@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הגדרות גלובליות | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+    --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+    --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+    --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+    --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+    --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+    --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+    --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --sidebar-bg:var(--navy);--sidebar-text:rgba(255,255,255,0.65);
+    --sidebar-hover:rgba(255,255,255,0.08);--sidebar-active-bg:rgba(56,196,242,0.2);
+    --sidebar-active-cl:var(--cyan);--sidebar-border:rgba(255,255,255,0.1);
+  }
+  [data-theme="dark"] {
+    --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+    --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+    --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+    --light-blue:rgba(56,196,242,0.08);--sidebar-bg:#0d1628;
+    --sidebar-text:rgba(255,255,255,0.55);--sidebar-hover:rgba(255,255,255,0.06);
+    --sidebar-active-bg:rgba(56,196,242,0.15);--sidebar-border:rgba(255,255,255,0.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;transition:background .3s,color .3s;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{width:220px;background:var(--sidebar-bg);border-left:1px solid var(--sidebar-border);min-height:100vh;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;position:fixed;right:0;top:0;bottom:0;z-index:50;transition:background .3s;}
+  .sidebar-logo{padding:16px 16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
+  .sidebar-logo img{width:150px;object-fit:contain;}
+  .sidebar-section{padding:8px 12px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--sidebar-text);font-size:14px;font-weight:500;}
+  .nav-item:hover{background:var(--sidebar-hover);color:white;}
+  .nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-cl);font-weight:700;}
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;}
+  .sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);}
+  .mode-switcher{margin-bottom:10px;}
+  .mode-switcher-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;padding-right:2px;}
+  .mode-toggle-row{display:flex;background:rgba(0,0,0,0.25);border-radius:8px;padding:3px;gap:2px;}
+  .mode-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 4px;border-radius:6px;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.45);background:transparent;white-space:nowrap;}
+  .mode-btn svg{width:13px;height:13px;}
+  .mode-btn.active{background:rgba(56,196,242,0.25);color:var(--cyan);}
+  .profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;}
+  .profile-mini:hover{background:rgba(255,255,255,0.08);}
+  .avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+  .profile-mini-name{font-size:13px;font-weight:600;color:white;}
+  .profile-mini-role{font-size:11px;color:rgba(255,255,255,0.45);}
+  .profile-edit-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;color:rgba(255,255,255,0.4);flex-shrink:0;margin-right:auto;}
+  .profile-edit-btn:hover{background:rgba(255,255,255,0.1);color:white;}
+  .profile-edit-btn svg{width:13px;height:13px;}
+
+  /* ── MAIN ── */
+  .main{margin-right:220px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+  /* ── TOPBAR ── */
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:var(--shadow-sm);transition:background .3s;}
+  .topbar-breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .breadcrumb-current{color:var(--text-main);font-weight:700;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;}
+  .icon-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+  .icon-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .icon-sun{display:none;}.icon-moon{display:block;}
+  [data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+  /* ── BUTTONS ── */
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:30px;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:none;white-space:nowrap;}
+  .btn svg{width:15px;height:15px;}
+  .btn-primary{background:linear-gradient(135deg,var(--cyan),#1db0d8);color:white;box-shadow:0 3px 14px rgba(56,196,242,0.3);}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(56,196,242,0.4);}
+  .btn-ghost{background:transparent;color:var(--text-sub);border:1.5px solid var(--border);}
+  .btn-ghost:hover{background:var(--light-blue);color:var(--text-main);border-color:var(--cyan);}
+  .btn-danger{background:rgba(240,86,128,0.08);color:#d62a5e;border:1.5px solid rgba(240,86,128,0.25);}
+  .btn-danger:hover{background:rgba(240,86,128,0.15);border-color:rgba(240,86,128,0.45);}
+  .btn-sm{padding:7px 14px;font-size:12px;}
+  .btn-sm svg{width:13px;height:13px;}
+
+  /* ── SAVE STATE BUTTON ── */
+  .save-state-btn{min-width:180px;justify-content:center;border:1.5px solid transparent;transition:background .3s,color .3s,border-color .3s,box-shadow .3s;}
+  .save-state-btn[data-state="unsaved"]{background:rgba(234,214,84,0.13);color:#7a6200;border-color:rgba(200,168,0,0.35);}
+  [data-theme="dark"] .save-state-btn[data-state="unsaved"]{background:rgba(234,214,84,0.1);color:#d4bc2e;border-color:rgba(234,214,84,0.28);}
+  .save-state-btn[data-state="saved"]{background:rgba(125,197,122,0.13);color:#3a8838;border-color:rgba(100,180,97,0.38);}
+  [data-theme="dark"] .save-state-btn[data-state="saved"]{background:rgba(125,197,122,0.1);color:#7DC57A;border-color:rgba(125,197,122,0.28);}
+  .save-state-btn[data-state="clean"]{background:transparent;color:var(--text-light);border-color:transparent;pointer-events:none;}
+  .save-state-btn[data-hovering="true"]{background:linear-gradient(135deg,var(--cyan),#1db0d8) !important;color:white !important;border-color:transparent !important;box-shadow:0 4px 16px rgba(56,196,242,0.35) !important;}
+
+  /* ── TAB BAR ── */
+  .settings-tabs-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 40px;display:flex;gap:4px;overflow-x:auto;transition:background .3s;}
+  .tab{display:flex;align-items:center;gap:6px;padding:14px 18px;font-size:13px;font-weight:600;color:var(--text-sub);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;}
+  .tab svg{opacity:.6;transition:opacity .2s;width:15px;height:15px;}
+  .tab:hover{color:var(--text-main);}
+  .tab:hover svg{opacity:1;}
+  .tab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+  .tab.active svg{opacity:1;}
+
+  /* ── PAGE BODY ── */
+  .page-body{flex:1;padding:40px 40px 120px;max-width:960px;margin:0 auto;width:100%;}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  /* ── SETTINGS SECTION ── */
+  .settings-section{display:grid;grid-template-columns:260px 1fr;gap:40px;padding:32px 0;border-bottom:1px solid var(--border);align-items:start;}
+  .settings-section:last-child{border-bottom:none;}
+  .settings-label-wrap{display:flex;align-items:center;gap:9px;margin-bottom:6px;}
+  .settings-label-icon{width:32px;height:32px;border-radius:8px;background:var(--light-blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--navy);}
+  .settings-label-icon svg{width:15px;height:15px;}
+  .settings-label{font-size:15px;font-weight:900;color:var(--text-main);}
+  .settings-desc{font-size:13px;color:var(--text-sub);line-height:1.6;}
+  .settings-field-col{display:flex;flex-direction:column;gap:12px;}
+
+  /* ── INPUTS ── */
+  .field-input{width:100%;font-family:var(--font-he);font-size:14px;padding:11px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);outline:none;transition:border-color .2s,box-shadow .2s;}
+  .field-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
+  .field-input::placeholder{color:var(--text-light);}
+  textarea.field-input{resize:vertical;min-height:96px;line-height:1.6;}
+  .field-hint{font-size:12px;color:var(--text-light);}
+  .field-label{font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:4px;}
+
+  /* ── TOGGLE ── */
+  .toggle-row{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
+  .toggle-row:last-child{border-bottom:none;}
+  .toggle-row-text{flex:1;}
+  .toggle-row-label{font-size:14px;font-weight:700;color:var(--text-main);margin-bottom:2px;}
+  .toggle-row-desc{font-size:12px;color:var(--text-sub);}
+  .toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+  .toggle input{opacity:0;width:0;height:0;}
+  .toggle-track{position:absolute;inset:0;border-radius:20px;background:var(--border);transition:background .2s;cursor:pointer;border:1.5px solid rgba(37,62,122,0.15);}
+  .toggle input:checked+.toggle-track{background:var(--cyan);border-color:var(--cyan);}
+  .toggle-thumb{position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:white;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+  .toggle input:checked~.toggle-thumb{transform:translateX(-20px);}
+
+  /* ── INTEGRATION CARD ── */
+  .integration-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:24px;transition:all .2s;}
+  .integration-card:hover{border-color:rgba(56,196,242,0.3);}
+  .integration-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .integration-logo-row{display:flex;align-items:center;gap:12px;}
+  .integration-logo{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;flex-shrink:0;}
+  .integration-name{font-size:15px;font-weight:900;color:var(--text-main);}
+  .integration-desc{font-size:12px;color:var(--text-sub);}
+  .integration-fields{display:flex;flex-direction:column;gap:12px;}
+  .integration-fields.collapsed{display:none;}
+
+  /* ── GATEWAY CARD (סליקה) ── */
+  .gateway-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:20px 24px;transition:all .2s;}
+  .gateway-card.active-gw{border-color:rgba(56,196,242,0.35);background:var(--light-blue);}
+  .gateway-header{display:flex;align-items:center;justify-content:space-between;}
+  .gateway-logo-row{display:flex;align-items:center;gap:12px;}
+  .gateway-logo{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;flex-shrink:0;}
+  .gateway-name{font-size:14px;font-weight:900;color:var(--text-main);}
+  .gateway-desc{font-size:12px;color:var(--text-sub);}
+  .gateway-fields{margin-top:16px;display:flex;flex-direction:column;gap:10px;}
+  .gateway-fields.collapsed{display:none;margin-top:0;}
+
+  /* ── BADGE ── */
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+  .badge-active{background:rgba(125,197,122,0.15);color:#3a8838;border:1px solid rgba(125,197,122,0.3);}
+  .badge-inactive{background:rgba(240,86,128,0.08);color:#d62a5e;border:1px solid rgba(240,86,128,0.2);}
+  .badge-coming{background:rgba(234,214,84,0.15);color:#7a6200;border:1px solid rgba(234,214,84,0.3);}
+  .badge-role{background:var(--light-blue);color:var(--navy);border:1px solid rgba(56,196,242,0.2);}
+  [data-theme="dark"] .badge-active{color:#7DC57A;}
+  [data-theme="dark"] .badge-coming{color:#d4bc2e;}
+  [data-theme="dark"] .badge-role{color:var(--cyan);}
+
+  /* ── STAT CARDS ── */
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
+  .stat-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:20px;text-align:center;transition:all .2s;}
+  .stat-card:hover{border-color:rgba(56,196,242,0.3);}
+  .stat-value{font-family:var(--font-en);font-size:28px;font-weight:700;color:var(--text-main);margin-bottom:4px;}
+  .stat-label{font-size:12px;color:var(--text-sub);font-weight:600;}
+
+  /* ── TEAM MEMBER CARD ── */
+  .team-list{display:flex;flex-direction:column;gap:10px;}
+  .team-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:16px 20px;display:flex;align-items:center;gap:14px;transition:all .2s;}
+  .team-card:hover{border-color:rgba(56,196,242,0.3);box-shadow:var(--shadow-sm);}
+  .team-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:white;flex-shrink:0;}
+  .team-info{flex:1;min-width:0;}
+  .team-name{font-size:14px;font-weight:700;color:var(--text-main);}
+  .team-email{font-size:12px;color:var(--text-sub);direction:ltr;text-align:right;}
+  .team-role-text{font-size:11px;color:var(--text-light);margin-top:2px;}
+  .team-actions{display:flex;gap:6px;flex-shrink:0;}
+  .team-action-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+  .team-action-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .team-action-btn.danger:hover{background:rgba(240,86,128,0.08);color:#d62a5e;border-color:rgba(240,86,128,0.3);}
+  .team-action-btn svg{width:14px;height:14px;}
+
+  /* ── COPY URL FIELD ── */
+  .copy-url-wrap{display:flex;align-items:center;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);overflow:hidden;transition:border-color .2s;}
+  .copy-url-wrap:focus-within{border-color:var(--cyan);}
+  .copy-url-input{flex:1;font-family:var(--font-en);font-size:13px;padding:11px 14px;border:none;background:transparent;color:var(--text-main);outline:none;direction:ltr;}
+  .copy-url-btn{padding:10px 16px;background:var(--bg);border:none;border-right:1.5px solid var(--border);font-family:var(--font-he);font-size:12px;font-weight:700;color:var(--text-sub);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
+  .copy-url-btn:hover{background:var(--light-blue);color:var(--navy);}
+  .copy-url-btn svg{width:14px;height:14px;}
+
+  /* ── EMPTY STATE ── */
+  .empty-state{text-align:center;padding:48px 20px;color:var(--text-light);}
+  .empty-state svg{margin-bottom:12px;color:var(--text-light);}
+  .empty-state-title{font-size:15px;font-weight:700;color:var(--text-sub);margin-bottom:4px;}
+  .empty-state-desc{font-size:13px;color:var(--text-light);}
+
+  /* ── SEARCH INPUT ── */
+  .search-wrap{position:relative;margin-bottom:16px;}
+  .search-wrap svg{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-light);pointer-events:none;}
+  .search-input{width:100%;font-family:var(--font-he);font-size:13px;padding:10px 40px 10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);outline:none;transition:border-color .2s;}
+  .search-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
+  .search-input::placeholder{color:var(--text-light);}
+
+  /* ── VERIFY BUTTON ── */
+  .btn-verify{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:30px;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;border:1.5px solid rgba(125,197,122,0.35);background:rgba(125,197,122,0.08);color:#3a8838;}
+  .btn-verify:hover{background:rgba(125,197,122,0.18);}
+  [data-theme="dark"] .btn-verify{color:#7DC57A;}
+
+  /* ── SECTION HEADER (for team tab etc) ── */
+  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:16px;}
+  .section-title{font-size:18px;font-weight:900;color:var(--text-main);}
+
+  @media(prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important;}}
+  @keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo"><img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD"></div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>לוח הבקרה
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>הספריה שלי
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <div class="mode-switcher-label">מצב תצוגה</div>
+      <div class="mode-toggle-row">
+        <button class="mode-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>תלמיד</button>
+        <button class="mode-btn active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>מרצה</button>
+      </div>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div><div class="profile-mini-name">אלון</div><div class="profile-mini-role">מרצה</div></div>
+      <button class="profile-edit-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-current">הגדרות</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleTheme()" aria-label="החלף ערכת נושא">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="btn save-state-btn" id="saveBtn" data-state="clean" data-hovering="false"
+        onmouseenter="this.dataset.hovering='true';document.getElementById('saveBtnLabel').textContent='שמור שינויים'"
+        onmouseleave="this.dataset.hovering='false';updateSaveBtnLabel()"
+        onclick="saveSettings()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <span id="saveBtnLabel">כל השינויים נשמרו</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- TAB BAR -->
+  <div class="settings-tabs-bar">
+    <div class="tab active" data-tab="billing" onclick="switchTab('billing')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>סליקה
+    </div>
+    <div class="tab" data-tab="email" onclick="switchTab('email')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>הגדרות דוא"ל
+    </div>
+    <div class="tab" data-tab="integrations" onclick="switchTab('integrations')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M6 8H5a4 4 0 0 0 0 8h1"/><line x1="6" y1="12" x2="18" y2="12"/></svg>אינטגרציות
+    </div>
+    <div class="tab" data-tab="team" onclick="switchTab('team')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>צוות והרשאות
+    </div>
+    <div class="tab" data-tab="affiliates" onclick="switchTab('affiliates')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>תכנית שותפים
+    </div>
+  </div>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- TAB 1: סליקה                                    -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="tab-panel active" id="panel-billing">
+
+      <!-- Tranzila -->
+      <div class="settings-section">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+            <div class="settings-label">Tranzila</div>
+          </div>
+          <div class="settings-desc">חיבור לשער סליקה Tranzila לעיבוד תשלומים בכרטיס אשראי.</div>
+        </div>
+        <div class="settings-field-col">
+          <div class="gateway-card" id="gw-tranzila">
+            <div class="gateway-header">
+              <div class="gateway-logo-row">
+                <div class="gateway-logo" style="background:linear-gradient(135deg,#1a73e8,#0d47a1);color:white;font-family:var(--font-en);font-size:10px;letter-spacing:-0.5px;">TRZ</div>
+                <div>
+                  <div class="gateway-name">Tranzila</div>
+                  <div class="gateway-desc">סליקת כרטיסי אשראי</div>
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="toggle-tranzila" onchange="toggleGateway('tranzila',this.checked)">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+            <div class="gateway-fields collapsed" id="fields-tranzila">
+              <div>
+                <label class="field-label" for="tranzila-terminal">Terminal</label>
+                <input class="field-input" id="tranzila-terminal" type="text" placeholder="הכנס Terminal ID" dir="ltr" oninput="markUnsaved()">
+              </div>
+              <div>
+                <label class="field-label" for="tranzila-terminal-num">מספר טרמינל</label>
+                <input class="field-input" id="tranzila-terminal-num" type="text" placeholder="מספר טרמינל" dir="ltr" oninput="markUnsaved()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cardcom -->
+      <div class="settings-section">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+            <div class="settings-label">Cardcom</div>
+          </div>
+          <div class="settings-desc">חיבור לשער סליקה Cardcom לעיבוד תשלומים.</div>
+        </div>
+        <div class="settings-field-col">
+          <div class="gateway-card" id="gw-cardcom">
+            <div class="gateway-header">
+              <div class="gateway-logo-row">
+                <div class="gateway-logo" style="background:linear-gradient(135deg,#ff6d00,#e65100);color:white;font-family:var(--font-en);font-size:10px;">CC</div>
+                <div>
+                  <div class="gateway-name">Cardcom</div>
+                  <div class="gateway-desc">סליקת כרטיסי אשראי ו-Bit</div>
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="toggle-cardcom" onchange="toggleGateway('cardcom',this.checked)">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+            <div class="gateway-fields collapsed" id="fields-cardcom">
+              <div>
+                <label class="field-label" for="cardcom-terminal">Terminal</label>
+                <input class="field-input" id="cardcom-terminal" type="text" placeholder="הכנס Terminal" dir="ltr" oninput="markUnsaved()">
+              </div>
+              <div>
+                <label class="field-label" for="cardcom-api-name">API Name</label>
+                <input class="field-input" id="cardcom-api-name" type="text" placeholder="API Name" dir="ltr" oninput="markUnsaved()">
+              </div>
+              <div>
+                <label class="field-label" for="cardcom-api-pass">API Password</label>
+                <input class="field-input" id="cardcom-api-pass" type="password" placeholder="API Password" dir="ltr" oninput="markUnsaved()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- משולם -->
+      <div class="settings-section">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+            <div class="settings-label">משולם</div>
+          </div>
+          <div class="settings-desc">חיבור למערכת משולם לניהול תשלומים.</div>
+        </div>
+        <div class="settings-field-col">
+          <div class="gateway-card" id="gw-meshulam" style="opacity:.7;">
+            <div class="gateway-header">
+              <div class="gateway-logo-row">
+                <div class="gateway-logo" style="background:linear-gradient(135deg,#4caf50,#2e7d32);color:white;font-family:var(--font-he);font-size:11px;">מ</div>
+                <div>
+                  <div class="gateway-name" style="display:flex;align-items:center;gap:8px;">משולם <span class="badge badge-coming">בקרוב</span></div>
+                  <div class="gateway-desc">חיבור למשולם יתווסף בקרוב</div>
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" disabled>
+                <div class="toggle-track" style="opacity:.5;cursor:not-allowed;"></div>
+                <div class="toggle-thumb"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Google Pay / Bit / Apple Pay -->
+      <div class="settings-section" style="border-bottom:none;">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div class="settings-label">אמצעי תשלום נוספים</div>
+          </div>
+          <div class="settings-desc">הפעל או בטל אמצעי תשלום נוספים עבור הקונים.</div>
+        </div>
+        <div class="settings-field-col">
+          <div class="toggle-row">
+            <div class="toggle-row-text">
+              <div class="toggle-row-label">Google Pay</div>
+              <div class="toggle-row-desc">אפשר תשלום באמצעות Google Pay</div>
+            </div>
+            <label class="toggle"><input type="checkbox" onchange="markUnsaved()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-row-text">
+              <div class="toggle-row-label">Bit</div>
+              <div class="toggle-row-desc">אפשר תשלום באמצעות אפליקציית Bit</div>
+            </div>
+            <label class="toggle"><input type="checkbox" onchange="markUnsaved()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+          </div>
+          <div class="toggle-row" style="border-bottom:none;">
+            <div class="toggle-row-text">
+              <div class="toggle-row-label">Apple Pay</div>
+              <div class="toggle-row-desc">אפשר תשלום באמצעות Apple Pay</div>
+            </div>
+            <label class="toggle"><input type="checkbox" onchange="markUnsaved()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-billing -->
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- TAB 2: הגדרות דוא"ל                             -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-email">
+
+      <!-- אימות דומיין -->
+      <div class="settings-section">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div class="settings-label">אימות דומיין</div>
+          </div>
+          <div class="settings-desc">אמת את הדומיין שלך כדי לשלוח אימיילים מכתובת מותאמת אישית.</div>
+        </div>
+        <div class="settings-field-col">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span class="badge badge-inactive" id="domainBadge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              לא פעיל
+            </span>
+          </div>
+          <div>
+            <label class="field-label" for="domain-input">דומיין</label>
+            <input class="field-input" id="domain-input" type="text" placeholder="example.com" dir="ltr" oninput="markUnsaved()">
+          </div>
+          <button class="btn-verify" onclick="verifyDomain()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>
+            אמת דומיין
+          </button>
+        </div>
+      </div>
+
+      <!-- פרטי שולח -->
+      <div class="settings-section">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div class="settings-label">פרטי שולח</div>
+          </div>
+          <div class="settings-desc">פרטים שיופיעו באימיילים שנשלחים לתלמידים.</div>
+        </div>
+        <div class="settings-field-col">
+          <div>
+            <label class="field-label" for="sender-name">שם שולח</label>
+            <input class="field-input" id="sender-name" type="text" placeholder="שם שיוצג כשם השולח" oninput="markUnsaved()">
+          </div>
+          <div>
+            <label class="field-label" for="sender-email">אימייל שולח</label>
+            <input class="field-input" id="sender-email" type="email" placeholder="hello@example.com" dir="ltr" oninput="markUnsaved()">
+          </div>
+          <div>
+            <label class="field-label" for="invitation-address">כתובת הזמנה</label>
+            <input class="field-input" id="invitation-address" type="text" placeholder="כתובת למשלוח הזמנות" oninput="markUnsaved()">
+          </div>
+          <div>
+            <label class="field-label" for="manager-name">שם מנהלת</label>
+            <input class="field-input" id="manager-name" type="text" placeholder="שם המנהלת שיופיע באימיילים" oninput="markUnsaved()">
+          </div>
+        </div>
+      </div>
+
+      <!-- חתימה -->
+      <div class="settings-section">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/><line x1="2" y1="22" x2="22" y2="22"/></svg></div>
+            <div class="settings-label">חתימה</div>
+          </div>
+          <div class="settings-desc">חתימה שתופיע בתחתית כל אימייל שנשלח מהמערכת.</div>
+        </div>
+        <div class="settings-field-col">
+          <textarea class="field-input" id="email-signature" placeholder="הכנס את חתימת המייל שלך..." oninput="markUnsaved()"></textarea>
+        </div>
+      </div>
+
+      <!-- מייל בדיקה -->
+      <div class="settings-section" style="border-bottom:none;">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div class="settings-label">מייל בדיקה</div>
+          </div>
+          <div class="settings-desc">שלח מייל בדיקה כדי לוודא שההגדרות תקינות.</div>
+        </div>
+        <div class="settings-field-col">
+          <div>
+            <button class="btn btn-ghost" onclick="sendTestEmail()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              שלח מייל בדיקה
+            </button>
+            <div class="field-hint" style="margin-top:8px;">מייל בדיקה יישלח לכתובת השולח שהוגדרה למעלה</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-email -->
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- TAB 3: אינטגרציות                               -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-integrations">
+
+      <!-- Make.com -->
+      <div class="settings-section">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon" style="background:rgba(109,61,222,0.12);color:#6d3dde;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg></div>
+            <div class="settings-label">Make.com</div>
+          </div>
+          <div class="settings-desc">חבר את Make.com ליצירת אוטומציות מתקדמות.</div>
+        </div>
+        <div class="settings-field-col">
+          <div class="integration-card">
+            <div class="integration-header">
+              <div class="integration-logo-row">
+                <div class="integration-logo" style="background:linear-gradient(135deg,#6d3dde,#9b59b6);color:white;font-family:var(--font-en);font-size:11px;font-weight:900;">M</div>
+                <div>
+                  <div class="integration-name">Make.com</div>
+                  <div class="integration-desc">אוטומציות ותהליכי עבודה</div>
+                </div>
+              </div>
+              <span class="badge badge-inactive" id="make-badge">לא מחובר</span>
+            </div>
+            <div class="integration-fields">
+              <div>
+                <label class="field-label" for="make-api-key">API Key</label>
+                <input class="field-input" id="make-api-key" type="text" placeholder="הכנס את מפתח ה-API של Make.com" dir="ltr" oninput="markUnsaved()">
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="createMakeKey()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Create New Key
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Google Analytics -->
+      <div class="settings-section">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon" style="background:rgba(234,136,0,0.12);color:#e68900;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+            <div class="settings-label">Google Analytics</div>
+          </div>
+          <div class="settings-desc">עקוב אחר ביקורים, המרות ונתוני משתמשים.</div>
+        </div>
+        <div class="settings-field-col">
+          <div class="integration-card">
+            <div class="integration-header">
+              <div class="integration-logo-row">
+                <div class="integration-logo" style="background:linear-gradient(135deg,#f9ab00,#e37400);color:white;font-family:var(--font-en);font-size:12px;font-weight:900;">GA</div>
+                <div>
+                  <div class="integration-name">Google Analytics</div>
+                  <div class="integration-desc">מעקב וניתוח נתונים</div>
+                </div>
+              </div>
+            </div>
+            <div class="integration-fields">
+              <div>
+                <label class="field-label" for="ga-tracking-id">Tracking ID (GA4)</label>
+                <input class="field-input" id="ga-tracking-id" type="text" placeholder="G-XXXXXXXXXX" dir="ltr" oninput="markUnsaved()">
+              </div>
+              <div class="field-hint">ניתן למצוא את ה-Tracking ID בהגדרות חשבון Google Analytics שלך</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Facebook Pixel -->
+      <div class="settings-section">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon" style="background:rgba(24,119,242,0.12);color:#1877f2;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></div>
+            <div class="settings-label">Facebook Pixel</div>
+          </div>
+          <div class="settings-desc">מעקב אירועי פייסבוק לקמפיינים וקהלים מותאמים.</div>
+        </div>
+        <div class="settings-field-col">
+          <div class="integration-card">
+            <div class="integration-header">
+              <div class="integration-logo-row">
+                <div class="integration-logo" style="background:linear-gradient(135deg,#1877f2,#0d5bca);color:white;font-family:var(--font-en);font-size:11px;font-weight:900;">FB</div>
+                <div>
+                  <div class="integration-name">Facebook Pixel</div>
+                  <div class="integration-desc">מעקב המרות ופרסום</div>
+                </div>
+              </div>
+            </div>
+            <div class="integration-fields">
+              <div>
+                <label class="field-label" for="fb-pixel-id">Pixel ID</label>
+                <input class="field-input" id="fb-pixel-id" type="text" placeholder="הכנס Pixel ID" dir="ltr" oninput="markUnsaved()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zapier -->
+      <div class="settings-section" style="border-bottom:none;">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon" style="background:rgba(255,74,39,0.12);color:#ff4a27;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <div class="settings-label">Zapier</div>
+          </div>
+          <div class="settings-desc">חבר אלפי אפליקציות באמצעות Zapier.</div>
+        </div>
+        <div class="settings-field-col">
+          <div class="integration-card" style="opacity:.7;">
+            <div class="integration-header" style="margin-bottom:0;">
+              <div class="integration-logo-row">
+                <div class="integration-logo" style="background:linear-gradient(135deg,#ff4a27,#e03e1f);color:white;font-family:var(--font-en);font-size:11px;font-weight:900;">Z</div>
+                <div>
+                  <div class="integration-name" style="display:flex;align-items:center;gap:8px;">Zapier <span class="badge badge-coming">בקרוב</span></div>
+                  <div class="integration-desc">אינטגרציית Zapier תתווסף בקרוב</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-integrations -->
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- TAB 4: צוות והרשאות                              -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-team">
+
+      <div class="section-header">
+        <div class="section-title">צוות והרשאות</div>
+        <button class="btn btn-primary" onclick="inviteTeamMember()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+          הוסף חבר צוות
+        </button>
+      </div>
+
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" type="text" placeholder="חפש חבר צוות..." id="teamSearch" oninput="filterTeam()">
+      </div>
+
+      <div class="team-list" id="teamList">
+
+        <!-- Member 1 -->
+        <div class="team-card" data-name="ofaad richittman">
+          <div class="team-avatar">O</div>
+          <div class="team-info">
+            <div class="team-name">Ofaad Richittman</div>
+            <div class="team-email">ofaad000@gmail.com</div>
+            <div class="team-role-text">הנהלה ראשית, דוח כספים</div>
+          </div>
+          <span class="badge badge-role">מנהל</span>
+          <div class="team-actions">
+            <button class="team-action-btn" aria-label="ערוך חבר צוות" onclick="">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="team-action-btn danger" aria-label="הסר חבר צוות" onclick="">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Member 2 -->
+        <div class="team-card" data-name="eyad segal">
+          <div class="team-avatar">E</div>
+          <div class="team-info">
+            <div class="team-name">Eyad Segal</div>
+            <div class="team-email">eyadsegal@gmail.com</div>
+            <div class="team-role-text">הנהלה ראשית, דוח כספים</div>
+          </div>
+          <span class="badge badge-role">מנהל</span>
+          <div class="team-actions">
+            <button class="team-action-btn" aria-label="ערוך חבר צוות" onclick="">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="team-action-btn danger" aria-label="הסר חבר צוות" onclick="">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /panel-team -->
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- TAB 5: תכנית שותפים                              -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-affiliates">
+
+      <!-- Stats Row -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-value">$0.00</div>
+          <div class="stat-label">דף למאגר</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">$0.00</div>
+          <div class="stat-label">סכו"ל</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">$0.00</div>
+          <div class="stat-label">ממוצע עמלות</div>
+        </div>
+      </div>
+
+      <!-- קישור שותף -->
+      <div class="settings-section">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+            <div class="settings-label">קישור שותף</div>
+          </div>
+          <div class="settings-desc">שתף את הקישור הייחודי שלך כדי להרוויח עמלות מהפניות.</div>
+        </div>
+        <div class="settings-field-col">
+          <div class="copy-url-wrap">
+            <input class="copy-url-input" id="affiliateUrl" type="text" value="https://whiteboard.education/r/alon123" readonly>
+            <button class="copy-url-btn" onclick="copyAffiliateLink()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              העתק
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- הממפנים שלך -->
+      <div class="settings-section">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div class="settings-label">הממפנים שלך</div>
+          </div>
+          <div class="settings-desc">רשימת המשתמשים שהגיעו דרך הקישור שלך.</div>
+        </div>
+        <div class="settings-field-col">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <div class="empty-state-title">עדיין אין הפניות</div>
+            <div class="empty-state-desc">שתף את הקישור שלך כדי להתחיל להרוויח עמלות</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- בקש שותפות -->
+      <div class="settings-section" style="border-bottom:none;">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div>
+            <div class="settings-label">בקש שותפות</div>
+          </div>
+          <div class="settings-desc">הצטרף לתכנית השותפים שלנו והרוויח עמלות על הפניות מוצלחות.</div>
+        </div>
+        <div class="settings-field-col">
+          <div style="background:var(--light-blue);border-radius:var(--radius-md);padding:20px;border:1px solid var(--border);">
+            <div style="font-size:14px;font-weight:700;color:var(--text-main);margin-bottom:6px;">איך זה עובד?</div>
+            <div style="font-size:13px;color:var(--text-sub);line-height:1.7;margin-bottom:16px;">
+              שתף את הקישור הייחודי שלך עם חברים, עמיתים ותלמידים. על כל רכישה שמגיעה דרך הקישור שלך, תקבל עמלה ישירות לחשבונך. העמלות משולמות מדי חודש.
+            </div>
+            <button class="btn btn-primary" onclick="">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+              בקש שותפות
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-affiliates -->
+
+  </div><!-- /page-body -->
+
+</div><!-- /main -->
+
+<script>
+// ── THEME ──────────────────────────────────────────
+function toggleTheme(){
+  const html=document.documentElement;
+  html.setAttribute('data-theme',html.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+
+// ── TAB SWITCHING ──────────────────────────────────
+function switchTab(tabId){
+  // update tabs
+  document.querySelectorAll('.settings-tabs-bar .tab').forEach(t=>{
+    t.classList.toggle('active',t.dataset.tab===tabId);
+  });
+  // update panels
+  document.querySelectorAll('.tab-panel').forEach(p=>{
+    p.classList.toggle('active',p.id==='panel-'+tabId);
+  });
+}
+
+// ── GATEWAY TOGGLE ─────────────────────────────────
+function toggleGateway(name,on){
+  const card=document.getElementById('gw-'+name);
+  const fields=document.getElementById('fields-'+name);
+  if(on){
+    card.classList.add('active-gw');
+    fields.classList.remove('collapsed');
+  } else {
+    card.classList.remove('active-gw');
+    fields.classList.add('collapsed');
+  }
+  markUnsaved();
+}
+
+// ── SAVE STATE ─────────────────────────────────────
+function markUnsaved(){
+  const btn=document.getElementById('saveBtn');
+  if(btn.dataset.state==='clean'||btn.dataset.state==='saved'){
+    btn.dataset.state='unsaved';
+    btn.style.pointerEvents='auto';
+    updateSaveBtnLabel();
+  }
+}
+function updateSaveBtnLabel(){
+  const btn=document.getElementById('saveBtn');
+  const lbl={saved:'ההגדרות עודכנו',unsaved:'שינויים שלא נשמרו',clean:'כל השינויים נשמרו'};
+  document.getElementById('saveBtnLabel').textContent=lbl[btn.dataset.state]??'שינויים שלא נשמרו';
+}
+function saveSettings(){
+  const btn=document.getElementById('saveBtn');
+  if(btn.dataset.state==='clean') return;
+  btn.dataset.hovering='false';
+  btn.dataset.state='saved';
+  document.getElementById('saveBtnLabel').textContent='ההגדרות עודכנו';
+  setTimeout(()=>{
+    btn.dataset.state='clean';
+    updateSaveBtnLabel();
+  },4000);
+}
+
+// ── DOMAIN VERIFY ──────────────────────────────────
+function verifyDomain(){
+  const badge=document.getElementById('domainBadge');
+  const domain=document.getElementById('domain-input').value.trim();
+  if(!domain){alert('נא להזין דומיין'); return;}
+  badge.className='badge badge-active';
+  badge.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><polyline points="20 6 9 17 4 12"/></svg> פעיל';
+}
+
+// ── TEST EMAIL ─────────────────────────────────────
+function sendTestEmail(){
+  alert('מייל בדיקה נשלח בהצלחה!');
+}
+
+// ── MAKE KEY ───────────────────────────────────────
+function createMakeKey(){
+  const key='mk_'+Math.random().toString(36).substring(2,18);
+  document.getElementById('make-api-key').value=key;
+  document.getElementById('make-badge').className='badge badge-active';
+  document.getElementById('make-badge').textContent='מחובר';
+  markUnsaved();
+}
+
+// ── COPY AFFILIATE LINK ────────────────────────────
+function copyAffiliateLink(){
+  const input=document.getElementById('affiliateUrl');
+  navigator.clipboard.writeText(input.value).then(()=>{
+    const btn=input.nextElementSibling;
+    const orig=btn.innerHTML;
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> הועתק!';
+    setTimeout(()=>{btn.innerHTML=orig;},2000);
+  });
+}
+
+// ── TEAM FILTER ────────────────────────────────────
+function filterTeam(){
+  const q=document.getElementById('teamSearch').value.toLowerCase();
+  document.querySelectorAll('.team-card').forEach(card=>{
+    const name=card.dataset.name||'';
+    card.style.display=name.includes(q)?'flex':'none';
+  });
+}
+
+// ── INVITE TEAM MEMBER ─────────────────────────────
+function inviteTeamMember(){
+  alert('חלון הזמנת חבר צוות חדש');
+}
+</script>
+</body>
+</html>

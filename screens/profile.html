@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הפרופיל שלי | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+    --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+    --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+    --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+    --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+    --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+    --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+    --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --sidebar-bg:var(--navy);--sidebar-text:rgba(255,255,255,0.65);
+    --sidebar-hover:rgba(255,255,255,0.08);--sidebar-active-bg:rgba(56,196,242,0.2);
+    --sidebar-active-cl:var(--cyan);--sidebar-border:rgba(255,255,255,0.1);
+  }
+  [data-theme="dark"] {
+    --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+    --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+    --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+    --light-blue:rgba(56,196,242,0.08);--sidebar-bg:#0d1628;
+    --sidebar-text:rgba(255,255,255,0.55);--sidebar-hover:rgba(255,255,255,0.06);
+    --sidebar-active-bg:rgba(56,196,242,0.15);--sidebar-border:rgba(255,255,255,0.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;transition:background .3s,color .3s;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{width:220px;background:var(--sidebar-bg);border-left:1px solid var(--sidebar-border);min-height:100vh;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;position:fixed;right:0;top:0;bottom:0;z-index:50;transition:background .3s;}
+  .sidebar-logo{padding:16px 16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
+  .sidebar-logo img{width:150px;object-fit:contain;}
+  .sidebar-section{padding:8px 12px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--sidebar-text);font-size:14px;font-weight:500;}
+  .nav-item:hover{background:var(--sidebar-hover);color:white;}
+  .nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-cl);font-weight:700;}
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;}
+  .sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);}
+  .mode-switcher{margin-bottom:10px;}
+  .mode-switcher-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;padding-right:2px;}
+  .mode-toggle-row{display:flex;background:rgba(0,0,0,0.25);border-radius:8px;padding:3px;gap:2px;}
+  .mode-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 4px;border-radius:6px;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.45);background:transparent;white-space:nowrap;}
+  .mode-btn svg{width:13px;height:13px;}
+  .mode-btn.active{background:rgba(56,196,242,0.25);color:var(--cyan);}
+  .profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;}
+  .profile-mini:hover{background:rgba(255,255,255,0.08);}
+  .avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+  .profile-mini-name{font-size:13px;font-weight:600;color:white;}
+  .profile-mini-role{font-size:11px;color:rgba(255,255,255,0.45);}
+  .profile-edit-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;color:rgba(255,255,255,0.4);flex-shrink:0;margin-right:auto;}
+  .profile-edit-btn:hover{background:rgba(255,255,255,0.1);color:white;}
+  .profile-edit-btn svg{width:13px;height:13px;}
+
+  /* ── MAIN ── */
+  .main{margin-right:220px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+  /* ── TOPBAR ── */
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:var(--shadow-sm);transition:background .3s;}
+  .topbar-breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .breadcrumb-current{color:var(--text-main);font-weight:700;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;}
+  .icon-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+  .icon-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .icon-sun{display:none;}.icon-moon{display:block;}
+  [data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+  /* ── BUTTONS ── */
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:30px;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:none;white-space:nowrap;}
+  .btn svg{width:15px;height:15px;}
+  .btn-primary{background:linear-gradient(135deg,var(--cyan),#1db0d8);color:white;box-shadow:0 3px 14px rgba(56,196,242,0.3);}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(56,196,242,0.4);}
+  .btn-ghost{background:transparent;color:var(--text-sub);border:1.5px solid var(--border);}
+  .btn-ghost:hover{background:var(--light-blue);color:var(--text-main);border-color:var(--cyan);}
+  .btn-danger{background:rgba(240,86,128,0.08);color:#d62a5e;border:1.5px solid rgba(240,86,128,0.25);}
+  .btn-danger:hover{background:rgba(240,86,128,0.15);border-color:rgba(240,86,128,0.45);}
+
+  /* ── PAGE BODY ── */
+  .page-body{flex:1;padding:40px 40px 120px;max-width:960px;margin:0 auto;width:100%;}
+
+  /* ── SETTINGS SECTION ── */
+  .settings-section{display:grid;grid-template-columns:260px 1fr;gap:40px;padding:32px 0;border-bottom:1px solid var(--border);align-items:start;}
+  .settings-section:last-child{border-bottom:none;}
+  .settings-label-col{}
+  .settings-label{font-size:15px;font-weight:900;color:var(--text-main);margin-bottom:4px;}
+  .settings-desc{font-size:13px;color:var(--text-sub);line-height:1.6;}
+  .settings-field-col{display:flex;flex-direction:column;gap:12px;}
+
+  /* ── SECTION LABEL WITH ICON ── */
+  .settings-label-wrap{display:flex;align-items:center;gap:9px;margin-bottom:6px;}
+  .settings-label-icon{width:32px;height:32px;border-radius:8px;background:var(--light-blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--navy);}
+  .settings-label-icon svg{width:15px;height:15px;}
+
+  /* ── INPUTS ── */
+  .field-input{width:100%;font-family:var(--font-he);font-size:14px;padding:11px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);outline:none;transition:border-color .2s,box-shadow .2s;}
+  .field-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
+  .field-input::placeholder{color:var(--text-light);}
+  .field-input[readonly]{opacity:.6;cursor:not-allowed;background:var(--bg);}
+  textarea.field-input{resize:vertical;min-height:96px;line-height:1.6;}
+  .field-hint{font-size:12px;color:var(--text-light);}
+  .field-label{font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:4px;}
+
+  /* ── INPUT WITH ICON ── */
+  .input-icon-wrap{position:relative;}
+  .input-icon-wrap .field-input{padding-left:40px;}
+  .input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-light);display:flex;align-items:center;pointer-events:none;}
+  .input-icon svg{width:15px;height:15px;}
+
+  /* ── SOCIAL LINK ROW ── */
+  .social-link-row{display:flex;align-items:center;gap:10px;}
+  .social-icon{width:38px;height:38px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1.5px solid var(--border);background:var(--surface);color:var(--text-sub);transition:all .2s;}
+  .social-link-row:focus-within .social-icon{border-color:var(--cyan);color:var(--navy);background:var(--light-blue);}
+  .social-icon svg{width:16px;height:16px;}
+  .social-link-row .field-input{direction:ltr;text-align:left;}
+
+  /* ── AVATAR ── */
+  .avatar-lg{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:900;color:white;flex-shrink:0;box-shadow:0 4px 20px rgba(56,196,242,0.25);}
+  .avatar-section{display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .avatar-note{font-size:12px;color:var(--text-light);text-align:center;}
+
+  /* ── TOGGLES ── */
+  .toggle-row{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
+  .toggle-row:last-child{border-bottom:none;}
+  .toggle-row-text{flex:1;}
+  .toggle-row-label{font-size:14px;font-weight:700;color:var(--text-main);margin-bottom:2px;}
+  .toggle-row-desc{font-size:12px;color:var(--text-sub);}
+  .toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+  .toggle input{opacity:0;width:0;height:0;}
+  .toggle-track{position:absolute;inset:0;border-radius:20px;background:var(--border);transition:background .2s;cursor:pointer;border:1.5px solid rgba(37,62,122,0.15);}
+  .toggle input:checked+.toggle-track{background:var(--cyan);border-color:var(--cyan);}
+  .toggle-thumb{position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:white;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+  .toggle input:checked~.toggle-thumb{transform:translateX(-20px);}
+
+  /* ── DANGER ZONE ── */
+  .danger-zone{background:rgba(240,86,128,0.04);border:1.5px solid rgba(240,86,128,0.15);border-radius:var(--radius-md);padding:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  .danger-title{font-size:14px;font-weight:900;color:#d62a5e;margin-bottom:4px;}
+  .danger-desc{font-size:13px;color:var(--text-sub);line-height:1.5;}
+
+  /* ── SAVE STATE BUTTON (topbar) ── */
+  .save-state-btn{min-width:180px;justify-content:center;border:1.5px solid transparent;transition:background .3s,color .3s,border-color .3s,box-shadow .3s;}
+  .save-state-btn[data-state="unsaved"]{background:rgba(234,214,84,0.13);color:#7a6200;border-color:rgba(200,168,0,0.35);}
+  [data-theme="dark"] .save-state-btn[data-state="unsaved"]{background:rgba(234,214,84,0.1);color:#d4bc2e;border-color:rgba(234,214,84,0.28);}
+  .save-state-btn[data-state="saved"]{background:rgba(125,197,122,0.13);color:#3a8838;border-color:rgba(100,180,97,0.38);}
+  [data-theme="dark"] .save-state-btn[data-state="saved"]{background:rgba(125,197,122,0.1);color:#7DC57A;border-color:rgba(125,197,122,0.28);}
+  .save-state-btn[data-state="clean"]{background:transparent;color:var(--text-light);border-color:transparent;pointer-events:none;}
+  .save-state-btn[data-hovering="true"]{background:linear-gradient(135deg,var(--cyan),#1db0d8) !important;color:white !important;border-color:transparent !important;box-shadow:0 4px 16px rgba(56,196,242,0.35) !important;}
+
+  /* ── FOCUS VISIBLE ── */
+  *:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+
+  /* ── REDUCED MOTION ── */
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}
+  }
+
+  @keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo"><img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD"></div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>לוח הבקרה
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <div class="mode-switcher-label">מצב תצוגה</div>
+      <div class="mode-toggle-row">
+        <button class="mode-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>תלמיד</button>
+        <button class="mode-btn active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>מרצה</button>
+      </div>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div><div class="profile-mini-name">אלון</div><div class="profile-mini-role">מרצה</div></div>
+      <button class="profile-edit-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-current">הפרופיל שלי</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleTheme()">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="btn save-state-btn" id="saveBtn" data-state="clean" data-hovering="false"
+        onmouseenter="this.dataset.hovering='true';document.getElementById('saveBtnLabel').textContent='שמור שינויים'"
+        onmouseleave="this.dataset.hovering='false';updateSaveBtnLabel()"
+        onclick="saveSettings()">
+        <svg id="saveBtnIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <span id="saveBtnLabel">כל השינויים נשמרו</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+
+    <!-- 1. תמונת פרופיל -->
+    <div class="settings-section">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="settings-label">תמונת פרופיל</div>
+        </div>
+        <div class="settings-desc">התמונה שתוצג לתלמידים ובמערכת</div>
+      </div>
+      <div class="settings-field-col">
+        <div class="avatar-section">
+          <div class="avatar-lg">א</div>
+          <button class="btn btn-ghost" onclick="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            שנה תמונה
+          </button>
+          <div class="avatar-note">(מיובאת מ-Google כברירת מחדל)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. פרטים אישיים -->
+    <div class="settings-section">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+          <div class="settings-label">פרטים אישיים</div>
+        </div>
+        <div class="settings-desc">שם, אימייל ופרטים בסיסיים</div>
+      </div>
+      <div class="settings-field-col">
+        <div>
+          <label class="field-label" for="firstName">שם פרטי</label>
+          <input class="field-input" id="firstName" type="text" value="אלון" oninput="markDirty()">
+        </div>
+        <div>
+          <label class="field-label" for="lastName">שם משפחה</label>
+          <input class="field-input" id="lastName" type="text" value="גבאי" oninput="markDirty()">
+        </div>
+        <div>
+          <label class="field-label" for="email">אימייל</label>
+          <div class="input-icon-wrap">
+            <input class="field-input" id="email" type="email" value="alon@alon-gabay.co.il" readonly>
+            <div class="input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          </div>
+          <div class="field-hint">לא ניתן לשנות את כתובת האימייל</div>
+        </div>
+        <div>
+          <label class="field-label" for="phone">טלפון</label>
+          <input class="field-input" id="phone" type="tel" value="050-0000000" dir="ltr" style="text-align:left;" oninput="markDirty()">
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. ביוגרפיה -->
+    <div class="settings-section">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div>
+          <div class="settings-label">ביוגרפיה</div>
+        </div>
+        <div class="settings-desc">ספר על עצמך — יופיע בעמודי הקורסים ובית הספר</div>
+      </div>
+      <div class="settings-field-col">
+        <div>
+          <label class="field-label" for="proTitle">כותרת מקצועית</label>
+          <input class="field-input" id="proTitle" type="text" value="יוצר תוכן ומרצה לשיווק דיגיטלי" oninput="markDirty()">
+        </div>
+        <div>
+          <label class="field-label" for="bio">ביוגרפיה</label>
+          <textarea class="field-input" id="bio" rows="5" placeholder="ספר על עצמך, הניסיון שלך ומה התלמידים יכולים לצפות ללמוד..." oninput="markDirty()"></textarea>
+        </div>
+        <div>
+          <label class="field-label">קישורים חברתיים</label>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+            <!-- Instagram -->
+            <div class="social-link-row">
+              <div class="social-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+              </div>
+              <input class="field-input" type="url" placeholder="https://instagram.com/username" oninput="markDirty()">
+            </div>
+            <!-- YouTube -->
+            <div class="social-link-row">
+              <div class="social-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.13C5.12 19.56 12 19.56 12 19.56s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.43z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+              </div>
+              <input class="field-input" type="url" placeholder="https://youtube.com/@channel" oninput="markDirty()">
+            </div>
+            <!-- LinkedIn -->
+            <div class="social-link-row">
+              <div class="social-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              </div>
+              <input class="field-input" type="url" placeholder="https://linkedin.com/in/username" oninput="markDirty()">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. אבטחה -->
+    <div class="settings-section">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <div class="settings-label">אבטחה</div>
+        </div>
+        <div class="settings-desc">סיסמה ואימות</div>
+      </div>
+      <div class="settings-field-col">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <label class="field-label" style="margin-bottom:0;">שנה סיסמה</label>
+          <button class="btn btn-ghost" onclick="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            שנה סיסמה
+          </button>
+        </div>
+        <div class="toggle-row" style="border-bottom:none;">
+          <div class="toggle-row-text">
+            <div class="toggle-row-label">אימות דו-שלבי (2FA)</div>
+            <div class="toggle-row-desc">הוסף שכבת אבטחה נוספת לחשבון שלך באמצעות קוד חד-פעמי</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. התראות -->
+    <div class="settings-section">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+          <div class="settings-label">התראות</div>
+        </div>
+        <div class="settings-desc">ניהול ההתראות שתקבל</div>
+      </div>
+      <div class="settings-field-col">
+        <div class="toggle-row">
+          <div class="toggle-row-text">
+            <div class="toggle-row-label">עדכונים על תלמידים חדשים</div>
+            <div class="toggle-row-desc">קבל התראה כשתלמיד חדש נרשם לקורס שלך</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" checked>
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-row-text">
+            <div class="toggle-row-label">סיכום שבועי במייל</div>
+            <div class="toggle-row-desc">סקירה שבועית של ביצועי הקורסים שלך ישירות למייל</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" checked>
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-row-text">
+            <div class="toggle-row-label">התראות שיווקיות</div>
+            <div class="toggle-row-desc">טיפים, עדכונים ומבצעים מ-WHITEBOARD</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. מחיקת חשבון -->
+    <div class="settings-section">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon" style="background:rgba(240,86,128,0.1);color:#d62a5e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></div>
+          <div class="settings-label" style="color:#d62a5e;">מחיקת חשבון</div>
+        </div>
+        <div class="settings-desc">פעולה בלתי הפיכה. כל המידע, הקורסים והתוכן יימחקו לצמיתות.</div>
+      </div>
+      <div class="settings-field-col">
+        <div class="danger-zone">
+          <div>
+            <div class="danger-title">מחק חשבון לצמיתות</div>
+            <div class="danger-desc">לאחר המחיקה לא ניתן לשחזר את החשבון, הקורסים או נתוני התלמידים. פעולה זו אינה הפיכה.</div>
+          </div>
+          <button class="btn btn-danger" onclick="confirmDeleteAccount()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            מחק חשבון
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-body -->
+
+</div><!-- /main -->
+
+<script>
+// ── THEME ──────────────────────────────────────────
+function toggleTheme(){
+  const html=document.documentElement;
+  html.setAttribute('data-theme',html.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+
+// ── DIRTY STATE ───────────────────────────────────
+function markDirty(){
+  const btn=document.getElementById('saveBtn');
+  if(btn.dataset.state==='unsaved') return;
+  btn.dataset.state='unsaved';
+  btn.style.pointerEvents='auto';
+  updateSaveBtnLabel();
+}
+
+// ── SAVE STATE BUTTON ──────────────────────────────
+function updateSaveBtnLabel(){
+  const btn=document.getElementById('saveBtn');
+  const lbl={saved:'ההגדרות עודכנו',unsaved:'שינויים שלא נשמרו',clean:'כל השינויים נשמרו'};
+  document.getElementById('saveBtnLabel').textContent=lbl[btn.dataset.state]??'שינויים שלא נשמרו';
+}
+function saveSettings(){
+  const btn=document.getElementById('saveBtn');
+  if(btn.dataset.state==='clean') return;
+  btn.dataset.hovering='false';
+  btn.dataset.state='saved';
+  document.getElementById('saveBtnLabel').textContent='ההגדרות עודכנו';
+  setTimeout(()=>{
+    btn.dataset.state='clean';
+    updateSaveBtnLabel();
+  },4000);
+}
+
+// ── DELETE ACCOUNT ─────────────────────────────────
+function confirmDeleteAccount(){
+  if(confirm('האם אתה בטוח שברצונך למחוק את החשבון? פעולה זו בלתי הפיכה.')){
+    alert('החשבון נמחק (הדגמה בלבד)');
+  }
+}
+</script>
+
+</body>
+</html>
