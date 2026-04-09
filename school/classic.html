@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light" data-mode="student" data-view="school">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בית ספר — קלאסי | שיווק ויצירת תוכן | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root{
+  --primary:#253E7A;--primary-light:rgba(37,62,122,0.08);
+  --accent:#38C4F2;--accent-light:rgba(56,196,242,0.1);
+  --cta:#F05680;--cta-light:rgba(240,86,128,0.08);
+  --green:#22c55e;--amber:#F59E0B;--yellow:#EAD654;
+  --font:'Heebo',sans-serif;--font-brand:'Fredoka',sans-serif;
+  --r:14px;--r-sm:10px;--r-xs:6px;--r-full:30px;
+  --strip-w:52px;
+  --bg:#F5F7FB;--surface:#FFFFFF;--surface-2:#F0F4FA;--surface-3:#e8eef8;
+  --border:rgba(37,62,122,0.08);--border-mid:rgba(37,62,122,0.14);
+  --text:#1a2f5e;--text-sub:rgba(37,62,122,0.52);--text-xs:rgba(37,62,122,0.32);
+  --sh:0 2px 12px rgba(37,62,122,0.07);--sh-lg:0 8px 32px rgba(37,62,122,0.1);
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.12);
+  --text:#dde5f5;--text-sub:rgba(221,229,245,0.48);--text-xs:rgba(221,229,245,0.28);
+  --sh:0 2px 12px rgba(0,0,0,0.3);--sh-lg:0 8px 32px rgba(0,0,0,0.4);
+}
+[data-theme="dark"] .hero-title,[data-theme="dark"] .sec-title,[data-theme="dark"] .cc-title,
+[data-theme="dark"] .inst-name,[data-theme="dark"] .nav-logo-name{color:#fff;}
+[data-theme="dark"] .hero-stat strong,[data-theme="dark"] .inst-stat strong,
+[data-theme="dark"] .cc-price{color:#e8edf7;}
+[data-theme="dark"] .cc-category{color:var(--accent);}
+[data-theme="dark"] .cat-btn.active{background:var(--accent);border-color:var(--accent);}
+[data-theme="dark"] .hero{background:linear-gradient(135deg,#0c1422,#1a2e5e);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);
+  height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  height:48px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+  flex-shrink:0;box-shadow:var(--sh);z-index:30;
+}
+[data-mode="teacher"] .topbar{border-bottom-color:var(--amber);}
+.tb-right{display:flex;align-items:center;gap:8px;}
+.tb-name{font-family:var(--font-brand);font-size:15px;font-weight:600;color:var(--primary);}
+[data-theme="dark"] .tb-name{color:#e8edf7;}
+.tb-sep{color:var(--text-xs);font-size:13px;}
+.tb-page{font-size:13px;font-weight:700;color:var(--text);}
+.tb-links{display:flex;align-items:center;gap:3px;margin-right:12px;}
+.tb-link{padding:5px 12px;border-radius:var(--r-full);font-size:12px;font-weight:600;
+  color:var(--text-sub);cursor:pointer;transition:all .15s;text-decoration:none;border:none;background:transparent;font-family:var(--font);}
+.tb-link:hover{background:var(--primary-light);color:var(--primary);}
+.tb-link.active{background:var(--primary);color:#fff;}
+.edit-tag{display:none;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--r-full);
+  background:var(--amber);color:#fff;font-size:10px;font-weight:800;}
+[data-mode="teacher"] .edit-tag{display:inline-flex;}
+.edit-tag svg{width:10px;height:10px;}
+.tb-left{display:flex;align-items:center;gap:7px;}
+.ib{width:32px;height:32px;border-radius:var(--r-xs);border:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-sub);transition:all .18s;}
+.ib:hover{background:var(--accent-light);color:var(--primary);border-color:var(--accent);}
+.ib svg{width:14px;height:14px;}
+.icon-sun{display:none;}[data-theme="dark"] .icon-sun{display:block;}
+.icon-moon{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+.mode-pill{display:flex;background:var(--surface-2);border:1px solid var(--border);border-radius:30px;padding:3px;gap:2px;}
+.mp{display:flex;align-items:center;gap:4px;padding:4px 11px;border-radius:20px;
+  border:none;font-family:var(--font);font-size:11.5px;font-weight:700;cursor:pointer;
+  color:var(--text-sub);background:transparent;white-space:nowrap;transition:all .2s;}
+.mp svg{width:11px;height:11px;}
+.mp.s.on{background:#dbeafe;color:var(--primary);}
+.mp.t.on{background:var(--amber);color:#fff;}
+[data-theme="dark"] .mp.s.on{background:rgba(56,196,242,0.14);color:var(--accent);}
+[data-theme="dark"] .mp.t.on{background:rgba(245,158,11,0.22);color:#fbbf24;}
+.tb-cta{height:32px;padding:0 14px;border-radius:var(--r-full);border:none;
+  background:var(--cta);color:#fff;font-family:var(--font);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;}
+.tb-cta:hover{opacity:.9;}
+
+/* ══ EDIT BANNER ══ */
+.edit-banner{display:none;align-items:center;justify-content:space-between;
+  padding:6px 18px;background:var(--surface);border-bottom:2px solid var(--amber);flex-shrink:0;gap:12px;}
+[data-mode="teacher"] .edit-banner{display:flex;}
+.eb-l{display:flex;align-items:center;gap:10px;}
+.eb-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:var(--amber);}
+.eb-badge svg{width:11px;height:11px;}
+.eb-info{font-size:11px;color:var(--text-xs);}
+.eb-r{display:flex;align-items:center;gap:6px;}
+.eb-btn{display:flex;align-items:center;gap:4px;padding:4px 12px;border-radius:var(--r-xs);
+  border:1px solid var(--border);background:transparent;font-family:var(--font);
+  font-size:11px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .15s;}
+.eb-btn:hover{border-color:var(--border-mid);color:var(--text);}
+.eb-btn svg{width:11px;height:11px;}
+.eb-pub{display:flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;
+  border:none;font-family:var(--font);font-size:11.5px;font-weight:700;
+  background:var(--primary);color:#fff;cursor:pointer;transition:all .2s;}
+.eb-pub:hover{background:var(--accent);}
+.eb-pub svg{width:11px;height:11px;}
+
+/* ══ BODY ══ */
+.body-wrap{flex:1;display:flex;overflow:hidden;}
+
+/* ══ RIGHT STRIP — identical across all screens ══ */
+.right-strip{
+  width:var(--strip-w);flex-shrink:0;background:#1a2e5e;
+  display:flex;flex-direction:column;align-items:center;z-index:20;
+}
+[data-mode="teacher"] .right-strip{border-right:3px solid var(--amber);}
+.rs-logo{width:100%;display:flex;align-items:center;justify-content:center;
+  padding:10px 0 8px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
+.rs-logo img{width:28px;height:auto;opacity:.9;}
+.rs-icons{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;position:relative;}
+.rs-btn{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .18s;position:relative;background:transparent;border:none;
+  color:rgba(255,255,255,0.5);padding:0;text-decoration:none;}
+.rs-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.rs-btn.rs-active{background:rgba(56,196,242,0.2);color:#38C4F2;}
+.rs-btn svg{width:17px;height:17px;}
+.rs-btn::after{content:attr(data-tip);position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,.8);color:#fff;font-family:var(--font);font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:100;}
+.rs-btn:hover::after{opacity:1;}
+.rs-sep{width:26px;height:1px;background:rgba(255,255,255,0.1);margin:4px 0;flex-shrink:0;}
+.rs-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
+.rs-profile{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#38C4F2,#253E7A);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;
+  cursor:pointer;border:2px solid rgba(255,255,255,0.2);}
+.rs-teacher{display:none;}[data-mode="teacher"] .rs-teacher{display:flex;}
+/* Course-active icons (hidden when on school view) */
+.rs-course-only{display:none;}
+[data-view="course"] .rs-course-only{display:flex;}
+
+/* ══ MAIN CONTENT ══ */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+
+/* ── HERO (compact — first row must be above fold) ── */
+.hero{
+  position:relative;padding:28px 32px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--primary) 0%,color-mix(in srgb,var(--primary),var(--accent) 30%) 100%);
+  display:flex;align-items:center;gap:24px;overflow:hidden;
+}
+.hero::before{content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='40' cy='40' r='24'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+.hero-text{position:relative;flex:1;z-index:2;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:var(--r-full);
+  background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);color:#fff;font-size:11px;font-weight:700;margin-bottom:10px;}
+.hero-badge svg{width:13px;height:13px;}
+.hero-title{font-family:var(--font-brand);font-size:26px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:8px;}
+.hero-desc{font-size:13.5px;color:rgba(255,255,255,0.75);line-height:1.6;max-width:480px;margin-bottom:14px;}
+.hero-actions{display:flex;gap:8px;margin-bottom:12px;}
+.hero-btn{padding:9px 22px;border-radius:var(--r-full);font-family:var(--font);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .2s;border:none;display:flex;align-items:center;gap:6px;}
+.hero-btn svg{width:14px;height:14px;}
+.hero-btn.primary{background:#fff;color:var(--primary);box-shadow:0 3px 14px rgba(0,0,0,0.12);}
+.hero-btn.primary:hover{transform:translateY(-2px);box-shadow:0 5px 20px rgba(0,0,0,0.18);}
+.hero-btn.secondary{background:rgba(255,255,255,0.1);color:#fff;border:1.5px solid rgba(255,255,255,0.25);}
+.hero-btn.secondary:hover{background:rgba(255,255,255,0.18);}
+.hero-stats{display:flex;gap:22px;}
+.hero-stat{text-align:center;}
+.hero-stat strong{display:block;font-family:var(--font-brand);font-size:18px;font-weight:700;color:#fff;}
+.hero-stat span{font-size:10px;color:rgba(255,255,255,0.55);}
+/* Hero video */
+.hero-video{position:relative;width:340px;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;
+  flex-shrink:0;z-index:2;box-shadow:0 8px 32px rgba(0,0,0,0.3);cursor:pointer;}
+.hero-video img{width:100%;height:100%;object-fit:cover;display:block;}
+.hero-video-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.15);transition:background .2s;}
+.hero-video:hover .hero-video-play{background:rgba(0,0,0,0.25);}
+.hero-video-play-btn{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.92);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.25);
+  transition:transform .2s;}
+.hero-video:hover .hero-video-play-btn{transform:scale(1.08);}
+.hero-video-play-btn svg{width:20px;height:20px;color:var(--primary);margin-right:-2px;}
+.hero-video-label{position:absolute;bottom:10px;right:10px;padding:3px 10px;border-radius:var(--r-full);
+  background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);color:#fff;font-size:10.5px;font-weight:700;}
+
+/* ── CONTENT ── */
+.content{padding:20px 28px 40px;}
+.cat-bar{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
+.cat-btn{padding:6px 14px;border-radius:var(--r-full);border:1.5px solid var(--border);
+  background:var(--surface);font-family:var(--font);font-size:12px;font-weight:700;
+  color:var(--text-sub);cursor:pointer;transition:all .15s;}
+.cat-btn:hover{border-color:var(--accent);color:var(--primary);}
+.cat-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.sec-title{font-family:var(--font-brand);font-size:19px;font-weight:700;color:var(--primary);}
+
+/* ── COURSE CARDS — compact to fit first row above fold ── */
+.courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+@media(max-width:1024px){.courses-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:640px){.courses-grid{grid-template-columns:1fr;}}
+.course-card{
+  background:var(--surface);border-radius:var(--r);border:1px solid var(--border);
+  overflow:hidden;box-shadow:var(--sh);transition:all .25s;cursor:pointer;
+  display:flex;flex-direction:column;text-decoration:none;color:inherit;
+}
+.course-card:hover{transform:translateY(-3px);box-shadow:var(--sh-lg);border-color:var(--border-mid);}
+/* Teacher: drag handle overlay */
+.cc-drag{display:none;position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:6px;
+  background:var(--amber);align-items:center;justify-content:center;cursor:grab;z-index:3;}
+[data-mode="teacher"] .cc-drag{display:flex;}
+.cc-drag svg{width:11px;height:11px;color:#fff;}
+.cc-thumb{position:relative;aspect-ratio:16/9;overflow:hidden;}
+.cc-thumb-bg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.cc-thumb-bg.g1{background:linear-gradient(135deg,#253E7A,#38C4F2);}
+.cc-thumb-bg.g2{background:linear-gradient(135deg,#F05680,#253E7A);}
+.cc-thumb-bg.g3{background:linear-gradient(135deg,#22c55e,#253E7A);}
+.cc-thumb-bg.g4{background:linear-gradient(135deg,#EAD654,#F59E0B);}
+.cc-thumb-bg.g5{background:linear-gradient(135deg,#8b5cf6,#253E7A);}
+.cc-thumb-bg.g6{background:linear-gradient(135deg,#38C4F2,#22c55e);}
+.cc-thumb-num{font-family:var(--font-brand);font-size:44px;font-weight:700;color:rgba(255,255,255,0.18);}
+.cc-badge{position:absolute;top:10px;right:10px;padding:3px 9px;border-radius:var(--r-full);
+  font-size:10px;font-weight:700;backdrop-filter:blur(8px);}
+.cc-badge.new{background:var(--cta);color:#fff;}
+.cc-badge.popular{background:rgba(255,255,255,0.9);color:var(--primary);}
+.cc-badge.free{background:rgba(34,197,94,0.9);color:#fff;}
+/* Teacher draft badge */
+.cc-draft{display:none;position:absolute;top:10px;left:10px;padding:3px 9px;border-radius:var(--r-full);
+  font-size:10px;font-weight:700;background:var(--amber);color:#fff;}
+[data-mode="teacher"] .cc-draft{display:block;}
+.cc-price{position:absolute;bottom:10px;left:10px;padding:4px 10px;border-radius:var(--r-sm);
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);color:#fff;font-family:var(--font-brand);
+  font-size:14px;font-weight:700;}
+.cc-price.free{background:rgba(34,197,94,0.85);}
+.cc-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;}
+.cc-category{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--accent);margin-bottom:5px;}
+.cc-title{font-family:var(--font-brand);font-size:15px;font-weight:700;color:var(--primary);
+  line-height:1.3;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.cc-desc{font-size:12px;color:var(--text-xs);line-height:1.5;margin-bottom:10px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.cc-meta{display:flex;gap:10px;font-size:11px;color:var(--text-xs);margin-top:auto;padding-top:10px;border-top:1px solid var(--border);}
+.cc-meta-item{display:flex;align-items:center;gap:3px;}
+.cc-meta-item svg{width:12px;height:12px;}
+.cc-rating{display:flex;align-items:center;gap:2px;margin-right:auto;}
+.cc-rating svg{width:11px;height:11px;color:#FBBF24;}
+.cc-rating span{font-size:11px;font-weight:700;color:var(--text-sub);}
+.cc-cta{display:flex;align-items:center;justify-content:center;gap:5px;
+  padding:9px;margin:0 16px 14px;border-radius:var(--r-sm);
+  background:var(--primary-light);color:var(--primary);
+  font-family:var(--font);font-size:12px;font-weight:700;
+  border:none;cursor:pointer;transition:all .18s;}
+.cc-cta:hover{background:var(--primary);color:#fff;}
+.cc-cta svg{width:12px;height:12px;}
+/* Enrolled state */
+.course-card.enrolled{border-color:var(--accent);border-width:1.5px;}
+.course-card.enrolled .cc-cta{background:var(--accent);color:#fff;}
+.course-card.enrolled .cc-cta:hover{background:var(--primary);color:#fff;}
+.cc-enrolled-badge{display:none;position:absolute;top:10px;left:10px;padding:3px 9px;border-radius:var(--r-full);
+  font-size:10px;font-weight:700;background:rgba(34,197,94,0.9);color:#fff;backdrop-filter:blur(8px);
+  align-items:center;gap:4px;z-index:2;}
+.course-card.enrolled .cc-enrolled-badge{display:inline-flex;}
+.cc-enrolled-badge svg{width:10px;height:10px;}
+/* Progress bar */
+.cc-progress{display:none;margin:0 16px;padding:0 0 10px;}
+.course-card.enrolled .cc-progress{display:block;}
+.cc-progress-bar{height:4px;border-radius:2px;background:var(--border);overflow:hidden;}
+.cc-progress-fill{height:100%;border-radius:2px;background:var(--accent);transition:width .4s ease;}
+.cc-progress-text{display:flex;justify-content:space-between;font-size:10px;color:var(--text-xs);margin-top:4px;font-weight:600;}
+
+/* Teacher actions on card */
+.cc-teacher{display:none;margin:0 16px 14px;gap:6px;}
+[data-mode="teacher"] .cc-teacher{display:flex;}
+.cc-ta{flex:1;padding:7px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;
+  font-family:var(--font);font-size:11px;font-weight:700;color:var(--text-sub);cursor:pointer;
+  transition:all .15s;display:flex;align-items:center;justify-content:center;gap:4px;}
+.cc-ta:hover{background:var(--surface-2);color:var(--primary);}
+.cc-ta svg{width:11px;height:11px;}
+.cc-ta.danger:hover{background:rgba(240,86,128,0.1);color:var(--cta);}
+
+/* ── INSTRUCTOR SECTION ── */
+.instructor-section{margin-top:28px;padding:24px;background:var(--surface);border-radius:var(--r);
+  border:1px solid var(--border);box-shadow:var(--sh);display:flex;align-items:center;gap:20px;}
+.inst-avatar{width:64px;height:64px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--primary));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-brand);font-size:22px;font-weight:700;color:#fff;}
+.inst-info{flex:1;}
+.inst-name{font-family:var(--font-brand);font-size:17px;font-weight:700;color:var(--primary);margin-bottom:4px;}
+.inst-bio{font-size:13px;color:var(--text-sub);line-height:1.6;margin-bottom:10px;}
+.inst-stats{display:flex;gap:18px;}
+.inst-stat{text-align:center;}
+.inst-stat strong{display:block;font-family:var(--font-brand);font-size:16px;font-weight:700;color:var(--primary);}
+.inst-stat span{font-size:10px;color:var(--text-xs);}
+
+/* Teacher: add course button */
+.add-course-btn{display:none;align-items:center;justify-content:center;gap:8px;
+  padding:12px;border-radius:var(--r);border:2px dashed rgba(245,158,11,0.3);
+  background:rgba(245,158,11,0.04);color:var(--amber);font-family:var(--font);
+  font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;margin-top:18px;}
+[data-mode="teacher"] .add-course-btn{display:flex;}
+.add-course-btn:hover{background:rgba(245,158,11,0.1);border-color:var(--amber);}
+.add-course-btn svg{width:16px;height:16px;}
+
+/* ── FOOTER ── */
+.footer{margin-top:auto;padding:20px 28px;background:var(--surface-2);border-top:1px solid var(--border);
+  text-align:center;flex-shrink:0;}
+.footer-name{font-family:var(--font-brand);font-size:13px;font-weight:600;color:var(--text-sub);margin-bottom:4px;}
+.footer-copy{font-size:11px;color:var(--text-xs);}
+.footer-powered{margin-top:8px;font-size:10.5px;color:var(--text-xs);display:flex;align-items:center;justify-content:center;gap:4px;}
+.footer-powered img{height:14px;opacity:.4;}
+
+/* Strip popups */
+.strip-popup{display:none;position:fixed;bottom:60px;right:60px;z-index:200;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh-lg);min-width:200px;padding:8px;}
+.strip-popup.open{display:block;}
+.sp-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text-xs);padding:6px 10px 8px;}
+.sp-item{display:flex;align-items:center;gap:8px;width:100%;padding:9px 10px;border:none;background:transparent;border-radius:var(--r-sm);font-family:var(--font);font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all .12s;text-align:right;}
+.sp-item:hover{background:var(--surface-2);}
+.sp-item svg{width:16px;height:16px;color:var(--text-sub);flex-shrink:0;}
+.sp-divider{height:1px;background:var(--border);margin:4px 0;}
+.sp-profile-header{display:flex;align-items:center;gap:10px;padding:10px 10px 6px;}
+.sp-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#38C4F2,#253E7A);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.sp-name{font-size:13px;font-weight:800;color:var(--text);}
+.sp-email{font-size:11px;color:var(--text-xs);}
+
+/* ── Dark mode headings ── */
+[data-theme="dark"] .page-title{color:#fff;}
+[data-theme="dark"] .page-section-title{color:#e8edf7;}
+[data-theme="dark"] .fc-title{color:var(--text);}
+[data-theme="dark"] .testi-quote{color:var(--text);}
+[data-theme="dark"] .testi-name{color:var(--text);}
+[data-theme="dark"] .ql-title{color:var(--text);}
+[data-theme="dark"] .pop-title{color:#fff;}
+[data-theme="dark"] .stat-val{color:#e8edf7;}
+[data-theme="dark"] .about-inst-name{color:#fff;}
+[data-theme="dark"] .about-stat strong{color:#e8edf7;}
+[data-theme="dark"] h1{color:#fff;}
+[data-theme="dark"] h2{color:var(--accent);}
+[data-theme="dark"] .tb-name{color:#e8edf7;}
+[data-theme="dark"] .faq-q{color:var(--text);}
+[data-theme="dark"] .form-label{color:var(--text);}
+/* ── Hover transitions ── */
+.tb-link{transition:all .18s;}
+.faq-q{transition:background .15s;}
+.faq-item{transition:border-color .15s;}
+.faq-item:hover{border-color:var(--border-mid);}
+.testi-card{transition:all .2s;}
+.testi-card:hover{transform:translateY(-2px);box-shadow:var(--sh-lg);}
+.ql-card{transition:all .2s;}
+.feature-card{transition:all .2s;}
+.stats-bar{transition:all .2s;}
+/* ── Accessibility ── */
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}
+}
+/* Focus states */
+.rs-btn:focus-visible,.tb-link:focus-visible,.ib:focus-visible,.cat-btn:focus-visible,
+.cc-cta:focus-visible,.hero-btn:focus-visible,.home-hero-btn:focus-visible,
+.nav-btn:focus-visible,.faq-q:focus-visible,.form-submit:focus-visible,
+.mp:focus-visible,.tb-cta:focus-visible,.eb-btn:focus-visible,.eb-pub:focus-visible,
+.ql-card:focus-visible,.feature-card:focus-visible,.course-card:focus-visible,
+a:focus-visible,button:focus-visible{
+  outline:2.5px solid var(--accent);outline-offset:2px;
+}
+/* cursor-pointer on all interactive */
+a,button,.course-card,.cc-cta,.cat-btn,.tb-link,.faq-q,.ql-card,.feature-card,
+.pop-card,.testi-card,.home-hero-video,.rs-btn,.rs-profile,.ib,.mp,.tb-cta,
+.eb-btn,.eb-pub,.form-submit,.hero-btn,.home-hero-btn,.cc-ta{cursor:pointer;}
+</style>
+<script>(function(){var t=localStorage.getItem("wb-theme");if(t)document.documentElement.dataset.theme=t;})()</script>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+  <div class="tb-right">
+    <a href="בית ספר - בית.html" class="tb-name" style="text-decoration:none;">אלון גבאי | שיווק ויצירת תוכן</a>
+    <div class="tb-links">
+      <button class="tb-link active">הקורסים שלנו</button>
+      <button class="tb-link">אודות</button>
+      <button class="tb-link">שאלות נפוצות</button>
+      <button class="tb-link">צור קשר</button>
+    </div>
+    <span class="edit-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>מצב עריכה</span>
+  </div>
+  <div class="tb-left">
+    <button class="ib" aria-label="מצב לילה" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('wb-theme',document.documentElement.dataset.theme)">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <div class="mode-pill">
+      <button class="mp s on" onclick="setMode('student')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>תלמיד</button>
+      <button class="mp t" onclick="setMode('teacher')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>מרצה</button>
+    </div>
+    <button class="tb-cta">התחבר</button>
+  </div>
+</header>
+
+<!-- ══ EDIT BANNER ══ -->
+<div class="edit-banner">
+  <div class="eb-l">
+    <div class="eb-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>מצב עריכה — בית ספר</div>
+    <span class="eb-info">גרור קורסים לשינוי סדר · לחץ על כרטיס לעריכה</span>
+  </div>
+  <div class="eb-r">
+    <button class="eb-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>תצוגה מקדימה</button>
+    <button class="eb-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>הגדרות בית ספר</button>
+    <button class="eb-pub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>פרסם שינויים</button>
+  </div>
+</div>
+
+<!-- ══ BODY ══ -->
+<div class="body-wrap">
+
+  <!-- RIGHT STRIP -->
+  <nav class="right-strip">
+    <div class="rs-logo"><img src="../../LOGO/LOGO PNG/אייקון בהיר בלי רקע.png" alt="WHITEBOARD" width="28" height="28" style="opacity:.9"></div>
+    <div class="rs-icons">
+      <!-- School nav -->
+      <a class="rs-btn" href="בית ספר - בית.html" data-tip="בית ספר" aria-label="בית ספר"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></a>
+      <a class="rs-btn rs-active" href="בית ספר - קלאסי.html" data-tip="הקורסים שלי" aria-label="הקורסים שלי"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></a>
+      <a class="rs-btn" href="בית ספר - אודות.html" data-tip="אודות" aria-label="אודות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+      <a class="rs-btn" href="בית ספר - שאלות נפוצות.html" data-tip="שאלות נפוצות" aria-label="שאלות נפוצות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></a>
+      <a class="rs-btn" href="בית ספר - צור קשר.html" data-tip="צור קשר" aria-label="צור קשר"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
+      <div class="rs-sep"></div>
+      <!-- Course-active icons (show only when inside a course) -->
+      <button class="rs-btn rs-course-only" data-tip="סילבוס" aria-label="סילבוס"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
+      <button class="rs-btn rs-course-only" data-tip="הפתקים שלי" aria-label="הפתקים שלי"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></button>
+      <button class="rs-btn rs-course-only" data-tip="BOARDi" aria-label="BOARDi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+      <!-- Teacher-only -->
+      <button class="rs-btn rs-teacher" data-tip="ערכת מותג" aria-label="ערכת מותג"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10 1.1 0 2-.9 2-2 0-.54-.21-1.03-.54-1.4-.32-.36-.52-.85-.52-1.36 0-1.1.9-2 2-2h2.34C19.85 15.24 22 13.76 22 12c0-5.52-4.48-10-10-10z"/><circle cx="6.5" cy="11.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="9.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="14.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="17.5" cy="11.5" r="1.5" fill="currentColor" stroke="none"/></svg></button>
+      <button class="rs-btn rs-teacher" data-tip="אנליטיקס" aria-label="אנליטיקס"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button>
+    </div>
+    <div class="rs-bottom">
+      <button class="rs-btn" data-tip="הגדרות" onclick="toggleSettingsPopup(event)" aria-label="הגדרות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      <div class="rs-profile" onclick="toggleProfilePopup(event)">א</div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- PAGE HEADER — instructor + title -->
+    <div style="padding:24px 28px 0;display:flex;align-items:center;gap:16px;">
+      <div style="width:48px;height:48px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--accent),var(--primary));display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-size:16px;font-weight:700;color:#fff;border:2.5px solid var(--accent-light);">א</div>
+      <div>
+        <h1 style="font-family:var(--font-brand);font-size:20px;font-weight:700;color:var(--primary);margin-bottom:2px;">אלון גבאי · הקורסים שלנו</h1>
+        <p style="font-size:12.5px;color:var(--text-sub);line-height:1.5;">יוצר תוכן, מרצה לשיווק דיגיטלי ומלווה מותגים · 6 קורסים · 52 שיעורים · 4.8 דירוג</p>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+      <div class="cat-bar">
+        <button class="cat-btn active">הכל (6)</button>
+        <button class="cat-btn">שיווק דיגיטלי</button>
+        <button class="cat-btn">צילום ועריכה</button>
+        <button class="cat-btn">מותג אישי</button>
+        <button class="cat-btn">רשתות חברתיות</button>
+      </div>
+
+      <div class="courses-grid">
+        <!-- Course 1 — enrolled -->
+        <div class="course-card enrolled">
+          <div class="cc-thumb"><div class="cc-thumb-bg g1"><span class="cc-thumb-num">1</span></div>
+            <div class="cc-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="19" r="1" fill="currentColor"/><circle cx="15" cy="5" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="19" r="1" fill="currentColor"/></svg></div>
+            <div class="cc-badge popular">פופולרי</div>
+            <div class="cc-enrolled-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>נרשמת</div></div>
+          <div class="cc-body">
+            <div class="cc-category">שיווק דיגיטלי</div>
+            <div class="cc-title">השקת הזהב — קורס שיווק דיגיטלי מקיף</div>
+            <div class="cc-desc">קורס על השיווק שהכניס 52,631 ש"ח ב-24 שעות.</div>
+            <div class="cc-meta">
+              <div class="cc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>14 שיעורים</div>
+              <div class="cc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>6.5 שעות</div>
+              <div class="cc-rating"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>4.9</span></div>
+            </div>
+          </div>
+          <div class="cc-progress"><div class="cc-progress-bar"><div class="cc-progress-fill" style="width:65%"></div></div><div class="cc-progress-text"><span>65% הושלמו</span><span>9/14 שיעורים</span></div></div>
+          <button class="cc-cta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>המשך ללמוד</button>
+          <div class="cc-teacher"><button class="cc-ta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>ערוך</button><button class="cc-ta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>סטטיסטיקות</button><button class="cc-ta danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>מחק</button></div>
+        </div>
+
+        <!-- Course 2 — enrolled -->
+        <div class="course-card enrolled">
+          <div class="cc-thumb"><div class="cc-thumb-bg g2"><span class="cc-thumb-num">2</span></div>
+            <div class="cc-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="19" r="1" fill="currentColor"/><circle cx="15" cy="5" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="19" r="1" fill="currentColor"/></svg></div>
+            <div class="cc-badge new">חדש</div>
+            <div class="cc-enrolled-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>נרשמת</div></div>
+          <div class="cc-body">
+            <div class="cc-category">צילום ועריכה</div>
+            <div class="cc-title">כריזמה מול המצלמה</div>
+            <div class="cc-desc">איך לעמוד מול מצלמה ולדבר בביטחון.</div>
+            <div class="cc-meta">
+              <div class="cc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>10 שיעורים</div>
+              <div class="cc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>4 שעות</div>
+              <div class="cc-rating"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>4.8</span></div>
+            </div>
+          </div>
+          <div class="cc-progress"><div class="cc-progress-bar"><div class="cc-progress-fill" style="width:20%"></div></div><div class="cc-progress-text"><span>20% הושלמו</span><span>2/10 שיעורים</span></div></div>
+          <button class="cc-cta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>המשך ללמוד</button>
+          <div class="cc-teacher"><button class="cc-ta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>ערוך</button><button class="cc-ta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>סטטיסטיקות</button><button class="cc-ta danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>מחק</button></div>
+        </div>
+
+        <!-- Course 3 -->
+        <div class="course-card">
+          <div class="cc-thumb"><div class="cc-thumb-bg g3"><span class="cc-thumb-num">3</span></div>
+            <div class="cc-drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="19" r="1" fill="currentColor"/><circle cx="15" cy="5" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="19" r="1" fill="currentColor"/></svg></div>
+            <div class="cc-price">₪179</div></div>
+          <div class="cc-body">
+            <div class="cc-category">צילום ועריכה</div>
+            <div class="cc-title">עריכת וידאו בהילוך מהיר</div>
+            <div class="cc-desc">כלי AI לעריכה מהירה וקבלת תוצאות ברמה גבוהה.</div>
+            <div class="cc-meta">
+              <div class="cc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>8 שיעורים</div>
+              <div class="cc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>3 שעות</div>
+              <div class="cc-rating"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>4.7</span></div>
+            </div>
+          </div>
+          <button class="cc-cta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>רכוש קורס</button>
+          <div class="cc-teacher"><button class="cc-ta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>ערוך</button><button class="cc-ta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>סטטיסטיקות</button><button class="cc-ta danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>מחק</button></div>
+        </div>
+      </div>
+
+      <!-- Second row (scrollable) -->
+      <div class="courses-grid" style="margin-top:18px;">
+        <div class="course-card">
+          <div class="cc-thumb"><div class="cc-thumb-bg g4"><span class="cc-thumb-num">4</span></div><div class="cc-badge free">חינם</div><div class="cc-price free">חינם</div></div>
+          <div class="cc-body"><div class="cc-category">מותג אישי</div><div class="cc-title">בניית מותג אישי — ממאפס למותג</div><div class="cc-desc">קורס מתנה — הבסיס של בניית מותג חזק.</div>
+            <div class="cc-meta"><div class="cc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>5 שיעורים</div><div class="cc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>1.5 שעות</div><div class="cc-rating"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>4.9</span></div></div></div>
+          <button class="cc-cta" style="background:rgba(34,197,94,0.08);color:#16a34a;">התחל בחינם</button>
+          <div class="cc-teacher"><button class="cc-ta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>ערוך</button><button class="cc-ta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>סטטיסטיקות</button></div>
+        </div>
+        <div class="course-card">
+          <div class="cc-thumb"><div class="cc-thumb-bg g5"><span class="cc-thumb-num">5</span></div><div class="cc-price">₪299</div></div>
+          <div class="cc-body"><div class="cc-category">רשתות חברתיות</div><div class="cc-title">אינסטגרם למתקדמים — Reels & Growth</div><div class="cc-desc">אסטרטגיות צמיחה אורגנית ויצירת Reels וירליים.</div>
+            <div class="cc-meta"><div class="cc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>12 שיעורים</div><div class="cc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>5 שעות</div><div class="cc-rating"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>4.6</span></div></div></div>
+          <button class="cc-cta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>רכוש קורס</button>
+          <div class="cc-teacher"><button class="cc-ta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>ערוך</button><button class="cc-ta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>סטטיסטיקות</button></div>
+        </div>
+        <div class="course-card">
+          <div class="cc-thumb"><div class="cc-thumb-bg g6"><span class="cc-thumb-num">6</span></div><div class="cc-price">₪349<small style="font-size:10px;opacity:.7;margin-right:2px;"> / חבילה</small></div></div>
+          <div class="cc-body"><div class="cc-category">שיווק דיגיטלי</div><div class="cc-title">חבילת הכל כלול — כל הקורסים</div><div class="cc-desc">גישה לכל 6 הקורסים במחיר מוזל.</div>
+            <div class="cc-meta"><div class="cc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>52 שיעורים</div><div class="cc-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>20+ שעות</div><div class="cc-rating"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>4.8</span></div></div></div>
+          <button class="cc-cta" style="background:var(--cta-light);color:var(--cta);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>רכוש חבילה</button>
+          <div class="cc-teacher"><button class="cc-ta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>ערוך</button><button class="cc-ta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>סטטיסטיקות</button></div>
+        </div>
+      </div>
+
+      <!-- Add course (teacher) -->
+      <button class="add-course-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>הוסף קורס חדש</button>
+
+      <!-- Instructor -->
+      <div class="instructor-section">
+        <div class="inst-avatar">א</div>
+        <div class="inst-info">
+          <div class="inst-name">אלון גבאי</div>
+          <div class="inst-bio">יוצר תוכן, מרצה לשיווק דיגיטלי ומלווה מותגים בבניית נוכחות אונליין. מעל 10 שנות ניסיון.</div>
+          <div class="inst-stats">
+            <div class="inst-stat"><strong>6</strong><span>קורסים</span></div>
+            <div class="inst-stat"><strong>1,240</strong><span>תלמידים</span></div>
+            <div class="inst-stat"><strong>4.8</strong><span>דירוג</span></div>
+            <div class="inst-stat"><strong>52</strong><span>שיעורים</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-name">אלון גבאי | שיווק ויצירת תוכן</div>
+      <div class="footer-copy">כל הזכויות שמורות © 2026</div>
+      <div class="footer-powered">Powered by <img src="../../LOGO/LOGO PNG/אייקון בהיר בלי רקע.png" alt="WB" width="14" height="14" onerror="this.outerHTML='WHITEBOARD'"> WHITEBOARD</div>
+    </footer>
+  </main>
+</div>
+
+<!-- Popups -->
+<div class="strip-popup" id="settingsPopup">
+  <div class="sp-title">הגדרות</div>
+  <button class="sp-item" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('wb-theme',document.documentElement.dataset.theme);closePopups()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>מצב לילה</button>
+  <button class="sp-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>התראות</button>
+</div>
+<div class="strip-popup" id="profilePopup">
+  <div class="sp-profile-header"><div class="sp-avatar">א</div><div><div class="sp-name">אלון גבאי</div><div class="sp-email">alon@email.com</div></div></div>
+  <div class="sp-divider"></div>
+  <button class="sp-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>הפרופיל שלי</button>
+  <button class="sp-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>התנתק</button>
+</div>
+
+<script>
+function setMode(m){
+  document.documentElement.dataset.mode=m;
+  document.querySelectorAll('.mp').forEach(b=>b.classList.remove('on'));
+  document.querySelector('.mp.'+m[0]).classList.add('on');
+}
+function toggleSettingsPopup(e){e&&e.stopPropagation();document.getElementById('profilePopup').classList.remove('open');document.getElementById('settingsPopup').classList.toggle('open');}
+function toggleProfilePopup(e){e&&e.stopPropagation();document.getElementById('settingsPopup').classList.remove('open');document.getElementById('profilePopup').classList.toggle('open');}
+function closePopups(){document.getElementById('settingsPopup').classList.remove('open');document.getElementById('profilePopup').classList.remove('open');}
+document.addEventListener('click',function(e){if(!e.target.closest('.strip-popup')&&!e.target.closest('.rs-bottom'))closePopups();});
+document.querySelectorAll('.cat-btn').forEach(b=>b.onclick=function(){document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active'));this.classList.add('active');});
+document.querySelectorAll('.tb-link').forEach(b=>b.onclick=function(){
+  var pages={'בית':'בית ספר - בית.html','הקורסים שלנו':'בית ספר - קלאסי.html','אודות':'בית ספר - אודות.html','שאלות נפוצות':'בית ספר - שאלות נפוצות.html','צור קשר':'בית ספר - צור קשר.html'};
+  if(pages[this.textContent])window.location.href=pages[this.textContent];
+});
+</script>
+</body>
+</html>

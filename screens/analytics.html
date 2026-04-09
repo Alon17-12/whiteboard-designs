@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>אנליטיקס | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+    --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+    --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+    --font-he:'Heebo',sans-serif;
+    --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+    --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+    --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+    --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --sidebar-bg:var(--navy);--sidebar-text:rgba(255,255,255,0.65);
+    --sidebar-hover:rgba(255,255,255,0.08);--sidebar-active-bg:rgba(56,196,242,0.2);
+    --sidebar-active-cl:var(--cyan);--sidebar-border:rgba(255,255,255,0.1);
+  }
+  [data-theme="dark"] {
+    --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+    --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+    --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+    --light-blue:rgba(56,196,242,0.08);--sidebar-bg:#0d1628;
+    --sidebar-text:rgba(255,255,255,0.55);--sidebar-hover:rgba(255,255,255,0.06);
+    --sidebar-active-bg:rgba(56,196,242,0.15);--sidebar-border:rgba(255,255,255,0.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;transition:background .3s,color .3s;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{width:220px;background:var(--sidebar-bg);border-left:1px solid var(--sidebar-border);min-height:100vh;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;position:fixed;right:0;top:0;bottom:0;z-index:50;}
+  .sidebar-logo{padding:16px 16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
+  .sidebar-logo img{width:150px;object-fit:contain;}
+  .sidebar-section{padding:8px 12px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--sidebar-text);font-size:14px;font-weight:500;}
+  .nav-item:hover{background:var(--sidebar-hover);color:white;}
+  .nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-cl);font-weight:700;}
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;}
+  .sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);}
+  .mode-switcher-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
+  .mode-toggle-row{display:flex;background:rgba(0,0,0,0.25);border-radius:8px;padding:3px;gap:2px;}
+  .mode-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 4px;border-radius:6px;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.45);background:transparent;white-space:nowrap;}
+  .mode-btn svg{width:13px;height:13px;}
+  .mode-btn.active{background:rgba(56,196,242,0.25);color:var(--cyan);}
+  .profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;margin-top:10px;}
+  .profile-mini:hover{background:rgba(255,255,255,0.08);}
+  .avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+  .profile-mini-name{font-size:13px;font-weight:600;color:white;}
+  .profile-mini-role{font-size:11px;color:rgba(255,255,255,0.45);}
+  .profile-edit-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.4);flex-shrink:0;margin-right:auto;}
+  .profile-edit-btn svg{width:13px;height:13px;}
+
+  /* ── MAIN ── */
+  .main{margin-right:220px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+  /* ── TOPBAR ── */
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:var(--shadow-sm);}
+  .topbar-breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .breadcrumb-link{color:var(--text-sub);cursor:pointer;transition:color .2s;}
+  .breadcrumb-link:hover{color:var(--text-main);}
+  .breadcrumb-sep{color:var(--text-light);}
+  .breadcrumb-current{color:var(--text-main);font-weight:700;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;}
+  .icon-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+  .icon-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .icon-sun{display:none;}.icon-moon{display:block;}
+  [data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:30px;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:none;white-space:nowrap;}
+  .btn svg{width:15px;height:15px;}
+  .btn-ghost{background:transparent;color:var(--text-sub);border:1.5px solid var(--border);}
+  .btn-ghost:hover{background:var(--light-blue);color:var(--text-main);border-color:var(--cyan);}
+
+  /* date range pill */
+  .date-range-wrap{position:relative;}
+  .date-range{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:30px;border:1.5px solid var(--border);background:var(--surface);font-size:13px;font-weight:600;color:var(--text-main);cursor:pointer;transition:all .2s;user-select:none;}
+  .date-range:hover,.date-range.open{border-color:var(--cyan);background:var(--light-blue);}
+  .date-range svg{width:14px;height:14px;color:var(--text-sub);}
+  .date-range-chevron{transition:transform .2s;}
+  .date-range.open .date-range-chevron{transform:rotate(180deg);}
+  .date-range-dropdown{position:absolute;top:calc(100% + 8px);left:0;min-width:200px;background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);box-shadow:var(--shadow-md);padding:6px;z-index:100;display:none;animation:fadeDropdown .15s ease;}
+  .date-range-dropdown.open{display:block;}
+  .date-range-opt{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--text-main);cursor:pointer;transition:background .15s;}
+  .date-range-opt:hover{background:var(--light-blue);}
+  .date-range-opt.selected{color:var(--cyan);background:var(--cyan-light);}
+  .date-range-opt.selected::after{content:'✓';margin-right:auto;font-size:12px;}
+  .date-range-sep{height:1px;background:var(--border);margin:4px 0;}
+  @keyframes fadeDropdown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ── COURSE HEADER ── */
+  .course-header{background:var(--surface);border-bottom:1px solid var(--border);padding:20px 32px 0;position:relative;overflow:hidden;}
+  .course-title-row{display:flex;align-items:center;margin-bottom:16px;gap:14px;}
+  .course-icon{width:48px;height:48px;border-radius:var(--radius-sm);background:linear-gradient(135deg,#0d1b3e,#253E7A);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .course-icon svg{width:22px;height:22px;color:rgba(255,255,255,0.8);}
+  .course-name{font-size:20px;font-weight:900;color:var(--text-main);}
+  .course-meta-row{display:flex;align-items:center;gap:16px;margin-top:3px;}
+  .course-badge{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;background:rgba(125,197,122,0.15);color:#3d8a3a;border:1px solid rgba(125,197,122,0.3);}
+  .course-stat{font-size:12px;color:var(--text-sub);display:flex;align-items:center;gap:4px;}
+  .course-stat svg{width:13px;height:13px;}
+  .course-tabs{display:flex;gap:4px;overflow-x:auto;}
+  .tab{display:flex;align-items:center;gap:6px;padding:10px 15px;font-size:13px;font-weight:600;color:var(--text-sub);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;}
+  .tab:hover{color:var(--text-main);}
+  .tab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+  .tab svg{opacity:.6;width:15px;height:15px;}
+  .tab.active svg{opacity:1;}
+
+  /* ── PAGE CONTENT ── */
+  .page-content{padding:28px 32px;display:flex;flex-direction:column;gap:20px;}
+
+  /* ── STAT CARDS ── */
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .stat-card{background:var(--surface);border-radius:var(--radius-md);padding:22px 22px 18px;border:1px solid var(--border);box-shadow:var(--shadow-sm);display:flex;align-items:flex-start;gap:16px;
+    opacity:0;transform:translateY(20px);
+    transition:opacity .5s ease, transform .5s ease, box-shadow .2s;}
+  .stat-card.visible{opacity:1;transform:translateY(0);}
+  .stat-card:hover{box-shadow:var(--shadow-md);}
+  .stat-icon{width:46px;height:46px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .stat-icon svg{width:21px;height:21px;}
+  .stat-content{flex:1;}
+  .stat-num{font-size:28px;font-weight:900;color:var(--text-main);line-height:1;font-variant-numeric:tabular-nums;}
+  .stat-label{font-size:12px;color:var(--text-sub);margin-top:4px;}
+  .stat-delta{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;margin-top:6px;padding:2px 8px;border-radius:20px;}
+  .delta-up{background:rgba(125,197,122,0.12);color:#3a8838;}
+  .delta-down{background:rgba(240,86,128,0.1);color:#d62a5e;}
+  .delta-neutral{background:var(--surface-2);color:var(--text-sub);}
+
+  /* ── CHART CARDS ── */
+  .charts-row{display:grid;grid-template-columns:1fr 340px;gap:16px;}
+  .charts-row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .chart-card{background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);box-shadow:var(--shadow-sm);padding:22px 24px;
+    opacity:0;transform:translateY(24px);
+    transition:opacity .55s ease, transform .55s ease;}
+  .chart-card.visible{opacity:1;transform:translateY(0);}
+  .chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+  .chart-title{font-size:14px;font-weight:900;color:var(--text-main);}
+  .chart-subtitle{font-size:11px;color:var(--text-sub);margin-top:2px;}
+  .chart-legend{display:flex;align-items:center;gap:12px;}
+  .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-sub);font-weight:600;}
+  .legend-dot{width:8px;height:8px;border-radius:50%;}
+
+  /* ── SVG AREA CHART ── */
+  .svg-chart-wrap{width:100%;overflow:hidden;border-radius:var(--radius-sm);}
+  .area-chart{width:100%;height:180px;}
+  .chart-path{fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+  .chart-path.animate{stroke-dasharray:1000;stroke-dashoffset:1000;animation:drawLine 1.4s cubic-bezier(.4,0,.2,1) forwards;}
+  .chart-area{opacity:0;animation:fadeArea .8s ease .8s forwards;}
+  .chart-x-labels{display:flex;justify-content:space-between;margin-top:8px;padding:0 2px;}
+  .chart-x-label{font-size:10px;color:var(--text-light);font-weight:600;}
+
+  @keyframes drawLine{to{stroke-dashoffset:0;}}
+  @keyframes fadeArea{to{opacity:.15;}}
+
+  /* ── POPULAR LESSONS LIST ── */
+  .lesson-list{display:flex;flex-direction:column;gap:10px;}
+  .lesson-row{display:flex;align-items:center;gap:10px;}
+  .lesson-rank{font-size:11px;font-weight:900;color:var(--text-light);width:18px;flex-shrink:0;text-align:center;}
+  .lesson-info{flex:1;min-width:0;}
+  .lesson-name{font-size:13px;font-weight:700;color:var(--text-main);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .lesson-views{font-size:11px;color:var(--text-sub);}
+  .lesson-bar-wrap{width:90px;flex-shrink:0;}
+  .lesson-bar-bg{height:5px;border-radius:10px;background:var(--border);overflow:hidden;}
+  .lesson-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--cyan),#1db0d8);width:0%;transition:width 1s cubic-bezier(.4,0,.2,1);}
+
+  /* ── HORIZONTAL BARS ── */
+  .hbar-list{display:flex;flex-direction:column;gap:12px;}
+  .hbar-item{display:flex;flex-direction:column;gap:5px;}
+  .hbar-label-row{display:flex;justify-content:space-between;align-items:center;}
+  .hbar-label{font-size:12px;font-weight:700;color:var(--text-main);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;}
+  .hbar-val{font-size:12px;font-weight:700;color:var(--text-sub);flex-shrink:0;}
+  .hbar-bg{height:8px;border-radius:10px;background:var(--border);overflow:hidden;}
+  .hbar-fill{height:100%;border-radius:10px;width:0%;transition:width 1s cubic-bezier(.4,0,.2,1);}
+
+  /* ── STUDENT TABLE ── */
+  .table-card{background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden;
+    opacity:0;transform:translateY(24px);
+    transition:opacity .55s ease, transform .55s ease;}
+  .table-card.visible{opacity:1;transform:translateY(0);}
+  .table-card-header{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .table-card-title{font-size:14px;font-weight:900;color:var(--text-main);}
+  .table-wrap{overflow-x:auto;scrollbar-width:none;}
+  .table-wrap::-webkit-scrollbar{display:none;}
+  .student-table{width:100%;border-collapse:collapse;min-width:600px;}
+  .student-table thead th{padding:9px 18px;font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.6px;text-align:right;border-bottom:1.5px solid var(--border);background:var(--surface-2);white-space:nowrap;}
+  .student-table tbody tr{border-bottom:1px solid var(--border);transition:background .15s;}
+  .student-table tbody tr:last-child{border-bottom:none;}
+  .student-table tbody tr:hover{background:var(--surface-2);}
+  .student-table td{padding:12px 18px;font-size:13px;vertical-align:middle;}
+  .student-name{font-weight:700;color:var(--text-main);}
+  .student-email{font-size:11px;color:var(--text-sub);}
+  .progress-cell{display:flex;align-items:center;gap:10px;}
+  .progress-bar-bg{flex:1;height:5px;border-radius:10px;background:var(--border);overflow:hidden;}
+  .progress-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--cyan),#1db0d8);width:0%;transition:width 1s cubic-bezier(.4,0,.2,1);}
+  .progress-pct{font-size:12px;font-weight:700;color:var(--text-sub);min-width:34px;text-align:left;}
+  .last-seen{font-size:12px;color:var(--text-sub);}
+  .status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:5px;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes countUp{from{opacity:0}to{opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo"><img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD"></div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>לוח הבקרה
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="mode-switcher-label">מצב תצוגה</div>
+    <div class="mode-toggle-row">
+      <button class="mode-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>תלמיד</button>
+      <button class="mode-btn active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>מרצה</button>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div><div class="profile-mini-name">אלון</div><div class="profile-mini-role">מרצה</div></div>
+      <button class="profile-edit-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">מרכזי הידע שלי</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-link">כריזמה מול המצלמה</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">אנליטיקס</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleTheme()">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <div class="date-range-wrap">
+        <div class="date-range" id="dateRangeBtn" onclick="toggleDateRange()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span id="dateRangeLabel">30 ימים אחרונים</span>
+          <svg class="date-range-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="date-range-dropdown" id="dateRangeDropdown">
+          <div class="date-range-opt selected" onclick="selectRange(this,'היום')">היום</div>
+          <div class="date-range-opt" onclick="selectRange(this,'7 ימים אחרונים')">7 ימים אחרונים</div>
+          <div class="date-range-opt selected" onclick="selectRange(this,'30 ימים אחרונים')">30 ימים אחרונים</div>
+          <div class="date-range-opt" onclick="selectRange(this,'3 חודשים אחרונים')">3 חודשים אחרונים</div>
+          <div class="date-range-opt" onclick="selectRange(this,'6 חודשים אחרונים')">6 חודשים אחרונים</div>
+          <div class="date-range-opt" onclick="selectRange(this,'השנה הנוכחית')">השנה הנוכחית</div>
+          <div class="date-range-sep"></div>
+          <div class="date-range-opt" onclick="selectRange(this,'טווח מותאם אישית')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            טווח מותאם אישית
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        ייצוא
+      </button>
+    </div>
+  </header>
+
+  <!-- COURSE HEADER -->
+  <div class="course-header">
+    <div class="course-title-row">
+      <div class="course-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      </div>
+      <div style="flex:1;">
+        <div class="course-name">כריזמה מול המצלמה</div>
+        <div class="course-meta-row">
+          <span class="course-badge">פעיל</span>
+          <span class="course-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>247 תלמידים</span>
+          <span class="course-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>18 שיעורים</span>
+        </div>
+      </div>
+      <img src="../BOARDi/SVG/11.svg" width="150" height="150" alt="" style="position:absolute;left:72px;bottom:0;pointer-events:none;">
+    </div>
+    <div class="course-tabs">
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>ליי-אאוט</div>
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות</div>
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>התלמידים שלי</div>
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>ערכת מותג</div>
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>דיוור</div>
+      <div class="tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>אנליטיקס</div>
+    </div>
+  </div>
+
+  <!-- PAGE CONTENT -->
+  <div class="page-content">
+
+    <!-- STAT CARDS -->
+    <div class="stats-row">
+
+      <div class="stat-card" style="transition-delay:.05s">
+        <div class="stat-icon" style="background:rgba(56,196,242,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="stat-content">
+          <div class="stat-num" data-target="247" data-prefix="">0</div>
+          <div class="stat-label">תלמידים פעילים</div>
+          <div class="stat-delta delta-up">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><polyline points="18 15 12 9 6 15"/></svg>+12 השבוע
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card" style="transition-delay:.12s">
+        <div class="stat-icon" style="background:rgba(125,197,122,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3a8838" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div class="stat-content">
+          <div class="stat-num" data-target="49" data-prefix="" data-suffix="/5" data-decimal="1">0</div>
+          <div class="stat-label">דירוג ממוצע</div>
+          <div class="stat-delta delta-up">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><polyline points="18 15 12 9 6 15"/></svg>+0.2 מחודש שעבר
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card" style="transition-delay:.19s">
+        <div class="stat-icon" style="background:rgba(240,86,128,0.1);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        </div>
+        <div class="stat-content">
+          <div class="stat-num" data-target="1840" data-prefix="">0</div>
+          <div class="stat-label">צפיות בשיעורים</div>
+          <div class="stat-delta delta-up">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><polyline points="18 15 12 9 6 15"/></svg>+218 השבוע
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card" style="transition-delay:.26s">
+        <div class="stat-icon" style="background:rgba(234,214,84,0.15);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7a6200" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="stat-content">
+          <div class="stat-num" data-target="312" data-prefix="" data-suffix=" שע׳">0</div>
+          <div class="stat-label">זמן צפייה כולל</div>
+          <div class="stat-delta delta-up">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><polyline points="18 15 12 9 6 15"/></svg>+28 שע׳ השבוע
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /stats-row -->
+
+    <!-- CHARTS ROW 1 -->
+    <div class="charts-row">
+
+      <!-- Area chart -->
+      <div class="chart-card" style="transition-delay:.1s;">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">צפיות לאורך זמן</div>
+            <div class="chart-subtitle">30 ימים אחרונים</div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#38C4F2"></div>צפיות</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#F05680"></div>נרשמים</div>
+          </div>
+        </div>
+        <div class="svg-chart-wrap" style="position:relative;">
+          <canvas id="areaChart" class="area-chart" style="cursor:crosshair;display:block;"></canvas>
+          <div id="chartTooltip" style="display:none;position:fixed;background:#1a2f5e;color:white;border-radius:10px;padding:9px 13px;font-size:12px;font-family:'Heebo',sans-serif;pointer-events:none;z-index:500;box-shadow:0 6px 20px rgba(37,62,122,0.35);white-space:nowrap;direction:rtl;">
+            <div id="tooltipDate" style="font-size:10px;opacity:.55;margin-bottom:5px;font-weight:700;"></div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+              <span style="width:7px;height:7px;border-radius:50%;background:#38C4F2;flex-shrink:0;"></span>
+              <span style="opacity:.75;font-size:11px;">צפיות:</span><strong id="tooltipCyan" style="color:#38C4F2;margin-right:2px;"></strong>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="width:7px;height:7px;border-radius:50%;background:#F05680;flex-shrink:0;"></span>
+              <span style="opacity:.75;font-size:11px;">נרשמים:</span><strong id="tooltipPink" style="color:#F05680;margin-right:2px;"></strong>
+            </div>
+          </div>
+        </div>
+        <div class="chart-x-labels" style="margin-top:8px;">
+          <span class="chart-x-label">1 מרץ</span>
+          <span class="chart-x-label">8 מרץ</span>
+          <span class="chart-x-label">15 מרץ</span>
+          <span class="chart-x-label">22 מרץ</span>
+          <span class="chart-x-label">29 מרץ</span>
+        </div>
+      </div>
+
+      <!-- Student progress overview -->
+      <div class="chart-card" style="transition-delay:.18s">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">התקדמות תלמידים</div>
+            <div class="chart-subtitle">סקירה על ההתקדמות הממוצעת</div>
+          </div>
+        </div>
+        <div class="hbar-list">
+          <div class="hbar-item">
+            <div class="hbar-label-row"><span class="hbar-label">סיימו את הקורס</span><span class="hbar-val">18%</span></div>
+            <div class="hbar-bg"><div class="hbar-fill" data-width="18%" style="background:linear-gradient(90deg,var(--green),#2d7a2a)"></div></div>
+          </div>
+          <div class="hbar-item">
+            <div class="hbar-label-row"><span class="hbar-label">75%–99% מהקורס</span><span class="hbar-val">24%</span></div>
+            <div class="hbar-bg"><div class="hbar-fill" data-width="24%" style="background:linear-gradient(90deg,var(--cyan),#1db0d8)"></div></div>
+          </div>
+          <div class="hbar-item">
+            <div class="hbar-label-row"><span class="hbar-label">50%–74% מהקורס</span><span class="hbar-val">31%</span></div>
+            <div class="hbar-bg"><div class="hbar-fill" data-width="31%" style="background:linear-gradient(90deg,var(--cyan),#1db0d8)"></div></div>
+          </div>
+          <div class="hbar-item">
+            <div class="hbar-label-row"><span class="hbar-label">25%–49% מהקורס</span><span class="hbar-val">18%</span></div>
+            <div class="hbar-bg"><div class="hbar-fill" data-width="18%" style="background:linear-gradient(90deg,var(--yellow),#c8a800)"></div></div>
+          </div>
+          <div class="hbar-item">
+            <div class="hbar-label-row"><span class="hbar-label">פחות מ-25%</span><span class="hbar-val">9%</span></div>
+            <div class="hbar-bg"><div class="hbar-fill" data-width="9%" style="background:linear-gradient(90deg,var(--pink),#d62a5e)"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /charts-row -->
+
+    <!-- CHARTS ROW 2 -->
+    <div class="charts-row-2">
+
+      <!-- Completion by lesson -->
+      <div class="chart-card" style="transition-delay:.08s">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">השלמה לפי שיעור</div>
+            <div class="chart-subtitle">אחוז תלמידים שסיימו</div>
+          </div>
+        </div>
+        <div class="hbar-list">
+          <div class="hbar-item">
+            <div class="hbar-label-row"><span class="hbar-label">מבוא ויעדי הקורס</span><span class="hbar-val">94%</span></div>
+            <div class="hbar-bg"><div class="hbar-fill" data-width="94%" style="background:linear-gradient(90deg,var(--cyan),#1db0d8)"></div></div>
+          </div>
+          <div class="hbar-item">
+            <div class="hbar-label-row"><span class="hbar-label">עמידה והופעה כללית</span><span class="hbar-val">88%</span></div>
+            <div class="hbar-bg"><div class="hbar-fill" data-width="88%" style="background:linear-gradient(90deg,var(--cyan),#1db0d8)"></div></div>
+          </div>
+          <div class="hbar-item">
+            <div class="hbar-label-row"><span class="hbar-label">שפת גוף מול המצלמה</span><span class="hbar-val">76%</span></div>
+            <div class="hbar-bg"><div class="hbar-fill" data-width="76%" style="background:linear-gradient(90deg,var(--cyan),#1db0d8)"></div></div>
+          </div>
+          <div class="hbar-item">
+            <div class="hbar-label-row"><span class="hbar-label">מבט ועיניים</span><span class="hbar-val">61%</span></div>
+            <div class="hbar-bg"><div class="hbar-fill" data-width="61%" style="background:linear-gradient(90deg,var(--cyan),#1db0d8)"></div></div>
+          </div>
+          <div class="hbar-item">
+            <div class="hbar-label-row"><span class="hbar-label">קול וטון דיבור</span><span class="hbar-val">47%</span></div>
+            <div class="hbar-bg"><div class="hbar-fill" data-width="47%" style="background:linear-gradient(90deg,#7DC57A,#2d7a2a)"></div></div>
+          </div>
+          <div class="hbar-item">
+            <div class="hbar-label-row"><span class="hbar-label">תרגול מול מצלמה — יום 1</span><span class="hbar-val">29%</span></div>
+            <div class="hbar-bg"><div class="hbar-fill" data-width="29%" style="background:linear-gradient(90deg,var(--yellow),#c8a800)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Popular lessons -->
+      <div class="chart-card" style="transition-delay:.16s">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">שיעורים פופולריים</div>
+            <div class="chart-subtitle">לפי מספר צפיות</div>
+          </div>
+        </div>
+        <div class="lesson-list">
+          <div class="lesson-row">
+            <div class="lesson-rank">1</div>
+            <div class="lesson-info">
+              <div class="lesson-name">שפת גוף מול המצלמה</div>
+              <div class="lesson-views">218 צפיות</div>
+            </div>
+            <div class="lesson-bar-wrap">
+              <div class="lesson-bar-bg"><div class="lesson-bar-fill" data-width="100%"></div></div>
+            </div>
+          </div>
+          <div class="lesson-row">
+            <div class="lesson-rank">2</div>
+            <div class="lesson-info">
+              <div class="lesson-name">מבוא ויעדי הקורס</div>
+              <div class="lesson-views">197 צפיות</div>
+            </div>
+            <div class="lesson-bar-wrap">
+              <div class="lesson-bar-bg"><div class="lesson-bar-fill" data-width="90%"></div></div>
+            </div>
+          </div>
+          <div class="lesson-row">
+            <div class="lesson-rank">3</div>
+            <div class="lesson-info">
+              <div class="lesson-name">עמידה והופעה כללית</div>
+              <div class="lesson-views">174 צפיות</div>
+            </div>
+            <div class="lesson-bar-wrap">
+              <div class="lesson-bar-bg"><div class="lesson-bar-fill" data-width="80%"></div></div>
+            </div>
+          </div>
+          <div class="lesson-row">
+            <div class="lesson-rank">4</div>
+            <div class="lesson-info">
+              <div class="lesson-name">מבט ועיניים</div>
+              <div class="lesson-views">142 צפיות</div>
+            </div>
+            <div class="lesson-bar-wrap">
+              <div class="lesson-bar-bg"><div class="lesson-bar-fill" data-width="65%"></div></div>
+            </div>
+          </div>
+          <div class="lesson-row">
+            <div class="lesson-rank">5</div>
+            <div class="lesson-info">
+              <div class="lesson-name">קול וטון דיבור</div>
+              <div class="lesson-views">118 צפיות</div>
+            </div>
+            <div class="lesson-bar-wrap">
+              <div class="lesson-bar-bg"><div class="lesson-bar-fill" data-width="54%"></div></div>
+            </div>
+          </div>
+          <div class="lesson-row">
+            <div class="lesson-rank">6</div>
+            <div class="lesson-info">
+              <div class="lesson-name">תרגול מול מצלמה — יום 1</div>
+              <div class="lesson-views">96 צפיות</div>
+            </div>
+            <div class="lesson-bar-wrap">
+              <div class="lesson-bar-bg"><div class="lesson-bar-fill" data-width="44%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /charts-row-2 -->
+
+    <!-- STUDENT TABLE -->
+    <div class="table-card">
+      <div class="table-card-header">
+        <div class="table-card-title">פעילות תלמידים</div>
+      </div>
+      <div class="table-wrap">
+        <table class="student-table">
+          <thead>
+            <tr>
+              <th>תלמיד</th>
+              <th>התקדמות</th>
+              <th style="width:100px;text-align:center;">שיעורים</th>
+              <th style="width:120px;">פעמון אחרון</th>
+              <th style="width:80px;text-align:center;">סטטוס</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="student-name">מיכל לוי</div><div class="student-email">michal@gmail.com</div></td>
+              <td><div class="progress-cell"><div class="progress-bar-bg"><div class="progress-bar-fill" data-width="89%"></div></div><span class="progress-pct">89%</span></div></td>
+              <td style="text-align:center;font-weight:700;">16/18</td>
+              <td class="last-seen">לפני שעה</td>
+              <td style="text-align:center;"><span class="status-dot" style="background:#3a8838"></span></td>
+            </tr>
+            <tr>
+              <td><div class="student-name">דוד כהן</div><div class="student-email">david@walla.co.il</div></td>
+              <td><div class="progress-cell"><div class="progress-bar-bg"><div class="progress-bar-fill" data-width="72%"></div></div><span class="progress-pct">72%</span></div></td>
+              <td style="text-align:center;font-weight:700;">13/18</td>
+              <td class="last-seen">אתמול</td>
+              <td style="text-align:center;"><span class="status-dot" style="background:#3a8838"></span></td>
+            </tr>
+            <tr>
+              <td><div class="student-name">ענת שמש</div><div class="student-email">anat@hotmail.com</div></td>
+              <td><div class="progress-cell"><div class="progress-bar-bg"><div class="progress-bar-fill" data-width="55%"></div></div><span class="progress-pct">55%</span></div></td>
+              <td style="text-align:center;font-weight:700;">10/18</td>
+              <td class="last-seen">לפני 3 ימים</td>
+              <td style="text-align:center;"><span class="status-dot" style="background:#c8a800"></span></td>
+            </tr>
+            <tr>
+              <td><div class="student-name">יוסי אברהם</div><div class="student-email">yossi@gmail.com</div></td>
+              <td><div class="progress-cell"><div class="progress-bar-bg"><div class="progress-bar-fill" data-width="100%"></div></div><span class="progress-pct">100%</span></div></td>
+              <td style="text-align:center;font-weight:700;">18/18</td>
+              <td class="last-seen">לפני שבוע</td>
+              <td style="text-align:center;"><span class="status-dot" style="background:#7DC57A"></span></td>
+            </tr>
+            <tr>
+              <td><div class="student-name">רחל ביטון</div><div class="student-email">rachel@gmail.com</div></td>
+              <td><div class="progress-cell"><div class="progress-bar-bg"><div class="progress-bar-fill" data-width="22%"></div></div><span class="progress-pct">22%</span></div></td>
+              <td style="text-align:center;font-weight:700;">4/18</td>
+              <td class="last-seen">לפני 14 ימים</td>
+              <td style="text-align:center;"><span class="status-dot" style="background:#d62a5e"></span></td>
+            </tr>
+            <tr>
+              <td><div class="student-name">נועם גל</div><div class="student-email">noam@gmail.com</div></td>
+              <td><div class="progress-cell"><div class="progress-bar-bg"><div class="progress-bar-fill" data-width="38%"></div></div><span class="progress-pct">38%</span></div></td>
+              <td style="text-align:center;font-weight:700;">7/18</td>
+              <td class="last-seen">לפני 5 ימים</td>
+              <td style="text-align:center;"><span class="status-dot" style="background:#c8a800"></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /page-content -->
+</div><!-- /main -->
+
+<script>
+// ── AREA CHART CANVAS ─────────────────────────
+var draw; // exposed for IntersectionObserver
+(function(){
+  // Normalized data — x in [0..1], y in [0..1] top-to-bottom
+  // Derived from original SVG viewBox 600×160
+  const NX = [0, 0.25, 0.5, 0.75, 1];
+  const NY_CYAN = [130/160, 55/160, 32/160, 52/160, 60/160];
+  const NY_PINK = [155/160, 128/160, 116/160, 115/160, 118/160];
+  // Bezier control-point x offsets (same ratio: 75/600 = 0.125)
+  const CPX_OFF = 0.125;
+
+  const DATES = ['1 מרץ','8 מרץ','15 מרץ','22 מרץ','29 מרץ'];
+  const CYAN_V = [42, 78, 112, 138, 95];
+  const PINK_V = [8,  14,  19,  24, 17];
+
+  draw = function(hoverIdx){
+    const canvas = document.getElementById('areaChart');
+    if(!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.offsetWidth, H = canvas.offsetHeight;
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    // px helpers
+    const px = i => NX[i] * W;
+    const cyCy = i => NY_CYAN[i] * H;
+    const cyPk = i => NY_PINK[i] * H;
+    const cpx  = i => (NX[i-1] + CPX_OFF) * W;  // right CP of prev
+    const cpx2 = i => (NX[i]   - CPX_OFF) * W;  // left  CP of curr
+
+    // Grid lines (at 25%, 50%, 75% height — same as SVG y=40,80,120/160)
+    [0.25, 0.5, 0.75].forEach(t=>{
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(37,62,122,0.07)';
+      ctx.lineWidth = 1;
+      ctx.moveTo(0, t*H);
+      ctx.lineTo(W, t*H);
+      ctx.stroke();
+    });
+
+    // Helper: draw bezier path through normalized points
+    function buildPath(yFn){
+      ctx.moveTo(px(0), yFn(0));
+      for(let i=1;i<NX.length;i++){
+        ctx.bezierCurveTo(cpx(i), yFn(i-1), cpx2(i), yFn(i), px(i), yFn(i));
+      }
+    }
+
+    // Filled areas
+    function drawArea(yFn, hex, alpha){
+      const grad = ctx.createLinearGradient(0,0,0,H);
+      grad.addColorStop(0, hex + Math.round(alpha*255).toString(16).padStart(2,'0'));
+      grad.addColorStop(1, hex + '00');
+      ctx.beginPath();
+      buildPath(yFn);
+      ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+    drawArea(cyCy, '#38C4F2', 0.25);
+    drawArea(cyPk, '#F05680', 0.18);
+
+    // Stroke lines
+    function drawLine(yFn, color){
+      ctx.beginPath();
+      buildPath(yFn);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.lineJoin = 'round';
+      ctx.lineCap  = 'round';
+      ctx.stroke();
+    }
+    drawLine(cyCy, '#38C4F2');
+    drawLine(cyPk, '#F05680');
+
+    // Hover crosshair
+    if(hoverIdx >= 0){
+      const x = px(hoverIdx);
+      ctx.beginPath();
+      ctx.setLineDash([4,3]);
+      ctx.strokeStyle = 'rgba(37,62,122,0.2)';
+      ctx.lineWidth = 1;
+      ctx.moveTo(x, 0); ctx.lineTo(x, H);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  function init(){
+    const canvas  = document.getElementById('areaChart');
+    const tooltip = document.getElementById('chartTooltip');
+    if(!canvas) return;
+
+    // Resize observer keeps canvas sharp when panel width changes
+    const ro = new ResizeObserver(()=>draw(-1));
+    ro.observe(canvas);
+
+    canvas.addEventListener('mousemove', e=>{
+      const rect = canvas.getBoundingClientRect();
+      const relX = e.clientX - rect.left;
+      let nearest = 0, minDist = Infinity;
+      NX.forEach((nx,i)=>{ const d=Math.abs(relX - nx*rect.width); if(d<minDist){minDist=d;nearest=i;} });
+
+      draw(nearest);
+
+      // Fill tooltip
+      document.getElementById('tooltipDate').textContent = DATES[nearest];
+      document.getElementById('tooltipCyan').textContent = CYAN_V[nearest];
+      document.getElementById('tooltipPink').textContent = PINK_V[nearest];
+
+      // Position near cursor, flip if near edge
+      tooltip.style.display = 'block';
+      const ttW = tooltip.offsetWidth, ttH = tooltip.offsetHeight;
+      let left = e.clientX + 14;
+      let top  = e.clientY - ttH / 2;
+      if(left + ttW > window.innerWidth  - 12) left = e.clientX - ttW - 14;
+      if(top  < 8)                              top  = 8;
+      if(top  + ttH > window.innerHeight - 8)  top  = window.innerHeight - ttH - 8;
+      tooltip.style.left = left + 'px';
+      tooltip.style.top  = top  + 'px';
+    });
+
+    canvas.addEventListener('mouseleave', ()=>{
+      draw(-1);
+      tooltip.style.display = 'none';
+    });
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+// ── DATE RANGE ────────────────────────────────
+function toggleDateRange(){
+  const btn=document.getElementById('dateRangeBtn');
+  const dd=document.getElementById('dateRangeDropdown');
+  btn.classList.toggle('open');
+  dd.classList.toggle('open');
+}
+function selectRange(el,label){
+  document.querySelectorAll('.date-range-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('dateRangeLabel').textContent=label;
+  toggleDateRange();
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.date-range-wrap')){
+    document.getElementById('dateRangeBtn')?.classList.remove('open');
+    document.getElementById('dateRangeDropdown')?.classList.remove('open');
+  }
+});
+
+// ── THEME ──────────────────────────────────────
+function toggleTheme(){
+  const h=document.documentElement;
+  h.setAttribute('data-theme',h.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+
+// ── COUNTER ANIMATION ─────────────────────────
+function animateCounter(el){
+  const target = parseFloat(el.dataset.target);
+  const prefix = el.dataset.prefix || '';
+  const suffix = el.dataset.suffix || '';
+  const isDecimal = el.dataset.decimal === '1';
+  const duration = 1400;
+  const start = performance.now();
+
+  function easeOutExpo(t){ return t===1?1:1-Math.pow(2,-10*t); }
+
+  function tick(now){
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = easeOutExpo(progress);
+    const current = target * eased;
+
+    if(isDecimal){
+      el.textContent = prefix + (current/10).toFixed(1) + suffix;
+    } else if(target >= 1000){
+      el.textContent = prefix + Math.round(current).toLocaleString('he-IL');
+    } else {
+      el.textContent = prefix + Math.round(current) + suffix;
+    }
+
+    if(progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+// ── ANIMATE BARS ──────────────────────────────
+function animateBars(root){
+  root.querySelectorAll('.hbar-fill, .lesson-bar-fill, .progress-bar-fill').forEach(bar=>{
+    const w = bar.dataset.width;
+    if(w) setTimeout(()=>{ bar.style.width = w; }, 100);
+  });
+}
+
+// ── INTERSECTION OBSERVER ─────────────────────
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+    const el = entry.target;
+    el.classList.add('visible');
+
+    // counters
+    el.querySelectorAll('[data-target]').forEach(animateCounter);
+
+    // bars
+    animateBars(el);
+
+    // trigger canvas draw once card is visible and sized
+    if(el.querySelector('#areaChart')) draw(-1);
+
+    observer.unobserve(el);
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.stat-card, .chart-card, .table-card').forEach(el=>{
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

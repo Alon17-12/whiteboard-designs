@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ערכת מותג | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&family=Assistant:wght@300;400;600;700&family=Frank+Ruhl+Libre:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+    --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+    --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+    --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+    --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+    --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+    --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+    --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --sidebar-bg:var(--navy);--sidebar-text:rgba(255,255,255,0.65);
+    --sidebar-hover:rgba(255,255,255,0.08);--sidebar-active-bg:rgba(56,196,242,0.2);
+    --sidebar-active-cl:var(--cyan);--sidebar-border:rgba(255,255,255,0.1);
+    /* brand defaults */
+    --brand-primary:#253E7A;--brand-secondary:#38C4F2;
+    --brand-text:#1a2f5e;--brand-bg:#F0F6FF;
+    --brand-btn-radius:30px;
+  }
+  [data-theme="dark"] {
+    --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+    --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+    --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+    --light-blue:rgba(56,196,242,0.08);--sidebar-bg:#0d1628;
+    --sidebar-text:rgba(255,255,255,0.55);--sidebar-hover:rgba(255,255,255,0.06);
+    --sidebar-active-bg:rgba(56,196,242,0.15);--sidebar-border:rgba(255,255,255,0.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;transition:background .3s,color .3s;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{width:220px;background:var(--sidebar-bg);border-left:1px solid var(--sidebar-border);min-height:100vh;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;position:fixed;right:0;top:0;bottom:0;z-index:50;}
+  .sidebar-logo{padding:16px 16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
+  .sidebar-logo img{width:150px;object-fit:contain;}
+  .sidebar-section{padding:8px 12px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--sidebar-text);font-size:14px;font-weight:500;}
+  .nav-item:hover{background:var(--sidebar-hover);color:white;}
+  .nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-cl);font-weight:700;}
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;}
+  .sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);}
+  .mode-switcher{margin-bottom:10px;}
+  .mode-switcher-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
+  .mode-toggle-row{display:flex;background:rgba(0,0,0,0.25);border-radius:8px;padding:3px;gap:2px;}
+  .mode-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 4px;border-radius:6px;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.45);background:transparent;white-space:nowrap;}
+  .mode-btn svg{width:13px;height:13px;}
+  .mode-btn.active{background:rgba(56,196,242,0.25);color:var(--cyan);}
+  .profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;}
+  .profile-mini:hover{background:rgba(255,255,255,0.08);}
+  .avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+  .profile-mini-name{font-size:13px;font-weight:600;color:white;}
+  .profile-mini-role{font-size:11px;color:rgba(255,255,255,0.45);}
+  .profile-edit-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;color:rgba(255,255,255,0.4);flex-shrink:0;margin-right:auto;}
+  .profile-edit-btn:hover{background:rgba(255,255,255,0.1);color:white;}
+  .profile-edit-btn svg{width:13px;height:13px;}
+
+  /* ── MAIN ── */
+  .main{margin-right:220px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+  /* ── TOPBAR ── */
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:var(--shadow-sm);}
+  .topbar-breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .breadcrumb-link{color:var(--text-sub);cursor:pointer;transition:color .2s;}
+  .breadcrumb-link:hover{color:var(--text-main);}
+  .breadcrumb-sep{color:var(--text-light);}
+  .breadcrumb-current{color:var(--text-main);font-weight:700;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;}
+  .icon-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+  .icon-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .icon-sun{display:none;}.icon-moon{display:block;}
+  [data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:30px;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:none;white-space:nowrap;}
+  .btn svg{width:15px;height:15px;}
+  .btn-primary{background:linear-gradient(135deg,var(--cyan),#1db0d8);color:white;box-shadow:0 3px 14px rgba(56,196,242,0.3);}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(56,196,242,0.4);}
+  .btn-ghost{background:transparent;color:var(--text-sub);border:1.5px solid var(--border);}
+  .btn-ghost:hover{background:var(--light-blue);color:var(--text-main);border-color:var(--cyan);}
+
+  /* ── SAVE STATE BUTTON (topbar) ── */
+  .save-state-btn{min-width:180px;justify-content:center;border:1.5px solid transparent;transition:background .3s,color .3s,border-color .3s,box-shadow .3s;}
+  .save-state-btn[data-state="unsaved"]{background:rgba(234,214,84,0.13);color:#7a6200;border-color:rgba(200,168,0,0.35);}
+  [data-theme="dark"] .save-state-btn[data-state="unsaved"]{background:rgba(234,214,84,0.1);color:#d4bc2e;border-color:rgba(234,214,84,0.28);}
+  .save-state-btn[data-state="saved"]{background:rgba(125,197,122,0.13);color:#3a8838;border-color:rgba(100,180,97,0.38);}
+  [data-theme="dark"] .save-state-btn[data-state="saved"]{background:rgba(125,197,122,0.1);color:#7DC57A;border-color:rgba(125,197,122,0.28);}
+  .save-state-btn[data-state="clean"]{background:transparent;color:var(--text-light);border-color:transparent;pointer-events:none;}
+  .save-state-btn[data-hovering="true"]{background:linear-gradient(135deg,var(--cyan),#1db0d8) !important;color:white !important;border-color:transparent !important;box-shadow:0 4px 16px rgba(56,196,242,0.35) !important;}
+
+  /* ── OUTCOMES EDITABLE LIST ── */
+  .lp-outcomes li{position:relative;}
+  .lp-outcomes li .remove-outcome-btn{display:none;position:absolute;left:-4px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;background:#fee2e2;border:none;cursor:pointer;color:#dc2626;font-size:13px;line-height:1;align-items:center;justify-content:center;padding:0;transition:background .15s;}
+  .lp-outcomes li:hover .remove-outcome-btn{display:flex;}
+  .lp-outcomes li .remove-outcome-btn:hover{background:#fca5a5;}
+  .add-outcome-btn{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 12px;border-radius:20px;border:1.5px dashed rgba(37,62,122,0.2);background:transparent;font-family:var(--font-he);font-size:12px;font-weight:700;color:var(--text-sub);cursor:pointer;transition:all .2s;}
+  .add-outcome-btn:hover{border-color:var(--cyan);color:var(--cyan);background:var(--light-blue);}
+
+  /* ── COURSE HEADER ── */
+  .course-header{background:var(--surface);border-bottom:1px solid var(--border);padding:20px 32px 0;}
+  .course-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:16px;}
+  .course-title-wrap{display:flex;align-items:center;gap:14px;}
+  .course-icon{width:48px;height:48px;border-radius:var(--radius-sm);background:linear-gradient(135deg,#0d1b3e,#253E7A);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .course-icon svg{width:22px;height:22px;color:rgba(255,255,255,0.8);}
+  .course-name{font-size:20px;font-weight:900;color:var(--text-main);}
+  .course-meta-row{display:flex;align-items:center;gap:16px;margin-top:3px;}
+  .course-badge{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;}
+  .badge-pub{background:rgba(125,197,122,0.15);color:#3d8a3a;border:1px solid rgba(125,197,122,0.3);}
+  .course-stat{font-size:12px;color:var(--text-sub);display:flex;align-items:center;gap:4px;}
+  .course-stat svg{width:13px;height:13px;}
+  .course-tabs{display:flex;gap:4px;overflow-x:auto;}
+  .tab{display:flex;align-items:center;gap:6px;padding:10px 15px;font-size:13px;font-weight:600;color:var(--text-sub);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;}
+  .tab svg{opacity:.6;transition:opacity .2s;}
+  .tab:hover{color:var(--text-main);}
+  .tab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+  .tab.active svg{opacity:1;}
+
+  /* ── BRAND LAYOUT ── */
+  .brand-layout{display:flex;flex:1;overflow:hidden;height:calc(100vh - 64px - 130px);}
+
+  /* ── SETTINGS PANEL ── */
+  .brand-panel{width:360px;flex-shrink:0;background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;}
+  .brand-panel-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:5;}
+  .brand-panel-title{font-size:15px;font-weight:900;color:var(--text-main);}
+  .brand-section{padding:20px 24px;border-bottom:1px solid var(--border);}
+  .brand-section:last-child{border-bottom:none;}
+  .brand-section-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-light);margin-bottom:14px;}
+  .brand-section-label svg{width:13px;height:13px;}
+
+  /* Logo upload */
+  .logo-upload-area{border:2px dashed var(--border);border-radius:var(--radius-md);padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .2s;background:var(--bg);text-align:center;min-height:90px;}
+  .logo-upload-area:hover{border-color:var(--cyan);background:var(--light-blue);}
+  .logo-upload-icon{color:var(--text-light);}
+  .logo-upload-icon svg{width:24px;height:24px;}
+  .logo-upload-text{font-size:13px;font-weight:700;color:var(--text-main);}
+  .logo-upload-sub{font-size:11px;color:var(--text-sub);}
+  .logo-current{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg);border-radius:var(--radius-sm);border:1.5px solid var(--border);}
+  .logo-current-name{font-size:13px;font-weight:600;color:var(--text-main);}
+  .logo-remove-btn{background:none;border:none;cursor:pointer;color:var(--text-light);transition:color .15s;display:flex;}
+  .logo-remove-btn:hover{color:#d62a5e;}
+  .logo-remove-btn svg{width:14px;height:14px;}
+
+  /* ── Brand segmented toggle ── */
+  .bseg-wrap{padding:16px 24px 0;background:var(--surface);position:sticky;top:56px;z-index:4;}
+  .bseg{display:flex;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:4px;gap:3px;}
+  .bseg-btn{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
+    padding:10px 14px;border-radius:9px;border:none;background:transparent;
+    font-family:var(--font-he);font-size:13px;font-weight:700;color:var(--text-sub);
+    cursor:pointer;transition:all .2s;white-space:nowrap;min-height:44px;
+  }
+  .bseg-btn svg{width:15px;height:15px;flex-shrink:0;}
+  .bseg-btn.active{background:var(--surface);color:var(--navy);box-shadow:0 2px 8px rgba(37,62,122,0.12);}
+  [data-theme="dark"] .bseg-btn.active{color:var(--cyan);}
+  .bseg-btn:hover:not(.active){color:var(--text-main);}
+  .bdt-panel{display:none;}
+  .bdt-panel.active{display:block;}
+
+  /* Color palette picker */
+  .bcp-role{margin-bottom:20px;}
+  .bcp-role:last-child{margin-bottom:0;}
+  .bcp-role-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+  .bcp-role-name{font-size:13px;font-weight:700;color:var(--text-main);}
+  .bcp-role-desc{font-size:11px;color:var(--text-sub);margin-top:2px;}
+  .bcp-cur-hex{font-size:11px;font-weight:700;font-family:monospace;color:var(--text-light);padding:2px 7px;border-radius:5px;background:var(--bg);border:1px solid var(--border);}
+  /* Single color swatch + picker */
+  .bcp-swatch{position:relative;width:36px;height:36px;border-radius:10px;border:2px solid var(--border);cursor:pointer;overflow:hidden;flex-shrink:0;transition:transform .15s,box-shadow .15s;}
+  .bcp-swatch:hover{transform:scale(1.08);box-shadow:0 3px 12px rgba(0,0,0,0.22);}
+  .bcp-swatch input[type="color"]{position:absolute;inset:-4px;width:calc(100% + 8px);height:calc(100% + 8px);opacity:0;cursor:pointer;border:none;padding:0;}
+
+  /* Font type rows */
+  .bft-type{padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--border);}
+  .bft-type:last-child{border-bottom:none;padding-bottom:0;margin-bottom:0;}
+  .bft-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .bft-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-light);}
+  .bft-size-hint{font-size:11px;color:var(--text-light);}
+  .font-select{width:100%;font-family:var(--font-he);font-size:13px;padding:9px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg);color:var(--text-main);outline:none;cursor:pointer;transition:border-color .2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 10px center;}
+  .font-select:focus{border-color:var(--cyan);}
+  .bft-preview{margin-top:8px;padding:10px 12px;background:var(--bg);border-radius:var(--radius-sm);border:1.5px solid var(--border);color:var(--text-main);line-height:1.4;}
+
+  /* Button radius */
+  .radius-slider{width:100%;accent-color:var(--cyan);height:4px;cursor:pointer;}
+  .btn-preview-row{display:flex;align-items:center;gap:10px;margin-top:10px;}
+  .btn-preview{padding:9px 20px;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:default;border:none;color:white;transition:border-radius .3s;}
+
+  /* Save bar */
+  .brand-save-bar{padding:16px 24px;background:var(--surface);border-top:1px solid var(--border);display:flex;gap:8px;position:sticky;bottom:0;}
+
+  /* ── PREVIEW PANE ── */
+  .brand-preview{flex:1;background:var(--surface-2);overflow-y:auto;position:relative;display:flex;flex-direction:column;}
+  .preview-toolbar{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+  /* view tabs */
+  .preview-view-tabs{display:flex;gap:2px;background:var(--bg);border-radius:var(--radius-sm);padding:3px;}
+  .preview-view-tab{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:7px;border:none;background:transparent;font-family:var(--font-he);font-size:12px;font-weight:700;color:var(--text-sub);cursor:pointer;transition:all .2s;white-space:nowrap;}
+  .preview-view-tab svg{width:13px;height:13px;}
+  .preview-view-tab.active{background:var(--surface);color:var(--navy);box-shadow:0 1px 4px rgba(37,62,122,0.1);}
+  .preview-view-tab:hover:not(.active){color:var(--text-main);}
+  .preview-device-btns{display:flex;gap:4px;}
+  .device-btn{width:32px;height:32px;border-radius:6px;border:1.5px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-light);transition:all .2s;}
+  .device-btn.active,.device-btn:hover{border-color:var(--cyan);color:var(--navy);background:var(--light-blue);}
+  .device-btn svg{width:15px;height:15px;}
+  .preview-scale{font-size:11px;color:var(--text-light);}
+  /* view panels */
+  .preview-view{display:none;flex:1;}
+  .preview-view.active{display:block;}
+
+  /* ── CONTENTEDITABLE EDITING ── */
+  [contenteditable]{outline:none;border-radius:4px;transition:background .15s,box-shadow .15s;}
+  [contenteditable]:hover{background:rgba(56,196,242,0.12);box-shadow:0 0 0 2px rgba(56,196,242,0.35);cursor:text;}
+  [contenteditable]:focus{background:rgba(56,196,242,0.08);box-shadow:0 0 0 2px var(--cyan);}
+  .edit-hint{position:fixed;bottom:80px;right:50%;transform:translateX(50%);background:rgba(37,62,122,0.9);color:white;font-size:12px;font-weight:600;padding:7px 14px;border-radius:20px;pointer-events:none;opacity:0;transition:opacity .3s;z-index:100;white-space:nowrap;}
+  .edit-hint.show{opacity:1;}
+  /* Share popup */
+  .share-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--surface);border-radius:var(--radius-lg);box-shadow:0 24px 64px rgba(0,0,0,0.25);padding:28px;width:380px;z-index:400;border:1px solid var(--border);}
+  .share-popup.open{display:block;animation:fadeIn .2s ease;}
+  .share-popup-title{font-size:16px;font-weight:900;color:var(--text-main);margin-bottom:6px;}
+  .share-popup-desc{font-size:13px;color:var(--text-sub);margin-bottom:20px;}
+  .share-url-row{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--bg);border-radius:var(--radius-sm);border:1.5px solid var(--border);margin-bottom:14px;}
+  .share-url-text{flex:1;font-size:12px;color:var(--text-sub);font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;}
+  .share-copy-btn{flex-shrink:0;padding:6px 14px;border-radius:20px;background:var(--navy);color:white;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:background .2s;}
+  .share-copy-btn:hover{background:var(--navy-light);}
+  .share-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:399;}
+  .share-overlay.open{display:block;}
+
+  /* Landing page preview */
+  .lp-wrap{padding:20px;display:flex;justify-content:center;}
+  .lp{width:100%;max-width:700px;background:white;border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.12);}
+  .lp-hero{position:relative;height:300px;background:#111;display:flex;align-items:flex-end;overflow:hidden;}
+  .lp-hero-img{position:absolute;inset:0;background:linear-gradient(135deg,#1a0a0a 0%,#3d1a1a 40%,#6b2d2d 100%);display:flex;align-items:center;justify-content:center;}
+  .lp-hero-img svg{opacity:.15;}
+  .lp-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.3) 60%,transparent 100%);}
+  .lp-hero-content{position:relative;z-index:2;padding:24px;}
+  .lp-hero-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:8px;}
+  .lp-hero-title{font-size:26px;font-weight:900;color:white;line-height:1.2;margin-bottom:6px;}
+  .lp-hero-sub{font-size:13px;color:rgba(255,255,255,0.7);}
+  .lp-body{padding:28px 24px;}
+  .lp-instructor{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding:16px;border-radius:var(--radius-md);background:#f8f9fb;}
+  .lp-instructor-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:white;flex-shrink:0;}
+  .lp-instructor-name{font-size:14px;font-weight:700;color:#1a2f5e;margin-bottom:2px;}
+  .lp-instructor-role{font-size:12px;color:#666;}
+  .lp-section-title{font-size:15px;font-weight:900;color:#1a2f5e;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .lp-section-title svg{width:16px;height:16px;opacity:.6;}
+  .lp-outcomes{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+  .lp-outcomes li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#444;line-height:1.5;}
+  .lp-outcomes li::before{content:'✓';font-weight:900;flex-shrink:0;margin-top:1px;}
+  .lp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+  .lp-stat{text-align:center;padding:14px;border-radius:var(--radius-md);background:#f8f9fb;}
+  .lp-stat-num{font-size:22px;font-weight:900;margin-bottom:2px;}
+  .lp-stat-label{font-size:11px;color:#666;}
+  .lp-price-box{border-radius:var(--radius-md);padding:20px;margin-bottom:16px;}
+  .lp-price-label{font-size:12px;font-weight:700;opacity:.7;margin-bottom:4px;}
+  .lp-price-amount{font-size:32px;font-weight:900;color:white;margin-bottom:12px;}
+  .lp-cta-btn{width:100%;padding:14px;border-radius:var(--brand-btn-radius);border:none;font-family:var(--font-he);font-size:15px;font-weight:900;color:white;cursor:pointer;transition:opacity .2s;}
+  .lp-cta-btn:hover{opacity:.9;}
+  .lp-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .lp-feature{display:flex;align-items:center;gap:5px;font-size:11px;color:white;opacity:.85;}
+  .lp-feature svg{width:12px;height:12px;opacity:.7;}
+
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo"><img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD"></div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>לוח הבקרה
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <div class="mode-switcher-label">מצב תצוגה</div>
+      <div class="mode-toggle-row">
+        <button class="mode-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>תלמיד</button>
+        <button class="mode-btn active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>מרצה</button>
+      </div>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div><div class="profile-mini-name">אלון</div><div class="profile-mini-role">מרצה</div></div>
+      <button class="profile-edit-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">מרכזי הידע שלי</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-link">הקורסים שלי</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-link">כריזמה מול המצלמה</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">ערכת מותג</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleTheme()">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="btn btn-ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        תצוגה מקדימה
+      </button>
+      <button class="btn save-state-btn" id="saveBtn" data-state="unsaved" data-hovering="false"
+        onmouseenter="document.getElementById('saveBtn').dataset.hovering='true';document.getElementById('saveBtnLabel').textContent='שמור שינויים'"
+        onmouseleave="document.getElementById('saveBtn').dataset.hovering='false';updateSaveBtnLabel()"
+        onclick="saveBrand()">
+        <svg id="saveBtnIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <span id="saveBtnLabel">שינויים שלא נשמרו</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- COURSE HEADER -->
+  <div class="course-header">
+    <div class="course-title-row">
+      <div class="course-title-wrap">
+        <div class="course-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        </div>
+        <div>
+          <div class="course-name">כריזמה מול המצלמה</div>
+          <div class="course-meta-row">
+            <span class="course-badge badge-pub">פעיל</span>
+            <span class="course-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>247 תלמידים</span>
+            <span class="course-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>18 שיעורים</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="course-tabs">
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>ליי-אאוט</div>
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות</div>
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>התלמידים שלי</div>
+      <div class="tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>ערכת מותג</div>
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>דיוור</div>
+      <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>אנליטיקס</div>
+    </div>
+  </div>
+
+  <!-- BRAND LAYOUT -->
+  <div class="brand-layout">
+
+    <!-- SETTINGS PANEL -->
+    <aside class="brand-panel">
+      <div class="brand-panel-header">
+        <div class="brand-panel-title">עריכת ערכת מותג</div>
+        <button class="icon-btn" style="width:32px;height:32px;" onclick="resetBrand()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+        </button>
+      </div>
+
+      <!-- LOGO -->
+      <div class="brand-section">
+        <div class="brand-section-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          לוגו
+        </div>
+        <div class="logo-current" id="logoCurrentRow">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:32px;height:32px;border-radius:6px;background:var(--light-blue);display:flex;align-items:center;justify-content:center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" color="var(--navy)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <span class="logo-current-name">WHITEBOARD-logo.png</span>
+          </div>
+          <button class="logo-remove-btn" onclick="removeLogo()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="logo-upload-area" id="logoUploadArea" style="display:none;" onclick="">
+          <div class="logo-upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <div class="logo-upload-text">גרור לוגו או לחץ להעלאה</div>
+          <div class="logo-upload-sub">PNG, SVG, JPG · עד 2MB</div>
+        </div>
+      </div>
+
+      <!-- BRAND DESIGN TABS -->
+      <div class="bseg-wrap">
+        <div class="bseg">
+          <button class="bseg-btn active" id="bdtColors" onclick="switchBrandTab('colors')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+            צבעי מותג
+          </button>
+          <button class="bseg-btn" id="bdtFonts" onclick="switchBrandTab('fonts')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+            טקסט
+          </button>
+        </div>
+      </div>
+
+      <!-- COLORS PANEL -->
+      <div class="brand-section bdt-panel active" id="panelColors">
+
+        <div class="bcp-role">
+          <div class="bcp-role-top">
+            <div><div class="bcp-role-name">צבע ראשי</div><div class="bcp-role-desc">כפתורים, כותרות, אלמנטים מרכזיים</div></div>
+            <div style="display:flex;align-items:center;gap:9px;">
+              <span class="bcp-cur-hex" id="hexPrimary">#253E7A</span>
+              <div class="bcp-swatch" id="swPrimary" style="background:#253E7A"><input type="color" value="#253E7A" oninput="setBrandColorDirect('primary',this.value,this.closest('.bcp-swatch'))"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bcp-role">
+          <div class="bcp-role-top">
+            <div><div class="bcp-role-name">צבע משני</div><div class="bcp-role-desc">הדגשות, פרוגרס, קישורים</div></div>
+            <div style="display:flex;align-items:center;gap:9px;">
+              <span class="bcp-cur-hex" id="hexSecondary">#38C4F2</span>
+              <div class="bcp-swatch" id="swSecondary" style="background:#38C4F2"><input type="color" value="#38C4F2" oninput="setBrandColorDirect('secondary',this.value,this.closest('.bcp-swatch'))"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bcp-role">
+          <div class="bcp-role-top">
+            <div><div class="bcp-role-name">צבע טקסט</div><div class="bcp-role-desc">טקסט ראשי בדפים</div></div>
+            <div style="display:flex;align-items:center;gap:9px;">
+              <span class="bcp-cur-hex" id="hexText">#1a2f5e</span>
+              <div class="bcp-swatch" id="swText" style="background:#1a2f5e"><input type="color" value="#1a2f5e" oninput="setBrandColorDirect('text',this.value,this.closest('.bcp-swatch'))"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bcp-role">
+          <div class="bcp-role-top">
+            <div><div class="bcp-role-name">צבע רקע</div><div class="bcp-role-desc">רקע כללי של דף הקורס</div></div>
+            <div style="display:flex;align-items:center;gap:9px;">
+              <span class="bcp-cur-hex" id="hexBg">#F0F6FF</span>
+              <div class="bcp-swatch" id="swBg" style="background:#F0F6FF;border-color:var(--border-mid)"><input type="color" value="#F0F6FF" oninput="setBrandColorDirect('bg',this.value,this.closest('.bcp-swatch'))"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bcp-role" style="border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:20px;">
+          <div class="bcp-role-top">
+            <div><div class="bcp-role-name">צבע כפתור</div><div class="bcp-role-desc">כפתורי CTA · כפתור הצטרפות</div></div>
+            <div style="display:flex;align-items:center;gap:9px;">
+              <span class="bcp-cur-hex" id="hexBtn">#38C4F2</span>
+              <div class="bcp-swatch" id="swBtn" style="background:#38C4F2"><input type="color" value="#38C4F2" oninput="setBrandColorDirect('btn',this.value,this.closest('.bcp-swatch'))"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Button radius -->
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-light);">עגלות פינות</span>
+            <span style="font-size:11px;color:var(--text-light);" id="radiusLabel">עגול מלא</span>
+          </div>
+          <input class="radius-slider" type="range" min="0" max="30" value="30" id="btnRadius" oninput="updateRadius(this.value)">
+          <div class="btn-preview-row">
+            <button class="btn-preview" id="btnPreviewEl" style="background:#38C4F2;border-radius:30px;">הצטרף עכשיו</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FONTS PANEL -->
+      <div class="brand-section bdt-panel" id="panelFonts">
+
+        <!-- H1 -->
+        <div class="bft-type">
+          <div class="bft-row">
+            <span class="bft-label">כותרת ראשית · H1</span>
+            <span class="bft-size-hint">28–36px · 900</span>
+          </div>
+          <select class="font-select" id="fontH1" onchange="updateTypo('h1',this.value)">
+            <option value="Fredoka" selected>Fredoka</option>
+            <option value="Heebo">Heebo</option>
+            <option value="Frank Ruhl Libre">Frank Ruhl Libre</option>
+            <option value="Assistant">Assistant</option>
+          </select>
+          <div class="bft-preview" id="previewH1" style="font-family:'Fredoka',sans-serif;font-size:26px;font-weight:900;">כריזמה מול המצלמה</div>
+        </div>
+
+        <!-- H2 -->
+        <div class="bft-type">
+          <div class="bft-row">
+            <span class="bft-label">כותרת משנה · H2</span>
+            <span class="bft-size-hint">18–22px · 700</span>
+          </div>
+          <select class="font-select" id="fontH2" onchange="updateTypo('h2',this.value)">
+            <option value="Fredoka" selected>Fredoka</option>
+            <option value="Heebo">Heebo</option>
+            <option value="Frank Ruhl Libre">Frank Ruhl Libre</option>
+            <option value="Assistant">Assistant</option>
+          </select>
+          <div class="bft-preview" id="previewH2" style="font-family:'Fredoka',sans-serif;font-size:18px;font-weight:700;">שפת גוף מול המצלמה</div>
+        </div>
+
+        <!-- Body / Caption -->
+        <div class="bft-type">
+          <div class="bft-row">
+            <span class="bft-label">גוף טקסט</span>
+            <span class="bft-size-hint">14–16px · 400</span>
+          </div>
+          <select class="font-select" id="fontBody" onchange="updateTypo('body',this.value)">
+            <option value="Heebo" selected>Heebo</option>
+            <option value="Fredoka">Fredoka</option>
+            <option value="Assistant">Assistant</option>
+            <option value="Frank Ruhl Libre">Frank Ruhl Libre</option>
+          </select>
+          <div class="bft-preview" id="previewBody" style="font-family:'Heebo',sans-serif;font-size:14px;font-weight:400;line-height:1.65;">בשיעור זה נלמד כיצד שפת גוף נכונה משדרת ביטחון וסמכות בפני המצלמה.</div>
+        </div>
+
+        <!-- Quote -->
+        <div class="bft-type">
+          <div class="bft-row">
+            <span class="bft-label">ציטוט</span>
+            <span class="bft-size-hint">16–18px · Italic</span>
+          </div>
+          <select class="font-select" id="fontQuote" onchange="updateTypo('quote',this.value)">
+            <option value="Frank Ruhl Libre" selected>Frank Ruhl Libre</option>
+            <option value="Heebo">Heebo</option>
+            <option value="Fredoka">Fredoka</option>
+            <option value="Assistant">Assistant</option>
+          </select>
+          <div class="bft-preview" id="previewQuote" style="font-family:'Frank Ruhl Libre',serif;font-size:17px;font-style:italic;line-height:1.6;color:var(--text-sub);">"הדרך שבה אתה מופיע מול המצלמה אומרת יותר ממה שאתה אומר"</div>
+        </div>
+
+      </div>
+
+      <!-- SAVE -->
+      <div class="brand-save-bar">
+        <button class="btn btn-ghost" style="flex:1;" onclick="resetBrand()">איפוס</button>
+        <button class="btn btn-primary" style="flex:2;" onclick="saveBrand()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          שמור שינויים
+        </button>
+      </div>
+    </aside>
+
+    <!-- PREVIEW PANE -->
+    <div class="brand-preview">
+      <div class="preview-toolbar">
+        <!-- View tabs -->
+        <div class="preview-view-tabs">
+          <button class="preview-view-tab active" id="viewTabLanding" onclick="switchView('landing')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            דף נחיתה
+          </button>
+          <button class="preview-view-tab" id="viewTabEmail" onclick="switchView('email')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            מיילים
+          </button>
+          <button class="preview-view-tab" id="viewTabCourse" onclick="switchView('course')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            דף הקורס
+          </button>
+        </div>
+        <!-- Device + scale -->
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="preview-device-btns">
+            <button class="device-btn active" id="btnDesktop" onclick="setDevice('desktop')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </button>
+            <button class="device-btn" id="btnMobile" onclick="setDevice('mobile')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </button>
+          </div>
+          <span class="preview-scale" id="previewScaleLabel">שולחן עבודה</span>
+        </div>
+        <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px;gap:6px;" onclick="openShare()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          שתף דף
+        </button>
+      </div>
+
+      <!-- EDIT HINT -->
+      <div class="edit-hint" id="editHint">לחץ על כל טקסט לעריכה ישירה</div>
+
+      <!-- SHARE POPUP -->
+      <div class="share-overlay" id="shareOverlay" onclick="closeShare()"></div>
+      <div class="share-popup" id="sharePopup">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div class="share-popup-title">שיתוף דף הנחיתה</div>
+          <button onclick="closeShare()" style="background:none;border:none;cursor:pointer;color:var(--text-light);display:flex;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div class="share-popup-desc">שתף את הלינק הזה עם תלמידים פוטנציאליים</div>
+        <div class="share-url-row">
+          <span class="share-url-text" id="shareUrl">whiteboard.education/courses/charisma-on-camera</span>
+          <button class="share-copy-btn" id="shareCopyBtn" onclick="copyShareLink()">העתק</button>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="closeShare()" style="flex:1;padding:10px;border-radius:30px;border:1.5px solid var(--border);background:transparent;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;color:var(--text-sub);">סגור</button>
+          <button style="flex:2;padding:10px;border-radius:30px;background:linear-gradient(135deg,var(--cyan),#1db0d8);color:white;border:none;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;">
+            פתח בטאב חדש
+          </button>
+        </div>
+      </div>
+
+      <!-- ─── VIEW: LANDING PAGE ─── -->
+      <div class="preview-view active" id="viewLanding">
+      <div class="lp-wrap" id="lpWrap">
+        <div class="lp" id="lpEl">
+
+          <!-- Hero -->
+          <div class="lp-hero">
+            <div class="lp-hero-img">
+              <svg viewBox="0 0 200 120" width="200" height="120"><rect width="200" height="120" fill="none"/><circle cx="100" cy="50" r="30" fill="rgba(255,255,255,0.05)"/><polygon points="90,38 90,62 115,50" fill="rgba(255,255,255,0.1)"/></svg>
+            </div>
+            <div class="lp-hero-overlay"></div>
+            <div class="lp-hero-content">
+              <div class="lp-hero-badge" id="lpBadge" style="background:rgba(56,196,242,0.25);color:#38C4F2;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                קורס מוביל · 4.9 ★
+              </div>
+              <div class="lp-hero-title" id="lpTitle" style="font-family:'Fredoka',sans-serif;" contenteditable="true" data-hint>כריזמה מול המצלמה</div>
+              <div class="lp-hero-sub" id="lpSub" contenteditable="true" data-hint>לְמַד להופיע בטבעיות ובביטחון בכל וידאו</div>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="lp-body" id="lpBody" style="background:#ffffff;">
+
+            <!-- Instructor -->
+            <div class="lp-instructor">
+              <div class="lp-instructor-avatar" id="lpAvatar" style="background:#253E7A;">א</div>
+              <div>
+                <div class="lp-instructor-name" id="lpInstructorName">אלון כהן</div>
+                <div class="lp-instructor-role" id="lpInstructorRole">מרצה ומנחה · 12 שנות ניסיון</div>
+              </div>
+            </div>
+
+            <!-- Outcomes -->
+            <div class="lp-section-title" id="lpSectionTitle" style="color:#1a2f5e;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              מה תלמד בקורס?
+            </div>
+            <ul class="lp-outcomes" id="lpOutcomes" style="color:#1a2f5e;">
+              <li contenteditable="true" data-hint>טכניקות הצגה מול מצלמה שמשמשות מנחים מקצועיים<button class="remove-outcome-btn" onclick="removeOutcome(this)" title="הסר">×</button></li>
+              <li contenteditable="true" data-hint>איך לבנות נוכחות ביטחונית וכריזמטית בוידאו<button class="remove-outcome-btn" onclick="removeOutcome(this)" title="הסר">×</button></li>
+              <li contenteditable="true" data-hint>שפת גוף, מבט ותנועה — הדרך לתקשורת אפקטיבית<button class="remove-outcome-btn" onclick="removeOutcome(this)" title="הסר">×</button></li>
+              <li contenteditable="true" data-hint>תרגולים יומיים שמראים תוצאות תוך שבוע<button class="remove-outcome-btn" onclick="removeOutcome(this)" title="הסר">×</button></li>
+            </ul>
+            <button class="add-outcome-btn" onclick="addOutcome()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              הוסף נקודה
+            </button>
+
+            <!-- Stats -->
+            <div class="lp-stats">
+              <div class="lp-stat" id="lpStat1">
+                <div class="lp-stat-num" id="lpStatNum1" style="color:#253E7A;">247</div>
+                <div class="lp-stat-label">תלמידים</div>
+              </div>
+              <div class="lp-stat" id="lpStat2">
+                <div class="lp-stat-num" id="lpStatNum2" style="color:#253E7A;">18</div>
+                <div class="lp-stat-label">שיעורים</div>
+              </div>
+              <div class="lp-stat" id="lpStat3">
+                <div class="lp-stat-num" id="lpStatNum3" style="color:#253E7A;">4.9★</div>
+                <div class="lp-stat-label">דירוג</div>
+              </div>
+            </div>
+
+            <!-- Price CTA -->
+            <div class="lp-price-box" id="lpPriceBox" style="background:#253E7A;">
+              <div class="lp-price-label" style="color:rgba(255,255,255,0.7);">מחיר הקורס</div>
+              <div class="lp-price-amount" contenteditable="true" data-hint>₪297</div>
+              <button class="lp-cta-btn" id="lpCtaBtn" style="background:#38C4F2;border-radius:30px;" contenteditable="true" data-hint>
+                הצטרף לקורס עכשיו
+              </button>
+              <div class="lp-features">
+                <div class="lp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>גישה לכל החיים</div>
+                <div class="lp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>תעודת סיום</div>
+                <div class="lp-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>תמיכה ישירה</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      </div><!-- /viewLanding -->
+
+      <!-- ─── VIEW: EMAIL ─── -->
+      <div class="preview-view" id="viewEmail">
+        <div class="lp-wrap">
+          <div style="width:100%;max-width:600px;font-family:'Heebo',sans-serif;">
+            <!-- Email chrome -->
+            <div style="background:var(--bg);border-radius:var(--radius-md) var(--radius-md) 0 0;padding:12px 20px;border:1px solid var(--border);border-bottom:none;display:flex;align-items:center;gap:10px;">
+              <div style="display:flex;gap:6px;"><div style="width:12px;height:12px;border-radius:50%;background:#ff5f57;"></div><div style="width:12px;height:12px;border-radius:50%;background:#ffbd2e;"></div><div style="width:12px;height:12px;border-radius:50%;background:#28c840;"></div></div>
+              <div style="flex:1;background:white;border-radius:6px;padding:5px 12px;font-size:11px;color:var(--text-light);border:1px solid var(--border);">no-reply@whiteboard.education</div>
+            </div>
+            <!-- Email card -->
+            <div id="emailCard" style="background:white;border-radius:0 0 var(--radius-md) var(--radius-md);overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.10);border:1px solid var(--border);border-top:none;">
+              <!-- Email header -->
+              <div id="emailHeader" style="background:#253E7A;padding:32px 40px;text-align:center;">
+                <div style="font-size:22px;font-weight:900;color:white;margin-bottom:6px;" id="emailHeadline">ברוך הבא לקורס! 🎉</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.75);">הרשמתך אושרה בהצלחה</div>
+              </div>
+              <!-- Email body -->
+              <div style="padding:36px 40px;">
+                <div style="font-size:14px;color:#444;line-height:1.7;margin-bottom:24px;">
+                  שלום <strong>אלון</strong>,<br><br>
+                  תודה שנרשמת לקורס <strong>"כריזמה מול המצלמה"</strong>. אנחנו שמחים שאתה איתנו!<br><br>
+                  הגישה לקורס זמינה מיד — תוכל להתחיל ללמוד בכל עת שנוח לך.
+                </div>
+                <!-- CTA button -->
+                <div style="text-align:center;margin-bottom:28px;">
+                  <a id="emailCtaBtn" style="display:inline-block;padding:14px 36px;border-radius:30px;background:#253E7A;color:white;font-weight:900;font-size:15px;text-decoration:none;">כניסה לקורס</a>
+                </div>
+                <!-- Course info -->
+                <div style="background:#f8f9fb;border-radius:var(--radius-md);padding:20px;margin-bottom:24px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                  <div style="text-align:center;"><div style="font-size:20px;font-weight:900;color:#253E7A;" id="emailStatNum1">18</div><div style="font-size:11px;color:#888;">שיעורים</div></div>
+                  <div style="text-align:center;"><div style="font-size:20px;font-weight:900;color:#253E7A;" id="emailStatNum2">∞</div><div style="font-size:11px;color:#888;">גישה לכל החיים</div></div>
+                </div>
+                <!-- Instructor block in email -->
+                <div id="emailInstructorBlock" style="display:flex;align-items:center;gap:14px;padding:16px;background:#f8f9fb;border-radius:var(--radius-md);margin-bottom:20px;">
+                  <div id="emailAvatar" style="width:44px;height:44px;border-radius:50%;background:#253E7A;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;color:white;flex-shrink:0;">א</div>
+                  <div>
+                    <div id="emailInstructorName" style="font-size:14px;font-weight:700;color:#1a2f5e;margin-bottom:2px;">אלון כהן</div>
+                    <div id="emailInstructorRole" style="font-size:12px;color:#888;">מרצה ומנחה · 12 שנות ניסיון</div>
+                    <div id="emailInstructorBio" style="font-size:12px;color:#666;margin-top:4px;line-height:1.5;">מאמן תקשורת ומרצה בתחום המצגות.</div>
+                  </div>
+                </div>
+                <div style="font-size:13px;color:#888;line-height:1.6;border-top:1px solid #f0f0f0;padding-top:20px;">
+                  אם יש לך שאלות, תוכל לפנות אלינו בכל עת.<br>
+                  בהצלחה! 🚀
+                </div>
+              </div>
+              <!-- Email footer -->
+              <div id="emailFooter" style="background:#f8f9fb;padding:20px 40px;text-align:center;border-top:1px solid #f0f0f0;">
+                <div style="font-size:11px;color:#aaa;margin-bottom:6px;">נשלח מ-WHITEBOARD · whiteboard.education</div>
+                <div style="font-size:11px;color:#ccc;">להסרה מהרשימה <a style="color:#ccc;">לחץ כאן</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /viewEmail -->
+
+      <!-- ─── VIEW: COURSE PAGE ─── -->
+      <div class="preview-view" id="viewCourse">
+        <div class="lp-wrap">
+          <div id="coursePageEl" style="width:100%;max-width:700px;background:white;border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.12);">
+            <!-- Course topbar -->
+            <div id="courseTopbar" style="background:#253E7A;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;">
+              <div style="font-size:14px;font-weight:700;color:white;">כריזמה מול המצלמה</div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="font-size:12px;color:rgba(255,255,255,0.7);">שיעור 3 מתוך 18</div>
+                <div style="width:80px;height:5px;background:rgba(255,255,255,0.2);border-radius:10px;overflow:hidden;"><div id="courseProgress" style="width:16%;height:100%;background:#38C4F2;border-radius:10px;"></div></div>
+              </div>
+            </div>
+            <!-- Video player -->
+            <div style="background:#111;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;">
+              <div style="position:absolute;inset:0;background:linear-gradient(135deg,#111 0%,#222 100%);display:flex;align-items:center;justify-content:center;">
+                <div id="coursePlayBtn" style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;">
+                  <svg viewBox="0 0 24 24" fill="white" width="24" height="24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </div>
+              </div>
+              <div style="position:absolute;bottom:12px;right:12px;font-size:11px;color:rgba(255,255,255,0.6);background:rgba(0,0,0,0.5);padding:3px 8px;border-radius:4px;">12:34</div>
+            </div>
+            <!-- Lesson info -->
+            <div style="padding:24px;border-bottom:1px solid #f0f0f0;">
+              <div style="font-size:18px;font-weight:900;color:#1a2f5e;margin-bottom:6px;" id="courseLessonTitle">שיעור 3 — שפת גוף מול המצלמה</div>
+              <div style="font-size:13px;color:#888;margin-bottom:16px;">מבוא לשפת גוף · 12 דקות</div>
+              <div style="font-size:14px;color:#555;line-height:1.7;">בשיעור זה נלמד כיצד שפת גוף נכונה משדרת ביטחון וסמכות. נראה דוגמאות מעשיות ותרגולים שתוכל ליישם מיד.</div>
+            </div>
+            <!-- Lesson list -->
+            <div style="padding:20px 24px;">
+              <div style="font-size:13px;font-weight:900;color:#1a2f5e;margin-bottom:12px;">שיעורים בפרק הנוכחי</div>
+              <div style="display:flex;flex-direction:column;gap:4px;">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-sm);background:#f8f9fb;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#3a8838" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span style="font-size:13px;color:#888;text-decoration:line-through;">שיעור 1 — מבוא ויעדי הקורס</span>
+                  <span style="margin-right:auto;font-size:11px;color:#aaa;">8 דק׳</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-sm);background:#f8f9fb;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#3a8838" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span style="font-size:13px;color:#888;text-decoration:line-through;">שיעור 2 — עמידה והופעה כללית</span>
+                  <span style="margin-right:auto;font-size:11px;color:#aaa;">10 דק׳</span>
+                </div>
+                <div id="activeLessonRow" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-sm);background:#253E7A;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="14" height="14"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <span style="font-size:13px;font-weight:700;color:white;">שיעור 3 — שפת גוף מול המצלמה</span>
+                  <span style="margin-right:auto;font-size:11px;color:rgba(255,255,255,0.6);">12 דק׳</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-sm);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <span style="font-size:13px;color:#bbb;">שיעור 4 — מבט ועיניים</span>
+                  <span style="margin-right:auto;font-size:11px;color:#ccc;">9 דק׳</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /viewCourse -->
+
+    </div><!-- /brand-preview -->
+
+  </div><!-- /brand-layout -->
+
+</div><!-- /main -->
+
+<script>
+// ── THEME ────────────────────────────────────
+function toggleTheme(){
+  const h=document.documentElement;
+  h.setAttribute('data-theme',h.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+
+// ── BRAND TABS ────────────────────────────────
+function switchBrandTab(tab){
+  ['colors','fonts'].forEach(t=>{
+    document.getElementById('bdt'+cap(t)).classList.toggle('active',t===tab);
+    document.getElementById('panel'+cap(t)).classList.toggle('active',t===tab);
+  });
+  // Update segmented buttons
+  document.querySelectorAll('.bseg-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('bdt'+cap(tab)).classList.add('active');
+}
+
+// ── COLORS ────────────────────────────────────
+const colors={primary:'#253E7A',secondary:'#38C4F2',bg:'#F0F6FF',text:'#1a2f5e',btn:'#38C4F2'};
+
+function setBrandColorDirect(role,hex,swatch){
+  colors[role]=hex;
+  swatch.style.background=hex;
+  document.getElementById('hex'+cap(role)).textContent=hex.toUpperCase();
+  if(role==='btn'){
+    const ctaBtn=document.getElementById('lpCtaBtn');
+    if(ctaBtn) ctaBtn.style.background=hex;
+    const previewEl=document.getElementById('btnPreviewEl');
+    if(previewEl) previewEl.style.background=hex;
+    const emailBtn=document.getElementById('emailCtaBtn');
+    if(emailBtn) emailBtn.style.background=hex;
+    markDirty();
+    return;
+  }
+  applyBrandToPreview();
+  markDirty();
+}
+
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+
+function applyBrandToPreview(){
+  const {primary,secondary,text,btn}=colors;
+  const r=document.getElementById('btnRadius').value+'px';
+  const btnColor=btn||secondary;
+
+  // Landing page
+  document.getElementById('lpBadge').style.color=secondary;
+  document.getElementById('lpAvatar').style.background=primary;
+  document.getElementById('lpSectionTitle').style.color=primary;
+  document.getElementById('lpOutcomes').style.color=text;
+  ['lpStatNum1','lpStatNum2','lpStatNum3'].forEach(id=>document.getElementById(id).style.color=primary);
+  document.getElementById('lpPriceBox').style.background=primary;
+  document.getElementById('lpCtaBtn').style.background=btnColor;
+  document.getElementById('lpCtaBtn').style.borderRadius=r;
+  document.getElementById('btnPreviewEl').style.background=btnColor;
+
+  // Email
+  document.getElementById('emailHeader').style.background=primary;
+  document.getElementById('emailCtaBtn').style.background=btnColor;
+  document.getElementById('emailCtaBtn').style.borderRadius=r;
+  ['emailStatNum1','emailStatNum2'].forEach(id=>document.getElementById(id).style.color=primary);
+
+  // Course page
+  document.getElementById('courseTopbar').style.background=primary;
+  document.getElementById('activeLessonRow').style.background=primary;
+  document.getElementById('courseProgress').style.background=secondary;
+}
+
+// ── TYPOGRAPHY ────────────────────────────────
+const typoFonts={h1:'Fredoka',h2:'Fredoka',body:'Heebo',quote:'Frank Ruhl Libre'};
+
+function updateTypo(type,val){
+  typoFonts[type]=val;
+  const serif=val==='Frank Ruhl Libre';
+  const fam=`'${val}',${serif?'serif':'sans-serif'}`;
+  const preview=document.getElementById('preview'+cap(type==='body'?'body':type==='quote'?'quote':type));
+  if(preview) preview.style.fontFamily=fam;
+
+  // Push to preview pane
+  if(type==='h1'){
+    document.getElementById('lpTitle').style.fontFamily=fam;
+  } else if(type==='h2'){
+    document.getElementById('lpSectionTitle').style.fontFamily=fam;
+    const ct=document.getElementById('courseLessonTitle');
+    if(ct) ct.style.fontFamily=fam;
+  } else if(type==='body'){
+    document.getElementById('lpSub').style.fontFamily=fam;
+    document.getElementById('lpBody').style.fontFamily=fam;
+  }
+  markDirty();
+}
+
+// legacy alias used by reset
+function updateFont(type,val){
+  if(type==='heading') updateTypo('h1',val);
+  else updateTypo('body',val);
+}
+
+// ── BUTTON RADIUS ────────────────────────────
+function updateRadius(val){
+  const px=val+'px';
+  document.getElementById('lpCtaBtn').style.borderRadius=px;
+  document.getElementById('btnPreviewEl').style.borderRadius=px;
+  const labels={0:'ישר',8:'מעוגל קל',16:'מעוגל',30:'עגול מלא'};
+  const closest=Object.keys(labels).reduce((a,b)=>Math.abs(b-val)<Math.abs(a-val)?b:a);
+  document.getElementById('radiusLabel').textContent=labels[closest]||val+'px';
+}
+
+// ── INIT ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  applyBrandToPreview();
+});
+
+// ── INSTRUCTOR PROFILE ────────────────────────
+function updateInstructor(){
+  const name=document.getElementById('instructorName').value||'שם המרצה';
+  const role=document.getElementById('instructorRole').value||'תפקיד';
+  const bio=document.getElementById('instructorBio').value||'';
+  const initial=name.trim().charAt(0)||'מ';
+  // panel avatar letter
+  document.getElementById('panelAvatar').textContent=initial;
+  // landing page
+  document.getElementById('lpInstructorName').textContent=name;
+  document.getElementById('lpAvatar').textContent=initial;
+  document.getElementById('lpInstructorRole').textContent=role;
+  // email
+  document.getElementById('emailInstructorName').textContent=name;
+  document.getElementById('emailAvatar').textContent=initial;
+  document.getElementById('emailInstructorRole').textContent=role;
+  document.getElementById('emailInstructorBio').textContent=bio.substring(0,80)+(bio.length>80?'…':'');
+}
+
+// ── VIEW SWITCHER ────────────────────────────
+const views=['landing','email','course'];
+function switchView(view){
+  views.forEach(v=>{
+    document.getElementById('viewTab'+cap(v)).classList.toggle('active',v===view);
+    document.getElementById('view'+cap(v)).classList.toggle('active',v===view);
+  });
+}
+
+// ── DEVICE ──────────────────────────────────
+function setDevice(type){
+  const wrap=document.getElementById('lpWrap');
+  const lp=document.getElementById('lpEl');
+  document.getElementById('btnDesktop').classList.toggle('active',type==='desktop');
+  document.getElementById('btnMobile').classList.toggle('active',type==='mobile');
+  document.getElementById('previewScaleLabel').textContent=type==='desktop'?'שולחן עבודה':'מובייל';
+  if(type==='mobile'){lp.style.maxWidth='375px';wrap.style.justifyContent='center';}
+  else{lp.style.maxWidth='700px';wrap.style.justifyContent='center';}
+}
+
+// ── LOGO ─────────────────────────────────────
+function removeLogo(){
+  document.getElementById('logoCurrentRow').style.display='none';
+  document.getElementById('logoUploadArea').style.display='flex';
+}
+
+// ── RESET ────────────────────────────────────
+function resetBrand(){
+  if(!confirm('לאפס את ערכת המותג לברירות המחדל?'))return;
+  // Colors
+  const defaults={primary:'#253E7A',secondary:'#38C4F2',bg:'#F0F6FF',text:'#1a2f5e',btn:'#38C4F2'};
+  Object.entries(defaults).forEach(([role,hex])=>{
+    colors[role]=hex;
+    const hexEl=document.getElementById('hex'+cap(role));
+    if(hexEl) hexEl.textContent=hex.toUpperCase();
+    const sw=document.getElementById('sw'+cap(role));
+    if(sw){ sw.style.background=hex; sw.querySelector('input[type="color"]').value=hex; }
+  });
+  applyBrandToPreview();
+  // Fonts
+  ['h1','h2'].forEach(t=>{
+    document.getElementById('font'+t.toUpperCase()).value='Fredoka';
+    updateTypo(t,'Fredoka');
+  });
+  document.getElementById('fontBody').value='Heebo';
+  updateTypo('body','Heebo');
+  document.getElementById('fontQuote').value='Frank Ruhl Libre';
+  updateTypo('quote','Frank Ruhl Libre');
+  // Radius
+  document.getElementById('btnRadius').value=30;
+  updateRadius(30);
+}
+
+// ── SHARE ────────────────────────────────────
+function openShare(){
+  document.getElementById('sharePopup').classList.add('open');
+  document.getElementById('shareOverlay').classList.add('open');
+}
+function closeShare(){
+  document.getElementById('sharePopup').classList.remove('open');
+  document.getElementById('shareOverlay').classList.remove('open');
+}
+function copyShareLink(){
+  const url=document.getElementById('shareUrl').textContent;
+  navigator.clipboard?.writeText(url).catch(()=>{});
+  const btn=document.getElementById('shareCopyBtn');
+  btn.textContent='הועתק ✓';
+  btn.style.background='#3a8838';
+  setTimeout(()=>{btn.textContent='העתק';btn.style.background='';},2000);
+}
+
+// ── EDIT HINT (show once on first hover of landing view) ─────
+let hintShown=false;
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('viewLanding').addEventListener('mouseover',()=>{
+    if(hintShown)return;
+    hintShown=true;
+    const hint=document.getElementById('editHint');
+    hint.classList.add('show');
+    setTimeout(()=>hint.classList.remove('show'),3000);
+  },{once:true});
+});
+
+// ── SAVE STATE BUTTON ──────────────────────────────
+function markDirty(){
+  const btn=document.getElementById('saveBtn');
+  if(btn.dataset.state==='clean'||btn.dataset.state==='saved'){
+    btn.dataset.state='unsaved';
+    btn.style.pointerEvents='';
+    updateSaveBtnLabel();
+  }
+}
+function updateSaveBtnLabel(){
+  const btn=document.getElementById('saveBtn');
+  const lbl={saved:'ערכת המותג עודכנה',unsaved:'שינויים שלא נשמרו',clean:'כל השינויים נשמרו'};
+  document.getElementById('saveBtnLabel').textContent=lbl[btn.dataset.state]??'שינויים שלא נשמרו';
+}
+
+function saveBrand(){
+  const btn=document.getElementById('saveBtn');
+  btn.dataset.hovering='false';
+  btn.dataset.state='saved';
+  document.getElementById('saveBtnLabel').textContent='ערכת המותג עודכנה';
+  setTimeout(()=>{
+    btn.dataset.state='clean';
+    updateSaveBtnLabel();
+  },4000);
+}
+
+// ── OUTCOMES ADD/REMOVE ──────────────────────────
+function addOutcome(){
+  const ul=document.getElementById('lpOutcomes');
+  const li=document.createElement('li');
+  li.contentEditable='true';
+  li.setAttribute('data-hint','');
+  li.textContent='נקודה חדשה — לחץ לעריכה';
+  const btn=document.createElement('button');
+  btn.className='remove-outcome-btn';
+  btn.title='הסר';
+  btn.textContent='×';
+  btn.onclick=function(){removeOutcome(this);};
+  li.appendChild(btn);
+  ul.appendChild(li);
+  // focus the new item
+  li.focus();
+  const range=document.createRange();
+  range.selectNodeContents(li);
+  range.collapse(false);
+  const sel=window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+function removeOutcome(btn){
+  const li=btn.closest('li');
+  const ul=li.parentElement;
+  if(ul.querySelectorAll('li').length<=1)return; // keep at least 1
+  li.remove();
+}
+</script>
+</body>
+</html>

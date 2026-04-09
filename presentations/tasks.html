@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHITEBOARD | משימות מערכת</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:      #253E7A;
+    --cyan:      #38C4F2;
+    --pink:      #F05680;
+    --yellow:    #EAD654;
+    --green:     #22c55e;
+    --white:     #FFFFFF;
+    --font-en:   'Fredoka', sans-serif;
+    --font-he:   'Heebo', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: #0d1b3e;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    user-select: none;
+  }
+
+  /* ─── SLIDESHOW ─────────────────────────────────────────── */
+  .slideshow {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: scale(0.97);
+    background: #0d1b3e;
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: scale(1);
+  }
+
+  .slide.exit {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+
+  /* ─── PROGRESS BAR ──────────────────────────────────────── */
+  #progress-bar {
+    position: fixed;
+    bottom: 0; left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--cyan), var(--pink));
+    transition: width 0.5s ease;
+    z-index: 100;
+    border-radius: 2px;
+  }
+
+  /* ─── NAV ───────────────────────────────────────────────── */
+  .nav-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+
+  .nav-btn:hover {
+    background: rgba(56,196,242,0.35);
+    border-color: var(--cyan);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  #prev-btn { left: 20px; }
+  #next-btn { right: 20px; }
+
+  /* ─── SLIDE COUNTER ─────────────────────────────────────── */
+  #slide-counter {
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .dot.active {
+    background: var(--cyan);
+    transform: scale(1.4);
+  }
+
+  /* ─── LOGO CORNER ───────────────────────────────────────── */
+  .logo-corner {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 100;
+    opacity: 0.85;
+  }
+
+  .logo-corner img {
+    height: 48px;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  }
+
+  /* ─── SLIDE COUNTER TEXT ────────────────────────────────── */
+  #slide-number {
+    position: fixed;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-en);
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    z-index: 100;
+    letter-spacing: 2px;
+  }
+
+  /* ─── BOARDi FLOATING ───────────────────────────────────── */
+  .boardi-deco {
+    position: absolute;
+    opacity: 0.7;
+    z-index: 1;
+    pointer-events: none;
+    animation: boardiFloat 5s ease-in-out infinite;
+  }
+
+  @keyframes boardiFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+
+  /* ─── PARTICLES ─────────────────────────────────────────── */
+  .particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: drift linear infinite;
+  }
+
+  @keyframes drift {
+    0% { transform: translateY(0) scale(1); opacity: 0.7; }
+    100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     COMMON SLIDE STYLES
+  ══════════════════════════════════════════════════════════════ */
+
+  .slide-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    width: 100%;
+    padding: 40px 80px;
+    text-align: right;
+  }
+
+  .slide-num {
+    font-family: var(--font-en);
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .slide-heading {
+    font-family: var(--font-he);
+    font-weight: 900;
+    font-size: 42px;
+    line-height: 1.1;
+    color: white;
+    margin-bottom: 24px;
+  }
+
+  .slide-heading em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--cyan), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .slide-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  /* ─── TABLE STYLES ──────────────────────────────────────── */
+  .table-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+    overflow-x: auto;
+  }
+
+  .table-card table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 500px;
+  }
+
+  .table-card thead th {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 500;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    text-align: right;
+  }
+
+  .table-card tbody td {
+    font-size: 14px;
+    color: white;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    vertical-align: middle;
+  }
+
+  .table-card tbody tr:hover {
+    background: rgba(255,255,255,0.04);
+  }
+
+  .table-card tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Status badges */
+  .badge {
+    display: inline-block;
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .badge-designed {
+    background: rgba(34,197,94,0.15);
+    color: #22c55e;
+  }
+
+  .badge-reference {
+    background: rgba(56,196,242,0.15);
+    color: #38C4F2;
+  }
+
+  .badge-missing {
+    background: rgba(240,86,128,0.15);
+    color: #F05680;
+  }
+
+  .badge-future {
+    background: rgba(234,214,84,0.15);
+    color: #EAD654;
+  }
+
+  /* Mobile check */
+  .mobile-yes { color: #22c55e; font-weight: 700; }
+  .mobile-no { color: #F05680; font-weight: 700; }
+
+  /* Master filter buttons */
+  .mf-btn{padding:7px 18px;border-radius:30px;border:1.5px solid rgba(255,255,255,0.15);background:transparent;font-family:var(--font-he);font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);cursor:pointer;transition:all .2s;}
+  .mf-btn:hover{border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.8);}
+  .mf-btn.active{background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.3);}
+  /* Master table rows */
+  #masterBody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background .15s;}
+  #masterBody tr:hover{background:rgba(255,255,255,0.04);}
+  #masterBody td{padding:9px 16px;font-size:13px;color:rgba(255,255,255,0.75);}
+  #masterBody td:first-child{font-size:11px;font-weight:700;color:rgba(255,255,255,0.35);white-space:nowrap;}
+
+  /* Links */
+  .table-card a {
+    color: var(--cyan);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+
+  .table-card a:hover {
+    text-decoration: underline;
+  }
+
+  .note-text {
+    margin-top: 16px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 1 — COVER
+  ══════════════════════════════════════════════════════════════ */
+  #slide-1 {
+    background: linear-gradient(135deg, #0d1b3e 0%, #253E7A 50%, #1a3060 100%);
+    overflow: hidden;
+  }
+
+  #slide-1::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 80%, rgba(56,196,242,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 80% 20%, rgba(240,86,128,0.15) 0%, transparent 60%);
+  }
+
+  .cover-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .cover-tag {
+    display: inline-block;
+    background: rgba(56,196,242,0.2);
+    border: 1px solid rgba(56,196,242,0.5);
+    color: var(--cyan);
+    font-family: var(--font-en);
+    font-size: 13px;
+    letter-spacing: 3px;
+    padding: 6px 16px;
+    border-radius: 30px;
+    text-transform: uppercase;
+  }
+
+  .cover-title {
+    font-family: var(--font-he);
+    font-weight: 900;
+    font-size: 72px;
+    line-height: 1.05;
+    color: white;
+  }
+
+  .cover-title span {
+    background: linear-gradient(90deg, var(--cyan), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .cover-subtitle {
+    font-size: 22px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .cover-date {
+    font-family: var(--font-en);
+    font-size: 14px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 2px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 2 — SUMMARY
+  ══════════════════════════════════════════════════════════════ */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 24px 16px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s;
+  }
+
+  .stat-card:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-4px);
+  }
+
+  .stat-value {
+    font-family: var(--font-en);
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.4;
+  }
+
+  .progress-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .progress-ring-wrap {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+  }
+
+  .progress-ring-wrap svg {
+    width: 100px;
+    height: 100px;
+    transform: rotate(-90deg);
+  }
+
+  .progress-ring-bg {
+    fill: none;
+    stroke: rgba(255,255,255,0.1);
+    stroke-width: 8;
+  }
+
+  .progress-ring-fill {
+    fill: none;
+    stroke: url(#progressGrad);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 251;
+    stroke-dashoffset: 63;
+    transition: stroke-dashoffset 1s ease;
+  }
+
+  .progress-percent {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-en);
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .progress-label {
+    color: rgba(255,255,255,0.6);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .progress-label strong {
+    color: white;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 14 — TASK LIST
+  ══════════════════════════════════════════════════════════════ */
+  .task-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  .task-column {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .task-column-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .priority-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .priority-high { background: var(--pink); }
+  .priority-medium { background: var(--yellow); }
+  .priority-future { background: rgba(255,255,255,0.25); }
+
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+  }
+
+  .task-item:last-child {
+    border-bottom: none;
+  }
+
+  .task-number {
+    font-family: var(--font-en);
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.35);
+    min-width: 22px;
+    padding-top: 2px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 15 — CLOSING
+  ══════════════════════════════════════════════════════════════ */
+  .closing-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .closing-title {
+    font-family: var(--font-he);
+    font-weight: 900;
+    font-size: 64px;
+    color: white;
+  }
+
+  .closing-subtitle {
+    font-family: var(--font-en);
+    font-size: 18px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .closing-boardi img {
+    width: 220px;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 20px 40px rgba(56,196,242,0.3));
+  }
+
+  /* ─── RADIAL BG HELPERS ─────────────────────────────────── */
+  .bg-radial {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .bg-radial::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 50% 40% at 25% 75%, rgba(56,196,242,0.1) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 35% at 75% 25%, rgba(240,86,128,0.08) 0%, transparent 60%);
+  }
+
+  /* Scrollable table area */
+  .slide-inner.scrollable {
+    max-height: 90vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.15) transparent;
+  }
+
+  .slide-inner.scrollable::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .slide-inner.scrollable::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .slide-inner.scrollable::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Logo corner -->
+<div class="logo-corner">
+  <img src="LOGO/LOGO PNG/לוגו מלא צבעוני בלי רקע.png" alt="WHITEBOARD">
+</div>
+
+<!-- Progress bar -->
+<div id="progress-bar" style="width:6.67%"></div>
+
+<!-- Navigation -->
+<button class="nav-btn" id="prev-btn">&larr;</button>
+<button class="nav-btn" id="next-btn">&rarr;</button>
+
+<!-- Slide number -->
+<div id="slide-number">1 / 15</div>
+
+<!-- Slide dots -->
+<div id="slide-counter"></div>
+
+<!-- SVG defs for progress ring gradient -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38C4F2"/>
+      <stop offset="100%" stop-color="#F05680"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="slideshow">
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 1 — COVER
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide active" id="slide-1">
+    <div class="particles" id="particles"></div>
+    <img class="boardi-deco" src="BOARDi/PNG/BOARDi_1.png" style="width:130px; bottom:60px; left:80px; animation-delay:0.5s;" alt="">
+    <div class="cover-content">
+      <div class="cover-tag">WHITEBOARD SYSTEM</div>
+      <div class="cover-title"><span>משימות מערכת</span></div>
+      <div class="cover-subtitle">WHITEBOARD — מפת כל המסכים, המשימות והתכניות</div>
+      <div class="cover-date">APRIL 2026</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 2 — SUMMARY
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-2">
+    <div class="bg-radial"></div>
+    <img class="boardi-deco" src="BOARDi/PNG/BOARDi_3.png" style="width:110px; top:50px; left:60px; animation-delay:1s;" alt="">
+    <div class="slide-inner">
+      <div class="slide-num">SLIDE 02</div>
+      <div class="slide-heading">סיכום <em>כללי</em></div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--cyan)">~45</div>
+          <div class="stat-label">מסכים במערכת</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--pink)">10</div>
+          <div class="stat-label">פיצ'רים</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--yellow)">6</div>
+          <div class="stat-label">תבניות בית ספר</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:rgba(255,255,255,0.35)">~15</div>
+          <div class="stat-label">מסכים חסרים</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--pink)">0</div>
+          <div class="stat-label">מותאם למובייל</div>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-ring-wrap">
+          <svg viewBox="0 0 100 100">
+            <circle class="progress-ring-bg" cx="50" cy="50" r="40"/>
+            <circle class="progress-ring-fill" cx="50" cy="50" r="40"/>
+          </svg>
+          <div class="progress-percent">75%</div>
+        </div>
+        <div class="progress-label">
+          <strong>התקדמות עיצוב כללית</strong>
+          כ-75% מהמסכים עוצבו או קיימים כרפרנס. נותרו כ-15 מסכים חסרים ו-0 מסכים מותאמים למובייל.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 3 — REGISTRATION & PAYMENTS
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-3">
+    <div class="bg-radial"></div>
+    <img class="boardi-deco" src="BOARDi/PNG/BOARDi_5.png" style="width:120px; bottom:50px; left:50px; animation-delay:0.3s;" alt="">
+    <div class="slide-inner">
+      <div class="slide-num">SLIDE 03</div>
+      <div class="slide-heading">הרשמה <em>ותשלומים</em></div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>מסך</th>
+              <th>סטטוס</th>
+              <th>מובייל</th>
+              <th>קישור</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>מסך הרשמה זמני</td>
+              <td><span class="badge badge-reference">רפרנס</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים קיימים/מסך הרשמה זמני.png" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>מסך הרשמה מעוצב</td>
+              <td><span class="badge badge-missing">חסר</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>מסך תשלום + מסלולים</td>
+              <td><span class="badge badge-missing">חסר</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>דף נחיתה שיווקי (אתר הבית)</td>
+              <td><span class="badge badge-missing">חסר</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 4 — COURSE MANAGEMENT
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-4">
+    <div class="bg-radial"></div>
+    <div class="slide-inner scrollable">
+      <div class="slide-num">SLIDE 04</div>
+      <div class="slide-heading">ניהול <em>קורסים</em></div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>מסך</th>
+              <th>סטטוס</th>
+              <th>מובייל</th>
+              <th>קישור</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>הקורסים שלי (תלמיד)</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מסך הקורסים שלי כתלמיד - light-dark.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>מרכזי הידע שלי</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מרכזי הידע שלי - light-dark.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>צפייה בקורס</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/צפייה בקורס.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>טבלת עריכה</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/טבלת העריכה - light-dark.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>הגדרות קורס</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/הגדרות קורס.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>אנליטיקס</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/אנליטיקס.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>יצירת קורס (popup)</td>
+              <td><span class="badge badge-reference">רפרנס</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים קיימים/יצירת קורס שלב 1.png" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>BOARDi — מולטי אייג'נט</td>
+              <td><span class="badge badge-future">תכנית עתידית</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 5 — STUDENTS & MAILING
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-5">
+    <div class="bg-radial"></div>
+    <div class="slide-inner">
+      <div class="slide-num">SLIDE 05</div>
+      <div class="slide-heading">ניהול תלמידים <em>ודיוור</em></div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>מסך</th>
+              <th>סטטוס</th>
+              <th>מובייל</th>
+              <th>קישור</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>התלמידים שלי (ישן)</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מסך התלמידים שלי - light-dark.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>דיוור (ישן)</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/דיוור.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>סקיצה למערכת דיוור</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/סקיצה למערכת דיוור.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>ערכת מותג (ישנה)</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/ערכת מותג.html" target="_blank">צפה</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 6 — CLUB
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-6">
+    <div class="bg-radial"></div>
+    <div class="slide-inner scrollable">
+      <div class="slide-num">SLIDE 06</div>
+      <div class="slide-heading"><em>מועדון</em></div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>מסך</th>
+              <th>סטטוס</th>
+              <th>מובייל</th>
+              <th>קישור</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>בית</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מועדון/מועדון - בית.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>פיד</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מועדון/מועדון - פיד.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>קורסים</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מועדון/מועדון - קורסים.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>קורס פעיל</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מועדון/מועדון - קורס פעיל.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>צ'אט</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מועדון/מועדון - צ'אט.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>אירועים</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מועדון/מועדון - אירועים.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>לוח מובילים</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מועדון/מועדון - לוח מובילים.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>חברים</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מועדון/מועדון - חברים.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>עזיבה</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מועדון/מועדון - עזיבה.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>דיוור</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מועדון/מועדון - דיוור.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>הגדרות מועדון (כללי, תמחור, הרשאות, צ'אט, אירועים + ניווט עוגן)</td>
+              <td><span class="badge badge-done">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מועדון/מועדון - הגדרות.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>ערכת מותג מועדון (צבעים, פונטים, קאבר, תצוגה מקדימה)</td>
+              <td><span class="badge badge-done">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/מועדון/מועדון - ערכת מותג.html" target="_blank">צפה</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 7 — SCHOOL TEMPLATES
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-7">
+    <div class="bg-radial"></div>
+    <div class="slide-inner scrollable">
+      <div class="slide-num">SLIDE 07</div>
+      <div class="slide-heading">בית ספר — <em>תבניות</em></div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>תבנית</th>
+              <th>מסכים</th>
+              <th>סטטוס</th>
+              <th>קישור</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>קלאסי</td>
+              <td>בית, קורסים, אודות, שאלות נפוצות, צור קשר</td>
+              <td><span class="badge badge-designed">עוצב (5)</span></td>
+              <td>
+                <a href="מסכים מחודשים/בית ספר/בית ספר - קלאסי בית.html" target="_blank">בית</a>,
+                <a href="מסכים מחודשים/בית ספר/בית ספר - קלאסי קורסים.html" target="_blank">קורסים</a>,
+                <a href="מסכים מחודשים/בית ספר/בית ספר - קלאסי אודות.html" target="_blank">אודות</a>,
+                <a href="מסכים מחודשים/בית ספר/בית ספר - קלאסי שאלות נפוצות.html" target="_blank">שאלות</a>,
+                <a href="מסכים מחודשים/בית ספר/בית ספר - קלאסי צור קשר.html" target="_blank">קשר</a>
+              </td>
+            </tr>
+            <tr>
+              <td>פרימיום</td>
+              <td>דף ראשי, כל הקורסים</td>
+              <td><span class="badge badge-designed">עוצב (2)</span></td>
+              <td>
+                <a href="מסכים מחודשים/בית ספר/בית ספר - פרימיום.html" target="_blank">ראשי</a>,
+                <a href="מסכים מחודשים/בית ספר/בית ספר - פרימיום קורסים.html" target="_blank">קורסים</a>
+              </td>
+            </tr>
+            <tr>
+              <td>יודמי</td>
+              <td>דף ראשי</td>
+              <td><span class="badge badge-designed">עוצב (1)</span></td>
+              <td><a href="מסכים מחודשים/בית ספר/בית ספר - יודמי.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>גלים</td>
+              <td>דף ראשי</td>
+              <td><span class="badge badge-designed">עוצב (1)</span></td>
+              <td><a href="מסכים מחודשים/בית ספר/בית ספר - גלים.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>מינימלי</td>
+              <td>דף ראשי</td>
+              <td><span class="badge badge-designed">עוצב (1)</span></td>
+              <td><a href="מסכים מחודשים/בית ספר/בית ספר - מינימלי.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>טבעי</td>
+              <td>דף ראשי</td>
+              <td><span class="badge badge-designed">עוצב (1)</span></td>
+              <td><a href="מסכים מחודשים/בית ספר/בית ספר - טבעי.html" target="_blank">צפה</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 8 — SCHOOL SETTINGS
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-8">
+    <div class="bg-radial"></div>
+    <img class="boardi-deco" src="BOARDi/PNG/BOARDi_8.png" style="width:100px; bottom:40px; left:40px; animation-delay:0.7s;" alt="">
+    <div class="slide-inner">
+      <div class="slide-num">SLIDE 08</div>
+      <div class="slide-heading">בית ספר — <em>הגדרות</em></div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>מסך</th>
+              <th>סטטוס</th>
+              <th>מובייל</th>
+              <th>קישור</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>הגדרות כלליות (+ ניווט עוגן)</td>
+              <td><span class="badge badge-done">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/בית ספר/בית ספר - הגדרות.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>לייאאוט</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/בית ספר/בית ספר - הגדרות לייאאוט.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>ערכת מותג</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/בית ספר/בית ספר - הגדרות ערכת מותג.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>התלמידים שלי</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/בית ספר/בית ספר - הגדרות תלמידים.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>דיוור בית ספר</td>
+              <td><span class="badge badge-done">עוצב</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים מחודשים/בית ספר/בית ספר - הגדרות דיוור.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>אנליטיקס בית ספר</td>
+              <td><span class="badge badge-missing">חסר</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 9 — USER PROFILE
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-9">
+    <div class="bg-radial"></div>
+    <img class="boardi-deco" src="BOARDi/PNG/BOARDi_8.png" style="width:140px; bottom:80px; right:80px; animation-delay:0.4s;" alt="">
+    <div class="slide-inner">
+      <div class="slide-num">SLIDE 09</div>
+      <div class="slide-heading">פרופיל <em>משתמש</em></div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>מסך</th>
+              <th>סטטוס</th>
+              <th>מובייל</th>
+              <th>קישור</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>פרופיל אישי (תמונה, ביו)</td>
+              <td><span class="badge badge-missing">חסר</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 10 — GLOBAL SETTINGS
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-10">
+    <div class="bg-radial"></div>
+    <img class="boardi-deco" src="BOARDi/PNG/BOARDi_10.png" style="width:110px; top:60px; left:50px; animation-delay:1.2s;" alt="">
+    <div class="slide-inner">
+      <div class="slide-num">SLIDE 10</div>
+      <div class="slide-heading">הגדרות גלובליות — <em>מרצה</em></div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>מסך</th>
+              <th>סטטוס</th>
+              <th>מובייל</th>
+              <th>קישור</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>סליקה</td>
+              <td><span class="badge badge-reference">רפרנס</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים קיימים/הגדרות סליקה.png" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>הגדרות דוא"ל</td>
+              <td><span class="badge badge-reference">רפרנס</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים קיימים/הגדרות דוא״ל.png" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>אינטגרציות</td>
+              <td><span class="badge badge-reference">רפרנס</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים קיימים/הגדרות אינטגרציות.png" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>צוות והרשאות</td>
+              <td><span class="badge badge-reference">רפרנס</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים קיימים/הגדרות צוות והרשאות.png" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>תכנית שותפים</td>
+              <td><span class="badge badge-reference">רפרנס</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים קיימים/הגדרות תכנית שותפים.png" target="_blank">צפה</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-text">כל 5 המסכים דורשים עיצוב מחדש.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 11 — MY LIBRARY
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-11">
+    <div class="bg-radial"></div>
+    <div class="slide-inner">
+      <div class="slide-num">SLIDE 11</div>
+      <div class="slide-heading">הספריה <em>שלי</em></div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>מסך</th>
+              <th>סטטוס</th>
+              <th>מובייל</th>
+              <th>קישור</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>הספריה — תיקיות</td>
+              <td><span class="badge badge-reference">רפרנס</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים קיימים/הספריה שלי.png" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>הספריה — קורסים</td>
+              <td><span class="badge badge-reference">רפרנס</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים קיימים/הספריה שלי - הקורסים שלי.png" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>הספריה — קורס ספציפי (שיעורים)</td>
+              <td><span class="badge badge-reference">רפרנס</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים קיימים/הספריה שלי - הקורסים שלי - קורס ספציפי.png" target="_blank">צפה</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-text">כל 3 המסכים דורשים עיצוב מחדש.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 12 — CONTACTS & CRM
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-12">
+    <div class="bg-radial"></div>
+    <div class="slide-inner">
+      <div class="slide-num">SLIDE 12</div>
+      <div class="slide-heading">אנשי קשר <em>ו-CRM</em></div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>מסך</th>
+              <th>סטטוס</th>
+              <th>מובייל</th>
+              <th>קישור</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>כל אנשי הקשר שלי</td>
+              <td><span class="badge badge-reference">רפרנס</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים קיימים/כל אנשי קשר שלי.png" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>פרטי תלמיד + הערות CRM</td>
+              <td><span class="badge badge-reference">רפרנס</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td><a href="מסכים קיימים/פרטי תלמיד.png" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>ניהול מערך מכירות</td>
+              <td><span class="badge badge-future">תכנית עתידית</span></td>
+              <td><span class="mobile-no">&cross;</span></td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note-text">חלוקה: תלמידים / נוטשי עגלה (לידים). פילטר: שם, תאריך הצטרפות, שם קורס, כמות קורסים. הערות CRM מוצגות בטבלה ובפרטי תלמיד.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 13 — PRESENTATIONS & DOCS
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-13">
+    <div class="bg-radial"></div>
+    <div class="slide-inner">
+      <div class="slide-num">SLIDE 13</div>
+      <div class="slide-heading">מצגות <em>ותיעוד</em></div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>מסך</th>
+              <th>סטטוס</th>
+              <th>קישור</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>מצגת UX/UI</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><a href="UX-UI-Presentation.html" target="_blank">צפה</a></td>
+            </tr>
+            <tr>
+              <td>משימות מערכת</td>
+              <td><span class="badge badge-designed">עוצב</span></td>
+              <td><span style="color:rgba(255,255,255,0.35); font-size:13px;">(קובץ זה)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 14 — TASK LIST
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-14">
+    <div class="bg-radial"></div>
+    <img class="boardi-deco" src="BOARDi/PNG/BOARDi_14.png" style="width:100px; top:40px; left:40px; animation-delay:0.6s;" alt="">
+    <div class="slide-inner scrollable">
+      <div class="slide-num">SLIDE 14</div>
+      <div class="slide-heading">רשימת משימות — <em>מה חסר</em></div>
+
+      <div class="task-columns">
+        <!-- HIGH PRIORITY -->
+        <div class="task-column">
+          <div class="task-column-title" style="color:var(--pink);">
+            <span class="priority-dot priority-high"></span>
+            עדיפות גבוהה
+          </div>
+          <div class="task-item">
+            <span class="task-number">1</span>
+            <span>מסך הרשמה מעוצב</span>
+          </div>
+          <div class="task-item">
+            <span class="task-number">2</span>
+            <span>מסך תשלום + מסלולים</span>
+          </div>
+          <div class="task-item" style="text-decoration:line-through;opacity:.5;">
+            <span class="task-number" style="background:rgba(34,197,94,0.15);color:#22c55e;">✓</span>
+            <span>הגדרות מועדון — הושלם</span>
+          </div>
+          <div class="task-item">
+            <span class="task-number">3</span>
+            <span>פרופיל אישי</span>
+          </div>
+          <div class="task-item">
+            <span class="task-number">5</span>
+            <span>דף נחיתה שיווקי</span>
+          </div>
+        </div>
+
+        <!-- MEDIUM PRIORITY -->
+        <div class="task-column">
+          <div class="task-column-title" style="color:var(--yellow);">
+            <span class="priority-dot priority-medium"></span>
+            עדיפות בינונית
+          </div>
+          <div class="task-item">
+            <span class="task-number">6</span>
+            <span>הגדרות גלובליות (5 מסכים — סליקה, דוא"ל, אינטגרציות, צוות, שותפים)</span>
+          </div>
+          <div class="task-item">
+            <span class="task-number">7</span>
+            <span>הספריה שלי (3 מסכים)</span>
+          </div>
+          <div class="task-item">
+            <span class="task-number">8</span>
+            <span>אנשי קשר + CRM (2 מסכים)</span>
+          </div>
+          <div class="task-item">
+            <span class="task-number">9</span>
+            <span>יצירת קורס/מועדון (popup redesign)</span>
+          </div>
+          <div class="task-item" style="text-decoration:line-through;opacity:.5;">
+            <span class="task-number" style="background:rgba(34,197,94,0.15);color:#22c55e;">✓</span>
+            <span>דיוור בית ספר — הושלם</span>
+          </div>
+          <div class="task-item">
+            <span class="task-number">10</span>
+            <span>אנליטיקס בית ספר</span>
+          </div>
+        </div>
+
+        <!-- FUTURE -->
+        <div class="task-column">
+          <div class="task-column-title" style="color:rgba(255,255,255,0.45);">
+            <span class="priority-dot priority-future"></span>
+            תכנית עתידית
+          </div>
+          <div class="task-item">
+            <span class="task-number">11</span>
+            <span>BOARDi מולטי אייג'נט</span>
+          </div>
+          <div class="task-item">
+            <span class="task-number">12</span>
+            <span>ניהול מערך מכירות</span>
+          </div>
+          <div class="task-item">
+            <span class="task-number">13</span>
+            <span>התאמה למובייל (כל המסכים)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 15 — MASTER TABLE WITH FILTERS
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-15">
+    <div class="bg-radial"></div>
+    <div style="width:90%;max-width:1100px;display:flex;flex-direction:column;gap:16px;height:85vh;position:relative;z-index:2;">
+      <div style="text-align:center;flex-shrink:0;">
+        <div style="font-family:var(--font-he);font-size:26px;font-weight:900;color:#fff;">כל המשימות במבט אחד</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:4px;">לחץ על פילטר כדי לסנן לפי סטטוס</div>
+      </div>
+      <!-- Filter buttons -->
+      <div style="display:flex;gap:8px;justify-content:center;flex-shrink:0;flex-wrap:wrap;" id="masterFilters">
+        <button class="mf-btn active" data-filter="all" onclick="filterMaster('all',this)">הכל</button>
+        <button class="mf-btn" data-filter="done" onclick="filterMaster('done',this)" style="--fc:#22c55e;">עוצב</button>
+        <button class="mf-btn" data-filter="ref" onclick="filterMaster('ref',this)" style="--fc:#38C4F2;">רפרנס</button>
+        <button class="mf-btn" data-filter="missing" onclick="filterMaster('missing',this)" style="--fc:#F05680;">חסר</button>
+        <button class="mf-btn" data-filter="future" onclick="filterMaster('future',this)" style="--fc:#EAD654;">תכנית עתידית</button>
+      </div>
+      <!-- Scrollable table -->
+      <div style="flex:1;overflow-y:auto;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);backdrop-filter:blur(12px);" id="masterTableWrap">
+        <table style="width:100%;border-collapse:collapse;min-width:700px;">
+          <thead>
+            <tr style="background:rgba(255,255,255,0.05);position:sticky;top:0;z-index:2;">
+              <th style="padding:10px 16px;text-align:right;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid rgba(255,255,255,0.08);">פיצ'ר</th>
+              <th style="padding:10px 16px;text-align:right;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid rgba(255,255,255,0.08);">מסך</th>
+              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid rgba(255,255,255,0.08);width:90px;">סטטוס</th>
+              <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid rgba(255,255,255,0.08);width:60px;">מובייל</th>
+            </tr>
+          </thead>
+          <tbody id="masterBody">
+            <tr data-s="ref"><td>הרשמה</td><td><a href="מסכים קיימים/מסך הרשמה זמני.png" target="_blank" style="color:var(--cyan);">מסך הרשמה זמני</a></td><td style="text-align:center"><span class="badge badge-reference">רפרנס</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="missing"><td>הרשמה</td><td>מסך הרשמה מעוצב</td><td style="text-align:center"><span class="badge badge-missing">חסר</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="missing"><td>הרשמה</td><td>מסך תשלום + מסלולים</td><td style="text-align:center"><span class="badge badge-missing">חסר</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="missing"><td>הרשמה</td><td>דף נחיתה שיווקי</td><td style="text-align:center"><span class="badge badge-missing">חסר</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>קורסים</td><td><a href="מסכים מחודשים/מסך הקורסים שלי כתלמיד - light-dark.html" target="_blank" style="color:var(--cyan);">הקורסים שלי (תלמיד)</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>קורסים</td><td><a href="מסכים מחודשים/מרכזי הידע שלי - light-dark.html" target="_blank" style="color:var(--cyan);">מרכזי הידע שלי</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>קורסים</td><td><a href="מסכים מחודשים/צפייה בקורס.html" target="_blank" style="color:var(--cyan);">צפייה בקורס</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>קורסים</td><td><a href="מסכים מחודשים/טבלת העריכה - light-dark.html" target="_blank" style="color:var(--cyan);">טבלת עריכה</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>קורסים</td><td><a href="מסכים מחודשים/הגדרות קורס.html" target="_blank" style="color:var(--cyan);">הגדרות קורס</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>קורסים</td><td><a href="מסכים מחודשים/אנליטיקס.html" target="_blank" style="color:var(--cyan);">אנליטיקס</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="ref"><td>קורסים</td><td><a href="מסכים קיימים/יצירת קורס שלב 1.png" target="_blank" style="color:var(--cyan);">יצירת קורס (popup)</a></td><td style="text-align:center"><span class="badge badge-reference">רפרנס</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="future"><td>קורסים</td><td>BOARDi מולטי אייג'נט</td><td style="text-align:center"><span class="badge badge-future">תכנית עתידית</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>תלמידים</td><td><a href="מסכים מחודשים/מסך התלמידים שלי - light-dark.html" target="_blank" style="color:var(--cyan);">התלמידים שלי</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>תלמידים</td><td><a href="מסכים מחודשים/דיוור.html" target="_blank" style="color:var(--cyan);">דיוור (ישן)</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>תלמידים</td><td><a href="מסכים מחודשים/סקיצה למערכת דיוור.html" target="_blank" style="color:var(--cyan);">סקיצה למערכת דיוור</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>תלמידים</td><td><a href="מסכים מחודשים/ערכת מותג.html" target="_blank" style="color:var(--cyan);">ערכת מותג (ישנה)</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>מועדון</td><td><a href="מסכים מחודשים/מועדון/מועדון - בית.html" target="_blank" style="color:var(--cyan);">בית</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>מועדון</td><td><a href="מסכים מחודשים/מועדון/מועדון - פיד.html" target="_blank" style="color:var(--cyan);">פיד</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>מועדון</td><td><a href="מסכים מחודשים/מועדון/מועדון - קורסים.html" target="_blank" style="color:var(--cyan);">קורסים</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>מועדון</td><td><a href="מסכים מחודשים/מועדון/מועדון - קורס פעיל.html" target="_blank" style="color:var(--cyan);">קורס פעיל</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>מועדון</td><td><a href="מסכים מחודשים/מועדון/מועדון - צ'אט.html" target="_blank" style="color:var(--cyan);">צ'אט</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>מועדון</td><td><a href="מסכים מחודשים/מועדון/מועדון - אירועים.html" target="_blank" style="color:var(--cyan);">אירועים</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>מועדון</td><td><a href="מסכים מחודשים/מועדון/מועדון - לוח מובילים.html" target="_blank" style="color:var(--cyan);">לוח מובילים</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>מועדון</td><td><a href="מסכים מחודשים/מועדון/מועדון - חברים.html" target="_blank" style="color:var(--cyan);">חברים</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>מועדון</td><td><a href="מסכים מחודשים/מועדון/מועדון - עזיבה.html" target="_blank" style="color:var(--cyan);">עזיבה</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>מועדון</td><td><a href="מסכים מחודשים/מועדון/מועדון - דיוור.html" target="_blank" style="color:var(--cyan);">דיוור</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>מועדון</td><td><a href="מסכים מחודשים/מועדון/מועדון - הגדרות.html" target="_blank" style="color:var(--cyan);">הגדרות</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>מועדון</td><td><a href="מסכים מחודשים/מועדון/מועדון - ערכת מותג.html" target="_blank" style="color:var(--cyan);">ערכת מותג</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>בית ספר</td><td><a href="מסכים מחודשים/בית ספר/בית ספר - בית.html" target="_blank" style="color:var(--cyan);">6 תבניות (11 מסכים)</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>בית ספר</td><td><a href="מסכים מחודשים/בית ספר/בית ספר - הגדרות.html" target="_blank" style="color:var(--cyan);">הגדרות (+ ניווט עוגן)</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>בית ספר</td><td><a href="מסכים מחודשים/בית ספר/בית ספר - הגדרות לייאאוט.html" target="_blank" style="color:var(--cyan);">לייאאוט</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>בית ספר</td><td><a href="מסכים מחודשים/בית ספר/בית ספר - הגדרות ערכת מותג.html" target="_blank" style="color:var(--cyan);">ערכת מותג</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>בית ספר</td><td><a href="מסכים מחודשים/בית ספר/בית ספר - הגדרות תלמידים.html" target="_blank" style="color:var(--cyan);">התלמידים שלי</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>בית ספר</td><td><a href="מסכים מחודשים/בית ספר/בית ספר - הגדרות דיוור.html" target="_blank" style="color:var(--cyan);">דיוור</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="missing"><td>בית ספר</td><td>אנליטיקס</td><td style="text-align:center"><span class="badge badge-missing">חסר</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="missing"><td>פרופיל</td><td>פרופיל אישי</td><td style="text-align:center"><span class="badge badge-missing">חסר</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="ref"><td>הגדרות גלובליות</td><td><a href="מסכים קיימים/הגדרות סליקה.png" target="_blank" style="color:var(--cyan);">סליקה</a></td><td style="text-align:center"><span class="badge badge-reference">רפרנס</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="ref"><td>הגדרות גלובליות</td><td><a href="מסכים קיימים/הגדרות דוא״ל.png" target="_blank" style="color:var(--cyan);">דוא"ל</a></td><td style="text-align:center"><span class="badge badge-reference">רפרנס</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="ref"><td>הגדרות גלובליות</td><td><a href="מסכים קיימים/הגדרות אינטגרציות.png" target="_blank" style="color:var(--cyan);">אינטגרציות</a></td><td style="text-align:center"><span class="badge badge-reference">רפרנס</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="ref"><td>הגדרות גלובליות</td><td><a href="מסכים קיימים/הגדרות צוות והרשאות.png" target="_blank" style="color:var(--cyan);">צוות והרשאות</a></td><td style="text-align:center"><span class="badge badge-reference">רפרנס</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="ref"><td>הגדרות גלובליות</td><td><a href="מסכים קיימים/הגדרות תכנית שותפים.png" target="_blank" style="color:var(--cyan);">תכנית שותפים</a></td><td style="text-align:center"><span class="badge badge-reference">רפרנס</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="ref"><td>ספריה</td><td><a href="מסכים קיימים/הספריה שלי.png" target="_blank" style="color:var(--cyan);">הספריה שלי — תיקיות</a></td><td style="text-align:center"><span class="badge badge-reference">רפרנס</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="ref"><td>ספריה</td><td><a href="מסכים קיימים/הספריה שלי - הקורסים שלי.png" target="_blank" style="color:var(--cyan);">הספריה — קורסים</a></td><td style="text-align:center"><span class="badge badge-reference">רפרנס</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="ref"><td>ספריה</td><td><a href="מסכים קיימים/הספריה שלי - הקורסים שלי - קורס ספציפי.png" target="_blank" style="color:var(--cyan);">הספריה — קורס ספציפי</a></td><td style="text-align:center"><span class="badge badge-reference">רפרנס</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="ref"><td>CRM</td><td><a href="מסכים קיימים/כל אנשי קשר שלי.png" target="_blank" style="color:var(--cyan);">כל אנשי הקשר שלי</a></td><td style="text-align:center"><span class="badge badge-reference">רפרנס</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="ref"><td>CRM</td><td><a href="מסכים קיימים/פרטי תלמיד.png" target="_blank" style="color:var(--cyan);">פרטי תלמיד + CRM</a></td><td style="text-align:center"><span class="badge badge-reference">רפרנס</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="future"><td>CRM</td><td>ניהול מערך מכירות</td><td style="text-align:center"><span class="badge badge-future">תכנית עתידית</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>תיעוד</td><td><a href="UX-UI-Presentation.html" target="_blank" style="color:var(--cyan);">מצגת UX/UI</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+            <tr data-s="done"><td>תיעוד</td><td><a href="משימות מערכת.html" target="_blank" style="color:var(--cyan);">משימות מערכת</a></td><td style="text-align:center"><span class="badge badge-designed">עוצב</span></td><td style="text-align:center"><span style="color:#F05680;">&cross;</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Counter -->
+      <div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.4);flex-shrink:0;" id="masterCount">מציג 47 מתוך 47 משימות</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 16 — CLOSING
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide" id="slide-15">
+    <div class="bg-radial"></div>
+    <div id="slide-1-bg" style="position:absolute;inset:0;background:linear-gradient(135deg,#0d1b3e 0%,#253E7A 50%,#1a3060 100%);"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 60%,rgba(56,196,242,0.12) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 50% 30%,rgba(240,86,128,0.1) 0%,transparent 60%);"></div>
+    <div class="closing-content">
+      <div class="closing-boardi">
+        <img src="BOARDi/SVG/2.svg" alt="BOARDi" style="filter:drop-shadow(0 10px 30px rgba(56,196,242,0.3));">
+      </div>
+      <div class="closing-title">יאללה לעבודה!</div>
+      <div class="closing-subtitle">WHITEBOARD &mdash; Learn &middot; Create &middot; Action</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('slide-counter');
+  const progressBar = document.getElementById('progress-bar');
+  const slideNumber = document.getElementById('slide-number');
+  let current = 0;
+  const total = slides.length;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsContainer.appendChild(d);
+  });
+
+  // Master table filter
+  function filterMaster(status, btn) {
+    document.querySelectorAll('.mf-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    var rows = document.querySelectorAll('#masterBody tr');
+    var shown = 0;
+    rows.forEach(function(r) {
+      if (status === 'all' || r.dataset.s === status) {
+        r.style.display = '';
+        shown++;
+      } else {
+        r.style.display = 'none';
+      }
+    });
+    document.getElementById('masterCount').textContent = 'מציג ' + shown + ' מתוך ' + rows.length + ' משימות';
+  }
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    const prev = current;
+    setTimeout(() => slides[prev].classList.remove('exit'), 700);
+    current = n;
+    slides[current].classList.add('active');
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    progressBar.style.width = ((current + 1) / total * 100) + '%';
+    slideNumber.textContent = (current + 1) + ' / ' + total;
+  }
+
+  document.getElementById('prev-btn').onclick = () => goTo(current - 1);
+  document.getElementById('next-btn').onclick = () => goTo(current + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') goTo(current - 1);
+  });
+
+  // Touch swipe
+  let touchX = 0;
+  document.addEventListener('touchstart', e => touchX = e.touches[0].clientX);
+  document.addEventListener('touchend', e => {
+    const dx = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 50) goTo(current + (dx > 0 ? -1 : 1));
+  });
+
+  // Particles for slide 1
+  function makeParticles() {
+    const c = document.getElementById('particles');
+    const colors = ['#38C4F2','#F05680','#EAD654','#22c55e','#fff'];
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 8 + 3;
+      p.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${Math.random()*100}%;
+        top:${Math.random()*100+100}%;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        opacity:${Math.random()*0.5+0.2};
+        animation-duration:${Math.random()*12+8}s;
+        animation-delay:${Math.random()*8}s;
+      `;
+      c.appendChild(p);
+    }
+  }
+  makeParticles();
+</script>
+</body>
+</html>

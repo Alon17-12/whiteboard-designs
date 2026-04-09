@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>התלמידים שלי | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:        #253E7A;
+    --navy-dark:   #1a2f5e;
+    --navy-light:  #3a5499;
+    --cyan:        #38C4F2;
+    --cyan-light:  rgba(56,196,242,0.12);
+    --light-blue:  #E3F4FD;
+    --pink:        #F05680;
+    --pink-light:  rgba(240,86,128,0.12);
+    --yellow:      #EAD654;
+    --green:       #7DC57A;
+    --green-light: rgba(125,197,122,0.12);
+    --white:       #FFFFFF;
+    --bg:          #F0F6FF;
+    --surface:     #FFFFFF;
+    --surface-2:   #f5f8ff;
+    --border:      rgba(37,62,122,0.1);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #1a2f5e;
+    --text-sub:    rgba(37,62,122,0.55);
+    --text-light:  rgba(37,62,122,0.38);
+    --font-he:     'Heebo', sans-serif;
+    --font-en:     'Fredoka', sans-serif;
+    --radius-sm:   10px;
+    --radius-md:   16px;
+    --radius-lg:   22px;
+    --shadow-sm:   0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:   0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:   0 16px 48px rgba(37,62,122,0.14);
+    --sidebar-bg:  var(--navy);
+    --notif-border: white;
+  }
+
+  [data-theme="dark"] {
+    --cyan-light:  rgba(56,196,242,0.14);
+    --light-blue:  rgba(56,196,242,0.1);
+    --pink-light:  rgba(240,86,128,0.14);
+    --green-light: rgba(125,197,122,0.14);
+    --bg:          #0c1424;
+    --surface:     #131e35;
+    --surface-2:   #1a2740;
+    --border:      rgba(255,255,255,0.07);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #dde5f5;
+    --text-sub:    rgba(221,229,245,0.5);
+    --text-light:  rgba(221,229,245,0.3);
+    --shadow-sm:   0 2px 12px rgba(0,0,0,0.3);
+    --shadow-md:   0 6px 28px rgba(0,0,0,0.4);
+    --shadow-lg:   0 16px 48px rgba(0,0,0,0.5);
+    --sidebar-bg:  #0d1628;
+    --notif-border: var(--surface);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    transition: background .3s, color .3s;
+  }
+
+  /* ── SIDEBAR ─────────────────────────────────── */
+  .sidebar {
+    width: 220px;
+    background: var(--sidebar-bg);
+    border-left: 1px solid rgba(255,255,255,0.05);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 0;
+    flex-shrink: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 50;
+    transition: background .3s;
+  }
+
+  .sidebar-logo {
+    padding: 16px 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar-logo img.logo-img {
+    width: 150px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .sidebar-section {
+    padding: 8px 12px;
+    margin-bottom: 4px;
+  }
+
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    padding: 0 8px;
+    margin-bottom: 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: rgba(255,255,255,0.65);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .nav-item:hover {
+    background: rgba(255,255,255,0.08);
+    color: white;
+  }
+
+  .nav-item.active {
+    background: rgba(56,196,242,0.2);
+    color: var(--cyan);
+    font-weight: 700;
+  }
+
+  [data-theme="dark"] .nav-item:hover {
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.9);
+  }
+
+  [data-theme="dark"] .nav-item.active {
+    background: rgba(56,196,242,0.18);
+  }
+
+  .nav-item svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .profile-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .profile-mini:hover { background: rgba(255,255,255,0.08); }
+
+  [data-theme="dark"] .profile-mini:hover { background: rgba(255,255,255,0.06); }
+
+  .avatar-sm {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--navy-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .profile-mini-info { flex: 1; overflow: hidden; }
+  .profile-mini-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  [data-theme="dark"] .profile-mini-name { color: rgba(255,255,255,0.85); }
+
+  .profile-mini-role {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+  }
+
+  [data-theme="dark"] .profile-mini-role { color: rgba(255,255,255,0.35); }
+
+  /* ── MAIN CONTENT ────────────────────────────── */
+  .main {
+    margin-right: 220px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ── TOP BAR ─────────────────────────────────── */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    box-shadow: var(--shadow-sm);
+    transition: background .3s;
+  }
+
+  .topbar-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .breadcrumb-link {
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .breadcrumb-link:hover { color: var(--text-main); }
+
+  .breadcrumb-sep {
+    color: var(--text-light);
+    font-size: 16px;
+  }
+
+  .breadcrumb-current {
+    color: var(--text-main);
+    font-weight: 700;
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-sub);
+    position: relative;
+  }
+  .icon-btn:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+
+  [data-theme="dark"] .icon-btn { background: var(--surface-2); }
+  [data-theme="dark"] .icon-btn:hover { color: var(--cyan); border-color: var(--border-hover); }
+
+  .notif-badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--pink);
+    border: 2px solid var(--notif-border);
+  }
+
+  /* ── THEME TOGGLE ────────────────────────────── */
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="dark"] .icon-sun  { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* ── PAGE BODY ───────────────────────────────── */
+  .page-body {
+    padding: 32px;
+    flex: 1;
+  }
+
+  /* ── PAGE HEADER ─────────────────────────────── */
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 20px;
+  }
+
+  .page-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .page-title-text {}
+
+  .boardi-title-img {
+    width: 90px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 4px 12px rgba(37,62,122,0.18));
+  }
+
+  [data-theme="dark"] .boardi-title-img {
+    filter: drop-shadow(0 4px 16px rgba(56,196,242,0.2));
+  }
+
+  .course-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cyan-light);
+    border: 1px solid rgba(56,196,242,0.3);
+    color: #1a8bb5;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+
+  [data-theme="dark"] .course-badge {
+    border-color: rgba(56,196,242,0.25);
+    color: var(--cyan);
+  }
+
+  .page-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--text-main);
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--text-sub);
+    margin-top: 4px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  /* ── BUTTONS ─────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--cyan), #1db0d8);
+    color: white;
+    box-shadow: 0 4px 16px rgba(56,196,242,0.35);
+  }
+
+  [data-theme="dark"] .btn-primary { color: #0b1424; box-shadow: 0 4px 20px rgba(56,196,242,0.3); }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(56,196,242,0.45);
+  }
+
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--navy);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--light-blue); border-color: var(--cyan); }
+
+  [data-theme="dark"] .btn-secondary {
+    background: var(--surface-2);
+    color: var(--text-main);
+  }
+  [data-theme="dark"] .btn-secondary:hover { border-color: var(--border-hover); color: var(--cyan); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-sub);
+    border: 1.5px solid transparent;
+  }
+  .btn-ghost:hover { background: var(--light-blue); color: var(--navy); }
+
+  [data-theme="dark"] .btn-ghost:hover { color: var(--cyan); }
+
+  .btn svg { width: 16px; height: 16px; }
+
+  /* ── STATS ROW ───────────────────────────────── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 20px 22px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(56,196,242,0.2);
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .stat-icon svg { width: 22px; height: 22px; }
+
+  .stat-info { flex: 1; }
+
+  .stat-value {
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--text-main);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-sub);
+    font-weight: 500;
+  }
+
+  .stat-trend {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 12px;
+    align-self: flex-start;
+  }
+
+  .trend-up   { background: var(--green-light); color: #3d8c3a; }
+  .trend-down { background: var(--pink-light);  color: #c02050; }
+
+  [data-theme="dark"] .trend-up   { color: #7DC57A; }
+  [data-theme="dark"] .trend-down { color: #F05680; }
+
+  /* ── TABLE CONTAINER ─────────────────────────── */
+  .table-section {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .table-toolbar {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* ── SEARCH ──────────────────────────────────── */
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    max-width: 320px;
+  }
+
+  .search-icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    width: 16px;
+    height: 16px;
+  }
+
+  .search-input {
+    width: 100%;
+    height: 40px;
+    border: 1.5px solid var(--border);
+    border-radius: 30px;
+    padding: 0 42px 0 16px;
+    font-family: var(--font-he);
+    font-size: 14px;
+    color: var(--text-main);
+    background: var(--bg);
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  .search-input::placeholder { color: var(--text-light); }
+  .search-input:focus {
+    border-color: var(--cyan);
+    background: var(--surface-2);
+    box-shadow: 0 0 0 3px rgba(56,196,242,0.1);
+  }
+
+  /* ── FILTER TABS ─────────────────────────────── */
+  .filter-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg);
+    border-radius: 30px;
+    padding: 4px;
+  }
+
+  .filter-tab {
+    padding: 6px 16px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-sub);
+    border: none;
+    background: none;
+    font-family: var(--font-he);
+  }
+
+  .filter-tab.active {
+    background: var(--surface);
+    color: var(--text-main);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .filter-tab:hover:not(.active) { color: var(--text-main); }
+
+  .toolbar-spacer { flex: 1; }
+
+  /* ── TABLE ───────────────────────────────────── */
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    padding: 13px 20px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-sub);
+    text-align: right;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  th.sortable {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  th.sortable:hover { color: var(--cyan); }
+
+  .sort-icon {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 4px;
+    opacity: 0.4;
+    vertical-align: middle;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(56,196,242,0.05); }
+
+  td {
+    padding: 14px 20px;
+    font-size: 14px;
+    color: var(--text-main);
+    vertical-align: middle;
+  }
+
+  /* ── STUDENT CELL ────────────────────────────── */
+  .student-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    font-family: var(--font-en);
+  }
+
+  .student-name {
+    font-weight: 700;
+    color: var(--text-main);
+    font-size: 14px;
+  }
+
+  .student-id {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 1px;
+  }
+
+  /* ── EMAIL / PHONE ───────────────────────────── */
+  .contact-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .contact-email {
+    font-size: 13px;
+    color: var(--text-sub);
+  }
+
+  /* ── STATUS BADGE ────────────────────────────── */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .status-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-active   { background: rgba(125,197,122,0.15); color: #7DC57A; }
+  .status-active::before { background: var(--green); }
+
+  .status-inactive { background: rgba(255,255,255,0.06); color: var(--text-sub); }
+  .status-inactive::before { background: rgba(255,255,255,0.25); }
+
+  [data-theme="light"] .status-inactive { background: rgba(37,62,122,0.07); }
+  [data-theme="light"] .status-inactive::before { background: #aab4cc; }
+
+  .status-pending  { background: rgba(234,214,84,0.12); color: #d4bf3a; }
+  .status-pending::before { background: var(--yellow); }
+
+  [data-theme="light"] .status-pending { color: #8a7800; }
+
+  /* ── PROGRESS BAR ────────────────────────────── */
+  .progress-cell {}
+
+  .progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .progress-pct {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  .progress-bar-track {
+    height: 7px;
+    background: var(--bg);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 130px;
+  }
+
+  [data-theme="dark"] .progress-bar-track { background: rgba(255,255,255,0.07); }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--cyan), #1db0d8);
+    transition: width 0.5s ease;
+  }
+
+  .progress-bar-fill.low  { background: linear-gradient(90deg, var(--pink), #d0305a); }
+  .progress-bar-fill.mid  { background: linear-gradient(90deg, var(--yellow), #c8a800); }
+  .progress-bar-fill.high { background: linear-gradient(90deg, var(--green), #4da84a); }
+
+  /* ── DATE CELL ───────────────────────────────── */
+  .date-cell {
+    font-size: 13px;
+    color: var(--text-sub);
+    white-space: nowrap;
+  }
+
+  /* ── ACTIONS CELL ────────────────────────────── */
+  .actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .action-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-sub);
+  }
+
+  .action-btn:hover { background: var(--light-blue); color: var(--cyan); border-color: var(--border-hover); }
+  .action-btn.danger:hover { background: rgba(240,86,128,0.12); color: var(--pink); border-color: var(--pink); }
+
+  .action-btn svg { width: 15px; height: 15px; }
+
+  /* ── TABLE FOOTER ────────────────────────────── */
+  .table-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-sub);
+    background: var(--surface-2);
+  }
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .page-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    transition: all 0.2s;
+    font-family: var(--font-he);
+  }
+
+  .page-btn:hover { background: var(--light-blue); border-color: var(--border-hover); color: var(--cyan); }
+  .page-btn.active { background: var(--cyan); color: #0b1424; border-color: var(--cyan); font-weight: 900; }
+
+  /* ── AVATAR COLORS ───────────────────────────── */
+  .av-1 { background: linear-gradient(135deg, #38C4F2, #1a8bb5); }
+  .av-2 { background: linear-gradient(135deg, #F05680, #c02050); }
+  .av-3 { background: linear-gradient(135deg, #7DC57A, #4da84a); }
+  .av-4 { background: linear-gradient(135deg, #EAD654, #c8a800); }
+  .av-5 { background: linear-gradient(135deg, #3a5499, #253E7A); }
+  .av-6 { background: linear-gradient(135deg, #9b59b6, #7d3c98); }
+  .av-7 { background: linear-gradient(135deg, #e67e22, #ca6f1e); }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <img class="logo-img" src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD">
+  </div>
+
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      לוח הבקרה
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      מרכזי הידע שלי
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>
+      בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      הגדרות
+    </a>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div class="profile-mini-info">
+        <div class="profile-mini-name">אלון</div>
+        <div class="profile-mini-role">מרצה</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">הקורסים שלי</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-link">עריכת וידאו בהליך מהיר</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">התלמידים</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="icon-btn" title="הודעות">
+        <div class="notif-badge"></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div class="icon-btn" title="הגדרות">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
+      <!-- THEME TOGGLE -->
+      <div class="icon-btn" id="themeToggle" title="עבור למצב כהה / בהיר">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="page-title-wrap">
+        <div class="page-title-text">
+          <div class="course-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
+            עריכת וידאו בהליך מהיר
+          </div>
+          <h1 class="page-title">התלמידים שלי</h1>
+          <p class="page-subtitle">ניהול וצפייה בכל הנרשמים לקורס</p>
+        </div>
+        <img class="boardi-title-img" src="../BOARDi/SVG/3.svg" alt="BOARDi">
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          יצוא רשימה
+        </button>
+        <button class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          הוסף תלמיד
+        </button>
+      </div>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(56,196,242,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">181</div>
+          <div class="stat-label">סה"כ תלמידים</div>
+        </div>
+        <div class="stat-trend trend-up">+12%</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(125,197,122,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7DC57A" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">143</div>
+          <div class="stat-label">תלמידים פעילים</div>
+        </div>
+        <div class="stat-trend trend-up">79%</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(234,214,84,0.15);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#c8a800" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">38</div>
+          <div class="stat-label">לידים</div>
+        </div>
+        <div class="stat-trend trend-down">21%</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(240,86,128,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#F05680" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">64%</div>
+          <div class="stat-label">ממוצע התקדמות</div>
+        </div>
+        <div class="stat-trend trend-up">+8%</div>
+      </div>
+    </div>
+
+    <!-- TABLE SECTION -->
+    <div class="table-section">
+      <div class="table-toolbar">
+        <div class="filter-tabs">
+          <button class="filter-tab active">כל התלמידים <span style="background:rgba(37,62,122,0.1);color:var(--text-main);padding:1px 7px;border-radius:10px;font-size:11px;margin-right:4px;">181</span></button>
+          <button class="filter-tab">פעילים <span style="background:rgba(125,197,122,0.2);color:#7DC57A;padding:1px 7px;border-radius:10px;font-size:11px;margin-right:4px;">143</span></button>
+          <button class="filter-tab">לידים <span style="background:rgba(234,214,84,0.15);color:#d4bf3a;padding:1px 7px;border-radius:10px;font-size:11px;margin-right:4px;">38</span></button>
+        </div>
+
+        <div class="toolbar-spacer"></div>
+
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" class="search-input" placeholder="חיפוש לפי שם, אימייל...">
+        </div>
+
+        <button class="btn btn-ghost" style="padding: 8px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--border);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="10" y2="18"/></svg>
+          סינון
+        </button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="sortable">שם התלמיד <span class="sort-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg></span></th>
+              <th>פרטי התקשרות</th>
+              <th>סטטוס</th>
+              <th class="sortable">התקדמות <span class="sort-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg></span></th>
+              <th class="sortable">תאריך הרשמה <span class="sort-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg></span></th>
+              <th>פעולות</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="student-cell">
+                  <div class="avatar av-1">א</div>
+                  <div>
+                    <div class="student-name">אלון שמרלינג</div>
+                    <div class="student-id">#1042</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="contact-cell">
+                  <span class="contact-email">alon@gmail.com</span>
+                </div>
+              </td>
+              <td><span class="status-badge status-active">פעיל</span></td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-header">
+                    <span class="progress-pct">85%</span>
+                  </div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill high" style="width:85%"></div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="date-cell">29.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn" title="צפה בפרופיל">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </div>
+                  <div class="action-btn" title="שלח הודעה">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  </div>
+                  <div class="action-btn danger" title="הסר תלמיד">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="student-cell">
+                  <div class="avatar av-2">י</div>
+                  <div>
+                    <div class="student-name">יגון קלדמן</div>
+                    <div class="student-id">#1041</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="contact-email">hubhexmuk000@gmail.com</span></td>
+              <td><span class="status-badge status-active">פעיל</span></td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-header"><span class="progress-pct">62%</span></div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill mid" style="width:62%"></div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="date-cell">22.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="action-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="student-cell">
+                  <div class="avatar av-3">א</div>
+                  <div>
+                    <div class="student-name">אמיר רוזנר</div>
+                    <div class="student-id">#1040</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="contact-email">dietamir@gmail.com</span></td>
+              <td><span class="status-badge status-pending">ממתין</span></td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-header"><span class="progress-pct">8%</span></div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill low" style="width:8%"></div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="date-cell">22.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="action-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="student-cell">
+                  <div class="avatar av-4">ל</div>
+                  <div>
+                    <div class="student-name">לב גינזבורג</div>
+                    <div class="student-id">#1039</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="contact-email">l3133770@gmail.com</span></td>
+              <td><span class="status-badge status-active">פעיל</span></td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-header"><span class="progress-pct">47%</span></div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill mid" style="width:47%"></div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="date-cell">22.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="action-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="student-cell">
+                  <div class="avatar av-5">ד</div>
+                  <div>
+                    <div class="student-name">ד"ר שרי בדן</div>
+                    <div class="student-id">#1038</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="contact-email">izmal6@gmail.com</span></td>
+              <td><span class="status-badge status-inactive">לא פעיל</span></td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-header"><span class="progress-pct">0%</span></div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill low" style="width:2%"></div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="date-cell">22.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="action-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="student-cell">
+                  <div class="avatar av-6">ד</div>
+                  <div>
+                    <div class="student-name">דקלה אברבנאל</div>
+                    <div class="student-id">#1037</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="contact-email">dikla.abarbonel@gmail.com</span></td>
+              <td><span class="status-badge status-active">פעיל</span></td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-header"><span class="progress-pct">73%</span></div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill high" style="width:73%"></div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="date-cell">21.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="action-btn danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-footer">
+        <span>מציג 1–6 מתוך <strong>181</strong> תלמידים</span>
+        <div class="pagination">
+          <button class="page-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <span style="padding:0 4px;color:var(--text-light);">...</span>
+          <button class="page-btn">19</button>
+          <button class="page-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const toggle = document.getElementById('themeToggle');
+  const html = document.documentElement;
+  toggle.addEventListener('click', () => {
+    html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  });
+</script>
+
+</body>
+</html>

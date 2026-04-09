@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>עריכת תוכן קורס | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+    --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+    --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+    --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+    --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+    --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+    --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+    --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --sidebar-bg:var(--navy);--sidebar-text:rgba(255,255,255,0.65);
+    --sidebar-hover:rgba(255,255,255,0.08);--sidebar-active-bg:rgba(56,196,242,0.2);
+    --sidebar-active-cl:var(--cyan);--sidebar-border:rgba(255,255,255,0.1);
+    --section-bg:rgba(37,62,122,0.04);--section-hover:rgba(37,62,122,0.07);
+    --row-hover:rgba(56,196,242,0.06);--drag-color:rgba(37,62,122,0.2);
+  }
+  [data-theme="dark"] {
+    --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+    --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+    --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+    --light-blue:rgba(56,196,242,0.08);--sidebar-bg:#0d1628;
+    --sidebar-text:rgba(255,255,255,0.55);--sidebar-hover:rgba(255,255,255,0.06);
+    --sidebar-active-bg:rgba(56,196,242,0.15);--sidebar-border:rgba(255,255,255,0.05);
+    --section-bg:rgba(255,255,255,0.03);--section-hover:rgba(255,255,255,0.05);
+    --row-hover:rgba(56,196,242,0.06);--drag-color:rgba(255,255,255,0.2);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;transition:background .3s,color .3s;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{width:220px;background:var(--sidebar-bg);border-left:1px solid var(--sidebar-border);min-height:100vh;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;position:fixed;right:0;top:0;bottom:0;z-index:50;transition:background .3s;}
+  .sidebar-logo{padding:16px 16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
+  .sidebar-logo img{width:150px;object-fit:contain;}
+  .sidebar-section{padding:8px 12px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--sidebar-text);font-size:14px;font-weight:500;}
+  .nav-item:hover{background:var(--sidebar-hover);color:white;}
+  .nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-cl);font-weight:700;}
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;}
+  .sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);}
+  .mode-switcher{margin-bottom:10px;}
+  .mode-switcher-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;padding-right:2px;}
+  .mode-toggle-row{display:flex;background:rgba(0,0,0,0.25);border-radius:8px;padding:3px;gap:2px;}
+  .mode-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 4px;border-radius:6px;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.45);background:transparent;white-space:nowrap;}
+  .mode-btn svg{width:13px;height:13px;}
+  .mode-btn.active{background:rgba(56,196,242,0.25);color:var(--cyan);}
+  .profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;}
+  .profile-mini:hover{background:rgba(255,255,255,0.08);}
+  .avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+  .profile-mini-name{font-size:13px;font-weight:600;color:white;}
+  .profile-mini-role{font-size:11px;color:rgba(255,255,255,0.45);}
+  .profile-edit-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;color:rgba(255,255,255,0.4);flex-shrink:0;margin-right:auto;}
+  .profile-edit-btn:hover{background:rgba(255,255,255,0.1);color:white;}
+  .profile-edit-btn svg{width:13px;height:13px;}
+
+  /* ── MAIN ── */
+  .main{margin-right:220px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:var(--shadow-sm);transition:background .3s;}
+  .topbar-breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .breadcrumb-link{color:var(--text-sub);cursor:pointer;transition:color .2s;}
+  .breadcrumb-link:hover{color:var(--text-main);}
+  .breadcrumb-sep{color:var(--text-light);}
+  .breadcrumb-current{color:var(--text-main);font-weight:700;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;}
+  .icon-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+  .icon-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .lang-toggle{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;transition:border-color .2s,transform .15s;}
+  .lang-toggle:hover{border-color:var(--cyan);transform:scale(1.08);}
+  .icon-sun{display:none;}.icon-moon{display:block;}
+  [data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+  /* ── COURSE HEADER ── */
+  .course-header{background:var(--surface);border-bottom:1px solid var(--border);padding:20px 32px 0;transition:background .3s;}
+  .course-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:16px;}
+  .course-title-wrap{display:flex;align-items:center;gap:14px;}
+  .course-icon{width:48px;height:48px;border-radius:var(--radius-sm);background:linear-gradient(135deg,#0d1b3e,#253E7A);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .course-icon svg{width:22px;height:22px;color:rgba(255,255,255,0.8);}
+  .course-name{font-size:20px;font-weight:900;color:var(--text-main);}
+  .course-meta-row{display:flex;align-items:center;gap:16px;margin-top:3px;}
+  .course-badge{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;}
+  .badge-pub{background:rgba(125,197,122,0.15);color:#3d8a3a;border:1px solid rgba(125,197,122,0.3);}
+  [data-theme="dark"] .badge-pub{color:#7DC57A;}
+  .course-stat{font-size:12px;color:var(--text-sub);display:flex;align-items:center;gap:4px;}
+  .course-stat svg{width:13px;height:13px;}
+  .course-actions{display:flex;gap:8px;align-items:center;}
+  .course-tabs{display:flex;gap:4px;overflow-x:auto;}
+  .tab{display:flex;align-items:center;gap:6px;padding:10px 15px;font-size:13px;font-weight:600;color:var(--text-sub);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;}
+  .tab svg{opacity:.6;transition:opacity .2s;}
+  .tab:hover{color:var(--text-main);}
+  .tab:hover svg{opacity:1;}
+  .tab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+  .tab.active svg{opacity:1;}
+
+  /* ── BUTTONS ── */
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:30px;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:none;white-space:nowrap;}
+  .btn svg{width:15px;height:15px;}
+  .btn-primary{background:linear-gradient(135deg,var(--cyan),#1db0d8);color:white;box-shadow:0 3px 14px rgba(56,196,242,0.3);}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(56,196,242,0.4);}
+  .btn-ghost{background:transparent;color:var(--text-sub);border:1.5px solid var(--border);}
+  .btn-ghost:hover{background:var(--light-blue);color:var(--text-main);border-color:var(--cyan);}
+  .btn-sm{padding:6px 14px;font-size:12px;border-radius:20px;}
+
+  /* ── PUBLISH STATE BUTTON ── */
+  .publish-state-btn{min-width:196px;justify-content:center;border:1.5px solid transparent;transition:background .3s,color .3s,border-color .3s,box-shadow .3s;}
+  .publish-state-btn[data-state="unsaved"]{background:rgba(234,214,84,0.13);color:#7a6200;border-color:rgba(200,168,0,0.35);box-shadow:none;}
+  [data-theme="dark"] .publish-state-btn[data-state="unsaved"]{background:rgba(234,214,84,0.1);color:#d4bc2e;border-color:rgba(234,214,84,0.28);}
+  .publish-state-btn[data-state="published"]{background:rgba(125,197,122,0.13);color:#3a8838;border-color:rgba(100,180,97,0.38);box-shadow:none;}
+  [data-theme="dark"] .publish-state-btn[data-state="published"]{background:rgba(125,197,122,0.1);color:#7DC57A;border-color:rgba(125,197,122,0.28);}
+  .publish-state-btn[data-hovering="true"]{background:linear-gradient(135deg,var(--cyan),#1db0d8) !important;color:white !important;border-color:transparent !important;box-shadow:0 4px 16px rgba(56,196,242,0.35) !important;}
+  .publish-state-btn #pubIcon{width:15px;height:15px;flex-shrink:0;}
+
+  /* ── PAGE BODY ── */
+  .page-body{padding:24px 32px;flex:1;}
+
+  /* ── EDITOR TOOLBAR ── */
+  .editor-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap;}
+  .editor-stats{display:flex;align-items:center;gap:20px;}
+  .editor-stat{font-size:13px;color:var(--text-sub);display:flex;align-items:center;gap:6px;}
+  .editor-stat strong{color:var(--text-main);font-weight:700;}
+  .editor-stat svg{width:14px;height:14px;}
+  .editor-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+
+  /* ── CTRL BAR ── */
+  .ctrl-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+  .ctrl-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;border:1.5px solid var(--border);background:var(--surface);color:var(--text-sub);}
+  .ctrl-btn:hover{border-color:var(--cyan);color:var(--text-main);background:var(--light-blue);}
+  .ctrl-btn svg{width:13px;height:13px;}
+  .ctrl-btn.active{background:var(--navy);color:white;border-color:var(--navy);}
+  [data-theme="dark"] .ctrl-btn.active{background:var(--cyan);color:#0b1424;border-color:var(--cyan);}
+  .ctrl-sep{width:1px;height:24px;background:var(--border);}
+
+  /* ── SECTION BLOCK ── */
+  .section-block{margin-bottom:14px;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm);transition:opacity .2s,transform .2s;}
+  .section-block.dragging{opacity:.5;transform:scale(.99);}
+  .section-block.drag-over{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(56,196,242,0.3);}
+
+  /* colored borders */
+  .section-block[data-color="cyan"]{border-right:4px solid var(--cyan);}
+  .section-block[data-color="pink"]{border-right:4px solid var(--pink);}
+  .section-block[data-color="yellow"]{border-right:4px solid var(--yellow);}
+  .section-block[data-color="green"]{border-right:4px solid var(--green);}
+  .section-block[data-color="cyan"] .section-header{background:rgba(56,196,242,0.06);}
+  .section-block[data-color="pink"] .section-header{background:rgba(240,86,128,0.06);}
+  .section-block[data-color="yellow"] .section-header{background:rgba(234,214,84,0.06);}
+  .section-block[data-color="green"] .section-header{background:rgba(125,197,122,0.06);}
+  .section-block[data-color="cyan"] .section-header:hover{background:rgba(56,196,242,0.1);}
+  .section-block[data-color="pink"] .section-header:hover{background:rgba(240,86,128,0.1);}
+  .section-block[data-color="yellow"] .section-header:hover{background:rgba(234,214,84,0.1);}
+  .section-block[data-color="green"] .section-header:hover{background:rgba(125,197,122,0.1);}
+  .section-block[data-color="cyan"] .section-num{color:var(--cyan);}
+  .section-block[data-color="pink"] .section-num{color:var(--pink);}
+  .section-block[data-color="yellow"] .section-num{color:#c8a800;}
+  .section-block[data-color="green"] .section-num{color:var(--green);}
+
+  .section-header{padding:0 16px;height:54px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .2s;border-bottom:1px solid var(--border);user-select:none;}
+  .drag-handle{color:var(--drag-color);cursor:grab;flex-shrink:0;display:flex;align-items:center;}
+  .drag-handle:active{cursor:grabbing;}
+  .drag-handle svg{width:16px;height:16px;}
+  .section-chevron{color:var(--text-light);transition:transform .25s;flex-shrink:0;}
+  .section-chevron svg{width:16px;height:16px;}
+  .section-block.collapsed .section-chevron{transform:rotate(-90deg);}
+  .section-num{font-size:12px;font-weight:700;font-family:var(--font-en);width:24px;text-align:center;flex-shrink:0;}
+  .section-name{font-size:15px;font-weight:800;color:var(--text-main);flex:1;}
+  .section-count{font-size:12px;color:var(--text-sub);flex-shrink:0;}
+  .section-actions-row{display:flex;gap:4px;opacity:0;transition:opacity .2s;}
+  .section-header:hover .section-actions-row{opacity:1;}
+  .row-icon-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;color:var(--text-sub);}
+  .row-icon-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .row-icon-btn svg{width:13px;height:13px;}
+
+  /* ── SELECT ALL CHECKBOX ── */
+  .cb-wrap{display:flex;align-items:center;gap:6px;cursor:pointer;}
+  .cb-wrap input[type="checkbox"]{width:16px;height:16px;accent-color:var(--cyan);cursor:pointer;}
+  .cb-label{font-size:12px;font-weight:700;color:var(--text-sub);}
+  .sel-count{font-weight:700;color:var(--cyan);}
+
+  /* ── FLOATING SELECTION BAR ── */
+  .float-sel-bar{position:fixed;bottom:-90px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:40px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:8px 8px 8px 10px;display:flex;align-items:center;gap:8px;z-index:500;transition:bottom .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;font-size:13px;color:var(--text-sub);}
+  .float-sel-bar.visible{bottom:28px;}
+  .float-sel-count{font-weight:800;color:var(--text-main);padding:0 6px 0 2px;}
+  .float-sel-sep{width:1px;height:22px;background:var(--border);margin:0 4px;}
+  .float-sel-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:30px;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;}
+  .float-sel-btn svg{width:13px;height:13px;}
+  .float-sel-btn.green{background:rgba(125,197,122,0.14);color:#3a8838;}
+  .float-sel-btn.green:hover{background:rgba(125,197,122,0.24);}
+  [data-theme="dark"] .float-sel-btn.green{color:#7DC57A;}
+  .float-sel-btn.yellow{background:rgba(234,214,84,0.14);color:#7a6200;}
+  .float-sel-btn.yellow:hover{background:rgba(234,214,84,0.24);}
+  [data-theme="dark"] .float-sel-btn.yellow{color:#d4bc2e;}
+  .float-sel-btn.red{background:rgba(240,86,128,0.1);color:var(--pink);}
+  .float-sel-btn.red:hover{background:rgba(240,86,128,0.2);}
+  .float-sel-close{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .2s;margin-right:4px;}
+  .float-sel-close:hover{background:var(--bg);color:var(--text-main);}
+  .float-sel-close svg{width:14px;height:14px;}
+
+  /* ── PILL CHEVRON AFFORDANCE ── */
+  .pill::after{content:'▾';font-size:9px;opacity:0;transition:opacity .15s;margin-right:1px;}
+  .pill:hover::after{opacity:.65;}
+
+  /* ── EMPTY STATES ── */
+  .table-empty{display:none;flex-direction:column;align-items:center;justify-content:center;padding:64px 20px;gap:12px;background:var(--surface);border-radius:var(--radius-md);border:1.5px dashed var(--border);margin-bottom:14px;text-align:center;}
+  .table-empty.visible{display:flex;}
+  .table-empty img{width:150px;opacity:.9;}
+  .table-empty-title{font-size:18px;font-weight:900;color:var(--text-main);margin-top:4px;}
+  .table-empty-sub{font-size:13px;color:var(--text-sub);max-width:300px;line-height:1.6;}
+  .section-empty{display:none;flex-direction:column;align-items:center;padding:28px 20px;gap:8px;background:var(--surface);text-align:center;}
+  .section-empty.visible{display:flex;}
+  .section-empty img{width:80px;opacity:.85;}
+  .section-empty-title{font-size:13px;font-weight:700;color:var(--text-sub);}
+  .section-empty-sub{font-size:12px;color:var(--text-light);}
+
+  /* ── LESSONS TABLE ── */
+  .table-wrap{overflow-x:auto;}
+  .lessons-table{background:var(--surface);width:100%;border-collapse:collapse;transition:background .3s;min-width:600px;}
+  .table-head{background:var(--surface-2);}
+  .table-head th{padding:9px 14px;font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.6px;text-align:right;white-space:nowrap;border-bottom:2px solid var(--border);}
+  .th-drag{width:28px;}
+  .th-cb{width:36px;}
+  .th-num{width:44px;}
+  .th-name{min-width:200px;}
+  .th-type{width:100px;}
+  .th-source{width:120px;}
+  .th-status{width:100px;}
+  .th-date{width:110px;}
+  .th-actions{width:100px;text-align:center;}
+  .th-add-col{width:36px;text-align:center;position:sticky;left:0;z-index:4;background:var(--surface-2);}
+  .add-col-th-btn{width:26px;height:26px;border-radius:7px;border:1.5px dashed rgba(56,196,242,0.5);background:transparent;color:var(--cyan);font-size:17px;font-weight:400;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .18s;line-height:1;padding:0;}
+  .add-col-th-btn:hover{background:var(--cyan);color:white;border-color:var(--cyan);border-style:solid;}
+  .th-custom{min-width:140px;}
+
+  .lesson-row{border-bottom:1px solid var(--border);transition:background .15s;}
+  .lesson-row:last-child{border-bottom:none;}
+  .lesson-row:nth-child(even){background:var(--section-bg);}
+  .lesson-row:hover{background:var(--row-hover) !important;}
+  .lesson-row:hover .row-actions{opacity:1;}
+  .lesson-row.selected{background:rgba(56,196,242,0.08) !important;}
+  .lesson-row td{padding:12px 14px;font-size:13px;vertical-align:middle;}
+
+  .lesson-num{color:var(--text-light);font-size:12px;font-weight:700;font-family:var(--font-en);}
+  .lesson-name-cell{display:flex;align-items:center;gap:10px;}
+  .lesson-type-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .lesson-type-icon svg{width:15px;height:15px;}
+  .icon-video{background:rgba(56,196,242,0.15);color:#1db0d8;box-shadow:0 2px 8px rgba(56,196,242,0.2);}
+  .icon-doc{background:rgba(37,62,122,0.12);color:#253E7A;box-shadow:0 2px 8px rgba(37,62,122,0.15);}
+  .icon-quiz{background:rgba(240,86,128,0.15);color:#e03060;box-shadow:0 2px 8px rgba(240,86,128,0.2);}
+  .icon-audio{background:rgba(125,197,122,0.15);color:#4a9e47;box-shadow:0 2px 8px rgba(125,197,122,0.2);}
+  .icon-live{background:rgba(234,214,84,0.2);color:#a08800;box-shadow:0 2px 8px rgba(234,214,84,0.25);}
+  .icon-embed{background:rgba(99,102,241,0.14);color:#5b5bd6;box-shadow:0 2px 8px rgba(99,102,241,0.18);}
+  [data-theme="dark"] .icon-embed{color:#8587f8;}
+
+  /* ── CONTEXTUAL DROPDOWNS ── */
+  .ctx-menu{position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:0 8px 28px rgba(0,0,0,0.16);z-index:700;min-width:168px;overflow:hidden;animation:fadeIn .12s ease;}
+  .ctx-item{display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--text-main);cursor:pointer;transition:background .13s;}
+  .ctx-item:hover{background:var(--light-blue);}
+  .ctx-item:not(:last-child){border-bottom:1px solid var(--border);}
+  .ctx-item svg{width:14px;height:14px;flex-shrink:0;color:var(--text-sub);}
+  .ctx-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .ctx-item.ctx-active{background:var(--cyan-light);}
+  .ctx-item.ctx-active::after{content:'✓';margin-right:auto;font-size:11px;color:var(--cyan);}
+  .type-tag{cursor:pointer;}
+  .type-tag:hover{background:var(--light-blue);border-color:var(--cyan);color:var(--navy);}
+  .lesson-title{font-weight:600;color:var(--text-main);}
+  .lesson-free{font-size:10px;font-weight:700;background:rgba(125,197,122,0.15);color:#3d8a3a;border-radius:4px;padding:1px 6px;margin-right:6px;}
+  [data-theme="dark"] .lesson-free{color:#7DC57A;}
+  .duration{font-size:11px;color:var(--text-light);display:flex;align-items:center;gap:3px;margin-top:2px;}
+  .duration svg{width:11px;height:11px;}
+
+  .type-tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--text-sub);}
+  .type-tag svg{width:12px;height:12px;}
+
+  /* Interactive source link */
+  .source-tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--text-sub);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:3px 8px;cursor:pointer;transition:all .15s;}
+  .source-tag:hover{border-color:var(--cyan);color:var(--cyan);}
+  .source-tag svg{width:12px;height:12px;}
+  .source-input-wrap{display:flex;align-items:center;gap:4px;}
+  .source-input{font-family:var(--font-he);font-size:12px;color:var(--text-main);background:var(--bg);border:1.5px solid var(--cyan);border-radius:6px;padding:3px 8px;outline:none;width:110px;}
+
+  /* Status pill — clickable */
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;cursor:pointer;transition:all .2s;user-select:none;}
+  .pill:hover{filter:brightness(1.1);transform:scale(1.04);}
+  .pill::before{content:'';width:6px;height:6px;border-radius:50%;display:inline-block;}
+  .pill-pub{background:rgba(125,197,122,0.14);color:#3d8a3a;}
+  .pill-pub::before{background:#7DC57A;}
+  .pill-draft{background:rgba(234,214,84,0.14);color:#8a7200;}
+  .pill-draft::before{background:#c8a800;}
+  .pill-hidden{background:rgba(37,62,122,0.08);color:var(--text-sub);}
+  .pill-hidden::before{background:var(--text-light);}
+  [data-theme="dark"] .pill-pub{color:#7DC57A;}
+  [data-theme="dark"] .pill-draft{color:#EAD654;}
+
+  .date-text{font-size:12px;color:var(--text-light);}
+  .row-actions{display:flex;align-items:center;justify-content:center;gap:4px;opacity:0;transition:opacity .2s;}
+
+  /* ── CUSTOM CELL ── */
+  .custom-cell{font-size:12px;color:var(--text-sub);}
+  .custom-cell-input{width:100%;font-family:var(--font-he);font-size:12px;color:var(--text-main);background:transparent;border:none;border-bottom:1.5px solid var(--border);padding:2px 4px;outline:none;transition:border-color .2s;}
+  .custom-cell-input:focus{border-color:var(--cyan);}
+  .custom-cell-input::placeholder{color:var(--text-light);}
+
+  /* ── STICKY COLUMNS (Monday-style) ── */
+  .table-wrap{overflow-x:auto;}
+  .lessons-table th.th-drag{position:sticky;right:0;z-index:4;background:var(--surface-2);}
+  .lessons-table th.th-cb{position:sticky;right:28px;z-index:4;background:var(--surface-2);}
+  .lessons-table th.th-num{position:sticky;right:64px;z-index:4;background:var(--surface-2);}
+  .lessons-table th.th-name{position:sticky;right:108px;z-index:4;background:var(--surface-2);box-shadow:-3px 0 10px rgba(0,0,0,.06);}
+  .lesson-row td:nth-child(1){position:sticky;right:0;z-index:2;background:var(--surface);}
+  .lesson-row td:nth-child(2){position:sticky;right:28px;z-index:2;background:var(--surface);}
+  .lesson-row td:nth-child(3){position:sticky;right:64px;z-index:2;background:var(--surface);}
+  .lesson-row td:nth-child(4){position:sticky;right:108px;z-index:2;background:var(--surface);box-shadow:-3px 0 8px rgba(0,0,0,.04);}
+  .lesson-row:nth-child(even) td:nth-child(1),.lesson-row:nth-child(even) td:nth-child(2),.lesson-row:nth-child(even) td:nth-child(3),.lesson-row:nth-child(even) td:nth-child(4){background:var(--section-bg);}
+  .lesson-row:hover td:nth-child(1),.lesson-row:hover td:nth-child(2),.lesson-row:hover td:nth-child(3),.lesson-row:hover td:nth-child(4){background:var(--row-hover)!important;}
+  .lesson-row.selected td:nth-child(1),.lesson-row.selected td:nth-child(2),.lesson-row.selected td:nth-child(3),.lesson-row.selected td:nth-child(4){background:rgba(56,196,242,.08)!important;}
+
+  /* ── HIDE NATIVE TABLE SCROLLBARS ── */
+  .table-wrap{scrollbar-width:none;}
+  .table-wrap::-webkit-scrollbar{display:none;}
+
+  /* ── SCROLL RAIL (shared horizontal scroll) ── */
+  .scroll-rail-wrap{position:sticky;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--border);padding:2px 0;display:none;}
+  .scroll-rail{overflow-x:auto;overflow-y:hidden;height:14px;direction:ltr;cursor:default;}
+  .scroll-rail::-webkit-scrollbar{height:8px;}
+  .scroll-rail::-webkit-scrollbar-track{background:var(--bg);border-radius:4px;}
+  .scroll-rail::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+  .scroll-rail::-webkit-scrollbar-thumb:hover{background:var(--cyan);}
+  .scroll-rail-inner{height:1px;min-width:100%;}
+
+  /* ── COLUMN TYPE TOGGLE ── */
+  .col-type-row{display:flex;gap:6px;margin:10px 0 0;}
+  .col-type-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:8px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg);font-family:var(--font-he);font-size:13px;font-weight:700;color:var(--text-sub);cursor:pointer;transition:all .2s;}
+  .col-type-btn svg{width:14px;height:14px;}
+  .col-type-btn.active{background:var(--cyan-light);border-color:var(--cyan);color:var(--navy);}
+  [data-theme="dark"] .col-type-btn.active{color:var(--cyan);}
+  .col-type-btn:hover:not(.active){border-color:var(--cyan);color:var(--text-main);}
+  .options-textarea{width:100%;font-family:var(--font-he);font-size:13px;padding:9px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg);color:var(--text-main);outline:none;resize:none;transition:border-color .2s;margin-top:8px;line-height:1.7;}
+  .options-textarea:focus{border-color:var(--cyan);}
+  #selectOptionsArea{margin-top:12px;}
+
+  /* ── SELECT-PILL CELL ── */
+  .sel-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;border:1px solid transparent;user-select:none;}
+  .sel-pill:hover{filter:brightness(.95);}
+  .sel-pill::after{content:'▾';font-size:9px;opacity:.6;margin-right:2px;}
+  .sel-dot-cell{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .sel-cell-menu{position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:0 8px 28px rgba(0,0,0,0.16);z-index:700;min-width:160px;overflow:hidden;animation:fadeIn .12s ease;}
+  .sel-cell-item{display:flex;align-items:center;gap:10px;padding:9px 14px;font-size:12px;font-weight:600;color:var(--text-main);cursor:pointer;transition:background .13s;}
+  .sel-cell-item:hover{background:var(--light-blue);}
+  .sel-cell-item:not(:last-child){border-bottom:1px solid var(--border);}
+  .sel-cell-item.active-opt{background:var(--cyan-light);}
+  .sel-cell-item.active-opt::after{content:'✓';margin-right:auto;font-size:11px;color:var(--cyan);}
+
+  /* ── ADD ROW ── */
+  .add-lesson-row{display:flex;align-items:center;gap:10px;padding:11px 20px;background:var(--surface);border-top:1px dashed var(--border);cursor:pointer;transition:background .2s;color:var(--text-sub);font-size:13px;font-weight:600;}
+  .add-lesson-row:hover{background:rgba(56,196,242,0.04);color:var(--cyan);}
+  .add-lesson-row svg{width:15px;height:15px;}
+
+  /* ── ADD SECTION ── */
+  .add-section-btn{display:flex;align-items:center;gap:10px;padding:14px 20px;background:var(--surface);border:1.5px dashed var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all .2s;color:var(--text-sub);font-size:14px;font-weight:700;justify-content:center;}
+  .add-section-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(56,196,242,0.03);}
+  .add-section-btn svg{width:16px;height:16px;}
+
+  /* ── ADD COLUMN PANEL ── */
+  .col-manager{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:420px;background:var(--surface);border-radius:var(--radius-lg);box-shadow:0 24px 64px rgba(0,0,0,0.2);z-index:200;border:1px solid var(--border);}
+  .col-manager-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);}
+  .col-manager-title{font-size:16px;font-weight:900;color:var(--text-main);}
+  .close-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .2s;}
+  .close-btn:hover{background:var(--bg);color:var(--text-main);}
+  .close-btn svg{width:16px;height:16px;}
+  .col-manager-body{padding:20px 24px;}
+  .col-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-light);margin-bottom:10px;}
+  .preset-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
+  .preset-col-btn{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg);cursor:pointer;transition:all .2s;font-family:var(--font-he);font-size:13px;font-weight:600;color:var(--text-main);}
+  .preset-col-btn:hover{border-color:var(--cyan);background:var(--light-blue);color:var(--navy);}
+  .preset-col-btn.added{border-color:var(--green);background:rgba(125,197,122,0.1);color:#3d8a3a;}
+  .preset-col-btn svg{width:15px;height:15px;flex-shrink:0;}
+  .custom-col-form{display:flex;gap:8px;}
+  .custom-col-input{flex:1;font-family:var(--font-he);font-size:13px;padding:9px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg);color:var(--text-main);outline:none;transition:border-color .2s;}
+  .custom-col-input:focus{border-color:var(--cyan);}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:190;display:none;}
+  .overlay.visible{display:block;}
+
+  /* ── UPLOAD MODAL ── */
+  .upload-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:480px;background:var(--surface);border-radius:var(--radius-lg);box-shadow:0 24px 64px rgba(0,0,0,0.25);z-index:200;border:1px solid var(--border);}
+  .upload-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);}
+  .upload-title{font-size:16px;font-weight:900;color:var(--text-main);}
+  .upload-body{padding:24px;}
+  .upload-drop{border:2px dashed var(--border);border-radius:var(--radius-md);padding:40px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);}
+  .upload-drop:hover,.upload-drop.drag-over-drop{border-color:var(--cyan);background:rgba(56,196,242,0.04);}
+  .upload-drop-icon{width:48px;height:48px;background:var(--cyan-light);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:var(--cyan);}
+  .upload-drop-icon svg{width:22px;height:22px;}
+  .upload-drop-text{font-size:14px;font-weight:700;color:var(--text-main);margin-bottom:4px;}
+  .upload-drop-sub{font-size:12px;color:var(--text-sub);}
+  .upload-or{text-align:center;margin:16px 0;font-size:12px;color:var(--text-light);}
+  .upload-url-row{display:flex;gap:8px;}
+  .upload-url-input{flex:1;font-family:var(--font-he);font-size:13px;padding:9px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg);color:var(--text-main);outline:none;transition:border-color .2s;}
+  .upload-url-input:focus{border-color:var(--cyan);}
+  .upload-progress{margin-top:16px;display:none;}
+  .upload-progress.visible{display:block;}
+  .progress-bar-wrap{height:6px;background:var(--border);border-radius:10px;overflow:hidden;margin-top:6px;}
+  .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),#1db0d8);border-radius:10px;width:0%;transition:width .3s;}
+  .upload-footer{display:flex;justify-content:flex-end;gap:8px;padding:16px 24px;border-top:1px solid var(--border);}
+
+  /* ── IMPORT DROPDOWN ── */
+  .import-wrap{position:relative;}
+  .import-menu{display:none;position:absolute;top:calc(100% + 6px);right:0;min-width:220px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-md);z-index:300;overflow:hidden;}
+  .import-menu.open{display:block;animation:fadeIn .15s ease;}
+  .import-option{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;font-weight:600;color:var(--text-main);cursor:pointer;transition:background .15s;}
+  .import-option:hover{background:var(--light-blue);color:var(--navy);}
+  .import-option svg{width:15px;height:15px;flex-shrink:0;color:var(--text-sub);}
+  .import-option:not(:last-child){border-bottom:1px solid var(--border);}
+
+  /* ── OPTIONS TAG INPUT ── */
+  .options-tags-wrap{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg);min-height:48px;cursor:text;transition:border-color .2s;}
+  .options-tags-wrap:focus-within{border-color:var(--cyan);}
+  .options-tag-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 6px;border-radius:20px;font-size:12px;font-weight:700;cursor:default;animation:fadeIn .15s ease;}
+  .options-tag-pill button{display:flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:none;background:rgba(0,0,0,0.1);cursor:pointer;color:inherit;opacity:.7;transition:opacity .15s;flex-shrink:0;padding:0;}
+  .options-tag-pill button:hover{opacity:1;background:rgba(0,0,0,0.18);}
+  .options-tag-pill button svg{width:9px;height:9px;}
+  .options-tag-input{border:none;background:transparent;outline:none;font-family:var(--font-he);font-size:13px;color:var(--text-main);min-width:160px;flex:1;padding:2px 0;}
+  .options-tag-input::placeholder{color:var(--text-light);}
+  .options-tag-hint{font-size:11px;color:var(--text-light);margin-top:6px;text-align:right;}
+
+  /* ── CUSTOM COLUMN TRIGGER BUTTON ── */
+  .custom-col-trigger-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 14px;border-radius:var(--radius-sm);border:1.5px dashed var(--border);background:transparent;cursor:pointer;font-family:var(--font-he);font-size:13px;font-weight:700;color:var(--text-sub);transition:all .2s;margin-top:4px;}
+  .custom-col-trigger-btn:hover{border-color:var(--cyan);background:var(--light-blue);color:var(--navy);}
+  .custom-col-trigger-btn svg{width:15px;height:15px;flex-shrink:0;}
+
+  /* ── CUSTOM COLUMN SUB-MODAL POSITIONING ── */
+  .custom-col-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);}
+</style>
+</head>
+<body>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeAllPanels()"></div>
+
+<!-- COLUMN MANAGER MODAL -->
+<div class="col-manager" id="colManager" style="display:none;">
+  <div class="col-manager-header">
+    <div class="col-manager-title">ניהול עמודות</div>
+    <button class="close-btn" onclick="closeAllPanels()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="col-manager-body">
+    <div class="col-section-label">עמודות מוכנות מראש</div>
+    <div class="preset-cols">
+      <button class="preset-col-btn" id="btn-notes" onclick="addPresetCol('notes', 'הערות מרצה', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        הערות מרצה
+      </button>
+      <button class="preset-col-btn" id="btn-summary" onclick="addPresetCol('summary', 'סיכום שיעור', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        סיכום שיעור
+      </button>
+      <button class="preset-col-btn" id="btn-homework" onclick="addPresetCol('homework', 'משימה לבית', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        משימה לבית
+      </button>
+      <button class="preset-col-btn" id="btn-resources" onclick="addPresetCol('resources', 'חומרי עזר', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        חומרי עזר
+      </button>
+      <button class="preset-col-btn" id="btn-difficulty" onclick="addPresetCol('difficulty', 'רמת קושי', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+        רמת קושי
+      </button>
+      <button class="preset-col-btn" id="btn-tags" onclick="addPresetCol('tags', 'תגיות', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        תגיות
+      </button>
+    </div>
+    <button class="custom-col-trigger-btn" onclick="openCustomColModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>עמודה מותאמת אישית
+    </button>
+  </div>
+</div>
+
+<!-- CUSTOM COLUMN SUB-MODAL -->
+<div class="col-manager custom-col-modal" id="customColModal" style="display:none;z-index:220;">
+  <div class="col-manager-header">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="close-btn" onclick="closeCustomColModal()" title="חזרה" style="border:none;background:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="col-manager-title">עמודה מותאמת אישית</div>
+    </div>
+    <button class="close-btn" onclick="closeAllPanels()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div style="display:flex;justify-content:center;padding:16px 0 4px;pointer-events:none;">
+    <img src="../BOARDi/SVG/7.svg" alt="" width="101" height="101" style="object-fit:contain;">
+  </div>
+  <div class="col-manager-body">
+    <div class="col-section-label" style="margin-bottom:8px;">שם העמודה</div>
+    <input type="text" class="custom-col-input" id="customColName" placeholder="לדוגמה: סטטוס פעולה, הערה..." maxlength="24" style="width:100%;">
+    <div class="col-section-label" style="margin-top:16px;margin-bottom:8px;">סוג עמודה</div>
+    <div class="col-type-row" style="margin-top:0;">
+      <button class="col-type-btn active" id="colTypeTxt" onclick="setColType('text')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="9" y1="20" x2="15" y2="20"/></svg>טקסט חופשי
+      </button>
+      <button class="col-type-btn" id="colTypeSel" onclick="setColType('select')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="4" rx="1"/><rect x="3" y="10" width="14" height="4" rx="1"/><rect x="3" y="17" width="10" height="4" rx="1"/></svg>בחירה / סטטוס
+      </button>
+    </div>
+    <div id="selectOptionsArea" style="display:none;">
+      <div class="col-section-label" style="margin-top:16px;margin-bottom:8px;">אפשרויות</div>
+      <div class="options-tags-wrap" id="optionsTagsWrap">
+        <!-- pills injected here by JS -->
+        <input class="options-tag-input" id="optionsTagInput" type="text" placeholder="הקלד אפשרות ולחץ Enter..." maxlength="40" autocomplete="off">
+      </div>
+      <div class="options-tag-hint">לחץ Enter להוספת אפשרות נוספת</div>
+    </div>
+    <button class="btn btn-primary" onclick="addCustomCol()" style="margin-top:20px;width:100%;justify-content:center;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>הוסף עמודה
+    </button>
+  </div>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="upload-modal" id="uploadModal" style="display:none;">
+  <div class="upload-header">
+    <div class="upload-title" id="uploadTitle">העלאת וידאו</div>
+    <button class="close-btn" onclick="closeAllPanels()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="upload-body">
+    <div class="upload-drop" id="uploadDrop" onclick="simulateUpload()">
+      <div class="upload-drop-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="upload-drop-text">גרור ושחרר קובץ וידאו</div>
+      <div class="upload-drop-sub">MP4, MOV, AVI · עד 2GB</div>
+    </div>
+    <div class="upload-or">— או הכנס קישור —</div>
+    <div class="upload-url-row">
+      <input class="upload-url-input" id="uploadUrl" type="url" placeholder="https://vimeo.com/..." dir="ltr">
+      <button class="btn btn-ghost btn-sm" onclick="simulateLink()">קשר</button>
+    </div>
+    <div class="upload-progress" id="uploadProgress">
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-sub);">
+        <span id="uploadFileName">סרטון_מבוא.mp4</span>
+        <span id="uploadPct">0%</span>
+      </div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="uploadBar"></div></div>
+    </div>
+  </div>
+  <div class="upload-footer">
+    <button class="btn btn-ghost btn-sm" onclick="closeAllPanels()">ביטול</button>
+    <button class="btn btn-primary btn-sm" onclick="closeAllPanels()">שמור</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo"><img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD"></div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>לוח הבקרה
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <div class="mode-switcher-label">מצב תצוגה</div>
+      <div class="mode-toggle-row">
+        <button class="mode-btn" onclick="setMode('student')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>תלמיד</button>
+        <button class="mode-btn active" onclick="setMode('teacher')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>מרצה</button>
+      </div>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div><div class="profile-mini-name">אלון</div><div class="profile-mini-role">מרצה</div></div>
+      <button class="profile-edit-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">מרכזי הידע שלי</span><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-link">הקורסים שלי</span><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-link">כריזמה מול המצלמה</span><span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">ליי-אאוט</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="lang-toggle" id="langToggle" onclick="toggleLang()">🇮🇱</button>
+      <button class="icon-btn" onclick="toggleTheme()">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <div class="icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+    </div>
+  </header>
+
+  <!-- COURSE HEADER -->
+  <div class="course-header">
+    <div class="course-title-row">
+      <div class="course-title-wrap">
+        <div class="course-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+        <div>
+          <div class="course-name">כריזמה מול המצלמה</div>
+          <div class="course-meta-row">
+            <span class="course-badge badge-pub">פורסם</span>
+            <span class="course-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>48 תלמידים</span>
+            <span class="course-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>12 שיעורים</span>
+            <span class="course-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>4.5 שעות</span>
+          </div>
+        </div>
+      </div>
+      <div class="course-actions">
+        <button class="btn btn-ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>תצוגה מקדימה</button>
+        <button class="btn publish-state-btn" id="publishBtn" data-state="unsaved" onclick="clickPublish()" onmouseenter="publishHover(true)" onmouseleave="publishHover(false)">
+          <svg id="pubIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="pubLabel">שינויים שלא נשמרו</span>
+        </button>
+      </div>
+    </div>
+    <div class="course-tabs">
+      <div class="tab active"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="4" rx="1"/><rect x="3" y="10" width="11" height="11" rx="1"/><rect x="17" y="10" width="4" height="11" rx="1"/></svg>ליי-אאוט</div>
+      <div class="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות</div>
+      <div class="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>התלמידים שלי</div>
+      <div class="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>ערכת מותג</div>
+      <div class="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>דיוור</div>
+      <div class="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>אנליטיקס</div>
+    </div>
+  </div>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+
+    <!-- EDITOR TOOLBAR -->
+    <div class="editor-toolbar">
+      <div class="editor-stats">
+        <div class="editor-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><strong>3</strong> פרקים</div>
+        <div class="editor-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg><strong>12</strong> שיעורים</div>
+        <div class="editor-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><strong>4:32</strong> שעות</div>
+        <div class="editor-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><strong>8</strong> פורסמו</div>
+      </div>
+      <div class="editor-actions">
+        <div class="import-wrap">
+          <button class="btn btn-ghost btn-sm" onclick="toggleImportMenu(event)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            ייבוא
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11" style="opacity:.6"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="import-menu" id="importMenu">
+            <div class="import-option" onclick="closeImportMenu()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+              ייבוא מאקסל לפי פורמט
+            </div>
+            <div class="import-option" onclick="closeImportMenu()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              ייבוא מלינק
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="openColManager()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          ניהול עמודות
+        </button>
+        <button class="btn btn-ghost btn-sm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.41"/></svg>
+          שחזר
+        </button>
+      </div>
+    </div>
+
+    <!-- CTRL BAR -->
+    <div class="ctrl-bar">
+      <label class="cb-wrap" title="בחר הכל">
+        <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this.checked)">
+        <span class="cb-label">בחר הכל</span>
+      </label>
+      <div class="ctrl-sep"></div>
+      <button class="ctrl-btn" onclick="expandAll()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/><line x1="12" y1="3" x2="12" y2="4"/></svg>
+        הרחב הכל
+      </button>
+      <button class="ctrl-btn" onclick="collapseAll()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/><line x1="12" y1="20" x2="12" y2="21"/></svg>
+        כווץ הכל
+      </button>
+    </div>
+
+    <!-- TABLE EMPTY STATE -->
+    <div class="table-empty" id="tableEmpty">
+      <img src="../BOARDi/SVG/9.svg" alt="ריק">
+      <div class="table-empty-title">הקורס ריק עדיין</div>
+      <div class="table-empty-sub">הוסף פרק ראשון כדי להתחיל לבנות את תוכן הקורס שלך</div>
+      <button class="btn btn-primary" style="margin-top:8px;" onclick="document.querySelector('.add-section-btn').click()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>הוסף פרק ראשון
+      </button>
+    </div>
+
+    <!-- ═══ SECTIONS CONTAINER ═══ -->
+    <div id="sectionsContainer">
+
+    <!-- SECTION 1 -->
+    <div class="section-block" data-color="cyan" draggable="true">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="drag-handle" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg></div>
+        <div class="section-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <span class="section-num">01</span>
+        <span class="section-name">מבוא ועקרונות בסיסיים</span>
+        <span class="section-count">4 שיעורים · 1:12 שעות</span>
+        <div class="section-actions-row">
+          <div class="row-icon-btn" onclick="event.stopPropagation()" title="ערוך"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+          <div class="row-icon-btn" onclick="event.stopPropagation()" style="color:var(--pink);" title="מחק"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="table-wrap">
+        <table class="lessons-table">
+          <thead class="table-head">
+            <tr>
+              <th class="th-drag"></th>
+              <th class="th-cb"><input type="checkbox" class="section-cb" onchange="toggleSectionCb(this)" style="accent-color:var(--cyan);width:14px;height:14px;"></th>
+              <th class="th-num">#</th>
+              <th class="th-name">שם השיעור</th>
+              <th class="th-type">סוג</th>
+              <th class="th-source">מקור תוכן</th>
+              <th class="th-status">סטטוס</th>
+              <th class="th-date">עריכה אחרונה</th>
+              <th class="th-actions" id="extra-heads-1"></th>
+              <th class="th-add-col"><button class="add-col-th-btn" onclick="openColManager()" title="הוסף עמודה">+</button></th>
+            </tr>
+          </thead>
+          <tbody id="tbody-1">
+            <tr class="lesson-row">
+              <td><div class="drag-handle"><svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><circle cx="9" cy="6" r="1.2"/><circle cx="15" cy="6" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="18" r="1.2"/><circle cx="15" cy="18" r="1.2"/></svg></div></td>
+              <td><input type="checkbox" class="row-cb" onchange="updateSelection()" style="accent-color:var(--cyan);width:14px;height:14px;"></td>
+              <td><span class="lesson-num">1.1</span></td>
+              <td><div class="lesson-name-cell">
+                <div class="lesson-type-icon icon-video" onclick="openUpload('מבוא לקורס')" title="לחץ להחלפת וידאו" style="cursor:pointer;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+                <div><div class="lesson-title">מבוא לקורס — מה תלמד <span class="lesson-free">חינם</span></div><div class="duration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>08:24</div></div>
+              </div></td>
+              <td><span class="type-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>וידאו</span></td>
+              <td><span class="source-tag" onclick="editSource(this)" title="לחץ לעריכת קישור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Vimeo</span></td>
+              <td><span class="pill pill-pub" onclick="openPillMenu(this,event)">פורסם</span></td>
+              <td><span class="date-text">לפני 3 ימים</span></td>
+              <td><div class="row-actions" id="extra-1-1">
+                <div class="row-icon-btn" title="ערוך שיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                <div class="row-icon-btn" title="תצוגה מקדימה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                <div class="row-icon-btn" title="מחק" style="color:var(--pink);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div>
+              </div></td>
+            </tr>
+            <tr class="lesson-row">
+              <td><div class="drag-handle"><svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><circle cx="9" cy="6" r="1.2"/><circle cx="15" cy="6" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="18" r="1.2"/><circle cx="15" cy="18" r="1.2"/></svg></div></td>
+              <td><input type="checkbox" class="row-cb" onchange="updateSelection()" style="accent-color:var(--cyan);width:14px;height:14px;"></td>
+              <td><span class="lesson-num">1.2</span></td>
+              <td><div class="lesson-name-cell">
+                <div class="lesson-type-icon icon-video" onclick="openUpload('שפת גוף')" style="cursor:pointer;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+                <div><div class="lesson-title">שפת גוף — 5 עקרונות מנצחים</div><div class="duration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>14:07</div></div>
+              </div></td>
+              <td><span class="type-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>וידאו</span></td>
+              <td><span class="source-tag" onclick="editSource(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Vimeo</span></td>
+              <td><span class="pill pill-pub" onclick="openPillMenu(this,event)">פורסם</span></td>
+              <td><span class="date-text">לפני שבוע</span></td>
+              <td><div class="row-actions">
+                <div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                <div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                <div class="row-icon-btn" style="color:var(--pink);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div>
+              </div></td>
+            </tr>
+            <tr class="lesson-row">
+              <td><div class="drag-handle"><svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><circle cx="9" cy="6" r="1.2"/><circle cx="15" cy="6" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="18" r="1.2"/><circle cx="15" cy="18" r="1.2"/></svg></div></td>
+              <td><input type="checkbox" class="row-cb" onchange="updateSelection()" style="accent-color:var(--cyan);width:14px;height:14px;"></td>
+              <td><span class="lesson-num">1.3</span></td>
+              <td><div class="lesson-name-cell">
+                <div class="lesson-type-icon icon-doc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                <div><div class="lesson-title">מדריך — צ'קליסט לפני הצילום</div><div class="duration">PDF · 2 עמודים</div></div>
+              </div></td>
+              <td><span class="type-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>מסמך</span></td>
+              <td><span class="source-tag" onclick="editSource(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>העלאה</span></td>
+              <td><span class="pill pill-pub" onclick="openPillMenu(this,event)">פורסם</span></td>
+              <td><span class="date-text">לפני שבוע</span></td>
+              <td><div class="row-actions">
+                <div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                <div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                <div class="row-icon-btn" style="color:var(--pink);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div>
+              </div></td>
+            </tr>
+            <tr class="lesson-row">
+              <td><div class="drag-handle"><svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><circle cx="9" cy="6" r="1.2"/><circle cx="15" cy="6" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="18" r="1.2"/><circle cx="15" cy="18" r="1.2"/></svg></div></td>
+              <td><input type="checkbox" class="row-cb" onchange="updateSelection()" style="accent-color:var(--cyan);width:14px;height:14px;"></td>
+              <td><span class="lesson-num">1.4</span></td>
+              <td><div class="lesson-name-cell">
+                <div class="lesson-type-icon icon-quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+                <div><div class="lesson-title">חידון — בחן את עצמך</div><div class="duration">10 שאלות</div></div>
+              </div></td>
+              <td><span class="type-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/></svg>חידון</span></td>
+              <td><span class="source-tag" onclick="editSource(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>פנימי</span></td>
+              <td><span class="pill pill-draft" onclick="openPillMenu(this,event)">טיוטה</span></td>
+              <td><span class="date-text">היום</span></td>
+              <td><div class="row-actions">
+                <div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                <div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                <div class="row-icon-btn" style="color:var(--pink);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div>
+              </div></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="add-lesson-row" onclick="addLessonRow(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>הוסף שיעור לפרק
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section-block" data-color="pink" draggable="true">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="drag-handle" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg></div>
+        <div class="section-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <span class="section-num">02</span>
+        <span class="section-name">טכניקות מתקדמות לשפת גוף</span>
+        <span class="section-count">3 שיעורים · 2:08 שעות</span>
+        <div class="section-actions-row">
+          <div class="row-icon-btn" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+          <div class="row-icon-btn" onclick="event.stopPropagation()" style="color:var(--pink);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div>
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="table-wrap">
+        <table class="lessons-table">
+          <thead class="table-head"><tr>
+            <th class="th-drag"></th><th class="th-cb"><input type="checkbox" class="section-cb" onchange="toggleSectionCb(this)" style="accent-color:var(--cyan);width:14px;height:14px;"></th>
+            <th class="th-num">#</th><th class="th-name">שם השיעור</th><th class="th-type">סוג</th>
+            <th class="th-source">מקור תוכן</th><th class="th-status">סטטוס</th><th class="th-date">עריכה אחרונה</th><th class="th-actions"></th>
+            <th class="th-add-col"><button class="add-col-th-btn" onclick="openColManager()" title="הוסף עמודה">+</button></th>
+          </tr></thead>
+          <tbody>
+            <tr class="lesson-row">
+              <td><div class="drag-handle"><svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><circle cx="9" cy="6" r="1.2"/><circle cx="15" cy="6" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="18" r="1.2"/><circle cx="15" cy="18" r="1.2"/></svg></div></td>
+              <td><input type="checkbox" class="row-cb" onchange="updateSelection()" style="accent-color:var(--cyan);width:14px;height:14px;"></td>
+              <td><span class="lesson-num">2.1</span></td>
+              <td><div class="lesson-name-cell"><div class="lesson-type-icon icon-video" onclick="openUpload('קשר עין')" style="cursor:pointer;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div><div class="lesson-title">קשר עין — איך עושים את זה נכון</div><div class="duration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>19:45</div></div></div></td>
+              <td><span class="type-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>וידאו</span></td>
+              <td><span class="source-tag" onclick="editSource(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Vimeo</span></td>
+              <td><span class="pill pill-pub" onclick="openPillMenu(this,event)">פורסם</span></td>
+              <td><span class="date-text">לפני 4 ימים</span></td>
+              <td><div class="row-actions"><div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="row-icon-btn" style="color:var(--pink);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div></div></td>
+            </tr>
+            <tr class="lesson-row">
+              <td><div class="drag-handle"><svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><circle cx="9" cy="6" r="1.2"/><circle cx="15" cy="6" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="18" r="1.2"/><circle cx="15" cy="18" r="1.2"/></svg></div></td>
+              <td><input type="checkbox" class="row-cb" onchange="updateSelection()" style="accent-color:var(--cyan);width:14px;height:14px;"></td>
+              <td><span class="lesson-num">2.2</span></td>
+              <td><div class="lesson-name-cell"><div class="lesson-type-icon icon-video" onclick="openUpload('הצגה עצמית')" style="cursor:pointer;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div><div class="lesson-title">הצגה עצמית — 30 שניות שמשנות הכל</div><div class="duration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>22:11</div></div></div></td>
+              <td><span class="type-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>וידאו</span></td>
+              <td><span class="source-tag" onclick="editSource(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Vimeo</span></td>
+              <td><span class="pill pill-hidden" onclick="openPillMenu(this,event)">מוסתר</span></td>
+              <td><span class="date-text">לפני 4 ימים</span></td>
+              <td><div class="row-actions"><div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="row-icon-btn" style="color:var(--pink);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div></div></td>
+            </tr>
+            <tr class="lesson-row">
+              <td><div class="drag-handle"><svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><circle cx="9" cy="6" r="1.2"/><circle cx="15" cy="6" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="18" r="1.2"/><circle cx="15" cy="18" r="1.2"/></svg></div></td>
+              <td><input type="checkbox" class="row-cb" onchange="updateSelection()" style="accent-color:var(--cyan);width:14px;height:14px;"></td>
+              <td><span class="lesson-num">2.3</span></td>
+              <td><div class="lesson-name-cell"><div class="lesson-type-icon icon-live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49"/><path d="M7.76 7.76a6 6 0 0 0 0 8.49"/></svg></div><div><div class="lesson-title">שידור חי — שאלות ותשובות</div><div class="duration">ממתין לתאריך</div></div></div></td>
+              <td><span class="type-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/></svg>לייב</span></td>
+              <td><span class="source-tag" onclick="editSource(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>Zoom</span></td>
+              <td><span class="pill pill-draft" onclick="openPillMenu(this,event)">טיוטה</span></td>
+              <td><span class="date-text">היום</span></td>
+              <td><div class="row-actions"><div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div class="row-icon-btn" style="color:var(--pink);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div></div></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="add-lesson-row" onclick="addLessonRow(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>הוסף שיעור לפרק
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 — COLLAPSED -->
+    <div class="section-block collapsed" data-color="yellow" draggable="true">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="drag-handle" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg></div>
+        <div class="section-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <span class="section-num">03</span>
+        <span class="section-name">תרגול מעשי וסיום</span>
+        <span class="section-count">3 שיעורים · 1:12 שעות</span>
+        <div class="section-actions-row">
+          <div class="row-icon-btn" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+          <div class="row-icon-btn" onclick="event.stopPropagation()" style="color:var(--pink);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div>
+        </div>
+      </div>
+      <div class="section-content" style="max-height:0;overflow:hidden;">
+        <div class="table-wrap">
+        <table class="lessons-table">
+          <thead class="table-head"><tr>
+            <th class="th-drag"></th><th class="th-cb"><input type="checkbox" class="section-cb" onchange="toggleSectionCb(this)" style="accent-color:var(--cyan);width:14px;height:14px;"></th>
+            <th class="th-num">#</th><th class="th-name">שם השיעור</th><th class="th-type">סוג</th>
+            <th class="th-source">מקור תוכן</th><th class="th-status">סטטוס</th><th class="th-date">עריכה אחרונה</th><th class="th-actions"></th>
+            <th class="th-add-col"><button class="add-col-th-btn" onclick="openColManager()" title="הוסף עמודה">+</button></th>
+          </tr></thead>
+          <tbody>
+            <tr class="lesson-row">
+              <td><div class="drag-handle"><svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><circle cx="9" cy="6" r="1.2"/><circle cx="15" cy="6" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="18" r="1.2"/><circle cx="15" cy="18" r="1.2"/></svg></div></td>
+              <td><input type="checkbox" class="row-cb" onchange="updateSelection()" style="accent-color:var(--cyan);width:14px;height:14px;"></td>
+              <td><span class="lesson-num">3.1</span></td>
+              <td><div class="lesson-name-cell"><div class="lesson-type-icon icon-video" onclick="openUpload('תרגיל מעשי')" style="cursor:pointer;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div><div class="lesson-title">תרגיל מעשי — צלם את עצמך</div><div class="duration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>12:00</div></div></div></td>
+              <td><span class="type-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>וידאו</span></td>
+              <td><span class="source-tag" onclick="editSource(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Vimeo</span></td>
+              <td><span class="pill pill-draft" onclick="openPillMenu(this,event)">טיוטה</span></td>
+              <td><span class="date-text">היום</span></td>
+              <td><div class="row-actions"><div class="row-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><div class="row-icon-btn" style="color:var(--pink);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div></div></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="add-lesson-row" onclick="addLessonRow(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>הוסף שיעור לפרק</div>
+      </div>
+    </div>
+
+    </div><!-- /sectionsContainer -->
+
+    <div class="add-section-btn" style="margin-top:16px;" onclick="addSection()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>הוסף פרק חדש
+    </div>
+
+    <!-- SHARED SCROLL RAIL -->
+    <div class="scroll-rail-wrap" id="scrollRailWrap">
+      <div class="scroll-rail" id="scrollRail" dir="ltr">
+        <div class="scroll-rail-inner" id="scrollRailInner"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── THEME / LANG / MODE ─────────────────────────
+function toggleTheme(){const h=document.documentElement;h.setAttribute('data-theme',h.getAttribute('data-theme')==='dark'?'light':'dark');}
+let lang='he';
+function toggleLang(){lang=lang==='he'?'en':'he';document.getElementById('langToggle').textContent=lang==='he'?'🇮🇱':'🇺🇸';}
+function setMode(m){document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));document.querySelector(`.mode-btn[onclick="setMode('${m}')"]`).classList.add('active');}
+
+// ── SECTION TOGGLE ──────────────────────────────
+function toggleSection(header){
+  const block=header.closest('.section-block');
+  const content=block.querySelector('.section-content');
+  block.classList.toggle('collapsed');
+  if(block.classList.contains('collapsed')){content.style.maxHeight='0';}
+  else{content.style.maxHeight=content.scrollHeight+'px';setTimeout(()=>{content.style.maxHeight='none';},300);}
+}
+
+// init collapsed sections
+document.querySelectorAll('.section-block.collapsed .section-content').forEach(c=>{c.style.maxHeight='0';c.style.overflow='hidden';c.style.transition='max-height .3s ease';});
+document.querySelectorAll('.section-block:not(.collapsed) .section-content').forEach(c=>{c.style.overflow='hidden';c.style.transition='max-height .3s ease';});
+
+// ── EXPAND / COLLAPSE ALL ───────────────────────
+function expandAll(){
+  document.querySelectorAll('.section-block').forEach(block=>{
+    block.classList.remove('collapsed');
+    const c=block.querySelector('.section-content');
+    c.style.maxHeight=c.scrollHeight+'px';
+    setTimeout(()=>{c.style.maxHeight='none';},300);
+  });
+}
+function collapseAll(){
+  document.querySelectorAll('.section-block').forEach(block=>{
+    // Ensure content is measured before collapsing
+    const c=block.querySelector('.section-content');
+    c.style.maxHeight=c.scrollHeight+'px';
+    requestAnimationFrame(()=>{
+      block.classList.add('collapsed');
+      c.style.maxHeight='0';
+    });
+  });
+}
+
+// ── SELECT ALL ──────────────────────────────────
+function toggleSelectAll(checked){
+  document.querySelectorAll('.row-cb').forEach(cb=>{cb.checked=checked;cb.closest('.lesson-row').classList.toggle('selected',checked);});
+  updateSelection();
+}
+function toggleSectionCb(cb){
+  const table=cb.closest('table');
+  table.querySelectorAll('.row-cb').forEach(r=>{r.checked=cb.checked;r.closest('.lesson-row').classList.toggle('selected',cb.checked);});
+  updateSelection();
+}
+function updateSelection(){
+  const checked=document.querySelectorAll('.row-cb:checked').length;
+  const bar=document.getElementById('selectionBar');
+  const total=document.querySelectorAll('.row-cb').length;
+  document.getElementById('selCount').textContent=checked;
+  bar.classList.toggle('visible',checked>0);
+  document.getElementById('selectAll').checked=checked===total&&total>0;
+  document.getElementById('selectAll').indeterminate=checked>0&&checked<total;
+}
+function publishSelected(){
+  document.querySelectorAll('.row-cb:checked').forEach(cb=>{
+    const pill=cb.closest('.lesson-row').querySelector('.pill');
+    if(pill){pill.className='pill pill-pub';pill.textContent='פורסם';}
+  });
+  clearSelection();
+}
+function draftSelected(){
+  document.querySelectorAll('.row-cb:checked').forEach(cb=>{
+    const pill=cb.closest('.lesson-row').querySelector('.pill');
+    if(pill){pill.className='pill pill-draft';pill.textContent='טיוטה';}
+  });
+  clearSelection();
+}
+function deleteSelected(){
+  if(!confirm('למחוק את השיעורים שנבחרו?'))return;
+  document.querySelectorAll('.row-cb:checked').forEach(cb=>{cb.closest('.lesson-row').remove();});
+  clearSelection();
+  document.querySelectorAll('.section-block').forEach(checkSectionEmpty);
+  checkTableEmpty();
+}
+
+// ── EMPTY STATE HELPERS ──────────────────────────
+function checkSectionEmpty(block){
+  const tbody=block.querySelector('tbody');
+  const emptyEl=block.querySelector('.section-empty');
+  if(!tbody||!emptyEl)return;
+  const hasRows=tbody.querySelectorAll('.lesson-row').length>0;
+  emptyEl.classList.toggle('visible',!hasRows);
+}
+function checkTableEmpty(){
+  const hasSections=document.querySelectorAll('#sectionsContainer .section-block').length>0;
+  document.getElementById('tableEmpty').classList.toggle('visible',!hasSections);
+}
+function initSectionEmpty(block){
+  const content=block.querySelector('.section-content');
+  if(!content||content.querySelector('.section-empty'))return;
+  const addRow=content.querySelector('.add-lesson-row');
+  const el=document.createElement('div');
+  el.className='section-empty';
+  el.innerHTML=`<img src="../BOARDi/SVG/9.svg" alt="ריק"><div class="section-empty-title">הפרק ריק</div><div class="section-empty-sub">לחץ על הוסף שיעור כדי להתחיל</div>`;
+  content.insertBefore(el,addRow);
+  checkSectionEmpty(block);
+}
+function clearSelection(){
+  document.querySelectorAll('.row-cb,.section-cb').forEach(cb=>cb.checked=false);
+  document.querySelectorAll('.lesson-row').forEach(r=>r.classList.remove('selected'));
+  document.getElementById('selectAll').checked=false;
+  updateSelection();
+}
+
+// ── STATUS PILL DROPDOWN ─────────────────────────
+let activePill=null;
+function openPillMenu(el,e){
+  e.stopPropagation();
+  closeCtxMenus();
+  activePill=el;
+  const menu=document.getElementById('pillMenu');
+  // mark active
+  ['pub','draft','hidden'].forEach(k=>{
+    document.getElementById('ctx-'+k).classList.toggle('ctx-active',el.classList.contains('pill-'+k));
+  });
+  positionMenu(menu,el);
+}
+function setPillStatus(key){
+  if(!activePill)return;
+  const map={pub:{cls:'pill-pub',txt:'פורסם'},draft:{cls:'pill-draft',txt:'טיוטה'},hidden:{cls:'pill-hidden',txt:'מוסתר'}};
+  activePill.className='pill '+map[key].cls;
+  activePill.textContent=map[key].txt;
+  closeCtxMenus();
+}
+
+// ── TYPE TAG DROPDOWN ────────────────────────────
+let activeTypeTag=null;
+const typeMap={
+  video:{cls:'icon-video',label:'וידאו',svg:'<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>',tagSvg:'color:#1db0d8;'},
+  file:{cls:'icon-doc',label:'קובץ',svg:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',tagSvg:'color:#253E7A;'},
+  embed:{cls:'icon-embed',label:'לינק מוטמע',svg:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',tagSvg:'color:#5b5bd6;'},
+  quiz:{cls:'icon-quiz',label:'חידון',svg:'<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>',tagSvg:'color:#e03060;'}
+};
+// type-tag clicks handled in unified document listener below
+function openTypeMenu(tag){
+  closeCtxMenus();
+  activeTypeTag=tag;
+  const menu=document.getElementById('typeMenu');
+  // detect current type
+  const row=tag.closest('tr');
+  const icon=row?row.querySelector('.lesson-type-icon'):null;
+  Object.keys(typeMap).forEach(k=>{
+    document.getElementById('ctx-'+k).classList.toggle('ctx-active',icon&&icon.classList.contains(typeMap[k].cls));
+  });
+  positionMenu(menu,tag);
+}
+function setLessonType(key){
+  if(!activeTypeTag)return;
+  const t=typeMap[key];
+  const row=activeTypeTag.closest('tr');
+  // update icon
+  if(row){
+    const icon=row.querySelector('.lesson-type-icon');
+    if(icon){
+      icon.className='lesson-type-icon '+t.cls;
+      icon.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${t.svg}</svg>`;
+    }
+  }
+  // update tag
+  activeTypeTag.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="${t.tagSvg}">${t.svg}</svg>${t.label}`;
+  closeCtxMenus();
+}
+
+// ── CTX MENU POSITIONING ─────────────────────────
+function positionMenu(menu,anchor){
+  menu.style.display='block';
+  const r=anchor.getBoundingClientRect();
+  const mw=menu.offsetWidth||170;
+  const mh=menu.offsetHeight||120;
+  let top=r.bottom+4;
+  let left=r.right-mw;
+  if(top+mh>window.innerHeight-8)top=r.top-mh-4;
+  if(left<8)left=8;
+  menu.style.top=top+'px';
+  menu.style.left=left+'px';
+}
+function closeCtxMenus(){
+  document.getElementById('pillMenu').style.display='none';
+  document.getElementById('typeMenu').style.display='none';
+  document.getElementById('selCellMenu').style.display='none';
+  activePill=null;activeTypeTag=null;activeSelPill=null;
+}
+
+// ── SCROLL RAIL ──────────────────────────────────
+let railSyncing=false;
+function updateRailWidth(){
+  const wraps=[...document.querySelectorAll('.table-wrap')];
+  if(!wraps.length)return;
+  const maxW=Math.max(...wraps.map(w=>w.scrollWidth));
+  const cW=wraps.find(w=>w.offsetWidth>0)?.clientWidth||0;
+  const inner=document.getElementById('scrollRailInner');
+  const railWrap=document.getElementById('scrollRailWrap');
+  if(inner)inner.style.width=maxW+'px';
+  if(railWrap)railWrap.style.display=maxW>cW+4?'block':'none';
+}
+function attachTableScrollSync(w){
+  w.addEventListener('scroll',()=>{
+    if(railSyncing)return;
+    railSyncing=true;
+    const rail=document.getElementById('scrollRail');
+    if(rail)rail.scrollLeft=Math.abs(w.scrollLeft);
+    document.querySelectorAll('.table-wrap').forEach(other=>{
+      if(other!==w)other.scrollLeft=w.scrollLeft;
+    });
+    railSyncing=false;
+  });
+}
+function initScrollRail(){
+  const rail=document.getElementById('scrollRail');
+  if(!rail)return;
+  rail.addEventListener('scroll',()=>{
+    if(railSyncing)return;
+    railSyncing=true;
+    const pos=rail.scrollLeft;
+    document.querySelectorAll('.table-wrap').forEach(w=>{w.scrollLeft=-pos;});
+    railSyncing=false;
+  });
+  document.querySelectorAll('.table-wrap').forEach(attachTableScrollSync);
+  updateRailWidth();
+  setTimeout(updateRailWidth,200); // after layout settles
+}
+// Unified click handler — type-tag open, pill guard, everything else closes
+document.addEventListener('click',e=>{
+  if(e.target.closest('.ctx-menu')||e.target.closest('.sel-cell-menu'))return;
+  const tag=e.target.closest('.type-tag');
+  if(tag){openTypeMenu(tag);return;}
+  if(e.target.closest('.pill'))return; // pill has its own onclick
+  closeCtxMenus();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCtxMenus();});
+
+// ── DOUBLE-CLICK INLINE EDITING ──────────────────
+document.addEventListener('dblclick',e=>{
+  const sn=e.target.closest('.section-name');
+  if(sn&&!sn.querySelector('input')){startInlineEdit(sn,'15px','800');return;}
+  const lt=e.target.closest('.lesson-title');
+  if(lt&&!lt.querySelector('input')){startInlineEdit(lt,'13px','600');return;}
+});
+function startInlineEdit(el,size,weight){
+  const original=el.textContent.trim();
+  const inp=document.createElement('input');
+  inp.value=original;
+  inp.style.cssText=`font-family:var(--font-he);font-size:${size};font-weight:${weight};border:none;border-bottom:2px solid var(--cyan);background:transparent;color:var(--text-main);outline:none;width:100%;min-width:140px;`;
+  function finish(){const v=inp.value.trim()||original;el.innerHTML='';el.appendChild(document.createTextNode(v));}
+  inp.onblur=finish;
+  inp.onkeydown=e=>{if(e.key==='Enter'){inp.blur();}if(e.key==='Escape'){inp.value=original;inp.blur();}e.stopPropagation();};
+  el.innerHTML='';el.appendChild(inp);inp.focus();inp.select();
+}
+
+// ── SOURCE LINK EDIT ────────────────────────────
+function editSource(el){
+  const cur=el.textContent.trim();
+  const input=document.createElement('input');
+  input.className='source-input';
+  input.value=cur;
+  el.replaceWith(input);
+  input.focus();input.select();
+  function finish(){
+    const span=document.createElement('span');
+    span.className='source-tag';
+    span.onclick=()=>editSource(span);
+    span.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>${input.value||cur}`;
+    input.replaceWith(span);
+  }
+  input.onblur=finish;
+  input.onkeydown=e=>{if(e.key==='Enter')finish();if(e.key==='Escape'){input.value=cur;finish();}};
+}
+
+// ── UPLOAD MODAL ────────────────────────────────
+function openUpload(name){
+  document.getElementById('uploadTitle').textContent='העלאת וידאו — '+name;
+  document.getElementById('uploadProgress').classList.remove('visible');
+  document.getElementById('uploadBar').style.width='0%';
+  document.getElementById('uploadPct').textContent='0%';
+  document.getElementById('uploadUrl').value='';
+  document.getElementById('uploadModal').style.display='block';
+  document.getElementById('overlay').classList.add('visible');
+}
+function simulateUpload(){
+  const prog=document.getElementById('uploadProgress');
+  const bar=document.getElementById('uploadBar');
+  const pct=document.getElementById('uploadPct');
+  prog.classList.add('visible');
+  let p=0;
+  const iv=setInterval(()=>{
+    p+=Math.random()*12;if(p>=100){p=100;clearInterval(iv);}
+    bar.style.width=p+'%';pct.textContent=Math.floor(p)+'%';
+  },200);
+}
+function simulateLink(){
+  const url=document.getElementById('uploadUrl').value;
+  if(!url)return;
+  simulateUpload();
+}
+
+// ── COLUMN MANAGER ──────────────────────────────
+// ── PUBLISH BUTTON STATE ────────────────────────
+const pubIcons={
+  unsaved:`<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>`,
+  published:`<polyline points="20 6 9 17 4 12"/>`,
+  hover:`<polyline points="20 6 9 17 4 12"/>`
+};
+const pubLabels={unsaved:'שינויים שלא נשמרו',published:'השינויים פורסמו בהצלחה',hover:'פרסם שינויים'};
+let publishTimer=null;
+
+function setPubUI(key){
+  document.getElementById('pubIcon').innerHTML=pubIcons[key];
+  document.getElementById('pubLabel').textContent=pubLabels[key];
+}
+function publishHover(entering){
+  const btn=document.getElementById('publishBtn');
+  btn.dataset.hovering=entering?'true':'false';
+  setPubUI(entering?'hover':btn.dataset.state);
+}
+function clickPublish(){
+  const btn=document.getElementById('publishBtn');
+  btn.dataset.state='published';
+  btn.dataset.hovering='false';
+  setPubUI('published');
+  clearTimeout(publishTimer);
+  publishTimer=setTimeout(()=>{
+    btn.dataset.state='unsaved';
+    if(btn.dataset.hovering!=='true') setPubUI('unsaved');
+  },5000);
+}
+
+function openColManager(){
+  document.getElementById('colManager').style.display='block';
+  document.getElementById('overlay').classList.add('visible');
+}
+const addedCols=new Set();
+// Store original button HTML for proper restore on column removal
+const presetBtnOriginal={};
+const presetLabelToKey={'הערות מרצה':'notes','סיכום שיעור':'summary','משימה לבית':'homework','חומרי עזר':'resources','רמת קושי':'difficulty','תגיות':'tags'};
+
+function initPresetBtns(){
+  ['notes','summary','homework','resources','difficulty','tags'].forEach(k=>{
+    const btn=document.getElementById('btn-'+k);
+    if(btn)presetBtnOriginal[k]=btn.innerHTML;
+  });
+}
+
+function addPresetCol(key,label,btn){
+  if(addedCols.has(key)){
+    // Toggle off — remove from tables and reset button
+    removeColByLabelInternal(label);
+    addedCols.delete(key);
+    btn.classList.remove('added');
+    if(presetBtnOriginal[key])btn.innerHTML=presetBtnOriginal[key];
+    return;
+  }
+  addedCols.add(key);
+  btn.classList.add('added');
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>'+label+' ✓';
+  addColToTables(label);
+}
+// ── COLUMN TYPE TOGGLE ──────────────────────────
+let currentColType='text';
+function setColType(type){
+  currentColType=type;
+  document.getElementById('colTypeTxt').classList.toggle('active',type==='text');
+  document.getElementById('colTypeSel').classList.toggle('active',type==='select');
+  const area=document.getElementById('selectOptionsArea');
+  area.style.display=type==='select'?'block':'none';
+  if(type==='select') document.getElementById('optionsTagInput').focus();
+}
+
+// ── OPTIONS TAG INPUT ────────────────────────────
+const tagPillColors=[
+  {bg:'rgba(200,168,0,0.15)',cl:'#7a6200'},
+  {bg:'rgba(125,197,122,0.15)',cl:'#3a8838'},
+  {bg:'rgba(56,196,242,0.15)',cl:'#1db0d8'},
+  {bg:'rgba(240,86,128,0.15)',cl:'#d62a5e'},
+  {bg:'rgba(99,102,241,0.15)',cl:'#5b5bd6'},
+  {bg:'rgba(37,62,122,0.1)',cl:'#253E7A'},
+];
+let tagOptions=[];
+function renderTagPills(){
+  const wrap=document.getElementById('optionsTagsWrap');
+  const input=document.getElementById('optionsTagInput');
+  // remove all existing pills (keep the input)
+  Array.from(wrap.querySelectorAll('.options-tag-pill')).forEach(p=>p.remove());
+  tagOptions.forEach((opt,i)=>{
+    const c=tagPillColors[i%tagPillColors.length];
+    const pill=document.createElement('div');
+    pill.className='options-tag-pill';
+    pill.style.cssText=`background:${c.bg};color:${c.cl};`;
+    pill.innerHTML=`<span>${opt}</span><button onclick="removeTagOption(${i})" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
+    wrap.insertBefore(pill,input);
+  });
+}
+function removeTagOption(idx){
+  tagOptions.splice(idx,1);
+  renderTagPills();
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const input=document.getElementById('optionsTagInput');
+  const wrap=document.getElementById('optionsTagsWrap');
+  wrap.addEventListener('click',()=>input.focus());
+  input.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      e.preventDefault();
+      const val=input.value.trim();
+      if(val&&!tagOptions.includes(val)){
+        tagOptions.push(val);
+        renderTagPills();
+      }
+      input.value='';
+    } else if(e.key==='Backspace'&&input.value===''&&tagOptions.length){
+      tagOptions.pop();
+      renderTagPills();
+    }
+  });
+});
+
+function addCustomCol(){
+  const name=document.getElementById('customColName').value.trim();
+  if(!name)return;
+  let options=[];
+  if(currentColType==='select'){
+    // flush any uncommitted text in input
+    const inputVal=document.getElementById('optionsTagInput').value.trim();
+    if(inputVal&&!tagOptions.includes(inputVal)) tagOptions.push(inputVal);
+    options=[...tagOptions];
+    if(!options.length)options=['אפשרות 1','אפשרות 2','אפשרות 3'];
+  }
+  addColToTables(name,currentColType,options);
+  document.getElementById('customColName').value='';
+  document.getElementById('optionsTagInput').value='';
+  tagOptions=[];
+  renderTagPills();
+  setColType('text');
+  updateRailWidth();
+}
+// Color palette for select options
+const selOptColors=['rgba(200,168,0,0.15)','rgba(125,197,122,0.15)','rgba(56,196,242,0.15)','rgba(240,86,128,0.15)','rgba(99,102,241,0.15)','rgba(37,62,122,0.1)'];
+const selOptTextColors=['#7a6200','#3a8838','#1db0d8','#d62a5e','#5b5bd6','#253E7A'];
+function makeSelPillHTML(opts,idx){
+  const i=idx%selOptColors.length;
+  return `<div class="sel-pill" data-options="${opts.join('|')}" data-idx="${idx}" onclick="openSelPillMenu(this,event)" style="background:${selOptColors[i]};color:${selOptTextColors[i]};"><span class="sel-dot-cell" style="background:${selOptTextColors[i]};"></span>${opts[idx]}</div>`;
+}
+function addColToTables(label,type='text',options=[]){
+  document.querySelectorAll('.lessons-table').forEach(t=>{
+    const th=document.createElement('th');
+    th.className='th-custom';
+    th.setAttribute('data-col-type',type);
+    th.setAttribute('data-col-opts',options.join('|'));
+    th.innerHTML=label+' <span style="font-size:10px;color:var(--pink);margin-right:4px;cursor:pointer;" onclick="removeColByLabel(this,\''+label+'\')">✕</span>';
+    const addColTh=t.querySelector('thead tr .th-add-col');
+    if(addColTh)t.querySelector('thead tr').insertBefore(th,addColTh);
+    else t.querySelector('thead tr').appendChild(th);
+    t.querySelectorAll('tbody tr').forEach(row=>{
+      const td=document.createElement('td');
+      if(type==='select'&&options.length){
+        td.innerHTML=makeSelPillHTML(options,0);
+      } else {
+        td.innerHTML='<input class="custom-cell-input" placeholder="הוסף..." type="text">';
+      }
+      row.appendChild(td);
+    });
+  });
+  updateRailWidth();
+}
+
+// ── SELECT PILL CELL ─────────────────────────────
+let activeSelPill=null;
+function openSelPillMenu(el,e){
+  e.stopPropagation();
+  closeCtxMenus();
+  activeSelPill=el;
+  const opts=el.dataset.options.split('|');
+  const curIdx=parseInt(el.dataset.idx)||0;
+  const menu=document.getElementById('selCellMenu');
+  menu.innerHTML=opts.map((o,i)=>{
+    const ci=i%selOptColors.length;
+    return `<div class="sel-cell-item${i===curIdx?' active-opt':''}" onclick="setSelPill(${i})" style="color:${selOptTextColors[ci]};"><span class="sel-dot-cell" style="background:${selOptTextColors[ci]};"></span>${o}</div>`;
+  }).join('');
+  positionMenu(menu,el);
+}
+function setSelPill(idx){
+  if(!activeSelPill)return;
+  const opts=activeSelPill.dataset.options.split('|');
+  activeSelPill.outerHTML; // read before replace
+  const parent=activeSelPill.parentElement;
+  parent.innerHTML=makeSelPillHTML(opts,idx);
+  activeSelPill=null;
+  document.getElementById('selCellMenu').style.display='none';
+}
+// Called from table ✕ button — also resets column manager
+function removeColByLabel(el,label){
+  removeColByLabelInternal(label);
+  // Sync column manager preset button
+  const key=presetLabelToKey[label];
+  if(key){
+    addedCols.delete(key);
+    const btn=document.getElementById('btn-'+key);
+    if(btn){
+      btn.classList.remove('added');
+      if(presetBtnOriginal[key])btn.innerHTML=presetBtnOriginal[key];
+    }
+  }
+}
+function removeColByLabelInternal(label){
+  document.querySelectorAll('.lessons-table').forEach(t=>{
+    const headers=[...t.querySelectorAll('thead th')];
+    const idx=headers.findIndex(th=>th.textContent.trim().startsWith(label));
+    if(idx===-1)return;
+    headers[idx].remove();
+    t.querySelectorAll('tbody tr').forEach(row=>{
+      const cells=row.querySelectorAll('td');
+      if(cells[idx])cells[idx].remove();
+    });
+  });
+  updateRailWidth();
+}
+
+// ── IMPORT MENU ─────────────────────────────────
+function toggleImportMenu(e){
+  e.stopPropagation();
+  const menu=document.getElementById('importMenu');
+  menu.classList.toggle('open');
+}
+function closeImportMenu(){
+  document.getElementById('importMenu').classList.remove('open');
+}
+document.addEventListener('click',()=>closeImportMenu());
+
+// ── CLOSE ALL PANELS ────────────────────────────
+function closeAllPanels(){
+  document.getElementById('colManager').style.display='none';
+  document.getElementById('customColModal').style.display='none';
+  document.getElementById('uploadModal').style.display='none';
+  document.getElementById('overlay').classList.remove('visible');
+  closeImportMenu();
+}
+
+function openCustomColModal(){
+  document.getElementById('customColModal').style.display='block';
+}
+
+function closeCustomColModal(){
+  document.getElementById('customColModal').style.display='none';
+}
+
+// ── ADD LESSON ROW ──────────────────────────────
+let lessonCounter=100;
+function addLessonRow(btn){
+  lessonCounter++;
+  const tbody=btn.previousElementSibling.querySelector('tbody');
+  const tr=document.createElement('tr');
+  tr.className='lesson-row';
+  tr.style.animation='fadeIn .25s ease';
+  tr.innerHTML=`
+    <td><div class="drag-handle"><svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><circle cx="9" cy="6" r="1.2"/><circle cx="15" cy="6" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="18" r="1.2"/><circle cx="15" cy="18" r="1.2"/></svg></div></td>
+    <td><input type="checkbox" class="row-cb" onchange="updateSelection()" style="accent-color:var(--cyan);width:14px;height:14px;"></td>
+    <td><span class="lesson-num">—</span></td>
+    <td><div class="lesson-name-cell">
+      <div class="lesson-type-icon icon-video" onclick="openUpload('שיעור חדש')" style="cursor:pointer;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      <div><input style="font-family:var(--font-he);font-size:13px;font-weight:600;border:none;border-bottom:2px solid var(--cyan);background:transparent;color:var(--text-main);outline:none;width:180px;" placeholder="שם השיעור..." autofocus></div>
+    </div></td>
+    <td><span class="type-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>וידאו</span></td>
+    <td><span class="source-tag" onclick="editSource(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>העלאה</span></td>
+    <td><span class="pill pill-draft" onclick="openPillMenu(this,event)">טיוטה</span></td>
+    <td><span class="date-text">עכשיו</span></td>
+    <td><div class="row-actions" style="opacity:1;">
+      <div class="row-icon-btn" style="color:var(--pink);" onclick="this.closest('tr').remove()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div>
+    </div></td>`;
+  tbody.appendChild(tr);
+  tr.querySelector('input[type="text"]')?.focus();
+  // expand parent if collapsed
+  const block=btn.closest('.section-block');
+  if(block.classList.contains('collapsed')){
+    block.classList.remove('collapsed');
+    const c=block.querySelector('.section-content');
+    c.style.maxHeight=c.scrollHeight+'px';
+  }
+}
+
+// ── ADD SECTION ─────────────────────────────────
+const colors=['cyan','pink','yellow','green'];
+let sectionCount=3;
+function addSection(){
+  sectionCount++;
+  const color=colors[(sectionCount-1)%colors.length];
+  const div=document.createElement('div');
+  div.className='section-block';
+  div.setAttribute('data-color',color);
+  div.setAttribute('draggable','true');
+  div.innerHTML=`
+    <div class="section-header" onclick="toggleSection(this)">
+      <div class="drag-handle" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg></div>
+      <div class="section-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <span class="section-num">0${sectionCount}</span>
+      <input style="font-family:var(--font-he);font-size:15px;font-weight:800;border:none;border-bottom:2px solid var(--cyan);background:transparent;color:var(--text-main);outline:none;flex:1;" placeholder="שם הפרק..." onclick="event.stopPropagation()">
+      <span class="section-count">0 שיעורים</span>
+      <div class="section-actions-row">
+        <div class="row-icon-btn" onclick="event.stopPropagation()" style="color:var(--pink);" title="מחק" onclick="this.closest('.section-block').remove()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></div>
+      </div>
+    </div>
+    <div class="section-content" style="overflow:hidden;transition:max-height .3s ease;">
+      <div class="table-wrap">
+      <table class="lessons-table"><thead class="table-head"><tr>
+        <th class="th-drag"></th><th class="th-cb"></th><th class="th-num">#</th>
+        <th class="th-name">שם השיעור</th><th class="th-type">סוג</th>
+        <th class="th-source">מקור תוכן</th><th class="th-status">סטטוס</th>
+        <th class="th-date">עריכה אחרונה</th><th class="th-actions"></th>
+        <th class="th-add-col"><button class="add-col-th-btn" onclick="openColManager()" title="הוסף עמודה">+</button></th>
+      </tr></thead><tbody></tbody></table>
+      </div>
+      <div class="add-lesson-row" onclick="addLessonRow(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>הוסף שיעור לפרק
+      </div>
+    </div>`;
+  document.getElementById('sectionsContainer').appendChild(div);
+  initDragSection(div);
+  initSectionEmpty(div);
+  checkTableEmpty();
+  const newWrap=div.querySelector('.table-wrap');
+  if(newWrap)attachTableScrollSync(newWrap);
+  updateRailWidth();
+  div.querySelector('input')?.focus();
+}
+
+// ── DRAG & DROP SECTIONS ────────────────────────
+let dragSrc=null;
+function initDragSection(el){
+  el.addEventListener('dragstart',e=>{
+    dragSrc=el;el.classList.add('dragging');
+    e.dataTransfer.effectAllowed='move';
+  });
+  el.addEventListener('dragend',()=>{
+    dragSrc=null;
+    document.querySelectorAll('.section-block').forEach(b=>b.classList.remove('dragging','drag-over'));
+  });
+  el.addEventListener('dragover',e=>{
+    e.preventDefault();e.dataTransfer.dropEffect='move';
+    if(el!==dragSrc){el.classList.add('drag-over');}
+  });
+  el.addEventListener('dragleave',()=>el.classList.remove('drag-over'));
+  el.addEventListener('drop',e=>{
+    e.preventDefault();
+    el.classList.remove('drag-over');
+    if(dragSrc&&dragSrc!==el){
+      const container=document.getElementById('sectionsContainer');
+      const blocks=[...container.children];
+      const srcIdx=blocks.indexOf(dragSrc);
+      const tgtIdx=blocks.indexOf(el);
+      if(srcIdx<tgtIdx){container.insertBefore(dragSrc,el.nextSibling);}
+      else{container.insertBefore(dragSrc,el);}
+      // renumber
+      container.querySelectorAll('.section-num').forEach((n,i)=>{n.textContent='0'+(i+1);});
+    }
+  });
+}
+document.querySelectorAll('.section-block').forEach(initDragSection);
+document.querySelectorAll('.section-block').forEach(initSectionEmpty);
+checkTableEmpty();
+initPresetBtns();
+initScrollRail();
+
+// ── FADE IN ANIMATION ────────────────────────────
+const style=document.createElement('style');
+style.textContent='@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}';
+document.head.appendChild(style);
+</script>
+
+<!-- SEL-PILL CELL MENU -->
+<div class="sel-cell-menu" id="selCellMenu" style="display:none;"></div>
+
+<!-- STATUS DROPDOWN -->
+<div class="ctx-menu" id="pillMenu" style="display:none;">
+  <div class="ctx-item" id="ctx-pub" onclick="setPillStatus('pub')">
+    <span class="ctx-dot" style="background:#7DC57A;"></span>פורסם
+  </div>
+  <div class="ctx-item" id="ctx-draft" onclick="setPillStatus('draft')">
+    <span class="ctx-dot" style="background:#c8a800;"></span>טיוטה
+  </div>
+  <div class="ctx-item" id="ctx-hidden" onclick="setPillStatus('hidden')">
+    <span class="ctx-dot" style="background:#aaa;"></span>מוסתר
+  </div>
+</div>
+
+<!-- TYPE DROPDOWN -->
+<div class="ctx-menu" id="typeMenu" style="display:none;">
+  <div class="ctx-item" id="ctx-video" onclick="setLessonType('video')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#1db0d8;"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>וידאו
+  </div>
+  <div class="ctx-item" id="ctx-file" onclick="setLessonType('file')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#253E7A;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>קובץ
+  </div>
+  <div class="ctx-item" id="ctx-embed" onclick="setLessonType('embed')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#5b5bd6;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>לינק מוטמע
+  </div>
+  <div class="ctx-item" id="ctx-quiz" onclick="setLessonType('quiz')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#e03060;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>חידון
+  </div>
+</div>
+
+<!-- FLOATING SELECTION BAR -->
+<div class="float-sel-bar" id="selectionBar">
+  <span class="float-sel-count"><span id="selCount">0</span> שיעורים נבחרו</span>
+  <div class="float-sel-sep"></div>
+  <button class="float-sel-btn green" onclick="publishSelected()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>פרסם
+  </button>
+  <button class="float-sel-btn yellow" onclick="draftSelected()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>העבר לטיוטה
+  </button>
+  <button class="float-sel-btn red" onclick="deleteSelected()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>מחק
+  </button>
+  <button class="float-sel-close" onclick="clearSelection()" title="בטל בחירה">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+</body>
+</html>

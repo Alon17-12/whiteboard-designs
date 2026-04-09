@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בית ספר — הגדרות | שיווק ויצירת תוכן | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+    --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+    --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+    --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+    --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+    --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+    --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+    --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --sidebar-bg:var(--navy);--sidebar-text:rgba(255,255,255,0.65);
+    --sidebar-hover:rgba(255,255,255,0.08);--sidebar-active-bg:rgba(56,196,242,0.2);
+    --sidebar-active-cl:var(--cyan);--sidebar-border:rgba(255,255,255,0.1);
+  }
+  [data-theme="dark"] {
+    --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+    --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+    --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+    --light-blue:rgba(56,196,242,0.08);--sidebar-bg:#0d1628;
+    --sidebar-text:rgba(255,255,255,0.55);--sidebar-hover:rgba(255,255,255,0.06);
+    --sidebar-active-bg:rgba(56,196,242,0.15);--sidebar-border:rgba(255,255,255,0.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);height:100vh;display:flex;overflow:hidden;transition:background .3s,color .3s;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{width:220px;background:var(--sidebar-bg);border-left:1px solid var(--sidebar-border);min-height:100vh;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;position:fixed;right:0;top:0;bottom:0;z-index:50;transition:background .3s;}
+  .sidebar-logo{padding:16px 16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
+  .sidebar-logo img{width:150px;object-fit:contain;}
+  .sidebar-section{padding:8px 12px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--sidebar-text);font-size:14px;font-weight:500;}
+  .nav-item:hover{background:var(--sidebar-hover);color:white;}
+  .nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-cl);font-weight:700;}
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;}
+  .sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);}
+  .mode-switcher{margin-bottom:10px;}
+  .mode-switcher-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;padding-right:2px;}
+  .mode-toggle-row{display:flex;background:rgba(0,0,0,0.25);border-radius:8px;padding:3px;gap:2px;}
+  .mode-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 4px;border-radius:6px;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.45);background:transparent;white-space:nowrap;}
+  .mode-btn svg{width:13px;height:13px;}
+  .mode-btn.active{background:rgba(56,196,242,0.25);color:var(--cyan);}
+  .profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;}
+  .profile-mini:hover{background:rgba(255,255,255,0.08);}
+  .avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+  .profile-mini-name{font-size:13px;font-weight:600;color:white;}
+  .profile-mini-role{font-size:11px;color:rgba(255,255,255,0.45);}
+  .profile-edit-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;color:rgba(255,255,255,0.4);flex-shrink:0;margin-right:auto;}
+  .profile-edit-btn:hover{background:rgba(255,255,255,0.1);color:white;}
+  .profile-edit-btn svg{width:13px;height:13px;}
+
+  /* ── MAIN ── */
+  .main{margin-right:220px;flex:1;display:flex;flex-direction:column;height:100vh;overflow-y:auto;scroll-behavior:smooth;}
+
+  /* ── TOPBAR ── */
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:var(--shadow-sm);transition:background .3s;}
+  .topbar-breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .breadcrumb-link{color:var(--text-sub);cursor:pointer;transition:color .2s;}
+  .breadcrumb-link:hover{color:var(--text-main);}
+  .breadcrumb-sep{color:var(--text-light);}
+  .breadcrumb-current{color:var(--text-main);font-weight:700;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;}
+  .icon-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+  .icon-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .icon-sun{display:none;}.icon-moon{display:block;}
+  [data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+  /* ── ENTITY HEADER ── */
+  .course-header{background:var(--surface);border-bottom:1px solid var(--border);padding:20px 32px 0;transition:background .3s;}
+  .course-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:16px;}
+  .course-title-wrap{display:flex;align-items:center;gap:14px;}
+  .course-icon{width:48px;height:48px;border-radius:var(--radius-sm);background:linear-gradient(135deg,#0d1b3e,#253E7A);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .course-icon svg{width:22px;height:22px;color:rgba(255,255,255,0.8);}
+  .course-name{font-size:20px;font-weight:900;color:var(--text-main);}
+  .course-meta-row{display:flex;align-items:center;gap:16px;margin-top:3px;}
+  .course-badge{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;}
+  .badge-pub{background:rgba(125,197,122,0.15);color:#3d8a3a;border:1px solid rgba(125,197,122,0.3);}
+  [data-theme="dark"] .badge-pub{color:#7DC57A;}
+  .course-stat{font-size:12px;color:var(--text-sub);display:flex;align-items:center;gap:4px;}
+  .course-stat svg{width:13px;height:13px;}
+  .course-actions{display:flex;gap:8px;align-items:center;}
+  .course-tabs{display:flex;gap:4px;overflow-x:auto;}
+  .tab{display:flex;align-items:center;gap:6px;padding:10px 15px;font-size:13px;font-weight:600;color:var(--text-sub);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;text-decoration:none;}
+  .tab svg{opacity:.6;transition:opacity .2s;}
+  .tab:hover{color:var(--text-main);}
+  .tab:hover svg{opacity:1;}
+  .tab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+  .tab.active svg{opacity:1;}
+  .tab.disabled{opacity:.4;pointer-events:none;cursor:default;}
+
+  /* ── BUTTONS ── */
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:30px;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:none;white-space:nowrap;}
+  .btn svg{width:15px;height:15px;}
+  .btn-primary{background:linear-gradient(135deg,var(--cyan),#1db0d8);color:white;box-shadow:0 3px 14px rgba(56,196,242,0.3);}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(56,196,242,0.4);}
+  .btn-ghost{background:transparent;color:var(--text-sub);border:1.5px solid var(--border);}
+  .btn-ghost:hover{background:var(--light-blue);color:var(--text-main);border-color:var(--cyan);}
+  .btn-danger{background:rgba(240,86,128,0.08);color:#d62a5e;border:1.5px solid rgba(240,86,128,0.25);}
+  .btn-danger:hover{background:rgba(240,86,128,0.15);border-color:rgba(240,86,128,0.45);}
+
+  /* ── PAGE BODY ── */
+  .page-body{flex:1;padding:40px 40px 120px;max-width:960px;margin:0 auto;width:100%;}
+
+  /* ── SETTINGS SECTION ── */
+  .settings-section{display:grid;grid-template-columns:260px 1fr;gap:40px;padding:32px 0;border-bottom:1px solid var(--border);align-items:start;}
+  .settings-section:last-child{border-bottom:none;}
+  .settings-label-col{}
+  .settings-label{font-size:15px;font-weight:900;color:var(--text-main);margin-bottom:4px;}
+  .settings-desc{font-size:13px;color:var(--text-sub);line-height:1.6;}
+  .settings-field-col{display:flex;flex-direction:column;gap:12px;}
+
+  /* ── SECTION LABEL WITH ICON ── */
+  .settings-label-wrap{display:flex;align-items:center;gap:9px;margin-bottom:6px;}
+  .settings-label-icon{width:32px;height:32px;border-radius:8px;background:var(--light-blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--navy);}
+  .settings-label-icon svg{width:15px;height:15px;}
+
+  /* ── INPUTS ── */
+  .field-input{width:100%;font-family:var(--font-he);font-size:14px;padding:11px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);outline:none;transition:border-color .2s,box-shadow .2s;}
+  .field-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
+  .field-input::placeholder{color:var(--text-light);}
+  textarea.field-input{resize:vertical;min-height:96px;line-height:1.6;}
+  .field-hint{font-size:12px;color:var(--text-light);}
+  .char-count{font-size:11px;color:var(--text-light);text-align:left;margin-top:-8px;}
+
+  /* ── URL FIELD ── */
+  .url-field-wrap{display:flex;align-items:center;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);overflow:hidden;transition:border-color .2s,box-shadow .2s;}
+  .url-field-wrap:focus-within{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
+  .url-prefix{padding:11px 14px;font-size:12px;color:var(--text-light);background:var(--bg);border-left:1.5px solid var(--border);white-space:nowrap;direction:ltr;}
+  .url-input{flex:1;font-family:var(--font-he);font-size:14px;padding:11px 14px;border:none;background:transparent;color:var(--text-main);outline:none;direction:ltr;}
+  .url-input::placeholder{color:var(--text-light);}
+  .url-preview-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--cyan);cursor:pointer;transition:opacity .2s;}
+  .url-preview-link:hover{opacity:.75;}
+  .url-preview-link svg{width:12px;height:12px;}
+
+  /* ── COVER IMAGE 16:9 ── */
+  .cover-preview{width:100%;aspect-ratio:16/9;border-radius:var(--radius-md);background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;position:relative;overflow:hidden;border:2px dashed var(--border);transition:border-color .2s,background .2s;}
+  .cover-preview:hover{border-color:var(--cyan);background:var(--light-blue);}
+  .cover-preview:hover .cover-overlay{opacity:1;}
+  .cover-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity .2s;border-radius:var(--radius-md);}
+  .cover-overlay-text{font-size:13px;font-weight:700;color:white;}
+  .cover-overlay svg{color:white;}
+  .cover-placeholder-icon{color:var(--text-light);}
+  .cover-placeholder-text{font-size:12px;color:var(--text-light);}
+
+  /* ── TEMPLATE CARDS ── */
+  .template-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .template-card{border:2px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all .2s;background:var(--surface);position:relative;overflow:hidden;}
+  .template-card:hover{border-color:rgba(56,196,242,0.4);background:var(--light-blue);}
+  .template-card.selected{border-color:var(--cyan);background:var(--light-blue);}
+  .template-card.selected .template-check{opacity:1;}
+  .template-check{position:absolute;top:10px;left:10px;width:22px;height:22px;border-radius:50%;background:var(--cyan);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+  .template-check svg{width:12px;height:12px;color:white;}
+  .template-thumb{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-family:var(--font-en);font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);}
+  .template-thumb.t1{background:linear-gradient(135deg,#253E7A,#38C4F2);}
+  .template-thumb.t2{background:linear-gradient(135deg,#F05680,#253E7A);}
+  .template-thumb.t3{background:linear-gradient(135deg,#EAD654,#F59E0B);}
+  .template-thumb.t4{background:linear-gradient(135deg,#38C4F2,#22c55e);}
+  .template-thumb.t5{background:linear-gradient(135deg,#e8eef8,#d1d9e8);}
+  .template-thumb.t6{background:linear-gradient(135deg,#22c55e,#065f46);}
+  .template-name{padding:10px 12px;font-size:12px;font-weight:700;color:var(--text-main);text-align:center;}
+
+  /* ── VISIBILITY PILLS ── */
+  .visibility-group{display:flex;gap:8px;}
+  .vis-pill{display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:30px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-family:var(--font-he);font-size:13px;font-weight:700;color:var(--text-sub);transition:all .2s;}
+  .vis-pill:hover{border-color:rgba(56,196,242,0.4);color:var(--navy);}
+  .vis-pill.selected{border-color:var(--cyan);background:var(--light-blue);color:var(--navy);}
+  .vis-pill svg{width:14px;height:14px;}
+
+  /* ── DANGER ZONE ── */
+  .danger-zone{background:rgba(240,86,128,0.04);border:1.5px solid rgba(240,86,128,0.15);border-radius:var(--radius-md);padding:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  .danger-title{font-size:14px;font-weight:900;color:#d62a5e;margin-bottom:4px;}
+  .danger-desc{font-size:13px;color:var(--text-sub);line-height:1.5;}
+
+  /* ── SAVE STATE BUTTON (topbar) ── */
+  .save-state-btn{min-width:180px;justify-content:center;border:1.5px solid transparent;transition:background .3s,color .3s,border-color .3s,box-shadow .3s;}
+  .save-state-btn[data-state="unsaved"]{background:rgba(234,214,84,0.13);color:#7a6200;border-color:rgba(200,168,0,0.35);}
+  [data-theme="dark"] .save-state-btn[data-state="unsaved"]{background:rgba(234,214,84,0.1);color:#d4bc2e;border-color:rgba(234,214,84,0.28);}
+  .save-state-btn[data-state="saved"]{background:rgba(125,197,122,0.13);color:#3a8838;border-color:rgba(100,180,97,0.38);}
+  [data-theme="dark"] .save-state-btn[data-state="saved"]{background:rgba(125,197,122,0.1);color:#7DC57A;border-color:rgba(125,197,122,0.28);}
+  .save-state-btn[data-state="clean"]{background:transparent;color:var(--text-light);border-color:transparent;pointer-events:none;}
+  .save-state-btn[data-hovering="true"]{background:linear-gradient(135deg,var(--cyan),#1db0d8) !important;color:white !important;border-color:transparent !important;box-shadow:0 4px 16px rgba(56,196,242,0.35) !important;}
+
+  /* ── STATUS PILLS ── */
+  .status-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:30px;border:1.5px solid;cursor:pointer;font-family:var(--font-he);font-size:13px;font-weight:700;transition:all .2s;}
+  .status-pill-published{background:rgba(125,197,122,0.13);color:#3a8838;border-color:rgba(100,180,97,0.38);}
+  .status-pill-draft{background:rgba(234,214,84,0.13);color:#7a6200;border-color:rgba(200,168,0,0.35);}
+  .status-pill-published:hover:not([data-locked="true"]){background:rgba(234,214,84,0.13);color:#7a6200;border-color:rgba(200,168,0,0.35);}
+  .status-pill-draft:hover:not([data-locked="true"]){background:rgba(125,197,122,0.13);color:#3a8838;border-color:rgba(100,180,97,0.38);}
+  .status-pill[data-locked="true"]{cursor:not-allowed;opacity:.65;}
+  .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .status-dot-published{background:#3a8838;}
+  .status-dot-draft{background:#a08700;}
+  [data-theme="dark"] .status-pill-published{color:#7DC57A;}
+  [data-theme="dark"] .status-pill-draft{color:#d4bc2e;}
+
+  /* ── FLOATING TOC ── */
+  .floating-toc{position:fixed;top:240px;right:240px;width:130px;display:flex;flex-direction:column;gap:1px;z-index:10;}
+  .toc-item{font-size:11px;font-weight:600;color:var(--text-light);padding:5px 10px;border-right:2.5px solid var(--border);text-decoration:none;transition:all .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .toc-item:hover{color:var(--text-sub);border-right-color:var(--text-light);}
+  .toc-item.active{color:var(--cyan);border-right-color:var(--cyan);font-weight:700;}
+  @media(max-width:1400px){.floating-toc{display:none;}}
+
+  @keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo"><img src="../../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD"></div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>לוח הבקרה
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <div class="mode-switcher-label">מצב תצוגה</div>
+      <div class="mode-toggle-row">
+        <button class="mode-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>תלמיד</button>
+        <button class="mode-btn active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>מרצה</button>
+      </div>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div><div class="profile-mini-name">אלון</div><div class="profile-mini-role">מרצה</div></div>
+      <button class="profile-edit-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">מרכזי הידע שלי</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-link">בית ספר — שיווק ויצירת תוכן</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">הגדרות</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleTheme()">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="btn save-state-btn" id="saveBtn" data-state="unsaved" data-hovering="false"
+        onmouseenter="document.getElementById('saveBtn').dataset.hovering='true';document.getElementById('saveBtnLabel').textContent='שמור שינויים'"
+        onmouseleave="document.getElementById('saveBtn').dataset.hovering='false';updateSaveBtnLabel()"
+        onclick="saveSettings()">
+        <svg id="saveBtnIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <span id="saveBtnLabel">שינויים שלא נשמרו</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ENTITY HEADER -->
+  <div class="course-header">
+    <div class="course-title-row">
+      <div class="course-title-wrap">
+        <div class="course-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </div>
+        <div>
+          <div class="course-name">שיווק ויצירת תוכן</div>
+          <div class="course-meta-row">
+            <span class="course-badge badge-pub">פעיל</span>
+            <span class="course-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>152 תלמידים</span>
+            <span class="course-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>6 קורסים</span>
+          </div>
+        </div>
+      </div>
+      <div class="course-actions">
+        <button class="status-pill status-pill-published" id="statusPill" data-locked="false" onclick="toggleStatus()">
+          <div class="status-dot status-dot-published" id="statusDot"></div>
+          <span id="statusText">פורסם</span>
+        </button>
+      </div>
+    </div>
+    <div class="course-tabs">
+      <a class="tab" href="בית ספר - הגדרות לייאאוט.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>לייאאוט
+      </a>
+      <a class="tab active" href="בית ספר - הגדרות.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות
+      </a>
+      <a class="tab" href="בית ספר - הגדרות ערכת מותג.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>ערכת מותג
+      </a>
+      <a class="tab" href="בית ספר - הגדרות תלמידים.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>התלמידים שלי
+      </a>
+      <a class="tab" href="בית ספר - הגדרות דיוור.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>דיוור
+      </a>
+      <div class="tab disabled">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>אנליטיקס
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING TOC -->
+  <nav class="floating-toc" id="floatingToc">
+    <a class="toc-item active" href="#sec-details">פרטי בית הספר</a>
+    <a class="toc-item" href="#sec-cover">תמונת קאבר</a>
+    <a class="toc-item" href="#sec-template">תבנית</a>
+    <a class="toc-item" href="#sec-visibility">נראות</a>
+    <a class="toc-item" href="#sec-danger" style="color:rgba(240,86,128,0.6);">מחיקה</a>
+  </nav>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+
+    <!-- 1. פרטי בית הספר -->
+    <div class="settings-section" id="sec-details">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>
+          <div class="settings-label">פרטי בית הספר</div>
+        </div>
+        <div class="settings-desc">שם, תיאור וכתובת URL של בית הספר</div>
+      </div>
+      <div class="settings-field-col">
+        <div>
+          <div class="field-hint" style="margin-bottom:6px;font-weight:700;color:var(--text-sub);">שם בית הספר</div>
+          <input class="field-input" id="schoolName" type="text" value="אלון גבאי | שיווק ויצירת תוכן" maxlength="80" oninput="updateCharCount('schoolName','schoolNameCount',80)">
+          <div class="char-count" id="schoolNameCount" style="margin-top:4px;">26 / 80</div>
+        </div>
+        <div>
+          <div class="field-hint" style="margin-bottom:6px;font-weight:700;color:var(--text-sub);">תיאור</div>
+          <textarea class="field-input" id="schoolDesc" rows="3" maxlength="300" oninput="updateCharCount('schoolDesc','schoolDescCount',300)" placeholder="תאר בכמה משפטים את בית הספר, למי הוא מיועד ומה ילמדו בו"></textarea>
+          <div class="char-count" id="schoolDescCount" style="margin-top:4px;">0 / 300</div>
+        </div>
+        <div>
+          <div class="field-hint" style="margin-bottom:6px;font-weight:700;color:var(--text-sub);">כתובת URL</div>
+          <div class="url-field-wrap">
+            <input class="url-input" id="urlInput" type="text" value="marketing-and-content-creation" placeholder="school-url">
+            <div class="url-prefix">whiteboard.education/schools/</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
+            <a class="url-preview-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              whiteboard.education/schools/marketing-and-content-creation
+            </a>
+          </div>
+          <div class="field-hint">הכתובת הייחודית שבה תלמידים יגיעו לבית הספר</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. תמונת קאבר -->
+    <div class="settings-section" id="sec-cover">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="settings-label">תמונת קאבר</div>
+        </div>
+        <div class="settings-desc">תמונה ראשית שתופיע בראש בית הספר. מומלץ 1280x720px.</div>
+      </div>
+      <div class="settings-field-col">
+        <div class="cover-preview" onclick="">
+          <div class="cover-placeholder-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="cover-placeholder-text">1280 x 720px · יחס 16:9</div>
+          <div class="cover-overlay">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div class="cover-overlay-text">שנה תמונה</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. בחירת תבנית -->
+    <div class="settings-section" id="sec-template">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+          <div class="settings-label">תבנית בית הספר</div>
+        </div>
+        <div class="settings-desc">בחר את הסגנון שבו בית הספר שלך ייראה לתלמידים</div>
+      </div>
+      <div class="settings-field-col">
+        <div class="template-grid">
+          <div class="template-card selected" tabindex="0" role="button" onclick="selectTemplate(this)">
+            <div class="template-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="template-thumb t1">קלאסי</div>
+            <div class="template-name">קלאסי</div>
+          </div>
+          <div class="template-card" tabindex="0" role="button" onclick="selectTemplate(this)">
+            <div class="template-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="template-thumb t2">פרימיום</div>
+            <div class="template-name">פרימיום</div>
+          </div>
+          <div class="template-card" tabindex="0" role="button" onclick="selectTemplate(this)">
+            <div class="template-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="template-thumb t3">יודמי</div>
+            <div class="template-name">יודמי</div>
+          </div>
+          <div class="template-card" tabindex="0" role="button" onclick="selectTemplate(this)">
+            <div class="template-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="template-thumb t4">גלים</div>
+            <div class="template-name">גלים</div>
+          </div>
+          <div class="template-card" tabindex="0" role="button" onclick="selectTemplate(this)">
+            <div class="template-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="template-thumb t5" style="color:var(--text-sub);">מינימלי</div>
+            <div class="template-name">מינימלי</div>
+          </div>
+          <div class="template-card" tabindex="0" role="button" onclick="selectTemplate(this)">
+            <div class="template-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="template-thumb t6">טבעי</div>
+            <div class="template-name">טבעי</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. הגדרות נראות -->
+    <div class="settings-section" id="sec-visibility">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <div class="settings-label">נראות</div>
+        </div>
+        <div class="settings-desc">קבע מי יכול לראות את בית הספר</div>
+      </div>
+      <div class="settings-field-col">
+        <div class="visibility-group">
+          <button class="vis-pill selected" onclick="selectVisibility(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            ציבורי
+          </button>
+          <button class="vis-pill" onclick="selectVisibility(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            פרטי — בהזמנה בלבד
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. אזור מסוכן -->
+    <div class="settings-section" id="sec-danger">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon" style="background:rgba(240,86,128,0.1);color:#d62a5e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></div>
+          <div class="settings-label" style="color:#d62a5e;">מחיקת בית הספר</div>
+        </div>
+        <div class="settings-desc">פעולה בלתי הפיכה. כל המידע, הקורסים והתלמידים יימחקו לצמיתות.</div>
+      </div>
+      <div class="settings-field-col">
+        <div class="danger-zone">
+          <div>
+            <div class="danger-title">מחק בית ספר זה לצמיתות</div>
+            <div class="danger-desc">לאחר המחיקה לא ניתן לשחזר את בית הספר, הקורסים או נתוני התלמידים.</div>
+          </div>
+          <button class="btn btn-danger" onclick="confirmDelete()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            מחק בית ספר
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-body -->
+
+</div><!-- /main -->
+
+<script>
+// ── THEME ──────────────────────────────────────────
+function toggleTheme(){
+  const html=document.documentElement;
+  html.setAttribute('data-theme',html.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+
+// ── CHAR COUNT ─────────────────────────────────────
+function updateCharCount(inputId,countId,max){
+  const len=document.getElementById(inputId).value.length;
+  document.getElementById(countId).textContent=len+' / '+max;
+}
+
+// ── TEMPLATE SELECTION ─────────────────────────────
+function selectTemplate(el){
+  document.querySelectorAll('.template-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── VISIBILITY PILLS ───────────────────────────────
+function selectVisibility(el){
+  document.querySelectorAll('.vis-pill').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── STATUS TOGGLE ──────────────────────────────────
+let schoolPublished=true;
+function toggleStatus(){
+  const pill=document.getElementById('statusPill');
+  if(pill.dataset.locked==='true') return;
+  schoolPublished=!schoolPublished;
+  if(schoolPublished){
+    pill.className='status-pill status-pill-published';
+    document.getElementById('statusDot').className='status-dot status-dot-published';
+    document.getElementById('statusText').textContent='פורסם';
+  } else {
+    pill.className='status-pill status-pill-draft';
+    document.getElementById('statusDot').className='status-dot status-dot-draft';
+    document.getElementById('statusText').textContent='טיוטה';
+  }
+}
+
+// ── SAVE STATE BUTTON ──────────────────────────────
+function updateSaveBtnLabel(){
+  const btn=document.getElementById('saveBtn');
+  const lbl={saved:'ההגדרות עודכנו',unsaved:'שינויים שלא נשמרו',clean:'כל השינויים נשמרו'};
+  document.getElementById('saveBtnLabel').textContent=lbl[btn.dataset.state]??'שינויים שלא נשמרו';
+}
+function saveSettings(){
+  const btn=document.getElementById('saveBtn');
+  btn.dataset.hovering='false';
+  btn.dataset.state='saved';
+  document.getElementById('saveBtnLabel').textContent='ההגדרות עודכנו';
+  setTimeout(()=>{
+    btn.dataset.state='clean';
+    updateSaveBtnLabel();
+  },4000);
+}
+
+// ── DELETE ──────────────────────────────────────────
+// ── FLOATING TOC — smooth scroll + scroll spy ──────
+(function(){
+  var main=document.querySelector('.main');
+  var sections=document.querySelectorAll('.settings-section[id]');
+  var tocItems=document.querySelectorAll('.toc-item');
+  if(!main||!sections.length) return;
+  function getOffsetInMain(el){var top=0;while(el&&el!==main){top+=el.offsetTop;el=el.offsetParent;}return top;}
+  tocItems.forEach(function(a){
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      var target=document.querySelector(this.getAttribute('href'));
+      if(target) main.scrollTo({top:getOffsetInMain(target)-140,behavior:'smooth'});
+    });
+  });
+  main.addEventListener('scroll',function(){
+    var scrollTop=main.scrollTop+160;
+    var current='';
+    sections.forEach(function(sec){if(getOffsetInMain(sec)<=scrollTop) current=sec.id;});
+    tocItems.forEach(function(item){item.classList.toggle('active',item.getAttribute('href')==='#'+current);});
+  });
+})();
+
+function confirmDelete(){
+  if(confirm('האם אתה בטוח שברצונך למחוק את בית הספר? פעולה זו אינה הפיכה.'))
+    alert('בית הספר נמחק (הדגמה)');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light" data-mode="student">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>עזיבת המועדון | מועדון להורות התפתחותית | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.13);--pink:#F05680;--green:#22c55e;--amber:#F59E0B;--font:'Heebo',sans-serif;--font-brand:'Fredoka',sans-serif;--r-xs:6px;--r-sm:9px;--r-md:13px;--r-lg:18px;--r-xl:24px;--strip-w:52px;--bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-mid:rgba(37,62,122,0.16);--text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.52);--text-xs:rgba(37,62,122,0.35);--sh-sm:0 2px 8px rgba(37,62,122,0.08);--sh-md:0 4px 20px rgba(37,62,122,0.12);}
+[data-theme="dark"]{--bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.12);--text-main:#dde5f5;--text-sub:rgba(221,229,245,0.48);--text-xs:rgba(221,229,245,0.28);--sh-sm:0 2px 12px rgba(0,0,0,0.3);}
+[data-theme="dark"] .tb-club-name{color:#e8edf7;}
+[data-theme="dark"] .leave-title{color:#fff;}
+[data-theme="dark"] .leave-step-title{color:#e8edf7;}
+[data-theme="dark"] .leave-card{background:var(--surface);border-color:var(--border);}
+/* Dark mode headings */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text-main);height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{height:48px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0;box-shadow:var(--sh-sm);z-index:30;}
+.tb-left{display:flex;align-items:center;gap:8px;}
+.tb-club-name{font-family:var(--font-brand);font-size:15px;font-weight:600;color:var(--navy);}
+.tb-sep{color:var(--text-xs);}
+.tb-page{font-size:13px;font-weight:700;color:var(--text-main);}
+.tb-right{display:flex;align-items:center;gap:7px;}
+.ib{width:32px;height:32px;border-radius:var(--r-xs);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .18s;}
+.ib:hover{background:var(--cyan-light);color:var(--navy);}
+.ib svg{width:14px;height:14px;}
+.icon-sun{display:none;}[data-theme="dark"] .icon-sun{display:block;}
+.icon-moon{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+.mode-pill{display:flex;background:var(--surface-2);border:1px solid var(--border);border-radius:30px;padding:3px;gap:2px;}
+.mp{display:flex;align-items:center;gap:4px;padding:4px 11px;border-radius:20px;border:none;font-family:var(--font);font-size:11.5px;font-weight:700;cursor:pointer;color:var(--text-sub);background:transparent;white-space:nowrap;transition:all .2s;}
+.mp svg{width:11px;height:11px;}
+.mp.s.on{background:#dbeafe;color:var(--navy);}
+.mp.t.on{background:var(--amber);color:#fff;}
+[data-theme="dark"] .mp.s.on{background:rgba(56,196,242,0.14);color:var(--cyan);}
+[data-theme="dark"] .mp.t.on{background:rgba(245,158,11,0.22);color:#fbbf24;}
+.body-wrap{flex:1;display:flex;overflow:hidden;}
+
+/* Strip */
+.right-strip{width:var(--strip-w);flex-shrink:0;background:#1a2e5e;display:flex;flex-direction:column;align-items:center;z-index:20;}
+.rs-logo{width:100%;display:flex;align-items:center;justify-content:center;padding:10px 0 8px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
+.rs-logo img{width:28px;height:auto;opacity:.9;}
+.rs-club-logo{width:100%;display:flex;align-items:center;justify-content:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
+.rs-club-img{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#38C4F2,#253E7A);display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-size:13px;font-weight:700;color:#fff;}
+.rs-icons{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;position:relative;}
+.rs-btn{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;position:relative;background:transparent;border:none;color:rgba(255,255,255,0.5);padding:0;text-decoration:none;}
+.rs-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.rs-btn.rs-active{background:rgba(240,86,128,0.15);color:#F05680;}
+.rs-btn svg{width:17px;height:17px;}
+.rs-btn::after{content:attr(data-tip);position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);background:rgba(0,0,0,.8);color:#fff;font-family:var(--font);font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:100;}
+.rs-btn:hover::after{opacity:1;}
+.rs-sep{width:26px;height:1px;background:rgba(255,255,255,0.1);margin:4px 0;flex-shrink:0;}
+.rs-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
+.rs-profile{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#38C4F2,#253E7A);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;cursor:pointer;border:2px solid rgba(255,255,255,0.2);}
+.main{flex:1;overflow-y:auto;display:flex;align-items:center;justify-content:center;}
+
+/* Leave page */
+.leave-wrap{display:flex;flex-direction:column;align-items:center;max-width:520px;width:100%;padding:40px 28px;text-align:center;}
+.leave-mascot{width:180px;height:auto;margin-bottom:28px;opacity:.9;}
+.leave-title{font-family:var(--font-brand);font-size:26px;font-weight:700;color:var(--navy);margin-bottom:10px;line-height:1.3;}
+.leave-subtitle{font-size:14px;color:var(--text-sub);line-height:1.7;margin-bottom:28px;}
+.leave-card{
+  background:var(--surface);border-radius:var(--r-xl);border:1px solid var(--border);
+  box-shadow:var(--sh-sm);padding:24px;width:100%;text-align:right;margin-bottom:24px;
+}
+.leave-steps{display:flex;flex-direction:column;gap:16px;}
+.leave-step{display:flex;gap:12px;align-items:flex-start;}
+.leave-step-num{
+  width:28px;height:28px;border-radius:50%;background:rgba(240,86,128,0.1);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-family:var(--font-brand);font-size:13px;font-weight:700;color:var(--pink);
+}
+.leave-step-body{flex:1;}
+.leave-step-title{font-size:13.5px;font-weight:700;color:var(--text-main);margin-bottom:3px;}
+.leave-step-desc{font-size:12.5px;color:var(--text-xs);line-height:1.6;}
+
+/* Checkbox */
+.leave-confirm{
+  display:flex;align-items:center;gap:10px;padding:14px 18px;
+  background:rgba(240,86,128,0.04);border:1.5px solid rgba(240,86,128,0.15);
+  border-radius:var(--r-md);margin-bottom:20px;cursor:pointer;width:100%;
+  transition:all .15s;
+}
+.leave-confirm:hover{background:rgba(240,86,128,0.08);border-color:rgba(240,86,128,0.3);}
+.leave-confirm input{width:18px;height:18px;accent-color:var(--pink);cursor:pointer;flex-shrink:0;}
+.leave-confirm label{font-size:13px;font-weight:700;color:var(--text-main);cursor:pointer;}
+
+/* Buttons */
+.leave-actions{display:flex;gap:10px;width:100%;justify-content:center;}
+.leave-btn{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 28px;border-radius:30px;font-family:var(--font);font-size:13.5px;font-weight:700;
+  cursor:pointer;transition:all .2s;border:none;
+}
+.leave-btn.cancel{
+  background:var(--surface);border:1.5px solid var(--border);color:var(--text-sub);
+}
+.leave-btn.cancel:hover{border-color:var(--border-mid);color:var(--text-main);}
+.leave-btn.cancel svg{width:14px;height:14px;}
+.leave-btn.danger{
+  background:var(--pink);color:#fff;opacity:.5;pointer-events:none;
+}
+.leave-btn.danger.enabled{opacity:1;pointer-events:auto;}
+.leave-btn.danger.enabled:hover{background:#d6436a;box-shadow:0 4px 16px rgba(240,86,128,0.35);}
+.leave-btn.danger svg{width:14px;height:14px;}
+
+/* Strip popups */
+.strip-popup{display:none;position:fixed;bottom:60px;right:60px;z-index:200;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-md);min-width:200px;padding:8px;animation:popIn .15s ease;}
+.strip-popup.open{display:block;}
+@keyframes popIn{from{opacity:0;transform:translateY(6px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.sp-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text-xs);padding:6px 10px 8px;}
+.sp-item{display:flex;align-items:center;gap:8px;width:100%;padding:9px 10px;border:none;background:transparent;border-radius:var(--r-sm);font-family:var(--font);font-size:13px;font-weight:600;color:var(--text-main);cursor:pointer;transition:all .12s;text-align:right;}
+.sp-item:hover{background:var(--surface-2);color:var(--navy);}
+.sp-item svg{width:16px;height:16px;color:var(--text-sub);flex-shrink:0;}
+.sp-divider{height:1px;background:var(--border);margin:4px 0;}
+.sp-profile-header{display:flex;align-items:center;gap:10px;padding:10px 10px 6px;}
+.sp-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#38C4F2,#253E7A);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.sp-name{font-size:13px;font-weight:800;color:var(--text-main);}
+.sp-email{font-size:11px;color:var(--text-xs);}
+</style>
+<script>
+(function(){var t=localStorage.getItem("wb-theme");if(t)document.documentElement.dataset.theme=t;})();
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="tb-left">
+    <span class="tb-club-name">מועדון להורות התפתחותית</span>
+    <span class="tb-sep">·</span>
+    <span class="tb-page">עזיבת המועדון</span>
+  </div>
+  <div class="tb-right">
+    <button class="ib" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('wb-theme',document.documentElement.dataset.theme)">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <div class="mode-pill">
+      <button class="mp s on" onclick="setMode('student')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>תלמיד</button>
+      <button class="mp t" onclick="setMode('teacher')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>מרצה</button>
+    </div>
+  </div>
+</header>
+
+<div class="body-wrap">
+  <nav class="right-strip">
+    <div class="rs-logo"><img src="../../LOGO/LOGO PNG/אייקון בהיר בלי רקע.png" alt="WHITEBOARD" width="28" height="28" style="opacity:.9"></div>
+    <div class="rs-club-logo"><div class="rs-club-img">ה</div></div>
+    <div class="rs-icons">
+      <a class="rs-btn" href="מועדון - בית.html" data-tip="בית המועדון" aria-label="בית"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></a>
+      <a class="rs-btn" href="מועדון - קורסים.html" data-tip="קורסים" aria-label="קורסים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></a>
+      <a class="rs-btn" href="מועדון - פיד.html" data-tip="פיד המועדון" aria-label="פיד"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a>
+      <a class="rs-btn" href="מועדון - צ'אט.html" data-tip="צ׳אט" aria-label="צ'אט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="13" y2="14"/></svg></a>
+      <a class="rs-btn" href="מועדון - אירועים.html" data-tip="אירועים" aria-label="אירועים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></a>
+      <a class="rs-btn" href="מועדון - חברים.html" data-tip="חברים" aria-label="חברים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></a>
+      <a class="rs-btn" href="מועדון - לוח מובילים.html" data-tip="לוח מובילים" aria-label="לוח מובילים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></a>
+      <div class="rs-sep"></div>
+    </div>
+    <div class="rs-bottom">
+      <a class="rs-btn rs-active" href="מועדון - עזיבה.html" data-tip="עזיבת המועדון" aria-label="עזיבת המועדון" style="color:#F05680;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></a>
+      <button class="rs-btn" data-tip="הגדרות" aria-label="הגדרות" onclick="toggleSettingsPopup(event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      <div class="rs-profile" title="הפרופיל שלי" aria-label="פרופיל" onclick="toggleProfilePopup(event)">ד</div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="leave-wrap">
+      <!-- BOARDi sad -->
+      <img class="leave-mascot" src="../../BOARDi/SVG/13.svg" alt="BOARDi עצוב">
+
+      <div class="leave-title">בטוח/ה שרוצה לעזוב?</div>
+      <div class="leave-subtitle">
+        אנחנו מצטערים לשמוע שאתם שוקלים לעזוב את המועדון.<br>
+        לפני שממשיכים, חשוב שתדעו מה יקרה:
+      </div>
+
+      <div class="leave-card">
+        <div class="leave-steps">
+          <div class="leave-step">
+            <div class="leave-step-num">1</div>
+            <div class="leave-step-body">
+              <div class="leave-step-title">הבקשה תועבר למנהל המועדון</div>
+              <div class="leave-step-desc">מנהל המועדון יקבל הודעה על בקשתך ויטפל בה בהקדם.</div>
+            </div>
+          </div>
+          <div class="leave-step">
+            <div class="leave-step-num">2</div>
+            <div class="leave-step-body">
+              <div class="leave-step-title">הגישה לתכנים תוסר</div>
+              <div class="leave-step-desc">לאחר אישור הבקשה, הגישה לקורסים, מפגשים, צ׳אט ותכני המועדון תיפסק.</div>
+            </div>
+          </div>
+          <div class="leave-step">
+            <div class="leave-step-num">3</div>
+            <div class="leave-step-body">
+              <div class="leave-step-title">החיוב ייפסק</div>
+              <div class="leave-step-desc">מנהל המועדון יפסיק את המנוי והחיוב החודשי שלך. לא יתבצעו חיובים נוספים.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirm checkbox -->
+      <div class="leave-confirm" onclick="this.querySelector('input').click()">
+        <input type="checkbox" id="leaveCheck" onchange="document.querySelector('.leave-btn.danger').classList.toggle('enabled',this.checked)">
+        <label for="leaveCheck">אני מבין/ה שהגישה שלי לתכני המועדון תוסר</label>
+      </div>
+
+      <!-- Actions -->
+      <div class="leave-actions">
+        <a class="leave-btn cancel" href="מועדון - בית.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          חזרה למועדון
+        </a>
+        <button class="leave-btn danger" onclick="alert('הבקשה נשלחה למנהל המועדון')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          שלח בקשת עזיבה
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Settings popup -->
+<div class="strip-popup" id="settingsPopup">
+  <div class="sp-title">הגדרות</div>
+  <button class="sp-item" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('wb-theme',document.documentElement.dataset.theme);closePopups()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+    מצב לילה
+  </button>
+  <button class="sp-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    התראות
+  </button>
+</div>
+<!-- Profile popup -->
+<div class="strip-popup" id="profilePopup">
+  <div class="sp-profile-header">
+    <div class="sp-avatar">א</div>
+    <div>
+      <div class="sp-name">אלון גבאי</div>
+      <div class="sp-email">alon@email.com</div>
+    </div>
+  </div>
+  <div class="sp-divider"></div>
+  <button class="sp-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    הפרופיל שלי
+  </button>
+  <button class="sp-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    התנתק
+  </button>
+</div>
+
+<script>
+function setMode(m){document.documentElement.dataset.mode=m;document.querySelectorAll('.mp').forEach(b=>b.classList.remove('on'));document.querySelector('.mp.'+m[0]).classList.add('on');}
+function toggleSettingsPopup(e){e&&e.stopPropagation();var s=document.getElementById("settingsPopup"),p=document.getElementById("profilePopup");p.classList.remove("open");s.classList.toggle("open");}
+function toggleProfilePopup(e){e&&e.stopPropagation();var p=document.getElementById("profilePopup"),s=document.getElementById("settingsPopup");s.classList.remove("open");p.classList.toggle("open");}
+function closePopups(){document.getElementById("settingsPopup").classList.remove("open");document.getElementById("profilePopup").classList.remove("open");}
+document.addEventListener("click",function(e){if(!e.target.closest(".strip-popup")&&!e.target.closest(".rs-bottom"))closePopups();});
+</script>
+</body>
+</html>

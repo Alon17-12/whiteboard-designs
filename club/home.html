@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light" data-mode="student">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בית המועדון | מועדון להורות התפתחותית | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --cyan-light:rgba(56,196,242,0.13);
+  --pink:#F05680; --green:#22c55e; --amber:#F59E0B; --yellow:#EAD654;
+  --font:'Heebo',sans-serif; --font-brand:'Fredoka',sans-serif;
+  --r-xs:6px; --r-sm:9px; --r-md:13px; --r-lg:18px; --r-xl:24px;
+  --strip-w:52px;
+  --bg:#EBF3FB;
+  --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+  --border:rgba(37,62,122,0.1); --border-mid:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.52); --text-xs:rgba(37,62,122,0.35);
+  --sh-sm:0 2px 8px rgba(37,62,122,0.08); --sh-md:0 4px 20px rgba(37,62,122,0.12);
+  --amber:#F59E0B;
+}
+[data-theme="dark"] {
+  --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.07); --border-mid:rgba(255,255,255,0.12);
+  --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.48); --text-xs:rgba(221,229,245,0.28);
+  --sh-sm:0 2px 12px rgba(0,0,0,0.3); --sh-md:0 6px 24px rgba(0,0,0,0.4);
+}
+/* Dark mode — headings & accents readable on dark bg */
+[data-theme="dark"] .tb-club-name{color:#e8edf7;}
+[data-theme="dark"] .tb-page{color:var(--text-main);}
+[data-theme="dark"] .sec-title{color:#dde5f5;}
+[data-theme="dark"] .sec-title svg{color:var(--cyan);}
+[data-theme="dark"] .ch-name{color:#fff;}
+[data-theme="dark"] .ch-sub{color:var(--text-sub);}
+[data-theme="dark"] .wc-title{color:#fff;}
+[data-theme="dark"] .wc-stat strong{color:#e8edf7;}
+[data-theme="dark"] .qs-val{color:#e8edf7;}
+[data-theme="dark"] .uc-name{color:#fff;}
+[data-theme="dark"] .uc-stat strong{color:#e8edf7;}
+[data-theme="dark"] .uc-pct{color:#e8edf7;}
+[data-theme="dark"] .ann-title{color:var(--text-main);}
+[data-theme="dark"] .ev-name{color:var(--text-main);}
+[data-theme="dark"] .info-card{background:var(--surface);border-color:var(--border);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text-main);
+  height:100dvh;display:flex;flex-direction:column;overflow:hidden;
+  transition:background .25s,color .25s;}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  height:48px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+  flex-shrink:0;box-shadow:var(--sh-sm);z-index:30;
+}
+[data-mode="teacher"] .topbar{background:var(--surface);border-bottom-color:var(--amber);}
+.tb-left{display:flex;align-items:center;gap:8px;}
+.tb-club-name{font-family:var(--font-brand);font-size:15px;font-weight:600;color:var(--navy);}
+.tb-sep{color:var(--text-xs);font-size:13px;}
+.tb-page{font-size:13px;font-weight:700;color:var(--text-main);}
+.edit-tag{
+  display:none;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;
+  background:var(--amber);color:#fff;font-size:10px;font-weight:800;
+}
+[data-mode="teacher"] .edit-tag{display:inline-flex;}
+.edit-tag svg{width:10px;height:10px;}
+.tb-right{display:flex;align-items:center;gap:7px;}
+.ib{width:32px;height:32px;border-radius:var(--r-xs);border:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-sub);transition:all .18s;}
+.ib:hover{background:var(--cyan-light);color:var(--navy);border-color:var(--cyan);}
+.ib svg{width:14px;height:14px;}
+.icon-sun{display:none;}[data-theme="dark"] .icon-sun{display:block;}
+.icon-moon{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+.mode-pill{display:flex;background:var(--surface-2);border:1px solid var(--border);border-radius:30px;padding:3px;gap:2px;}
+.mp{display:flex;align-items:center;gap:4px;padding:4px 11px;border-radius:20px;
+  border:none;font-family:var(--font);font-size:11.5px;font-weight:700;cursor:pointer;
+  color:var(--text-sub);background:transparent;white-space:nowrap;transition:all .2s;}
+.mp svg{width:11px;height:11px;}
+.mp.s.on{background:#dbeafe;color:var(--navy);}
+.mp.t.on{background:var(--amber);color:#fff;}
+[data-theme="dark"] .mp.s.on{background:rgba(56,196,242,0.14);color:var(--cyan);}
+[data-theme="dark"] .mp.t.on{background:rgba(245,158,11,0.22);color:#fbbf24;}
+
+/* ══ EDIT BANNER ══ */
+.edit-banner{
+  display:none;align-items:center;justify-content:space-between;
+  padding:6px 18px;background:var(--surface);border-bottom:2px solid var(--amber);
+  flex-shrink:0;gap:12px;
+}
+[data-mode="teacher"] .edit-banner{display:flex;animation:slideDown .2s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.eb-l{display:flex;align-items:center;gap:10px;}
+.eb-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:var(--amber);}
+.eb-badge svg{width:11px;height:11px;}
+.eb-info{font-size:11px;color:var(--text-xs);}
+.eb-r{display:flex;align-items:center;gap:6px;}
+.eb-btn{display:flex;align-items:center;gap:4px;padding:4px 12px;border-radius:var(--r-xs);
+  border:1px solid var(--border);background:transparent;font-family:var(--font);
+  font-size:11px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .15s;}
+.eb-btn:hover{border-color:var(--border-mid);color:var(--text-main);}
+.eb-btn svg{width:11px;height:11px;}
+.eb-pub{display:flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;
+  border:none;font-family:var(--font);font-size:11.5px;font-weight:700;
+  background:var(--navy);color:#fff;cursor:pointer;transition:all .2s;}
+.eb-pub:hover{background:var(--cyan);}
+.eb-pub svg{width:11px;height:11px;}
+
+/* ══ BODY ══ */
+.body-wrap{flex:1;display:flex;overflow:hidden;}
+
+/* ══ RIGHT STRIP ══ */
+.right-strip{
+  width:var(--strip-w);flex-shrink:0;
+  background:#1a2e5e;
+  display:flex;flex-direction:column;align-items:center;
+  z-index:20;position:relative;
+}
+[data-mode="teacher"] .right-strip{border-right:3px solid var(--amber);}
+
+.rs-logo{
+  width:100%;display:flex;align-items:center;justify-content:center;
+  padding:10px 0 8px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;
+}
+.rs-logo img{width:28px;height:auto;opacity:.9;}
+
+.rs-club-logo{
+  width:100%;display:flex;align-items:center;justify-content:center;
+  padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;
+}
+.rs-club-img{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,#38C4F2,#253E7A);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-brand);font-size:13px;font-weight:700;color:#fff;
+  overflow:hidden;
+}
+
+.rs-icons{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;position:relative;}
+.rs-btn{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .18s;position:relative;
+  background:transparent;border:none;color:rgba(255,255,255,0.5);padding:0;
+  text-decoration:none;
+}
+.rs-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.rs-btn.rs-active{background:rgba(56,196,242,0.2);color:#38C4F2;}
+.rs-btn svg{width:17px;height:17px;}
+.rs-btn::after{
+  content:attr(data-tip);
+  position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,.8);color:#fff;font-family:var(--font);font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:6px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .15s;z-index:100;
+}
+.rs-btn:hover::after{opacity:1;}
+.rs-sep{width:26px;height:1px;background:rgba(255,255,255,0.1);margin:4px 0;flex-shrink:0;}
+
+.rs-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
+.rs-profile{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,#38C4F2,#253E7A);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;color:#fff;cursor:pointer;
+  border:2px solid rgba(255,255,255,0.2);transition:border-color .18s;
+}
+.rs-profile:hover{border-color:rgba(255,255,255,0.5);}
+
+/* Teacher-only strip buttons */
+.rs-teacher{display:none;}
+[data-mode="teacher"] .rs-teacher{display:flex;}
+
+/* ══ MAIN CONTENT ══ */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+
+/* ── CONTENT ── */
+.club-content{flex:1;padding:24px 28px;display:flex;flex-direction:column;gap:24px;}
+
+/* Section title */
+.sec-title{font-family:var(--font-brand);font-size:17px;font-weight:700;color:var(--navy);
+  display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.sec-title svg{width:18px;height:18px;color:var(--cyan);}
+[data-mode="teacher"] .sec-title .teacher-only{display:inline-flex;}
+.teacher-only{display:none;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;
+  background:rgba(245,158,11,0.12);color:var(--amber);font-size:10px;font-weight:800;
+  border:1px solid rgba(245,158,11,0.25);font-family:var(--font);}
+.teacher-only svg{width:10px;height:10px;}
+
+/* Club heading */
+.club-heading{display:flex;align-items:center;gap:14px;margin-bottom:6px;}
+.ch-avatar{width:48px;height:48px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#253E7A,#1a2e5e);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;color:#fff;
+  border:2.5px solid var(--cyan);box-shadow:0 2px 12px rgba(37,62,122,0.15);}
+.ch-text{flex:1;}
+.ch-name{font-family:var(--font-brand);font-size:22px;font-weight:700;color:var(--navy);line-height:1.2;}
+.ch-sub{font-size:12.5px;color:var(--text-sub);margin-top:2px;}
+
+/* Welcome — side by side */
+.welcome-card{
+  background:var(--surface);border-radius:var(--r-xl);border:1px solid var(--border);
+  box-shadow:var(--sh-sm);overflow:hidden;display:flex;flex-direction:row-reverse;
+}
+@media(max-width:900px){.welcome-card{flex-direction:column-reverse;}}
+.wc-video{
+  flex:1;min-width:0;aspect-ratio:16/9;background:#0c1422;position:relative;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  overflow:hidden;
+}
+.wc-video img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.wc-video-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,#1a2e5e 0%,#253E7A 40%,#38C4F2 100%);
+  opacity:.85;
+}
+.wc-play{
+  position:relative;width:58px;height:58px;border-radius:50%;
+  background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 28px rgba(0,0,0,0.35);transition:transform .2s,box-shadow .2s;cursor:pointer;z-index:2;
+}
+.wc-play:hover{transform:scale(1.1);box-shadow:0 8px 36px rgba(0,0,0,0.45);}
+.wc-play svg{width:22px;height:22px;color:var(--navy);margin-right:-2px;}
+.wc-label{
+  position:absolute;bottom:12px;right:12px;z-index:2;
+  background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);
+  color:#fff;font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:20px;
+}
+.wc-body{flex:1;padding:24px 22px;display:flex;flex-direction:column;justify-content:center;min-width:280px;}
+.wc-title{font-family:var(--font-brand);font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+.wc-text{font-size:13.5px;color:var(--text-sub);line-height:1.7;}
+.wc-stats{display:flex;gap:18px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.wc-stat{text-align:center;}
+.wc-stat strong{display:block;font-family:var(--font-brand);font-size:18px;font-weight:700;color:var(--navy);}
+.wc-stat span{font-size:10.5px;color:var(--text-xs);}
+
+/* User profile card */
+.user-card{
+  background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--border);
+  padding:18px 20px;box-shadow:var(--sh-sm);display:flex;align-items:center;gap:16px;
+}
+.uc-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#38C4F2,#253E7A);
+  display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0;
+  border:2.5px solid var(--cyan);}
+.uc-info{flex:1;min-width:0;}
+.uc-name{font-size:14px;font-weight:800;color:var(--text-main);}
+.uc-role{font-size:11px;color:var(--text-xs);margin-top:1px;}
+.uc-stats{display:flex;gap:16px;margin-top:8px;}
+.uc-stat{text-align:center;}
+.uc-stat strong{display:block;font-family:var(--font-brand);font-size:15px;font-weight:700;color:var(--navy);}
+.uc-stat span{font-size:10px;color:var(--text-xs);}
+.uc-progress{flex-shrink:0;width:52px;height:52px;position:relative;display:flex;align-items:center;justify-content:center;}
+.uc-progress svg{width:52px;height:52px;transform:rotate(-90deg);}
+.uc-progress circle{fill:none;stroke-width:4;stroke-linecap:round;}
+.uc-progress .track{stroke:var(--border);}
+.uc-progress .fill{stroke:var(--cyan);transition:stroke-dashoffset .5s;}
+.uc-pct{position:absolute;font-family:var(--font-brand);font-size:13px;font-weight:700;color:var(--navy);}
+
+/* Two-column grid */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:900px){.two-col{grid-template-columns:1fr;}}
+
+/* Info card */
+.info-card{
+  background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--border);
+  padding:20px 22px;box-shadow:var(--sh-sm);
+}
+
+/* Quick stats */
+.qs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.qs-item{
+  background:var(--surface-2);border-radius:var(--r-md);padding:16px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  border:1px solid var(--border);text-align:center;
+}
+.qs-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:2px;}
+.qs-icon.blue{background:rgba(37,62,122,0.1);}
+.qs-icon.cyan{background:rgba(56,196,242,0.12);}
+.qs-icon.pink{background:rgba(240,86,128,0.1);}
+.qs-icon.green{background:rgba(34,197,94,0.1);}
+.qs-icon svg{width:18px;height:18px;}
+.qs-icon.blue svg{color:var(--navy);}
+.qs-icon.cyan svg{color:var(--cyan);}
+.qs-icon.pink svg{color:var(--pink);}
+.qs-icon.green svg{color:var(--green);}
+.qs-val{font-family:var(--font-brand);font-size:22px;font-weight:700;color:var(--navy);}
+.qs-lbl{font-size:11px;color:var(--text-xs);font-weight:600;}
+
+/* Announcements */
+.ann-list{display:flex;flex-direction:column;gap:10px;}
+.ann-item{
+  display:flex;gap:12px;align-items:flex-start;padding:12px 14px;
+  background:var(--surface-2);border-radius:var(--r-md);border:1px solid var(--border);
+  cursor:pointer;transition:all .15s;
+}
+.ann-item:hover{border-color:var(--cyan);background:var(--surface-3);}
+.ann-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);flex-shrink:0;margin-top:5px;}
+.ann-dot.pink{background:var(--pink);}
+.ann-dot.amber{background:var(--amber);}
+.ann-body{flex:1;}
+.ann-title{font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:3px;}
+.ann-meta{font-size:11px;color:var(--text-xs);}
+
+/* Upcoming events */
+.ev-list{display:flex;flex-direction:column;gap:10px;}
+.ev-item{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  background:var(--surface-2);border-radius:var(--r-md);border:1px solid var(--border);
+  cursor:pointer;transition:all .15s;text-decoration:none;color:inherit;
+}
+.ev-item:hover{border-color:var(--cyan);}
+.ev-date{width:40px;height:40px;border-radius:10px;background:var(--navy);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex-shrink:0;color:#fff;}
+.ev-date .day{font-family:var(--font-brand);font-size:16px;font-weight:700;line-height:1;}
+.ev-date .mon{font-size:9px;font-weight:600;opacity:.7;text-transform:uppercase;}
+.ev-info{flex:1;}
+.ev-name{font-size:13px;font-weight:700;color:var(--text-main);}
+.ev-type{font-size:11px;color:var(--text-xs);margin-top:2px;}
+.ev-badge{padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+.ev-badge.online{background:rgba(56,196,242,0.12);color:#0ea5e9;}
+.ev-badge.live{background:rgba(240,86,128,0.1);color:var(--pink);}
+
+/* Add content button (teacher) */
+.add-content-btn{
+  display:none;align-items:center;justify-content:center;gap:7px;
+  padding:10px;border-radius:var(--r-md);border:2px dashed rgba(245,158,11,0.35);
+  background:rgba(245,158,11,0.04);color:var(--amber);
+  font-family:var(--font);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .18s;margin-top:6px;
+}
+[data-mode="teacher"] .add-content-btn{display:flex;}
+.add-content-btn:hover{background:rgba(245,158,11,0.1);border-color:var(--amber);}
+.add-content-btn svg{width:14px;height:14px;}
+/* Strip popups */
+.strip-popup{display:none;position:fixed;bottom:60px;right:60px;z-index:200;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-md);min-width:200px;padding:8px;animation:popIn .15s ease;}
+.strip-popup.open{display:block;}
+@keyframes popIn{from{opacity:0;transform:translateY(6px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.sp-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text-xs);padding:6px 10px 8px;}
+.sp-item{display:flex;align-items:center;gap:8px;width:100%;padding:9px 10px;border:none;background:transparent;border-radius:var(--r-sm);font-family:var(--font);font-size:13px;font-weight:600;color:var(--text-main);cursor:pointer;transition:all .12s;text-align:right;}
+.sp-item:hover{background:var(--surface-2);color:var(--navy);}
+.sp-item svg{width:16px;height:16px;color:var(--text-sub);flex-shrink:0;}
+.sp-divider{height:1px;background:var(--border);margin:4px 0;}
+.sp-profile-header{display:flex;align-items:center;gap:10px;padding:10px 10px 6px;}
+.sp-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#38C4F2,#253E7A);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.sp-name{font-size:13px;font-weight:800;color:var(--text-main);}
+.sp-email{font-size:11px;color:var(--text-xs);}
+</style>
+<script>
+(function(){var t=localStorage.getItem("wb-theme");if(t)document.documentElement.dataset.theme=t;})();
+</script>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+  <div class="tb-left">
+    <span class="tb-club-name">מועדון להורות התפתחותית</span>
+    <span class="tb-sep">·</span>
+    <span class="tb-page">בית</span>
+    <span class="edit-tag">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      מצב עריכה
+    </span>
+  </div>
+  <div class="tb-right">
+    <button class="ib" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('wb-theme',document.documentElement.dataset.theme)" aria-label="מצב לילה">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+
+    </button>
+    <div class="mode-pill" role="group" aria-label="מצב תצוגה">
+      <button class="mp s on" onclick="setMode('student')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        תלמיד
+      </button>
+      <button class="mp t" onclick="setMode('teacher')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        מרצה
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ EDIT BANNER ══ -->
+<div class="edit-banner">
+  <div class="eb-l">
+    <div class="eb-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      מצב עריכה — בית המועדון
+    </div>
+    <span class="eb-info">שינויים נשמרים אוטומטית</span>
+  </div>
+  <div class="eb-r">
+    <button class="eb-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><eye cx="12" cy="12"/><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      תצוגה מקדימה
+    </button>
+    <button class="eb-pub">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      פרסם שינויים
+    </button>
+  </div>
+</div>
+
+<!-- ══ BODY ══ -->
+<div class="body-wrap">
+
+  <!-- RIGHT STRIP -->
+  <nav class="right-strip" aria-label="ניווט מועדון">
+    <!-- WB Logo -->
+    <div class="rs-logo" title="WHITEBOARD">
+      <img src="../../LOGO/LOGO PNG/אייקון בהיר בלי רקע.png" alt="WHITEBOARD" width="28" height="28" style="opacity:.9" onerror="this.outerHTML='<svg width=28 height=28 viewBox=\'0 0 40 40\' fill=\'none\'><rect width=\'40\' height=\'40\' rx=\'10\' fill=\'white\' fill-opacity=\'0.1\'/><path d=\'M8 12 L14 28 L20 16 L26 28 L32 12\' stroke=\'#38C4F2\' stroke-width=\'2.8\' stroke-linecap=\'round\' stroke-linejoin=\'round\' fill=\'none\'/><circle cx=\'20\' cy=\'30\' r=\'2.5\' fill=\'#F05680\'/></svg>'">
+    </div>
+    <!-- Club Logo -->
+    <div class="rs-club-logo" title="מועדון להורות התפתחותית">
+      <div class="rs-club-img">ה</div>
+    </div>
+    <!-- Nav Icons -->
+    <div class="rs-icons">
+      <a class="rs-btn rs-active" href="מועדון - בית.html" data-tip="בית המועדון" aria-label="בית"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></a>
+      <a class="rs-btn" href="מועדון - קורסים.html" data-tip="קורסים" aria-label="קורסים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></a>
+      <a class="rs-btn" href="מועדון - פיד.html" data-tip="פיד המועדון" aria-label="פיד"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg></a>
+      <a class="rs-btn" href="מועדון - צ'אט.html" data-tip="צ׳אט" aria-label="צ'אט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="13" y2="14"/></svg></a>
+      <a class="rs-btn" href="מועדון - אירועים.html" data-tip="אירועים" aria-label="אירועים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></a>
+      <a class="rs-btn" href="מועדון - חברים.html" data-tip="חברים" aria-label="חברים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></a>
+      <a class="rs-btn" href="מועדון - לוח מובילים.html" data-tip="לוח מובילים" aria-label="לוח מובילים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></a>
+      <a class="rs-btn" href="מועדון - עזיבה.html" data-tip="עזיבת המועדון" aria-label="עזיבת המועדון" style="color:rgba(255,255,255,0.3);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></a>
+      <div class="rs-sep"></div>
+
+      <!-- Teacher: Add content -->
+      <button class="rs-btn rs-teacher" data-tip="הוסף תוכן" aria-label="הוסף תוכן">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      </button>
+      <!-- Teacher: Settings -->
+      <button class="rs-btn rs-teacher" data-tip="הגדרות מועדון" aria-label="הגדרות">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+      </button>
+    </div>
+
+    <div class="rs-bottom">
+      <button class="rs-btn" data-tip="הגדרות" aria-label="הגדרות">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+      <div class="rs-profile" title="הפרופיל שלי" aria-label="פרופיל" onclick="toggleProfilePopup(event)">ד</div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- Content -->
+    <div class="club-content">
+
+      <!-- Club heading + welcome card -->
+      <div>
+        <div class="club-heading">
+          <div class="ch-avatar">ד"ר</div>
+          <div class="ch-text">
+            <div class="ch-name">מועדון להורות התפתחותית</div>
+            <div class="ch-sub">ד"ר אבי ברקר · קהילה ייחודית להורים שרוצים להבין את ילדיהם לעומק</div>
+          </div>
+          <span class="teacher-only">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            ניתן לעריכה
+          </span>
+        </div>
+        <div class="welcome-card">
+          <div class="wc-video">
+            <img src="../../עיצובים למערכת/קאבר ברירת מחדל לקורסים בלי תמונה.png" alt="ברוכים הבאים למועדון">
+            <div class="wc-play">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+            <div class="wc-label">סרטון ברוכים הבאים · 4:32</div>
+          </div>
+          <div class="wc-body">
+            <div class="wc-title">ברוכים הבאים למועדון</div>
+            <div class="wc-text">
+              שמחים שהצטרפתם! כאן תמצאו קורסים, מפגשים חיים, קהילה תוססת ותכנים מקצועיים. מומלץ לצפות בסרטון ברוכים הבאים לפני שמתחילים.
+            </div>
+            <div class="wc-stats">
+              <div class="wc-stat"><strong>2,340</strong><span>חברים</span></div>
+              <div class="wc-stat"><strong>8</strong><span>קורסים</span></div>
+              <div class="wc-stat"><strong>24</strong><span>מפגשים</span></div>
+              <div class="wc-stat"><strong>3</strong><span>אירועים קרובים</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two column -->
+      <div class="two-col">
+
+        <!-- Quick stats -->
+        <div class="info-card">
+          <div class="sec-title" style="margin-bottom:14px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            המועדון שלנו
+          </div>
+          <div class="qs-grid">
+            <div class="qs-item">
+              <div class="qs-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+              <div class="qs-val">2,340</div>
+              <div class="qs-lbl">חברים</div>
+            </div>
+            <div class="qs-item">
+              <div class="qs-icon cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg></div>
+              <div class="qs-val">8</div>
+              <div class="qs-lbl">קורסים</div>
+            </div>
+            <div class="qs-item">
+              <div class="qs-icon pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+              <div class="qs-val">24</div>
+              <div class="qs-lbl">מפגשים שהתקיימו</div>
+            </div>
+            <div class="qs-item">
+              <div class="qs-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+              <div class="qs-val">1.4K</div>
+              <div class="qs-lbl">פוסטים בפיד</div>
+            </div>
+            <div class="qs-item">
+              <div class="qs-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></div>
+              <div class="qs-val">87%</div>
+              <div class="qs-lbl">השלמת קורסים</div>
+            </div>
+            <div class="qs-item">
+              <div class="qs-icon cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+              <div class="qs-val">4.9</div>
+              <div class="qs-lbl">דירוג ממוצע</div>
+            </div>
+          </div>
+          <!-- User profile -->
+          <div class="user-card" style="margin-top:16px;">
+            <div class="uc-avatar">א</div>
+            <div class="uc-info">
+              <div class="uc-name">אלון גבאי</div>
+              <div class="uc-role">חבר מאז מרץ 2026</div>
+              <div class="uc-stats">
+                <div class="uc-stat"><strong>4</strong><span>קורסים</span></div>
+                <div class="uc-stat"><strong>26</strong><span>שיעורים</span></div>
+                <div class="uc-stat"><strong>1,620</strong><span>נקודות</span></div>
+              </div>
+            </div>
+            <div class="uc-progress">
+              <svg viewBox="0 0 52 52"><circle class="track" cx="26" cy="26" r="22"/><circle class="fill" cx="26" cy="26" r="22" stroke-dasharray="138.23" stroke-dashoffset="89.85"/></svg>
+              <div class="uc-pct">35%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Announcements + upcoming events -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="info-card">
+            <div class="sec-title" style="margin-bottom:12px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              הודעות אחרונות
+              <span class="teacher-only"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>ניתן לעריכה</span>
+            </div>
+            <div class="ann-list">
+              <div class="ann-item">
+                <div class="ann-dot pink"></div>
+                <div class="ann-body">
+                  <div class="ann-title">קורס חדש נפתח — שנה שישית לחיים</div>
+                  <div class="ann-meta">לפני 2 ימים · ד"ר אבי ברקר</div>
+                </div>
+              </div>
+              <div class="ann-item">
+                <div class="ann-dot amber"></div>
+                <div class="ann-body">
+                  <div class="ann-title">מפגש זום ביום ה׳ — הירשמו עכשיו</div>
+                  <div class="ann-meta">לפני 4 ימים · צוות WHITEBOARD</div>
+                </div>
+              </div>
+              <div class="ann-item">
+                <div class="ann-dot"></div>
+                <div class="ann-body">
+                  <div class="ann-title">סיכום מפגש אפריל — הקלטה זמינה</div>
+                  <div class="ann-meta">לפני שבוע · ד"ר אבי ברקר</div>
+                </div>
+              </div>
+            </div>
+            <button class="add-content-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              הוסף הודעה
+            </button>
+          </div>
+
+          <div class="info-card">
+            <div class="sec-title" style="margin-bottom:12px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              אירועים קרובים
+            </div>
+            <div class="ev-list">
+              <a class="ev-item" href="מועדון - אירועים.html">
+                <div class="ev-date"><div class="day">10</div><div class="mon">APR</div></div>
+                <div class="ev-info">
+                  <div class="ev-name">מפגש הורים — גבולות ואהבה</div>
+                  <div class="ev-type">זום · 20:00–21:30</div>
+                </div>
+                <span class="ev-badge online">אונליין</span>
+              </a>
+              <a class="ev-item" href="מועדון - אירועים.html">
+                <div class="ev-date"><div class="day">18</div><div class="mon">APR</div></div>
+                <div class="ev-info">
+                  <div class="ev-name">סדנה פרונטלית — תל אביב</div>
+                  <div class="ev-type">פרונטלי · 09:00–13:00</div>
+                </div>
+                <span class="ev-badge live">פרונטלי</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+function setMode(m){
+  document.documentElement.dataset.mode = m;
+  document.querySelectorAll('.mp').forEach(b=>b.classList.remove('on'));
+  document.querySelector('.mp.'+m[0]).classList.add('on');
+}
+function toggleSettingsPopup(e){e&&e.stopPropagation();var s=document.getElementById("settingsPopup"),p=document.getElementById("profilePopup");p.classList.remove("open");s.classList.toggle("open");}
+function toggleProfilePopup(e){e&&e.stopPropagation();var p=document.getElementById("profilePopup"),s=document.getElementById("settingsPopup");s.classList.remove("open");p.classList.toggle("open");}
+function closePopups(){document.getElementById("settingsPopup").classList.remove("open");document.getElementById("profilePopup").classList.remove("open");}
+document.addEventListener("click",function(e){if(!e.target.closest(".strip-popup")&&!e.target.closest(".rs-bottom"))closePopups();});
+</script>
+<!-- Settings popup -->
+<div class="strip-popup" id="settingsPopup">
+  <div class="sp-title">הגדרות</div>
+  <button class="sp-item" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('wb-theme',document.documentElement.dataset.theme);closePopups()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+    מצב לילה
+  </button>
+  <button class="sp-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    התראות
+  </button>
+  <button class="sp-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    עזרה
+  </button>
+</div>
+<!-- Profile popup -->
+<div class="strip-popup" id="profilePopup">
+  <div class="sp-profile-header">
+    <div class="sp-avatar">א</div>
+    <div>
+      <div class="sp-name">אלון גבאי</div>
+      <div class="sp-email">alon@email.com</div>
+    </div>
+  </div>
+  <div class="sp-divider"></div>
+  <button class="sp-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    הפרופיל שלי
+  </button>
+  <button class="sp-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    התנתק
+  </button>
+</div>
+</body>
+</html>

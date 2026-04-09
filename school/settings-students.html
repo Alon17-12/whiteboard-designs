@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light" data-mode="teacher" data-view="school">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>התלמידים שלי | שיווק ויצירת תוכן | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root{
+  --font:'Heebo',sans-serif;--font-brand:'Fredoka',sans-serif;
+  --strip-w:52px;
+  --bg:#F5F7FB;--surface:#FFFFFF;--surface-2:#F0F4FA;--surface-3:#e8eef8;
+  --text:#1a2f5e;--text-sub:rgba(37,62,122,0.52);--text-xs:rgba(37,62,122,0.32);
+  --border:rgba(37,62,122,0.08);--border-mid:rgba(37,62,122,0.14);
+  --sh:0 2px 12px rgba(37,62,122,0.07);--sh-lg:0 8px 32px rgba(37,62,122,0.1);
+  --r:14px;--r-sm:10px;--r-xs:6px;--r-full:30px;
+  --primary:#253E7A;--primary-light:rgba(37,62,122,0.08);
+  --accent:#38C4F2;--accent-light:rgba(56,196,242,0.1);
+  --cta:#F05680;--cta-light:rgba(240,86,128,0.08);
+  --amber:#F59E0B;--green:#22c55e;--yellow:#EAD654;
+  --navy:#1a2e5e;
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;
+  --text:#dde5f5;--text-sub:rgba(221,229,245,0.48);--text-xs:rgba(221,229,245,0.28);
+  --border:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.12);
+  --sh:0 2px 12px rgba(0,0,0,0.3);--sh-lg:0 8px 32px rgba(0,0,0,0.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);
+  height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  height:48px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+  flex-shrink:0;box-shadow:var(--sh);z-index:30;
+}
+[data-mode="teacher"] .topbar{border-bottom-color:var(--amber);}
+.tb-right{display:flex;align-items:center;gap:8px;}
+.tb-name{font-family:var(--font-brand);font-size:15px;font-weight:600;color:var(--primary);text-decoration:none;}
+[data-theme="dark"] .tb-name{color:#e8edf7;}
+.tb-sep{color:var(--text-xs);font-size:13px;}
+.tb-page{font-size:13px;font-weight:700;color:var(--text);}
+.tb-left{display:flex;align-items:center;gap:7px;}
+.ib{width:32px;height:32px;border-radius:var(--r-xs);border:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-sub);transition:all .18s;}
+.ib:hover{background:var(--accent-light);color:var(--primary);border-color:var(--accent);}
+.ib svg{width:14px;height:14px;}
+.icon-sun{display:none;}[data-theme="dark"] .icon-sun{display:block;}
+.icon-moon{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+.mode-pill{display:flex;background:var(--surface-2);border:1px solid var(--border);border-radius:30px;padding:3px;gap:2px;}
+.mp{display:flex;align-items:center;gap:4px;padding:4px 11px;border-radius:20px;
+  border:none;font-family:var(--font);font-size:11.5px;font-weight:700;cursor:pointer;
+  color:var(--text-sub);background:transparent;white-space:nowrap;transition:all .2s;}
+.mp svg{width:11px;height:11px;}
+.mp.s.on{background:#dbeafe;color:var(--primary);}
+.mp.t.on{background:var(--amber);color:#fff;}
+[data-theme="dark"] .mp.s.on{background:rgba(56,196,242,0.14);color:var(--accent);}
+[data-theme="dark"] .mp.t.on{background:rgba(245,158,11,0.22);color:#fbbf24;}
+.tb-cta{height:32px;padding:0 14px;border-radius:var(--r-full);border:none;
+  background:var(--cta);color:#fff;font-family:var(--font);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;}
+.tb-cta:hover{opacity:.9;}
+.edit-tag{display:none;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--r-full);
+  background:var(--amber);color:#fff;font-size:10px;font-weight:800;}
+[data-mode="teacher"] .edit-tag{display:inline-flex;}
+.edit-tag svg{width:10px;height:10px;}
+
+/* ══ BODY ══ */
+.body-wrap{flex:1;display:flex;overflow:hidden;}
+
+/* ══ RIGHT STRIP ══ */
+.right-strip{
+  width:var(--strip-w);flex-shrink:0;background:#1a2e5e;
+  display:flex;flex-direction:column;align-items:center;z-index:20;
+}
+[data-mode="teacher"] .right-strip{border-right:3px solid var(--amber);}
+.rs-logo{width:100%;display:flex;align-items:center;justify-content:center;
+  padding:10px 0 8px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
+.rs-logo img{width:28px;height:auto;opacity:.9;}
+.rs-icons{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;position:relative;}
+.rs-btn{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .18s;position:relative;background:transparent;border:none;
+  color:rgba(255,255,255,0.5);padding:0;text-decoration:none;}
+.rs-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.rs-btn.rs-active{background:rgba(56,196,242,0.2);color:#38C4F2;}
+.rs-btn svg{width:17px;height:17px;}
+.rs-btn::after{content:attr(data-tip);position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,.8);color:#fff;font-family:var(--font);font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:100;}
+.rs-btn:hover::after{opacity:1;}
+.rs-sep{width:26px;height:1px;background:rgba(255,255,255,0.1);margin:4px 0;flex-shrink:0;}
+.rs-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
+.rs-profile{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#38C4F2,#253E7A);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;
+  cursor:pointer;border:2px solid rgba(255,255,255,0.2);}
+.rs-teacher{display:none;}[data-mode="teacher"] .rs-teacher{display:flex;}
+
+/* ══ MAIN ══ */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.main-inner{width:92%;max-width:1200px;margin:0 auto;padding:28px 0 40px;}
+
+/* ══ SETTINGS TAB BAR ══ */
+.settings-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:28px;}
+.settings-tab{padding:12px 20px;font-family:var(--font);font-size:13px;font-weight:600;
+  color:var(--text-sub);text-decoration:none;border-bottom:2px solid transparent;
+  transition:all .15s;white-space:nowrap;}
+.settings-tab:hover{color:var(--primary);background:var(--primary-light);}
+.settings-tab.active{color:var(--primary);font-weight:700;border-bottom-color:var(--primary);}
+[data-theme="dark"] .settings-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* ══ HEADER ROW ══ */
+.students-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.students-count{font-family:var(--font-brand);font-size:22px;font-weight:700;color:var(--primary);}
+[data-theme="dark"] .students-count{color:#fff;}
+.students-actions{display:flex;align-items:center;gap:8px;}
+.btn-outline{padding:8px 18px;border-radius:var(--r-full);border:1.5px solid var(--border-mid);
+  background:transparent;font-family:var(--font);font-size:12px;font-weight:700;color:var(--text-sub);
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary);}
+.btn-outline svg{width:13px;height:13px;}
+.btn-cta{padding:8px 18px;border-radius:var(--r-full);border:none;
+  background:var(--cta);color:#fff;font-family:var(--font);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;}
+.btn-cta:hover{opacity:.9;}
+.btn-cta svg{width:13px;height:13px;}
+
+/* ══ FILTER ROW ══ */
+.filter-row{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
+.filter-pills{display:flex;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-full);padding:3px;gap:2px;}
+.filter-pill{padding:6px 16px;border-radius:var(--r-full);border:none;font-family:var(--font);
+  font-size:12px;font-weight:700;cursor:pointer;color:var(--text-sub);background:transparent;transition:all .15s;}
+.filter-pill.active{background:var(--primary);color:#fff;}
+.filter-pill:hover:not(.active){background:var(--primary-light);color:var(--primary);}
+.filter-check{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text-sub);cursor:pointer;}
+.filter-check input[type="checkbox"]{width:15px;height:15px;accent-color:var(--primary);cursor:pointer;}
+.search-box{margin-right:auto;position:relative;}
+.search-box input{padding:7px 14px 7px 32px;border-radius:var(--r-full);border:1.5px solid var(--border);
+  background:var(--surface);font-family:var(--font);font-size:12px;color:var(--text);
+  outline:none;transition:border-color .15s;width:200px;}
+.search-box input:focus{border-color:var(--accent);}
+.search-box svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--text-xs);pointer-events:none;}
+
+/* ══ TABLE ══ */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  box-shadow:var(--sh);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:var(--surface-2);font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--text-sub);padding:12px 16px;text-align:right;white-space:nowrap;
+  border-bottom:1px solid var(--border);}
+tbody tr{border-bottom:1px solid var(--border);transition:background .12s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--primary-light);}
+tbody td{padding:12px 16px;font-size:13px;color:var(--text);vertical-align:middle;}
+
+/* Student name */
+.student-name{font-weight:700;color:var(--text);}
+.student-email{color:var(--text-sub);font-size:12px;direction:ltr;text-align:right;}
+
+/* Status badge */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:var(--r-full);
+  font-size:11px;font-weight:700;white-space:nowrap;}
+.badge-active{background:rgba(34,197,94,0.12);color:#16a34a;}
+[data-theme="dark"] .badge-active{background:rgba(34,197,94,0.18);color:#4ade80;}
+.badge-amber{background:rgba(245,158,11,0.12);color:#d97706;}
+[data-theme="dark"] .badge-amber{background:rgba(245,158,11,0.18);color:#fbbf24;}
+
+/* Progress bar */
+.progress-cell{display:flex;align-items:center;gap:8px;}
+.progress-bar{flex:1;height:4px;background:var(--surface-3);border-radius:2px;overflow:hidden;min-width:60px;}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s;}
+.progress-pct{font-size:11px;font-weight:700;color:var(--text-xs);white-space:nowrap;min-width:28px;}
+
+/* Actions */
+.actions-btn{width:28px;height:28px;border-radius:var(--r-xs);border:1px solid var(--border);
+  background:transparent;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-sub);transition:all .15s;}
+.actions-btn:hover{background:var(--surface-2);color:var(--primary);border-color:var(--border-mid);}
+.actions-btn svg{width:14px;height:14px;}
+
+/* ══ POPUPS ══ */
+.strip-popup{display:none;position:fixed;bottom:60px;right:60px;z-index:200;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh-lg);min-width:200px;padding:8px;}
+.strip-popup.open{display:block;}
+.sp-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text-xs);padding:6px 10px 8px;}
+.sp-item{display:flex;align-items:center;gap:8px;width:100%;padding:9px 10px;border:none;background:transparent;border-radius:var(--r-sm);font-family:var(--font);font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all .12s;text-align:right;}
+.sp-item:hover{background:var(--surface-2);}
+.sp-item svg{width:16px;height:16px;color:var(--text-sub);flex-shrink:0;}
+.sp-divider{height:1px;background:var(--border);margin:4px 0;}
+.sp-profile-header{display:flex;align-items:center;gap:10px;padding:10px 10px 6px;}
+.sp-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#38C4F2,#253E7A);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.sp-name{font-size:13px;font-weight:800;color:var(--text);}
+.sp-email{font-size:11px;color:var(--text-xs);}
+
+/* ══ ACCESSIBILITY ══ */
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}
+}
+.rs-btn:focus-visible,.ib:focus-visible,.mp:focus-visible,.tb-cta:focus-visible,
+.settings-tab:focus-visible,.btn-outline:focus-visible,.btn-cta:focus-visible,
+.filter-pill:focus-visible,.actions-btn:focus-visible,.search-box input:focus-visible,
+a:focus-visible,button:focus-visible{
+  outline:2.5px solid var(--accent);outline-offset:2px;
+}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:900px){
+  .students-header{flex-direction:column;gap:12px;align-items:flex-start;}
+  .filter-row{gap:8px;}
+  .search-box{margin-right:0;width:100%;}
+  .search-box input{width:100%;}
+  .table-wrap{overflow-x:auto;}
+}
+</style>
+<script>(function(){var t=localStorage.getItem("wb-theme");if(t)document.documentElement.dataset.theme=t;})()</script>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar" role="banner">
+  <div class="tb-right">
+    <a href="בית ספר - בית.html" class="tb-name">שיווק ויצירת תוכן</a>
+    <span class="tb-sep">/</span>
+    <span class="tb-page">התלמידים שלי</span>
+    <span class="edit-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>מצב עריכה</span>
+  </div>
+  <div class="tb-left">
+    <button class="ib" aria-label="מצב לילה" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('wb-theme',document.documentElement.dataset.theme)">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <div class="mode-pill">
+      <button class="mp s" onclick="setMode('student')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>תלמיד</button>
+      <button class="mp t on" onclick="setMode('teacher')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>מרצה</button>
+    </div>
+    <button class="tb-cta">התחבר</button>
+  </div>
+</header>
+
+<!-- ══ BODY ══ -->
+<div class="body-wrap">
+
+  <!-- RIGHT STRIP -->
+  <nav class="right-strip" aria-label="ניווט ראשי">
+    <div class="rs-logo"><img src="../../LOGO/LOGO PNG/אייקון בהיר בלי רקע.png" alt="WHITEBOARD" width="28" height="28"></div>
+    <div class="rs-icons">
+      <a class="rs-btn" href="בית ספר - בית.html" data-tip="בית ספר" aria-label="בית ספר"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></a>
+      <a class="rs-btn" href="בית ספר - קלאסי.html" data-tip="הקורסים שלי" aria-label="הקורסים שלי"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></a>
+      <div class="rs-sep"></div>
+      <!-- Teacher-only -->
+      <button class="rs-btn rs-teacher rs-active" data-tip="הגדרות בית ספר" aria-label="הגדרות בית ספר"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      <button class="rs-btn rs-teacher" data-tip="אנליטיקס" aria-label="אנליטיקס"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button>
+    </div>
+    <div class="rs-bottom">
+      <button class="rs-btn" data-tip="הגדרות" onclick="toggleSettingsPopup(event)" aria-label="הגדרות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      <div class="rs-profile" onclick="toggleProfilePopup(event)" role="button" aria-label="פרופיל">א</div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- SETTINGS TAB BAR -->
+      <nav class="settings-tabs" aria-label="הגדרות בית ספר">
+        <a class="settings-tab" href="בית ספר - הגדרות לייאאוט.html">לייאאוט</a>
+        <a class="settings-tab" href="בית ספר - הגדרות ערכת מותג.html">ערכת מותג</a>
+        <a class="settings-tab" href="בית ספר - הגדרות.html">הגדרות</a>
+        <a class="settings-tab active" href="בית ספר - הגדרות תלמידים.html" aria-current="page">התלמידים שלי</a>
+      </nav>
+
+      <!-- HEADER ROW -->
+      <div class="students-header">
+        <h1 class="students-count">152 תלמידים</h1>
+        <div class="students-actions">
+          <button class="btn-outline" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            ייצא תלמידים
+          </button>
+          <button class="btn-cta" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            הוסף תלמידים
+          </button>
+        </div>
+      </div>
+
+      <!-- FILTER ROW -->
+      <div class="filter-row">
+        <div class="filter-pills">
+          <button class="filter-pill active" type="button">תלמידים</button>
+          <button class="filter-pill" type="button">מנויי שנה</button>
+        </div>
+        <label class="filter-check">
+          <input type="checkbox" id="hide-inactive">
+          <span>הסתר לא פעילים</span>
+        </label>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="חפש..." aria-label="חפש תלמידים">
+        </div>
+      </div>
+
+      <!-- STUDENT TABLE -->
+      <div class="table-wrap">
+        <table aria-label="טבלת תלמידים">
+          <thead>
+            <tr>
+              <th scope="col">שם התלמיד</th>
+              <th scope="col">אימייל התלמיד</th>
+              <th scope="col">סוג</th>
+              <th scope="col">סטטוס</th>
+              <th scope="col">התקדמות</th>
+              <th scope="col">רישום</th>
+              <th scope="col"><span class="sr-only">פעולות</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1 -->
+            <tr>
+              <td><span class="student-name">אלון גבירטמן</span></td>
+              <td><span class="student-email">alon1894@gmail.com</span></td>
+              <td>תלמיד</td>
+              <td><span class="badge badge-active">פעיל</span></td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+                  <span class="progress-pct">0%</span>
+                </div>
+              </td>
+              <td>12/03/2026</td>
+              <td>
+                <button class="actions-btn" type="button" aria-label="פעולות נוספות">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                </button>
+              </td>
+            </tr>
+            <!-- Row 2 -->
+            <tr>
+              <td><span class="student-name">יובל כהנא</span></td>
+              <td><span class="student-email">huhhenudh008@gmail.com</span></td>
+              <td>תלמיד</td>
+              <td><span class="badge badge-active">פעיל</span></td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+                  <span class="progress-pct">0%</span>
+                </div>
+              </td>
+              <td>08/02/2026</td>
+              <td>
+                <button class="actions-btn" type="button" aria-label="פעולות נוספות">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                </button>
+              </td>
+            </tr>
+            <!-- Row 3 -->
+            <tr>
+              <td><span class="student-name">אמיר הנגרד - דיאש פלני</span></td>
+              <td><span class="student-email">deitamo@gmail.com</span></td>
+              <td>תלמיד</td>
+              <td><span class="badge badge-amber">מסורבל</span></td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+                  <span class="progress-pct">0%</span>
+                </div>
+              </td>
+              <td>15/01/2026</td>
+              <td>
+                <button class="actions-btn" type="button" aria-label="פעולות נוספות">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                </button>
+              </td>
+            </tr>
+            <!-- Row 4 -->
+            <tr>
+              <td><span class="student-name">לכבירי</span></td>
+              <td><span class="student-email">l31397019@gmail.com</span></td>
+              <td>תלמיד</td>
+              <td><span class="badge badge-active">פעיל</span></td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+                  <span class="progress-pct">0%</span>
+                </div>
+              </td>
+              <td>22/12/2025</td>
+              <td>
+                <button class="actions-btn" type="button" aria-label="פעולות נוספות">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                </button>
+              </td>
+            </tr>
+            <!-- Row 5 -->
+            <tr>
+              <td><span class="student-name">ולי שרוף גדיש</span></td>
+              <td><span class="student-email">szmaili6@gmail.com</span></td>
+              <td>תלמיד</td>
+              <td><span class="badge badge-active">פעיל</span></td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+                  <span class="progress-pct">0%</span>
+                </div>
+              </td>
+              <td>05/11/2025</td>
+              <td>
+                <button class="actions-btn" type="button" aria-label="פעולות נוספות">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Popups -->
+<div class="strip-popup" id="settingsPopup">
+  <div class="sp-title">הגדרות</div>
+  <button class="sp-item" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('wb-theme',document.documentElement.dataset.theme);closePopups()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>מצב לילה</button>
+  <button class="sp-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>התראות</button>
+</div>
+<div class="strip-popup" id="profilePopup">
+  <div class="sp-profile-header"><div class="sp-avatar">א</div><div><div class="sp-name">אלון גבאי</div><div class="sp-email">alon@email.com</div></div></div>
+  <div class="sp-divider"></div>
+  <button class="sp-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>הפרופיל שלי</button>
+  <button class="sp-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>התנתק</button>
+</div>
+
+<script>
+function setMode(m){
+  document.documentElement.dataset.mode=m;
+  document.querySelectorAll('.mp').forEach(function(b){b.classList.remove('on');});
+  document.querySelector('.mp.'+m[0]).classList.add('on');
+}
+function toggleSettingsPopup(e){e&&e.stopPropagation();document.getElementById('profilePopup').classList.remove('open');document.getElementById('settingsPopup').classList.toggle('open');}
+function toggleProfilePopup(e){e&&e.stopPropagation();document.getElementById('settingsPopup').classList.remove('open');document.getElementById('profilePopup').classList.toggle('open');}
+function closePopups(){document.getElementById('settingsPopup').classList.remove('open');document.getElementById('profilePopup').classList.remove('open');}
+document.addEventListener('click',function(e){if(!e.target.closest('.strip-popup')&&!e.target.closest('.rs-bottom'))closePopups();});
+// Filter pills toggle
+document.querySelectorAll('.filter-pill').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('.filter-pill').forEach(function(x){x.classList.remove('active');});
+    this.classList.add('active');
+  };
+});
+</script>
+</body>
+</html>

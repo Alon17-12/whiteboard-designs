@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מועדון — הגדרות | מועדון שיווק ויצירת תוכן | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+    --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+    --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+    --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+    --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+    --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+    --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+    --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --sidebar-bg:var(--navy);--sidebar-text:rgba(255,255,255,0.65);
+    --sidebar-hover:rgba(255,255,255,0.08);--sidebar-active-bg:rgba(56,196,242,0.2);
+    --sidebar-active-cl:var(--cyan);--sidebar-border:rgba(255,255,255,0.1);
+  }
+  [data-theme="dark"] {
+    --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+    --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+    --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+    --light-blue:rgba(56,196,242,0.08);--sidebar-bg:#0d1628;
+    --sidebar-text:rgba(255,255,255,0.55);--sidebar-hover:rgba(255,255,255,0.06);
+    --sidebar-active-bg:rgba(56,196,242,0.15);--sidebar-border:rgba(255,255,255,0.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);height:100vh;display:flex;overflow:hidden;transition:background .3s,color .3s;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{width:220px;background:var(--sidebar-bg);border-left:1px solid var(--sidebar-border);min-height:100vh;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;position:fixed;right:0;top:0;bottom:0;z-index:50;transition:background .3s;}
+  .sidebar-logo{padding:16px 16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
+  .sidebar-logo img{width:150px;object-fit:contain;}
+  .sidebar-section{padding:8px 12px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--sidebar-text);font-size:14px;font-weight:500;}
+  .nav-item:hover{background:var(--sidebar-hover);color:white;}
+  .nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-cl);font-weight:700;}
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;}
+  .sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);}
+  .mode-switcher{margin-bottom:10px;}
+  .mode-switcher-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;padding-right:2px;}
+  .mode-toggle-row{display:flex;background:rgba(0,0,0,0.25);border-radius:8px;padding:3px;gap:2px;}
+  .mode-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 4px;border-radius:6px;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.45);background:transparent;white-space:nowrap;}
+  .mode-btn svg{width:13px;height:13px;}
+  .mode-btn.active{background:rgba(56,196,242,0.25);color:var(--cyan);}
+  .profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;}
+  .profile-mini:hover{background:rgba(255,255,255,0.08);}
+  .avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+  .profile-mini-name{font-size:13px;font-weight:600;color:white;}
+  .profile-mini-role{font-size:11px;color:rgba(255,255,255,0.45);}
+  .profile-edit-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;color:rgba(255,255,255,0.4);flex-shrink:0;margin-right:auto;}
+  .profile-edit-btn:hover{background:rgba(255,255,255,0.1);color:white;}
+  .profile-edit-btn svg{width:13px;height:13px;}
+
+  /* ── MAIN ── */
+  .main{margin-right:220px;flex:1;display:flex;flex-direction:column;height:100vh;overflow-y:auto;scroll-behavior:smooth;}
+
+  /* ── TOPBAR ── */
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:var(--shadow-sm);transition:background .3s;}
+  .topbar-breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .breadcrumb-link{color:var(--text-sub);cursor:pointer;transition:color .2s;}
+  .breadcrumb-link:hover{color:var(--text-main);}
+  .breadcrumb-sep{color:var(--text-light);}
+  .breadcrumb-current{color:var(--text-main);font-weight:700;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;}
+  .icon-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+  .icon-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .icon-sun{display:none;}.icon-moon{display:block;}
+  [data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+  /* ── ENTITY HEADER ── */
+  .course-header{background:var(--surface);border-bottom:1px solid var(--border);padding:20px 32px 0;transition:background .3s;}
+  .course-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:16px;}
+  .course-title-wrap{display:flex;align-items:center;gap:14px;}
+  .course-icon{width:48px;height:48px;border-radius:var(--radius-sm);background:linear-gradient(135deg,#0d1b3e,#253E7A);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .course-icon svg{width:22px;height:22px;color:rgba(255,255,255,0.8);}
+  .course-name{font-size:20px;font-weight:900;color:var(--text-main);}
+  .course-meta-row{display:flex;align-items:center;gap:16px;margin-top:3px;}
+  .course-badge{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;}
+  .badge-pub{background:rgba(125,197,122,0.15);color:#3d8a3a;border:1px solid rgba(125,197,122,0.3);}
+  [data-theme="dark"] .badge-pub{color:#7DC57A;}
+  .course-stat{font-size:12px;color:var(--text-sub);display:flex;align-items:center;gap:4px;}
+  .course-stat svg{width:13px;height:13px;}
+  .course-actions{display:flex;gap:8px;align-items:center;}
+  .course-tabs{display:flex;gap:4px;overflow-x:auto;}
+  .tab{display:flex;align-items:center;gap:6px;padding:10px 15px;font-size:13px;font-weight:600;color:var(--text-sub);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;text-decoration:none;}
+  .tab svg{opacity:.6;transition:opacity .2s;}
+  .tab:hover{color:var(--text-main);}
+  .tab:hover svg{opacity:1;}
+  .tab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+  .tab.active svg{opacity:1;}
+  .tab.disabled{opacity:.4;pointer-events:none;cursor:default;}
+
+  /* ── BUTTONS ── */
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:30px;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:none;white-space:nowrap;}
+  .btn svg{width:15px;height:15px;}
+  .btn-primary{background:linear-gradient(135deg,var(--cyan),#1db0d8);color:white;box-shadow:0 3px 14px rgba(56,196,242,0.3);}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(56,196,242,0.4);}
+  .btn-ghost{background:transparent;color:var(--text-sub);border:1.5px solid var(--border);}
+  .btn-ghost:hover{background:var(--light-blue);color:var(--text-main);border-color:var(--cyan);}
+  .btn-danger{background:rgba(240,86,128,0.08);color:#d62a5e;border:1.5px solid rgba(240,86,128,0.25);}
+  .btn-danger:hover{background:rgba(240,86,128,0.15);border-color:rgba(240,86,128,0.45);}
+
+  /* ── PAGE BODY ── */
+  .page-body{flex:1;padding:40px 40px 120px;max-width:960px;margin:0 auto;width:100%;}
+
+  /* ── SETTINGS SECTION ── */
+  .settings-section{display:grid;grid-template-columns:260px 1fr;gap:40px;padding:32px 0;border-bottom:1px solid var(--border);align-items:start;}
+  .settings-section:last-child{border-bottom:none;}
+  .settings-label-col{}
+  .settings-label{font-size:15px;font-weight:900;color:var(--text-main);margin-bottom:4px;}
+  .settings-desc{font-size:13px;color:var(--text-sub);line-height:1.6;}
+  .settings-field-col{display:flex;flex-direction:column;gap:12px;}
+
+  /* ── SECTION LABEL WITH ICON ── */
+  .settings-label-wrap{display:flex;align-items:center;gap:9px;margin-bottom:6px;}
+  .settings-label-icon{width:32px;height:32px;border-radius:8px;background:var(--light-blue);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--navy);}
+  .settings-label-icon svg{width:15px;height:15px;}
+
+  /* ── INPUTS ── */
+  .field-input{width:100%;font-family:var(--font-he);font-size:14px;padding:11px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);outline:none;transition:border-color .2s,box-shadow .2s;}
+  .field-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
+  .field-input::placeholder{color:var(--text-light);}
+  textarea.field-input{resize:vertical;min-height:96px;line-height:1.6;}
+  .field-hint{font-size:12px;color:var(--text-light);}
+  .char-count{font-size:11px;color:var(--text-light);text-align:left;margin-top:-8px;}
+
+  /* ── URL FIELD ── */
+  .url-field-wrap{display:flex;align-items:center;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);overflow:hidden;transition:border-color .2s,box-shadow .2s;}
+  .url-field-wrap:focus-within{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
+  .url-prefix{padding:11px 14px;font-size:12px;color:var(--text-light);background:var(--bg);border-left:1.5px solid var(--border);white-space:nowrap;direction:ltr;}
+  .url-input{flex:1;font-family:var(--font-he);font-size:14px;padding:11px 14px;border:none;background:transparent;color:var(--text-main);outline:none;direction:ltr;}
+  .url-input::placeholder{color:var(--text-light);}
+  .url-preview-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--cyan);cursor:pointer;transition:opacity .2s;}
+  .url-preview-link:hover{opacity:.75;}
+  .url-preview-link svg{width:12px;height:12px;}
+
+  /* ── COVER IMAGE 16:9 ── */
+  .cover-preview{width:100%;aspect-ratio:16/9;border-radius:var(--radius-md);background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;position:relative;overflow:hidden;border:2px dashed var(--border);transition:border-color .2s,background .2s;}
+  .cover-preview:hover{border-color:var(--cyan);background:var(--light-blue);}
+  .cover-preview:hover .cover-overlay{opacity:1;}
+  .cover-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity .2s;border-radius:var(--radius-md);}
+  .cover-overlay-text{font-size:13px;font-weight:700;color:white;}
+  .cover-overlay svg{color:white;}
+  .cover-placeholder-icon{color:var(--text-light);}
+  .cover-placeholder-text{font-size:12px;color:var(--text-light);}
+
+  /* ── VISIBILITY PILLS ── */
+  .visibility-group{display:flex;gap:8px;}
+  .vis-pill{display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:30px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-family:var(--font-he);font-size:13px;font-weight:700;color:var(--text-sub);transition:all .2s;}
+  .vis-pill:hover{border-color:rgba(56,196,242,0.4);color:var(--navy);}
+  .vis-pill.selected{border-color:var(--cyan);background:var(--light-blue);color:var(--navy);}
+  .vis-pill svg{width:14px;height:14px;}
+
+  /* ── TOGGLE ROWS ── */
+  .toggle-row{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
+  .toggle-row:last-child{border-bottom:none;}
+  .toggle-row-text{flex:1;}
+  .toggle-row-label{font-size:14px;font-weight:700;color:var(--text-main);margin-bottom:2px;}
+  .toggle-row-desc{font-size:12px;color:var(--text-sub);}
+  .toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+  .toggle input{opacity:0;width:0;height:0;}
+  .toggle-track{position:absolute;inset:0;border-radius:20px;background:var(--border);transition:background .2s;cursor:pointer;border:1.5px solid rgba(37,62,122,0.15);}
+  .toggle input:checked+.toggle-track{background:var(--cyan);border-color:var(--cyan);}
+  .toggle-thumb{position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:white;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+  .toggle input:checked~.toggle-thumb{transform:translateX(-20px);}
+
+  /* ── ADMIN CARDS ── */
+  .admin-card{display:flex;align-items:center;gap:12px;padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);}
+  .admin-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+  .admin-info{flex:1;}
+  .admin-name{font-size:14px;font-weight:700;color:var(--text-main);}
+  .admin-email{font-size:12px;color:var(--text-sub);}
+  .admin-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--cyan-light);color:var(--navy);}
+  .add-admin-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:30px;border:1.5px dashed rgba(56,196,242,0.45);background:transparent;font-family:var(--font-he);font-size:13px;font-weight:700;color:var(--cyan);cursor:pointer;transition:all .2s;}
+  .add-admin-btn:hover{background:var(--cyan-light);border-style:solid;}
+  .add-admin-btn svg{width:14px;height:14px;}
+
+  /* ── DANGER ZONE ── */
+  .danger-zone{background:rgba(240,86,128,0.04);border:1.5px solid rgba(240,86,128,0.15);border-radius:var(--radius-md);padding:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  .danger-title{font-size:14px;font-weight:900;color:#d62a5e;margin-bottom:4px;}
+  .danger-desc{font-size:13px;color:var(--text-sub);line-height:1.5;}
+
+  /* ── SAVE STATE BUTTON (topbar) ── */
+  .save-state-btn{min-width:180px;justify-content:center;border:1.5px solid transparent;transition:background .3s,color .3s,border-color .3s,box-shadow .3s;}
+  .save-state-btn[data-state="unsaved"]{background:rgba(234,214,84,0.13);color:#7a6200;border-color:rgba(200,168,0,0.35);}
+  [data-theme="dark"] .save-state-btn[data-state="unsaved"]{background:rgba(234,214,84,0.1);color:#d4bc2e;border-color:rgba(234,214,84,0.28);}
+  .save-state-btn[data-state="saved"]{background:rgba(125,197,122,0.13);color:#3a8838;border-color:rgba(100,180,97,0.38);}
+  [data-theme="dark"] .save-state-btn[data-state="saved"]{background:rgba(125,197,122,0.1);color:#7DC57A;border-color:rgba(125,197,122,0.28);}
+  .save-state-btn[data-state="clean"]{background:transparent;color:var(--text-light);border-color:transparent;pointer-events:none;}
+  .save-state-btn[data-hovering="true"]{background:linear-gradient(135deg,var(--cyan),#1db0d8) !important;color:white !important;border-color:transparent !important;box-shadow:0 4px 16px rgba(56,196,242,0.35) !important;}
+
+  /* ── STATUS PILLS ── */
+  .status-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:30px;border:1.5px solid;cursor:pointer;font-family:var(--font-he);font-size:13px;font-weight:700;transition:all .2s;}
+  .status-pill-published{background:rgba(125,197,122,0.13);color:#3a8838;border-color:rgba(100,180,97,0.38);}
+  .status-pill-draft{background:rgba(234,214,84,0.13);color:#7a6200;border-color:rgba(200,168,0,0.35);}
+  .status-pill-published:hover:not([data-locked="true"]){background:rgba(234,214,84,0.13);color:#7a6200;border-color:rgba(200,168,0,0.35);}
+  .status-pill-draft:hover:not([data-locked="true"]){background:rgba(125,197,122,0.13);color:#3a8838;border-color:rgba(100,180,97,0.38);}
+  .status-pill[data-locked="true"]{cursor:not-allowed;opacity:.65;}
+  .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .status-dot-published{background:#3a8838;}
+  .status-dot-draft{background:#a08700;}
+  [data-theme="dark"] .status-pill-published{color:#7DC57A;}
+  [data-theme="dark"] .status-pill-draft{color:#d4bc2e;}
+
+  /* ── FLOATING TOC ── */
+  .floating-toc{
+    position:fixed;top:240px;right:240px;
+    width:130px;display:flex;flex-direction:column;gap:1px;z-index:10;
+  }
+  .toc-item{
+    font-size:11px;font-weight:600;color:var(--text-light);
+    padding:5px 10px;border-right:2.5px solid var(--border);
+    text-decoration:none;transition:all .2s;border-radius:0;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .toc-item:hover{color:var(--text-sub);border-right-color:var(--text-light);}
+  .toc-item.active{color:var(--cyan);border-right-color:var(--cyan);font-weight:700;}
+  @media(max-width:1400px){.floating-toc{display:none;}}
+
+  /* ── LOCK NOTICE ── */
+  .lock-notice{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-light);margin-top:4px;}
+  .lock-notice svg{width:13px;height:13px;flex-shrink:0;}
+
+  /* ── PRICE INPUTS ── */
+  .price-input-wrap{display:flex;align-items:center;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);overflow:hidden;transition:border-color .2s;}
+  .price-input-wrap:focus-within{border-color:var(--cyan);}
+  .price-currency{padding:10px 14px;font-size:13px;font-weight:700;color:var(--text-sub);background:var(--bg);border-left:1.5px solid var(--border);}
+  .price-input{flex:1;font-family:var(--font-he);font-size:15px;font-weight:700;padding:10px 14px;border:none;background:transparent;color:var(--text-main);outline:none;direction:ltr;}
+
+  /* ── CHAT MODE CARDS ── */
+  .chat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .chat-card{border:2px solid var(--border);border-radius:var(--radius-md);padding:20px;cursor:pointer;transition:all .2s;background:var(--surface);position:relative;text-align:center;}
+  .chat-card:hover{border-color:rgba(56,196,242,0.4);background:var(--light-blue);}
+  .chat-card.selected{border-color:var(--cyan);background:var(--light-blue);}
+  .chat-card.selected .chat-check{opacity:1;}
+  .chat-check{position:absolute;top:10px;left:10px;width:22px;height:22px;border-radius:50%;background:var(--cyan);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+  .chat-check svg{width:12px;height:12px;color:white;}
+  .chat-card-icon{width:44px;height:44px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;background:var(--light-blue);color:var(--navy);}
+  .chat-card-icon svg{width:20px;height:20px;}
+  .chat-card-title{font-size:14px;font-weight:900;color:var(--text-main);margin-bottom:4px;}
+  .chat-card-desc{font-size:12px;color:var(--text-sub);line-height:1.5;}
+  .chat-sub-toggles{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+
+  /* ── EVENT CARD ── */
+  .event-empty{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:40px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;}
+  .event-empty-icon{width:52px;height:52px;border-radius:var(--radius-md);background:var(--light-blue);display:flex;align-items:center;justify-content:center;color:var(--navy);}
+  .event-empty-icon svg{width:24px;height:24px;opacity:.5;}
+  .event-empty-title{font-size:14px;font-weight:900;color:var(--text-main);}
+  .event-empty-desc{font-size:13px;color:var(--text-sub);max-width:280px;line-height:1.6;}
+  .event-actions{display:flex;gap:8px;margin-top:6px;}
+  .event-filter-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+  .event-filter{padding:6px 14px;border-radius:30px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-he);font-size:12px;font-weight:700;color:var(--text-sub);cursor:pointer;transition:all .15s;}
+  .event-filter:hover{border-color:var(--cyan);color:var(--navy);}
+  .event-filter.selected{border-color:var(--cyan);background:var(--light-blue);color:var(--navy);}
+
+  /* ── HOME LAYOUT PREVIEW ── */
+  .home-preview{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);overflow:hidden;}
+  .home-preview-header{background:linear-gradient(135deg,#0d1b3e,#253E7A);padding:20px;text-align:center;color:white;font-size:13px;font-weight:700;}
+  .home-preview-sections{padding:16px;display:flex;flex-direction:column;gap:10px;}
+  .home-section-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg);cursor:grab;transition:all .15s;}
+  .home-section-item:hover{border-color:var(--cyan);background:var(--light-blue);}
+  .home-section-left{display:flex;align-items:center;gap:10px;}
+  .home-section-drag{color:var(--text-light);cursor:grab;}
+  .home-section-drag svg{width:14px;height:14px;}
+  .home-section-name{font-size:13px;font-weight:700;color:var(--text-main);}
+  .home-section-right{display:flex;align-items:center;gap:8px;}
+  .home-section-toggle{font-size:11px;color:var(--text-sub);}
+
+  @keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo"><img src="../../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD"></div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>לוח הבקרה
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <div class="mode-switcher-label">מצב תצוגה</div>
+      <div class="mode-toggle-row">
+        <button class="mode-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>תלמיד</button>
+        <button class="mode-btn active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>מרצה</button>
+      </div>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div><div class="profile-mini-name">אלון</div><div class="profile-mini-role">מרצה</div></div>
+      <button class="profile-edit-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">מרכזי הידע שלי</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-link">מועדון — שיווק ויצירת תוכן</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">הגדרות</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleTheme()">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="btn save-state-btn" id="saveBtn" data-state="unsaved" data-hovering="false"
+        onmouseenter="document.getElementById('saveBtn').dataset.hovering='true';document.getElementById('saveBtnLabel').textContent='שמור שינויים'"
+        onmouseleave="document.getElementById('saveBtn').dataset.hovering='false';updateSaveBtnLabel()"
+        onclick="saveSettings()">
+        <svg id="saveBtnIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <span id="saveBtnLabel">שינויים שלא נשמרו</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ENTITY HEADER -->
+  <div class="course-header">
+    <div class="course-title-row">
+      <div class="course-title-wrap">
+        <div class="course-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div>
+          <div class="course-name">מועדון שיווק ויצירת תוכן</div>
+          <div class="course-meta-row">
+            <span class="course-badge badge-pub">פעיל</span>
+            <span class="course-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>247 חברים</span>
+            <span class="course-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>6 קורסים</span>
+            <span class="course-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>12 אירועים</span>
+          </div>
+        </div>
+      </div>
+      <div class="course-actions">
+        <button class="status-pill status-pill-published" id="statusPill" data-locked="false" onclick="toggleStatus()">
+          <div class="status-dot status-dot-published" id="statusDot"></div>
+          <span id="statusText">פורסם</span>
+        </button>
+      </div>
+    </div>
+    <div class="course-tabs">
+      <a class="tab" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>לייאאוט
+      </a>
+      <a class="tab active" href="מועדון - הגדרות.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות
+      </a>
+      <a class="tab" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>ערכת מותג
+      </a>
+      <a class="tab" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>החברים שלי
+      </a>
+      <a class="tab" href="מועדון - דיוור.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>דיוור
+      </a>
+      <div class="tab disabled">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>אנליטיקס
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING TOC (fixed, outside page-body) -->
+  <nav class="floating-toc" id="floatingToc">
+    <a class="toc-item active" href="#sec-details">פרטי המועדון</a>
+    <a class="toc-item" href="#sec-pricing">תמחור</a>
+    <a class="toc-item" href="#sec-status">סטטוס ושפה</a>
+    <a class="toc-item" href="#sec-membership">הרשאות</a>
+    <a class="toc-item" href="#sec-team">צוות</a>
+    <a class="toc-item" href="#sec-chat">צ׳אט</a>
+    <a class="toc-item" href="#sec-events">אירועים</a>
+    <a class="toc-item" href="#sec-danger" style="color:rgba(240,86,128,0.6);">מחיקה</a>
+  </nav>
+
+  <!-- PAGE BODY -->
+  <div class="page-body" id="pageBody">
+
+    <!-- 1. פרטי המועדון -->
+    <div class="settings-section" id="sec-details">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>
+          <div class="settings-label">פרטי המועדון</div>
+        </div>
+        <div class="settings-desc">שם, תיאור וכתובת URL של המועדון</div>
+      </div>
+      <div class="settings-field-col">
+        <div>
+          <div class="field-hint" style="margin-bottom:6px;font-weight:700;color:var(--text-sub);">שם</div>
+          <input class="field-input" id="clubName" type="text" value="מועדון שיווק ויצירת תוכן" maxlength="80" oninput="updateCharCount('clubName','clubNameCount',80)">
+          <div class="char-count" id="clubNameCount" style="margin-top:4px;">24 / 80</div>
+        </div>
+        <div>
+          <div class="field-hint" style="margin-bottom:6px;font-weight:700;color:var(--text-sub);">תיאור</div>
+          <textarea class="field-input" id="clubDesc" rows="3" maxlength="300" oninput="updateCharCount('clubDesc','clubDescCount',300)" placeholder="תאר בכמה משפטים את המועדון, למי הוא מיועד ומה יקבלו החברים"></textarea>
+          <div class="char-count" id="clubDescCount" style="margin-top:4px;">0 / 300</div>
+        </div>
+        <div>
+          <div class="field-hint" style="margin-bottom:6px;font-weight:700;color:var(--text-sub);">כתובת URL</div>
+          <div class="url-field-wrap">
+            <input class="url-input" id="urlInput" type="text" value="marketing-club" placeholder="club-url">
+            <div class="url-prefix">whiteboard.education/clubs/</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
+            <a class="url-preview-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              whiteboard.education/clubs/marketing-club
+            </a>
+          </div>
+          <div class="field-hint">הכתובת הייחודית שבה חברים יגיעו למועדון</div>
+          <div class="lock-notice" id="urlLockNotice" style="display:flex;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            לא ניתן לשנות קישור לאחר שהמועדון פעיל
+          </div>
+        </div>
+        <!-- Share section -->
+        <div style="margin-top:16px;padding:16px;border-radius:var(--radius-md);border:1.5px solid var(--border);background:var(--bg);display:flex;align-items:center;gap:16px;">
+          <img src="../../BOARDi/SVG/15.svg" alt="BOARDi שיתוף" width="80" style="flex-shrink:0;">
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:var(--text-main);margin-bottom:4px;">שיתוף דף המועדון</div>
+            <div style="font-size:12px;color:var(--text-sub);margin-bottom:10px;">שתף את הקישור הציבורי של המועדון עם תלמידים פוטנציאליים</div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-primary" style="font-size:12px;padding:7px 16px;" onclick="navigator.clipboard.writeText('https://whiteboard.education/clubs/marketing-club')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                העתק קישור
+              </button>
+              <button class="btn btn-ghost" style="font-size:12px;padding:7px 16px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                שתף
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. תמחור ומנוי -->
+    <div class="settings-section" id="sec-pricing">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="settings-label">תמחור ומנוי</div>
+        </div>
+        <div class="settings-desc">הגדר מחירי מנוי חודשי ושנתי למועדון</div>
+      </div>
+      <div class="settings-field-col">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <div class="field-hint" style="margin-bottom:6px;font-weight:700;color:var(--text-sub);">מנוי חודשי</div>
+            <div class="price-input-wrap">
+              <div class="price-currency">₪</div>
+              <input class="price-input" type="number" value="49" placeholder="0">
+            </div>
+          </div>
+          <div>
+            <div class="field-hint" style="margin-bottom:6px;font-weight:700;color:var(--text-sub);">מנוי שנתי</div>
+            <div class="price-input-wrap">
+              <div class="price-currency">₪</div>
+              <input class="price-input" type="number" value="399" placeholder="0">
+            </div>
+          </div>
+        </div>
+        <div class="toggle-row" style="border-bottom:none;padding-bottom:0;">
+          <div class="toggle-row-text">
+            <div class="toggle-row-label">מועדון חינמי</div>
+            <div class="toggle-row-desc">כשמופעל, המחיר מתאפס והמועדון פתוח לכולם ללא תשלום</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="freeToggle" onchange="toggleFree(this.checked)"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+        </div>
+        <div class="field-hint" id="priceHint">מומלץ: מסלול שנתי = 10 חודשים (חודשיים מתנה)</div>
+      </div>
+    </div>
+
+    <!-- 3. סטטוס ושפה -->
+    <div class="settings-section" id="sec-status">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <div class="settings-label">סטטוס ושפה</div>
+        </div>
+        <div class="settings-desc">הגדר אם המועדון פעיל או בטיוטה, ואת שפת ברירת המחדל</div>
+      </div>
+      <div class="settings-field-col">
+        <div>
+          <div class="field-hint" style="margin-bottom:6px;font-weight:700;color:var(--text-sub);">סטטוס מועדון</div>
+          <div class="visibility-group">
+            <button class="vis-pill selected" onclick="selectStatusPill(this,'active')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              פעיל — גלוי לחברים
+            </button>
+            <button class="vis-pill" onclick="selectStatusPill(this,'draft')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              טיוטה — לא גלוי
+            </button>
+          </div>
+        </div>
+        <div>
+          <div class="field-hint" style="margin-bottom:6px;font-weight:700;color:var(--text-sub);">שפת ברירת מחדל</div>
+          <select class="field-input" style="appearance:auto;height:44px;cursor:pointer;">
+            <option value="he" selected>עברית</option>
+            <option value="en">English</option>
+            <option value="ar">العربية</option>
+            <option value="ru">Русский</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. חברות והרשאות -->
+    <div class="settings-section" id="sec-membership">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <div class="settings-label">חברות והרשאות</div>
+        </div>
+        <div class="settings-desc">ניהול גישה, הרשאות חברים ומגבלות</div>
+      </div>
+      <div class="settings-field-col">
+        <!-- Toggle rows -->
+        <div class="toggle-row">
+          <div class="toggle-row-text">
+            <div class="toggle-row-label">חברים יכולים לפרסם בפיד</div>
+          </div>
+          <label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-row-text">
+            <div class="toggle-row-label">חברים יכולים לפרסם פוסט אנונימי בפיד</div>
+          </div>
+          <label class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-row-text">
+            <div class="toggle-row-label">חברים יכולים להיות אנונימיים ברשימת החברים</div>
+          </div>
+          <label class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-row-text">
+            <div class="toggle-row-label">חברים יכולים להזמין חברים</div>
+          </div>
+          <label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-row-text">
+            <div class="toggle-row-label">חברים יכולים לצפות בלוח מובילים</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" checked>
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. צוות ניהול -->
+    <div class="settings-section" id="sec-team">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="settings-label">צוות ניהול</div>
+        </div>
+        <div class="settings-desc">מנהלים והרשאות צוות</div>
+      </div>
+      <div class="settings-field-col">
+        <div class="admin-card">
+          <div class="admin-avatar">א</div>
+          <div class="admin-info">
+            <div class="admin-name">אלון גבאי</div>
+            <div class="admin-email">alon@email.com</div>
+          </div>
+          <span class="admin-badge">מנהל ראשי</span>
+        </div>
+        <div>
+          <button class="add-admin-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            הוסף מנהל
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. צ'אט מועדון -->
+    <div class="settings-section" id="sec-chat">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div class="settings-label">צ'אט מועדון</div>
+        </div>
+        <div class="settings-desc">בחר כיצד הקהילה שלך מתקשרת. כל ההגדרות מוחלות באופן אוטומטי.</div>
+      </div>
+      <div class="settings-field-col">
+        <div class="chat-cards">
+          <div class="chat-card selected" onclick="selectChat(this)">
+            <div class="chat-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="chat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <div class="chat-card-title">צ'אט פתוח</div>
+            <div class="chat-card-desc">תלמידים מדברים בחופשיות — חוויה קהילתית מלאה</div>
+          </div>
+          <div class="chat-card" onclick="selectChat(this)">
+            <div class="chat-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="chat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+            <div class="chat-card-title">צ'אט עם מורה</div>
+            <div class="chat-card-desc">המורה מנהל/ת את השיחה — תלמידים יכולים להגיב</div>
+          </div>
+          <div class="chat-card" onclick="selectChat(this)">
+            <div class="chat-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="chat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg></div>
+            <div class="chat-card-title">ללא צ'אט</div>
+            <div class="chat-card-desc">הסתר את הצ'אט מהתלמידים לחלוטין</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. ניהול אירועים -->
+    <div class="settings-section" id="sec-events">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <div class="settings-label">ניהול אירועים</div>
+        </div>
+        <div class="settings-desc">חבר חשבון שיחות וידאו ויומן כדי ליצור זימוני אירועים אוטומטיים</div>
+      </div>
+      <div class="settings-field-col">
+        <div>
+          <div class="field-hint" style="margin-bottom:6px;font-weight:700;color:var(--text-sub);">פלטפורמת שיחות וידאו</div>
+          <div class="visibility-group">
+            <button class="vis-pill selected" onclick="selectVideoPlat(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+              Google Meet
+            </button>
+            <button class="vis-pill" onclick="selectVideoPlat(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+              Zoom
+            </button>
+            <button class="vis-pill" onclick="selectVideoPlat(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              לינק מותאם
+            </button>
+          </div>
+        </div>
+        <div>
+          <div class="field-hint" style="margin-bottom:6px;font-weight:700;color:var(--text-sub);">קישור ליומן</div>
+          <div class="url-field-wrap">
+            <input class="url-input" type="text" placeholder="הדבק קישור ליומן Google Calendar, Outlook או אחר..." style="direction:ltr;">
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+            <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Google Calendar
+            </button>
+            <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Outlook
+            </button>
+            <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              סוגי יומנים נוספים
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. מחיקת המועדון -->
+    <div class="settings-section" id="sec-danger">
+      <div class="settings-label-col">
+        <div class="settings-label-wrap">
+          <div class="settings-label-icon" style="background:rgba(240,86,128,0.1);color:#d62a5e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></div>
+          <div class="settings-label" style="color:#d62a5e;">מחיקת המועדון</div>
+        </div>
+        <div class="settings-desc">פעולה בלתי הפיכה. כל המידע, החברים והתוכן יימחקו לצמיתות.</div>
+      </div>
+      <div class="settings-field-col">
+        <div class="danger-zone">
+          <div>
+            <div class="danger-title">מחק מועדון זה לצמיתות</div>
+            <div class="danger-desc">לאחר המחיקה לא ניתן לשחזר את המועדון, התוכן או נתוני החברים.</div>
+          </div>
+          <button class="btn btn-danger" onclick="confirmDelete()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            מחק מועדון
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-body -->
+
+</div><!-- /main -->
+
+<script>
+// ── THEME ──────────────────────────────────────────
+function toggleTheme(){
+  const html=document.documentElement;
+  html.setAttribute('data-theme',html.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+
+// ── CHAR COUNT ─────────────────────────────────────
+function updateCharCount(inputId,countId,max){
+  const len=document.getElementById(inputId).value.length;
+  document.getElementById(countId).textContent=len+' / '+max;
+}
+
+// ── VISIBILITY PILLS ───────────────────────────────
+function selectVisibility(el){
+  document.querySelectorAll('.vis-pill').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── STATUS TOGGLE ──────────────────────────────────
+let clubPublished=true;
+function toggleStatus(){
+  const pill=document.getElementById('statusPill');
+  if(pill.dataset.locked==='true') return;
+  clubPublished=!clubPublished;
+  if(clubPublished){
+    pill.className='status-pill status-pill-published';
+    document.getElementById('statusDot').className='status-dot status-dot-published';
+    document.getElementById('statusText').textContent='פורסם';
+  } else {
+    pill.className='status-pill status-pill-draft';
+    document.getElementById('statusDot').className='status-dot status-dot-draft';
+    document.getElementById('statusText').textContent='טיוטה';
+  }
+}
+
+// ── SAVE STATE BUTTON ──────────────────────────────
+function updateSaveBtnLabel(){
+  const btn=document.getElementById('saveBtn');
+  const lbl={saved:'ההגדרות עודכנו',unsaved:'שינויים שלא נשמרו',clean:'כל השינויים נשמרו'};
+  document.getElementById('saveBtnLabel').textContent=lbl[btn.dataset.state]??'שינויים שלא נשמרו';
+}
+function saveSettings(){
+  const btn=document.getElementById('saveBtn');
+  btn.dataset.hovering='false';
+  btn.dataset.state='saved';
+  document.getElementById('saveBtnLabel').textContent='ההגדרות עודכנו';
+  setTimeout(()=>{
+    btn.dataset.state='clean';
+    updateSaveBtnLabel();
+  },4000);
+}
+
+// ── FLOATING TOC — smooth scroll + scroll spy ──────
+(function(){
+  var main=document.querySelector('.main');
+  var sections=document.querySelectorAll('.settings-section[id]');
+  var tocItems=document.querySelectorAll('.toc-item');
+  if(!main||!sections.length) return;
+
+  // Helper: get element top relative to .main scroll container
+  function getOffsetInMain(el){
+    var top=0;
+    while(el && el!==main){top+=el.offsetTop;el=el.offsetParent;}
+    return top;
+  }
+
+  // Click to scroll
+  tocItems.forEach(function(a){
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      var target=document.querySelector(this.getAttribute('href'));
+      if(target){
+        var offset=getOffsetInMain(target)-140;
+        main.scrollTo({top:offset,behavior:'smooth'});
+      }
+    });
+  });
+
+  // Scroll spy — update active on every scroll
+  main.addEventListener('scroll',function(){
+    var scrollTop=main.scrollTop+160;
+    var current='';
+    sections.forEach(function(sec){
+      if(getOffsetInMain(sec)<=scrollTop) current=sec.id;
+    });
+    tocItems.forEach(function(item){
+      item.classList.toggle('active',item.getAttribute('href')==='#'+current);
+    });
+  });
+})();
+
+// ── FREE TOGGLE ────────────────────────────────────
+function toggleFree(on){
+  var inputs=document.querySelectorAll('.price-input');
+  var hint=document.getElementById('priceHint');
+  if(on){
+    inputs.forEach(function(i){i.value='0';i.disabled=true;i.style.opacity='.4';});
+    hint.textContent='המועדון מוגדר כחינמי — המחיר לא ניתן לעריכה';
+  } else {
+    inputs.forEach(function(i){i.disabled=false;i.style.opacity='1';});
+    hint.textContent='מומלץ: מסלול שנתי = 10 חודשים (חודשיים מתנה)';
+  }
+}
+
+// ── STATUS PILLS + URL LOCK ────────────────────────
+function selectStatusPill(el,mode){
+  el.parentElement.querySelectorAll('.vis-pill').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+  var urlWrap=document.querySelector('.url-field-wrap');
+  var urlNotice=document.getElementById('urlLockNotice');
+  if(mode==='active'){
+    urlWrap.style.opacity='.6';urlWrap.style.pointerEvents='none';
+    urlNotice.style.display='flex';
+  } else {
+    urlWrap.style.opacity='1';urlWrap.style.pointerEvents='auto';
+    urlNotice.style.display='none';
+  }
+}
+function selectVideoPlat(el){el.parentElement.querySelectorAll('.vis-pill').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');}
+function selectCalendar(el){el.parentElement.querySelectorAll('.vis-pill').forEach(p=>p.classList.remove('selected'));el.classList.add('selected');}
+
+// ── CHAT MODE ──────────────────────────────────────
+function selectChat(el){
+  document.querySelectorAll('.chat-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── EVENT FILTER ───────────────────────────────────
+function selectEventFilter(el){
+  document.querySelectorAll('.event-filter').forEach(f=>f.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── DELETE ──────────────────────────────────────────
+function confirmDelete(){
+  if(confirm('האם אתה בטוח שברצונך למחוק את המועדון? פעולה זו אינה הפיכה.'))
+    alert('המועדון נמחק (הדגמה)');
+}
+</script>
+</body>
+</html>

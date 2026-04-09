@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light" data-mode="teacher" data-view="school">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>דיוור | מועדון שיווק ויצירת תוכן | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script>(function(){var t=localStorage.getItem("wb-theme");if(t)document.documentElement.dataset.theme=t;})()</script>
+<style>
+:root{
+  --font:'Heebo',sans-serif;--font-brand:'Fredoka',sans-serif;
+  --strip-w:52px;
+  --bg:#F5F7FB;--surface:#FFFFFF;--surface-2:#F0F4FA;--surface-3:#e8eef8;
+  --text:#1a2f5e;--text-sub:rgba(37,62,122,0.52);--text-xs:rgba(37,62,122,0.32);
+  --border:rgba(37,62,122,0.08);--border-mid:rgba(37,62,122,0.14);
+  --sh:0 2px 12px rgba(37,62,122,0.07);--sh-lg:0 8px 32px rgba(37,62,122,0.1);
+  --r:14px;--r-sm:10px;--r-xs:6px;--r-full:30px;
+  --primary:#253E7A;--primary-light:rgba(37,62,122,0.08);
+  --accent:#38C4F2;--accent-light:rgba(56,196,242,0.1);
+  --cta:#F05680;--cta-light:rgba(240,86,128,0.08);
+  --amber:#F59E0B;--green:#22c55e;--yellow:#EAD654;
+  --navy:#1a2e5e;
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;
+  --text:#dde5f5;--text-sub:rgba(221,229,245,0.48);--text-xs:rgba(221,229,245,0.28);
+  --border:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.12);
+  --sh:0 2px 12px rgba(0,0,0,0.3);--sh-lg:0 8px 32px rgba(0,0,0,0.4);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+
+/* ── Topbar ── */
+.topbar{height:48px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0;box-shadow:var(--sh);z-index:30;}
+[data-mode="teacher"] .topbar{border-bottom-color:var(--amber);}
+.tb-right{display:flex;align-items:center;gap:8px;}
+.tb-club-name{font-family:var(--font-brand);font-size:15px;font-weight:600;color:var(--navy);}
+[data-theme="dark"] .tb-club-name{color:#e8edf7;}
+.tb-sep{color:var(--text-xs);}
+.tb-page{font-size:13px;font-weight:700;}
+.edit-tag{display:none;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;background:var(--amber);color:#fff;font-size:10px;font-weight:800;}
+[data-mode="teacher"] .edit-tag{display:inline-flex;}
+.edit-tag svg{width:10px;height:10px;}
+.tb-left{display:flex;align-items:center;gap:7px;}
+.ib{width:32px;height:32px;border-radius:var(--r-xs);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .18s;}
+.ib:hover{background:var(--accent-light);color:var(--navy);}
+.ib svg{width:14px;height:14px;}
+.icon-sun{display:none;}[data-theme="dark"] .icon-sun{display:block;}
+.icon-moon{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+.mode-pill{display:flex;background:var(--surface-2);border:1px solid var(--border);border-radius:30px;padding:3px;gap:2px;}
+.mp{display:flex;align-items:center;gap:4px;padding:4px 11px;border-radius:20px;border:none;font-family:var(--font);font-size:11.5px;font-weight:700;cursor:pointer;color:var(--text-sub);background:transparent;white-space:nowrap;transition:all .2s;}
+.mp svg{width:11px;height:11px;}
+.mp.s.on{background:#dbeafe;color:var(--navy);}
+.mp.t.on{background:var(--amber);color:#fff;}
+[data-theme="dark"] .mp.s.on{background:rgba(56,196,242,0.14);color:var(--accent);}
+[data-theme="dark"] .mp.t.on{background:rgba(245,158,11,0.22);color:#fbbf24;}
+
+/* ── Edit Banner ── */
+.edit-banner{display:none;align-items:center;justify-content:space-between;padding:6px 18px;background:var(--surface);border-bottom:2px solid var(--amber);flex-shrink:0;gap:12px;}
+[data-mode="teacher"] .edit-banner{display:flex;animation:slideDown .2s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.eb-l{display:flex;align-items:center;gap:8px;}
+.eb-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:var(--amber);}
+.eb-badge svg{width:11px;height:11px;}
+.eb-info{font-size:11px;color:var(--text-xs);}
+.eb-r{display:flex;gap:6px;}
+.eb-btn{display:flex;align-items:center;gap:4px;padding:4px 12px;border-radius:var(--r-xs);border:1px solid var(--border);background:transparent;font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .15s;}
+.eb-btn:hover{background:var(--surface-2);}
+.eb-btn.primary{background:var(--primary);color:#fff;border-color:var(--primary);}
+.eb-btn.primary:hover{opacity:.9;}
+
+/* ── Body wrap ── */
+.body-wrap{flex:1;display:flex;overflow:hidden;}
+
+/* ── Sidebar strip ── */
+.right-strip{width:var(--strip-w);flex-shrink:0;background:#1a2e5e;display:flex;flex-direction:column;align-items:center;z-index:20;}
+[data-mode="teacher"] .right-strip{border-right:3px solid var(--amber);}
+.rs-logo{width:100%;display:flex;align-items:center;justify-content:center;padding:10px 0 8px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
+.rs-icons{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;overflow-y:auto;}
+.rs-btn{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;position:relative;background:transparent;border:none;color:rgba(255,255,255,0.5);padding:0;text-decoration:none;}
+.rs-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.rs-btn.rs-active{background:rgba(56,196,242,0.2);color:#38C4F2;}
+.rs-btn svg{width:17px;height:17px;}
+.rs-btn::after{content:attr(data-tip);position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);background:rgba(0,0,0,.8);color:#fff;font-family:var(--font);font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:100;}
+.rs-btn:hover::after{opacity:1;}
+.rs-sep{width:26px;height:1px;background:rgba(255,255,255,0.1);margin:4px 0;flex-shrink:0;}
+.rs-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
+.rs-profile{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#38C4F2,#253E7A);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;cursor:pointer;border:2px solid rgba(255,255,255,0.2);}
+.rs-teacher{display:none;}[data-mode="teacher"] .rs-teacher{display:flex;}
+
+/* ── Main ── */
+.main{flex:1;overflow-y:auto;padding:28px 32px;display:flex;flex-direction:column;gap:20px;}
+
+/* ── Trigger Cards ── */
+.trigger-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+.trigger-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;cursor:pointer;transition:all .22s;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;}
+.trigger-card::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;border-radius:var(--r) var(--r) 0 0;background:transparent;transition:background .22s;}
+.trigger-card:hover{border-color:rgba(56,196,242,0.35);box-shadow:var(--sh);}
+.trigger-card:hover::before{background:var(--accent);}
+.trigger-card.active{border-color:var(--accent);box-shadow:0 4px 20px rgba(56,196,242,0.15);}
+.trigger-card.active::before{background:linear-gradient(90deg,var(--accent),#1db0d8);}
+.trigger-card-icon{width:38px;height:38px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.trigger-card-icon svg{width:18px;height:18px;}
+.trigger-card-name{font-size:13px;font-weight:800;color:var(--text);}
+.trigger-card-desc{font-size:11px;color:var(--text-sub);line-height:1.5;margin-top:-4px;}
+.trigger-card-count{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--text-sub);}
+.trigger-card-count svg{width:11px;height:11px;}
+.trigger-card.active .trigger-card-name{color:var(--navy);}
+.trigger-card.active .trigger-card-count{color:var(--accent);}
+
+/* ── Table Section ── */
+.table-section{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh);overflow:hidden;}
+.table-section-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.table-section-title{display:flex;align-items:center;gap:10px;}
+.table-section-name{font-size:14px;font-weight:900;color:var(--text);}
+.table-count-pill{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--accent-light);color:var(--navy);}
+.add-email-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;border:1.5px dashed rgba(56,196,242,0.45);background:transparent;font-family:var(--font);font-size:12px;font-weight:700;color:var(--accent);cursor:pointer;transition:all .2s;}
+.add-email-btn:hover{background:var(--accent-light);border-style:solid;}
+.add-email-btn svg{width:12px;height:12px;}
+
+/* Table */
+.table-wrap{overflow-x:auto;scrollbar-width:none;}
+.table-wrap::-webkit-scrollbar{display:none;}
+.mail-table{width:100%;border-collapse:collapse;min-width:820px;}
+.mail-table thead tr{background:var(--surface-2);}
+.mail-table thead th{padding:9px 16px;font-size:11px;font-weight:700;color:var(--text-xs);text-transform:uppercase;letter-spacing:.6px;text-align:right;white-space:nowrap;border-bottom:1.5px solid var(--border);}
+.mail-table tbody tr{border-bottom:1px solid var(--border);transition:background .15s;}
+.mail-table tbody tr:last-child{border-bottom:none;}
+.mail-table tbody tr:hover{background:var(--surface-2);}
+.mail-table td{padding:13px 16px;font-size:13px;color:var(--text);vertical-align:middle;}
+
+/* Campaign name cell */
+.campaign-name{font-weight:700;color:var(--text);margin-bottom:2px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.campaign-list{font-size:11px;color:var(--text-sub);display:flex;align-items:center;gap:3px;}
+.campaign-list svg{width:10px;height:10px;flex-shrink:0;}
+
+/* Subject */
+.subject-text{color:var(--text-sub);font-size:13px;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* Open rate */
+.open-rate-wrap{display:flex;flex-direction:column;gap:5px;min-width:90px;}
+.open-rate-num{font-size:13px;font-weight:700;color:var(--text);}
+.open-rate-bar{height:4px;border-radius:10px;background:var(--border);overflow:hidden;}
+.open-rate-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--accent),#1db0d8);}
+
+/* Stat / date cells */
+.stat-cell{text-align:center;font-weight:700;}
+.stat-cell.muted{color:var(--text-xs);font-weight:400;}
+.date-cell .d-main{font-size:13px;font-weight:600;color:var(--text);}
+.date-cell .d-time{font-size:11px;color:var(--text-sub);}
+
+/* Status badges */
+.status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+.status-badge::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.badge-active{background:rgba(56,196,242,0.12);color:var(--navy);border:1px solid rgba(56,196,242,0.25);}
+.badge-active::before{background:var(--accent);}
+.badge-sent{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.25);}
+.badge-sent::before{background:var(--green);}
+.badge-scheduled{background:rgba(234,214,84,0.15);color:#7a6200;border:1px solid rgba(200,168,0,0.25);}
+.badge-scheduled::before{background:#c8a800;}
+[data-theme="dark"] .badge-scheduled{color:#d4bc2e;}
+.badge-draft{background:var(--surface-2);color:var(--text-sub);border:1px solid var(--border);}
+.badge-draft::before{background:var(--text-xs);}
+
+/* Row actions */
+.row-actions{display:flex;align-items:center;justify-content:center;gap:4px;opacity:0;transition:opacity .15s;}
+tr:hover .row-actions{opacity:1;}
+.row-action-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-xs);transition:all .15s;}
+.row-action-btn:hover{background:var(--accent-light);color:var(--navy);border-color:var(--accent);}
+.row-action-btn.danger:hover{background:#fee2e2;color:#dc2626;border-color:#fca5a5;}
+.row-action-btn svg{width:13px;height:13px;}
+
+/* Empty state */
+.empty-state{padding:52px 40px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.empty-icon{width:52px;height:52px;border-radius:var(--r);background:var(--accent-light);display:flex;align-items:center;justify-content:center;}
+.empty-icon svg{width:22px;height:22px;color:var(--navy);opacity:.4;}
+.empty-title{font-size:14px;font-weight:900;color:var(--text);}
+.empty-desc{font-size:13px;color:var(--text-sub);max-width:280px;line-height:1.6;}
+
+/* ── Footer ── */
+.footer{text-align:center;padding:16px;font-size:11px;color:var(--text-xs);margin-top:auto;}
+
+/* ── Popups ── */
+.strip-popup{display:none;position:fixed;bottom:60px;right:60px;z-index:200;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh-lg);min-width:200px;padding:8px;animation:popIn .15s ease;}
+.strip-popup.open{display:block;}
+@keyframes popIn{from{opacity:0;transform:translateY(6px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.sp-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text-xs);padding:6px 10px 8px;}
+.sp-item{display:flex;align-items:center;gap:8px;width:100%;padding:9px 10px;border:none;background:transparent;border-radius:var(--r-sm);font-family:var(--font);font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all .12s;text-align:right;}
+.sp-item:hover{background:var(--surface-2);}
+.sp-item svg{width:16px;height:16px;color:var(--text-sub);flex-shrink:0;}
+.sp-divider{height:1px;background:var(--border);margin:4px 0;}
+.sp-profile-header{display:flex;align-items:center;gap:10px;padding:10px 10px 6px;}
+.sp-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#38C4F2,#253E7A);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.sp-name{font-size:13px;font-weight:800;color:var(--text);}
+.sp-email{font-size:11px;color:var(--text-xs);}
+
+/* ── Responsive ── */
+@media(max-width:1100px){
+  .trigger-row{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:700px){
+  .trigger-row{grid-template-columns:repeat(2,1fr);}
+  .main{padding:20px 16px;}
+}
+/* ── A11y ── */
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<!-- ── Topbar ── -->
+<header class="topbar">
+  <div class="tb-right">
+    <span class="tb-club-name">מועדון שיווק ויצירת תוכן</span>
+    <span class="tb-sep">&middot;</span>
+    <span class="tb-page">דיוור</span>
+    <span class="edit-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>מצב עריכה</span>
+  </div>
+  <div class="tb-left">
+    <div class="mode-pill">
+      <button class="mp s" onclick="setMode('student')" aria-label="מצב תלמיד"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>תלמיד</button>
+      <button class="mp t on" onclick="setMode('teacher')" aria-label="מצב מרצה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>מרצה</button>
+    </div>
+    <button class="ib" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('wb-theme',document.documentElement.dataset.theme)" aria-label="החלפת מצב כהה/בהיר">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ── Edit Banner ── -->
+<div class="edit-banner">
+  <div class="eb-l">
+    <div class="eb-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>מצב עריכה — דיוור</div>
+    <span class="eb-info">צור וניהל דיוור לחברי המועדון</span>
+  </div>
+  <div class="eb-r">
+    <button class="eb-btn">תצוגה מקדימה</button>
+    <button class="eb-btn primary">פרסם שינויים</button>
+  </div>
+</div>
+
+<!-- ── Body ── -->
+<div class="body-wrap">
+
+  <!-- ── Sidebar Strip ── -->
+  <nav class="right-strip" aria-label="ניווט המועדון">
+    <div class="rs-logo"><img src="../../LOGO/LOGO PNG/אייקון בהיר בלי רקע.png" alt="WHITEBOARD" width="28" height="28" style="opacity:.9"></div>
+    <div class="rs-icons">
+      <!-- בית -->
+      <a class="rs-btn" href="מועדון - בית.html" data-tip="בית" aria-label="בית"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></a>
+      <!-- פיד -->
+      <a class="rs-btn" href="מועדון - פיד.html" data-tip="פיד" aria-label="פיד"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></a>
+      <!-- קורסים -->
+      <a class="rs-btn" href="מועדון - קורסים.html" data-tip="קורסים" aria-label="קורסים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></a>
+      <!-- צ'אט -->
+      <a class="rs-btn" href="מועדון - צ'אט.html" data-tip="צ׳אט" aria-label="צ'אט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+      <!-- אירועים -->
+      <a class="rs-btn" href="מועדון - אירועים.html" data-tip="אירועים" aria-label="אירועים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></a>
+      <!-- לוח מובילים -->
+      <a class="rs-btn" href="מועדון - לוח מובילים.html" data-tip="לוח מובילים" aria-label="לוח מובילים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></a>
+      <!-- חברים -->
+      <a class="rs-btn" href="מועדון - חברים.html" data-tip="חברים" aria-label="חברים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></a>
+      <div class="rs-sep"></div>
+      <!-- דיוור (active) -->
+      <a class="rs-btn rs-active" href="מועדון - דיוור.html" data-tip="דיוור" aria-label="דיוור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
+      <div class="rs-sep"></div>
+      <!-- Teacher-only: ערכת מותג -->
+      <button class="rs-btn rs-teacher" data-tip="ערכת מותג" aria-label="ערכת מותג"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg></button>
+      <!-- Teacher-only: אנליטיקס -->
+      <button class="rs-btn rs-teacher" data-tip="אנליטיקס" aria-label="אנליטיקס"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button>
+    </div>
+    <div class="rs-bottom">
+      <button class="rs-btn" data-tip="הגדרות" aria-label="הגדרות" onclick="toggleSettingsPopup(event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      <div class="rs-profile" onclick="toggleProfilePopup(event)" role="button" aria-label="פרופיל">א</div>
+    </div>
+  </nav>
+
+  <!-- ── Main Content ── -->
+  <main class="main">
+
+    <!-- ── Trigger Cards Row ── -->
+    <div class="trigger-row">
+
+      <div class="trigger-card" id="trigger-single" onclick="selectTrigger('single')" role="button" tabindex="0" aria-label="מייל בודד">
+        <div class="trigger-card-icon" style="background:rgba(56,196,242,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </div>
+        <div>
+          <div class="trigger-card-name">מייל בודד</div>
+          <div class="trigger-card-desc">שליחה ידנית חד-פעמית לכל חברי המועדון</div>
+        </div>
+        <div class="trigger-card-count">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          3 מיילים
+        </div>
+      </div>
+
+      <div class="trigger-card active" id="trigger-join" onclick="selectTrigger('join')" role="button" tabindex="0" aria-label="הצטרפות למועדון">
+        <div class="trigger-card-icon" style="background:rgba(34,197,94,0.12);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        </div>
+        <div>
+          <div class="trigger-card-name">הצטרפות למועדון</div>
+          <div class="trigger-card-desc">נשלח אוטומטית עם הצטרפות למועדון</div>
+        </div>
+        <div class="trigger-card-count">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          1 מייל
+        </div>
+      </div>
+
+      <div class="trigger-card" id="trigger-cart" onclick="selectTrigger('cart')" role="button" tabindex="0" aria-label="נוטשי עגלה">
+        <div class="trigger-card-icon" style="background:rgba(240,86,128,0.1);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--cta)" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        </div>
+        <div>
+          <div class="trigger-card-name">נוטשי עגלה</div>
+          <div class="trigger-card-desc">לגולשים שהתחילו תשלום ולא סיימו</div>
+        </div>
+        <div class="trigger-card-count">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          2 מיילים
+        </div>
+      </div>
+
+      <div class="trigger-card" id="trigger-watch" onclick="selectTrigger('watch')" role="button" tabindex="0" aria-label="זמן צפייה אחרונה">
+        <div class="trigger-card-icon" style="background:rgba(234,214,84,0.15);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7a6200" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div>
+          <div class="trigger-card-name">זמן צפייה אחרונה</div>
+          <div class="trigger-card-desc">ריענון לחברים שלא היו פעילים</div>
+        </div>
+        <div class="trigger-card-count">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          1 מייל
+        </div>
+      </div>
+
+      <div class="trigger-card" id="trigger-complete" onclick="selectTrigger('complete')" role="button" tabindex="0" aria-label="סיום קורס">
+        <div class="trigger-card-icon" style="background:rgba(37,62,122,0.08);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div>
+          <div class="trigger-card-name">סיום קורס</div>
+          <div class="trigger-card-desc">לחברים שסיימו את כל הקורסים</div>
+        </div>
+        <div class="trigger-card-count">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          0 מיילים
+        </div>
+      </div>
+
+    </div><!-- /trigger-row -->
+
+    <!-- ── Table Section ── -->
+    <div class="table-section">
+      <div class="table-section-header">
+        <div class="table-section-title">
+          <div class="table-section-name" id="tableTitle">הצטרפות למועדון</div>
+          <span class="table-count-pill" id="tableCount">1</span>
+        </div>
+        <button class="add-email-btn" aria-label="הוסף מייל חדש">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          הוסף מייל
+        </button>
+      </div>
+
+      <!-- JOIN TABLE (default visible) -->
+      <div class="table-wrap" id="table-join">
+        <table class="mail-table">
+          <thead>
+            <tr>
+              <th style="min-width:200px;">שם הקמפיין</th>
+              <th style="min-width:180px;">נושא</th>
+              <th style="width:120px;">אחוז פתיחה</th>
+              <th style="width:80px;text-align:center;">נשלח</th>
+              <th style="width:80px;text-align:center;">לחיצות</th>
+              <th style="width:80px;text-align:center;">שגיאה</th>
+              <th style="width:130px;">תאריך שליחה</th>
+              <th style="width:100px;">סטטוס</th>
+              <th style="width:80px;text-align:center;">פעולות</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="campaign-name">ברוכים הבאים למועדון!</div>
+                <div class="campaign-list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>כל החברים · 247</div>
+              </td>
+              <td><div class="subject-text">הנה כל מה שצריך לדעת</div></td>
+              <td>
+                <div class="open-rate-wrap">
+                  <div class="open-rate-num">45.1%</div>
+                  <div class="open-rate-bar"><div class="open-rate-fill" style="width:45.1%"></div></div>
+                </div>
+              </td>
+              <td class="stat-cell">247</td>
+              <td class="stat-cell">68</td>
+              <td class="stat-cell">1.2%</td>
+              <td class="date-cell"><div class="d-main">15 מרץ 2026</div><div class="d-time">09:00</div></td>
+              <td><span class="status-badge badge-active">פעיל</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="row-action-btn" title="עריכה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="row-action-btn danger" title="מחיקה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SINGLE TABLE -->
+      <div class="table-wrap" id="table-single" style="display:none;">
+        <table class="mail-table">
+          <thead>
+            <tr>
+              <th style="min-width:200px;">שם הקמפיין</th>
+              <th style="min-width:180px;">נושא</th>
+              <th style="width:120px;">אחוז פתיחה</th>
+              <th style="width:80px;text-align:center;">נשלח</th>
+              <th style="width:80px;text-align:center;">לחיצות</th>
+              <th style="width:80px;text-align:center;">שגיאה</th>
+              <th style="width:130px;">תאריך שליחה</th>
+              <th style="width:100px;">סטטוס</th>
+              <th style="width:80px;text-align:center;">פעולות</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="campaign-name">עדכון חודשי — מרץ</div>
+                <div class="campaign-list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>כל החברים · 247</div>
+              </td>
+              <td><div class="subject-text">מה חדש במועדון</div></td>
+              <td>
+                <div class="open-rate-wrap">
+                  <div class="open-rate-num">32.4%</div>
+                  <div class="open-rate-bar"><div class="open-rate-fill" style="width:32.4%"></div></div>
+                </div>
+              </td>
+              <td class="stat-cell">247</td>
+              <td class="stat-cell">41</td>
+              <td class="stat-cell">1.8%</td>
+              <td class="date-cell"><div class="d-main">28 מרץ 2026</div><div class="d-time">10:30</div></td>
+              <td><span class="status-badge badge-sent">נשלח</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="row-action-btn" title="עריכה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="row-action-btn danger" title="מחיקה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="campaign-name">הזמנה לאירוע</div>
+                <div class="campaign-list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>כל החברים · 247</div>
+              </td>
+              <td><div class="subject-text">אירוע מיוחד בשבוע הבא</div></td>
+              <td>
+                <div class="open-rate-wrap">
+                  <div class="open-rate-num muted" style="color:var(--text-xs);font-weight:400;">—</div>
+                </div>
+              </td>
+              <td class="stat-cell muted">—</td>
+              <td class="stat-cell muted">—</td>
+              <td class="stat-cell muted">—</td>
+              <td class="date-cell"><div class="d-main">10 אפריל 2026</div></td>
+              <td><span class="status-badge badge-scheduled">מתוזמן</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="row-action-btn" title="עריכה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="row-action-btn danger" title="מחיקה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="campaign-name">טיפים שבועיים</div>
+                <div class="campaign-list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>כל החברים · 247</div>
+              </td>
+              <td><div class="subject-text">3 טיפים שישפרו את הנוכחות שלך</div></td>
+              <td>
+                <div class="open-rate-wrap">
+                  <div class="open-rate-num muted" style="color:var(--text-xs);font-weight:400;">—</div>
+                </div>
+              </td>
+              <td class="stat-cell muted">—</td>
+              <td class="stat-cell muted">—</td>
+              <td class="stat-cell muted">—</td>
+              <td class="date-cell"><div class="d-main" style="color:var(--text-xs);">טרם נשלח</div></td>
+              <td><span class="status-badge badge-draft">טיוטה</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="row-action-btn" title="עריכה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="row-action-btn danger" title="מחיקה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- CART TABLE -->
+      <div class="table-wrap" id="table-cart" style="display:none;">
+        <table class="mail-table">
+          <thead>
+            <tr>
+              <th style="min-width:200px;">שם הקמפיין</th>
+              <th style="min-width:180px;">נושא</th>
+              <th style="width:120px;">אחוז פתיחה</th>
+              <th style="width:80px;text-align:center;">נשלח</th>
+              <th style="width:80px;text-align:center;">לחיצות</th>
+              <th style="width:80px;text-align:center;">שגיאה</th>
+              <th style="width:130px;">תאריך שליחה</th>
+              <th style="width:100px;">סטטוס</th>
+              <th style="width:80px;text-align:center;">פעולות</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="campaign-name">תזכורת — שכחת משהו</div>
+                <div class="campaign-list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>נוטשי עגלה · 34</div>
+              </td>
+              <td><div class="subject-text">ההצטרפות למועדון עוד ממתינה</div></td>
+              <td>
+                <div class="open-rate-wrap">
+                  <div class="open-rate-num">38.2%</div>
+                  <div class="open-rate-bar"><div class="open-rate-fill" style="width:38.2%"></div></div>
+                </div>
+              </td>
+              <td class="stat-cell">34</td>
+              <td class="stat-cell">11</td>
+              <td class="stat-cell">0%</td>
+              <td class="date-cell"><div class="d-main">מתמשך</div><div class="d-time">אוטומטי</div></td>
+              <td><span class="status-badge badge-active">פעיל</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="row-action-btn" title="עריכה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="row-action-btn danger" title="מחיקה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="campaign-name">הנחת ריסטארט</div>
+                <div class="campaign-list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>נוטשי עגלה · 34</div>
+              </td>
+              <td><div class="subject-text">10% הנחה · עוד 48 שעות</div></td>
+              <td>
+                <div class="open-rate-wrap">
+                  <div class="open-rate-num">21.5%</div>
+                  <div class="open-rate-bar"><div class="open-rate-fill" style="width:21.5%"></div></div>
+                </div>
+              </td>
+              <td class="stat-cell">34</td>
+              <td class="stat-cell">4</td>
+              <td class="stat-cell">0%</td>
+              <td class="date-cell"><div class="d-main">מתמשך</div><div class="d-time">אוטומטי</div></td>
+              <td><span class="status-badge badge-active">פעיל</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="row-action-btn" title="עריכה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="row-action-btn danger" title="מחיקה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- WATCH TABLE -->
+      <div class="table-wrap" id="table-watch" style="display:none;">
+        <table class="mail-table">
+          <thead>
+            <tr>
+              <th style="min-width:200px;">שם הקמפיין</th>
+              <th style="min-width:180px;">נושא</th>
+              <th style="width:120px;">אחוז פתיחה</th>
+              <th style="width:80px;text-align:center;">נשלח</th>
+              <th style="width:80px;text-align:center;">לחיצות</th>
+              <th style="width:80px;text-align:center;">שגיאה</th>
+              <th style="width:130px;">תאריך שליחה</th>
+              <th style="width:100px;">סטטוס</th>
+              <th style="width:80px;text-align:center;">פעולות</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="campaign-name">בא נחזור למועדון?</div>
+                <div class="campaign-list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>לא פעילים · 89</div>
+              </td>
+              <td><div class="subject-text">עברו 14 יום מאז...</div></td>
+              <td>
+                <div class="open-rate-wrap">
+                  <div class="open-rate-num">18.4%</div>
+                  <div class="open-rate-bar"><div class="open-rate-fill" style="width:18.4%"></div></div>
+                </div>
+              </td>
+              <td class="stat-cell">89</td>
+              <td class="stat-cell">12</td>
+              <td class="stat-cell">5.6%</td>
+              <td class="date-cell"><div class="d-main">מתמשך</div><div class="d-time">אוטומטי</div></td>
+              <td><span class="status-badge badge-active">פעיל</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="row-action-btn" title="עריכה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                  <button class="row-action-btn danger" title="מחיקה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- COMPLETE TABLE (empty state) -->
+      <div class="table-wrap" id="table-complete" style="display:none;">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="empty-title">אין מיילים עדיין</div>
+          <div class="empty-desc">צור את המייל הראשון שיישלח אוטומטית לחברים שסיימו את כל הקורסים במועדון.</div>
+        </div>
+      </div>
+
+    </div><!-- /table-section -->
+
+    <!-- Footer -->
+    <footer class="footer">WhiteBoard &copy; 2026</footer>
+  </main>
+</div>
+
+<!-- ── Settings popup ── -->
+<div class="strip-popup" id="settingsPopup">
+  <div class="sp-title">הגדרות</div>
+  <button class="sp-item" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('wb-theme',document.documentElement.dataset.theme);closePopups()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+    מצב לילה
+  </button>
+  <button class="sp-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    התראות
+  </button>
+</div>
+
+<!-- ── Profile popup ── -->
+<div class="strip-popup" id="profilePopup">
+  <div class="sp-profile-header">
+    <div class="sp-avatar">א</div>
+    <div>
+      <div class="sp-name">אלון גבאי</div>
+      <div class="sp-email">alon@email.com</div>
+    </div>
+  </div>
+  <div class="sp-divider"></div>
+  <button class="sp-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    הפרופיל שלי
+  </button>
+  <button class="sp-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    התנתק
+  </button>
+</div>
+
+<script>
+/* ── Mode switching ── */
+function setMode(m){
+  document.documentElement.dataset.mode=m;
+  document.querySelectorAll('.mp').forEach(function(b){b.classList.remove('on');});
+  document.querySelector('.mp.'+m[0]).classList.add('on');
+}
+
+/* ── Popups ── */
+function toggleSettingsPopup(e){
+  if(e)e.stopPropagation();
+  var s=document.getElementById("settingsPopup"),p=document.getElementById("profilePopup");
+  p.classList.remove("open");s.classList.toggle("open");
+}
+function toggleProfilePopup(e){
+  if(e)e.stopPropagation();
+  var p=document.getElementById("profilePopup"),s=document.getElementById("settingsPopup");
+  s.classList.remove("open");p.classList.toggle("open");
+}
+function closePopups(){
+  document.getElementById("settingsPopup").classList.remove("open");
+  document.getElementById("profilePopup").classList.remove("open");
+}
+document.addEventListener("click",function(e){
+  if(!e.target.closest(".strip-popup")&&!e.target.closest(".rs-bottom"))closePopups();
+});
+
+/* ── Trigger switching ── */
+var triggerMeta = {
+  single:   { name:'מייל בודד', count:3 },
+  join:     { name:'הצטרפות למועדון', count:1 },
+  cart:     { name:'נוטשי עגלה', count:2 },
+  watch:    { name:'זמן צפייה אחרונה', count:1 },
+  complete: { name:'סיום קורס', count:0 }
+};
+function selectTrigger(key){
+  document.querySelectorAll('.trigger-card').forEach(function(c){c.classList.remove('active');});
+  document.getElementById('trigger-'+key).classList.add('active');
+  ['single','join','cart','watch','complete'].forEach(function(k){
+    var el=document.getElementById('table-'+k);
+    if(el) el.style.display = k===key ? '' : 'none';
+  });
+  document.getElementById('tableTitle').textContent = triggerMeta[key].name;
+  document.getElementById('tableCount').textContent = triggerMeta[key].count;
+}
+
+/* ── Keyboard a11y for trigger cards ── */
+document.querySelectorAll('.trigger-card').forEach(function(card){
+  card.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();card.click();}
+  });
+});
+</script>
+</body>
+</html>
