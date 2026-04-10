@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>פופאפים — ממשק מרצה | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+  --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+  --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+  --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+  --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+  --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+  --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+  --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+  --shadow-sm:0 2px 10px rgba(37,62,122,0.07);
+  --shadow-md:0 6px 24px rgba(37,62,122,0.1);
+  --shadow-lg:0 16px 48px rgba(37,62,122,0.14);
+  --danger:#e53e3e;--danger-light:rgba(229,62,62,0.08);
+}
+[data-theme="dark"] {
+  --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+  --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+  --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+  --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+  --shadow-lg:0 16px 48px rgba(0,0,0,0.5);
+  --light-blue:rgba(56,196,242,0.08);
+  --danger:#fc5c65;--danger-light:rgba(252,92,101,0.12);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-height:100vh;transition:background .3s,color .3s;}
+
+/* ── PAGE LAYOUT ── */
+.page-wrapper{max-width:840px;margin:0 auto;padding:40px 24px 80px;}
+.page-header{text-align:center;margin-bottom:40px;}
+.logo-wrap{margin-bottom:20px;}
+.logo-wrap img{height:48px;object-fit:contain;}
+.page-title{font-family:var(--font-en);font-size:24px;font-weight:600;color:var(--text-main);margin-bottom:6px;}
+.page-subtitle{font-size:14px;color:var(--text-sub);font-weight:400;}
+
+/* ── DARK MODE TOGGLE ── */
+.theme-toggle{position:fixed;top:20px;left:20px;z-index:100;width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);transition:all .2s;}
+.theme-toggle:hover{transform:scale(1.08);box-shadow:var(--shadow-md);}
+.theme-toggle svg{width:20px;height:20px;color:var(--text-main);}
+[data-theme="dark"] .theme-toggle .icon-sun{display:block;}
+[data-theme="dark"] .theme-toggle .icon-moon{display:none;}
+[data-theme="light"] .theme-toggle .icon-sun{display:none;}
+[data-theme="light"] .theme-toggle .icon-moon{display:block;}
+
+/* ── BUTTON GRID ── */
+.btn-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.trigger-btn{display:flex;align-items:center;gap:12px;padding:18px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all .2s;font-family:var(--font-he);font-size:14px;font-weight:600;color:var(--text-main);text-align:right;}
+.trigger-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.trigger-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+.trigger-btn .btn-icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;}
+.trigger-btn .btn-icon.cyan-bg{background:var(--cyan-light);color:var(--cyan);}
+.trigger-btn .btn-icon.pink-bg{background:rgba(240,86,128,0.1);color:var(--pink);}
+.trigger-btn .btn-icon.green-bg{background:rgba(125,197,122,0.1);color:var(--green);}
+.trigger-btn .btn-icon.yellow-bg{background:rgba(234,214,84,0.15);color:#b8a020;}
+.trigger-btn .btn-icon.navy-bg{background:rgba(37,62,122,0.08);color:var(--navy);}
+.trigger-btn .btn-icon.danger-bg{background:var(--danger-light);color:var(--danger);}
+
+/* ── OVERLAY ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity .25s;}
+.modal-overlay.active{display:flex;opacity:1;}
+
+/* ── MODAL CARD ── */
+.modal-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:32px;position:relative;width:100%;animation:modalIn .3s ease;max-height:90vh;overflow-y:auto;}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(8px);}to{opacity:1;transform:scale(1) translateY(0);}}
+@media(prefers-reduced-motion:reduce){@keyframes modalIn{from{opacity:0;}to{opacity:1;}}}
+
+.modal-close{position:absolute;top:16px;left:16px;width:32px;height:32px;border-radius:50%;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-light);transition:all .15s;z-index:2;}
+.modal-close:hover{background:rgba(37,62,122,0.06);color:var(--text-main);}
+[data-theme="dark"] .modal-close:hover{background:rgba(255,255,255,0.08);}
+.modal-close svg{width:18px;height:18px;}
+
+.modal-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.modal-title{font-size:18px;font-weight:700;color:var(--text-main);}
+.modal-subtitle{font-size:13px;color:var(--text-sub);margin-bottom:20px;line-height:1.5;}
+
+/* ── FORM ELEMENTS ── */
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:6px;}
+.form-input,.form-select,.form-textarea{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font-he);font-size:14px;color:var(--text-main);background:var(--surface);transition:border .2s;outline:none;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.15);}
+.form-textarea{resize:vertical;min-height:60px;}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--text-light);}
+[data-theme="dark"] .form-input,[data-theme="dark"] .form-select,[data-theme="dark"] .form-textarea{background:var(--surface-2);border-color:var(--border);}
+
+.form-row{display:flex;gap:12px;}
+.form-row .form-group{flex:1;}
+
+/* ── CHECKBOX / RADIO ── */
+.checkbox-wrap,.radio-wrap{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-main);}
+.checkbox-wrap input,.radio-wrap input{accent-color:var(--cyan);width:16px;height:16px;cursor:pointer;}
+
+/* ── TOGGLE SWITCH ── */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--cyan-light);border-radius:var(--radius-sm);margin-bottom:16px;}
+.toggle-info{display:flex;align-items:center;gap:10px;}
+.toggle-info img{width:28px;height:28px;object-fit:contain;}
+.toggle-label{font-size:13px;font-weight:600;color:var(--text-main);}
+.toggle-desc{font-size:11px;color:var(--text-sub);margin-top:2px;}
+.toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-switch .slider{position:absolute;inset:0;background:rgba(37,62,122,0.15);border-radius:12px;cursor:pointer;transition:.3s;}
+.toggle-switch .slider::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;right:3px;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,0.15);}
+.toggle-switch input:checked+.slider{background:var(--cyan);}
+.toggle-switch input:checked+.slider::before{transform:translateX(-20px);}
+
+/* ── BUTTONS ── */
+.modal-actions{display:flex;gap:10px;margin-top:24px;}
+.btn{padding:10px 22px;border-radius:var(--radius-sm);font-family:var(--font-he);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px;}
+.btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+.btn-primary{background:var(--cyan);color:#fff;}
+.btn-primary:hover{background:#2ab5e3;transform:translateY(-1px);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-danger:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.btn-danger:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.btn-ghost{background:transparent;color:var(--text-sub);border:1px solid var(--border);}
+.btn-ghost:hover{background:rgba(37,62,122,0.04);color:var(--text-main);}
+
+/* ── TEMPLATE / TYPE CARDS ── */
+.card-select{display:flex;gap:10px;margin-top:6px;}
+.card-option{flex:1;padding:14px 10px;border:2px solid var(--border);border-radius:var(--radius-md);text-align:center;cursor:pointer;transition:all .2s;background:var(--surface);}
+.card-option:hover{border-color:rgba(56,196,242,0.4);}
+.card-option.selected{border-color:var(--cyan);background:var(--cyan-light);}
+.card-option .card-icon{font-size:24px;margin-bottom:6px;}
+.card-option .card-name{font-size:12px;font-weight:600;color:var(--text-main);}
+
+/* ── UPLOAD ZONE ── */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius-md);padding:24px;text-align:center;cursor:pointer;transition:all .2s;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--cyan);background:var(--cyan-light);}
+.upload-zone .upload-icon{font-size:36px;color:var(--text-light);}
+.upload-zone .upload-text{font-size:14px;font-weight:500;color:var(--text-sub);}
+.upload-zone .upload-hint{font-size:11px;color:var(--text-light);}
+.upload-zone-sm{min-height:80px;padding:14px;}
+.upload-zone-sm .upload-icon{font-size:22px;}
+.upload-zone-sm .upload-text{font-size:12px;}
+
+.progress-row{display:none;align-items:center;gap:10px;margin-top:12px;padding:10px 14px;background:var(--surface-2);border-radius:var(--radius-sm);}
+.progress-row.visible{display:flex;}
+.progress-name{font-size:12px;font-weight:500;color:var(--text-main);flex-shrink:0;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.progress-bar{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--cyan);border-radius:3px;width:0;transition:width 1.5s ease;}
+.progress-pct{font-size:11px;font-weight:600;color:var(--cyan);min-width:32px;text-align:left;}
+
+/* ── SHARE BUTTONS ── */
+.share-url-row{display:flex;gap:8px;margin-bottom:16px;}
+.share-url-input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font-he);font-size:13px;color:var(--text-sub);background:var(--surface-2);outline:none;}
+.copy-btn{padding:10px 16px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;font-family:var(--font-he);font-size:13px;font-weight:600;color:var(--text-main);transition:all .15s;display:flex;align-items:center;gap:4px;}
+.copy-btn:hover{background:var(--cyan-light);border-color:var(--cyan);}
+.share-btns{display:flex;gap:10px;justify-content:center;margin-bottom:16px;}
+.share-icon-btn{width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;color:#fff;font-size:18px;}
+.share-icon-btn:hover{transform:scale(1.1);}
+.share-icon-btn.whatsapp{background:#25d366;}
+.share-icon-btn.facebook{background:#1877f2;}
+.share-icon-btn.twitter{background:var(--cyan);}
+.share-icon-btn.email{background:var(--navy);}
+.toast{display:none;text-align:center;padding:8px 16px;background:var(--green);color:#fff;border-radius:var(--radius-sm);font-size:13px;font-weight:600;margin-top:10px;}
+.toast.visible{display:block;animation:fadeInToast .3s;}
+@keyframes fadeInToast{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── BOARDi FLOAT ── */
+.boardi-img{width:68px;height:68px;object-fit:contain;animation:boardiFloat 3s ease-in-out infinite;}
+@keyframes boardiFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@media(prefers-reduced-motion:reduce){.boardi-img{animation:none;}}
+.boardi-corner{position:absolute;bottom:16px;left:16px;}
+
+/* ── RADIO GROUP ── */
+.radio-group{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+
+/* ── WARNING ── */
+.warning-block{text-align:center;margin-bottom:16px;}
+.warning-icon{font-size:40px;margin-bottom:8px;}
+.warning-text{font-size:14px;color:var(--text-sub);line-height:1.6;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .btn-grid{grid-template-columns:1fr;}
+  .card-select{flex-direction:column;}
+  .form-row{flex-direction:column;gap:0;}
+  .modal-card{padding:24px 18px;}
+  .share-btns{gap:8px;}
+}
+</style>
+</head>
+<body>
+
+<!-- DARK MODE TOGGLE -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="החלף ערכת נושא">
+  <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+</button>
+
+<div class="page-wrapper">
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="logo-wrap">
+      <img class="logo-light" src="../LOGO/LOGO PNG/WHITEBOARD 2.0-01.png" alt="WHITEBOARD">
+      <img class="logo-dark" src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD" style="display:none;">
+    </div>
+    <h1 class="page-title">Popups &mdash; Teacher Interface</h1>
+    <p class="page-subtitle">לחץ על כפתור כדי לפתוח את הפופאפ המתאים</p>
+  </div>
+
+  <!-- BUTTON GRID -->
+  <div class="btn-grid">
+    <button class="trigger-btn" onclick="openPopup('popup-new-course')">
+      <span class="btn-icon cyan-bg">&#128218;</span> יצירת קורס חדש
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-new-club')">
+      <span class="btn-icon green-bg">&#127941;</span> יצירת מועדון חדש
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-new-school')">
+      <span class="btn-icon navy-bg">&#127979;</span> יצירת בית ספר חדש
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-add-student')">
+      <span class="btn-icon cyan-bg">&#128100;</span> הוספת תלמיד ידנית
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-add-team')">
+      <span class="btn-icon pink-bg">&#128101;</span> הזמנת חבר צוות
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-upload')">
+      <span class="btn-icon yellow-bg">&#128228;</span> העלאת קובץ
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-share')">
+      <span class="btn-icon green-bg">&#128279;</span> שיתוף קישור
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-delete')">
+      <span class="btn-icon danger-bg">&#128465;</span> אישור מחיקה
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-event')">
+      <span class="btn-icon cyan-bg">&#128197;</span> יצירת אירוע
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-new-lesson')">
+      <span class="btn-icon navy-bg">&#127902;</span> יצירת שיעור חדש
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 1: יצירת קורס חדש                    -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-new-course" role="dialog" aria-modal="true" aria-label="יצירת קורס חדש">
+  <div class="modal-card" style="max-width:480px;">
+    <button class="modal-close" onclick="closePopup('popup-new-course')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-header">
+      <span class="modal-title">יצירת קורס חדש</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">שם הקורס</label>
+      <input class="form-input" type="text" placeholder="לדוגמה: קורס שיווק דיגיטלי">
+    </div>
+    <div class="form-group">
+      <label class="form-label">תיאור קצר</label>
+      <textarea class="form-textarea" rows="2" placeholder="תיאור קצר של הקורס..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">בחר קטגוריה</label>
+      <select class="form-select">
+        <option value="">בחר קטגוריה...</option>
+        <option>שיווק</option>
+        <option>עסקים</option>
+        <option>טכנולוגיה</option>
+        <option>עיצוב</option>
+        <option>אחר</option>
+      </select>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <img src="../BOARDi/PNG/BOARDi_3.png" alt="BOARDi" style="width:28px;height:28px;object-fit:contain;">
+        <div>
+          <div class="toggle-label">צור עם BOARDi</div>
+          <div class="toggle-desc">BOARDi יעזור לך לבנות את מבנה הקורס</div>
+        </div>
+      </div>
+      <label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary">צור קורס</button>
+      <button class="btn btn-ghost" onclick="closePopup('popup-new-course')">ביטול</button>
+    </div>
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_3.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 2: יצירת מועדון חדש                   -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-new-club" role="dialog" aria-modal="true" aria-label="יצירת מועדון חדש">
+  <div class="modal-card" style="max-width:480px;">
+    <button class="modal-close" onclick="closePopup('popup-new-club')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-header">
+      <span class="modal-title">יצירת מועדון חדש</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">שם המועדון</label>
+      <input class="form-input" type="text" placeholder="לדוגמה: מועדון יזמים">
+    </div>
+    <div class="form-group">
+      <label class="form-label">תיאור</label>
+      <textarea class="form-textarea" rows="3" placeholder="תיאור קצר של המועדון..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">סוג גישה</label>
+      <div class="radio-group">
+        <label class="radio-wrap"><input type="radio" name="club-access" value="paid" checked> בתשלום</label>
+        <label class="radio-wrap"><input type="radio" name="club-access" value="register"> בהרשמה</label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary">צור מועדון</button>
+      <button class="btn btn-ghost" onclick="closePopup('popup-new-club')">ביטול</button>
+    </div>
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_5.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 3: יצירת בית ספר חדש                  -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-new-school" role="dialog" aria-modal="true" aria-label="יצירת בית ספר חדש">
+  <div class="modal-card" style="max-width:480px;">
+    <button class="modal-close" onclick="closePopup('popup-new-school')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-header">
+      <span class="modal-title">יצירת בית ספר חדש</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">שם בית הספר</label>
+      <input class="form-input" type="text" placeholder="לדוגמה: אקדמיה ללמידה">
+    </div>
+    <div class="form-group">
+      <label class="form-label">תיאור</label>
+      <textarea class="form-textarea" rows="2" placeholder="תיאור קצר..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">בחר תבנית</label>
+      <div class="card-select" id="school-template">
+        <div class="card-option selected" onclick="selectCard(this,'school-template')">
+          <div class="card-icon">&#127891;</div>
+          <div class="card-name">קלאסי</div>
+        </div>
+        <div class="card-option" onclick="selectCard(this,'school-template')">
+          <div class="card-icon">&#11088;</div>
+          <div class="card-name">פרימיום</div>
+        </div>
+        <div class="card-option" onclick="selectCard(this,'school-template')">
+          <div class="card-icon">&#128722;</div>
+          <div class="card-name">חנות</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary">צור בית ספר</button>
+      <button class="btn btn-ghost" onclick="closePopup('popup-new-school')">ביטול</button>
+    </div>
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_8.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 4: הוספת תלמיד ידנית                  -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-add-student" role="dialog" aria-modal="true" aria-label="הוספת תלמיד">
+  <div class="modal-card" style="max-width:440px;">
+    <button class="modal-close" onclick="closePopup('popup-add-student')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-header">
+      <span class="modal-title">הוספת תלמיד</span>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">שם פרטי</label>
+        <input class="form-input" type="text" placeholder="שם פרטי">
+      </div>
+      <div class="form-group">
+        <label class="form-label">שם משפחה</label>
+        <input class="form-input" type="text" placeholder="שם משפחה">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">אימייל</label>
+      <input class="form-input" type="email" placeholder="email@example.com" dir="ltr">
+    </div>
+    <div class="form-group">
+      <label class="form-label">בחר קורס</label>
+      <select class="form-select">
+        <option value="">בחר קורס...</option>
+        <option>קורס שיווק דיגיטלי</option>
+        <option>קורס עיצוב גרפי</option>
+        <option>קורס פיתוח אתרים</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="checkbox-wrap">
+        <input type="checkbox" checked>
+        שלח מייל הזמנה
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary">הוסף תלמיד</button>
+      <button class="btn btn-ghost" onclick="closePopup('popup-add-student')">ביטול</button>
+    </div>
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_1.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 5: הוספת חבר צוות                     -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-add-team" role="dialog" aria-modal="true" aria-label="הזמנת חבר צוות">
+  <div class="modal-card" style="max-width:440px;">
+    <button class="modal-close" onclick="closePopup('popup-add-team')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-header">
+      <span class="modal-title">הזמנת חבר צוות</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">אימייל</label>
+      <input class="form-input" type="email" placeholder="email@example.com" dir="ltr">
+    </div>
+    <div class="form-group">
+      <label class="form-label">תפקיד</label>
+      <select class="form-select">
+        <option value="">בחר תפקיד...</option>
+        <option>מנהל</option>
+        <option>עורך</option>
+        <option>צופה</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">הודעה אישית <span style="color:var(--text-light);font-weight:400;">(אופציונלי)</span></label>
+      <textarea class="form-textarea" rows="2" placeholder="הוסף הודעה אישית..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary">שלח הזמנה</button>
+      <button class="btn btn-ghost" onclick="closePopup('popup-add-team')">ביטול</button>
+    </div>
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_4.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 6: העלאת קובץ                         -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-upload" role="dialog" aria-modal="true" aria-label="העלאת קובץ">
+  <div class="modal-card" style="max-width:520px;">
+    <button class="modal-close" onclick="closePopup('popup-upload')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-header">
+      <span class="modal-title">העלאת קובץ</span>
+    </div>
+    <div class="upload-zone" id="upload-zone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)" onclick="document.getElementById('file-input').click()">
+      <div class="upload-icon">&#128228;</div>
+      <div class="upload-text">גרור קובץ לכאן או לחץ לבחירה</div>
+      <div class="upload-hint">MP4, PDF, PNG, JPG &middot; עד 500MB</div>
+      <input type="file" id="file-input" style="display:none;" onchange="handleFileSelect(this)">
+    </div>
+    <div class="progress-row" id="upload-progress">
+      <span class="progress-name" id="upload-filename">file.mp4</span>
+      <div class="progress-bar"><div class="progress-fill" id="upload-fill"></div></div>
+      <span class="progress-pct" id="upload-pct">0%</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="upload-btn" disabled onclick="simulateUpload()">העלה</button>
+      <button class="btn btn-ghost" onclick="closePopup('popup-upload')">ביטול</button>
+    </div>
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_7.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 7: שיתוף קישור                        -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-share" role="dialog" aria-modal="true" aria-label="שיתוף">
+  <div class="modal-card" style="max-width:440px;">
+    <button class="modal-close" onclick="closePopup('popup-share')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-header">
+      <span class="modal-title">שיתוף</span>
+    </div>
+    <div class="share-url-row">
+      <input class="share-url-input" id="share-url" type="text" readonly value="https://whiteboard.education/course/abc123" dir="ltr">
+      <button class="copy-btn" onclick="copyLink()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        העתק
+      </button>
+    </div>
+    <div class="share-btns">
+      <button class="share-icon-btn whatsapp" aria-label="שתף בוואטסאפ" title="WhatsApp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+      </button>
+      <button class="share-icon-btn facebook" aria-label="שתף בפייסבוק" title="Facebook">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </button>
+      <button class="share-icon-btn twitter" aria-label="שתף בטוויטר" title="Twitter / X">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </button>
+      <button class="share-icon-btn email" aria-label="שתף במייל" title="Email">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      </button>
+    </div>
+    <div class="toast" id="copy-toast">&#10003; הקישור הועתק!</div>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="btn btn-ghost" onclick="closePopup('popup-share')">סגור</button>
+    </div>
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_10.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 8: אישור מחיקה                        -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-delete" role="dialog" aria-modal="true" aria-label="אישור מחיקה">
+  <div class="modal-card" style="max-width:400px;">
+    <button class="modal-close" onclick="closePopup('popup-delete')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-header">
+      <span class="modal-title" style="color:var(--danger);">האם למחוק?</span>
+    </div>
+    <div class="warning-block">
+      <div class="warning-icon">&#9888;&#65039;</div>
+      <div class="warning-text">הפעולה הזו תמחק את הפריט לצמיתות.<br>לא ניתן לשחזר.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">הקלד 'מחק' לאישור</label>
+      <input class="form-input" type="text" id="delete-confirm-input" placeholder="מחק" oninput="validateDelete()">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="delete-btn" disabled>מחק לצמיתות</button>
+      <button class="btn btn-ghost" onclick="closePopup('popup-delete')">ביטול</button>
+    </div>
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_13.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 9: יצירת אירוע                        -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-event" role="dialog" aria-modal="true" aria-label="יצירת אירוע חדש">
+  <div class="modal-card" style="max-width:500px;">
+    <button class="modal-close" onclick="closePopup('popup-event')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-header">
+      <span class="modal-title">יצירת אירוע חדש</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">שם האירוע</label>
+      <input class="form-input" type="text" placeholder="לדוגמה: וובינר שיווק">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">תאריך</label>
+        <input class="form-input" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">שעה</label>
+        <input class="form-input" type="time">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">פלטפורמה</label>
+      <div class="radio-group">
+        <label class="radio-wrap"><input type="radio" name="event-platform" value="meet" checked onchange="toggleEventLink()"> Google Meet</label>
+        <label class="radio-wrap"><input type="radio" name="event-platform" value="zoom" onchange="toggleEventLink()"> Zoom</label>
+        <label class="radio-wrap"><input type="radio" name="event-platform" value="custom" onchange="toggleEventLink()"> לינק מותאם</label>
+      </div>
+    </div>
+    <div class="form-group" id="event-link-group" style="display:none;">
+      <label class="form-label">קישור</label>
+      <input class="form-input" type="url" placeholder="https://..." dir="ltr">
+    </div>
+    <div class="form-group">
+      <label class="form-label">תיאור</label>
+      <textarea class="form-textarea" rows="2" placeholder="תיאור קצר של האירוע..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary">צור אירוע</button>
+      <button class="btn btn-ghost" onclick="closePopup('popup-event')">ביטול</button>
+    </div>
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_6.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 10: יצירת שיעור חדש                   -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-new-lesson" role="dialog" aria-modal="true" aria-label="יצירת שיעור חדש">
+  <div class="modal-card" style="max-width:480px;">
+    <button class="modal-close" onclick="closePopup('popup-new-lesson')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-header">
+      <span class="modal-title">יצירת שיעור חדש</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">שם השיעור</label>
+      <input class="form-input" type="text" placeholder="לדוגמה: מבוא לשיווק">
+    </div>
+    <div class="form-group">
+      <label class="form-label">סוג שיעור</label>
+      <div class="card-select" id="lesson-type">
+        <div class="card-option selected" onclick="selectLessonType(this)">
+          <div class="card-icon">&#127909;</div>
+          <div class="card-name">וידאו</div>
+        </div>
+        <div class="card-option" onclick="selectLessonType(this)">
+          <div class="card-icon">&#128196;</div>
+          <div class="card-name">טקסט</div>
+        </div>
+        <div class="card-option" onclick="selectLessonType(this)">
+          <div class="card-icon">&#128221;</div>
+          <div class="card-name">מבחן</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" id="lesson-upload-zone" style="display:block;">
+      <label class="form-label">העלאת קובץ</label>
+      <div class="upload-zone upload-zone-sm" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="event.preventDefault();this.classList.remove('dragover')">
+        <div class="upload-icon">&#128228;</div>
+        <div class="upload-text">גרור קובץ או לחץ לבחירה</div>
+      </div>
+    </div>
+    <div class="toggle-row" style="background:rgba(125,197,122,0.1);">
+      <div class="toggle-info">
+        <div>
+          <div class="toggle-label">שיעור חינמי</div>
+        </div>
+      </div>
+      <label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary">צור שיעור</button>
+      <button class="btn btn-ghost" onclick="closePopup('popup-new-lesson')">ביטול</button>
+    </div>
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_2.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<script>
+/* ── THEME TOGGLE ── */
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  // Swap logo
+  document.querySelector('.logo-light').style.display = next === 'light' ? '' : 'none';
+  document.querySelector('.logo-dark').style.display = next === 'dark' ? '' : 'none';
+}
+
+/* ── POPUP OPEN / CLOSE ── */
+let currentPopup = null;
+
+function openPopup(id) {
+  const overlay = document.getElementById(id);
+  if (!overlay) return;
+  overlay.classList.add('active');
+  currentPopup = id;
+  // Focus trap: focus first input or close button
+  requestAnimationFrame(() => {
+    const firstFocusable = overlay.querySelector('input:not([type="hidden"]):not([style*="display:none"]),select,textarea,button.modal-close');
+    if (firstFocusable) firstFocusable.focus();
+  });
+}
+
+function closePopup(id) {
+  const overlay = document.getElementById(id);
+  if (!overlay) return;
+  overlay.classList.remove('active');
+  currentPopup = null;
+  // Reset states for specific popups
+  if (id === 'popup-delete') {
+    const inp = document.getElementById('delete-confirm-input');
+    if (inp) inp.value = '';
+    validateDelete();
+  }
+  if (id === 'popup-upload') {
+    document.getElementById('upload-progress').classList.remove('visible');
+    document.getElementById('upload-fill').style.width = '0';
+    document.getElementById('upload-pct').textContent = '0%';
+    document.getElementById('upload-btn').disabled = true;
+    document.getElementById('file-input').value = '';
+  }
+  if (id === 'popup-share') {
+    document.getElementById('copy-toast').classList.remove('visible');
+  }
+}
+
+// Click overlay to close
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closePopup(overlay.id);
+  });
+});
+
+// Escape to close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && currentPopup) closePopup(currentPopup);
+});
+
+// Focus trap
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('keydown', e => {
+    if (e.key !== 'Tab') return;
+    const focusable = overlay.querySelectorAll('button:not([disabled]),input:not([style*="display:none"]),select,textarea,[tabindex]:not([tabindex="-1"])');
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+});
+
+/* ── CARD SELECTION ── */
+function selectCard(el, groupId) {
+  const group = document.getElementById(groupId);
+  group.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+/* ── LESSON TYPE SELECTION ── */
+function selectLessonType(el) {
+  const group = document.getElementById('lesson-type');
+  group.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const name = el.querySelector('.card-name').textContent.trim();
+  const uploadZone = document.getElementById('lesson-upload-zone');
+  uploadZone.style.display = name === '\u05D5\u05D9\u05D3\u05D0\u05D5' ? 'block' : 'none';
+}
+
+/* ── DELETE CONFIRMATION ── */
+function validateDelete() {
+  const inp = document.getElementById('delete-confirm-input');
+  const btn = document.getElementById('delete-btn');
+  btn.disabled = inp.value.trim() !== '\u05DE\u05D7\u05E7';
+}
+
+/* ── FILE UPLOAD ── */
+function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('dragover'); }
+function handleDragLeave(e) { e.currentTarget.classList.remove('dragover'); }
+function handleDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('dragover');
+  if (e.dataTransfer.files.length) {
+    showFileSelected(e.dataTransfer.files[0].name);
+  }
+}
+function handleFileSelect(input) {
+  if (input.files.length) showFileSelected(input.files[0].name);
+}
+function showFileSelected(name) {
+  document.getElementById('upload-btn').disabled = false;
+  document.getElementById('upload-filename').textContent = name;
+}
+function simulateUpload() {
+  const row = document.getElementById('upload-progress');
+  const fill = document.getElementById('upload-fill');
+  const pct = document.getElementById('upload-pct');
+  row.classList.add('visible');
+  fill.style.width = '0';
+  pct.textContent = '0%';
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 20 + 5;
+    if (progress >= 100) { progress = 100; clearInterval(interval); }
+    fill.style.width = Math.round(progress) + '%';
+    pct.textContent = Math.round(progress) + '%';
+  }, 300);
+}
+
+/* ── COPY LINK ── */
+function copyLink() {
+  const url = document.getElementById('share-url').value;
+  navigator.clipboard.writeText(url).then(() => {
+    const toast = document.getElementById('copy-toast');
+    toast.classList.add('visible');
+    setTimeout(() => toast.classList.remove('visible'), 2500);
+  });
+}
+
+/* ── EVENT LINK TOGGLE ── */
+function toggleEventLink() {
+  const val = document.querySelector('input[name="event-platform"]:checked').value;
+  document.getElementById('event-link-group').style.display = val === 'custom' ? 'block' : 'none';
+}
+</script>
+</body>
+</html>
