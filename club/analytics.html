@@ -433,8 +433,8 @@
             <div class="chart-subtitle">30 ימים אחרונים</div>
           </div>
           <div class="chart-legend">
-            <div class="legend-item"><div class="legend-dot" style="background:#38C4F2"></div>חברים</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#7DC57A"></div>זמן למידה כולל</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#7DC57A"></div>חברים פעילים</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#38C4F2"></div>זמן למידה</div>
           </div>
         </div>
         <div class="svg-chart-wrap" style="position:relative;">
@@ -442,12 +442,12 @@
           <div id="chartTooltip" style="display:none;position:fixed;background:#1a2f5e;color:white;border-radius:10px;padding:9px 13px;font-size:12px;font-family:'Heebo',sans-serif;pointer-events:none;z-index:500;box-shadow:0 6px 20px rgba(37,62,122,0.35);white-space:nowrap;direction:rtl;">
             <div id="tooltipDate" style="font-size:10px;opacity:.55;margin-bottom:5px;font-weight:700;"></div>
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-              <span style="width:7px;height:7px;border-radius:50%;background:#38C4F2;flex-shrink:0;"></span>
-              <span style="opacity:.75;font-size:11px;">פעילים:</span><strong id="tooltipCyan" style="color:#38C4F2;margin-right:2px;"></strong>
+              <span style="width:7px;height:7px;border-radius:50%;background:#7DC57A;flex-shrink:0;"></span>
+              <span style="opacity:.75;font-size:11px;">פעילים:</span><strong id="tooltipCyan" style="color:#7DC57A;margin-right:2px;"></strong>
             </div>
             <div style="display:flex;align-items:center;gap:6px;">
-              <span style="width:7px;height:7px;border-radius:50%;background:#7DC57A;flex-shrink:0;"></span>
-              <span style="opacity:.75;font-size:11px;">נרשמים:</span><strong id="tooltipGreen" style="color:#7DC57A;margin-right:2px;"></strong>
+              <span style="width:7px;height:7px;border-radius:50%;background:#38C4F2;flex-shrink:0;"></span>
+              <span style="opacity:.75;font-size:11px;">זמן למידה:</span><strong id="tooltipGreen" style="color:#38C4F2;margin-right:2px;"></strong>
             </div>
           </div>
         </div>
@@ -690,8 +690,8 @@ var draw; // exposed for IntersectionObserver
       ctx.fillStyle = grad;
       ctx.fill();
     }
-    drawArea(cyCy, '#38C4F2', 0.25);
-    drawArea(cyGr, '#7DC57A', 0.18);
+    drawArea(cyCy, '#7DC57A', 0.25);
+    drawArea(cyGr, '#38C4F2', 0.18);
 
     function drawLine(yFn, color){
       ctx.beginPath();
@@ -702,8 +702,8 @@ var draw; // exposed for IntersectionObserver
       ctx.lineCap  = 'round';
       ctx.stroke();
     }
-    drawLine(cyCy, '#38C4F2');
-    drawLine(cyGr, '#7DC57A');
+    drawLine(cyCy, '#7DC57A');
+    drawLine(cyGr, '#38C4F2');
 
     // Hover
     if(hoverIdx >= 0 && hoverIdx < N){
@@ -716,7 +716,7 @@ var draw; // exposed for IntersectionObserver
       ctx.stroke();
       ctx.setLineDash([]);
       // dots
-      [['#38C4F2', cyCy], ['#7DC57A', cyGr]].forEach(([c, fn])=>{
+      [['#7DC57A', cyCy], ['#38C4F2', cyGr]].forEach(([c, fn])=>{
         ctx.beginPath();
         ctx.arc(x, fn(hoverIdx), 4, 0, Math.PI*2);
         ctx.fillStyle = c;
