@@ -112,11 +112,11 @@
     .page-header .logo {
       max-width: 160px;
       margin: 0 auto 20px;
-      display: block;
     }
-    .logo-dark { display: none; }
-    [data-theme="dark"] .logo-light { display: none; }
-    [data-theme="dark"] .logo-dark { display: block; }
+    .logo-light { display: block; }
+    .logo-dark { display: none !important; }
+    [data-theme="dark"] .logo-light { display: none !important; }
+    [data-theme="dark"] .logo-dark { display: block !important; }
     .page-header h1 {
       font-family: var(--font-en);
       font-size: 28px;
