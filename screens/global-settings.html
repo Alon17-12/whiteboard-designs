@@ -518,20 +518,16 @@
             <label class="field-label" for="manager-name">שם מנהלת</label>
             <input class="field-input" id="manager-name" type="text" placeholder="שם המנהלת שיופיע באימיילים" oninput="markUnsaved()">
           </div>
-        </div>
-      </div>
-
-      <!-- חתימה -->
-      <div class="settings-section">
-        <div class="settings-label-col">
-          <div class="settings-label-wrap">
-            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/><line x1="2" y1="22" x2="22" y2="22"/></svg></div>
-            <div class="settings-label">חתימה</div>
+          <div>
+            <label class="field-label" for="reply-email">אימייל למענה</label>
+            <input class="field-input" id="reply-email" type="email" placeholder="reply@example.com" dir="ltr" oninput="markUnsaved()">
+            <div class="field-hint">כתובת שאליה יגיעו תגובות מנמענים</div>
           </div>
-          <div class="settings-desc">חתימה שתופיע בתחתית כל אימייל שנשלח מהמערכת.</div>
-        </div>
-        <div class="settings-field-col">
-          <textarea class="field-input" id="email-signature" placeholder="הכנס את חתימת המייל שלך..." oninput="markUnsaved()"></textarea>
+          <div>
+            <label class="field-label" for="physical-address">כתובת פיזית</label>
+            <input class="field-input" id="physical-address" type="text" placeholder="רחוב, עיר, מיקוד" oninput="markUnsaved()">
+            <div class="field-hint">נדרש עבור אבטחה ואימות דומיין (CAN-SPAM)</div>
+          </div>
         </div>
       </div>
 
@@ -682,6 +678,35 @@
         </div>
       </div>
 
+      <!-- Vimeo -->
+      <div class="settings-section" style="border-bottom:none;">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon" style="background:rgba(26,183,234,0.12);color:#1ab7ea;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+            <div class="settings-label">Vimeo</div>
+          </div>
+          <div class="settings-desc">חבר את חשבון Vimeo שלך לאחסון והזרמת וידאו מאובטחת.</div>
+        </div>
+        <div class="settings-field-col">
+          <div class="integration-card">
+            <div class="integration-header">
+              <div class="integration-logo-row">
+                <div class="integration-logo" style="background:linear-gradient(135deg,#1ab7ea,#162221);color:white;font-family:var(--font-en);font-size:11px;font-weight:900;">V</div>
+                <div>
+                  <div class="integration-name">Vimeo</div>
+                  <div class="integration-desc">אחסון וידאו מאובטח עם הגנת DRM</div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label class="field-label" for="vimeo-token">Access Token</label>
+              <input class="field-input" id="vimeo-token" type="text" placeholder="הכנס Vimeo Access Token..." dir="ltr" oninput="markUnsaved()">
+              <div class="field-hint">ניתן ליצור Token ב-Vimeo Developer Portal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div><!-- /panel-integrations -->
 
     <!-- ═══════════════════════════════════════════════ -->
@@ -751,19 +776,34 @@
     <!-- ═══════════════════════════════════════════════ -->
     <div class="tab-panel" id="panel-affiliates">
 
+      <!-- How it works banner -->
+      <div style="background:linear-gradient(135deg,var(--navy),var(--navy-dark));border-radius:var(--radius-md);padding:24px;color:white;margin-bottom:24px;display:flex;align-items:center;gap:20px;">
+        <div style="flex-shrink:0;width:48px;height:48px;border-radius:50%;background:rgba(56,196,242,0.2);display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" width="22" height="22"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:16px;font-weight:900;margin-bottom:4px;">תכנית שותפים — 10% עמלה לצמיתות</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.6;">שתף את הקישור שלך וקבל <strong style="color:var(--cyan);">10% עמלה מכל חיי הלקוח</strong> שנסלק דרכך, ללא הגבלה. התשלום מבוצע כל רבעון ישירות לחשבונך.</div>
+        </div>
+      </div>
+
       <!-- Stats Row -->
-      <div class="stat-grid">
+      <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);">
         <div class="stat-card">
-          <div class="stat-value">$0.00</div>
-          <div class="stat-label">דף למאגר</div>
+          <div class="stat-value" style="color:var(--cyan);">7</div>
+          <div class="stat-label">לקוחות פעילים דרכך</div>
         </div>
         <div class="stat-card">
-          <div class="stat-value">$0.00</div>
-          <div class="stat-label">סכו"ל</div>
+          <div class="stat-value" style="color:var(--green);">₪847</div>
+          <div class="stat-label">צפי תשלום רבעון הבא</div>
         </div>
         <div class="stat-card">
-          <div class="stat-value">$0.00</div>
-          <div class="stat-label">ממוצע עמלות</div>
+          <div class="stat-value" style="color:var(--navy);">₪3,210</div>
+          <div class="stat-label">סה"כ עמלות שולמו</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--yellow);">₪121</div>
+          <div class="stat-label">ממוצע עמלה חודשי ללקוח</div>
         </div>
       </div>
 
@@ -772,58 +812,122 @@
         <div class="settings-label-col">
           <div class="settings-label-wrap">
             <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
-            <div class="settings-label">קישור שותף</div>
+            <div class="settings-label">הקישור שלך</div>
           </div>
-          <div class="settings-desc">שתף את הקישור הייחודי שלך כדי להרוויח עמלות מהפניות.</div>
+          <div class="settings-desc">קישור ייחודי שנוצר אוטומטית. שתף אותו כדי להרוויח 10% מכל לקוח.</div>
         </div>
         <div class="settings-field-col">
           <div class="copy-url-wrap">
-            <input class="copy-url-input" id="affiliateUrl" type="text" value="https://whiteboard.education/r/alon123" readonly>
+            <input class="copy-url-input" id="affiliateUrl" type="text" value="https://whiteboard.education/r/alon-gabay-2d7f" readonly>
             <button class="copy-url-btn" onclick="copyAffiliateLink()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
               העתק
             </button>
           </div>
+          <div class="field-hint">הקישור נוצר אוטומטית ומקושר לחשבון שלך</div>
         </div>
       </div>
 
-      <!-- הממפנים שלך -->
+      <!-- לקוחות פעילים -->
       <div class="settings-section">
         <div class="settings-label-col">
           <div class="settings-label-wrap">
             <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-            <div class="settings-label">הממפנים שלך</div>
+            <div class="settings-label">לקוחות פעילים דרכך</div>
           </div>
-          <div class="settings-desc">רשימת המשתמשים שהגיעו דרך הקישור שלך.</div>
+          <div class="settings-desc">רשימת הלקוחות שנרשמו דרך הקישור שלך ומשלמים באופן פעיל.</div>
         </div>
         <div class="settings-field-col">
-          <div class="empty-state">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <div class="empty-state-title">עדיין אין הפניות</div>
-            <div class="empty-state-desc">שתף את הקישור שלך כדי להתחיל להרוויח עמלות</div>
+          <div style="overflow-x:auto;border-radius:var(--radius-sm);border:1px solid var(--border);">
+            <table style="width:100%;border-collapse:collapse;min-width:600px;">
+              <thead>
+                <tr style="background:var(--surface-2);">
+                  <th style="padding:10px 14px;text-align:right;font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;">לקוח</th>
+                  <th style="padding:10px 14px;text-align:right;font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;">חבילה</th>
+                  <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;">תשלום חודשי</th>
+                  <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;">העמלה שלך (10%)</th>
+                  <th style="padding:10px 14px;text-align:right;font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;">הצטרף</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:10px 14px;font-size:13px;font-weight:600;">דניאלה כהן</td>
+                  <td style="padding:10px 14px;font-size:13px;color:var(--text-sub);">Pro שנתי</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;">₪199</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:var(--green);">₪19.90</td>
+                  <td style="padding:10px 14px;font-size:12px;color:var(--text-light);">12.01.2026</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:10px 14px;font-size:13px;font-weight:600;">יוסי לוי</td>
+                  <td style="padding:10px 14px;font-size:13px;color:var(--text-sub);">Basic חודשי</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;">₪79</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:var(--green);">₪7.90</td>
+                  <td style="padding:10px 14px;font-size:12px;color:var(--text-light);">28.01.2026</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:10px 14px;font-size:13px;font-weight:600;">מיכל אברהם</td>
+                  <td style="padding:10px 14px;font-size:13px;color:var(--text-sub);">Pro שנתי</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;">₪199</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:var(--green);">₪19.90</td>
+                  <td style="padding:10px 14px;font-size:12px;color:var(--text-light);">14.02.2026</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:10px 14px;font-size:13px;font-weight:600;">רון שמש</td>
+                  <td style="padding:10px 14px;font-size:13px;color:var(--text-sub);">Pro חודשי</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;">₪149</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:var(--green);">₪14.90</td>
+                  <td style="padding:10px 14px;font-size:12px;color:var(--text-light);">03.03.2026</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:10px 14px;font-size:13px;font-weight:600;">נועה דוד</td>
+                  <td style="padding:10px 14px;font-size:13px;color:var(--text-sub);">Basic חודשי</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;">₪79</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:var(--green);">₪7.90</td>
+                  <td style="padding:10px 14px;font-size:12px;color:var(--text-light);">15.03.2026</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:10px 14px;font-size:13px;font-weight:600;">עמית רוזן</td>
+                  <td style="padding:10px 14px;font-size:13px;color:var(--text-sub);">Enterprise</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;">₪399</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:var(--green);">₪39.90</td>
+                  <td style="padding:10px 14px;font-size:12px;color:var(--text-light);">22.03.2026</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px;font-size:13px;font-weight:600;">שירה פלדמן</td>
+                  <td style="padding:10px 14px;font-size:13px;color:var(--text-sub);">Pro שנתי</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;">₪199</td>
+                  <td style="padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:var(--green);">₪19.90</td>
+                  <td style="padding:10px 14px;font-size:12px;color:var(--text-light);">01.04.2026</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+            <div class="field-hint">סה"כ 7 לקוחות פעילים · ₪1,303/חודש · עמלתך ₪130.30/חודש</div>
+            <button class="btn btn-ghost" style="font-size:11px;padding:5px 12px;">ייצוא CSV</button>
           </div>
         </div>
       </div>
 
-      <!-- בקש שותפות -->
+      <!-- תשלום רבעוני -->
       <div class="settings-section" style="border-bottom:none;">
         <div class="settings-label-col">
           <div class="settings-label-wrap">
-            <div class="settings-label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div>
-            <div class="settings-label">בקש שותפות</div>
+            <div class="settings-label-icon" style="background:rgba(125,197,122,0.15);color:#3a8838;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+            <div class="settings-label">תשלום רבעוני</div>
           </div>
-          <div class="settings-desc">הצטרף לתכנית השותפים שלנו והרוויח עמלות על הפניות מוצלחות.</div>
+          <div class="settings-desc">העמלות מחושבות ומשולמות כל רבעון (ינואר, אפריל, יולי, אוקטובר).</div>
         </div>
         <div class="settings-field-col">
-          <div style="background:var(--light-blue);border-radius:var(--radius-md);padding:20px;border:1px solid var(--border);">
-            <div style="font-size:14px;font-weight:700;color:var(--text-main);margin-bottom:6px;">איך זה עובד?</div>
-            <div style="font-size:13px;color:var(--text-sub);line-height:1.7;margin-bottom:16px;">
-              שתף את הקישור הייחודי שלך עם חברים, עמיתים ותלמידים. על כל רכישה שמגיעה דרך הקישור שלך, תקבל עמלה ישירות לחשבונך. העמלות משולמות מדי חודש.
+          <div style="background:rgba(125,197,122,0.08);border:1px solid rgba(125,197,122,0.25);border-radius:var(--radius-md);padding:20px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <div style="font-size:14px;font-weight:800;color:var(--text-main);">רבעון נוכחי: Q2 2026</div>
+              <div style="font-size:20px;font-weight:900;color:#3a8838;">₪847.00</div>
             </div>
-            <button class="btn btn-primary" onclick="">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-              בקש שותפות
-            </button>
+            <div style="font-size:12px;color:var(--text-sub);line-height:1.6;">
+              צפי תשלום: <strong>יולי 2026</strong> · מחושב לפי 10% מכל סליקה פעילה דרך הקישור שלך.<br>
+              התשלום יבוצע לחשבון הבנק שהוגדר בפרטי הסליקה.
+            </div>
           </div>
         </div>
       </div>
