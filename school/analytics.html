@@ -199,6 +199,8 @@
   .student-table tbody tr{border-bottom:1px solid var(--border);transition:background .15s;}
   .student-table tbody tr:last-child{border-bottom:none;}
   .student-table tbody tr:hover{background:var(--surface-2);}
+  .view-btn{padding:4px 12px;border-radius:20px;border:1.5px solid var(--border);background:transparent;font-family:var(--font-he);font-size:11px;font-weight:700;color:var(--text-sub);cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .view-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(56,196,242,0.06);}
   .student-table td{padding:12px 18px;font-size:13px;vertical-align:middle;}
   .student-name{font-weight:700;color:var(--text-main);}
   .student-course{font-size:11px;color:var(--text-sub);}
@@ -353,7 +355,7 @@
         </div>
         <div class="stat-content">
           <div class="stat-num" data-target="134" data-prefix="">0</div>
-          <div class="stat-label">תלמידים פעילים</div>
+          <div class="stat-label">תלמידים</div>
           <div class="stat-delta delta-up">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><polyline points="18 15 12 9 6 15"/></svg>+12%
           </div>
@@ -365,8 +367,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="#3a8838" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
         </div>
         <div class="stat-content">
-          <div class="stat-num" data-target="28" data-prefix="">0</div>
-          <div class="stat-label">נרשמים חדשים</div>
+          <div class="stat-num" data-target="1240" data-prefix="" data-suffix=" שעות">0</div>
+          <div class="stat-label">זמן למידה כולל</div>
           <div class="stat-delta delta-up">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><polyline points="18 15 12 9 6 15"/></svg>+8%
           </div>
@@ -379,7 +381,7 @@
         </div>
         <div class="stat-content">
           <div class="stat-num" data-target="12450" data-prefix="₪">0</div>
-          <div class="stat-label">הכנסות החודש</div>
+          <div class="stat-label">הכנסות</div>
           <div class="stat-delta delta-up">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><polyline points="18 15 12 9 6 15"/></svg>+15%
           </div>
@@ -388,13 +390,13 @@
 
       <div class="stat-card" style="transition-delay:.26s">
         <div class="stat-icon" style="background:rgba(240,86,128,0.1);">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         </div>
-        <div class="stat-content">
-          <div class="stat-num" data-target="42" data-prefix="" data-suffix="%" data-decimal="1">0</div>
-          <div class="stat-label">שיעור נטישה</div>
-          <div class="stat-delta delta-down">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><polyline points="18 9 12 15 6 9"/></svg>-0.8%
+        <div class="stat-content" title="לידים שלא השלימו רכישה">
+          <div class="stat-num" data-target="23" data-prefix="" data-suffix="">0</div>
+          <div class="stat-label">נוטשי עגלה</div>
+          <div class="stat-delta delta-up">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><polyline points="6 15 12 9 18 15"/></svg>+3
           </div>
         </div>
       </div>
@@ -412,8 +414,8 @@
             <div class="chart-subtitle">30 ימים אחרונים</div>
           </div>
           <div class="chart-legend">
-            <div class="legend-item"><div class="legend-dot" style="background:#38C4F2"></div>תלמידים פעילים</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#7DC57A"></div>נרשמים חדשים</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#38C4F2"></div>תלמידים</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#7DC57A"></div>זמן למידה כולל</div>
           </div>
         </div>
         <div class="svg-chart-wrap" style="position:relative;">
@@ -526,6 +528,10 @@
             <div class="vbar-bar-wrap"><div class="vbar-bar" data-height="17.5%" data-val="7%" style="background:linear-gradient(180deg,var(--pink),#d62a5e);"></div></div>
             <div class="vbar-label">אחר</div>
           </div>
+          <div class="vbar-col">
+            <div class="vbar-bar-wrap"><div class="vbar-bar" data-height="12.5%" data-val="5%" style="background:linear-gradient(180deg,#999,#666);"></div></div>
+            <div class="vbar-label">לא ידוע</div>
+          </div>
         </div>
       </div>
 
@@ -546,6 +552,7 @@
               <th>התקדמות</th>
               <th style="width:100px;text-align:center;">ציון ממוצע</th>
               <th style="width:120px;">פעילות אחרונה</th>
+              <th style="width:100px;"></th>
             </tr>
           </thead>
           <tbody>
@@ -555,6 +562,7 @@
               <td><div class="progress-cell"><div class="progress-bar-bg"><div class="progress-bar-fill" data-width="96%"></div></div><span class="progress-pct">96%</span></div></td>
               <td style="text-align:center;font-weight:700;">98</td>
               <td class="last-seen">לפני שעה</td>
+              <td><button class="view-btn">צפה בפרטים</button></td>
             </tr>
             <tr>
               <td><div class="student-name">דוד כהן</div></td>
@@ -562,6 +570,7 @@
               <td><div class="progress-cell"><div class="progress-bar-bg"><div class="progress-bar-fill" data-width="91%"></div></div><span class="progress-pct">91%</span></div></td>
               <td style="text-align:center;font-weight:700;">95</td>
               <td class="last-seen">לפני 3 שעות</td>
+              <td><button class="view-btn">צפה בפרטים</button></td>
             </tr>
             <tr>
               <td><div class="student-name">ענת שמש</div></td>
@@ -569,6 +578,7 @@
               <td><div class="progress-cell"><div class="progress-bar-bg"><div class="progress-bar-fill" data-width="87%"></div></div><span class="progress-pct">87%</span></div></td>
               <td style="text-align:center;font-weight:700;">92</td>
               <td class="last-seen">אתמול</td>
+              <td><button class="view-btn">צפה בפרטים</button></td>
             </tr>
             <tr>
               <td><div class="student-name">יוסי אברהם</div></td>
@@ -576,6 +586,7 @@
               <td><div class="progress-cell"><div class="progress-bar-bg"><div class="progress-bar-fill" data-width="82%"></div></div><span class="progress-pct">82%</span></div></td>
               <td style="text-align:center;font-weight:700;">89</td>
               <td class="last-seen">לפני יומיים</td>
+              <td><button class="view-btn">צפה בפרטים</button></td>
             </tr>
             <tr>
               <td><div class="student-name">נועם גל</div></td>
@@ -583,6 +594,7 @@
               <td><div class="progress-cell"><div class="progress-bar-bg"><div class="progress-bar-fill" data-width="78%"></div></div><span class="progress-pct">78%</span></div></td>
               <td style="text-align:center;font-weight:700;">86</td>
               <td class="last-seen">לפני 3 ימים</td>
+              <td><button class="view-btn">צפה בפרטים</button></td>
             </tr>
           </tbody>
         </table>
