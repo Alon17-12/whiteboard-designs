@@ -237,6 +237,12 @@
     .card-badge.recommended-badge {
       background: var(--gradient-cyan);
       color: #fff;
+      /* Ribbon style — top-left corner */
+      top: 0; left: 0; right: auto;
+      transform: none;
+      border-radius: 16px 0 12px 0;
+      padding: 5px 14px 5px 10px;
+      font-size: 11px;
     }
     .card-badge.trial-badge {
       background: rgba(234, 214, 84, 0.22);
@@ -642,9 +648,9 @@
 
     <!-- ── Card 3: צמיחה (Recommended) ── -->
     <div class="pricing-card recommended">
-      <span class="card-badge recommended-badge">&#11088; מומלץ</span>
-      <span class="card-badge trial-badge" style="top:18px;">30 יום חינם</span>
-      <div class="card-name" style="margin-top:22px;">מחנך</div>
+      <span class="card-badge recommended-badge">מומלץ</span>
+      <span class="card-badge trial-badge">30 יום חינם</span>
+      <div class="card-name">מחנך</div>
       <div class="card-price-block">
         <div class="card-price" data-monthly="249" data-annual="209">
           <span class="currency">&#8362;</span><span class="price-value">249</span>
