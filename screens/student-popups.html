@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>פופאפים — ממשק תלמיד ומשותף | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+  --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+  --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+  --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+  --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+  --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+  --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+  --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+  --shadow-sm:0 2px 10px rgba(37,62,122,0.07);
+  --shadow-md:0 6px 24px rgba(37,62,122,0.1);
+  --shadow-lg:0 16px 48px rgba(37,62,122,0.14);
+  --danger:#e53e3e;--danger-light:rgba(229,62,62,0.08);
+}
+[data-theme="dark"] {
+  --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+  --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+  --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+  --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+  --shadow-lg:0 16px 48px rgba(0,0,0,0.5);
+  --light-blue:rgba(56,196,242,0.08);
+  --danger:#fc5c65;--danger-light:rgba(252,92,101,0.12);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-height:100vh;transition:background .3s,color .3s;}
+
+/* ── PAGE LAYOUT ── */
+.page-wrapper{max-width:840px;margin:0 auto;padding:40px 24px 80px;}
+.page-header{text-align:center;margin-bottom:40px;}
+.logo-wrap{margin-bottom:20px;}
+.logo-wrap img{height:48px;object-fit:contain;}
+.page-title{font-family:var(--font-en);font-size:24px;font-weight:600;color:var(--text-main);margin-bottom:6px;}
+.page-subtitle{font-size:14px;color:var(--text-sub);font-weight:400;}
+
+/* ── DARK MODE TOGGLE ── */
+.theme-toggle{position:fixed;top:20px;left:20px;z-index:100;width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);transition:all .2s;}
+.theme-toggle:hover{transform:scale(1.08);box-shadow:var(--shadow-md);}
+.theme-toggle svg{width:20px;height:20px;color:var(--text-main);}
+[data-theme="dark"] .theme-toggle .icon-sun{display:block;}
+[data-theme="dark"] .theme-toggle .icon-moon{display:none;}
+[data-theme="light"] .theme-toggle .icon-sun{display:none;}
+[data-theme="light"] .theme-toggle .icon-moon{display:block;}
+
+/* ── SECTION LABEL ── */
+.section-label{font-size:13px;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;margin-top:32px;}
+.section-label:first-of-type{margin-top:0;}
+
+/* ── BUTTON GRID ── */
+.btn-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.trigger-btn{display:flex;align-items:center;gap:12px;padding:18px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all .2s;font-family:var(--font-he);font-size:14px;font-weight:600;color:var(--text-main);text-align:right;}
+.trigger-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.trigger-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+.trigger-btn .btn-icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;}
+.trigger-btn .btn-icon.cyan-bg{background:var(--cyan-light);color:var(--cyan);}
+.trigger-btn .btn-icon.pink-bg{background:rgba(240,86,128,0.1);color:var(--pink);}
+.trigger-btn .btn-icon.green-bg{background:rgba(125,197,122,0.1);color:var(--green);}
+.trigger-btn .btn-icon.yellow-bg{background:rgba(234,214,84,0.15);color:#b8a020;}
+.trigger-btn .btn-icon.navy-bg{background:rgba(37,62,122,0.08);color:var(--navy);}
+.trigger-btn .btn-icon.danger-bg{background:var(--danger-light);color:var(--danger);}
+
+/* ── OVERLAY ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity .25s;}
+.modal-overlay.active{display:flex;opacity:1;}
+
+/* ── MODAL CARD ── */
+.modal-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:32px;position:relative;width:100%;animation:modalIn .3s ease;max-height:90vh;overflow-y:auto;}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(8px);}to{opacity:1;transform:scale(1) translateY(0);}}
+@media(prefers-reduced-motion:reduce){@keyframes modalIn{from{opacity:0;}to{opacity:1;}}}
+
+.modal-close{position:absolute;top:16px;left:16px;width:32px;height:32px;border-radius:50%;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-light);transition:all .15s;z-index:2;}
+.modal-close:hover{background:rgba(37,62,122,0.06);color:var(--text-main);}
+[data-theme="dark"] .modal-close:hover{background:rgba(255,255,255,0.08);}
+.modal-close svg{width:18px;height:18px;}
+
+.modal-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.modal-title{font-size:18px;font-weight:700;color:var(--text-main);}
+.modal-subtitle{font-size:13px;color:var(--text-sub);margin-bottom:20px;line-height:1.5;}
+
+/* ── FORM ELEMENTS ── */
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:6px;}
+.form-input,.form-select,.form-textarea{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font-he);font-size:14px;color:var(--text-main);background:var(--surface);transition:border .2s;outline:none;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.15);}
+.form-textarea{resize:vertical;min-height:60px;}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--text-light);}
+[data-theme="dark"] .form-input,[data-theme="dark"] .form-select,[data-theme="dark"] .form-textarea{background:var(--surface-2);border-color:var(--border);}
+
+.form-row{display:flex;gap:12px;}
+.form-row .form-group{flex:1;}
+
+/* ── CARD SELECTION ── */
+.card-select{display:flex;gap:10px;margin-top:6px;}
+.card-option{flex:1;padding:14px 10px;border:2px solid var(--border);border-radius:var(--radius-md);text-align:center;cursor:pointer;transition:all .2s;background:var(--surface);}
+.card-option:hover{border-color:rgba(56,196,242,0.4);}
+.card-option.selected{border-color:var(--cyan);background:var(--cyan-light);}
+.card-option .card-icon{font-size:24px;margin-bottom:6px;}
+.card-option .card-name{font-size:12px;font-weight:600;color:var(--text-main);}
+
+/* ── BUTTONS ── */
+.modal-actions{display:flex;gap:10px;margin-top:24px;}
+.btn{padding:10px 22px;border-radius:var(--radius-sm);font-family:var(--font-he);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px;}
+.btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+.btn-primary{background:var(--cyan);color:#fff;}
+.btn-primary:hover{background:#2ab5e3;transform:translateY(-1px);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.btn-ghost{background:transparent;color:var(--text-sub);border:1px solid var(--border);}
+.btn-ghost:hover{background:rgba(37,62,122,0.04);color:var(--text-main);}
+.btn-full{width:100%;}
+.btn-lg{padding:14px 28px;font-size:16px;}
+.btn-success{background:var(--green);color:#fff;}
+.btn-success:hover{filter:brightness(1.08);transform:translateY(-1px);}
+
+/* ── COURSE PREVIEW CARD ── */
+.course-preview{background:linear-gradient(135deg,var(--navy),var(--navy-light));border-radius:var(--radius-md);padding:20px;margin-bottom:20px;color:#fff;}
+.course-preview .cp-name{font-size:16px;font-weight:700;margin-bottom:4px;}
+.course-preview .cp-instructor{font-size:12px;opacity:0.8;margin-bottom:12px;}
+.course-preview .cp-price{font-size:22px;font-weight:800;font-family:var(--font-en);}
+
+/* ── CLUB PREVIEW CARD ── */
+.club-preview{background:linear-gradient(135deg,#38C4F2,#253E7A);border-radius:var(--radius-md);padding:20px;margin-bottom:20px;color:#fff;}
+.club-preview .club-name{font-size:16px;font-weight:700;margin-bottom:4px;}
+.club-preview .club-members{font-size:12px;opacity:0.8;}
+
+/* ── PLAN PILLS ── */
+.plan-pills{display:flex;gap:10px;margin-bottom:20px;}
+.plan-pill{flex:1;padding:14px 12px;border:2px solid var(--border);border-radius:var(--radius-md);text-align:center;cursor:pointer;transition:all .2s;background:var(--surface);}
+.plan-pill:hover{border-color:rgba(56,196,242,0.4);}
+.plan-pill.selected{border-color:var(--cyan);background:var(--cyan-light);}
+.plan-pill .pill-title{font-size:14px;font-weight:700;color:var(--text-main);}
+.plan-pill .pill-sub{font-size:11px;color:var(--text-sub);margin-top:2px;}
+
+/* ── COUPON ROW ── */
+.coupon-row{display:flex;gap:8px;margin-bottom:16px;}
+.coupon-row .form-input{flex:1;}
+.coupon-row .btn{flex-shrink:0;}
+
+/* ── SUMMARY TABLE ── */
+.summary-table{width:100%;margin-bottom:20px;}
+.summary-table .row{display:flex;justify-content:space-between;padding:8px 0;font-size:13px;color:var(--text-sub);}
+.summary-table .row.total{font-size:15px;font-weight:700;color:var(--text-main);border-top:1px solid var(--border);padding-top:12px;margin-top:4px;}
+.summary-table .discount{color:var(--green);}
+
+/* ── SECURE NOTE ── */
+.secure-note{text-align:center;font-size:12px;color:var(--text-light);margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px;}
+.secure-note svg{width:14px;height:14px;}
+
+/* ── SUCCESS CHECK ── */
+.success-check{width:64px;height:64px;border-radius:50%;background:rgba(125,197,122,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;animation:checkPop .5s ease;}
+@keyframes checkPop{0%{transform:scale(0);}60%{transform:scale(1.15);}100%{transform:scale(1);}}
+.success-check svg{width:32px;height:32px;color:var(--green);}
+
+/* ── EMAIL ICON LARGE ── */
+.icon-large{width:64px;height:64px;border-radius:50%;background:var(--cyan-light);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.icon-large svg{width:32px;height:32px;color:var(--cyan);}
+.icon-large.lock-icon{background:rgba(240,86,128,0.1);}
+.icon-large.lock-icon svg{color:var(--pink);}
+
+/* ── PASSWORD FIELD WITH EYE ── */
+.password-wrap{position:relative;}
+.password-wrap .form-input{padding-left:44px;}
+.eye-toggle{position:absolute;left:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-light);padding:4px;display:flex;align-items:center;justify-content:center;}
+.eye-toggle:hover{color:var(--text-main);}
+.eye-toggle svg{width:18px;height:18px;}
+
+/* ── STRENGTH BAR ── */
+.strength-bar{display:flex;gap:4px;margin-top:6px;margin-bottom:4px;}
+.strength-bar .bar-seg{flex:1;height:4px;border-radius:2px;background:var(--border);transition:background .3s;}
+.strength-bar.weak .bar-seg:nth-child(1){background:var(--danger);}
+.strength-bar.medium .bar-seg:nth-child(1),.strength-bar.medium .bar-seg:nth-child(2){background:var(--yellow);}
+.strength-bar.strong .bar-seg:nth-child(1),.strength-bar.strong .bar-seg:nth-child(2),.strength-bar.strong .bar-seg:nth-child(3){background:var(--green);}
+.strength-label{font-size:11px;color:var(--text-light);}
+
+/* ── BOARDi FLOAT ── */
+.boardi-img{width:68px;height:68px;object-fit:contain;animation:boardiFloat 3s ease-in-out infinite;}
+@keyframes boardiFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@media(prefers-reduced-motion:reduce){.boardi-img{animation:none;}}
+.boardi-corner{position:absolute;bottom:16px;left:16px;}
+
+/* ── TOAST NOTIFICATIONS ── */
+.toast-container{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:2000;display:flex;flex-direction:column-reverse;gap:10px;align-items:center;pointer-events:none;}
+.toast-item{display:flex;align-items:center;gap:10px;padding:14px 20px;border-radius:var(--radius-md);color:#fff;font-size:14px;font-weight:600;font-family:var(--font-he);box-shadow:var(--shadow-lg);pointer-events:auto;min-width:300px;max-width:480px;animation:toastSlideIn .4s ease;}
+.toast-item.hiding{animation:toastSlideOut .3s ease forwards;}
+@keyframes toastSlideIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes toastSlideOut{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(20px);}}
+@media(prefers-reduced-motion:reduce){@keyframes toastSlideIn{from{opacity:0;}to{opacity:1;}}@keyframes toastSlideOut{from{opacity:1;}to{opacity:0;}}}
+.toast-item svg{width:18px;height:18px;flex-shrink:0;}
+.toast-item .toast-text{flex:1;}
+.toast-item .toast-close{background:none;border:none;color:rgba(255,255,255,0.7);cursor:pointer;padding:4px;display:flex;align-items:center;flex-shrink:0;}
+.toast-item .toast-close:hover{color:#fff;}
+.toast-item .toast-close svg{width:14px;height:14px;}
+.toast-item .toast-undo{background:none;border:none;color:rgba(255,255,255,0.9);cursor:pointer;font-family:var(--font-he);font-size:13px;font-weight:700;text-decoration:underline;padding:0 4px;flex-shrink:0;}
+.toast-item .toast-undo:hover{color:#fff;}
+.toast-item.toast-success{background:#38a169;}
+.toast-item.toast-info{background:var(--cyan);}
+.toast-item.toast-warning{background:var(--pink);}
+.toast-item.toast-error{background:var(--danger);}
+
+/* ── TOAST TRIGGER BUTTONS ── */
+.toast-section{margin-top:32px;padding-top:24px;border-top:1px solid var(--border);}
+.toast-btn-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.toast-trigger{padding:10px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);cursor:pointer;font-family:var(--font-he);font-size:12px;font-weight:600;color:var(--text-main);transition:all .2s;text-align:center;}
+.toast-trigger:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm);}
+.toast-trigger:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+.toast-trigger .t-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:6px;}
+.toast-trigger .t-dot.green{background:#38a169;}
+.toast-trigger .t-dot.cyan{background:var(--cyan);}
+.toast-trigger .t-dot.pink{background:var(--pink);}
+.toast-trigger .t-dot.red{background:var(--danger);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .btn-grid{grid-template-columns:1fr;}
+  .card-select{flex-direction:column;}
+  .plan-pills{flex-direction:column;}
+  .form-row{flex-direction:column;gap:0;}
+  .modal-card{padding:24px 18px;}
+  .toast-btn-grid{grid-template-columns:repeat(2,1fr);}
+  .toast-item{min-width:260px;}
+}
+</style>
+</head>
+<body>
+
+<!-- DARK MODE TOGGLE -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="החלף ערכת נושא">
+  <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+</button>
+
+<div class="page-wrapper">
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="logo-wrap">
+      <img class="logo-light" src="../LOGO/LOGO PNG/WHITEBOARD 2.0-01.png" alt="WHITEBOARD">
+      <img class="logo-dark" src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD" style="display:none;">
+    </div>
+    <h1 class="page-title">Popups &mdash; Student &amp; Shared</h1>
+    <p class="page-subtitle">לחץ על כפתור כדי לפתוח את הפופאפ המתאים</p>
+  </div>
+
+  <!-- STUDENT POPUPS -->
+  <div class="section-label">פופאפים — תלמיד</div>
+  <div class="btn-grid">
+    <button class="trigger-btn" onclick="openPopup('popup-checkout')">
+      <span class="btn-icon cyan-bg">&#128179;</span> רכישת קורס
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-thankyou')">
+      <span class="btn-icon green-bg">&#10004;</span> הצלחת רכישה
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-join-club')">
+      <span class="btn-icon pink-bg">&#127941;</span> הצטרפות למועדון
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-verify-email')">
+      <span class="btn-icon yellow-bg">&#9993;</span> אימות אימייל
+    </button>
+  </div>
+
+  <!-- SHARED POPUPS -->
+  <div class="section-label" style="margin-top:32px;">פופאפים — משותף</div>
+  <div class="btn-grid">
+    <button class="trigger-btn" onclick="openPopup('popup-forgot-password')">
+      <span class="btn-icon pink-bg">&#128274;</span> שכחתי סיסמה
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-change-password')">
+      <span class="btn-icon navy-bg">&#128273;</span> שינוי סיסמה
+    </button>
+    <button class="trigger-btn" onclick="openPopup('popup-toasts')" style="grid-column:span 2;justify-content:center;">
+      <span class="btn-icon cyan-bg">&#128276;</span> Toast / הודעות מערכת
+    </button>
+  </div>
+
+  <!-- TOAST TRIGGER SECTION -->
+  <div class="toast-section">
+    <div class="section-label">הפעלת הודעות Toast</div>
+    <div class="toast-btn-grid">
+      <button class="toast-trigger" onclick="showToast('success')"><span class="t-dot green"></span>הצלחה</button>
+      <button class="toast-trigger" onclick="showToast('info')"><span class="t-dot cyan"></span>מידע</button>
+      <button class="toast-trigger" onclick="showToast('warning')"><span class="t-dot pink"></span>מחיקה</button>
+      <button class="toast-trigger" onclick="showToast('error')"><span class="t-dot red"></span>שגיאה</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 1: רכישת קורס — Checkout             -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-checkout" role="dialog" aria-modal="true" aria-label="רכישת קורס">
+  <div class="modal-card" style="max-width:480px;">
+    <button class="modal-close" onclick="closePopup('popup-checkout')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="modal-header">
+      <div class="modal-title">&#128179; רכישת קורס</div>
+    </div>
+
+    <!-- Course preview -->
+    <div class="course-preview">
+      <div class="cp-name">השקת הזהב</div>
+      <div class="cp-instructor">אלון גבאי</div>
+      <div class="cp-price">&#8362;249</div>
+    </div>
+
+    <!-- Payment method -->
+    <div class="form-group">
+      <div class="form-label">אמצעי תשלום</div>
+      <div class="card-select" id="payment-method">
+        <div class="card-option selected" onclick="selectCard(this,'payment-method')">
+          <div class="card-icon">&#128179;</div>
+          <div class="card-name">כרטיס אשראי</div>
+        </div>
+        <div class="card-option" onclick="selectCard(this,'payment-method')">
+          <div class="card-icon">&#127852;</div>
+          <div class="card-name">PayPal</div>
+        </div>
+        <div class="card-option" onclick="selectCard(this,'payment-method')">
+          <div class="card-icon">&#9889;</div>
+          <div class="card-name">Bit</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Credit card fields -->
+    <div class="form-group">
+      <div class="form-label">מספר כרטיס</div>
+      <input class="form-input" type="text" placeholder="0000 0000 0000 0000" maxlength="19" dir="ltr">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <div class="form-label">תוקף</div>
+        <input class="form-input" type="text" placeholder="MM/YY" maxlength="5" dir="ltr">
+      </div>
+      <div class="form-group">
+        <div class="form-label">CVV</div>
+        <input class="form-input" type="text" placeholder="***" maxlength="4" dir="ltr">
+      </div>
+    </div>
+
+    <!-- Coupon -->
+    <div class="form-label">קוד קופון</div>
+    <div class="coupon-row">
+      <input class="form-input" type="text" placeholder="הכנס קוד קופון" id="coupon-input">
+      <button class="btn btn-ghost" onclick="applyCoupon()">הפעל</button>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-table">
+      <div class="row"><span>סה״כ ביניים</span><span>&#8362;249</span></div>
+      <div class="row discount" id="discount-row" style="display:none;"><span>הנחה</span><span>-&#8362;50</span></div>
+      <div class="row total"><span>לתשלום</span><span id="total-price">&#8362;249</span></div>
+    </div>
+
+    <button class="btn btn-primary btn-full btn-lg">השלם רכישה</button>
+
+    <div class="secure-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      תשלום מאובטח
+    </div>
+
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_1.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 2: הצלחת רכישה — Thank You            -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-thankyou" role="dialog" aria-modal="true" aria-label="הצלחת רכישה">
+  <div class="modal-card" style="max-width:420px;text-align:center;">
+    <button class="modal-close" onclick="closePopup('popup-thankyou')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="success-check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+
+    <div class="modal-title" style="text-align:center;margin-bottom:8px;color:var(--green);font-size:20px;">הרכישה בוצעה בהצלחה!</div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:8px;">השקת הזהב</div>
+    <div class="modal-subtitle" style="text-align:center;">קיבלת גישה מלאה לקורס. מייל אישור נשלח אליך.</div>
+
+    <button class="btn btn-primary btn-full btn-lg" onclick="closePopup('popup-thankyou')">התחל ללמוד</button>
+    <div style="margin-top:10px;">
+      <button class="btn btn-ghost btn-full" onclick="closePopup('popup-thankyou')">חזרה לדף הבית</button>
+    </div>
+
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_14.png" alt="BOARDi" style="width:90px;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 3: הצטרפות למועדון                     -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-join-club" role="dialog" aria-modal="true" aria-label="הצטרפות למועדון">
+  <div class="modal-card" style="max-width:460px;">
+    <button class="modal-close" onclick="closePopup('popup-join-club')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="modal-header">
+      <div class="modal-title">&#127941; הצטרפות למועדון</div>
+    </div>
+
+    <!-- Club preview -->
+    <div class="club-preview">
+      <div class="club-name">מועדון שיווק ויצירת תוכן</div>
+      <div class="club-members">247 חברים</div>
+    </div>
+
+    <!-- Plan pills -->
+    <div class="form-label">בחר מסלול</div>
+    <div class="plan-pills" id="plan-pills">
+      <div class="plan-pill selected" onclick="selectPill(this)">
+        <div class="pill-title">חודשי &#8362;49</div>
+      </div>
+      <div class="plan-pill" onclick="selectPill(this)">
+        <div class="pill-title">שנתי &#8362;399</div>
+        <div class="pill-sub">חודשיים חינם</div>
+      </div>
+    </div>
+
+    <!-- Payment method -->
+    <div class="form-group">
+      <div class="form-label">אמצעי תשלום</div>
+      <div class="card-select" id="club-payment">
+        <div class="card-option selected" onclick="selectCard(this,'club-payment')">
+          <div class="card-icon">&#128179;</div>
+          <div class="card-name">כרטיס אשראי</div>
+        </div>
+        <div class="card-option" onclick="selectCard(this,'club-payment')">
+          <div class="card-icon">&#127852;</div>
+          <div class="card-name">PayPal</div>
+        </div>
+        <div class="card-option" onclick="selectCard(this,'club-payment')">
+          <div class="card-icon">&#9889;</div>
+          <div class="card-name">Bit</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-full btn-lg">הצטרף למועדון</button>
+
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_5.png" alt="BOARDi" style="width:90px;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 4: אימות אימייל                       -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-verify-email" role="dialog" aria-modal="true" aria-label="אימות אימייל">
+  <div class="modal-card" style="max-width:400px;text-align:center;">
+    <button class="modal-close" onclick="closePopup('popup-verify-email')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="icon-large">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    </div>
+
+    <div class="modal-title" style="text-align:center;margin-bottom:12px;">אמת את כתובת המייל שלך</div>
+    <div class="modal-subtitle" style="text-align:center;">שלחנו מייל אימות ל-<strong>alon@email.com</strong>. לחץ על הקישור במייל כדי להפעיל את החשבון.</div>
+
+    <button class="btn btn-ghost btn-full" style="margin-top:8px;">שלח שוב</button>
+    <div style="font-size:12px;color:var(--text-light);margin-top:12px;">לא קיבלת? בדוק בספאם</div>
+
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_8.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 5: שכחתי סיסמה                        -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-forgot-password" role="dialog" aria-modal="true" aria-label="שכחתי סיסמה">
+  <div class="modal-card" style="max-width:400px;text-align:center;">
+    <button class="modal-close" onclick="closePopup('popup-forgot-password')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="icon-large lock-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+
+    <div class="modal-title" style="text-align:center;margin-bottom:12px;">שכחת סיסמה?</div>
+    <div class="modal-subtitle" style="text-align:center;">הכנס את האימייל שלך ונשלח לך קישור לאיפוס</div>
+
+    <div class="form-group" style="text-align:right;">
+      <div class="form-label">אימייל</div>
+      <input class="form-input" type="email" placeholder="your@email.com" dir="ltr">
+    </div>
+
+    <button class="btn btn-primary btn-full btn-lg">שלח קישור איפוס</button>
+    <div style="margin-top:14px;"><a href="#" style="font-size:13px;color:var(--cyan);text-decoration:none;font-weight:600;" onclick="closePopup('popup-forgot-password');return false;">חזרה להתחברות</a></div>
+
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_4.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- POPUP 6: שינוי סיסמה                        -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="popup-change-password" role="dialog" aria-modal="true" aria-label="שינוי סיסמה">
+  <div class="modal-card" style="max-width:420px;">
+    <button class="modal-close" onclick="closePopup('popup-change-password')" aria-label="סגור">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="modal-header">
+      <div class="modal-title">&#128273; שינוי סיסמה</div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-label">סיסמה נוכחית</div>
+      <div class="password-wrap">
+        <input class="form-input" type="password" placeholder="הכנס סיסמה נוכחית" id="current-pw">
+        <button class="eye-toggle" onclick="togglePassword('current-pw',this)" aria-label="הצג סיסמה">
+          <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-label">סיסמה חדשה</div>
+      <div class="password-wrap">
+        <input class="form-input" type="password" placeholder="הכנס סיסמה חדשה" id="new-pw" oninput="checkStrength(this.value)">
+        <button class="eye-toggle" onclick="togglePassword('new-pw',this)" aria-label="הצג סיסמה">
+          <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
+      <div class="strength-bar" id="strength-bar">
+        <div class="bar-seg"></div><div class="bar-seg"></div><div class="bar-seg"></div>
+      </div>
+      <div class="strength-label" id="strength-label"></div>
+    </div>
+
+    <div class="form-group">
+      <div class="form-label">אימות סיסמה חדשה</div>
+      <div class="password-wrap">
+        <input class="form-input" type="password" placeholder="הכנס שוב את הסיסמה החדשה" id="confirm-pw">
+        <button class="eye-toggle" onclick="togglePassword('confirm-pw',this)" aria-label="הצג סיסמה">
+          <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-full btn-lg">שנה סיסמה</button>
+
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_7.png" alt="BOARDi"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCRIPT                                      -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+/* ── THEME ── */
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  document.querySelector('.logo-light').style.display = next === 'light' ? '' : 'none';
+  document.querySelector('.logo-dark').style.display = next === 'dark' ? '' : 'none';
+}
+
+/* ── POPUP OPEN / CLOSE ── */
+let currentPopup = null;
+
+function openPopup(id) {
+  if (id === 'popup-toasts') {
+    // Special: just show all 4 toasts in sequence
+    showToast('success');
+    setTimeout(() => showToast('info'), 200);
+    setTimeout(() => showToast('warning'), 400);
+    setTimeout(() => showToast('error'), 600);
+    return;
+  }
+  const overlay = document.getElementById(id);
+  if (!overlay) return;
+  overlay.classList.add('active');
+  currentPopup = id;
+  requestAnimationFrame(() => {
+    const firstFocusable = overlay.querySelector('input:not([type="hidden"]):not([style*="display:none"]),select,textarea,button.modal-close');
+    if (firstFocusable) firstFocusable.focus();
+  });
+}
+
+function closePopup(id) {
+  const overlay = document.getElementById(id);
+  if (!overlay) return;
+  overlay.classList.remove('active');
+  currentPopup = null;
+}
+
+// Click overlay to close
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closePopup(overlay.id);
+  });
+});
+
+// Escape to close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && currentPopup) closePopup(currentPopup);
+});
+
+// Focus trap
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('keydown', e => {
+    if (e.key !== 'Tab') return;
+    const focusable = overlay.querySelectorAll('button:not([disabled]),input:not([style*="display:none"]),select,textarea,[tabindex]:not([tabindex="-1"])');
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+});
+
+/* ── CARD SELECTION ── */
+function selectCard(el, groupId) {
+  const group = document.getElementById(groupId);
+  group.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+/* ── PLAN PILL SELECTION ── */
+function selectPill(el) {
+  document.querySelectorAll('#plan-pills .plan-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+/* ── COUPON ── */
+function applyCoupon() {
+  const code = document.getElementById('coupon-input').value.trim();
+  const discountRow = document.getElementById('discount-row');
+  const totalPrice = document.getElementById('total-price');
+  if (code.length > 0) {
+    discountRow.style.display = 'flex';
+    totalPrice.textContent = '\u20AA199';
+  } else {
+    discountRow.style.display = 'none';
+    totalPrice.textContent = '\u20AA249';
+  }
+}
+
+/* ── PASSWORD TOGGLE ── */
+function togglePassword(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const isPassword = input.type === 'password';
+  input.type = isPassword ? 'text' : 'password';
+  btn.querySelector('.eye-open').style.display = isPassword ? 'none' : '';
+  btn.querySelector('.eye-closed').style.display = isPassword ? '' : 'none';
+}
+
+/* ── PASSWORD STRENGTH ── */
+function checkStrength(val) {
+  const bar = document.getElementById('strength-bar');
+  const label = document.getElementById('strength-label');
+  bar.className = 'strength-bar';
+  if (val.length === 0) { label.textContent = ''; return; }
+  if (val.length < 6) {
+    bar.classList.add('weak');
+    label.textContent = '\u05D7\u05DC\u05E9\u05D4';
+  } else if (val.length < 10 || !/[0-9]/.test(val) || !/[A-Za-z]/.test(val)) {
+    bar.classList.add('medium');
+    label.textContent = '\u05D1\u05D9\u05E0\u05D5\u05E0\u05D9\u05EA';
+  } else {
+    bar.classList.add('strong');
+    label.textContent = '\u05D7\u05D6\u05E7\u05D4';
+  }
+}
+
+/* ── TOAST NOTIFICATIONS ── */
+const toastData = {
+  success: {
+    cls: 'toast-success',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+    text: '\u05D4\u05E9\u05D9\u05E0\u05D5\u05D9\u05D9\u05DD \u05E0\u05E9\u05DE\u05E8\u05D5 \u05D1\u05D4\u05E6\u05DC\u05D7\u05D4',
+    auto: 3000,
+    undo: false
+  },
+  info: {
+    cls: 'toast-info',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+    text: '\u05D4\u05DE\u05D9\u05D9\u05DC \u05E0\u05E9\u05DC\u05D7 \u05DC-247 \u05E0\u05DE\u05E2\u05E0\u05D9\u05DD',
+    auto: 4000,
+    undo: false
+  },
+  warning: {
+    cls: 'toast-warning',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+    text: '\u05D4\u05E4\u05E8\u05D9\u05D8 \u05E0\u05DE\u05D7\u05E7',
+    auto: 5000,
+    undo: true
+  },
+  error: {
+    cls: 'toast-error',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    text: '\u05E9\u05D2\u05D9\u05D0\u05D4: \u05DC\u05D0 \u05E0\u05D9\u05EA\u05DF \u05DC\u05E9\u05DE\u05D5\u05E8',
+    auto: 0,
+    undo: false
+  }
+};
+
+function showToast(type) {
+  const data = toastData[type];
+  if (!data) return;
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = 'toast-item ' + data.cls;
+  let html = data.icon + '<span class="toast-text">' + data.text + '</span>';
+  if (data.undo) {
+    html += '<button class="toast-undo" onclick="dismissToast(this.parentElement)">\u05D1\u05D8\u05DC</button>';
+  }
+  html += '<button class="toast-close" onclick="dismissToast(this.parentElement)" aria-label="\u05E1\u05D2\u05D5\u05E8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>';
+  el.innerHTML = html;
+  container.appendChild(el);
+
+  if (data.auto > 0) {
+    setTimeout(() => dismissToast(el), data.auto);
+  }
+}
+
+function dismissToast(el) {
+  if (!el || !el.parentElement) return;
+  el.classList.add('hiding');
+  setTimeout(() => { if (el.parentElement) el.parentElement.removeChild(el); }, 300);
+}
+</script>
+</body>
+</html>
