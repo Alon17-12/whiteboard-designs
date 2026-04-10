@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHITEBOARD | אסטרטגיית תמחור</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:      #253E7A;
+    --cyan:      #38C4F2;
+    --light-blue:#E3F4FD;
+    --pink:      #F05680;
+    --yellow:    #EAD654;
+    --green:     #7DC57A;
+    --white:     #FFFFFF;
+    --font-en:   'Fredoka', sans-serif;
+    --font-he:   'Heebo', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: #0a0e1a;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    user-select: none;
+  }
+
+  /* ─── SLIDESHOW ─────────────────────────────────────────── */
+  .slideshow {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: scale(0.97);
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: scale(1);
+  }
+
+  .slide.exit {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+
+  /* ─── PROGRESS BAR ──────────────────────────────────────── */
+  #progress-bar {
+    position: fixed;
+    bottom: 0; left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--cyan), var(--pink));
+    transition: width 0.5s ease;
+    z-index: 100;
+    border-radius: 2px;
+  }
+
+  /* ─── NAV ───────────────────────────────────────────────── */
+  .nav-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+
+  .nav-btn:hover {
+    background: rgba(56,196,242,0.35);
+    border-color: var(--cyan);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  #prev-btn { left: 20px; }
+  #next-btn { right: 20px; }
+
+  /* ─── SLIDE COUNTER ─────────────────────────────────────── */
+  #slide-counter {
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .dot.active {
+    background: var(--cyan);
+    transform: scale(1.4);
+  }
+
+  /* ─── LOGO CORNER ───────────────────────────────────────── */
+  .logo-corner {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 100;
+    opacity: 0.85;
+  }
+
+  .logo-corner img {
+    height: 48px;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  }
+
+  /* ─── SHARED STYLES ─────────────────────────────────────── */
+  .slide-num {
+    font-family: var(--font-en);
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .slide-heading {
+    font-family: var(--font-he);
+    font-weight: 900;
+    font-size: 52px;
+    line-height: 1.1;
+    color: white;
+    margin-bottom: 20px;
+  }
+
+  .slide-heading em {
+    font-style: normal;
+    color: var(--cyan);
+  }
+
+  .slide-sub {
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+
+  /* Particles */
+  .particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: drift linear infinite;
+  }
+
+  @keyframes drift {
+    0% { transform: translateY(0) scale(1); opacity: 0.7; }
+    100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 1 — COVER
+  ══════════════════════════════════════════════════════════════ */
+  #slide-1 {
+    background: linear-gradient(135deg, #0d1b3e 0%, #253E7A 50%, #1a3060 100%);
+    overflow: hidden;
+  }
+
+  #slide-1::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 80%, rgba(56,196,242,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 80% 20%, rgba(240,86,128,0.15) 0%, transparent 60%);
+  }
+
+  .cover-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    max-width: 1100px;
+    width: 100%;
+    padding: 0 60px;
+  }
+
+  .cover-text { text-align: right; }
+
+  .cover-tag {
+    display: inline-block;
+    background: rgba(56,196,242,0.2);
+    border: 1px solid rgba(56,196,242,0.5);
+    color: var(--cyan);
+    font-family: var(--font-en);
+    font-size: 13px;
+    letter-spacing: 3px;
+    padding: 6px 16px;
+    border-radius: 30px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  .cover-title {
+    font-family: var(--font-he);
+    font-weight: 900;
+    font-size: 64px;
+    line-height: 1.05;
+    color: white;
+    margin-bottom: 16px;
+  }
+
+  .cover-title span {
+    background: linear-gradient(90deg, var(--cyan), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .cover-subtitle {
+    font-size: 22px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+    margin-bottom: 36px;
+    line-height: 1.5;
+  }
+
+  .cover-tagline {
+    font-family: var(--font-en);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .cover-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .cover-boardi img {
+    width: 220px;
+    filter: drop-shadow(0 20px 40px rgba(56,196,242,0.35));
+    animation: float 4s ease-in-out infinite;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 2 — COMPETITORS MAP
+  ══════════════════════════════════════════════════════════════ */
+  .dark-slide {
+    background: linear-gradient(135deg, #0a0e1a 0%, #141a2e 100%);
+    overflow: hidden;
+  }
+
+  .dark-slide::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56,196,242,0.07) 0%, transparent 70%);
+  }
+
+  .slide-wrap {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 50px;
+    text-align: right;
+  }
+
+  .slide-top {
+    margin-bottom: 36px;
+  }
+
+  /* Competitor table */
+  .comp-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    font-size: 13px;
+  }
+
+  .comp-table th {
+    background: rgba(56,196,242,0.12);
+    color: var(--cyan);
+    font-weight: 700;
+    padding: 14px 12px;
+    text-align: center;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .comp-table td {
+    padding: 12px 10px;
+    text-align: center;
+    color: rgba(255,255,255,0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .comp-table tr:last-child td { border-bottom: none; }
+
+  .comp-table tr:hover td {
+    background: rgba(255,255,255,0.03);
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .badge-green { background: rgba(125,197,122,0.2); color: var(--green); }
+  .badge-red { background: rgba(240,86,128,0.2); color: var(--pink); }
+  .badge-yellow { background: rgba(234,214,84,0.2); color: var(--yellow); }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 3 — PROBLEM
+  ══════════════════════════════════════════════════════════════ */
+  .pain-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .pain-card {
+    background: rgba(240,86,128,0.08);
+    border: 1px solid rgba(240,86,128,0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 28px 22px;
+    text-align: right;
+    transition: transform 0.3s;
+  }
+
+  .pain-card:hover {
+    transform: translateY(-6px);
+  }
+
+  .pain-card .pain-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  .pain-card .pain-stat {
+    font-family: var(--font-en);
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--pink);
+    margin-bottom: 8px;
+  }
+
+  .pain-card h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+  }
+
+  .pain-card p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+  }
+
+  .solution-banner {
+    background: rgba(56,196,242,0.1);
+    border: 1px solid rgba(56,196,242,0.3);
+    border-radius: 16px;
+    padding: 20px 28px;
+    text-align: center;
+    color: var(--cyan);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 4 — ADVANTAGE
+  ══════════════════════════════════════════════════════════════ */
+  .stat-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    transition: transform 0.3s, background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .stat-card:nth-child(1)::after { background: var(--cyan); }
+  .stat-card:nth-child(2)::after { background: var(--pink); }
+  .stat-card:nth-child(3)::after { background: var(--yellow); }
+  .stat-card:nth-child(4)::after { background: var(--green); }
+
+  .stat-card:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-6px);
+  }
+
+  .stat-card .stat-big {
+    font-family: var(--font-en);
+    font-weight: 700;
+    font-size: 48px;
+    margin-bottom: 8px;
+  }
+
+  .stat-card:nth-child(1) .stat-big { color: var(--cyan); }
+  .stat-card:nth-child(2) .stat-big { color: var(--pink); }
+  .stat-card:nth-child(3) .stat-big { color: var(--yellow); }
+  .stat-card:nth-child(4) .stat-big { color: var(--green); }
+
+  .stat-card h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+  }
+
+  .stat-card p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.5;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 5 — PRICING CARDS
+  ══════════════════════════════════════════════════════════════ */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  .pricing-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 36px 28px;
+    text-align: center;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .pricing-card:hover {
+    transform: translateY(-8px);
+  }
+
+  .pricing-card.featured {
+    border: 2px solid var(--cyan);
+    background: rgba(56,196,242,0.08);
+    transform: scale(1.04);
+  }
+
+  .pricing-card.featured:hover {
+    transform: scale(1.04) translateY(-8px);
+  }
+
+  .recommended-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, var(--cyan), var(--pink));
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 20px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .pricing-card .plan-name {
+    font-family: var(--font-he);
+    font-weight: 700;
+    font-size: 24px;
+    color: white;
+    margin-bottom: 8px;
+    margin-top: 8px;
+  }
+
+  .pricing-card .plan-price {
+    font-family: var(--font-en);
+    font-weight: 700;
+    font-size: 44px;
+    color: var(--cyan);
+    margin-bottom: 4px;
+    direction: ltr;
+  }
+
+  .pricing-card .plan-period {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 4px;
+  }
+
+  .pricing-card .plan-annual {
+    font-size: 13px;
+    color: var(--green);
+    margin-bottom: 20px;
+  }
+
+  .pricing-card .plan-features {
+    list-style: none;
+    text-align: right;
+    flex: 1;
+    margin-bottom: 20px;
+  }
+
+  .pricing-card .plan-features li {
+    padding: 8px 0;
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-direction: row-reverse;
+  }
+
+  .pricing-card .plan-features li::after {
+    content: '\2713';
+    color: var(--green);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .pricing-card .plan-badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: auto;
+  }
+
+  .plan-mini-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 6-8 — PLAN DETAILS
+  ══════════════════════════════════════════════════════════════ */
+  .plan-detail-wrap {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    width: 100%;
+    padding: 0 50px;
+    text-align: right;
+  }
+
+  .plan-detail-wrap .slide-heading {
+    font-size: 44px;
+  }
+
+  .plan-badge-inline {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--cyan), var(--pink));
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 4px 16px;
+    border-radius: 14px;
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .feature-item {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-direction: row-reverse;
+    text-align: right;
+    transition: background 0.3s;
+  }
+
+  .feature-item:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+  .feature-item .fi-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .feature-item .fi-text {
+    font-size: 15px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+  }
+
+  .not-included {
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+  }
+
+  .not-included h4 {
+    font-size: 14px;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 8px;
+  }
+
+  .not-included p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.25);
+  }
+
+  .compare-banner {
+    background: rgba(125,197,122,0.1);
+    border: 1px solid rgba(125,197,122,0.3);
+    border-radius: 14px;
+    padding: 16px 24px;
+    text-align: center;
+    color: var(--green);
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 20px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 9 — COMPARISON
+  ══════════════════════════════════════════════════════════════ */
+  .vs-grid {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 0;
+    align-items: start;
+  }
+
+  .vs-col {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 32px 28px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .vs-col.winner {
+    border: 2px solid var(--green);
+    background: rgba(125,197,122,0.06);
+  }
+
+  .vs-col h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .vs-col .vs-price {
+    font-family: var(--font-en);
+    font-weight: 700;
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .vs-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row-reverse;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .vs-row:last-child { border-bottom: none; }
+
+  .vs-icon { font-size: 18px; flex-shrink: 0; }
+
+  .vs-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-en);
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--yellow);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 10 — TACTICS
+  ══════════════════════════════════════════════════════════════ */
+  .tactics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .tactic-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 28px 22px;
+    text-align: right;
+    transition: transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tactic-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .tactic-card:nth-child(1)::after { background: var(--cyan); }
+  .tactic-card:nth-child(2)::after { background: var(--pink); }
+  .tactic-card:nth-child(3)::after { background: var(--yellow); }
+  .tactic-card:nth-child(4)::after { background: var(--green); }
+
+  .tactic-card:hover {
+    transform: translateY(-6px);
+  }
+
+  .tactic-card .tactic-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  .tactic-card h4 {
+    font-family: var(--font-en);
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+  }
+
+  .tactic-card p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 11 — AFFILIATES
+  ══════════════════════════════════════════════════════════════ */
+  .affiliate-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .aff-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    transition: transform 0.3s;
+  }
+
+  .aff-card:hover {
+    transform: translateY(-6px);
+  }
+
+  .aff-card .aff-icon {
+    font-size: 40px;
+    margin-bottom: 14px;
+  }
+
+  .aff-card h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+  }
+
+  .aff-card p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+  }
+
+  .aff-card .aff-big {
+    font-family: var(--font-en);
+    font-weight: 700;
+    font-size: 42px;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SLIDE 12 — ENDING
+  ══════════════════════════════════════════════════════════════ */
+  #slide-12 {
+    background: linear-gradient(135deg, #0d1b3e 0%, #253E7A 50%, #1a3060 100%);
+    overflow: hidden;
+  }
+
+  #slide-12::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 30% 70%, rgba(56,196,242,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 70% 30%, rgba(240,86,128,0.12) 0%, transparent 60%);
+  }
+
+  .ending-wrap {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .ending-wrap .ending-title {
+    font-family: var(--font-he);
+    font-weight: 900;
+    font-size: 72px;
+    color: white;
+    background: linear-gradient(90deg, var(--cyan), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .ending-wrap .ending-sub {
+    font-family: var(--font-en);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: 6px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .ending-wrap .ending-sub span:nth-child(1) { color: var(--pink); }
+  .ending-wrap .ending-sub span:nth-child(3) { color: var(--yellow); }
+  .ending-wrap .ending-sub span:nth-child(5) { color: var(--green); }
+
+  .ending-boardi img {
+    width: 200px;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 20px 40px rgba(56,196,242,0.3));
+  }
+
+  /* Navy slide variant */
+  .navy-slide {
+    background: linear-gradient(135deg, #253E7A 0%, #1a2f5e 100%);
+    overflow: hidden;
+  }
+
+  .navy-slide::before {
+    content: '';
+    position: absolute;
+    top: -200px; left: -200px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56,196,242,0.08) 0%, transparent 70%);
+  }
+</style>
+</head>
+<body>
+
+<!-- Logo Corner -->
+<div class="logo-corner">
+  <img src="../LOGO/LOGO PNG/לוגו מלא צבעוני בלי רקע.png" alt="WHITEBOARD">
+</div>
+
+<!-- Nav -->
+<button class="nav-btn" id="next-btn">&#8592;</button>
+<button class="nav-btn" id="prev-btn">&#8594;</button>
+
+<!-- Progress Bar -->
+<div id="progress-bar" style="width:8.33%"></div>
+
+<!-- Dots -->
+<div id="slide-counter"></div>
+
+<div class="slideshow">
+
+  <!-- ═══════════ SLIDE 1 — COVER ═══════════ -->
+  <div class="slide active" id="slide-1">
+    <div class="particles" id="particles"></div>
+    <div class="cover-grid">
+      <div class="cover-text">
+        <div class="cover-tag">PRICING STRATEGY</div>
+        <h1 class="cover-title">אסטרטגיית<br><span>תמחור</span></h1>
+        <p class="cover-subtitle">WHITEBOARD — מחקר שוק, ניתוח מתחרים<br>והמלצת חבילות</p>
+        <div class="cover-tagline">אפריל 2026</div>
+      </div>
+      <div class="cover-visual">
+        <div class="cover-boardi">
+          <img src="../BOARDi/PNG/BOARDi_3.png" alt="BOARDi">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SLIDE 2 — COMPETITORS MAP ═══════════ -->
+  <div class="slide dark-slide" id="slide-2">
+    <div class="slide-wrap">
+      <div class="slide-top">
+        <div class="slide-num">SLIDE 02</div>
+        <h2 class="slide-heading">מפת <em>המתחרים</em></h2>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>פלטפורמה</th>
+            <th>מחיר כניסה</th>
+            <th>עמלה</th>
+            <th>וידאו</th>
+            <th>קהילה</th>
+            <th>מיילינג</th>
+            <th>AI</th>
+            <th>עברית</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:700;color:white">Schooler+רב מסר</td>
+            <td>~₪286</td>
+            <td>0%</td>
+            <td><span class="badge badge-red">חיצוני</span></td>
+            <td><span class="badge badge-red">אין</span></td>
+            <td><span class="badge badge-green">כן</span></td>
+            <td><span class="badge badge-red">אין</span></td>
+            <td><span class="badge badge-green">כן</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:700;color:white">Skool</td>
+            <td>~₪33</td>
+            <td style="color:var(--pink);font-weight:700">10%</td>
+            <td><span class="badge badge-green">כן</span></td>
+            <td><span class="badge badge-green">כן</span></td>
+            <td><span class="badge badge-red">אין</span></td>
+            <td><span class="badge badge-red">אין</span></td>
+            <td><span class="badge badge-red">לא</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:700;color:white">Kajabi</td>
+            <td>~₪259</td>
+            <td>0%</td>
+            <td><span class="badge badge-green">כן</span></td>
+            <td><span class="badge badge-green">כן</span></td>
+            <td><span class="badge badge-green">כן</span></td>
+            <td><span class="badge badge-yellow">חלקי</span></td>
+            <td><span class="badge badge-red">לא</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:700;color:white">Thinkific</td>
+            <td>~₪131</td>
+            <td style="color:var(--pink);font-weight:700">5%</td>
+            <td><span class="badge badge-green">כן</span></td>
+            <td><span class="badge badge-yellow">חלקי</span></td>
+            <td><span class="badge badge-red">אין</span></td>
+            <td><span class="badge badge-red">אין</span></td>
+            <td><span class="badge badge-red">לא</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:700;color:white">Teachable</td>
+            <td>~₪106</td>
+            <td style="color:var(--pink);font-weight:700">7.5%</td>
+            <td><span class="badge badge-green">כן</span></td>
+            <td><span class="badge badge-red">אין</span></td>
+            <td><span class="badge badge-yellow">חלקי</span></td>
+            <td><span class="badge badge-yellow">חלקי</span></td>
+            <td><span class="badge badge-red">לא</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:700;color:white">Mighty Networks</td>
+            <td>~₪178</td>
+            <td style="color:var(--pink);font-weight:700">2%</td>
+            <td><span class="badge badge-green">כן</span></td>
+            <td><span class="badge badge-green">כן</span></td>
+            <td><span class="badge badge-red">אין</span></td>
+            <td><span class="badge badge-yellow">חלקי</span></td>
+            <td><span class="badge badge-red">לא</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:700;color:white">Circle.so</td>
+            <td>~₪324</td>
+            <td style="color:var(--pink);font-weight:700">2%</td>
+            <td><span class="badge badge-yellow">חלקי</span></td>
+            <td><span class="badge badge-green">כן</span></td>
+            <td><span class="badge badge-yellow">בתוספת</span></td>
+            <td><span class="badge badge-green">כן</span></td>
+            <td><span class="badge badge-red">לא</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════ SLIDE 3 — PROBLEM ═══════════ -->
+  <div class="slide dark-slide" id="slide-3">
+    <div class="slide-wrap">
+      <div class="slide-top">
+        <div class="slide-num">SLIDE 03</div>
+        <h2 class="slide-heading">למה לקוחות עוזבים את <em>סקולר</em>?</h2>
+      </div>
+      <div class="pain-cards">
+        <div class="pain-card">
+          <div class="pain-icon">💸</div>
+          <div class="pain-stat">₪286/חודש</div>
+          <h4>יקר מדי</h4>
+          <p>רב מסר + Vimeo = עלות גבוהה שלא משתלמת</p>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon">🎬</div>
+          <div class="pain-stat">אין וידאו</div>
+          <h4>תלות ב-Vimeo חיצוני</h4>
+          <p>אין אחסון וידאו מובנה — נדרש שירות חיצוני יקר</p>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon">👥</div>
+          <div class="pain-stat">אין קהילה</div>
+          <h4>לא מועדונים, לא פורומים</h4>
+          <p>אי אפשר לבנות קהילה סביב הקורסים</p>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon">🎨</div>
+          <div class="pain-stat">עיצוב ישן</div>
+          <h4>אין AI, אין Brand Kit</h4>
+          <p>ממשק מיושן ללא כלי עיצוב ובינה מלאכותית</p>
+        </div>
+      </div>
+      <div class="solution-banner">
+        WHITEBOARD פותר את כל הבעיות האלו ← במחיר נמוך יותר
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SLIDE 4 — ADVANTAGE ═══════════ -->
+  <div class="slide navy-slide" id="slide-4">
+    <div class="slide-wrap">
+      <div class="slide-top">
+        <div class="slide-num">SLIDE 04</div>
+        <h2 class="slide-heading">היתרון התחרותי של <em>WHITEBOARD</em></h2>
+      </div>
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-big">0%</div>
+          <h4>עמלת עסקאות</h4>
+          <p>מול 2-10% אצל המתחרים</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-big">3</div>
+          <h4>חודשים חינם</h4>
+          <p>מול 7-14 יום אצל המתחרים</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-big">All-in</div>
+          <h4>הכל כלול</h4>
+          <p>וידאו + קהילה + מיילינג + AI</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-big">עב</div>
+          <h4>עברית מלאה</h4>
+          <p>RTL, ממשק מלא בעברית</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SLIDE 5 — PRICING ═══════════ -->
+  <div class="slide dark-slide" id="slide-5">
+    <div class="slide-wrap">
+      <div class="slide-top">
+        <div class="slide-num">SLIDE 05</div>
+        <h2 class="slide-heading">3 חבילות — <em>ברורות ופשוטות</em></h2>
+      </div>
+      <div class="pricing-grid">
+        <!-- START -->
+        <div class="pricing-card">
+          <div class="plan-name">סטארט</div>
+          <div class="plan-price">₪129</div>
+          <div class="plan-period">לחודש</div>
+          <div class="plan-annual">₪109/חודש בתוכנית שנתית</div>
+          <ul class="plan-features">
+            <li>2,000 תלמידים</li>
+            <li>קורסים ללא הגבלה</li>
+            <li>מרכז ידע אחד (מועדון / בית ספר / הכשרה)</li>
+            <li>100GB אחסון</li>
+            <li>12,000 מיילים/חודש</li>
+            <li>Brand Kit מלא</li>
+            <li>ללא API</li>
+          </ul>
+          <div class="plan-badge-row">
+            <span class="plan-mini-badge badge-green">0% עמלה</span>
+            <span class="plan-mini-badge badge-yellow">3 חודשים חינם</span>
+          </div>
+        </div>
+        <!-- GROWTH -->
+        <div class="pricing-card featured">
+          <div class="recommended-badge">⭐ מומלץ</div>
+          <div class="plan-name">צמיחה</div>
+          <div class="plan-price">₪249</div>
+          <div class="plan-period">לחודש</div>
+          <div class="plan-annual">₪209/חודש בתוכנית שנתית</div>
+          <ul class="plan-features">
+            <li>5,000 תלמידים</li>
+            <li>קורסים ללא הגבלה</li>
+            <li>5 מרכזי ידע</li>
+            <li>1TB אחסון</li>
+            <li>50,000 מיילים/חודש</li>
+            <li>BOARDi מתקדם + יצירת קורס</li>
+            <li>כל חיבורי API</li>
+            <li>דומיין מותאם + קאבר טאב</li>
+            <li>משחקים + מערכת שותפים</li>
+          </ul>
+          <div class="plan-badge-row">
+            <span class="plan-mini-badge badge-green">0% עמלה</span>
+            <span class="plan-mini-badge badge-yellow">3 חודשים חינם</span>
+          </div>
+        </div>
+        <!-- PRO -->
+        <div class="pricing-card">
+          <div class="plan-name">מקצוען</div>
+          <div class="plan-price">₪449</div>
+          <div class="plan-period">לחודש</div>
+          <div class="plan-annual">₪379/חודש בתוכנית שנתית</div>
+          <ul class="plan-features">
+            <li>10,000 תלמידים</li>
+            <li>ללא הגבלה קורסים</li>
+            <li>5 בתי ספר</li>
+            <li>200GB אחסון</li>
+            <li>100,000 מיילים/חודש</li>
+            <li>BOARDi מלא + API</li>
+            <li>Priority Support</li>
+            <li>כל האוטומציות</li>
+          </ul>
+          <div class="plan-badge-row">
+            <span class="plan-mini-badge badge-green">0% עמלה</span>
+            <span class="plan-mini-badge badge-yellow">3 חודשים חינם</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SLIDE 6 — START DETAIL ═══════════ -->
+  <div class="slide navy-slide" id="slide-6">
+    <div class="plan-detail-wrap">
+      <div class="slide-num">SLIDE 06</div>
+      <h2 class="slide-heading">סטארט — <em>₪129/חודש</em></h2>
+      <p class="slide-sub">הצעד הראשון שלך לעולם הדיגיטלי</p>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <div class="fi-icon">👥</div>
+          <div class="fi-text">2,000 תלמידים פעילים</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">📚</div>
+          <div class="fi-text">קורסים ללא הגבלה</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🏠</div>
+          <div class="fi-text">מרכז ידע 1 (מועדון / בית ספר / הכשרה)</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">💾</div>
+          <div class="fi-text">100GB אחסון</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">📧</div>
+          <div class="fi-text">12,000 מיילים/חודש</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🎨</div>
+          <div class="fi-text">Brand Kit מלא</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">📄</div>
+          <div class="fi-text">3 דפי נחיתה</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">📊</div>
+          <div class="fi-text">אנליטיקס בסיסי</div>
+        </div>
+      </div>
+      <div class="not-included">
+        <h4>מה לא כלול:</h4>
+        <p>דומיין מותאם, קאבר טאב, יצירת קורס עם BOARDi, משחקים, API</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SLIDE 7 — GROWTH DETAIL ═══════════ -->
+  <div class="slide dark-slide" id="slide-7">
+    <div class="plan-detail-wrap">
+      <div class="slide-num">SLIDE 07</div>
+      <h2 class="slide-heading">צמיחה — <em>₪249/חודש</em> <span class="plan-badge-inline">⭐ מומלץ</span></h2>
+      <p class="slide-sub">הכלים לצמוח — הכל במקום אחד</p>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <div class="fi-icon">👥</div>
+          <div class="fi-text">5,000 תלמידים פעילים</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">📚</div>
+          <div class="fi-text">קורסים ללא הגבלה</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🏠</div>
+          <div class="fi-text">5 מרכזי ידע</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🔌</div>
+          <div class="fi-text">כל חיבורי API</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">💾</div>
+          <div class="fi-text">1TB אחסון</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">📧</div>
+          <div class="fi-text">50,000 מיילים/חודש</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🤖</div>
+          <div class="fi-text">BOARDi מתקדם</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🎨</div>
+          <div class="fi-text">Brand Kit מלא</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🏆</div>
+          <div class="fi-text">תעודות מותאמות</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">⚡</div>
+          <div class="fi-text">אוטומציות</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🤝</div>
+          <div class="fi-text">מערכת שותפים</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">✨</div>
+          <div class="fi-text">הסרת לוגו WHITEBOARD</div>
+        </div>
+      </div>
+      <div class="compare-banner">
+        ₪249 &lt; סקולר+Vimeo (₪286) — וכולל הרבה יותר
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SLIDE 8 — PRO DETAIL ═══════════ -->
+  <div class="slide navy-slide" id="slide-8">
+    <div class="plan-detail-wrap">
+      <div class="slide-num">SLIDE 08</div>
+      <h2 class="slide-heading">מקצוען — <em>₪449/חודש</em></h2>
+      <p class="slide-sub">הפלטפורמה המלאה לעסק שלך</p>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <div class="fi-icon">👥</div>
+          <div class="fi-text">10,000 תלמידים פעילים</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">📚</div>
+          <div class="fi-text">ללא הגבלה קורסים</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🏫</div>
+          <div class="fi-text">5 בתי ספר</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">💾</div>
+          <div class="fi-text">200GB אחסון</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">📧</div>
+          <div class="fi-text">100,000 מיילים/חודש</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🤖</div>
+          <div class="fi-text">BOARDi מלא</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🔌</div>
+          <div class="fi-text">API מלא</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">🎯</div>
+          <div class="fi-text">Priority Support</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">⚡</div>
+          <div class="fi-text">כל האוטומציות</div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon">📊</div>
+          <div class="fi-text">אנליטיקס מלא</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SLIDE 9 — VS COMPARISON ═══════════ -->
+  <div class="slide dark-slide" id="slide-9">
+    <div class="slide-wrap">
+      <div class="slide-top">
+        <div class="slide-num">SLIDE 09</div>
+        <h2 class="slide-heading">WHITEBOARD vs סקולר — <em>השוואה ישירה</em></h2>
+      </div>
+      <div class="vs-grid">
+        <!-- Schooler -->
+        <div class="vs-col">
+          <h3>Schooler + Vimeo</h3>
+          <div class="vs-price" style="color:var(--pink)">₪286</div>
+          <div class="vs-row">
+            <span class="vs-icon">❌</span>
+            <span>אין וידאו מובנה</span>
+          </div>
+          <div class="vs-row">
+            <span class="vs-icon">❌</span>
+            <span>אין קהילה</span>
+          </div>
+          <div class="vs-row">
+            <span class="vs-icon">❌</span>
+            <span>אין AI</span>
+          </div>
+          <div class="vs-row">
+            <span class="vs-icon">❌</span>
+            <span>עיצוב מיושן</span>
+          </div>
+          <div class="vs-row">
+            <span class="vs-icon">❌</span>
+            <span>אין Brand Kit</span>
+          </div>
+          <div class="vs-row">
+            <span class="vs-icon">❌</span>
+            <span>אין בתי ספר</span>
+          </div>
+        </div>
+        <!-- VS -->
+        <div class="vs-divider">VS</div>
+        <!-- WHITEBOARD -->
+        <div class="vs-col winner">
+          <h3>WHITEBOARD צמיחה</h3>
+          <div class="vs-price" style="color:var(--green)">₪249</div>
+          <div class="vs-row">
+            <span class="vs-icon">✅</span>
+            <span>וידאו מובנה</span>
+          </div>
+          <div class="vs-row">
+            <span class="vs-icon">✅</span>
+            <span>מועדונים + בתי ספר</span>
+          </div>
+          <div class="vs-row">
+            <span class="vs-icon">✅</span>
+            <span>BOARDi AI מתקדם</span>
+          </div>
+          <div class="vs-row">
+            <span class="vs-icon">✅</span>
+            <span>עיצוב מודרני</span>
+          </div>
+          <div class="vs-row">
+            <span class="vs-icon">✅</span>
+            <span>Brand Kit מלא</span>
+          </div>
+          <div class="vs-row">
+            <span class="vs-icon">✅</span>
+            <span>מערכת שותפים + אוטומציות</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SLIDE 10 — TACTICS ═══════════ -->
+  <div class="slide navy-slide" id="slide-10">
+    <div class="slide-wrap">
+      <div class="slide-top">
+        <div class="slide-num">SLIDE 10</div>
+        <h2 class="slide-heading">טקטיקות <em>תמחור</em></h2>
+      </div>
+      <div class="tactics-grid">
+        <div class="tactic-card">
+          <div class="tactic-icon">⚓</div>
+          <h4>Anchoring</h4>
+          <p>מקצוען ₪449 → צמיחה ₪249 נראה זול יחסית. אפקט העיגון גורם ללקוח לבחור באמצע.</p>
+        </div>
+        <div class="tactic-card">
+          <div class="tactic-icon">🎁</div>
+          <h4>שלם 10, קבל 12</h4>
+          <p>חזק יותר פסיכולוגית מ-"16.7% הנחה". הלקוח מרגיש שמקבל מתנה.</p>
+        </div>
+        <div class="tactic-card">
+          <div class="tactic-icon">🚀</div>
+          <h4>3 חודשים חינם</h4>
+          <p>מוריד חסמי כניסה. הלקוח חווה את המוצר לפני שמתחייב לשלם.</p>
+        </div>
+        <div class="tactic-card">
+          <div class="tactic-icon">💎</div>
+          <h4>0% עמלה</h4>
+          <p>הדיפרנטייטור המרכזי שלנו. כל שקל שהלקוח מרוויח — שלו.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SLIDE 11 — AFFILIATES ═══════════ -->
+  <div class="slide dark-slide" id="slide-11">
+    <div class="slide-wrap">
+      <div class="slide-top">
+        <div class="slide-num">SLIDE 11</div>
+        <h2 class="slide-heading">תכנית <em>שותפים</em></h2>
+        <p class="slide-sub">הפוך את הלקוחות שלך לשגרירים</p>
+      </div>
+      <div class="affiliate-cards">
+        <div class="aff-card">
+          <div class="aff-icon">💰</div>
+          <div class="aff-big">10%</div>
+          <h4>עמלה מכל חיי הלקוח</h4>
+          <p>לא רק מהחודש הראשון — מכל תשלום שהלקוח משלם</p>
+        </div>
+        <div class="aff-card">
+          <div class="aff-icon">📅</div>
+          <div class="aff-big">Q</div>
+          <h4>תשלום כל רבעון</h4>
+          <p>העמלות מצטברות ומשולמות באופן קבוע כל 3 חודשים</p>
+        </div>
+        <div class="aff-card">
+          <div class="aff-icon">🔗</div>
+          <div class="aff-big">Auto</div>
+          <h4>קישור ייחודי אוטומטי</h4>
+          <p>כל שותף מקבל לינק מעקב אישי לשיתוף מיידי</p>
+        </div>
+        <div class="aff-card">
+          <div class="aff-icon">♾️</div>
+          <div class="aff-big">∞</div>
+          <h4>ללא הגבלה</h4>
+          <p>אין תקרה לכמות השותפים או ההפניות</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SLIDE 12 — ENDING ═══════════ -->
+  <div class="slide" id="slide-12">
+    <div class="particles" id="particles-end"></div>
+    <div class="ending-wrap">
+      <div class="ending-boardi">
+        <img src="../BOARDi/SVG/2.svg" alt="BOARDi">
+      </div>
+      <div class="ending-title">יאללה לעבוד!</div>
+      <div class="ending-sub">
+        <span>LEARN</span>
+        <span style="color:rgba(255,255,255,0.3)"> · </span>
+        <span>CREATE</span>
+        <span style="color:rgba(255,255,255,0.3)"> · </span>
+        <span>ACTION</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('slide-counter');
+  const progressBar = document.getElementById('progress-bar');
+  let current = 0;
+  const total = slides.length;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsContainer.appendChild(d);
+  });
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    setTimeout(() => slides[current].classList.remove('exit'), 700);
+    current = n;
+    slides[current].classList.add('active');
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    progressBar.style.width = ((current + 1) / total * 100) + '%';
+  }
+
+  // RTL: Right arrow = back, Left arrow = forward
+  document.getElementById('prev-btn').onclick = () => goTo(current - 1);
+  document.getElementById('next-btn').onclick = () => goTo(current + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp')   goTo(current - 1);
+  });
+
+  // Touch swipe
+  let touchX = 0;
+  document.addEventListener('touchstart', e => touchX = e.touches[0].clientX);
+  document.addEventListener('touchend', e => {
+    const dx = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 50) goTo(current + (dx > 0 ? -1 : 1));
+  });
+
+  // Particles
+  function makeParticles(containerId) {
+    const c = document.getElementById(containerId);
+    if (!c) return;
+    const colors = ['#38C4F2','#F05680','#EAD654','#7DC57A','#fff'];
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 8 + 3;
+      p.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${Math.random()*100}%;
+        top:${Math.random()*100+100}%;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        opacity:${Math.random()*0.5+0.2};
+        animation-duration:${Math.random()*12+8}s;
+        animation-delay:${Math.random()*8}s;
+      `;
+      c.appendChild(p);
+    }
+  }
+  makeParticles('particles');
+  makeParticles('particles-end');
+</script>
+</body>
+</html>
