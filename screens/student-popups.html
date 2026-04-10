@@ -217,6 +217,15 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-
 .toast-trigger .t-dot.pink{background:var(--pink);}
 .toast-trigger .t-dot.red{background:var(--danger);}
 
+/* ── CONFETTI ── */
+.confetti-container{position:fixed;inset:0;pointer-events:none;z-index:3000;overflow:hidden;}
+.confetti-piece{position:absolute;width:10px;height:10px;top:-10px;animation:confettiFall linear forwards;}
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1;}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0;}
+}
+@media(prefers-reduced-motion:reduce){.confetti-piece{animation:none;display:none;}}
+
 /* ── RESPONSIVE ── */
 @media(max-width:600px){
   .btn-grid{grid-template-columns:1fr;}
@@ -251,14 +260,8 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-
   <!-- STUDENT POPUPS -->
   <div class="section-label">פופאפים — תלמיד</div>
   <div class="btn-grid">
-    <button class="trigger-btn" onclick="openPopup('popup-checkout')">
-      <span class="btn-icon cyan-bg">&#128179;</span> רכישת קורס
-    </button>
     <button class="trigger-btn" onclick="openPopup('popup-thankyou')">
-      <span class="btn-icon green-bg">&#10004;</span> הצלחת רכישה
-    </button>
-    <button class="trigger-btn" onclick="openPopup('popup-join-club')">
-      <span class="btn-icon pink-bg">&#127941;</span> הצטרפות למועדון
+      <span class="btn-icon green-bg">&#10004;</span> הודעת הצלחה
     </button>
     <button class="trigger-btn" onclick="openPopup('popup-verify-email')">
       <span class="btn-icon yellow-bg">&#9993;</span> אימות אימייל
@@ -295,89 +298,9 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-
 <div class="toast-container" id="toast-container"></div>
 
 <!-- ═══════════════════════════════════════════ -->
-<!-- POPUP 1: רכישת קורס — Checkout             -->
+<!-- POPUP 2: הודעת הצלחה            -->
 <!-- ═══════════════════════════════════════════ -->
-<div class="modal-overlay" id="popup-checkout" role="dialog" aria-modal="true" aria-label="רכישת קורס">
-  <div class="modal-card" style="max-width:480px;">
-    <button class="modal-close" onclick="closePopup('popup-checkout')" aria-label="סגור">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
-
-    <div class="modal-header">
-      <div class="modal-title">&#128179; רכישת קורס</div>
-    </div>
-
-    <!-- Course preview -->
-    <div class="course-preview">
-      <div class="cp-name">השקת הזהב</div>
-      <div class="cp-instructor">אלון גבאי</div>
-      <div class="cp-price">&#8362;249</div>
-    </div>
-
-    <!-- Payment method -->
-    <div class="form-group">
-      <div class="form-label">אמצעי תשלום</div>
-      <div class="card-select" id="payment-method">
-        <div class="card-option selected" onclick="selectCard(this,'payment-method')">
-          <div class="card-icon">&#128179;</div>
-          <div class="card-name">כרטיס אשראי</div>
-        </div>
-        <div class="card-option" onclick="selectCard(this,'payment-method')">
-          <div class="card-icon">&#127852;</div>
-          <div class="card-name">PayPal</div>
-        </div>
-        <div class="card-option" onclick="selectCard(this,'payment-method')">
-          <div class="card-icon">&#9889;</div>
-          <div class="card-name">Bit</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Credit card fields -->
-    <div class="form-group">
-      <div class="form-label">מספר כרטיס</div>
-      <input class="form-input" type="text" placeholder="0000 0000 0000 0000" maxlength="19" dir="ltr">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <div class="form-label">תוקף</div>
-        <input class="form-input" type="text" placeholder="MM/YY" maxlength="5" dir="ltr">
-      </div>
-      <div class="form-group">
-        <div class="form-label">CVV</div>
-        <input class="form-input" type="text" placeholder="***" maxlength="4" dir="ltr">
-      </div>
-    </div>
-
-    <!-- Coupon -->
-    <div class="form-label">קוד קופון</div>
-    <div class="coupon-row">
-      <input class="form-input" type="text" placeholder="הכנס קוד קופון" id="coupon-input">
-      <button class="btn btn-ghost" onclick="applyCoupon()">הפעל</button>
-    </div>
-
-    <!-- Summary -->
-    <div class="summary-table">
-      <div class="row"><span>סה״כ ביניים</span><span>&#8362;249</span></div>
-      <div class="row discount" id="discount-row" style="display:none;"><span>הנחה</span><span>-&#8362;50</span></div>
-      <div class="row total"><span>לתשלום</span><span id="total-price">&#8362;249</span></div>
-    </div>
-
-    <button class="btn btn-primary btn-full btn-lg">השלם רכישה</button>
-
-    <div class="secure-note">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      תשלום מאובטח
-    </div>
-
-    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_1.png" alt="BOARDi"></div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════ -->
-<!-- POPUP 2: הצלחת רכישה — Thank You            -->
-<!-- ═══════════════════════════════════════════ -->
-<div class="modal-overlay" id="popup-thankyou" role="dialog" aria-modal="true" aria-label="הצלחת רכישה">
+<div class="modal-overlay" id="popup-thankyou" role="dialog" aria-modal="true" aria-label="הודעת הצלחה">
   <div class="modal-card" style="max-width:420px;text-align:center;">
     <button class="modal-close" onclick="closePopup('popup-thankyou')" aria-label="סגור">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -387,72 +310,16 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
 
-    <div class="modal-title" style="text-align:center;margin-bottom:8px;color:var(--green);font-size:20px;">הרכישה בוצעה בהצלחה!</div>
+    <div class="modal-title" style="text-align:center;margin-bottom:8px;color:var(--green);font-size:20px;">הפעולה בוצעה בהצלחה!</div>
     <div style="font-size:15px;font-weight:700;margin-bottom:8px;">השקת הזהב</div>
-    <div class="modal-subtitle" style="text-align:center;">קיבלת גישה מלאה לקורס. מייל אישור נשלח אליך.</div>
+    <div class="modal-subtitle" style="text-align:center;">מייל אישור נשלח אליך. תוכל להמשיך מכאן.</div>
 
     <button class="btn btn-primary btn-full btn-lg" onclick="closePopup('popup-thankyou')">התחל ללמוד</button>
     <div style="margin-top:10px;">
       <button class="btn btn-ghost btn-full" onclick="closePopup('popup-thankyou')">חזרה לדף הבית</button>
     </div>
 
-    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_14.png" alt="BOARDi" style="width:90px;"></div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════ -->
-<!-- POPUP 3: הצטרפות למועדון                     -->
-<!-- ═══════════════════════════════════════════ -->
-<div class="modal-overlay" id="popup-join-club" role="dialog" aria-modal="true" aria-label="הצטרפות למועדון">
-  <div class="modal-card" style="max-width:460px;">
-    <button class="modal-close" onclick="closePopup('popup-join-club')" aria-label="סגור">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
-
-    <div class="modal-header">
-      <div class="modal-title">&#127941; הצטרפות למועדון</div>
-    </div>
-
-    <!-- Club preview -->
-    <div class="club-preview">
-      <div class="club-name">מועדון שיווק ויצירת תוכן</div>
-      <div class="club-members">247 חברים</div>
-    </div>
-
-    <!-- Plan pills -->
-    <div class="form-label">בחר מסלול</div>
-    <div class="plan-pills" id="plan-pills">
-      <div class="plan-pill selected" onclick="selectPill(this)">
-        <div class="pill-title">חודשי &#8362;49</div>
-      </div>
-      <div class="plan-pill" onclick="selectPill(this)">
-        <div class="pill-title">שנתי &#8362;399</div>
-        <div class="pill-sub">חודשיים חינם</div>
-      </div>
-    </div>
-
-    <!-- Payment method -->
-    <div class="form-group">
-      <div class="form-label">אמצעי תשלום</div>
-      <div class="card-select" id="club-payment">
-        <div class="card-option selected" onclick="selectCard(this,'club-payment')">
-          <div class="card-icon">&#128179;</div>
-          <div class="card-name">כרטיס אשראי</div>
-        </div>
-        <div class="card-option" onclick="selectCard(this,'club-payment')">
-          <div class="card-icon">&#127852;</div>
-          <div class="card-name">PayPal</div>
-        </div>
-        <div class="card-option" onclick="selectCard(this,'club-payment')">
-          <div class="card-icon">&#9889;</div>
-          <div class="card-name">Bit</div>
-        </div>
-      </div>
-    </div>
-
-    <button class="btn btn-primary btn-full btn-lg">הצטרף למועדון</button>
-
-    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/PNG/BOARDi_5.png" alt="BOARDi" style="width:90px;"></div>
+    <div class="boardi-corner"><img class="boardi-img" src="../BOARDi/SVG/5.svg" alt="BOARDi" style="width:90px;"></div>
   </div>
 </div>
 
@@ -580,9 +447,29 @@ function toggleTheme() {
 /* ── POPUP OPEN / CLOSE ── */
 let currentPopup = null;
 
+// Confetti effect
+function launchConfetti() {
+  var container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  var colors = ['#38C4F2','#F05680','#EAD654','#7DC57A','#253E7A','#F59E0B'];
+  for (var i = 0; i < 60; i++) {
+    var piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.width = (Math.random() * 8 + 6) + 'px';
+    piece.style.height = (Math.random() * 8 + 6) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+    piece.style.animationDelay = (Math.random() * 0.8) + 's';
+    container.appendChild(piece);
+  }
+  setTimeout(function(){ container.remove(); }, 4000);
+}
+
 function openPopup(id) {
   if (id === 'popup-toasts') {
-    // Special: just show all 4 toasts in sequence
     showToast('success');
     setTimeout(() => showToast('info'), 200);
     setTimeout(() => showToast('warning'), 400);
@@ -593,6 +480,8 @@ function openPopup(id) {
   if (!overlay) return;
   overlay.classList.add('active');
   currentPopup = id;
+  // Confetti on success popup
+  if (id === 'popup-thankyou') setTimeout(launchConfetti, 200);
   requestAnimationFrame(() => {
     const firstFocusable = overlay.querySelector('input:not([type="hidden"]):not([style*="display:none"]),select,textarea,button.modal-close');
     if (firstFocusable) firstFocusable.focus();
