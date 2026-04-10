@@ -245,11 +245,14 @@
       font-size: 11px;
     }
     .card-badge.trial-badge {
-      background: rgba(234, 214, 84, 0.22);
+      background: #fffce6;
       color: #8a7600;
       font-weight: 600;
+      border: 1.5px solid rgba(234, 214, 84, 0.5);
+      top: -14px;
+      z-index: 2;
     }
-    [data-theme="dark"] .card-badge.trial-badge { background: rgba(234, 214, 84, 0.14); color: #d4c44a; }
+    [data-theme="dark"] .card-badge.trial-badge { background: rgba(234, 214, 84, 0.18); color: #d4c44a; border-color: rgba(234, 214, 84, 0.3); }
 
     .card-name {
       font-family: var(--font-en);
