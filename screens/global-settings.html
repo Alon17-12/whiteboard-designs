@@ -503,11 +503,11 @@
         </div>
         <div class="settings-field-col">
           <div>
-            <label class="field-label" for="sender-name">שם שולח</label>
+            <label class="field-label" for="sender-name">שם שולח *</label>
             <input class="field-input" id="sender-name" type="text" placeholder="שם שיוצג כשם השולח" oninput="markUnsaved()">
           </div>
           <div>
-            <label class="field-label" for="sender-email">אימייל שולח</label>
+            <label class="field-label" for="sender-email">אימייל שולח *</label>
             <input class="field-input" id="sender-email" type="email" placeholder="hello@example.com" dir="ltr" oninput="markUnsaved()">
           </div>
           <div>
@@ -519,14 +519,36 @@
             <input class="field-input" id="manager-name" type="text" placeholder="שם המנהלת שיופיע באימיילים" oninput="markUnsaved()">
           </div>
           <div>
-            <label class="field-label" for="reply-email">אימייל למענה</label>
+            <label class="field-label" for="reply-email">אימייל למענה *</label>
             <input class="field-input" id="reply-email" type="email" placeholder="reply@example.com" dir="ltr" oninput="markUnsaved()">
             <div class="field-hint">כתובת שאליה יגיעו תגובות מנמענים</div>
           </div>
           <div>
-            <label class="field-label" for="physical-address">כתובת פיזית</label>
-            <input class="field-input" id="physical-address" type="text" placeholder="רחוב, עיר, מיקוד" oninput="markUnsaved()">
-            <div class="field-hint">נדרש עבור אבטחה ואימות דומיין (CAN-SPAM)</div>
+            <label class="field-label">כתובת פיזית * <span style="font-weight:400;color:var(--text-light);">(נדרש עבור CAN-SPAM ואימות דומיין)</span></label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
+              <div>
+                <label class="field-label" for="addr-country" style="font-size:11px;">מדינה</label>
+                <input class="field-input" id="addr-country" type="text" placeholder="ישראל" oninput="markUnsaved()">
+              </div>
+              <div>
+                <label class="field-label" for="addr-city" style="font-size:11px;">עיר</label>
+                <input class="field-input" id="addr-city" type="text" placeholder="תל אביב" oninput="markUnsaved()">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-top:8px;">
+              <div>
+                <label class="field-label" for="addr-street" style="font-size:11px;">רחוב</label>
+                <input class="field-input" id="addr-street" type="text" placeholder="שם הרחוב" oninput="markUnsaved()">
+              </div>
+              <div>
+                <label class="field-label" for="addr-apt" style="font-size:11px;">דירה</label>
+                <input class="field-input" id="addr-apt" type="text" placeholder="12" oninput="markUnsaved()">
+              </div>
+              <div>
+                <label class="field-label" for="addr-zip" style="font-size:11px;">מיקוד</label>
+                <input class="field-input" id="addr-zip" type="text" placeholder="6100000" oninput="markUnsaved()">
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -654,32 +676,8 @@
         </div>
       </div>
 
-      <!-- Zapier -->
-      <div class="settings-section" style="border-bottom:none;">
-        <div class="settings-label-col">
-          <div class="settings-label-wrap">
-            <div class="settings-label-icon" style="background:rgba(255,74,39,0.12);color:#ff4a27;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-            <div class="settings-label">Zapier</div>
-          </div>
-          <div class="settings-desc">חבר אלפי אפליקציות באמצעות Zapier.</div>
-        </div>
-        <div class="settings-field-col">
-          <div class="integration-card" style="opacity:.7;">
-            <div class="integration-header" style="margin-bottom:0;">
-              <div class="integration-logo-row">
-                <div class="integration-logo" style="background:linear-gradient(135deg,#ff4a27,#e03e1f);color:white;font-family:var(--font-en);font-size:11px;font-weight:900;">Z</div>
-                <div>
-                  <div class="integration-name" style="display:flex;align-items:center;gap:8px;">Zapier <span class="badge badge-coming">בקרוב</span></div>
-                  <div class="integration-desc">אינטגרציית Zapier תתווסף בקרוב</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Vimeo -->
-      <div class="settings-section" style="border-bottom:none;">
+      <div class="settings-section">
         <div class="settings-label-col">
           <div class="settings-label-wrap">
             <div class="settings-label-icon" style="background:rgba(26,183,234,0.12);color:#1ab7ea;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
@@ -702,6 +700,30 @@
               <label class="field-label" for="vimeo-token">Access Token</label>
               <input class="field-input" id="vimeo-token" type="text" placeholder="הכנס Vimeo Access Token..." dir="ltr" oninput="markUnsaved()">
               <div class="field-hint">ניתן ליצור Token ב-Vimeo Developer Portal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zapier (coming soon — last) -->
+      <div class="settings-section" style="border-bottom:none;">
+        <div class="settings-label-col">
+          <div class="settings-label-wrap">
+            <div class="settings-label-icon" style="background:rgba(255,74,39,0.12);color:#ff4a27;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <div class="settings-label">Zapier</div>
+          </div>
+          <div class="settings-desc">חבר אלפי אפליקציות באמצעות Zapier.</div>
+        </div>
+        <div class="settings-field-col">
+          <div class="integration-card" style="opacity:.7;">
+            <div class="integration-header" style="margin-bottom:0;">
+              <div class="integration-logo-row">
+                <div class="integration-logo" style="background:linear-gradient(135deg,#ff4a27,#e03e1f);color:white;font-family:var(--font-en);font-size:11px;font-weight:900;">Z</div>
+                <div>
+                  <div class="integration-name" style="display:flex;align-items:center;gap:8px;">Zapier <span class="badge badge-coming">בקרוב</span></div>
+                  <div class="integration-desc">אינטגרציית Zapier תתווסף בקרוב</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
