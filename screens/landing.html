@@ -9,9 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800;900&family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* ═══════════════════════════════════════════════
-       WHITEBOARD Landing Page — Brand Tokens
-    ═══════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════════════
+       WHITEBOARD Landing Page — Apple-Inspired Premium Design
+       Brand Tokens & Design System
+    ═══════════════════════════════════════════════════════ */
     :root {
       --navy: #253E7A;
       --navy-dark: #1a2f5e;
@@ -19,22 +20,30 @@
       --cyan: #38C4F2;
       --cyan-hover: #2bb5e3;
       --cyan-glow: rgba(56, 196, 242, 0.25);
+      --cyan-glow-strong: rgba(56, 196, 242, 0.45);
       --pink: #F05680;
       --pink-glow: rgba(240, 86, 128, 0.2);
+      --purple: #8B5CF6;
       --yellow: #EAD654;
       --green: #7DC57A;
       --white: #FFFFFF;
+      --light-bg: #f5f5f7;
+      --dark-bg: #000000;
       --font-he: 'Heebo', sans-serif;
       --font-en: 'Fredoka', sans-serif;
-      --radius-sm: 10px;
-      --radius-md: 16px;
-      --radius-lg: 22px;
-      --radius-xl: 28px;
-      --shadow-sm: 0 2px 10px rgba(37, 62, 122, 0.07);
-      --shadow-md: 0 6px 24px rgba(37, 62, 122, 0.1);
-      --shadow-lg: 0 16px 48px rgba(37, 62, 122, 0.14);
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.12);
+      --shadow-glow: 0 0 60px rgba(56, 196, 242, 0.3);
       --gradient-cyan: linear-gradient(135deg, #38C4F2 0%, #2aa8d4 100%);
-      --gradient-hero: linear-gradient(160deg, #0d1b3e 0%, #253E7A 40%, #1a3060 100%);
+      --gradient-text: linear-gradient(135deg, #38C4F2, #F05680);
+      --gradient-hero: linear-gradient(180deg, #000000 0%, #0d1b3e 100%);
+      --section-padding: 140px;
+      --section-padding-mobile: 80px;
     }
 
     /* ── Reset ── */
@@ -49,19 +58,21 @@
         transition: none !important;
         animation: none !important;
       }
-      .particle { display: none !important; }
+      .orb, .particle { display: none !important; }
     }
 
     html {
       scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     body {
       font-family: var(--font-he);
-      color: #1a2f5e;
-      line-height: 1.6;
+      color: var(--navy-dark);
+      line-height: 1.7;
       overflow-x: hidden;
-      background: #F0F6FF;
+      background: var(--dark-bg);
     }
 
     img { max-width: 100%; height: auto; display: block; }
@@ -75,87 +86,144 @@
       padding: 0 24px;
     }
 
-    /* ═══════════════════════════════════════════════
-       SECTION ANIMATION — Scroll Reveal
-    ═══════════════════════════════════════════════ */
+    .container-narrow {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       GRADIENT TEXT UTILITY
+    ═══════════════════════════════════════════════════════ */
+    .gradient-text {
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SCROLL REVEAL ANIMATIONS
+    ═══════════════════════════════════════════════════════ */
     .reveal {
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .reveal.visible {
       opacity: 1;
       transform: translateY(0);
+    }
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-scale.visible {
+      opacity: 1;
+      transform: scale(1);
     }
     .reveal-delay-1 { transition-delay: 0.1s; }
     .reveal-delay-2 { transition-delay: 0.2s; }
     .reveal-delay-3 { transition-delay: 0.3s; }
     .reveal-delay-4 { transition-delay: 0.4s; }
     .reveal-delay-5 { transition-delay: 0.5s; }
+    .reveal-delay-6 { transition-delay: 0.6s; }
 
-    /* ═══════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════
+       SECTION HEADINGS — Apple Typography
+    ═══════════════════════════════════════════════════════ */
+    .section-headline {
+      font-family: var(--font-en);
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .section-headline-huge {
+      font-family: var(--font-en);
+      font-size: clamp(48px, 7vw, 80px);
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1.05;
+    }
+    .section-subtitle {
+      font-family: var(--font-he);
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 300;
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    /* ═══════════════════════════════════════════════════════
        1. NAVIGATION BAR
-    ═══════════════════════════════════════════════ */
+    ═══════════════════════════════════════════════════════ */
     .navbar {
       position: fixed;
       top: 0;
       right: 0;
       left: 0;
       z-index: 1000;
-      padding: 16px 0;
-      transition: background 0.35s ease, backdrop-filter 0.35s ease, box-shadow 0.35s ease, padding 0.35s ease;
+      padding: 20px 0;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .navbar.scrolled {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 2px 20px rgba(37, 62, 122, 0.08);
-      padding: 10px 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 12px 0;
     }
     .navbar .container {
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
+    .navbar-logo {
+      font-family: var(--font-en);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
     .navbar-logo img {
-      height: 40px;
+      height: 36px;
       width: auto;
     }
     .navbar-links {
       display: flex;
       align-items: center;
-      gap: 32px;
+      gap: 36px;
     }
     .navbar-links a {
-      font-size: 15px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.85);
-      transition: color 0.2s;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      transition: color 0.25s;
       white-space: nowrap;
     }
-    .navbar-links a:hover { color: var(--cyan); }
+    .navbar-links a:hover { color: var(--white); }
     .navbar-links a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; border-radius: 4px; }
-    .navbar.scrolled .navbar-links a { color: var(--navy); }
-    .navbar.scrolled .navbar-links a:hover { color: var(--cyan); }
 
     .btn-cta-nav {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 10px 24px;
-      background: var(--gradient-cyan);
-      color: var(--white);
+      background: var(--white);
+      color: var(--dark-bg);
       font-size: 14px;
       font-weight: 600;
       border-radius: 50px;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: all 0.25s;
       white-space: nowrap;
     }
     .btn-cta-nav:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(56, 196, 242, 0.35);
+      background: var(--cyan);
+      color: var(--white);
+      box-shadow: 0 4px 20px rgba(56, 196, 242, 0.3);
     }
-    .btn-cta-nav:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
 
     /* Hamburger */
     .hamburger {
@@ -168,12 +236,11 @@
     }
     .hamburger span {
       display: block;
-      height: 2.5px;
+      height: 2px;
       background: var(--white);
       border-radius: 2px;
-      transition: transform 0.3s, opacity 0.3s, background 0.3s;
+      transition: transform 0.3s, opacity 0.3s;
     }
-    .navbar.scrolled .hamburger span { background: var(--navy); }
     .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
     .hamburger.open span:nth-child(2) { opacity: 0; }
     .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
@@ -186,16 +253,16 @@
       right: 0;
       left: 0;
       bottom: 0;
-      background: rgba(13, 27, 62, 0.97);
-      backdrop-filter: blur(16px);
+      background: rgba(0, 0, 0, 0.96);
+      backdrop-filter: blur(40px);
       z-index: 999;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 28px;
+      gap: 32px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.35s ease;
+      transition: opacity 0.4s ease;
     }
     .mobile-menu.open {
       display: flex;
@@ -203,8 +270,8 @@
       pointer-events: all;
     }
     .mobile-menu a {
-      font-size: 22px;
-      font-weight: 600;
+      font-size: 24px;
+      font-weight: 500;
       color: var(--white);
       transition: color 0.2s;
     }
@@ -229,9 +296,9 @@
       .btn-cta-nav.desktop-only { display: none; }
     }
 
-    /* ═══════════════════════════════════════════════
-       2. HERO SECTION
-    ═══════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════════════
+       2. HERO SECTION — Apple-Inspired Dark Hero
+    ═══════════════════════════════════════════════════════ */
     .hero {
       position: relative;
       min-height: 100vh;
@@ -240,1787 +307,2106 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 120px 24px 80px;
+      padding: 140px 24px 100px;
       overflow: hidden;
+      text-align: center;
     }
 
-    /* Glows */
-    .hero::before {
-      content: '';
+    /* Animated gradient orbs */
+    .orb {
       position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      opacity: 0.4;
+    }
+    .orb-1 {
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%);
-      bottom: -200px;
-      left: -150px;
-      pointer-events: none;
+      background: var(--cyan);
+      top: -200px;
+      right: -150px;
+      animation: orb-drift-1 20s ease-in-out infinite;
     }
-    .hero::after {
-      content: '';
-      position: absolute;
+    .orb-2 {
       width: 500px;
       height: 500px;
-      background: radial-gradient(circle, var(--pink-glow) 0%, transparent 70%);
-      top: -100px;
-      right: -100px;
-      pointer-events: none;
+      background: var(--pink);
+      bottom: -150px;
+      left: -100px;
+      animation: orb-drift-2 25s ease-in-out infinite;
+    }
+    .orb-3 {
+      width: 400px;
+      height: 400px;
+      background: var(--purple);
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: orb-drift-3 18s ease-in-out infinite;
     }
 
-    /* CSS Particles */
-    .particles {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
+    @keyframes orb-drift-1 {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(-60px, 40px); }
+      66% { transform: translate(30px, -30px); }
     }
-    .particle {
-      position: absolute;
-      width: 3px;
-      height: 3px;
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 50%;
-      animation: float-up linear infinite;
+    @keyframes orb-drift-2 {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(50px, -30px); }
+      66% { transform: translate(-40px, 50px); }
     }
-    @keyframes float-up {
-      0% { transform: translateY(0) scale(1); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+    @keyframes orb-drift-3 {
+      0%, 100% { transform: translateX(-50%) translate(0, 0); }
+      33% { transform: translateX(-50%) translate(30px, -40px); }
+      66% { transform: translateX(-50%) translate(-30px, 30px); }
     }
-    .particle:nth-child(1) { left: 10%; animation-duration: 12s; animation-delay: 0s; width: 2px; height: 2px; }
-    .particle:nth-child(2) { left: 25%; animation-duration: 15s; animation-delay: 2s; }
-    .particle:nth-child(3) { left: 40%; animation-duration: 10s; animation-delay: 4s; width: 4px; height: 4px; }
-    .particle:nth-child(4) { left: 55%; animation-duration: 14s; animation-delay: 1s; }
-    .particle:nth-child(5) { left: 70%; animation-duration: 11s; animation-delay: 3s; width: 2px; height: 2px; }
-    .particle:nth-child(6) { left: 85%; animation-duration: 13s; animation-delay: 5s; }
-    .particle:nth-child(7) { left: 15%; animation-duration: 16s; animation-delay: 7s; width: 2px; height: 2px; }
-    .particle:nth-child(8) { left: 50%; animation-duration: 9s; animation-delay: 6s; }
-    .particle:nth-child(9) { left: 65%; animation-duration: 14s; animation-delay: 8s; width: 4px; height: 4px; }
-    .particle:nth-child(10) { left: 90%; animation-duration: 12s; animation-delay: 2s; }
-    .particle:nth-child(11) { left: 5%; animation-duration: 18s; animation-delay: 9s; }
-    .particle:nth-child(12) { left: 35%; animation-duration: 11s; animation-delay: 4s; width: 2px; height: 2px; }
 
     .hero-content {
       position: relative;
       z-index: 2;
-      text-align: center;
-      max-width: 800px;
+      max-width: 900px;
     }
-    .hero-badge {
-      display: inline-block;
-      padding: 6px 20px;
-      background: rgba(56, 196, 242, 0.15);
-      border: 1px solid rgba(56, 196, 242, 0.3);
-      border-radius: 50px;
-      color: var(--cyan);
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 24px;
-      backdrop-filter: blur(8px);
-    }
+
     .hero h1 {
       font-family: var(--font-en);
-      font-size: 56px;
+      font-size: clamp(48px, 8vw, 80px);
       font-weight: 900;
       color: var(--white);
-      line-height: 1.15;
-      margin-bottom: 20px;
-      letter-spacing: -0.5px;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 28px;
     }
-    .hero h1 br { display: block; }
+    .hero h1 .line-gradient {
+      display: block;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
     .hero-subtitle {
-      font-size: 18px;
-      color: rgba(255, 255, 255, 0.7);
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.5);
       max-width: 600px;
-      margin: 0 auto 36px;
+      margin: 0 auto 48px;
       line-height: 1.7;
     }
-    .hero-cta-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-    .btn-primary {
+
+    .hero-cta {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 16px 36px;
+      gap: 10px;
+      padding: 0 48px;
+      height: 56px;
       background: var(--gradient-cyan);
       color: var(--white);
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 700;
       border-radius: 50px;
-      transition: transform 0.25s, box-shadow 0.25s;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 0 40px rgba(56, 196, 242, 0.25);
+      position: relative;
+      overflow: hidden;
     }
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 30px rgba(56, 196, 242, 0.4);
-    }
-    .btn-primary:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 15px 32px;
-      background: transparent;
-      color: var(--white);
-      font-size: 16px;
-      font-weight: 500;
-      border: 1.5px solid rgba(255, 255, 255, 0.35);
+    .hero-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
       border-radius: 50px;
-      transition: border-color 0.2s, background 0.2s, transform 0.2s;
     }
-    .btn-ghost:hover {
-      border-color: rgba(255, 255, 255, 0.6);
-      background: rgba(255, 255, 255, 0.06);
-      transform: translateY(-2px);
-    }
-    .btn-ghost:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
-    .btn-ghost .play-icon {
-      width: 20px;
-      height: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    .hero-cta:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 0 60px rgba(56, 196, 242, 0.4);
     }
 
-    .trust-strip {
+    .hero-trust {
+      margin-top: 28px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.3);
+      font-weight: 300;
+    }
+
+    /* Browser mockup */
+    .hero-mockup {
+      position: relative;
+      z-index: 2;
+      margin-top: 72px;
+      max-width: 900px;
+      width: 100%;
+    }
+    .mockup-browser {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+    }
+    .mockup-topbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .mockup-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .mockup-dot:nth-child(1) { background: #ff5f57; }
+    .mockup-dot:nth-child(2) { background: #febc2e; }
+    .mockup-dot:nth-child(3) { background: #28c840; }
+    .mockup-urlbar {
+      flex: 1;
+      margin: 0 12px;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 48px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.25);
+      font-family: var(--font-en);
     }
-    .trust-pill {
-      display: inline-flex;
+    .mockup-screen {
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, var(--navy-deeper), var(--navy), var(--cyan));
+      background-size: 300% 300%;
+      animation: mockup-gradient 8s ease infinite;
+      display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 50px;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 13px;
-      font-weight: 400;
-      backdrop-filter: blur(8px);
+      justify-content: center;
     }
-    .trust-pill svg { flex-shrink: 0; }
+    .mockup-screen-text {
+      font-family: var(--font-en);
+      font-size: 24px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.15);
+      letter-spacing: 4px;
+    }
+    @keyframes mockup-gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-    /* Video Placeholder */
-    .hero-video-wrapper {
-      position: relative;
-      z-index: 2;
-      max-width: 900px;
-      width: 100%;
-      margin: 0 auto;
+    @media (max-width: 768px) {
+      .hero { padding: 120px 20px 60px; }
+      .hero-mockup { margin-top: 48px; }
     }
-    .video-placeholder {
+
+    /* ═══════════════════════════════════════════════════════
+       3. SOCIAL PROOF — Animated Counters
+    ═══════════════════════════════════════════════════════ */
+    .social-proof {
+      background: var(--dark-bg);
+      padding: 100px 24px 120px;
+      text-align: center;
       position: relative;
-      width: 100%;
-      padding-bottom: 56.25%;
-      background: linear-gradient(145deg, #101d3a 0%, #1a3060 100%);
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.06);
     }
-    .video-placeholder img {
+    .social-proof::before {
+      content: '';
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    }
+
+    .proof-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      max-width: 800px;
+      margin: 0 auto 40px;
+    }
+    .proof-item {
+      flex: 1;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+    }
+    .proof-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 20%;
+      height: 60%;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .proof-number {
+      font-family: var(--font-en);
+      font-size: clamp(48px, 7vw, 72px);
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .proof-label {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.4);
+    }
+    .proof-footnote {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.2);
+      font-weight: 300;
+    }
+    .proof-footnote span {
+      margin: 0 12px;
+    }
+
+    @media (max-width: 600px) {
+      .proof-grid { flex-direction: column; gap: 32px; }
+      .proof-item:not(:last-child)::after { display: none; }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       4. FEATURES — Apple Bento Grid
+    ═══════════════════════════════════════════════════════ */
+    .features {
+      background: var(--light-bg);
+      padding: var(--section-padding) 24px;
+      text-align: center;
+    }
+    .features .section-headline {
+      color: var(--navy-dark);
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      gap: 16px;
+      max-width: 1100px;
+      margin: 64px auto 0;
+    }
+    .bento-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      text-align: right;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      position: relative;
+      cursor: default;
+    }
+    .bento-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 20px 60px rgba(37, 62, 122, 0.1);
+    }
+    .bento-card.large {
+      grid-column: span 2;
+      grid-row: span 2;
+      padding: 48px 36px;
+    }
+    .bento-card.medium {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+
+    .bento-visual {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      aspect-ratio: 16 / 10;
+      border-radius: var(--radius-md);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .bento-visual-large {
+      background: linear-gradient(135deg, var(--navy-deeper), var(--navy), var(--cyan));
+      background-size: 200% 200%;
+      animation: mockup-gradient 10s ease infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bento-visual-clubs {
+      background: linear-gradient(135deg, #1a2f5e, #38C4F2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bento-visual-schools {
+      background: linear-gradient(135deg, #253E7A, #7DC57A);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bento-visual-analytics {
+      background: linear-gradient(135deg, #0d1b3e, #F05680);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bento-visual-email {
+      background: linear-gradient(135deg, #253E7A, #EAD654);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bento-visual-ai {
+      background: linear-gradient(135deg, #1a2f5e, #8B5CF6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bento-visual-icon {
+      font-size: 48px;
+      opacity: 0.5;
+    }
+    .bento-visual-icon-large {
+      font-size: 72px;
       opacity: 0.4;
     }
-    .play-btn-overlay {
+
+    .bento-card-title {
+      font-family: var(--font-en);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .bento-card-desc {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(26, 47, 94, 0.6);
+      line-height: 1.6;
+    }
+
+    .bento-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 14px;
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--purple);
       position: absolute;
+      top: 16px;
+      left: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .bento-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .bento-card.large {
+        grid-column: span 1;
+        grid-row: span 1;
+      }
+      .features { padding: var(--section-padding-mobile) 20px; }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       5. VIDEO DEMO — Full Width Dark
+    ═══════════════════════════════════════════════════════ */
+    .video-demo {
+      background: var(--dark-bg);
+      padding: var(--section-padding) 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .video-demo::before {
+      content: '';
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(56, 196, 242, 0.06) 0%, transparent 70%);
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 80px;
-      height: 80px;
-      background: rgba(56, 196, 242, 0.9);
+      pointer-events: none;
+    }
+
+    .video-demo h2 {
+      font-family: var(--font-en);
+      font-size: clamp(36px, 5vw, 48px);
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 56px;
+    }
+
+    .video-wrapper {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 0 80px rgba(56, 196, 242, 0.12);
+    }
+    .video-placeholder {
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, #0d1b3e, #1a2f5e, #253E7A);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+    }
+    .video-placeholder::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.2);
+      transition: background 0.3s;
+    }
+    .video-placeholder:hover::after {
+      background: rgba(0, 0, 0, 0.1);
+    }
+    .play-btn {
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+      transition: all 0.3s;
+    }
+    .play-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.08);
+    }
+    .play-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: var(--white);
+      margin-right: -3px;
+    }
+
+    @media (max-width: 768px) {
+      .video-demo { padding: var(--section-padding-mobile) 20px; }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       6. AUDIENCE — Expandable Panels
+    ═══════════════════════════════════════════════════════ */
+    .audience {
+      background: var(--light-bg);
+      padding: var(--section-padding) 24px;
+      text-align: center;
+    }
+    .audience .section-headline {
+      color: var(--navy-dark);
+    }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      max-width: 1100px;
+      margin: 64px auto 0;
+    }
+    .audience-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: var(--radius-lg);
+      padding: 36px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .audience-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(37, 62, 122, 0.1);
+    }
+    .audience-card.active {
+      background: var(--white);
+      box-shadow: 0 12px 40px rgba(37, 62, 122, 0.12);
+      border-color: var(--cyan);
+    }
+    .audience-icon {
+      font-size: 40px;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .audience-card-title {
+      font-family: var(--font-en);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .audience-card-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(26, 47, 94, 0.5);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .audience-card-link {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--cyan);
+      transition: gap 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .audience-card-link:hover { gap: 8px; }
+
+    /* Expandable Panel */
+    .audience-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+      opacity: 0;
+      grid-column: 1 / -1;
+    }
+    .audience-panel.open {
+      max-height: 600px;
+      opacity: 1;
+    }
+    .audience-panel-inner {
+      background: var(--navy-deeper);
+      border-radius: var(--radius-lg);
+      padding: 56px 48px;
+      text-align: right;
+      color: var(--white);
+      position: relative;
+      margin-top: 16px;
+    }
+    .panel-close {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-      box-shadow: 0 0 0 0 rgba(56, 196, 242, 0.4);
-      animation: pulse-play 2.5s ease infinite;
+      color: var(--white);
+      font-size: 18px;
+      transition: background 0.2s;
     }
-    @keyframes pulse-play {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(56, 196, 242, 0.4); }
-      50% { box-shadow: 0 0 0 20px rgba(56, 196, 242, 0); }
-    }
-    .play-btn-overlay:hover { transform: translate(-50%, -50%) scale(1.08); }
-    .play-btn-overlay svg { margin-right: -3px; }
+    .panel-close:hover { background: rgba(255, 255, 255, 0.2); }
 
-    /* BOARDi float */
-    .hero-boardi {
-      position: absolute;
-      bottom: 40px;
-      left: 40px;
-      width: 80px;
-      z-index: 3;
-      opacity: 0.8;
-      animation: boardi-float 4s ease-in-out infinite;
-    }
-    @keyframes boardi-float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
+    .panel-hero-text {
+      font-family: var(--font-en);
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 32px;
+      line-height: 1.2;
     }
 
-    @media (max-width: 768px) {
-      .hero { padding: 100px 20px 60px; min-height: auto; }
-      .hero h1 { font-size: 36px; }
-      .hero-subtitle { font-size: 16px; }
-      .hero-boardi { width: 50px; bottom: 20px; left: 20px; }
-    }
-    @media (max-width: 480px) {
-      .hero h1 { font-size: 30px; }
-      .btn-primary { padding: 14px 28px; font-size: 15px; }
-      .btn-ghost { padding: 13px 24px; font-size: 14px; }
-    }
-
-    /* ═══════════════════════════════════════════════
-       3. SOCIAL PROOF STRIP
-    ═══════════════════════════════════════════════ */
-    .social-proof {
-      background: var(--white);
-      padding: 48px 24px;
-      border-bottom: 1px solid rgba(37, 62, 122, 0.06);
-    }
-    .social-proof .container {
+    .panel-features {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 48px;
+      gap: 24px;
+      margin-bottom: 32px;
       flex-wrap: wrap;
     }
-    .proof-item {
-      text-align: center;
-      min-width: 140px;
+    .panel-feature {
+      flex: 1;
+      min-width: 180px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
-    .proof-number {
-      font-family: var(--font-en);
-      font-size: 36px;
-      font-weight: 800;
-      color: var(--navy);
-      line-height: 1.1;
+    .panel-feature-title {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 4px;
     }
-    .proof-label {
-      font-size: 14px;
-      color: rgba(37, 62, 122, 0.55);
-      margin-top: 4px;
-    }
-    .proof-divider {
-      width: 1px;
-      height: 40px;
-      background: rgba(37, 62, 122, 0.1);
-    }
-    @media (max-width: 600px) {
-      .social-proof .container { gap: 24px; }
-      .proof-divider { display: none; }
-      .proof-number { font-size: 28px; }
+    .panel-feature-desc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 300;
     }
 
-    /* ═══════════════════════════════════════════════
-       4. SECTION TITLES (shared)
-    ═══════════════════════════════════════════════ */
-    .section-light {
-      padding: 80px 24px;
-      background: #F8FBFF;
+    .panel-case-study {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 28px;
     }
-    .section-light:nth-child(even) {
-      background: var(--white);
-    }
-    .section-dark {
-      padding: 80px 24px;
-      background: var(--gradient-hero);
-      color: var(--white);
-    }
-    .section-title {
-      font-family: var(--font-en);
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--navy);
-      text-align: center;
-      margin-bottom: 12px;
-    }
-    .section-title-white {
-      font-family: var(--font-en);
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--white);
-      text-align: center;
-      margin-bottom: 12px;
-    }
-    .section-subtitle {
-      font-size: 16px;
-      color: rgba(37, 62, 122, 0.55);
-      text-align: center;
-      max-width: 550px;
-      margin: 0 auto 48px;
-    }
-    .section-subtitle-white {
-      font-size: 16px;
-      color: rgba(255, 255, 255, 0.6);
-      text-align: center;
-      max-width: 550px;
-      margin: 0 auto 48px;
-    }
-
-    /* ═══════════════════════════════════════════════
-       5. FEATURES — BENTO GRID
-    ═══════════════════════════════════════════════ */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: auto auto;
-      gap: 20px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .feature-card {
-      background: var(--white);
-      border: 1px solid rgba(37, 62, 122, 0.08);
-      border-radius: var(--radius-lg);
-      padding: 32px 28px;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .feature-card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-lg);
-    }
-    .feature-card.card-large {
-      grid-column: span 2;
-    }
-    .feature-card .card-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-      font-size: 24px;
-    }
-    .feature-card h3 {
-      font-family: var(--font-en);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 8px;
-    }
-    .feature-card p {
+    .panel-case-study p {
       font-size: 14px;
-      color: rgba(37, 62, 122, 0.6);
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.7);
       line-height: 1.7;
     }
+    .panel-case-study strong {
+      color: var(--cyan);
+      font-weight: 600;
+    }
 
-    /* Card special bg */
-    .feature-card.card-cyan {
-      background: linear-gradient(145deg, #e6f8ff 0%, #d4f1fd 100%);
-      border-color: rgba(56, 196, 242, 0.15);
-    }
-    .feature-card.card-navy {
-      background: linear-gradient(145deg, #1a3060 0%, #253E7A 100%);
-      border-color: rgba(56, 196, 242, 0.1);
-    }
-    .feature-card.card-navy h3 { color: var(--white); }
-    .feature-card.card-navy p { color: rgba(255, 255, 255, 0.65); }
-
-    .feature-card .boardi-img {
-      position: absolute;
-      bottom: -10px;
-      left: 20px;
-      width: 100px;
-      opacity: 0.9;
-    }
-    .feature-card .badge-soon {
-      display: inline-block;
-      padding: 3px 10px;
-      background: rgba(234, 214, 84, 0.2);
-      color: var(--yellow);
-      font-size: 11px;
+    .panel-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 32px;
+      background: var(--gradient-cyan);
+      color: var(--white);
+      font-size: 15px;
       font-weight: 600;
       border-radius: 50px;
-      margin-right: 8px;
+      transition: all 0.25s;
+    }
+    .panel-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(56, 196, 242, 0.3);
     }
 
-    @media (max-width: 768px) {
-      .features-grid {
-        grid-template-columns: 1fr;
-      }
-      .feature-card.card-large { grid-column: span 1; }
-    }
-
-    /* ═══════════════════════════════════════════════
-       6. VIDEO SECTION (dark)
-    ═══════════════════════════════════════════════ */
-    .video-section .video-demo-wrapper {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .video-section .demo-note {
-      text-align: center;
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 14px;
-      margin-top: 16px;
-    }
-
-    /* ═══════════════════════════════════════════════
-       7. AUDIENCE SEGMENTS
-    ═══════════════════════════════════════════════ */
-    .audience-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    .audience-card {
-      background: var(--white);
-      border: 1px solid rgba(37, 62, 122, 0.08);
-      border-radius: var(--radius-lg);
-      padding: 32px 24px;
-      text-align: center;
-      transition: transform 0.3s, box-shadow 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    .audience-card::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      height: 4px;
-      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-    }
-    .audience-card:nth-child(1)::after { background: var(--cyan); }
-    .audience-card:nth-child(2)::after { background: var(--pink); }
-    .audience-card:nth-child(3)::after { background: var(--yellow); }
-    .audience-card:nth-child(4)::after { background: var(--green); }
-    .audience-card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-lg);
-    }
-    .audience-card .aud-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      font-size: 26px;
-      background: #F0F6FF;
-    }
-    .audience-card h3 {
-      font-family: var(--font-en);
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 8px;
-    }
-    .audience-card p {
-      font-size: 13px;
-      color: rgba(37, 62, 122, 0.55);
-      line-height: 1.6;
-    }
     @media (max-width: 768px) {
       .audience-grid { grid-template-columns: repeat(2, 1fr); }
+      .audience { padding: var(--section-padding-mobile) 20px; }
+      .audience-panel-inner { padding: 36px 24px; }
+      .panel-features { flex-direction: column; }
     }
     @media (max-width: 480px) {
       .audience-grid { grid-template-columns: 1fr; }
     }
 
-    /* ═══════════════════════════════════════════════
-       8. COMPARISON
-    ═══════════════════════════════════════════════ */
-    .comparison-table {
+    /* ═══════════════════════════════════════════════════════
+       7. COMPARISON — Apple Style Side-by-Side
+    ═══════════════════════════════════════════════════════ */
+    .comparison {
+      background: var(--dark-bg);
+      padding: var(--section-padding) 24px;
+      text-align: center;
+      position: relative;
+    }
+
+    .comparison h2 {
+      font-family: var(--font-en);
+      font-size: clamp(36px, 5vw, 48px);
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -1.5px;
+      margin-bottom: 64px;
+    }
+
+    .comparison-cards {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 24px;
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
     }
-    .comp-col {
-      background: var(--white);
-      border: 1px solid rgba(37, 62, 122, 0.08);
+    .comparison-card {
       border-radius: var(--radius-lg);
-      padding: 32px 28px;
+      padding: 40px 32px;
+      text-align: right;
     }
-    .comp-col.comp-wb {
-      border: 2px solid var(--cyan);
-      background: linear-gradient(180deg, #f0fbff 0%, #ffffff 100%);
-      position: relative;
+    .comparison-card.old {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
-    .comp-col.comp-wb::before {
-      content: 'מומלץ';
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--gradient-cyan);
-      color: var(--white);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 14px;
-      border-radius: 50px;
+    .comparison-card.new {
+      background: rgba(56, 196, 242, 0.06);
+      border: 1px solid rgba(56, 196, 242, 0.15);
     }
-    .comp-col h3 {
+    .comparison-card-header {
       font-family: var(--font-en);
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 4px;
+      margin-bottom: 28px;
+      letter-spacing: -0.5px;
     }
-    .comp-price {
+    .comparison-card.old .comparison-card-header { color: rgba(255, 255, 255, 0.3); }
+    .comparison-card.new .comparison-card-header { color: var(--cyan); }
+
+    .comparison-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 14px;
+      font-weight: 300;
+    }
+    .comparison-card.old .comparison-row { color: rgba(255, 255, 255, 0.3); }
+    .comparison-card.new .comparison-row { color: rgba(255, 255, 255, 0.8); }
+    .comparison-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .comparison-card.old .comparison-icon { opacity: 0.4; }
+
+    .comparison-price-row {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+    .comparison-card.old .comparison-price-row {
+      background: rgba(240, 86, 128, 0.06);
+    }
+    .comparison-card.new .comparison-price-row {
+      background: rgba(56, 196, 242, 0.08);
+    }
+    .comparison-price {
       font-family: var(--font-en);
       font-size: 28px;
       font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 20px;
+      letter-spacing: -1px;
     }
-    .comp-price span { font-size: 14px; font-weight: 400; color: rgba(37, 62, 122, 0.5); }
-    .comp-features {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    .comparison-card.old .comparison-price { color: rgba(255, 255, 255, 0.25); }
+    .comparison-card.new .comparison-price { color: var(--cyan); }
+    .comparison-price-label {
+      font-size: 12px;
+      font-weight: 300;
+      margin-top: 4px;
     }
-    .comp-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      color: rgba(37, 62, 122, 0.7);
-    }
-    .comp-item .icon-check {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: rgba(125, 197, 122, 0.15);
-      color: var(--green);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 13px;
-      font-weight: 700;
-    }
-    .comp-item .icon-x {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: rgba(240, 86, 128, 0.1);
-      color: var(--pink);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 13px;
-      font-weight: 700;
-    }
-    @media (max-width: 600px) {
-      .comparison-table { grid-template-columns: 1fr; }
+    .comparison-card.old .comparison-price-label { color: rgba(255, 255, 255, 0.2); }
+    .comparison-card.new .comparison-price-label { color: rgba(255, 255, 255, 0.4); }
+
+    @media (max-width: 768px) {
+      .comparison-cards { grid-template-columns: 1fr; }
+      .comparison { padding: var(--section-padding-mobile) 20px; }
     }
 
-    /* ═══════════════════════════════════════════════
-       9. PRICING
-    ═══════════════════════════════════════════════ */
-    .pricing-section {
-      padding: 80px 24px;
-      background: #F8FBFF;
+    /* ═══════════════════════════════════════════════════════
+       8. PRICING — Elevated Cards
+    ═══════════════════════════════════════════════════════ */
+    .pricing {
+      background: var(--light-bg);
+      padding: var(--section-padding) 24px;
+      text-align: center;
+    }
+    .pricing .section-headline {
+      color: var(--navy-dark);
     }
 
-    /* Toggle */
+    /* Billing Toggle */
     .billing-toggle {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 40px;
+      gap: 16px;
+      margin: 40px 0 56px;
+      font-size: 15px;
+      color: rgba(26, 47, 94, 0.5);
+      font-weight: 400;
     }
-    .billing-toggle label {
-      font-size: 14px;
-      font-weight: 500;
-      color: rgba(37, 62, 122, 0.5);
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-    .billing-toggle label.active { color: var(--navy); font-weight: 600; }
-
-    .toggle-switch {
+    .billing-toggle .active-label { color: var(--navy-dark); font-weight: 600; }
+    .toggle-pill {
       position: relative;
       width: 52px;
       height: 28px;
-      background: rgba(37, 62, 122, 0.15);
-      border-radius: 14px;
+      background: #d1d5db;
+      border-radius: 50px;
       cursor: pointer;
-      transition: background 0.25s;
+      transition: background 0.3s;
     }
-    .toggle-switch.on { background: var(--cyan); }
-    .toggle-switch::after {
+    .toggle-pill.active { background: var(--cyan); }
+    .toggle-pill::after {
       content: '';
       position: absolute;
       top: 3px;
       right: 3px;
       width: 22px;
       height: 22px;
-      border-radius: 50%;
       background: var(--white);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-      transition: transform 0.25s;
+      border-radius: 50%;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .toggle-switch.on::after { transform: translateX(-24px); }
-    .toggle-switch:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
-
-    .annual-save {
-      display: inline-block;
-      background: rgba(234, 214, 84, 0.18);
-      color: #8a7600;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 6px;
+    .toggle-pill.active::after {
+      transform: translateX(-24px);
     }
 
-    /* Cards */
     .pricing-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px;
-      max-width: 1100px;
-      margin: 0 auto 40px;
+      max-width: 1050px;
+      margin: 0 auto;
+      align-items: start;
     }
-    .price-card {
+
+    .pricing-card {
       background: var(--white);
-      border: 1.5px solid rgba(37, 62, 122, 0.08);
-      border-radius: var(--radius-lg);
-      padding: 28px 24px;
-      display: flex;
-      flex-direction: column;
+      border-radius: var(--radius-xl);
+      padding: 40px 28px;
+      text-align: center;
+      border: 1px solid rgba(37, 62, 122, 0.06);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
-      transition: transform 0.3s, box-shadow 0.3s;
     }
-    .price-card:hover {
+    .pricing-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-lg);
     }
-    .price-card.free { border-style: dashed; opacity: 0.92; }
-    .price-card.recommended {
-      border-color: var(--cyan);
-      border-width: 2px;
-      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(56, 196, 242, 0.12);
-      transform: translateY(-6px);
+    .pricing-card.recommended {
+      background: var(--white);
+      border: 2px solid var(--cyan);
+      box-shadow: 0 0 60px rgba(56, 196, 242, 0.12);
+      transform: scale(1.04);
+      z-index: 2;
     }
-    .price-card.recommended:hover { transform: translateY(-10px); }
-    .price-card .card-rec-badge {
+    .pricing-card.recommended:hover {
+      transform: scale(1.04) translateY(-4px);
+    }
+    .pricing-badge {
       position: absolute;
-      top: 0;
-      right: 0;
-      background: var(--gradient-cyan);
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 20px;
+      background: var(--gradient-text);
       color: var(--white);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 5px 14px 5px 10px;
-      border-radius: var(--radius-lg) 0 12px 0;
-    }
-    .price-card-name {
-      font-family: var(--font-en);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 4px;
-      margin-top: 4px;
-    }
-    .price-card-tagline {
       font-size: 12px;
-      color: rgba(37, 62, 122, 0.45);
-      margin-bottom: 14px;
+      font-weight: 700;
+      border-radius: 50px;
+      white-space: nowrap;
     }
-    .price-amount {
-      font-family: var(--font-en);
-      font-size: 36px;
-      font-weight: 900;
-      color: var(--navy);
-      line-height: 1.1;
-    }
-    .price-amount .currency { font-size: 18px; font-weight: 600; }
-    .price-amount .period { font-size: 13px; font-weight: 400; color: rgba(37, 62, 122, 0.45); }
-    .price-amount-note {
-      font-size: 11px;
-      color: rgba(37, 62, 122, 0.4);
-      margin-top: 2px;
-      min-height: 16px;
-    }
-    .price-features {
-      margin: 16px 0;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .price-features li {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: rgba(37, 62, 122, 0.65);
-    }
-    .price-features li svg {
-      flex-shrink: 0;
-      color: var(--green);
-    }
-    .price-card .btn-card {
-      display: block;
-      text-align: center;
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      transition: background 0.2s, transform 0.2s;
-      margin-top: auto;
-    }
-    .btn-card-outline {
-      background: transparent;
-      border: 1.5px solid rgba(37, 62, 122, 0.15);
-      color: var(--navy);
-    }
-    .btn-card-outline:hover { background: rgba(37, 62, 122, 0.04); }
-    .btn-card-cyan {
-      background: var(--gradient-cyan);
-      color: var(--white);
-      border: none;
-    }
-    .btn-card-cyan:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(56, 196, 242, 0.3); }
 
-    /* Enterprise */
-    .enterprise-banner {
-      max-width: 800px;
-      margin: 0 auto 40px;
-      background: linear-gradient(135deg, #253E7A 0%, #1a3060 100%);
-      border-radius: var(--radius-lg);
-      padding: 32px 36px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-    .enterprise-banner h3 {
+    .pricing-plan-name {
       font-family: var(--font-en);
       font-size: 22px;
       font-weight: 700;
-      color: var(--white);
+      color: var(--navy-dark);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
     }
-    .enterprise-banner p {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.6);
-      margin-top: 4px;
+    .pricing-plan-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(26, 47, 94, 0.5);
+      margin-bottom: 24px;
     }
-    .enterprise-banner .btn-ent {
-      padding: 12px 28px;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--white);
-      font-size: 14px;
-      font-weight: 600;
-      border-radius: 50px;
-      transition: background 0.2s;
-      white-space: nowrap;
-    }
-    .enterprise-banner .btn-ent:hover { background: rgba(255, 255, 255, 0.2); }
-
-    @media (max-width: 900px) {
-      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 480px) {
-      .pricing-grid { grid-template-columns: 1fr; }
-    }
-
-    /* ═══════════════════════════════════════════════
-       10. TESTIMONIALS
-    ═══════════════════════════════════════════════ */
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    .test-card {
-      background: var(--white);
-      border: 1px solid rgba(37, 62, 122, 0.06);
-      border-radius: var(--radius-lg);
-      padding: 28px 24px;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .test-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-md);
-    }
-    .test-quote {
-      font-size: 15px;
-      color: rgba(37, 62, 122, 0.7);
-      line-height: 1.7;
-      margin-bottom: 20px;
-      position: relative;
-    }
-    .test-quote::before {
-      content: '\201D';
-      position: absolute;
-      top: -20px;
-      right: -4px;
-      font-size: 48px;
+    .pricing-price {
       font-family: var(--font-en);
-      color: rgba(56, 196, 242, 0.25);
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--navy-dark);
+      letter-spacing: -2px;
       line-height: 1;
     }
-    .test-author {
+    .pricing-currency {
+      font-size: 22px;
+      font-weight: 600;
+      vertical-align: super;
+    }
+    .pricing-period {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(26, 47, 94, 0.4);
+      margin-top: 4px;
+      margin-bottom: 28px;
+    }
+    .pricing-features {
+      text-align: right;
+      margin-bottom: 32px;
+    }
+    .pricing-features li {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      padding: 10px 0;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--navy-dark);
+      border-bottom: 1px solid rgba(37, 62, 122, 0.04);
     }
-    .test-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
+    .pricing-features li:last-child { border-bottom: none; }
+    .pricing-features .check {
+      color: var(--green);
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .pricing-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.25s;
+    }
+    .pricing-btn-primary {
+      background: var(--gradient-cyan);
+      color: var(--white);
+    }
+    .pricing-btn-primary:hover {
+      box-shadow: 0 8px 30px rgba(56, 196, 242, 0.3);
+      transform: translateY(-2px);
+    }
+    .pricing-btn-secondary {
+      background: var(--light-bg);
+      color: var(--navy-dark);
+    }
+    .pricing-btn-secondary:hover {
+      background: #e8e8ea;
+    }
+
+    @media (max-width: 768px) {
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+      .pricing-card.recommended { transform: none; }
+      .pricing-card.recommended:hover { transform: translateY(-4px); }
+      .pricing { padding: var(--section-padding-mobile) 20px; }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       9. TESTIMONIALS — Carousel
+    ═══════════════════════════════════════════════════════ */
+    .testimonials {
+      background: var(--light-bg);
+      padding: var(--section-padding) 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .testimonials .section-headline {
+      color: var(--navy-dark);
+    }
+
+    .testimonial-carousel {
+      max-width: 700px;
+      margin: 56px auto 0;
+      position: relative;
+      min-height: 260px;
+    }
+    .testimonial-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .testimonial-slide.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+      position: relative;
+    }
+    .testimonial-quote-icon {
+      font-size: 56px;
+      color: var(--cyan);
+      opacity: 0.3;
+      margin-bottom: 16px;
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+    .testimonial-text {
+      font-size: clamp(18px, 2.5vw, 22px);
+      font-weight: 400;
+      color: var(--navy-dark);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+    .testimonial-author {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--font-en);
-      font-size: 18px;
-      font-weight: 700;
+      gap: 16px;
+    }
+    .testimonial-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--pink));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
       color: var(--white);
-      flex-shrink: 0;
+      font-weight: 700;
+      font-family: var(--font-en);
     }
-    .test-avatar.av-1 { background: linear-gradient(135deg, var(--cyan), #2aa8d4); }
-    .test-avatar.av-2 { background: linear-gradient(135deg, var(--pink), #d04570); }
-    .test-avatar.av-3 { background: linear-gradient(135deg, var(--green), #5aad56); }
-    .test-info h4 {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--navy);
+    .testimonial-author-info {
+      text-align: right;
     }
-    .test-info span {
-      font-size: 12px;
-      color: rgba(37, 62, 122, 0.45);
+    .testimonial-name {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--navy-dark);
     }
-    @media (max-width: 768px) {
-      .testimonials-grid { grid-template-columns: 1fr; }
+    .testimonial-role {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(26, 47, 94, 0.5);
     }
 
-    /* ═══════════════════════════════════════════════
-       11. FAQ
-    ═══════════════════════════════════════════════ */
-    .faq-list {
-      max-width: 720px;
-      margin: 0 auto;
+    .testimonial-dots {
       display: flex;
-      flex-direction: column;
-      gap: 12px;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 40px;
+    }
+    .testimonial-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(37, 62, 122, 0.15);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .testimonial-dot.active {
+      background: var(--cyan);
+      width: 24px;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .testimonials { padding: var(--section-padding-mobile) 20px; }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       10. FAQ — Minimal Accordion
+    ═══════════════════════════════════════════════════════ */
+    .faq {
+      background: var(--light-bg);
+      padding: var(--section-padding) 24px 100px;
+      text-align: center;
+    }
+    .faq .section-headline {
+      color: var(--navy-dark);
+    }
+
+    .faq-list {
+      max-width: 700px;
+      margin: 56px auto 0;
+      text-align: right;
     }
     .faq-item {
-      background: var(--white);
-      border: 1px solid rgba(37, 62, 122, 0.06);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      transition: box-shadow 0.3s;
+      border-bottom: 1px solid rgba(37, 62, 122, 0.06);
     }
-    .faq-item:hover { box-shadow: var(--shadow-sm); }
     .faq-question {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 24px;
-      cursor: pointer;
-      font-size: 15px;
+      width: 100%;
+      padding: 24px 0;
+      font-size: 17px;
       font-weight: 600;
-      color: var(--navy);
-      user-select: none;
-      gap: 12px;
+      color: var(--navy-dark);
+      cursor: pointer;
+      transition: color 0.2s;
+      text-align: right;
+      background: none;
+      border: none;
+      font-family: var(--font-he);
     }
-    .faq-question:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
-    .faq-arrow {
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+    .faq-question:hover { color: var(--cyan); }
+    .faq-question .faq-arrow {
+      font-size: 20px;
       transition: transform 0.3s;
       color: rgba(37, 62, 122, 0.3);
+      flex-shrink: 0;
     }
-    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-item.open .faq-arrow { transform: rotate(45deg); }
     .faq-answer {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.35s ease, padding 0.35s ease;
-    }
-    .faq-item.open .faq-answer {
-      max-height: 300px;
+      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .faq-answer-inner {
-      padding: 0 24px 18px;
-      font-size: 14px;
-      color: rgba(37, 62, 122, 0.6);
+      padding: 0 0 24px;
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(26, 47, 94, 0.6);
       line-height: 1.7;
     }
 
-    /* ═══════════════════════════════════════════════
-       12. FINAL CTA
-    ═══════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .faq { padding: var(--section-padding-mobile) 20px 60px; }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       11. FINAL CTA — Dark Gradient
+    ═══════════════════════════════════════════════════════ */
     .final-cta {
+      background: linear-gradient(180deg, #000000, #0d1b3e);
+      padding: var(--section-padding) 24px;
+      text-align: center;
       position: relative;
       overflow: hidden;
     }
-    .final-cta .container { text-align: center; position: relative; z-index: 2; }
+    .final-cta .orb {
+      opacity: 0.2;
+    }
     .final-cta h2 {
       font-family: var(--font-en);
-      font-size: 40px;
-      font-weight: 800;
-      color: var(--white);
-      margin-bottom: 12px;
+      font-size: clamp(48px, 8vw, 80px);
+      font-weight: 900;
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
     }
-    .final-cta .sub {
-      font-size: 17px;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 32px;
+    .final-cta-subtitle {
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.4);
+      max-width: 550px;
+      margin: 0 auto 48px;
+      position: relative;
+      z-index: 2;
     }
-    .final-cta .trust-strip { margin-top: 24px; }
-    .final-cta .boardi-float {
-      position: absolute;
-      bottom: -10px;
-      left: 60px;
-      width: 130px;
-      opacity: 0.7;
-      animation: boardi-float 5s ease-in-out infinite;
-      z-index: 1;
+    .final-cta .hero-cta {
+      position: relative;
+      z-index: 2;
     }
-    @media (max-width: 768px) {
-      .final-cta h2 { font-size: 30px; }
-      .final-cta .boardi-float { width: 80px; left: 20px; }
+    .final-cta-mascot {
+      position: relative;
+      z-index: 2;
+      margin: 56px auto 0;
+      max-width: 160px;
+      opacity: 0.6;
     }
 
-    /* ═══════════════════════════════════════════════
-       13. FOOTER
-    ═══════════════════════════════════════════════ */
-    .site-footer {
-      background: #0d1b3e;
+    @media (max-width: 768px) {
+      .final-cta { padding: var(--section-padding-mobile) 20px; }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       12. FOOTER — Sleek Dark
+    ═══════════════════════════════════════════════════════ */
+    .footer {
+      background: #000;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
       padding: 60px 24px 32px;
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.4);
     }
     .footer-grid {
       display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      grid-template-columns: 2fr repeat(3, 1fr);
       gap: 40px;
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto 48px;
     }
-    .footer-brand img {
-      height: 36px;
-      margin-bottom: 14px;
-    }
-    .footer-brand p {
-      font-size: 13px;
-      line-height: 1.7;
-      max-width: 260px;
-    }
-    .footer-col h4 {
+    .footer-brand-name {
       font-family: var(--font-en);
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 22px;
+      font-weight: 800;
       color: var(--white);
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+    .footer-brand-desc {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      max-width: 280px;
+    }
+    .footer-col-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.6);
       margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     .footer-col a {
       display: block;
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.5);
-      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.35);
+      padding: 4px 0;
       transition: color 0.2s;
     }
-    .footer-col a:hover { color: var(--cyan); }
+    .footer-col a:hover { color: var(--white); }
+
     .footer-bottom {
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      padding-top: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-      max-width: 1000px;
+      text-align: center;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 13px;
+      font-weight: 300;
+      max-width: 1100px;
       margin: 0 auto;
     }
-    .footer-copy {
-      font-size: 12px;
-    }
-    .footer-socials {
-      display: flex;
-      gap: 16px;
-    }
-    .footer-socials a {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.06);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: rgba(255, 255, 255, 0.5);
-      transition: background 0.2s, color 0.2s;
-    }
-    .footer-socials a:hover { background: rgba(56, 196, 242, 0.2); color: var(--cyan); }
 
     @media (max-width: 768px) {
-      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
     }
     @media (max-width: 480px) {
       .footer-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
+
 <body>
 
-  <!-- ═══════════════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════════
        NAVIGATION
-  ═══════════════════════════════════════════════ -->
-  <header class="navbar" id="navbar" role="banner">
+  ═══════════════════════════════════════════════════ -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="ניווט ראשי">
     <div class="container">
-      <a href="#" class="navbar-logo" aria-label="WHITEBOARD דף הבית">
-        <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD" id="nav-logo-white" style="height:40px;">
-        <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-01.png" alt="WHITEBOARD" id="nav-logo-dark" style="height:40px;display:none;">
-      </a>
-      <nav class="navbar-links" aria-label="ניווט ראשי">
-        <a href="#features">פיצ'רים</a>
-        <a href="#pricing">תמחור</a>
+      <a href="#" class="navbar-logo" aria-label="WHITEBOARD דף הבית">WHITEBOARD</a>
+      <div class="navbar-links">
+        <a href="#features">יכולות</a>
         <a href="#audience">למי מתאים</a>
-        <a href="#faq">שאלות נפוצות</a>
-        <a href="#signup" class="btn-cta-nav desktop-only">התחל בחינם</a>
-      </nav>
-      <button class="hamburger" id="hamburger" aria-label="תפריט" aria-expanded="false">
-        <span></span><span></span><span></span>
+        <a href="#pricing">תמחור</a>
+        <a href="#faq">שאלות</a>
+        <a href="#" class="btn-cta-nav desktop-only">התחל בחינם</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="פתח תפריט" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
     </div>
-  </header>
+  </nav>
 
   <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="תפריט ניווט">
-    <button class="mobile-menu-close" id="mobileClose" aria-label="סגור תפריט">&times;</button>
-    <a href="#features" class="mobile-link">פיצ'רים</a>
-    <a href="#pricing" class="mobile-link">תמחור</a>
+  <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="תפריט נייד">
+    <button class="mobile-menu-close" id="mobileMenuClose" aria-label="סגור תפריט">&times;</button>
+    <a href="#features" class="mobile-link">יכולות</a>
     <a href="#audience" class="mobile-link">למי מתאים</a>
-    <a href="#faq" class="mobile-link">שאלות נפוצות</a>
-    <a href="#signup" class="btn-primary mobile-link">התחל בחינם</a>
+    <a href="#pricing" class="mobile-link">תמחור</a>
+    <a href="#faq" class="mobile-link">שאלות</a>
+    <a href="#" class="btn-cta-nav">התחל בחינם</a>
   </div>
 
-  <main>
-    <!-- ═══════════════════════════════════════════════
-         SECTION 1 — HERO
-    ═══════════════════════════════════════════════ -->
-    <section class="hero" id="hero">
-      <!-- Particles -->
-      <div class="particles" aria-hidden="true">
-        <div class="particle"></div><div class="particle"></div>
-        <div class="particle"></div><div class="particle"></div>
-        <div class="particle"></div><div class="particle"></div>
-        <div class="particle"></div><div class="particle"></div>
-        <div class="particle"></div><div class="particle"></div>
-        <div class="particle"></div><div class="particle"></div>
-      </div>
+  <!-- ═══════════════════════════════════════════════════
+       1. HERO
+  ═══════════════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <!-- Animated Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 
-      <div class="hero-content reveal">
-        <span class="hero-badge">הפלטפורמה לבניית אקדמיות דיגיטליות</span>
-        <h1>בנה אקדמיה דיגיטלית.<br>תוך דקות.</h1>
-        <p class="hero-subtitle">קורסים, קהילות, בתי ספר ותכניות הכשרה — הכל במערכת אחת. עם AI שעוזר לך בדרך.</p>
-        <div class="hero-cta-row">
-          <a href="#signup" class="btn-primary">התחל בחינם</a>
-          <a href="#video" class="btn-ghost">
-            <span class="play-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-            </span>
-            צפה בהדגמה
-          </a>
+    <div class="hero-content reveal">
+      <h1>
+        בנה אקדמיה דיגיטלית.
+        <span class="line-gradient">תוך דקות.</span>
+      </h1>
+      <p class="hero-subtitle">קורסים, קהילות, בתי ספר ותכניות הכשרה — הכל במערכת אחת.<br>עם AI שעוזר לך בדרך.</p>
+      <a href="#" class="hero-cta">התחל בחינם &larr;</a>
+      <p class="hero-trust">אפס עמלות &middot; 30 יום חינם &middot; ללא כרטיס אשראי</p>
+    </div>
+
+    <!-- Browser Mockup -->
+    <div class="hero-mockup reveal reveal-delay-3">
+      <div class="mockup-browser">
+        <div class="mockup-topbar">
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-urlbar">app.whiteboard.co.il</div>
         </div>
-        <div class="trust-strip">
-          <span class="trust-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            אפס עמלות
-          </span>
-          <span class="trust-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            30 יום חינם
-          </span>
-          <span class="trust-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            ללא כרטיס אשראי
-          </span>
+        <div class="mockup-screen">
+          <span class="mockup-screen-text">WHITEBOARD</span>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="hero-video-wrapper reveal" style="transition-delay:0.3s;">
+  <!-- ═══════════════════════════════════════════════════
+       2. SOCIAL PROOF
+  ═══════════════════════════════════════════════════ -->
+  <section class="social-proof" id="social-proof">
+    <div class="proof-grid reveal">
+      <div class="proof-item">
+        <div class="proof-number" data-target="2500">0</div>
+        <div class="proof-label">מרצים פעילים</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-number" data-target="18000">0</div>
+        <div class="proof-label">תלמידים רשומים</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-number" data-target="4200">0</div>
+        <div class="proof-label">קורסים נוצרו</div>
+      </div>
+    </div>
+    <p class="proof-footnote reveal reveal-delay-2">
+      <span>אפס עמלות</span>&middot;<span>30 יום חינם</span>&middot;<span>ללא כרטיס אשראי</span>
+    </p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       3. FEATURES — Bento Grid
+  ═══════════════════════════════════════════════════ -->
+  <section class="features" id="features">
+    <div class="container">
+      <h2 class="section-headline reveal">הכל כלול.<br><span class="gradient-text">הכל במקום אחד.</span></h2>
+
+      <div class="bento-grid">
+        <!-- Large Card: Courses -->
+        <div class="bento-card large reveal reveal-delay-1">
+          <div class="bento-visual bento-visual-large">
+            <span class="bento-visual-icon-large">&#127891;</span>
+          </div>
+          <div class="bento-card-title">קורסים דיגיטליים</div>
+          <div class="bento-card-desc">צרו קורסים מקצועיים עם וידאו, מבחנים, תעודות ומעקב התקדמות — בממשק גרירה פשוט.</div>
+        </div>
+
+        <!-- Medium: Clubs -->
+        <div class="bento-card medium reveal reveal-delay-2">
+          <div class="bento-visual bento-visual-clubs">
+            <span class="bento-visual-icon">&#128101;</span>
+          </div>
+          <div class="bento-card-title">מועדונים</div>
+          <div class="bento-card-desc">קהילות סגורות עם דיונים, תוכן בלעדי ומנוי חודשי.</div>
+        </div>
+
+        <!-- Medium: Schools -->
+        <div class="bento-card medium reveal reveal-delay-3">
+          <div class="bento-visual bento-visual-schools">
+            <span class="bento-visual-icon">&#127979;</span>
+          </div>
+          <div class="bento-card-title">בתי ספר</div>
+          <div class="bento-card-desc">6 תבניות מעוצבות, דפי נחיתה, ומותג אישי מלא.</div>
+        </div>
+
+        <!-- Small: Analytics -->
+        <div class="bento-card medium reveal reveal-delay-4">
+          <div class="bento-visual bento-visual-analytics">
+            <span class="bento-visual-icon">&#128200;</span>
+          </div>
+          <div class="bento-card-title">אנליטיקס</div>
+          <div class="bento-card-desc">דוחות מכירות, התקדמות תלמידים וביצועי קורסים — בזמן אמת.</div>
+        </div>
+
+        <!-- Small: Email -->
+        <div class="bento-card medium reveal reveal-delay-5">
+          <div class="bento-visual bento-visual-email">
+            <span class="bento-visual-icon">&#9993;</span>
+          </div>
+          <div class="bento-card-title">דיוור</div>
+          <div class="bento-card-desc">מערכת דיוור מובנית עם תבניות, אוטומציות וסגמנטציה.</div>
+        </div>
+
+        <!-- Medium: AI -->
+        <div class="bento-card medium reveal reveal-delay-6">
+          <span class="bento-badge">&#10024; בקרוב</span>
+          <div class="bento-visual bento-visual-ai">
+            <span class="bento-visual-icon">&#129302;</span>
+          </div>
+          <div class="bento-card-title">BOARDi AI</div>
+          <div class="bento-card-desc">עוזר AI שיוצר קורסים, עונה לתלמידים ומנתח ביצועים אוטומטית.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       4. VIDEO DEMO
+  ═══════════════════════════════════════════════════ -->
+  <section class="video-demo" id="video-demo">
+    <div class="container-narrow">
+      <h2 class="reveal">תראו את זה.<br><span class="gradient-text">בפעולה.</span></h2>
+      <div class="video-wrapper reveal-scale reveal-delay-2">
         <div class="video-placeholder">
-          <img src="../עיצובים למערכת/קאבר ברירת מחדל לקורסים בלי תמונה.png" alt="הדגמה של WHITEBOARD">
-          <div class="play-btn-overlay" role="button" aria-label="הפעל הדגמה" tabindex="0">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+          <div class="play-btn" aria-label="הפעל סרטון">
+            <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg>
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <img src="../BOARDi/PNG/BOARDi_1.png" alt="" class="hero-boardi" aria-hidden="true">
-    </section>
+  <!-- ═══════════════════════════════════════════════════
+       5. AUDIENCE — Expandable Cards
+  ═══════════════════════════════════════════════════ -->
+  <section class="audience" id="audience">
+    <div class="container">
+      <h2 class="section-headline reveal">נבנה בשבילך.</h2>
 
-    <!-- ═══════════════════════════════════════════════
-         SECTION 2 — SOCIAL PROOF STRIP
-    ═══════════════════════════════════════════════ -->
-    <section class="social-proof" aria-label="נתונים">
-      <div class="container">
-        <div class="proof-item reveal">
-          <div class="proof-number" data-target="2400">0</div>
-          <div class="proof-label">תלמידים פעילים</div>
-        </div>
-        <div class="proof-divider" aria-hidden="true"></div>
-        <div class="proof-item reveal reveal-delay-1">
-          <div class="proof-number" data-target="150">0</div>
-          <div class="proof-label">מרצים</div>
-        </div>
-        <div class="proof-divider" aria-hidden="true"></div>
-        <div class="proof-item reveal reveal-delay-2">
-          <div class="proof-number" data-target="500">0</div>
-          <div class="proof-label">קורסים</div>
-        </div>
-        <div class="proof-divider" aria-hidden="true"></div>
-        <div class="proof-item reveal reveal-delay-3">
-          <div class="proof-number" data-target="4.8" data-decimal="true">0</div>
-          <div class="proof-label">דירוג</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════
-         SECTION 3 — FEATURES (Bento Grid)
-    ═══════════════════════════════════════════════ -->
-    <section class="section-light" id="features">
-      <div class="container">
-        <h2 class="section-title reveal">הכל כלול. הכל במקום אחד.</h2>
-        <p class="section-subtitle reveal">למה אלפי מרצים בוחרים ב-WHITEBOARD?</p>
-
-        <div class="features-grid">
-          <!-- Card 1 — Large, Cyan -->
-          <div class="feature-card card-large card-cyan reveal">
-            <div class="card-icon" style="background:rgba(56,196,242,0.2);">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-            </div>
-            <h3>קורסים דיגיטליים</h3>
-            <p>בנה, ערוך ופרסם קורסים מקצועיים עם וידאו, מבחנים ותעודות. ממשק גרור-ושחרר פשוט שמאפשר לך ליצור תוכן מדהים בדקות.</p>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="feature-card reveal reveal-delay-1">
-            <div class="card-icon" style="background:rgba(240,86,128,0.12);">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F05680" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-            <h3>מועדונים וקהילות</h3>
-            <p>צור קהילה פעילה עם פיד, צ'אט, אירועים ולוח מובילים.</p>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="feature-card reveal reveal-delay-2">
-            <div class="card-icon" style="background:rgba(234,214,84,0.15);">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#c4a820" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            </div>
-            <h3>בתי ספר</h3>
-            <p>6 תבניות מעוצבות מראש. התאם למותג שלך בלחיצה.</p>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="feature-card reveal reveal-delay-1">
-            <div class="card-icon" style="background:rgba(125,197,122,0.15);">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7DC57A" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            </div>
-            <h3>אנליטיקס חכם</h3>
-            <p>עקוב אחרי התקדמות, מעורבות והכנסות בזמן אמת.</p>
-          </div>
-
-          <!-- Card 5 -->
-          <div class="feature-card reveal reveal-delay-2">
-            <div class="card-icon" style="background:rgba(37,62,122,0.08);">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#253E7A" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            </div>
-            <h3>דיוור אוטומטי</h3>
-            <p>סדרות מייל אוטומטיות: הרשמה, נטישה, סיום קורס.</p>
-          </div>
-
-          <!-- Card 6 — Large, Navy (BOARDi AI) -->
-          <div class="feature-card card-large card-navy reveal reveal-delay-3" style="min-height:180px;">
-            <div class="card-icon" style="background:rgba(56,196,242,0.15);">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" stroke-linecap="round"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M6 10v1a6 6 0 0 0 12 0v-1"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
-            </div>
-            <span class="badge-soon">בקרוב</span>
-            <h3>BOARDi AI</h3>
-            <p>העוזר החכם שלך — עוזר לבנות קורסים, לנהל תלמידים, לנתח ביצועים ועוד. בינה מלאכותית שמבינה את עולם ההוראה הדיגיטלית.</p>
-            <img src="../BOARDi/PNG/BOARDi_3.png" alt="" class="boardi-img" aria-hidden="true">
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════
-         SECTION 4 — VIDEO DEMO
-    ═══════════════════════════════════════════════ -->
-    <section class="section-dark video-section" id="video">
-      <div class="container">
-        <h2 class="section-title-white reveal">תראו את זה בפעולה</h2>
-        <p class="section-subtitle-white reveal">הדגמה קצרה של 2 דקות שתשנה לכם את הדרך שבה אתם חושבים על הוראה דיגיטלית</p>
-
-        <div class="video-demo-wrapper reveal">
-          <div class="video-placeholder">
-            <img src="../עיצובים למערכת/קאבר ברירת מחדל לקורסים בלי תמונה.png" alt="הדגמת WHITEBOARD">
-            <div class="play-btn-overlay" role="button" aria-label="הפעל הדגמה" tabindex="0">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
-            </div>
-          </div>
-          <p class="demo-note">הדגמה של 2 דקות</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════
-         SECTION 5 — AUDIENCE SEGMENTS
-    ═══════════════════════════════════════════════ -->
-    <section class="section-light" id="audience" style="background:#fff;">
-      <div class="container">
-        <h2 class="section-title reveal">למי WHITEBOARD מתאים?</h2>
-        <p class="section-subtitle reveal">לא משנה מה הגודל שלך — יש לנו פתרון</p>
-
-        <div class="audience-grid">
-          <div class="audience-card reveal">
-            <div class="aud-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            </div>
-            <h3>יוצרים</h3>
-            <p>יוצרי תוכן שרוצים למכור קורסים ולבנות קהילה נאמנה סביב התוכן שלהם.</p>
-          </div>
-          <div class="audience-card reveal reveal-delay-1">
-            <div class="aud-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F05680" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
-            </div>
-            <h3>מומחים</h3>
-            <p>מרצים, יועצים ומאמנים שרוצים לדגטל את הידע שלהם ולהגיע לקהל רחב יותר.</p>
-          </div>
-          <div class="audience-card reveal reveal-delay-2">
-            <div class="aud-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c4a820" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
-            </div>
-            <h3>מכללות</h3>
-            <p>מכללות פרטיות שמחפשות מערכת LMS מודרנית, גמישה ומותאמת לעברית.</p>
-          </div>
-          <div class="audience-card reveal reveal-delay-3">
-            <div class="aud-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7DC57A" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-            </div>
-            <h3>ארגונים</h3>
-            <p>חברות שרוצות להכשיר עובדים, לנהל ידע ארגוני ולעקוב אחרי התקדמות.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════
-         SECTION 6 — COMPARISON
-    ═══════════════════════════════════════════════ -->
-    <section class="section-light" style="background:#F8FBFF;">
-      <div class="container">
-        <h2 class="section-title reveal">השוואה ישירה</h2>
-        <p class="section-subtitle reveal">תראו בעצמכם למה כדאי לעבור</p>
-
-        <div class="comparison-table reveal">
-          <!-- Competitor -->
-          <div class="comp-col">
-            <h3>סקולר + Vimeo</h3>
-            <div class="comp-price">&#8362;286 <span>/חודש</span></div>
-            <div class="comp-features">
-              <div class="comp-item"><span class="icon-x">&times;</span>אין וידאו מובנה</div>
-              <div class="comp-item"><span class="icon-x">&times;</span>אין קהילה</div>
-              <div class="comp-item"><span class="icon-x">&times;</span>אין AI</div>
-              <div class="comp-item"><span class="icon-x">&times;</span>עיצוב ישן</div>
-              <div class="comp-item"><span class="icon-x">&times;</span>עמלות על עסקאות</div>
-            </div>
-          </div>
-          <!-- WHITEBOARD -->
-          <div class="comp-col comp-wb">
-            <h3>WHITEBOARD</h3>
-            <div class="comp-price">&#8362;149 <span>/חודש</span></div>
-            <div class="comp-features">
-              <div class="comp-item"><span class="icon-check">&check;</span>וידאו מובנה</div>
-              <div class="comp-item"><span class="icon-check">&check;</span>קהילות ומועדונים</div>
-              <div class="comp-item"><span class="icon-check">&check;</span>BOARDi AI</div>
-              <div class="comp-item"><span class="icon-check">&check;</span>עיצוב מודרני</div>
-              <div class="comp-item"><span class="icon-check">&check;</span>0% עמלה נוספת</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════
-         SECTION 7 — PRICING
-    ═══════════════════════════════════════════════ -->
-    <section class="pricing-section" id="pricing">
-      <div class="container">
-        <h2 class="section-title reveal">מסלולים ומחירים</h2>
-        <p class="section-subtitle reveal">התחל בחינם — שדרג כשתצמח</p>
-
-        <div class="billing-toggle reveal" role="group" aria-label="בחירת תקופת תשלום">
-          <label id="label-monthly" class="active" onclick="setBilling(false)">חודשי</label>
-          <div class="toggle-switch" id="billingToggle" role="switch" aria-checked="false" tabindex="0" aria-labelledby="label-monthly label-annual" onclick="toggleBilling()"></div>
-          <label id="label-annual" onclick="setBilling(true)">שנתי <span class="annual-save">שלם 10, קבל 12</span></label>
+      <div class="audience-grid" id="audienceGrid">
+        <!-- Card 1: Creators -->
+        <div class="audience-card reveal reveal-delay-1" data-panel="panel-creators">
+          <span class="audience-icon">&#127912;</span>
+          <div class="audience-card-title">יוצרים</div>
+          <div class="audience-card-desc">יוצרי תוכן, בלוגרים ויזמים דיגיטליים שרוצים למנף ידע.</div>
+          <span class="audience-card-link">גלה עוד &larr;</span>
         </div>
 
-        <div class="pricing-grid">
-          <!-- Trial -->
-          <div class="price-card free reveal">
-            <div class="price-card-name">ניסיון</div>
-            <div class="price-card-tagline">להתחלה חלקה</div>
-            <div class="price-amount">&#8362;0</div>
-            <div class="price-amount-note">חינם לתמיד — עד 30 תלמידים</div>
-            <ul class="price-features">
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>קורס אחד</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>עד 30 תלמידים</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>וידאו עד 1GB</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>תעודת סיום</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>תמיכה בסיסית</li>
-            </ul>
-            <a href="#signup" class="btn-card btn-card-outline">התחל בחינם</a>
-          </div>
-
-          <!-- Teacher -->
-          <div class="price-card reveal reveal-delay-1">
-            <div class="price-card-name">מורה</div>
-            <div class="price-card-tagline">לעצמאיים ויוצרים</div>
-            <div class="price-amount" data-monthly="149" data-annual="124">&#8362;<span class="price-val">149</span> <span class="period">/חודש</span></div>
-            <div class="price-amount-note annual-note" style="display:none;">חיוב שנתי &#8362;<span class="annual-total">1,490</span></div>
-            <ul class="price-features">
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>קורסים ללא הגבלה</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>עד 500 תלמידים</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>וידאו עד 50GB</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>מועדון אחד</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>דיוור בסיסי</li>
-            </ul>
-            <a href="#signup" class="btn-card btn-card-outline">בחירת מסלול</a>
-          </div>
-
-          <!-- Educator — Recommended -->
-          <div class="price-card recommended reveal reveal-delay-2">
-            <span class="card-rec-badge">מומלץ</span>
-            <div class="price-card-name">מחנך</div>
-            <div class="price-card-tagline">לצמיחה מואצת</div>
-            <div class="price-amount" data-monthly="199" data-annual="166">&#8362;<span class="price-val">199</span> <span class="period">/חודש</span></div>
-            <div class="price-amount-note annual-note" style="display:none;">חיוב שנתי &#8362;<span class="annual-total">1,990</span></div>
-            <ul class="price-features">
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>הכל במסלול מורה +</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>עד 2,000 תלמידים</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>בית ספר מותאם אישית</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>אנליטיקס מתקדם</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>דיוור אוטומטי</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>BOARDi AI</li>
-            </ul>
-            <a href="#signup" class="btn-card btn-card-cyan">התחל עכשיו</a>
-          </div>
-
-          <!-- Leader -->
-          <div class="price-card reveal reveal-delay-3">
-            <div class="price-card-name">מנהיג</div>
-            <div class="price-card-tagline">לאקדמיות גדולות</div>
-            <div class="price-amount" data-monthly="399" data-annual="332">&#8362;<span class="price-val">399</span> <span class="period">/חודש</span></div>
-            <div class="price-amount-note annual-note" style="display:none;">חיוב שנתי &#8362;<span class="annual-total">3,990</span></div>
-            <ul class="price-features">
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>הכל במסלול מחנך +</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>תלמידים ללא הגבלה</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>מספר בתי ספר</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>API ואינטגרציות</li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>תמיכה VIP</li>
-            </ul>
-            <a href="#signup" class="btn-card btn-card-outline">בחירת מסלול</a>
-          </div>
+        <!-- Card 2: Experts -->
+        <div class="audience-card reveal reveal-delay-2" data-panel="panel-experts">
+          <span class="audience-icon">&#127891;</span>
+          <div class="audience-card-title">מומחים</div>
+          <div class="audience-card-desc">מרצים, יועצים ומאמנים עם ידע מקצועי למכור.</div>
+          <span class="audience-card-link">גלה עוד &larr;</span>
         </div>
 
-        <!-- Enterprise -->
-        <div class="enterprise-banner reveal">
-          <div>
-            <h3>Enterprise</h3>
-            <p>פתרון מותאם אישית לארגונים גדולים. צרו קשר לפגישת ייעוץ.</p>
-          </div>
-          <a href="#contact" class="btn-ent">דברו איתנו</a>
+        <!-- Card 3: Colleges -->
+        <div class="audience-card reveal reveal-delay-3" data-panel="panel-colleges">
+          <span class="audience-icon">&#127979;</span>
+          <div class="audience-card-title">מכללות</div>
+          <div class="audience-card-desc">מוסדות לימוד שצריכים מערכת מלאה לניהול סטודנטים.</div>
+          <span class="audience-card-link">גלה עוד &larr;</span>
         </div>
 
-        <div style="text-align:center;" class="reveal">
-          <a href="#signup" class="btn-primary">התחל בחינם</a>
+        <!-- Card 4: Organizations -->
+        <div class="audience-card reveal reveal-delay-4" data-panel="panel-orgs">
+          <span class="audience-icon">&#127970;</span>
+          <div class="audience-card-title">ארגונים</div>
+          <div class="audience-card-desc">חברות שמחפשות פלטפורמה להכשרת עובדים.</div>
+          <span class="audience-card-link">גלה עוד &larr;</span>
         </div>
-      </div>
-    </section>
 
-    <!-- ═══════════════════════════════════════════════
-         SECTION 8 — TESTIMONIALS
-    ═══════════════════════════════════════════════ -->
-    <section class="section-light" style="background:#fff;">
-      <div class="container">
-        <h2 class="section-title reveal">מה אומרים עלינו</h2>
-        <p class="section-subtitle reveal">ההצלחה שלהם מדברת בעד עצמה</p>
-
-        <div class="testimonials-grid">
-          <div class="test-card reveal">
-            <p class="test-quote">הפלטפורמה שינתה לי את העסק. תוך חודש הקמתי 3 קורסים ומועדון עם 200 חברים. הממשק כל כך אינטואיטיבי שלא הייתי צריכה אפילו הדרכה.</p>
-            <div class="test-author">
-              <div class="test-avatar av-1">מ</div>
-              <div class="test-info">
-                <h4>מיכל לוי</h4>
-                <span>יוצרת תוכן</span>
+        <!-- Panel: Creators -->
+        <div class="audience-panel" id="panel-creators">
+          <div class="audience-panel-inner">
+            <button class="panel-close" aria-label="סגור">&times;</button>
+            <div class="panel-hero-text">הבמה שלך. הקהל שלך.<br><span class="gradient-text">ההכנסה שלך.</span></div>
+            <div class="panel-features">
+              <div class="panel-feature">
+                <div class="panel-feature-title">קורסים ללא הגבלה</div>
+                <div class="panel-feature-desc">צרו כמה קורסים שתרצו, ללא הגבלה על תלמידים או תוכן.</div>
+              </div>
+              <div class="panel-feature">
+                <div class="panel-feature-title">מועדון קהילה</div>
+                <div class="panel-feature-desc">בנו קהילה סגורה עם תוכן בלעדי ומנוי חודשי.</div>
+              </div>
+              <div class="panel-feature">
+                <div class="panel-feature-title">BOARDi AI</div>
+                <div class="panel-feature-desc">עוזר AI שיוצר תוכן, עונה לתלמידים ומנתח ביצועים.</div>
               </div>
             </div>
+            <div class="panel-case-study">
+              <p><strong>מיכל לוי</strong> — יוצרת תוכן. הקימה 3 קורסים ומועדון עם 200 חברים תוך חודש. הכנסה חודשית: <strong>&#8362;12,000</strong></p>
+            </div>
+            <a href="#" class="panel-cta">התחל כיוצר &larr;</a>
           </div>
-          <div class="test-card reveal reveal-delay-1">
-            <p class="test-quote">עברנו מסקולר ל-WHITEBOARD ולא הסתכלנו אחורה. החיסכון בזמן ובכסף הוא עצום. מערכת הוידאו המובנית לבד שווה את המעבר.</p>
-            <div class="test-author">
-              <div class="test-avatar av-2">ד</div>
-              <div class="test-info">
-                <h4>דוד כהן</h4>
-                <span>מרצה</span>
+        </div>
+
+        <!-- Panel: Experts -->
+        <div class="audience-panel" id="panel-experts">
+          <div class="audience-panel-inner">
+            <button class="panel-close" aria-label="סגור">&times;</button>
+            <div class="panel-hero-text">הידע שלך.<br><span class="gradient-text">הפלטפורמה שלנו.</span></div>
+            <div class="panel-features">
+              <div class="panel-feature">
+                <div class="panel-feature-title">תכניות הכשרה</div>
+                <div class="panel-feature-desc">בנו מסלולי לימוד מקצועיים עם תעודות סיום.</div>
+              </div>
+              <div class="panel-feature">
+                <div class="panel-feature-title">תעודות סיום</div>
+                <div class="panel-feature-desc">הנפיקו תעודות מותאמות אישית בסיום כל קורס.</div>
+              </div>
+              <div class="panel-feature">
+                <div class="panel-feature-title">אנליטיקס מתקדם</div>
+                <div class="panel-feature-desc">עקבו אחרי ביצועים, מכירות והתקדמות תלמידים.</div>
               </div>
             </div>
+            <div class="panel-case-study">
+              <p><strong>דוד כהן</strong> — מרצה לשיווק. העביר את כל הקורסים מסקולר ל-WHITEBOARD. חסך <strong>&#8362;1,800/שנה</strong> ו-<strong>15 שעות עבודה בחודש</strong>.</p>
+            </div>
+            <a href="#" class="panel-cta">התחל כמומחה &larr;</a>
           </div>
-          <div class="test-card reveal reveal-delay-2">
-            <p class="test-quote">כמכללה פרטית, היינו צריכים מערכת גמישה. WHITEBOARD נתנה לנו בדיוק את מה שחיפשנו — ועם תמיכה מלאה בעברית.</p>
-            <div class="test-author">
-              <div class="test-avatar av-3">נ</div>
-              <div class="test-info">
-                <h4>נועה שמש</h4>
-                <span>מנהלת מכללת נוף</span>
+        </div>
+
+        <!-- Panel: Colleges -->
+        <div class="audience-panel" id="panel-colleges">
+          <div class="audience-panel-inner">
+            <button class="panel-close" aria-label="סגור">&times;</button>
+            <div class="panel-hero-text">המכללה שלך.<br><span class="gradient-text">המערכת שלנו.</span></div>
+            <div class="panel-features">
+              <div class="panel-feature">
+                <div class="panel-feature-title">בתי ספר עם 6 תבניות</div>
+                <div class="panel-feature-desc">עיצוב מותאם עם דפי נחיתה, מותג ודומיין מותאם אישית.</div>
+              </div>
+              <div class="panel-feature">
+                <div class="panel-feature-title">ניהול תלמידים</div>
+                <div class="panel-feature-desc">מעקב מלא אחרי הרשמות, תשלומים והתקדמות.</div>
+              </div>
+              <div class="panel-feature">
+                <div class="panel-feature-title">דיוור מתקדם</div>
+                <div class="panel-feature-desc">תקשורת אוטומטית עם תלמידים — תזכורות, עדכונים ומבצעים.</div>
               </div>
             </div>
+            <div class="panel-case-study">
+              <p><strong>מכללת נוף</strong> — 500 תלמידים, 12 קורסים, 3 מרצים. מערכת אחת לכל הניהול.</p>
+            </div>
+            <a href="#" class="panel-cta">התחל כמכללה &larr;</a>
+          </div>
+        </div>
+
+        <!-- Panel: Organizations -->
+        <div class="audience-panel" id="panel-orgs">
+          <div class="audience-panel-inner">
+            <button class="panel-close" aria-label="סגור">&times;</button>
+            <div class="panel-hero-text">הכשרת עובדים.<br><span class="gradient-text">ברמה אחרת.</span></div>
+            <div class="panel-features">
+              <div class="panel-feature">
+                <div class="panel-feature-title">תכניות הכשרה</div>
+                <div class="panel-feature-desc">מסלולי onboarding והכשרה מקצועית לכל מחלקה.</div>
+              </div>
+              <div class="panel-feature">
+                <div class="panel-feature-title">API מלא</div>
+                <div class="panel-feature-desc">אינטגרציה מלאה עם המערכות הקיימות בארגון.</div>
+              </div>
+              <div class="panel-feature">
+                <div class="panel-feature-title">אנליטיקס ארגוני</div>
+                <div class="panel-feature-desc">דוחות מותאמים, SSO (בקרוב) וניהול הרשאות מתקדם.</div>
+              </div>
+            </div>
+            <div class="panel-case-study">
+              <p><strong>חברת TechFlow</strong> — 2,000 עובדים, 8 תכניות הכשרה, ירידה של <strong>40%</strong> בזמן onboarding.</p>
+            </div>
+            <a href="#" class="panel-cta">צור קשר &larr;</a>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ═══════════════════════════════════════════════
-         SECTION 9 — FAQ
-    ═══════════════════════════════════════════════ -->
-    <section class="section-light" id="faq" style="background:#F8FBFF;">
-      <div class="container">
-        <h2 class="section-title reveal">שאלות נפוצות</h2>
-        <p class="section-subtitle reveal">התשובות לכל מה שרציתם לדעת</p>
+  <!-- ═══════════════════════════════════════════════════
+       6. COMPARISON
+  ═══════════════════════════════════════════════════ -->
+  <section class="comparison" id="comparison">
+    <div class="container-narrow">
+      <h2 class="reveal">למה לעבור ל-<span class="gradient-text">WHITEBOARD</span>?</h2>
 
-        <div class="faq-list">
-          <div class="faq-item reveal">
-            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
-              <span>כמה עולה WHITEBOARD?</span>
-              <span class="faq-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-            </div>
-            <div class="faq-answer" role="region">
-              <div class="faq-answer-inner">יש לנו 4 מסלולים: ניסיון חינם (עד 30 תלמידים), מורה ב-&#8362;149/חודש, מחנך ב-&#8362;199/חודש, ומנהיג ב-&#8362;399/חודש. בתשלום שנתי מקבלים 12 חודשים במחיר של 10.</div>
+      <div class="comparison-cards">
+        <div class="comparison-card old reveal reveal-delay-1">
+          <div class="comparison-card-header">המצב הנוכחי</div>
+          <div class="comparison-row"><span class="comparison-icon">&#10060;</span> 3-4 כלים שונים לניהול</div>
+          <div class="comparison-row"><span class="comparison-icon">&#10060;</span> עמלות של 5-10% על כל מכירה</div>
+          <div class="comparison-row"><span class="comparison-icon">&#10060;</span> עיצוב מוגבל ותבניתי</div>
+          <div class="comparison-row"><span class="comparison-icon">&#10060;</span> תמיכה באנגלית בלבד</div>
+          <div class="comparison-row"><span class="comparison-icon">&#10060;</span> ללא AI מובנה</div>
+          <div class="comparison-price-row">
+            <div class="comparison-price">&#8362;350+/חודש</div>
+            <div class="comparison-price-label">+ עמלות על כל מכירה</div>
+          </div>
+        </div>
+
+        <div class="comparison-card new reveal reveal-delay-2">
+          <div class="comparison-card-header">עם WHITEBOARD</div>
+          <div class="comparison-row"><span class="comparison-icon">&#10004;</span> הכל במערכת אחת</div>
+          <div class="comparison-row"><span class="comparison-icon">&#10004;</span> אפס עמלות — 100% שלך</div>
+          <div class="comparison-row"><span class="comparison-icon">&#10004;</span> 6 תבניות + מותג מותאם</div>
+          <div class="comparison-row"><span class="comparison-icon">&#10004;</span> תמיכה מלאה בעברית</div>
+          <div class="comparison-row"><span class="comparison-icon">&#10004;</span> BOARDi AI מובנה</div>
+          <div class="comparison-price-row">
+            <div class="comparison-price">&#8362;79/חודש</div>
+            <div class="comparison-price-label">ללא עמלות, ללא הפתעות</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       7. PRICING
+  ═══════════════════════════════════════════════════ -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <h2 class="section-headline reveal">תמחור פשוט.<br><span class="gradient-text">בלי הפתעות.</span></h2>
+
+      <div class="billing-toggle reveal reveal-delay-1">
+        <span class="toggle-label active-label" id="labelMonthly">חודשי</span>
+        <div class="toggle-pill" id="billingToggle" role="switch" aria-checked="false" tabindex="0"></div>
+        <span class="toggle-label" id="labelYearly">שנתי (חסכו 20%)</span>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Starter -->
+        <div class="pricing-card reveal reveal-delay-1">
+          <div class="pricing-plan-name">Starter</div>
+          <div class="pricing-plan-desc">להתחלה מהירה</div>
+          <div class="pricing-price"><span class="pricing-currency">&#8362;</span><span class="price-value" data-monthly="49" data-yearly="39">49</span></div>
+          <div class="pricing-period">לחודש</div>
+          <ul class="pricing-features">
+            <li><span class="check">&#10003;</span> 3 קורסים</li>
+            <li><span class="check">&#10003;</span> 100 תלמידים</li>
+            <li><span class="check">&#10003;</span> מועדון אחד</li>
+            <li><span class="check">&#10003;</span> דיוור בסיסי</li>
+            <li><span class="check">&#10003;</span> תמיכה במייל</li>
+          </ul>
+          <a href="#" class="pricing-btn pricing-btn-secondary">התחל בחינם</a>
+        </div>
+
+        <!-- Pro (Recommended) -->
+        <div class="pricing-card recommended reveal reveal-delay-2">
+          <div class="pricing-badge">מומלץ</div>
+          <div class="pricing-plan-name">Pro</div>
+          <div class="pricing-plan-desc">לצמיחה מואצת</div>
+          <div class="pricing-price"><span class="pricing-currency">&#8362;</span><span class="price-value" data-monthly="79" data-yearly="63">79</span></div>
+          <div class="pricing-period">לחודש</div>
+          <ul class="pricing-features">
+            <li><span class="check">&#10003;</span> קורסים ללא הגבלה</li>
+            <li><span class="check">&#10003;</span> 1,000 תלמידים</li>
+            <li><span class="check">&#10003;</span> 3 מועדונים</li>
+            <li><span class="check">&#10003;</span> בית ספר מלא</li>
+            <li><span class="check">&#10003;</span> דיוור מתקדם</li>
+            <li><span class="check">&#10003;</span> אנליטיקס</li>
+            <li><span class="check">&#10003;</span> BOARDi AI</li>
+          </ul>
+          <a href="#" class="pricing-btn pricing-btn-primary">התחל בחינם</a>
+        </div>
+
+        <!-- Business -->
+        <div class="pricing-card reveal reveal-delay-3">
+          <div class="pricing-plan-name">Business</div>
+          <div class="pricing-plan-desc">למוסדות וארגונים</div>
+          <div class="pricing-price"><span class="pricing-currency">&#8362;</span><span class="price-value" data-monthly="199" data-yearly="159">199</span></div>
+          <div class="pricing-period">לחודש</div>
+          <ul class="pricing-features">
+            <li><span class="check">&#10003;</span> הכל ב-Pro</li>
+            <li><span class="check">&#10003;</span> תלמידים ללא הגבלה</li>
+            <li><span class="check">&#10003;</span> מועדונים ללא הגבלה</li>
+            <li><span class="check">&#10003;</span> API מלא</li>
+            <li><span class="check">&#10003;</span> מנהל חשבון ייעודי</li>
+            <li><span class="check">&#10003;</span> SLA מובטח</li>
+          </ul>
+          <a href="#" class="pricing-btn pricing-btn-secondary">צרו קשר</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       8. TESTIMONIALS — Carousel
+  ═══════════════════════════════════════════════════ -->
+  <section class="testimonials" id="testimonials">
+    <div class="container-narrow">
+      <h2 class="section-headline reveal">מה אומרים עלינו.</h2>
+
+      <div class="testimonial-carousel" id="testimonialCarousel">
+        <!-- Slide 1 -->
+        <div class="testimonial-slide active" data-index="0">
+          <div class="testimonial-quote-icon">"</div>
+          <p class="testimonial-text">עברתי מ-Teachable ל-WHITEBOARD ותוך שבוע כבר הייתי עם בית ספר מלא. הממשק פשוט מטורף — פשוט גוררים ושמים.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">ר</div>
+            <div class="testimonial-author-info">
+              <div class="testimonial-name">רונית שמעוני</div>
+              <div class="testimonial-role">מרצה לעיצוב גרפי, 12 קורסים</div>
             </div>
           </div>
-          <div class="faq-item reveal reveal-delay-1">
-            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
-              <span>האם יש תקופת ניסיון?</span>
-              <span class="faq-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-            </div>
-            <div class="faq-answer" role="region">
-              <div class="faq-answer-inner">בהחלט! מסלול הניסיון הוא חינמי לתמיד עם עד 30 תלמידים. בנוסף, בכל מסלול בתשלום יש 30 ימי ניסיון חינם — ללא צורך בכרטיס אשראי.</div>
-            </div>
-          </div>
-          <div class="faq-item reveal reveal-delay-2">
-            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
-              <span>האם אתם גובים עמלות על עסקאות?</span>
-              <span class="faq-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-            </div>
-            <div class="faq-answer" role="region">
-              <div class="faq-answer-inner">לא. 0% עמלה נוספת מצידנו. כל מה שהתלמידים שלך משלמים — הולך ישירות אליך (למעט עמלות סטנדרטיות של חברת הסליקה).</div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="testimonial-slide" data-index="1">
+          <div class="testimonial-quote-icon">"</div>
+          <p class="testimonial-text">הדבר הכי טוב שעשיתי לעסק שלי. מערכת אחת במקום ארבע, וחוסכת לי לפחות 10 שעות בשבוע.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">א</div>
+            <div class="testimonial-author-info">
+              <div class="testimonial-name">אורי ברק</div>
+              <div class="testimonial-role">יועץ עסקי, 800 תלמידים</div>
             </div>
           </div>
-          <div class="faq-item reveal reveal-delay-3">
-            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
-              <span>אפשר להעביר קורסים מסקולר?</span>
-              <span class="faq-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-            </div>
-            <div class="faq-answer" role="region">
-              <div class="faq-answer-inner">כן! אנחנו מציעים מעבר חלק מסקולר ומכל פלטפורמה אחרת. הצוות שלנו ילווה אותך בכל התהליך — ייבוא תלמידים, תוכן וסרטונים.</div>
-            </div>
-          </div>
-          <div class="faq-item reveal reveal-delay-4">
-            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
-              <span>מה זה BOARDi?</span>
-              <span class="faq-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-            </div>
-            <div class="faq-answer" role="region">
-              <div class="faq-answer-inner">BOARDi הוא עוזר AI חכם שמשולב בתוך WHITEBOARD. הוא עוזר לך לבנות סילבוסים, ליצור מבחנים, לכתוב תיאורי קורסים, לנתח ביצועי תלמידים ועוד — הכל בשיחה טבעית בעברית.</div>
-            </div>
-          </div>
-          <div class="faq-item reveal reveal-delay-5">
-            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
-              <span>יש תמיכה בעברית?</span>
-              <span class="faq-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-            </div>
-            <div class="faq-answer" role="region">
-              <div class="faq-answer-inner">כן! WHITEBOARD נבנתה מהיסוד בעברית RTL. כל הממשק, הדיוור, והתמיכה — הכל בעברית מלאה. זה לא תרגום — זו חוויה שנבנתה לשוק הישראלי.</div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="testimonial-slide" data-index="2">
+          <div class="testimonial-quote-icon">"</div>
+          <p class="testimonial-text">BOARDi AI שינה לי את הכל. בנה לי סילבוס של קורס שלם תוך 5 דקות, עם מבחנים ותעודות. לא מאמינה שזה בחינם.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">מ</div>
+            <div class="testimonial-author-info">
+              <div class="testimonial-name">מיכל לוי</div>
+              <div class="testimonial-role">יוצרת תוכן, 3 קורסים ומועדון</div>
             </div>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- ═══════════════════════════════════════════════
-         SECTION 10 — FINAL CTA
-    ═══════════════════════════════════════════════ -->
-    <section class="section-dark final-cta" id="signup">
-      <div class="container">
-        <h2 class="reveal">מוכנים להתחיל?</h2>
-        <p class="sub reveal">הצטרפו לאלפי מרצים שכבר בונים אקדמיות דיגיטליות</p>
-        <div class="reveal" style="transition-delay:0.2s;">
-          <a href="#" class="btn-primary" style="font-size:18px;padding:18px 44px;">התחל בחינם</a>
+      <div class="testimonial-dots" id="testimonialDots">
+        <div class="testimonial-dot active" data-index="0"></div>
+        <div class="testimonial-dot" data-index="1"></div>
+        <div class="testimonial-dot" data-index="2"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       9. FAQ
+  ═══════════════════════════════════════════════════ -->
+  <section class="faq" id="faq">
+    <div class="container-narrow">
+      <h2 class="section-headline reveal">שאלות נפוצות.</h2>
+
+      <div class="faq-list">
+        <div class="faq-item reveal reveal-delay-1">
+          <button class="faq-question" aria-expanded="false">
+            <span>האם אני צריך ידע טכני כדי להשתמש?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">בכלל לא. הממשק בנוי על גרירה ושחרור, וכל דבר אפשר לעשות בלחיצת כפתור. אם אתם יודעים להשתמש ב-Word, אתם יודעים להשתמש ב-WHITEBOARD.</div>
+          </div>
         </div>
-        <div class="trust-strip reveal" style="transition-delay:0.3s;">
-          <span class="trust-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            אפס עמלות
-          </span>
-          <span class="trust-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            30 יום חינם
-          </span>
-          <span class="trust-pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            ללא כרטיס אשראי
-          </span>
+
+        <div class="faq-item reveal reveal-delay-2">
+          <button class="faq-question" aria-expanded="false">
+            <span>מה קורה אחרי 30 יום חינם?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">תוכלו לבחור תוכנית בתשלום או להמשיך בגרסה החינמית המוגבלת. אנחנו לא גובים כרטיס אשראי בהרשמה — ללא סיכון.</div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal reveal-delay-3">
+          <button class="faq-question" aria-expanded="false">
+            <span>האם יש עמלות על מכירות?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">אפס עמלות. מה שאתם מוכרים — 100% נשאר אצלכם (פחות עמלת סליקה של חברת האשראי). אנחנו מרוויחים רק מהמנוי החודשי.</div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal reveal-delay-4">
+          <button class="faq-question" aria-expanded="false">
+            <span>האם אפשר לחבר דומיין משלי?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">כן! בתוכניות Pro ו-Business תוכלו לחבר דומיין מותאם אישית ולהציג את בית הספר שלכם בכתובת שלכם.</div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal reveal-delay-5">
+          <button class="faq-question" aria-expanded="false">
+            <span>מה זה BOARDi AI?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">BOARDi הוא עוזר AI מובנה שעוזר לכם ליצור קורסים, לכתוב תוכן, לענות לתלמידים ולנתח ביצועים — אוטומטית. זמין בתוכניות Pro ו-Business.</div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal reveal-delay-6">
+          <button class="faq-question" aria-expanded="false">
+            <span>יש תמיכה בעברית?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">WHITEBOARD נבנתה בישראל, בעברית, עם ממשק RTL מלא. כל התמיכה, התיעוד והממשק — בעברית מלאה.</div>
+          </div>
         </div>
       </div>
-      <img src="../BOARDi/PNG/BOARDi_5.png" alt="" class="boardi-float" aria-hidden="true">
-    </section>
-  </main>
+    </div>
+  </section>
 
-  <!-- ═══════════════════════════════════════════════
+  <!-- ═══════════════════════════════════════════════════
+       10. FINAL CTA
+  ═══════════════════════════════════════════════════ -->
+  <section class="final-cta" id="final-cta">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <h2 class="reveal"><span class="gradient-text">מוכנים?</span></h2>
+    <p class="final-cta-subtitle reveal reveal-delay-1">הצטרפו לאלפי מרצים שכבר בונים את העתיד שלהם.</p>
+    <a href="#" class="hero-cta reveal reveal-delay-2">התחל בחינם &larr;</a>
+
+    <img src="BOARDi_5.png" alt="BOARDi mascot" class="final-cta-mascot reveal reveal-delay-3" loading="lazy">
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
        FOOTER
-  ═══════════════════════════════════════════════ -->
-  <footer class="site-footer" role="contentinfo">
+  ═══════════════════════════════════════════════════ -->
+  <footer class="footer">
     <div class="footer-grid">
-      <div class="footer-brand">
-        <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD">
-        <p>הפלטפורמה המובילה בישראל לבניית אקדמיות דיגיטליות, קורסים אונליין וקהילות למידה.</p>
+      <div class="footer-col">
+        <div class="footer-brand-name">WHITEBOARD</div>
+        <p class="footer-brand-desc">הפלטפורמה הישראלית ליצירת קורסים, קהילות ובתי ספר דיגיטליים.</p>
       </div>
       <div class="footer-col">
-        <h4>מוצר</h4>
-        <a href="#features">פיצ'רים</a>
-        <a href="#pricing">תמחור</a>
+        <div class="footer-col-title">מוצר</div>
+        <a href="#">קורסים</a>
+        <a href="#">מועדונים</a>
         <a href="#">בתי ספר</a>
-        <a href="#">אינטגרציות</a>
+        <a href="#">אנליטיקס</a>
+        <a href="#">BOARDi AI</a>
       </div>
       <div class="footer-col">
-        <h4>חברה</h4>
+        <div class="footer-col-title">חברה</div>
         <a href="#">אודות</a>
         <a href="#">בלוג</a>
         <a href="#">קריירה</a>
-        <a href="#">סיפורי הצלחה</a>
+        <a href="#">צור קשר</a>
       </div>
       <div class="footer-col">
-        <h4>תמיכה</h4>
-        <a href="#faq">שאלות נפוצות</a>
-        <a href="#">צור קשר</a>
+        <div class="footer-col-title">משאבים</div>
+        <a href="#">מרכז עזרה</a>
         <a href="#">תנאי שימוש</a>
-        <a href="#">מדיניות פרטיות</a>
+        <a href="#">פרטיות</a>
+        <a href="#">API</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <span class="footer-copy">WHITEBOARD &copy; 2026 — כל הזכויות שמורות</span>
-      <div class="footer-socials">
-        <a href="#" aria-label="Facebook">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        </a>
-        <a href="#" aria-label="Instagram">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        </a>
-        <a href="#" aria-label="LinkedIn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        </a>
-        <a href="#" aria-label="YouTube">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        </a>
-      </div>
+      &copy; 2026 WHITEBOARD. כל הזכויות שמורות.
     </div>
   </footer>
 
-  <!-- ═══════════════════════════════════════════════
-       SCRIPTS
-  ═══════════════════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════════════════
+       JAVASCRIPT — Animations & Interactions
+  ═══════════════════════════════════════════════════ -->
   <script>
-    /* ── Navbar scroll effect ── */
-    const navbar = document.getElementById('navbar');
-    const logoWhite = document.getElementById('nav-logo-white');
-    const logoDark = document.getElementById('nav-logo-dark');
+    (function () {
+      'use strict';
 
-    function updateNavbar() {
-      const scrolled = window.scrollY > 60;
-      navbar.classList.toggle('scrolled', scrolled);
-      if (logoWhite && logoDark) {
-        logoWhite.style.display = scrolled ? 'none' : 'block';
-        logoDark.style.display = scrolled ? 'block' : 'none';
-      }
-    }
-    window.addEventListener('scroll', updateNavbar, { passive: true });
-    updateNavbar();
+      // ── Scroll Reveal via IntersectionObserver ──
+      const revealElements = document.querySelectorAll('.reveal, .reveal-scale');
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+      );
+      revealElements.forEach((el) => revealObserver.observe(el));
 
-    /* ── Mobile Menu ── */
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileClose = document.getElementById('mobileClose');
-
-    hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('open');
-      mobileMenu.classList.toggle('open');
-      hamburger.setAttribute('aria-expanded', mobileMenu.classList.contains('open'));
-      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
-    });
-    mobileClose.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      mobileMenu.classList.remove('open');
-      hamburger.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-    });
-    document.querySelectorAll('.mobile-link').forEach(link => {
-      link.addEventListener('click', () => {
-        hamburger.classList.remove('open');
-        mobileMenu.classList.remove('open');
-        hamburger.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-      });
-    });
-
-    /* ── Scroll Reveal (IntersectionObserver) ── */
-    const revealElements = document.querySelectorAll('.reveal');
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          revealObserver.unobserve(entry.target);
+      // ── Navbar Scroll ──
+      const navbar = document.getElementById('navbar');
+      let lastScroll = 0;
+      window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        if (scrollY > 60) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
         }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    revealElements.forEach(el => revealObserver.observe(el));
+        lastScroll = scrollY;
+      }, { passive: true });
 
-    /* ── Counter Animation ── */
-    const counterElements = document.querySelectorAll('.proof-number[data-target]');
-    const counterObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          const target = parseFloat(el.dataset.target);
-          const isDecimal = el.dataset.decimal === 'true';
-          const duration = 2000;
-          const startTime = performance.now();
+      // ── Hamburger Menu ──
+      const hamburger = document.getElementById('hamburger');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const mobileMenuClose = document.getElementById('mobileMenuClose');
+      const mobileLinks = document.querySelectorAll('.mobile-link');
 
-          function animate(currentTime) {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            const current = target * eased;
+      function toggleMenu(open) {
+        if (open) {
+          mobileMenu.classList.add('open');
+          hamburger.classList.add('open');
+          hamburger.setAttribute('aria-expanded', 'true');
+          document.body.style.overflow = 'hidden';
+        } else {
+          mobileMenu.classList.remove('open');
+          hamburger.classList.remove('open');
+          hamburger.setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+        }
+      }
 
-            if (isDecimal) {
-              el.textContent = current.toFixed(1);
-            } else {
-              const num = Math.floor(current);
-              el.textContent = num.toLocaleString() + '+';
+      hamburger.addEventListener('click', () => toggleMenu(!mobileMenu.classList.contains('open')));
+      mobileMenuClose.addEventListener('click', () => toggleMenu(false));
+      mobileLinks.forEach((link) => link.addEventListener('click', () => toggleMenu(false)));
+
+      // ── Animated Counters ──
+      const counters = document.querySelectorAll('.proof-number[data-target]');
+      const counterObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              animateCounter(entry.target);
+              counterObserver.unobserve(entry.target);
             }
+          });
+        },
+        { threshold: 0.5 }
+      );
+      counters.forEach((el) => counterObserver.observe(el));
 
-            if (progress < 1) {
-              requestAnimationFrame(animate);
-            } else {
-              if (isDecimal) {
-                el.textContent = target.toFixed(1);
-              } else {
-                el.textContent = target.toLocaleString() + '+';
-              }
-            }
+      function animateCounter(el) {
+        const target = parseInt(el.dataset.target, 10);
+        const duration = 2000;
+        const startTime = performance.now();
+
+        function update(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          // ease-out cubic
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = Math.floor(eased * target);
+          el.textContent = current.toLocaleString('he-IL');
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          } else {
+            el.textContent = target.toLocaleString('he-IL') + '+';
           }
-          requestAnimationFrame(animate);
-          counterObserver.unobserve(el);
         }
-      });
-    }, { threshold: 0.5 });
-    counterElements.forEach(el => counterObserver.observe(el));
-
-    /* ── Billing Toggle ── */
-    let isAnnual = false;
-    const billingToggle = document.getElementById('billingToggle');
-    const labelMonthly = document.getElementById('label-monthly');
-    const labelAnnual = document.getElementById('label-annual');
-
-    function setBilling(annual) {
-      isAnnual = annual;
-      updateBilling();
-    }
-
-    function toggleBilling() {
-      isAnnual = !isAnnual;
-      updateBilling();
-    }
-
-    function updateBilling() {
-      billingToggle.classList.toggle('on', isAnnual);
-      billingToggle.setAttribute('aria-checked', isAnnual);
-      labelMonthly.classList.toggle('active', !isAnnual);
-      labelAnnual.classList.toggle('active', isAnnual);
-
-      document.querySelectorAll('.price-amount[data-monthly]').forEach(el => {
-        const val = isAnnual ? el.dataset.annual : el.dataset.monthly;
-        el.querySelector('.price-val').textContent = val;
-      });
-      document.querySelectorAll('.annual-note').forEach(el => {
-        el.style.display = isAnnual ? 'block' : 'none';
-      });
-    }
-
-    billingToggle.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        toggleBilling();
+        requestAnimationFrame(update);
       }
-    });
 
-    /* ── FAQ Accordion ── */
-    document.querySelectorAll('.faq-question').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const item = btn.closest('.faq-item');
-        const wasOpen = item.classList.contains('open');
+      // ── Audience Expandable Panels ──
+      const audienceCards = document.querySelectorAll('.audience-card[data-panel]');
+      const audiencePanels = document.querySelectorAll('.audience-panel');
+      let openPanel = null;
 
-        // Close all
-        document.querySelectorAll('.faq-item.open').forEach(openItem => {
-          openItem.classList.remove('open');
-          openItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+      audienceCards.forEach((card) => {
+        card.addEventListener('click', () => {
+          const panelId = card.dataset.panel;
+          const panel = document.getElementById(panelId);
+
+          // Close current
+          if (openPanel && openPanel !== panel) {
+            openPanel.classList.remove('open');
+            document.querySelector('.audience-card.active')?.classList.remove('active');
+          }
+
+          if (panel.classList.contains('open')) {
+            panel.classList.remove('open');
+            card.classList.remove('active');
+            openPanel = null;
+          } else {
+            panel.classList.add('open');
+            card.classList.add('active');
+            openPanel = panel;
+            // Scroll panel into view
+            setTimeout(() => {
+              panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+          }
         });
-
-        // Open clicked (if wasn't open)
-        if (!wasOpen) {
-          item.classList.add('open');
-          btn.setAttribute('aria-expanded', 'true');
-        }
       });
 
-      btn.addEventListener('keydown', (e) => {
+      // Panel close buttons
+      document.querySelectorAll('.panel-close').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const panel = btn.closest('.audience-panel');
+          panel.classList.remove('open');
+          document.querySelector('.audience-card.active')?.classList.remove('active');
+          openPanel = null;
+        });
+      });
+
+      // ── Billing Toggle ──
+      const billingToggle = document.getElementById('billingToggle');
+      const labelMonthly = document.getElementById('labelMonthly');
+      const labelYearly = document.getElementById('labelYearly');
+      const priceValues = document.querySelectorAll('.price-value');
+      let isYearly = false;
+
+      billingToggle.addEventListener('click', () => {
+        isYearly = !isYearly;
+        billingToggle.classList.toggle('active', isYearly);
+        billingToggle.setAttribute('aria-checked', isYearly);
+
+        labelMonthly.classList.toggle('active-label', !isYearly);
+        labelYearly.classList.toggle('active-label', isYearly);
+
+        priceValues.forEach((el) => {
+          const price = isYearly ? el.dataset.yearly : el.dataset.monthly;
+          el.textContent = price;
+        });
+      });
+
+      billingToggle.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          btn.click();
+          billingToggle.click();
         }
       });
-    });
+
+      // ── FAQ Accordion ──
+      document.querySelectorAll('.faq-question').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const item = btn.closest('.faq-item');
+          const answer = item.querySelector('.faq-answer');
+          const isOpen = item.classList.contains('open');
+
+          // Close all
+          document.querySelectorAll('.faq-item.open').forEach((openItem) => {
+            openItem.classList.remove('open');
+            openItem.querySelector('.faq-answer').style.maxHeight = '0';
+            openItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          });
+
+          if (!isOpen) {
+            item.classList.add('open');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            btn.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      // ── Testimonial Carousel ──
+      const slides = document.querySelectorAll('.testimonial-slide');
+      const dots = document.querySelectorAll('.testimonial-dot');
+      let currentSlide = 0;
+      let autoRotateInterval;
+
+      function showSlide(index) {
+        slides.forEach((s) => s.classList.remove('active'));
+        dots.forEach((d) => d.classList.remove('active'));
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
+        currentSlide = index;
+      }
+
+      function nextSlide() {
+        showSlide((currentSlide + 1) % slides.length);
+      }
+
+      function startAutoRotate() {
+        autoRotateInterval = setInterval(nextSlide, 5000);
+      }
+
+      function resetAutoRotate() {
+        clearInterval(autoRotateInterval);
+        startAutoRotate();
+      }
+
+      dots.forEach((dot) => {
+        dot.addEventListener('click', () => {
+          showSlide(parseInt(dot.dataset.index, 10));
+          resetAutoRotate();
+        });
+      });
+
+      startAutoRotate();
+
+      // ── Subtle Parallax on Scroll ──
+      const heroContent = document.querySelector('.hero-content');
+      const heroMockup = document.querySelector('.hero-mockup');
+
+      function handleParallax() {
+        const scrollY = window.scrollY;
+        const heroHeight = document.querySelector('.hero').offsetHeight;
+
+        if (scrollY < heroHeight) {
+          const factor = scrollY / heroHeight;
+          if (heroContent) {
+            heroContent.style.transform = `translateY(${factor * 60}px)`;
+            heroContent.style.opacity = 1 - factor * 1.2;
+          }
+          if (heroMockup) {
+            heroMockup.style.transform = `translateY(${factor * 30}px)`;
+          }
+        }
+      }
+
+      // Only apply parallax if no reduced motion preference
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        window.addEventListener('scroll', handleParallax, { passive: true });
+      }
+
+    })();
   </script>
 </body>
 </html>
