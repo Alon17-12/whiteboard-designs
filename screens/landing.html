@@ -1,0 +1,2026 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WHITEBOARD — בנה אקדמיה דיגיטלית. תוך דקות.</title>
+  <meta name="description" content="קורסים, קהילות, בתי ספר ותכניות הכשרה — הכל במערכת אחת. עם AI שעוזר לך בדרך.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800;900&family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════
+       WHITEBOARD Landing Page — Brand Tokens
+    ═══════════════════════════════════════════════ */
+    :root {
+      --navy: #253E7A;
+      --navy-dark: #1a2f5e;
+      --navy-deeper: #0d1b3e;
+      --cyan: #38C4F2;
+      --cyan-hover: #2bb5e3;
+      --cyan-glow: rgba(56, 196, 242, 0.25);
+      --pink: #F05680;
+      --pink-glow: rgba(240, 86, 128, 0.2);
+      --yellow: #EAD654;
+      --green: #7DC57A;
+      --white: #FFFFFF;
+      --font-he: 'Heebo', sans-serif;
+      --font-en: 'Fredoka', sans-serif;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --radius-xl: 28px;
+      --shadow-sm: 0 2px 10px rgba(37, 62, 122, 0.07);
+      --shadow-md: 0 6px 24px rgba(37, 62, 122, 0.1);
+      --shadow-lg: 0 16px 48px rgba(37, 62, 122, 0.14);
+      --gradient-cyan: linear-gradient(135deg, #38C4F2 0%, #2aa8d4 100%);
+      --gradient-hero: linear-gradient(160deg, #0d1b3e 0%, #253E7A 40%, #1a3060 100%);
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+      .particle { display: none !important; }
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-he);
+      color: #1a2f5e;
+      line-height: 1.6;
+      overflow-x: hidden;
+      background: #F0F6FF;
+    }
+
+    img { max-width: 100%; height: auto; display: block; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: var(--font-he); cursor: pointer; border: none; background: none; }
+    ul, ol { list-style: none; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SECTION ANIMATION — Scroll Reveal
+    ═══════════════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ═══════════════════════════════════════════════
+       1. NAVIGATION BAR
+    ═══════════════════════════════════════════════ */
+    .navbar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 1000;
+      padding: 16px 0;
+      transition: background 0.35s ease, backdrop-filter 0.35s ease, box-shadow 0.35s ease, padding 0.35s ease;
+    }
+    .navbar.scrolled {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 2px 20px rgba(37, 62, 122, 0.08);
+      padding: 10px 0;
+    }
+    .navbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .navbar-logo img {
+      height: 40px;
+      width: auto;
+    }
+    .navbar-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .navbar-links a {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.85);
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .navbar-links a:hover { color: var(--cyan); }
+    .navbar-links a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; border-radius: 4px; }
+    .navbar.scrolled .navbar-links a { color: var(--navy); }
+    .navbar.scrolled .navbar-links a:hover { color: var(--cyan); }
+
+    .btn-cta-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 24px;
+      background: var(--gradient-cyan);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 50px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+    .btn-cta-nav:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56, 196, 242, 0.35);
+    }
+    .btn-cta-nav:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      width: 28px;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+    .hamburger span {
+      display: block;
+      height: 2.5px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s, background 0.3s;
+    }
+    .navbar.scrolled .hamburger span { background: var(--navy); }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* Mobile Menu */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      background: rgba(13, 27, 62, 0.97);
+      backdrop-filter: blur(16px);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .mobile-menu.open {
+      display: flex;
+      opacity: 1;
+      pointer-events: all;
+    }
+    .mobile-menu a {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--white);
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--cyan); }
+    .mobile-menu-close {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .navbar-links { display: none; }
+      .hamburger { display: flex; }
+      .btn-cta-nav.desktop-only { display: none; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       2. HERO SECTION
+    ═══════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      background: var(--gradient-hero);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 80px;
+      overflow: hidden;
+    }
+
+    /* Glows */
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%);
+      bottom: -200px;
+      left: -150px;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--pink-glow) 0%, transparent 70%);
+      top: -100px;
+      right: -100px;
+      pointer-events: none;
+    }
+
+    /* CSS Particles */
+    .particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      animation: float-up linear infinite;
+    }
+    @keyframes float-up {
+      0% { transform: translateY(0) scale(1); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+    }
+    .particle:nth-child(1) { left: 10%; animation-duration: 12s; animation-delay: 0s; width: 2px; height: 2px; }
+    .particle:nth-child(2) { left: 25%; animation-duration: 15s; animation-delay: 2s; }
+    .particle:nth-child(3) { left: 40%; animation-duration: 10s; animation-delay: 4s; width: 4px; height: 4px; }
+    .particle:nth-child(4) { left: 55%; animation-duration: 14s; animation-delay: 1s; }
+    .particle:nth-child(5) { left: 70%; animation-duration: 11s; animation-delay: 3s; width: 2px; height: 2px; }
+    .particle:nth-child(6) { left: 85%; animation-duration: 13s; animation-delay: 5s; }
+    .particle:nth-child(7) { left: 15%; animation-duration: 16s; animation-delay: 7s; width: 2px; height: 2px; }
+    .particle:nth-child(8) { left: 50%; animation-duration: 9s; animation-delay: 6s; }
+    .particle:nth-child(9) { left: 65%; animation-duration: 14s; animation-delay: 8s; width: 4px; height: 4px; }
+    .particle:nth-child(10) { left: 90%; animation-duration: 12s; animation-delay: 2s; }
+    .particle:nth-child(11) { left: 5%; animation-duration: 18s; animation-delay: 9s; }
+    .particle:nth-child(12) { left: 35%; animation-duration: 11s; animation-delay: 4s; width: 2px; height: 2px; }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 800px;
+    }
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 20px;
+      background: rgba(56, 196, 242, 0.15);
+      border: 1px solid rgba(56, 196, 242, 0.3);
+      border-radius: 50px;
+      color: var(--cyan);
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 24px;
+      backdrop-filter: blur(8px);
+    }
+    .hero h1 {
+      font-family: var(--font-en);
+      font-size: 56px;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+    }
+    .hero h1 br { display: block; }
+    .hero-subtitle {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 600px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 36px;
+      background: var(--gradient-cyan);
+      color: var(--white);
+      font-size: 17px;
+      font-weight: 700;
+      border-radius: 50px;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(56, 196, 242, 0.4);
+    }
+    .btn-primary:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 32px;
+      background: transparent;
+      color: var(--white);
+      font-size: 16px;
+      font-weight: 500;
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      border-radius: 50px;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+    .btn-ghost:hover {
+      border-color: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-2px);
+    }
+    .btn-ghost:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+    .btn-ghost .play-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .trust-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .trust-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 50px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+      font-weight: 400;
+      backdrop-filter: blur(8px);
+    }
+    .trust-pill svg { flex-shrink: 0; }
+
+    /* Video Placeholder */
+    .hero-video-wrapper {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .video-placeholder {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background: linear-gradient(145deg, #101d3a 0%, #1a3060 100%);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+    .video-placeholder img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.4;
+    }
+    .play-btn-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: rgba(56, 196, 242, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 0 0 rgba(56, 196, 242, 0.4);
+      animation: pulse-play 2.5s ease infinite;
+    }
+    @keyframes pulse-play {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(56, 196, 242, 0.4); }
+      50% { box-shadow: 0 0 0 20px rgba(56, 196, 242, 0); }
+    }
+    .play-btn-overlay:hover { transform: translate(-50%, -50%) scale(1.08); }
+    .play-btn-overlay svg { margin-right: -3px; }
+
+    /* BOARDi float */
+    .hero-boardi {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      width: 80px;
+      z-index: 3;
+      opacity: 0.8;
+      animation: boardi-float 4s ease-in-out infinite;
+    }
+    @keyframes boardi-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @media (max-width: 768px) {
+      .hero { padding: 100px 20px 60px; min-height: auto; }
+      .hero h1 { font-size: 36px; }
+      .hero-subtitle { font-size: 16px; }
+      .hero-boardi { width: 50px; bottom: 20px; left: 20px; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 30px; }
+      .btn-primary { padding: 14px 28px; font-size: 15px; }
+      .btn-ghost { padding: 13px 24px; font-size: 14px; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       3. SOCIAL PROOF STRIP
+    ═══════════════════════════════════════════════ */
+    .social-proof {
+      background: var(--white);
+      padding: 48px 24px;
+      border-bottom: 1px solid rgba(37, 62, 122, 0.06);
+    }
+    .social-proof .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .proof-item {
+      text-align: center;
+      min-width: 140px;
+    }
+    .proof-number {
+      font-family: var(--font-en);
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.1;
+    }
+    .proof-label {
+      font-size: 14px;
+      color: rgba(37, 62, 122, 0.55);
+      margin-top: 4px;
+    }
+    .proof-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(37, 62, 122, 0.1);
+    }
+    @media (max-width: 600px) {
+      .social-proof .container { gap: 24px; }
+      .proof-divider { display: none; }
+      .proof-number { font-size: 28px; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       4. SECTION TITLES (shared)
+    ═══════════════════════════════════════════════ */
+    .section-light {
+      padding: 80px 24px;
+      background: #F8FBFF;
+    }
+    .section-light:nth-child(even) {
+      background: var(--white);
+    }
+    .section-dark {
+      padding: 80px 24px;
+      background: var(--gradient-hero);
+      color: var(--white);
+    }
+    .section-title {
+      font-family: var(--font-en);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--navy);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .section-title-white {
+      font-family: var(--font-en);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .section-subtitle {
+      font-size: 16px;
+      color: rgba(37, 62, 122, 0.55);
+      text-align: center;
+      max-width: 550px;
+      margin: 0 auto 48px;
+    }
+    .section-subtitle-white {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.6);
+      text-align: center;
+      max-width: 550px;
+      margin: 0 auto 48px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       5. FEATURES — BENTO GRID
+    ═══════════════════════════════════════════════ */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto;
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: var(--white);
+      border: 1px solid rgba(37, 62, 122, 0.08);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+    .feature-card.card-large {
+      grid-column: span 2;
+    }
+    .feature-card .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 24px;
+    }
+    .feature-card h3 {
+      font-family: var(--font-en);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: rgba(37, 62, 122, 0.6);
+      line-height: 1.7;
+    }
+
+    /* Card special bg */
+    .feature-card.card-cyan {
+      background: linear-gradient(145deg, #e6f8ff 0%, #d4f1fd 100%);
+      border-color: rgba(56, 196, 242, 0.15);
+    }
+    .feature-card.card-navy {
+      background: linear-gradient(145deg, #1a3060 0%, #253E7A 100%);
+      border-color: rgba(56, 196, 242, 0.1);
+    }
+    .feature-card.card-navy h3 { color: var(--white); }
+    .feature-card.card-navy p { color: rgba(255, 255, 255, 0.65); }
+
+    .feature-card .boardi-img {
+      position: absolute;
+      bottom: -10px;
+      left: 20px;
+      width: 100px;
+      opacity: 0.9;
+    }
+    .feature-card .badge-soon {
+      display: inline-block;
+      padding: 3px 10px;
+      background: rgba(234, 214, 84, 0.2);
+      color: var(--yellow);
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 50px;
+      margin-right: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      .feature-card.card-large { grid-column: span 1; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       6. VIDEO SECTION (dark)
+    ═══════════════════════════════════════════════ */
+    .video-section .video-demo-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .video-section .demo-note {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+      margin-top: 16px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       7. AUDIENCE SEGMENTS
+    ═══════════════════════════════════════════════ */
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .audience-card {
+      background: var(--white);
+      border: 1px solid rgba(37, 62, 122, 0.08);
+      border-radius: var(--radius-lg);
+      padding: 32px 24px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .audience-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      height: 4px;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    }
+    .audience-card:nth-child(1)::after { background: var(--cyan); }
+    .audience-card:nth-child(2)::after { background: var(--pink); }
+    .audience-card:nth-child(3)::after { background: var(--yellow); }
+    .audience-card:nth-child(4)::after { background: var(--green); }
+    .audience-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+    .audience-card .aud-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 26px;
+      background: #F0F6FF;
+    }
+    .audience-card h3 {
+      font-family: var(--font-en);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .audience-card p {
+      font-size: 13px;
+      color: rgba(37, 62, 122, 0.55);
+      line-height: 1.6;
+    }
+    @media (max-width: 768px) {
+      .audience-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .audience-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       8. COMPARISON
+    ═══════════════════════════════════════════════ */
+    .comparison-table {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .comp-col {
+      background: var(--white);
+      border: 1px solid rgba(37, 62, 122, 0.08);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+    }
+    .comp-col.comp-wb {
+      border: 2px solid var(--cyan);
+      background: linear-gradient(180deg, #f0fbff 0%, #ffffff 100%);
+      position: relative;
+    }
+    .comp-col.comp-wb::before {
+      content: 'מומלץ';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gradient-cyan);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 50px;
+    }
+    .comp-col h3 {
+      font-family: var(--font-en);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .comp-price {
+      font-family: var(--font-en);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 20px;
+    }
+    .comp-price span { font-size: 14px; font-weight: 400; color: rgba(37, 62, 122, 0.5); }
+    .comp-features {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .comp-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: rgba(37, 62, 122, 0.7);
+    }
+    .comp-item .icon-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(125, 197, 122, 0.15);
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .comp-item .icon-x {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(240, 86, 128, 0.1);
+      color: var(--pink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    @media (max-width: 600px) {
+      .comparison-table { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       9. PRICING
+    ═══════════════════════════════════════════════ */
+    .pricing-section {
+      padding: 80px 24px;
+      background: #F8FBFF;
+    }
+
+    /* Toggle */
+    .billing-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .billing-toggle label {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(37, 62, 122, 0.5);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .billing-toggle label.active { color: var(--navy); font-weight: 600; }
+
+    .toggle-switch {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      background: rgba(37, 62, 122, 0.15);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+    .toggle-switch.on { background: var(--cyan); }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--white);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+      transition: transform 0.25s;
+    }
+    .toggle-switch.on::after { transform: translateX(-24px); }
+    .toggle-switch:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+    .annual-save {
+      display: inline-block;
+      background: rgba(234, 214, 84, 0.18);
+      color: #8a7600;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    /* Cards */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto 40px;
+    }
+    .price-card {
+      background: var(--white);
+      border: 1.5px solid rgba(37, 62, 122, 0.08);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .price-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .price-card.free { border-style: dashed; opacity: 0.92; }
+    .price-card.recommended {
+      border-color: var(--cyan);
+      border-width: 2px;
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(56, 196, 242, 0.12);
+      transform: translateY(-6px);
+    }
+    .price-card.recommended:hover { transform: translateY(-10px); }
+    .price-card .card-rec-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--gradient-cyan);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 14px 5px 10px;
+      border-radius: var(--radius-lg) 0 12px 0;
+    }
+    .price-card-name {
+      font-family: var(--font-en);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+      margin-top: 4px;
+    }
+    .price-card-tagline {
+      font-size: 12px;
+      color: rgba(37, 62, 122, 0.45);
+      margin-bottom: 14px;
+    }
+    .price-amount {
+      font-family: var(--font-en);
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.1;
+    }
+    .price-amount .currency { font-size: 18px; font-weight: 600; }
+    .price-amount .period { font-size: 13px; font-weight: 400; color: rgba(37, 62, 122, 0.45); }
+    .price-amount-note {
+      font-size: 11px;
+      color: rgba(37, 62, 122, 0.4);
+      margin-top: 2px;
+      min-height: 16px;
+    }
+    .price-features {
+      margin: 16px 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .price-features li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: rgba(37, 62, 122, 0.65);
+    }
+    .price-features li svg {
+      flex-shrink: 0;
+      color: var(--green);
+    }
+    .price-card .btn-card {
+      display: block;
+      text-align: center;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.2s;
+      margin-top: auto;
+    }
+    .btn-card-outline {
+      background: transparent;
+      border: 1.5px solid rgba(37, 62, 122, 0.15);
+      color: var(--navy);
+    }
+    .btn-card-outline:hover { background: rgba(37, 62, 122, 0.04); }
+    .btn-card-cyan {
+      background: var(--gradient-cyan);
+      color: var(--white);
+      border: none;
+    }
+    .btn-card-cyan:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(56, 196, 242, 0.3); }
+
+    /* Enterprise */
+    .enterprise-banner {
+      max-width: 800px;
+      margin: 0 auto 40px;
+      background: linear-gradient(135deg, #253E7A 0%, #1a3060 100%);
+      border-radius: var(--radius-lg);
+      padding: 32px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .enterprise-banner h3 {
+      font-family: var(--font-en);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .enterprise-banner p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 4px;
+    }
+    .enterprise-banner .btn-ent {
+      padding: 12px 28px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 50px;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .enterprise-banner .btn-ent:hover { background: rgba(255, 255, 255, 0.2); }
+
+    @media (max-width: 900px) {
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       10. TESTIMONIALS
+    ═══════════════════════════════════════════════ */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .test-card {
+      background: var(--white);
+      border: 1px solid rgba(37, 62, 122, 0.06);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .test-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .test-quote {
+      font-size: 15px;
+      color: rgba(37, 62, 122, 0.7);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .test-quote::before {
+      content: '\201D';
+      position: absolute;
+      top: -20px;
+      right: -4px;
+      font-size: 48px;
+      font-family: var(--font-en);
+      color: rgba(56, 196, 242, 0.25);
+      line-height: 1;
+    }
+    .test-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .test-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-en);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .test-avatar.av-1 { background: linear-gradient(135deg, var(--cyan), #2aa8d4); }
+    .test-avatar.av-2 { background: linear-gradient(135deg, var(--pink), #d04570); }
+    .test-avatar.av-3 { background: linear-gradient(135deg, var(--green), #5aad56); }
+    .test-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .test-info span {
+      font-size: 12px;
+      color: rgba(37, 62, 122, 0.45);
+    }
+    @media (max-width: 768px) {
+      .testimonials-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       11. FAQ
+    ═══════════════════════════════════════════════ */
+    .faq-list {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      background: var(--white);
+      border: 1px solid rgba(37, 62, 122, 0.06);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: box-shadow 0.3s;
+    }
+    .faq-item:hover { box-shadow: var(--shadow-sm); }
+    .faq-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--navy);
+      user-select: none;
+      gap: 12px;
+    }
+    .faq-question:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+    .faq-arrow {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.3s;
+      color: rgba(37, 62, 122, 0.3);
+    }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+    }
+    .faq-answer-inner {
+      padding: 0 24px 18px;
+      font-size: 14px;
+      color: rgba(37, 62, 122, 0.6);
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════════════
+       12. FINAL CTA
+    ═══════════════════════════════════════════════ */
+    .final-cta {
+      position: relative;
+      overflow: hidden;
+    }
+    .final-cta .container { text-align: center; position: relative; z-index: 2; }
+    .final-cta h2 {
+      font-family: var(--font-en);
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .final-cta .sub {
+      font-size: 17px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 32px;
+    }
+    .final-cta .trust-strip { margin-top: 24px; }
+    .final-cta .boardi-float {
+      position: absolute;
+      bottom: -10px;
+      left: 60px;
+      width: 130px;
+      opacity: 0.7;
+      animation: boardi-float 5s ease-in-out infinite;
+      z-index: 1;
+    }
+    @media (max-width: 768px) {
+      .final-cta h2 { font-size: 30px; }
+      .final-cta .boardi-float { width: 80px; left: 20px; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       13. FOOTER
+    ═══════════════════════════════════════════════ */
+    .site-footer {
+      background: #0d1b3e;
+      padding: 60px 24px 32px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+      max-width: 1000px;
+      margin: 0 auto 48px;
+    }
+    .footer-brand img {
+      height: 36px;
+      margin-bottom: 14px;
+    }
+    .footer-brand p {
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 260px;
+    }
+    .footer-col h4 {
+      font-family: var(--font-en);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .footer-col a {
+      display: block;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 10px;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--cyan); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .footer-copy {
+      font-size: 12px;
+    }
+    .footer-socials {
+      display: flex;
+      gap: 16px;
+    }
+    .footer-socials a {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.5);
+      transition: background 0.2s, color 0.2s;
+    }
+    .footer-socials a:hover { background: rgba(56, 196, 242, 0.2); color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+       NAVIGATION
+  ═══════════════════════════════════════════════ -->
+  <header class="navbar" id="navbar" role="banner">
+    <div class="container">
+      <a href="#" class="navbar-logo" aria-label="WHITEBOARD דף הבית">
+        <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD" id="nav-logo-white" style="height:40px;">
+        <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-01.png" alt="WHITEBOARD" id="nav-logo-dark" style="height:40px;display:none;">
+      </a>
+      <nav class="navbar-links" aria-label="ניווט ראשי">
+        <a href="#features">פיצ'רים</a>
+        <a href="#pricing">תמחור</a>
+        <a href="#audience">למי מתאים</a>
+        <a href="#faq">שאלות נפוצות</a>
+        <a href="#signup" class="btn-cta-nav desktop-only">התחל בחינם</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="תפריט" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="תפריט ניווט">
+    <button class="mobile-menu-close" id="mobileClose" aria-label="סגור תפריט">&times;</button>
+    <a href="#features" class="mobile-link">פיצ'רים</a>
+    <a href="#pricing" class="mobile-link">תמחור</a>
+    <a href="#audience" class="mobile-link">למי מתאים</a>
+    <a href="#faq" class="mobile-link">שאלות נפוצות</a>
+    <a href="#signup" class="btn-primary mobile-link">התחל בחינם</a>
+  </div>
+
+  <main>
+    <!-- ═══════════════════════════════════════════════
+         SECTION 1 — HERO
+    ═══════════════════════════════════════════════ -->
+    <section class="hero" id="hero">
+      <!-- Particles -->
+      <div class="particles" aria-hidden="true">
+        <div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div>
+      </div>
+
+      <div class="hero-content reveal">
+        <span class="hero-badge">הפלטפורמה לבניית אקדמיות דיגיטליות</span>
+        <h1>בנה אקדמיה דיגיטלית.<br>תוך דקות.</h1>
+        <p class="hero-subtitle">קורסים, קהילות, בתי ספר ותכניות הכשרה — הכל במערכת אחת. עם AI שעוזר לך בדרך.</p>
+        <div class="hero-cta-row">
+          <a href="#signup" class="btn-primary">התחל בחינם</a>
+          <a href="#video" class="btn-ghost">
+            <span class="play-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+            </span>
+            צפה בהדגמה
+          </a>
+        </div>
+        <div class="trust-strip">
+          <span class="trust-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            אפס עמלות
+          </span>
+          <span class="trust-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            30 יום חינם
+          </span>
+          <span class="trust-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            ללא כרטיס אשראי
+          </span>
+        </div>
+      </div>
+
+      <div class="hero-video-wrapper reveal" style="transition-delay:0.3s;">
+        <div class="video-placeholder">
+          <img src="../עיצובים למערכת/קאבר ברירת מחדל לקורסים בלי תמונה.png" alt="הדגמה של WHITEBOARD">
+          <div class="play-btn-overlay" role="button" aria-label="הפעל הדגמה" tabindex="0">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <img src="../BOARDi/PNG/BOARDi_1.png" alt="" class="hero-boardi" aria-hidden="true">
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         SECTION 2 — SOCIAL PROOF STRIP
+    ═══════════════════════════════════════════════ -->
+    <section class="social-proof" aria-label="נתונים">
+      <div class="container">
+        <div class="proof-item reveal">
+          <div class="proof-number" data-target="2400">0</div>
+          <div class="proof-label">תלמידים פעילים</div>
+        </div>
+        <div class="proof-divider" aria-hidden="true"></div>
+        <div class="proof-item reveal reveal-delay-1">
+          <div class="proof-number" data-target="150">0</div>
+          <div class="proof-label">מרצים</div>
+        </div>
+        <div class="proof-divider" aria-hidden="true"></div>
+        <div class="proof-item reveal reveal-delay-2">
+          <div class="proof-number" data-target="500">0</div>
+          <div class="proof-label">קורסים</div>
+        </div>
+        <div class="proof-divider" aria-hidden="true"></div>
+        <div class="proof-item reveal reveal-delay-3">
+          <div class="proof-number" data-target="4.8" data-decimal="true">0</div>
+          <div class="proof-label">דירוג</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         SECTION 3 — FEATURES (Bento Grid)
+    ═══════════════════════════════════════════════ -->
+    <section class="section-light" id="features">
+      <div class="container">
+        <h2 class="section-title reveal">הכל כלול. הכל במקום אחד.</h2>
+        <p class="section-subtitle reveal">למה אלפי מרצים בוחרים ב-WHITEBOARD?</p>
+
+        <div class="features-grid">
+          <!-- Card 1 — Large, Cyan -->
+          <div class="feature-card card-large card-cyan reveal">
+            <div class="card-icon" style="background:rgba(56,196,242,0.2);">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <h3>קורסים דיגיטליים</h3>
+            <p>בנה, ערוך ופרסם קורסים מקצועיים עם וידאו, מבחנים ותעודות. ממשק גרור-ושחרר פשוט שמאפשר לך ליצור תוכן מדהים בדקות.</p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="feature-card reveal reveal-delay-1">
+            <div class="card-icon" style="background:rgba(240,86,128,0.12);">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F05680" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3>מועדונים וקהילות</h3>
+            <p>צור קהילה פעילה עם פיד, צ'אט, אירועים ולוח מובילים.</p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="feature-card reveal reveal-delay-2">
+            <div class="card-icon" style="background:rgba(234,214,84,0.15);">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#c4a820" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <h3>בתי ספר</h3>
+            <p>6 תבניות מעוצבות מראש. התאם למותג שלך בלחיצה.</p>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="feature-card reveal reveal-delay-1">
+            <div class="card-icon" style="background:rgba(125,197,122,0.15);">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7DC57A" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <h3>אנליטיקס חכם</h3>
+            <p>עקוב אחרי התקדמות, מעורבות והכנסות בזמן אמת.</p>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="feature-card reveal reveal-delay-2">
+            <div class="card-icon" style="background:rgba(37,62,122,0.08);">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#253E7A" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <h3>דיוור אוטומטי</h3>
+            <p>סדרות מייל אוטומטיות: הרשמה, נטישה, סיום קורס.</p>
+          </div>
+
+          <!-- Card 6 — Large, Navy (BOARDi AI) -->
+          <div class="feature-card card-large card-navy reveal reveal-delay-3" style="min-height:180px;">
+            <div class="card-icon" style="background:rgba(56,196,242,0.15);">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" stroke-linecap="round"><path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M6 10v1a6 6 0 0 0 12 0v-1"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+            </div>
+            <span class="badge-soon">בקרוב</span>
+            <h3>BOARDi AI</h3>
+            <p>העוזר החכם שלך — עוזר לבנות קורסים, לנהל תלמידים, לנתח ביצועים ועוד. בינה מלאכותית שמבינה את עולם ההוראה הדיגיטלית.</p>
+            <img src="../BOARDi/PNG/BOARDi_3.png" alt="" class="boardi-img" aria-hidden="true">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         SECTION 4 — VIDEO DEMO
+    ═══════════════════════════════════════════════ -->
+    <section class="section-dark video-section" id="video">
+      <div class="container">
+        <h2 class="section-title-white reveal">תראו את זה בפעולה</h2>
+        <p class="section-subtitle-white reveal">הדגמה קצרה של 2 דקות שתשנה לכם את הדרך שבה אתם חושבים על הוראה דיגיטלית</p>
+
+        <div class="video-demo-wrapper reveal">
+          <div class="video-placeholder">
+            <img src="../עיצובים למערכת/קאבר ברירת מחדל לקורסים בלי תמונה.png" alt="הדגמת WHITEBOARD">
+            <div class="play-btn-overlay" role="button" aria-label="הפעל הדגמה" tabindex="0">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+          </div>
+          <p class="demo-note">הדגמה של 2 דקות</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         SECTION 5 — AUDIENCE SEGMENTS
+    ═══════════════════════════════════════════════ -->
+    <section class="section-light" id="audience" style="background:#fff;">
+      <div class="container">
+        <h2 class="section-title reveal">למי WHITEBOARD מתאים?</h2>
+        <p class="section-subtitle reveal">לא משנה מה הגודל שלך — יש לנו פתרון</p>
+
+        <div class="audience-grid">
+          <div class="audience-card reveal">
+            <div class="aud-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <h3>יוצרים</h3>
+            <p>יוצרי תוכן שרוצים למכור קורסים ולבנות קהילה נאמנה סביב התוכן שלהם.</p>
+          </div>
+          <div class="audience-card reveal reveal-delay-1">
+            <div class="aud-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F05680" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
+            </div>
+            <h3>מומחים</h3>
+            <p>מרצים, יועצים ומאמנים שרוצים לדגטל את הידע שלהם ולהגיע לקהל רחב יותר.</p>
+          </div>
+          <div class="audience-card reveal reveal-delay-2">
+            <div class="aud-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c4a820" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
+            </div>
+            <h3>מכללות</h3>
+            <p>מכללות פרטיות שמחפשות מערכת LMS מודרנית, גמישה ומותאמת לעברית.</p>
+          </div>
+          <div class="audience-card reveal reveal-delay-3">
+            <div class="aud-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7DC57A" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            </div>
+            <h3>ארגונים</h3>
+            <p>חברות שרוצות להכשיר עובדים, לנהל ידע ארגוני ולעקוב אחרי התקדמות.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         SECTION 6 — COMPARISON
+    ═══════════════════════════════════════════════ -->
+    <section class="section-light" style="background:#F8FBFF;">
+      <div class="container">
+        <h2 class="section-title reveal">השוואה ישירה</h2>
+        <p class="section-subtitle reveal">תראו בעצמכם למה כדאי לעבור</p>
+
+        <div class="comparison-table reveal">
+          <!-- Competitor -->
+          <div class="comp-col">
+            <h3>סקולר + Vimeo</h3>
+            <div class="comp-price">&#8362;286 <span>/חודש</span></div>
+            <div class="comp-features">
+              <div class="comp-item"><span class="icon-x">&times;</span>אין וידאו מובנה</div>
+              <div class="comp-item"><span class="icon-x">&times;</span>אין קהילה</div>
+              <div class="comp-item"><span class="icon-x">&times;</span>אין AI</div>
+              <div class="comp-item"><span class="icon-x">&times;</span>עיצוב ישן</div>
+              <div class="comp-item"><span class="icon-x">&times;</span>עמלות על עסקאות</div>
+            </div>
+          </div>
+          <!-- WHITEBOARD -->
+          <div class="comp-col comp-wb">
+            <h3>WHITEBOARD</h3>
+            <div class="comp-price">&#8362;149 <span>/חודש</span></div>
+            <div class="comp-features">
+              <div class="comp-item"><span class="icon-check">&check;</span>וידאו מובנה</div>
+              <div class="comp-item"><span class="icon-check">&check;</span>קהילות ומועדונים</div>
+              <div class="comp-item"><span class="icon-check">&check;</span>BOARDi AI</div>
+              <div class="comp-item"><span class="icon-check">&check;</span>עיצוב מודרני</div>
+              <div class="comp-item"><span class="icon-check">&check;</span>0% עמלה נוספת</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         SECTION 7 — PRICING
+    ═══════════════════════════════════════════════ -->
+    <section class="pricing-section" id="pricing">
+      <div class="container">
+        <h2 class="section-title reveal">מסלולים ומחירים</h2>
+        <p class="section-subtitle reveal">התחל בחינם — שדרג כשתצמח</p>
+
+        <div class="billing-toggle reveal" role="group" aria-label="בחירת תקופת תשלום">
+          <label id="label-monthly" class="active" onclick="setBilling(false)">חודשי</label>
+          <div class="toggle-switch" id="billingToggle" role="switch" aria-checked="false" tabindex="0" aria-labelledby="label-monthly label-annual" onclick="toggleBilling()"></div>
+          <label id="label-annual" onclick="setBilling(true)">שנתי <span class="annual-save">שלם 10, קבל 12</span></label>
+        </div>
+
+        <div class="pricing-grid">
+          <!-- Trial -->
+          <div class="price-card free reveal">
+            <div class="price-card-name">ניסיון</div>
+            <div class="price-card-tagline">להתחלה חלקה</div>
+            <div class="price-amount">&#8362;0</div>
+            <div class="price-amount-note">חינם לתמיד — עד 30 תלמידים</div>
+            <ul class="price-features">
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>קורס אחד</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>עד 30 תלמידים</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>וידאו עד 1GB</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>תעודת סיום</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>תמיכה בסיסית</li>
+            </ul>
+            <a href="#signup" class="btn-card btn-card-outline">התחל בחינם</a>
+          </div>
+
+          <!-- Teacher -->
+          <div class="price-card reveal reveal-delay-1">
+            <div class="price-card-name">מורה</div>
+            <div class="price-card-tagline">לעצמאיים ויוצרים</div>
+            <div class="price-amount" data-monthly="149" data-annual="124">&#8362;<span class="price-val">149</span> <span class="period">/חודש</span></div>
+            <div class="price-amount-note annual-note" style="display:none;">חיוב שנתי &#8362;<span class="annual-total">1,490</span></div>
+            <ul class="price-features">
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>קורסים ללא הגבלה</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>עד 500 תלמידים</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>וידאו עד 50GB</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>מועדון אחד</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>דיוור בסיסי</li>
+            </ul>
+            <a href="#signup" class="btn-card btn-card-outline">בחירת מסלול</a>
+          </div>
+
+          <!-- Educator — Recommended -->
+          <div class="price-card recommended reveal reveal-delay-2">
+            <span class="card-rec-badge">מומלץ</span>
+            <div class="price-card-name">מחנך</div>
+            <div class="price-card-tagline">לצמיחה מואצת</div>
+            <div class="price-amount" data-monthly="199" data-annual="166">&#8362;<span class="price-val">199</span> <span class="period">/חודש</span></div>
+            <div class="price-amount-note annual-note" style="display:none;">חיוב שנתי &#8362;<span class="annual-total">1,990</span></div>
+            <ul class="price-features">
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>הכל במסלול מורה +</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>עד 2,000 תלמידים</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>בית ספר מותאם אישית</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>אנליטיקס מתקדם</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>דיוור אוטומטי</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>BOARDi AI</li>
+            </ul>
+            <a href="#signup" class="btn-card btn-card-cyan">התחל עכשיו</a>
+          </div>
+
+          <!-- Leader -->
+          <div class="price-card reveal reveal-delay-3">
+            <div class="price-card-name">מנהיג</div>
+            <div class="price-card-tagline">לאקדמיות גדולות</div>
+            <div class="price-amount" data-monthly="399" data-annual="332">&#8362;<span class="price-val">399</span> <span class="period">/חודש</span></div>
+            <div class="price-amount-note annual-note" style="display:none;">חיוב שנתי &#8362;<span class="annual-total">3,990</span></div>
+            <ul class="price-features">
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>הכל במסלול מחנך +</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>תלמידים ללא הגבלה</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>מספר בתי ספר</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>API ואינטגרציות</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>תמיכה VIP</li>
+            </ul>
+            <a href="#signup" class="btn-card btn-card-outline">בחירת מסלול</a>
+          </div>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="enterprise-banner reveal">
+          <div>
+            <h3>Enterprise</h3>
+            <p>פתרון מותאם אישית לארגונים גדולים. צרו קשר לפגישת ייעוץ.</p>
+          </div>
+          <a href="#contact" class="btn-ent">דברו איתנו</a>
+        </div>
+
+        <div style="text-align:center;" class="reveal">
+          <a href="#signup" class="btn-primary">התחל בחינם</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         SECTION 8 — TESTIMONIALS
+    ═══════════════════════════════════════════════ -->
+    <section class="section-light" style="background:#fff;">
+      <div class="container">
+        <h2 class="section-title reveal">מה אומרים עלינו</h2>
+        <p class="section-subtitle reveal">ההצלחה שלהם מדברת בעד עצמה</p>
+
+        <div class="testimonials-grid">
+          <div class="test-card reveal">
+            <p class="test-quote">הפלטפורמה שינתה לי את העסק. תוך חודש הקמתי 3 קורסים ומועדון עם 200 חברים. הממשק כל כך אינטואיטיבי שלא הייתי צריכה אפילו הדרכה.</p>
+            <div class="test-author">
+              <div class="test-avatar av-1">מ</div>
+              <div class="test-info">
+                <h4>מיכל לוי</h4>
+                <span>יוצרת תוכן</span>
+              </div>
+            </div>
+          </div>
+          <div class="test-card reveal reveal-delay-1">
+            <p class="test-quote">עברנו מסקולר ל-WHITEBOARD ולא הסתכלנו אחורה. החיסכון בזמן ובכסף הוא עצום. מערכת הוידאו המובנית לבד שווה את המעבר.</p>
+            <div class="test-author">
+              <div class="test-avatar av-2">ד</div>
+              <div class="test-info">
+                <h4>דוד כהן</h4>
+                <span>מרצה</span>
+              </div>
+            </div>
+          </div>
+          <div class="test-card reveal reveal-delay-2">
+            <p class="test-quote">כמכללה פרטית, היינו צריכים מערכת גמישה. WHITEBOARD נתנה לנו בדיוק את מה שחיפשנו — ועם תמיכה מלאה בעברית.</p>
+            <div class="test-author">
+              <div class="test-avatar av-3">נ</div>
+              <div class="test-info">
+                <h4>נועה שמש</h4>
+                <span>מנהלת מכללת נוף</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         SECTION 9 — FAQ
+    ═══════════════════════════════════════════════ -->
+    <section class="section-light" id="faq" style="background:#F8FBFF;">
+      <div class="container">
+        <h2 class="section-title reveal">שאלות נפוצות</h2>
+        <p class="section-subtitle reveal">התשובות לכל מה שרציתם לדעת</p>
+
+        <div class="faq-list">
+          <div class="faq-item reveal">
+            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+              <span>כמה עולה WHITEBOARD?</span>
+              <span class="faq-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">יש לנו 4 מסלולים: ניסיון חינם (עד 30 תלמידים), מורה ב-&#8362;149/חודש, מחנך ב-&#8362;199/חודש, ומנהיג ב-&#8362;399/חודש. בתשלום שנתי מקבלים 12 חודשים במחיר של 10.</div>
+            </div>
+          </div>
+          <div class="faq-item reveal reveal-delay-1">
+            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+              <span>האם יש תקופת ניסיון?</span>
+              <span class="faq-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">בהחלט! מסלול הניסיון הוא חינמי לתמיד עם עד 30 תלמידים. בנוסף, בכל מסלול בתשלום יש 30 ימי ניסיון חינם — ללא צורך בכרטיס אשראי.</div>
+            </div>
+          </div>
+          <div class="faq-item reveal reveal-delay-2">
+            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+              <span>האם אתם גובים עמלות על עסקאות?</span>
+              <span class="faq-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">לא. 0% עמלה נוספת מצידנו. כל מה שהתלמידים שלך משלמים — הולך ישירות אליך (למעט עמלות סטנדרטיות של חברת הסליקה).</div>
+            </div>
+          </div>
+          <div class="faq-item reveal reveal-delay-3">
+            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+              <span>אפשר להעביר קורסים מסקולר?</span>
+              <span class="faq-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">כן! אנחנו מציעים מעבר חלק מסקולר ומכל פלטפורמה אחרת. הצוות שלנו ילווה אותך בכל התהליך — ייבוא תלמידים, תוכן וסרטונים.</div>
+            </div>
+          </div>
+          <div class="faq-item reveal reveal-delay-4">
+            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+              <span>מה זה BOARDi?</span>
+              <span class="faq-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">BOARDi הוא עוזר AI חכם שמשולב בתוך WHITEBOARD. הוא עוזר לך לבנות סילבוסים, ליצור מבחנים, לכתוב תיאורי קורסים, לנתח ביצועי תלמידים ועוד — הכל בשיחה טבעית בעברית.</div>
+            </div>
+          </div>
+          <div class="faq-item reveal reveal-delay-5">
+            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+              <span>יש תמיכה בעברית?</span>
+              <span class="faq-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">כן! WHITEBOARD נבנתה מהיסוד בעברית RTL. כל הממשק, הדיוור, והתמיכה — הכל בעברית מלאה. זה לא תרגום — זו חוויה שנבנתה לשוק הישראלי.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════
+         SECTION 10 — FINAL CTA
+    ═══════════════════════════════════════════════ -->
+    <section class="section-dark final-cta" id="signup">
+      <div class="container">
+        <h2 class="reveal">מוכנים להתחיל?</h2>
+        <p class="sub reveal">הצטרפו לאלפי מרצים שכבר בונים אקדמיות דיגיטליות</p>
+        <div class="reveal" style="transition-delay:0.2s;">
+          <a href="#" class="btn-primary" style="font-size:18px;padding:18px 44px;">התחל בחינם</a>
+        </div>
+        <div class="trust-strip reveal" style="transition-delay:0.3s;">
+          <span class="trust-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            אפס עמלות
+          </span>
+          <span class="trust-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            30 יום חינם
+          </span>
+          <span class="trust-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            ללא כרטיס אשראי
+          </span>
+        </div>
+      </div>
+      <img src="../BOARDi/PNG/BOARDi_5.png" alt="" class="boardi-float" aria-hidden="true">
+    </section>
+  </main>
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD">
+        <p>הפלטפורמה המובילה בישראל לבניית אקדמיות דיגיטליות, קורסים אונליין וקהילות למידה.</p>
+      </div>
+      <div class="footer-col">
+        <h4>מוצר</h4>
+        <a href="#features">פיצ'רים</a>
+        <a href="#pricing">תמחור</a>
+        <a href="#">בתי ספר</a>
+        <a href="#">אינטגרציות</a>
+      </div>
+      <div class="footer-col">
+        <h4>חברה</h4>
+        <a href="#">אודות</a>
+        <a href="#">בלוג</a>
+        <a href="#">קריירה</a>
+        <a href="#">סיפורי הצלחה</a>
+      </div>
+      <div class="footer-col">
+        <h4>תמיכה</h4>
+        <a href="#faq">שאלות נפוצות</a>
+        <a href="#">צור קשר</a>
+        <a href="#">תנאי שימוש</a>
+        <a href="#">מדיניות פרטיות</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">WHITEBOARD &copy; 2026 — כל הזכויות שמורות</span>
+      <div class="footer-socials">
+        <a href="#" aria-label="Facebook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="#" aria-label="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="#" aria-label="LinkedIn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="#" aria-label="YouTube">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════
+       SCRIPTS
+  ═══════════════════════════════════════════════ -->
+  <script>
+    /* ── Navbar scroll effect ── */
+    const navbar = document.getElementById('navbar');
+    const logoWhite = document.getElementById('nav-logo-white');
+    const logoDark = document.getElementById('nav-logo-dark');
+
+    function updateNavbar() {
+      const scrolled = window.scrollY > 60;
+      navbar.classList.toggle('scrolled', scrolled);
+      if (logoWhite && logoDark) {
+        logoWhite.style.display = scrolled ? 'none' : 'block';
+        logoDark.style.display = scrolled ? 'block' : 'none';
+      }
+    }
+    window.addEventListener('scroll', updateNavbar, { passive: true });
+    updateNavbar();
+
+    /* ── Mobile Menu ── */
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileClose = document.getElementById('mobileClose');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', mobileMenu.classList.contains('open'));
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+    mobileClose.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      });
+    });
+
+    /* ── Scroll Reveal (IntersectionObserver) ── */
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    /* ── Counter Animation ── */
+    const counterElements = document.querySelectorAll('.proof-number[data-target]');
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseFloat(el.dataset.target);
+          const isDecimal = el.dataset.decimal === 'true';
+          const duration = 2000;
+          const startTime = performance.now();
+
+          function animate(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = target * eased;
+
+            if (isDecimal) {
+              el.textContent = current.toFixed(1);
+            } else {
+              const num = Math.floor(current);
+              el.textContent = num.toLocaleString() + '+';
+            }
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              if (isDecimal) {
+                el.textContent = target.toFixed(1);
+              } else {
+                el.textContent = target.toLocaleString() + '+';
+              }
+            }
+          }
+          requestAnimationFrame(animate);
+          counterObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    counterElements.forEach(el => counterObserver.observe(el));
+
+    /* ── Billing Toggle ── */
+    let isAnnual = false;
+    const billingToggle = document.getElementById('billingToggle');
+    const labelMonthly = document.getElementById('label-monthly');
+    const labelAnnual = document.getElementById('label-annual');
+
+    function setBilling(annual) {
+      isAnnual = annual;
+      updateBilling();
+    }
+
+    function toggleBilling() {
+      isAnnual = !isAnnual;
+      updateBilling();
+    }
+
+    function updateBilling() {
+      billingToggle.classList.toggle('on', isAnnual);
+      billingToggle.setAttribute('aria-checked', isAnnual);
+      labelMonthly.classList.toggle('active', !isAnnual);
+      labelAnnual.classList.toggle('active', isAnnual);
+
+      document.querySelectorAll('.price-amount[data-monthly]').forEach(el => {
+        const val = isAnnual ? el.dataset.annual : el.dataset.monthly;
+        el.querySelector('.price-val').textContent = val;
+      });
+      document.querySelectorAll('.annual-note').forEach(el => {
+        el.style.display = isAnnual ? 'block' : 'none';
+      });
+    }
+
+    billingToggle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleBilling();
+      }
+    });
+
+    /* ── FAQ Accordion ── */
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const wasOpen = item.classList.contains('open');
+
+        // Close all
+        document.querySelectorAll('.faq-item.open').forEach(openItem => {
+          openItem.classList.remove('open');
+          openItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+        });
+
+        // Open clicked (if wasn't open)
+        if (!wasOpen) {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
