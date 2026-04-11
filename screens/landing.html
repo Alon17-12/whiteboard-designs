@@ -151,14 +151,46 @@
     }
 
     /* ═══════════════════════════════════════════════════════
-       BOARDi Float Animation
+       BOARDi Float Animation (FIX 4)
     ═══════════════════════════════════════════════════════ */
-    @keyframes boardi-float {
+    @keyframes boarFloat {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-12px); }
     }
     .boardi-float {
-      animation: boardi-float 3s ease-in-out infinite;
+      animation: boarFloat 4s ease-in-out infinite;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SVG Icon Containers (FIX 2)
+    ═══════════════════════════════════════════════════════ */
+    .icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .icon-box svg {
+      width: 24px;
+      height: 24px;
+    }
+    .icon-box.cyan { background: rgba(56, 196, 242, 0.12); color: var(--cyan); }
+    .icon-box.pink { background: rgba(240, 86, 128, 0.12); color: var(--pink); }
+    .icon-box.green { background: rgba(125, 197, 122, 0.12); color: var(--green); }
+    .icon-box.navy { background: rgba(37, 62, 122, 0.1); color: var(--navy); }
+    .icon-box.yellow { background: rgba(234, 214, 84, 0.18); color: #8a7600; }
+    .icon-box.purple { background: rgba(139, 92, 246, 0.12); color: #8B5CF6; }
+    .icon-box-lg {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+    }
+    .icon-box-lg svg {
+      width: 28px;
+      height: 28px;
     }
 
     /* ═══════════════════════════════════════════════════════
@@ -358,6 +390,11 @@
       max-width: 800px;
     }
 
+    .hero-logo {
+      max-width: 200px;
+      margin: 0 auto 24px;
+    }
+
     .hero h1 {
       font-family: var(--font-brand);
       font-size: clamp(36px, 6vw, 52px);
@@ -455,7 +492,7 @@
       opacity: 0.7;
     }
 
-    /* Video placeholder below hero */
+    /* Video placeholder below hero (FIX 5) */
     .hero-video {
       position: relative;
       z-index: 2;
@@ -472,31 +509,33 @@
     }
     .hero-video-placeholder {
       aspect-ratio: 16 / 9;
-      background: linear-gradient(135deg, var(--navy-deeper), var(--navy), rgba(56, 196, 242, 0.3));
+      background: url('../עיצובים למערכת/קאבר ברירת מחדל לקורסים בלי תמונה.png') center/cover;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       position: relative;
+      gap: 12px;
     }
     .hero-video-placeholder::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.15);
+      background: rgba(0, 0, 0, 0.4);
       transition: background 0.3s;
     }
     .hero-video-placeholder:hover::after {
-      background: rgba(0, 0, 0, 0.05);
+      background: rgba(0, 0, 0, 0.25);
     }
     .play-btn {
-      width: 64px;
-      height: 64px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -505,7 +544,7 @@
       transition: all 0.3s;
     }
     .play-btn:hover {
-      background: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.25);
       transform: scale(1.06);
     }
     .play-btn svg {
@@ -514,15 +553,33 @@
       fill: var(--white);
       margin-right: -2px;
     }
+    .video-label {
+      position: relative;
+      z-index: 2;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 0.5px;
+    }
+
+    /* BOARDi in hero (FIX 4) */
+    .hero-boardi {
+      width: 100px;
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      z-index: 3;
+    }
 
     @media (max-width: 768px) {
       .hero { padding: 110px 20px 50px; }
       .hero-video { margin-top: 40px; }
       .hero-buttons { flex-direction: column; }
+      .hero-boardi { width: 70px; bottom: 20px; left: 20px; }
     }
 
     /* ═══════════════════════════════════════════════════════
-       3. SOCIAL PROOF — Animated Counters
+       3. SOCIAL PROOF — Factual Stats (FIX 3)
     ═══════════════════════════════════════════════════════ */
     .social-proof {
       background: linear-gradient(180deg, var(--navy-deeper) 0%, var(--navy-dark) 100%);
@@ -535,50 +592,119 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 0;
-      max-width: 750px;
+      gap: 18px;
+      max-width: 800px;
       margin: 0 auto 32px;
+      flex-wrap: wrap;
     }
-    .proof-item {
-      flex: 1;
-      text-align: center;
-      padding: 16px;
-      position: relative;
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 28px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--r);
+      min-width: 160px;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .proof-item:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 20%;
-      height: 60%;
-      width: 1px;
-      background: rgba(255, 255, 255, 0.1);
+    .stat-pill:hover {
+      background: rgba(255, 255, 255, 0.07);
+      transform: translateY(-2px);
     }
-    .proof-number {
+    .stat-pill .icon-box {
+      background: rgba(56, 196, 242, 0.12);
+      color: var(--cyan);
+    }
+    .stat-pill-text {
+      text-align: right;
+    }
+    .stat-pill-value {
       font-family: var(--font-brand);
-      font-size: clamp(40px, 6vw, 56px);
+      font-size: 22px;
       font-weight: 700;
       color: var(--white);
-      line-height: 1;
-      margin-bottom: 6px;
+      line-height: 1.2;
     }
-    .proof-label {
-      font-size: 14px;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.5);
-    }
-    .proof-footnote {
+    .stat-pill-label {
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.3);
       font-weight: 400;
-    }
-    .proof-footnote span {
-      margin: 0 10px;
+      color: rgba(255, 255, 255, 0.45);
     }
 
     @media (max-width: 600px) {
-      .proof-grid { flex-direction: column; gap: 24px; }
-      .proof-item:not(:last-child)::after { display: none; }
+      .proof-grid { flex-direction: column; gap: 12px; }
+      .stat-pill { width: 100%; max-width: 280px; }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       HOW IT WORKS — 3 Steps (FIX 10)
+    ═══════════════════════════════════════════════════════ */
+    .how-it-works {
+      background: var(--white);
+      padding: var(--section-padding) 24px;
+      text-align: center;
+    }
+    .steps-row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 0;
+      max-width: 860px;
+      margin: 48px auto 0;
+      position: relative;
+    }
+    .steps-row::before {
+      content: '';
+      position: absolute;
+      top: 32px;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      border-top: 2px dashed rgba(56, 196, 242, 0.25);
+      z-index: 0;
+    }
+    .step-card {
+      flex: 1;
+      text-align: center;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-number {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--gradient-cyan);
+      color: var(--white);
+      font-family: var(--font-brand);
+      font-size: 26px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(56, 196, 242, 0.2);
+    }
+    .step-title {
+      font-family: var(--font-brand);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      margin-bottom: 8px;
+    }
+    .step-desc {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(26, 47, 94, 0.55);
+      line-height: 1.6;
+      max-width: 220px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 600px) {
+      .steps-row { flex-direction: column; gap: 36px; align-items: center; }
+      .steps-row::before { display: none; }
     }
 
     /* ═══════════════════════════════════════════════════════
@@ -654,13 +780,15 @@
     .bento-visual-ai {
       background: linear-gradient(135deg, var(--navy-dark), #8B5CF6);
     }
-    .bento-visual-icon {
-      font-size: 44px;
-      opacity: 0.5;
+    .bento-visual-svg-icon {
+      width: 48px;
+      height: 48px;
+      color: rgba(255, 255, 255, 0.45);
     }
-    .bento-visual-icon-large {
-      font-size: 64px;
-      opacity: 0.4;
+    .bento-visual-svg-icon-lg {
+      width: 64px;
+      height: 64px;
+      color: rgba(255, 255, 255, 0.35);
     }
     @keyframes bento-grad {
       0% { background-position: 0% 50%; }
@@ -695,6 +823,20 @@
       position: absolute;
       top: 14px;
       left: 14px;
+    }
+    .bento-badge svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .bento-boardi-img {
+      max-width: 80px;
+      opacity: 0.6;
+    }
+
+    .features-cta-wrap {
+      text-align: center;
+      margin-top: 40px;
     }
 
     @media (max-width: 768px) {
@@ -750,22 +892,24 @@
     }
     .video-placeholder-dark {
       aspect-ratio: 16 / 9;
-      background: linear-gradient(135deg, var(--navy-deeper), var(--navy-dark), var(--navy));
+      background: url('../עיצובים למערכת/קאבר ברירת מחדל לקורסים בלי תמונה.png') center/cover;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       position: relative;
       cursor: pointer;
+      gap: 12px;
     }
     .video-placeholder-dark::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.15);
+      background: rgba(0, 0, 0, 0.4);
       transition: background 0.3s;
     }
     .video-placeholder-dark:hover::after {
-      background: rgba(0, 0, 0, 0.05);
+      background: rgba(0, 0, 0, 0.25);
     }
 
     @media (max-width: 768px) {
@@ -807,9 +951,18 @@
       box-shadow: var(--shadow-md), 0 0 0 1px rgba(56, 196, 242, 0.15);
     }
     .audience-icon {
-      font-size: 36px;
       margin-bottom: 14px;
-      display: block;
+      display: flex;
+      justify-content: center;
+    }
+    .audience-icon .icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+    }
+    .audience-icon .icon-box svg {
+      width: 26px;
+      height: 26px;
     }
     .audience-card-title {
       font-family: var(--font-brand);
@@ -825,16 +978,37 @@
       line-height: 1.5;
       margin-bottom: 14px;
     }
-    .audience-card-link {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--cyan);
-      transition: gap 0.2s;
+    /* FIX 7: Better affordance button */
+    .audience-card-btn {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      padding: 8px 18px;
+      background: rgba(56, 196, 242, 0.08);
+      color: var(--cyan);
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--r-full);
+      border: 1.5px solid rgba(56, 196, 242, 0.2);
+      transition: all 0.25s;
+      font-family: var(--font-he);
+      cursor: pointer;
     }
-    .audience-card-link:hover { gap: 8px; }
+    .audience-card-btn:hover {
+      background: rgba(56, 196, 242, 0.14);
+      border-color: var(--cyan);
+    }
+    .audience-card-btn .arrow-icon {
+      display: inline-block;
+      transition: transform 0.3s;
+    }
+    .audience-card:hover .audience-card-btn .arrow-icon {
+      animation: arrowBounce 0.6s ease infinite;
+    }
+    @keyframes arrowBounce {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-4px); }
+    }
 
     /* Expandable Panel */
     .audience-panel {
@@ -954,7 +1128,7 @@
     }
 
     /* ═══════════════════════════════════════════════════════
-       7. COMPARISON — Side-by-Side
+       7. COMPARISON — Side-by-Side (FIX 8)
     ═══════════════════════════════════════════════════════ */
     .comparison {
       background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy-deeper) 100%);
@@ -1016,6 +1190,9 @@
       flex-shrink: 0;
     }
     .comparison-card.old .comparison-icon { opacity: 0.4; }
+    .comparison-row.positive { color: rgba(255, 255, 255, 0.6) !important; }
+    .comparison-row.positive .comparison-icon { opacity: 0.7 !important; }
+    .comparison-row.negative-new { color: rgba(255, 255, 255, 0.4) !important; }
 
     .comparison-price-row {
       margin-top: 20px;
@@ -1293,6 +1470,11 @@
       margin-top: 6px;
     }
 
+    .pricing-cta-wrap {
+      text-align: center;
+      margin-top: 40px;
+    }
+
     @media (max-width: 900px) {
       .pricing-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -1304,111 +1486,61 @@
     }
 
     /* ═══════════════════════════════════════════════════════
-       9. TESTIMONIALS — Carousel
+       9. VALUE PROPS — Why WHITEBOARD (FIX 6)
     ═══════════════════════════════════════════════════════ */
-    .testimonials {
+    .value-props {
       background: var(--white);
       padding: var(--section-padding) 24px;
       text-align: center;
       position: relative;
     }
 
-    .testimonial-carousel {
-      max-width: 660px;
-      margin: 44px auto 0;
-      position: relative;
-      min-height: 240px;
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1000px;
+      margin: 48px auto 0;
     }
-    .testimonial-slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-      pointer-events: none;
+    .value-card {
+      background: var(--light-bg);
+      border-radius: var(--r);
+      padding: 36px 28px;
+      text-align: center;
+      border-top: 3px solid transparent;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .testimonial-slide.active {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: all;
-      position: relative;
+    .value-card:nth-child(1) { border-top-color: var(--cyan); }
+    .value-card:nth-child(2) { border-top-color: var(--pink); }
+    .value-card:nth-child(3) { border-top-color: var(--green); }
+    .value-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
     }
-    .testimonial-quote-icon {
-      font-size: 48px;
-      color: var(--cyan);
-      opacity: 0.3;
-      margin-bottom: 12px;
-      font-family: Georgia, serif;
-      line-height: 1;
+    .value-card .icon-box-lg {
+      margin: 0 auto 20px;
     }
-    .testimonial-text {
-      font-size: clamp(17px, 2.2vw, 20px);
-      font-weight: 400;
-      color: var(--navy-dark);
-      line-height: 1.7;
-      margin-bottom: 28px;
-    }
-    .testimonial-author {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-    }
-    .testimonial-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--cyan), var(--navy));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: var(--white);
-      font-weight: 700;
+    .value-card-title {
       font-family: var(--font-brand);
-    }
-    .testimonial-author-info {
-      text-align: right;
-    }
-    .testimonial-name {
+      font-size: 20px;
       font-weight: 700;
-      font-size: 15px;
       color: var(--navy-dark);
+      margin-bottom: 10px;
     }
-    .testimonial-role {
-      font-size: 13px;
+    .value-card-desc {
+      font-size: 14px;
       font-weight: 400;
-      color: rgba(26, 47, 94, 0.5);
-    }
-
-    .testimonial-dots {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 36px;
-    }
-    .testimonial-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(37, 62, 122, 0.12);
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .testimonial-dot.active {
-      background: var(--cyan);
-      width: 22px;
-      border-radius: 4px;
+      color: rgba(26, 47, 94, 0.6);
+      line-height: 1.7;
     }
 
     @media (max-width: 768px) {
-      .testimonials { padding: var(--section-padding-mobile) 20px; }
+      .value-grid { grid-template-columns: 1fr; max-width: 420px; }
+      .value-props { padding: var(--section-padding-mobile) 20px; }
     }
 
     /* ═══════════════════════════════════════════════════════
-       10. FAQ — Minimal Accordion
+       10. FAQ — Minimal Accordion (FIX 9)
     ═══════════════════════════════════════════════════════ */
     .faq {
       background: var(--light-bg);
@@ -1505,7 +1637,7 @@
       position: relative;
       z-index: 2;
       margin: 44px auto 0;
-      width: 90px;
+      width: 120px;
       height: auto;
     }
 
@@ -1576,6 +1708,36 @@
     @media (max-width: 480px) {
       .footer-grid { grid-template-columns: 1fr; }
     }
+
+    /* ═══════════════════════════════════════════════════════
+       SECTION CTA BUTTONS
+    ═══════════════════════════════════════════════════════ */
+    .section-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 32px;
+      background: var(--gradient-cyan);
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: var(--r-full);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 0 20px rgba(56, 196, 242, 0.15);
+    }
+    .section-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 24px rgba(56, 196, 242, 0.3);
+    }
+    .section-cta.outline {
+      background: transparent;
+      border: 2px solid var(--cyan);
+      color: var(--cyan);
+      box-shadow: none;
+    }
+    .section-cta.outline:hover {
+      background: rgba(56, 196, 242, 0.06);
+    }
   </style>
 </head>
 
@@ -1613,7 +1775,7 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════
-       1. HERO
+       1. HERO (FIX 1 — Logo, FIX 4 — BOARDi, FIX 5 — Video, FIX 11 — CTA)
   ═══════════════════════════════════════════════════ -->
   <section class="hero" id="hero">
     <!-- Subtle radial glows -->
@@ -1621,6 +1783,9 @@
     <div class="orb orb-pink"></div>
 
     <div class="hero-content reveal">
+      <!-- FIX 1: Logo visible immediately -->
+      <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD" class="hero-logo" style="opacity:1;">
+
       <h1>
         בנה אקדמיה דיגיטלית.
         <span class="line-gradient">תוך דקות.</span>
@@ -1628,8 +1793,12 @@
       <p class="hero-subtitle">קורסים, קהילות, בתי ספר ותכניות הכשרה — הכל במערכת אחת.<br>עם AI שעוזר לך בדרך.</p>
 
       <div class="hero-buttons">
+        <!-- FIX 11: Distinct CTA copy -->
         <a href="#" class="hero-cta">התחל בחינם &larr;</a>
-        <a href="#video-demo" class="hero-cta-ghost">צפה בסרטון &#9654;</a>
+        <a href="#video-demo" class="hero-cta-ghost">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><polygon points="8,5 19,12 8,19"/></svg>
+          צפה בסרטון
+        </a>
       </div>
 
       <div class="hero-trust">
@@ -1648,43 +1817,102 @@
       </div>
     </div>
 
-    <!-- Video Placeholder -->
+    <!-- FIX 5: Video placeholder with cover image -->
     <div class="hero-video reveal reveal-delay-3">
       <div class="hero-video-wrap">
         <div class="hero-video-placeholder">
           <div class="play-btn" aria-label="הפעל סרטון">
             <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg>
           </div>
+          <span class="video-label">הדגמה · 2:30</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIX 4: BOARDi in hero -->
+    <img src="../BOARDi/PNG/BOARDi_1.png" alt="BOARDi" class="hero-boardi boardi-float">
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       2. SOCIAL PROOF — Factual Stats (FIX 3)
+  ═══════════════════════════════════════════════════ -->
+  <section class="social-proof" id="social-proof">
+    <div class="proof-grid reveal">
+      <!-- Stat 1: 0% commission -->
+      <div class="stat-pill">
+        <div class="icon-box cyan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="stat-pill-text">
+          <div class="stat-pill-value">0% עמלה</div>
+          <div class="stat-pill-label">הכל שלך</div>
+        </div>
+      </div>
+
+      <!-- Stat 2: 6 templates -->
+      <div class="stat-pill">
+        <div class="icon-box cyan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="stat-pill-text">
+          <div class="stat-pill-value">6 תבניות</div>
+          <div class="stat-pill-label">לבית ספר</div>
+        </div>
+      </div>
+
+      <!-- Stat 3: 30 days free -->
+      <div class="stat-pill">
+        <div class="icon-box cyan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="stat-pill-text">
+          <div class="stat-pill-value">30 יום חינם</div>
+          <div class="stat-pill-label">ללא כרטיס</div>
+        </div>
+      </div>
+
+      <!-- Stat 4: Built-in AI -->
+      <div class="stat-pill">
+        <div class="icon-box cyan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+        </div>
+        <div class="stat-pill-text">
+          <div class="stat-pill-value">AI מובנה</div>
+          <div class="stat-pill-label">BOARDi</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       2. SOCIAL PROOF
+       HOW IT WORKS — 3 Steps (FIX 10)
   ═══════════════════════════════════════════════════ -->
-  <section class="social-proof" id="social-proof">
-    <div class="proof-grid reveal">
-      <div class="proof-item">
-        <div class="proof-number" data-target="2500">0</div>
-        <div class="proof-label">מרצים פעילים</div>
-      </div>
-      <div class="proof-item">
-        <div class="proof-number" data-target="18000">0</div>
-        <div class="proof-label">תלמידים רשומים</div>
-      </div>
-      <div class="proof-item">
-        <div class="proof-number" data-target="4200">0</div>
-        <div class="proof-label">קורסים נוצרו</div>
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <h2 class="section-headline reveal">איך זה עובד?</h2>
+
+      <div class="steps-row">
+        <div class="step-card reveal reveal-delay-1">
+          <div class="step-number">1</div>
+          <div class="step-title">הירשם בחינם</div>
+          <div class="step-desc">צור חשבון תוך 30 שניות, ללא כרטיס אשראי</div>
+        </div>
+        <div class="step-card reveal reveal-delay-2">
+          <div class="step-number">2</div>
+          <div class="step-title">בנה את הקורס שלך</div>
+          <div class="step-desc">העלה תוכן, צור מבנה, עצב את העמוד</div>
+        </div>
+        <div class="step-card reveal reveal-delay-3">
+          <div class="step-number">3</div>
+          <div class="step-title">התחל למכור</div>
+          <div class="step-desc">שתף, קבל תשלומים ותנהל תלמידים</div>
+        </div>
       </div>
     </div>
-    <p class="proof-footnote reveal reveal-delay-2">
-      <span>אפס עמלות</span>&middot;<span>30 יום חינם</span>&middot;<span>ללא כרטיס אשראי</span>
-    </p>
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       3. FEATURES — Bento Grid
+       3. FEATURES — Bento Grid (FIX 2 — SVG icons, FIX 4 — BOARDi image)
   ═══════════════════════════════════════════════════ -->
   <section class="features" id="features">
     <div class="container">
@@ -1694,7 +1922,7 @@
         <!-- Large Card: Courses -->
         <div class="bento-card large reveal reveal-delay-1">
           <div class="bento-visual bento-visual-large">
-            <span class="bento-visual-icon-large">&#127891;</span>
+            <svg class="bento-visual-svg-icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
           </div>
           <div class="bento-card-title">קורסים דיגיטליים</div>
           <div class="bento-card-desc">צרו קורסים מקצועיים עם וידאו, מבחנים, תעודות ומעקב התקדמות — בממשק גרירה פשוט.</div>
@@ -1703,7 +1931,7 @@
         <!-- Medium: Clubs -->
         <div class="bento-card medium reveal reveal-delay-2">
           <div class="bento-visual bento-visual-clubs">
-            <span class="bento-visual-icon">&#128101;</span>
+            <svg class="bento-visual-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           </div>
           <div class="bento-card-title">מועדונים</div>
           <div class="bento-card-desc">קהילות סגורות עם דיונים, תוכן בלעדי ומנוי חודשי.</div>
@@ -1712,7 +1940,7 @@
         <!-- Medium: Schools -->
         <div class="bento-card medium reveal reveal-delay-3">
           <div class="bento-visual bento-visual-schools">
-            <span class="bento-visual-icon">&#127979;</span>
+            <svg class="bento-visual-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </div>
           <div class="bento-card-title">בתי ספר</div>
           <div class="bento-card-desc">6 תבניות מעוצבות, דפי נחיתה, ומותג אישי מלא.</div>
@@ -1721,7 +1949,7 @@
         <!-- Small: Analytics -->
         <div class="bento-card medium reveal reveal-delay-4">
           <div class="bento-visual bento-visual-analytics">
-            <span class="bento-visual-icon">&#128200;</span>
+            <svg class="bento-visual-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
           </div>
           <div class="bento-card-title">אנליטיקס</div>
           <div class="bento-card-desc">דוחות מכירות, התקדמות תלמידים וביצועי קורסים — בזמן אמת.</div>
@@ -1730,27 +1958,35 @@
         <!-- Small: Email -->
         <div class="bento-card medium reveal reveal-delay-5">
           <div class="bento-visual bento-visual-email">
-            <span class="bento-visual-icon">&#9993;</span>
+            <svg class="bento-visual-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </div>
           <div class="bento-card-title">דיוור</div>
           <div class="bento-card-desc">מערכת דיוור מובנית עם תבניות, אוטומציות וסגמנטציה.</div>
         </div>
 
-        <!-- Medium: AI -->
+        <!-- Medium: AI — FIX 4: BOARDi image -->
         <div class="bento-card medium reveal reveal-delay-6">
-          <span class="bento-badge">&#10024; בקרוב</span>
+          <span class="bento-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            בקרוב
+          </span>
           <div class="bento-visual bento-visual-ai">
-            <span class="bento-visual-icon">&#129302;</span>
+            <img src="../BOARDi/PNG/BOARDi_3.png" alt="BOARDi AI" class="bento-boardi-img">
           </div>
           <div class="bento-card-title">BOARDi AI</div>
           <div class="bento-card-desc">עוזר AI שיוצר קורסים, עונה לתלמידים ומנתח ביצועים אוטומטית.</div>
         </div>
       </div>
+
+      <!-- FIX 11: Distinct CTA after features -->
+      <div class="features-cta-wrap reveal reveal-delay-3">
+        <a href="#" class="section-cta outline">גלה את כל הפיצ'רים &larr;</a>
+      </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       4. VIDEO DEMO
+       4. VIDEO DEMO (FIX 5)
   ═══════════════════════════════════════════════════ -->
   <section class="video-demo" id="video-demo">
     <div class="container-narrow">
@@ -1760,13 +1996,14 @@
           <div class="play-btn" aria-label="הפעל סרטון">
             <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg>
           </div>
+          <span class="video-label">הדגמה · 2:30</span>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       5. AUDIENCE — Expandable Cards
+       5. AUDIENCE — Expandable Cards (FIX 2 — SVG icons, FIX 7 — Button affordance)
   ═══════════════════════════════════════════════════ -->
   <section class="audience" id="audience">
     <div class="container">
@@ -1775,34 +2012,50 @@
       <div class="audience-grid" id="audienceGrid">
         <!-- Card 1: Creators -->
         <div class="audience-card reveal reveal-delay-1" data-panel="panel-creators">
-          <span class="audience-icon">&#127912;</span>
+          <div class="audience-icon">
+            <div class="icon-box cyan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
           <div class="audience-card-title">יוצרים</div>
           <div class="audience-card-desc">יוצרי תוכן, בלוגרים ויזמים דיגיטליים שרוצים למנף ידע.</div>
-          <span class="audience-card-link">גלה עוד &larr;</span>
+          <button class="audience-card-btn">לחץ לפרטים נוספים <span class="arrow-icon">&larr;</span></button>
         </div>
 
         <!-- Card 2: Experts -->
         <div class="audience-card reveal reveal-delay-2" data-panel="panel-experts">
-          <span class="audience-icon">&#127891;</span>
+          <div class="audience-icon">
+            <div class="icon-box pink">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            </div>
+          </div>
           <div class="audience-card-title">מומחים</div>
           <div class="audience-card-desc">מרצים, יועצים ומאמנים עם ידע מקצועי למכור.</div>
-          <span class="audience-card-link">גלה עוד &larr;</span>
+          <button class="audience-card-btn">לחץ לפרטים נוספים <span class="arrow-icon">&larr;</span></button>
         </div>
 
         <!-- Card 3: Colleges -->
         <div class="audience-card reveal reveal-delay-3" data-panel="panel-colleges">
-          <span class="audience-icon">&#127979;</span>
+          <div class="audience-icon">
+            <div class="icon-box green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+          </div>
           <div class="audience-card-title">מכללות</div>
           <div class="audience-card-desc">מוסדות לימוד שצריכים מערכת מלאה לניהול סטודנטים.</div>
-          <span class="audience-card-link">גלה עוד &larr;</span>
+          <button class="audience-card-btn">לחץ לפרטים נוספים <span class="arrow-icon">&larr;</span></button>
         </div>
 
         <!-- Card 4: Organizations -->
         <div class="audience-card reveal reveal-delay-4" data-panel="panel-orgs">
-          <span class="audience-icon">&#127970;</span>
+          <div class="audience-icon">
+            <div class="icon-box navy">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            </div>
+          </div>
           <div class="audience-card-title">ארגונים</div>
           <div class="audience-card-desc">חברות שמחפשות פלטפורמה להכשרת עובדים.</div>
-          <span class="audience-card-link">גלה עוד &larr;</span>
+          <button class="audience-card-btn">לחץ לפרטים נוספים <span class="arrow-icon">&larr;</span></button>
         </div>
 
         <!-- Panel: Creators -->
@@ -1913,7 +2166,7 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       6. COMPARISON
+       6. COMPARISON (FIX 8 — Balanced rows)
   ═══════════════════════════════════════════════════ -->
   <section class="comparison" id="comparison">
     <div class="container-narrow">
@@ -1921,12 +2174,14 @@
 
       <div class="comparison-cards">
         <div class="comparison-card old reveal reveal-delay-1">
-          <div class="comparison-card-header">המצב הנוכחי</div>
+          <div class="comparison-card-header">Schooler (המצב הנוכחי)</div>
           <div class="comparison-row"><span class="comparison-icon">&#10060;</span> 3-4 כלים שונים לניהול</div>
           <div class="comparison-row"><span class="comparison-icon">&#10060;</span> עמלות של 5-10% על כל מכירה</div>
           <div class="comparison-row"><span class="comparison-icon">&#10060;</span> עיצוב מוגבל ותבניתי</div>
           <div class="comparison-row"><span class="comparison-icon">&#10060;</span> תמיכה באנגלית בלבד</div>
           <div class="comparison-row"><span class="comparison-icon">&#10060;</span> ללא AI מובנה</div>
+          <!-- FIX 8: Honest row where Schooler wins -->
+          <div class="comparison-row positive"><span class="comparison-icon">&#10004;</span> ותיק בשוק (מאז 2018)</div>
           <div class="comparison-price-row">
             <div class="comparison-price">&#8362;350+/חודש</div>
             <div class="comparison-price-label">+ עמלות על כל מכירה</div>
@@ -1940,6 +2195,8 @@
           <div class="comparison-row"><span class="comparison-icon">&#10004;</span> 6 תבניות + מותג מותאם</div>
           <div class="comparison-row"><span class="comparison-icon">&#10004;</span> תמיכה מלאה בעברית</div>
           <div class="comparison-row"><span class="comparison-icon">&#10004;</span> BOARDi AI מובנה</div>
+          <!-- FIX 8: Honest row where WHITEBOARD is newer -->
+          <div class="comparison-row negative-new"><span class="comparison-icon">&#10060;</span> חדש — 2025 (אבל רעננים!)</div>
           <div class="comparison-price-row">
             <div class="comparison-price">&#8362;149/חודש</div>
             <div class="comparison-price-label">ללא עמלות, ללא הפתעות</div>
@@ -1950,7 +2207,7 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       7. PRICING — 4 Plans synced with מסך תשלום
+       7. PRICING — 4 Plans (FIX 11 — CTA after pricing)
   ═══════════════════════════════════════════════════ -->
   <section class="pricing" id="pricing">
     <div class="container">
@@ -1978,8 +2235,12 @@
             <li><span class="check">&#10003;</span> 30 תלמידים</li>
             <li><span class="check">&#10003;</span> דף בית ספר בסיסי</li>
             <li><span class="check">&#10003;</span> תמיכה במייל</li>
-            <li class="locked"><span class="lock">&#128274;</span> דיוור</li>
-            <li class="locked"><span class="lock">&#128274;</span> BOARDi AI</li>
+            <li class="locked"><span class="lock">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span> דיוור</li>
+            <li class="locked"><span class="lock">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span> BOARDi AI</li>
           </ul>
           <a href="#" class="pricing-btn ghost">התחל בחינם</a>
           <div class="pricing-btn-note">ללא כרטיס אשראי</div>
@@ -2049,67 +2310,54 @@
           <a href="#" class="pricing-btn">צרו קשר</a>
         </div>
       </div>
+
+      <!-- FIX 11: CTA after pricing -->
+      <div class="pricing-cta-wrap reveal reveal-delay-3">
+        <a href="#" class="section-cta">בחר מסלול והתחל &larr;</a>
+      </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       8. TESTIMONIALS — Carousel
+       8. VALUE PROPS — Why WHITEBOARD (FIX 6 — replaces fake testimonials)
   ═══════════════════════════════════════════════════ -->
-  <section class="testimonials" id="testimonials">
-    <div class="container-narrow">
-      <h2 class="section-headline reveal">מה אומרים עלינו.</h2>
+  <section class="value-props" id="value-props">
+    <div class="container">
+      <h2 class="section-headline reveal">למה לבחור ב-<span class="gradient-text">WHITEBOARD</span>?</h2>
 
-      <div class="testimonial-carousel" id="testimonialCarousel">
-        <!-- Slide 1 -->
-        <div class="testimonial-slide active" data-index="0">
-          <div class="testimonial-quote-icon">"</div>
-          <p class="testimonial-text">עברתי מ-Teachable ל-WHITEBOARD ותוך שבוע כבר הייתי עם בית ספר מלא. הממשק פשוט מטורף — פשוט גוררים ושמים.</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">ר</div>
-            <div class="testimonial-author-info">
-              <div class="testimonial-name">רונית שמעוני</div>
-              <div class="testimonial-role">מרצה לעיצוב גרפי, 12 קורסים</div>
-            </div>
+      <div class="value-grid">
+        <!-- Card 1: Zero Fees -->
+        <div class="value-card reveal reveal-delay-1">
+          <div class="icon-box icon-box-lg cyan" style="margin:0 auto 20px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
+          <div class="value-card-title">אפס עמלות</div>
+          <div class="value-card-desc">בניגוד למתחרים, אנחנו לא גובים עמלה על העסקאות שלך. כל שקל שלך — שלך.</div>
         </div>
 
-        <!-- Slide 2 -->
-        <div class="testimonial-slide" data-index="1">
-          <div class="testimonial-quote-icon">"</div>
-          <p class="testimonial-text">הדבר הכי טוב שעשיתי לעסק שלי. מערכת אחת במקום ארבע, וחוסכת לי לפחות 10 שעות בשבוע.</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">א</div>
-            <div class="testimonial-author-info">
-              <div class="testimonial-name">אורי ברק</div>
-              <div class="testimonial-role">יועץ עסקי, 800 תלמידים</div>
-            </div>
+        <!-- Card 2: All-in-One -->
+        <div class="value-card reveal reveal-delay-2">
+          <div class="icon-box icon-box-lg pink" style="margin:0 auto 20px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
           </div>
+          <div class="value-card-title">הכל במקום אחד</div>
+          <div class="value-card-desc">לא צריך Vimeo לוידאו, לא צריך רב מסר למיילים. הכל מובנה במערכת.</div>
         </div>
 
-        <!-- Slide 3 -->
-        <div class="testimonial-slide" data-index="2">
-          <div class="testimonial-quote-icon">"</div>
-          <p class="testimonial-text">BOARDi AI שינה לי את הכל. בנה לי סילבוס של קורס שלם תוך 5 דקות, עם מבחנים ותעודות. לא מאמינה שזה בחינם.</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">מ</div>
-            <div class="testimonial-author-info">
-              <div class="testimonial-name">מיכל לוי</div>
-              <div class="testimonial-role">יוצרת תוכן, 3 קורסים ומועדון</div>
-            </div>
+        <!-- Card 3: Hebrew Support -->
+        <div class="value-card reveal reveal-delay-3">
+          <div class="icon-box icon-box-lg green" style="margin:0 auto 20px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
+          <div class="value-card-title">תמיכה בעברית מלאה</div>
+          <div class="value-card-desc">ממשק מלא בעברית, RTL מושלם, ותמיכה ישירה בעברית.</div>
         </div>
-      </div>
-
-      <div class="testimonial-dots" id="testimonialDots">
-        <div class="testimonial-dot active" data-index="0"></div>
-        <div class="testimonial-dot" data-index="1"></div>
-        <div class="testimonial-dot" data-index="2"></div>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       9. FAQ
+       9. FAQ (FIX 9 — Expanded answers)
   ═══════════════════════════════════════════════════ -->
   <section class="faq" id="faq">
     <div class="container-narrow">
@@ -2118,51 +2366,61 @@
       <div class="faq-list">
         <div class="faq-item reveal reveal-delay-1">
           <button class="faq-question" aria-expanded="false">
-            <span>האם אני צריך ידע טכני כדי להשתמש?</span>
+            <span>כמה עולה WHITEBOARD?</span>
             <span class="faq-arrow">+</span>
           </button>
           <div class="faq-answer">
-            <div class="faq-answer-inner">בכלל לא. הממשק בנוי על גרירה ושחרור, וכל דבר אפשר לעשות בלחיצת כפתור. אם אתם יודעים להשתמש ב-Word, אתם יודעים להשתמש ב-WHITEBOARD.</div>
+            <div class="faq-answer-inner">WHITEBOARD מציע 4 מסלולים: ניסיון חינמי (ללא כרטיס אשראי), מורה ב-&#8362;149/חודש, מחנך ב-&#8362;199/חודש, ומנהיג ב-&#8362;399/חודש. תשלום שנתי נותן 2 חודשים חינם. אפס עמלות על עסקאות בכל המסלולים.</div>
           </div>
         </div>
 
         <div class="faq-item reveal reveal-delay-2">
           <button class="faq-question" aria-expanded="false">
-            <span>מה קורה אחרי 30 יום חינם?</span>
+            <span>האם אני צריך ידע טכני כדי להשתמש?</span>
             <span class="faq-arrow">+</span>
           </button>
           <div class="faq-answer">
-            <div class="faq-answer-inner">תוכלו לבחור תוכנית בתשלום או להמשיך בגרסה החינמית המוגבלת. אנחנו לא גובים כרטיס אשראי בהרשמה — ללא סיכון.</div>
+            <div class="faq-answer-inner">בכלל לא. הממשק בנוי על גרירה ושחרור, וכל דבר אפשר לעשות בלחיצת כפתור. אם אתם יודעים להשתמש ב-Word, אתם יודעים להשתמש ב-WHITEBOARD. בנוסף, BOARDi AI יעזור לכם ליצור תוכן ולבנות מבנה קורס אוטומטית.</div>
           </div>
         </div>
 
         <div class="faq-item reveal reveal-delay-3">
           <button class="faq-question" aria-expanded="false">
-            <span>האם יש עמלות על מכירות?</span>
+            <span>מה קורה אחרי 30 יום חינם?</span>
             <span class="faq-arrow">+</span>
           </button>
           <div class="faq-answer">
-            <div class="faq-answer-inner">אפס עמלות. מה שאתם מוכרים — 100% נשאר אצלכם (פחות עמלת סליקה של חברת האשראי). אנחנו מרוויחים רק מהמנוי החודשי.</div>
+            <div class="faq-answer-inner">תוכלו לבחור תוכנית בתשלום או להמשיך בגרסה החינמית המוגבלת (קורס אחד, 30 תלמידים). אנחנו לא גובים כרטיס אשראי בהרשמה — ללא סיכון. התוכן שלכם נשמר גם אם לא שדרגתם, ותוכלו לשדרג בכל רגע.</div>
           </div>
         </div>
 
         <div class="faq-item reveal reveal-delay-4">
           <button class="faq-question" aria-expanded="false">
-            <span>האם אפשר לחבר דומיין משלי?</span>
+            <span>האם יש עמלות על מכירות?</span>
             <span class="faq-arrow">+</span>
           </button>
           <div class="faq-answer">
-            <div class="faq-answer-inner">כן! בתוכניות מחנך ומנהיג תוכלו לחבר דומיין מותאם אישית ולהציג את בית הספר שלכם בכתובת שלכם.</div>
+            <div class="faq-answer-inner">אפס עמלות. מה שאתם מוכרים — 100% נשאר אצלכם (פחות עמלת סליקה של חברת האשראי, בדרך כלל 2.4%+30 אג'). אנחנו מרוויחים רק מהמנוי החודשי שלכם — לכן האינטרס שלנו הוא שתצליחו, לא שתמכרו יותר כדי שנרוויח עמלות.</div>
           </div>
         </div>
 
         <div class="faq-item reveal reveal-delay-5">
           <button class="faq-question" aria-expanded="false">
+            <span>האם אפשר לחבר דומיין משלי?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">כן! בתוכניות מחנך ומנהיג תוכלו לחבר דומיין מותאם אישית ולהציג את בית הספר שלכם בכתובת שלכם. התהליך פשוט — מוסיפים רשומת CNAME ובתוך דקות הדומיין מחובר. תעודת SSL מותקנת אוטומטית.</div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal reveal-delay-6">
+          <button class="faq-question" aria-expanded="false">
             <span>מה זה BOARDi AI?</span>
             <span class="faq-arrow">+</span>
           </button>
           <div class="faq-answer">
-            <div class="faq-answer-inner">BOARDi הוא עוזר AI מובנה שעוזר לכם ליצור קורסים, לכתוב תוכן, לענות לתלמידים ולנתח ביצועים — אוטומטית. זמין בתוכניות מחנך ומנהיג.</div>
+            <div class="faq-answer-inner">BOARDi הוא עוזר AI מובנה שעוזר לכם ליצור קורסים, לכתוב תוכן, לענות לתלמידים ולנתח ביצועים — אוטומטית. הוא יודע לייצר סילבוס שלם מנושא, ליצור מבחנים, ולנתח את ההתקדמות של התלמידים שלכם. זמין בתוכניות מחנך ומנהיג.</div>
           </div>
         </div>
 
@@ -2172,7 +2430,7 @@
             <span class="faq-arrow">+</span>
           </button>
           <div class="faq-answer">
-            <div class="faq-answer-inner">WHITEBOARD נבנתה בישראל, בעברית, עם ממשק RTL מלא. כל התמיכה, התיעוד והממשק — בעברית מלאה.</div>
+            <div class="faq-answer-inner">WHITEBOARD נבנתה בישראל, בעברית, עם ממשק RTL מלא. כל התמיכה, התיעוד והממשק — בעברית מלאה. צוות התמיכה שלנו זמין בצ'אט ובמייל בעברית, ואנחנו מגיבים תוך שעות ספורות.</div>
           </div>
         </div>
       </div>
@@ -2180,17 +2438,19 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       10. FINAL CTA
+       10. FINAL CTA (FIX 4 — BOARDi SVG, FIX 11 — CTA copy)
   ═══════════════════════════════════════════════════ -->
   <section class="final-cta" id="final-cta">
     <div class="orb orb-cyan"></div>
     <div class="orb orb-pink"></div>
 
     <h2 class="reveal"><span class="gradient-text">מוכנים?</span></h2>
-    <p class="final-cta-subtitle reveal reveal-delay-1">הצטרפו לאלפי מרצים שכבר בונים את העתיד שלהם.</p>
-    <a href="#" class="hero-cta reveal reveal-delay-2">התחל בחינם &larr;</a>
+    <p class="final-cta-subtitle reveal reveal-delay-1">הצטרפו למרצים שכבר בונים את העתיד שלהם עם WHITEBOARD.</p>
+    <!-- FIX 11: Distinct final CTA -->
+    <a href="#" class="hero-cta reveal reveal-delay-2">הצטרף עכשיו — חינם &larr;</a>
 
-    <img src="BOARDi_5.png" alt="BOARDi mascot" class="final-cta-mascot boardi-float reveal reveal-delay-3" loading="lazy">
+    <!-- FIX 4: BOARDi SVG, 120px -->
+    <img src="../BOARDi/SVG/5.svg" alt="BOARDi mascot" class="final-cta-mascot boardi-float reveal reveal-delay-3" loading="lazy">
   </section>
 
   <!-- ═══════════════════════════════════════════════════
@@ -2285,40 +2545,30 @@
       mobileMenuClose.addEventListener('click', () => toggleMenu(false));
       mobileLinks.forEach((link) => link.addEventListener('click', () => toggleMenu(false)));
 
-      // ── Animated Counters ──
-      const counters = document.querySelectorAll('.proof-number[data-target]');
-      const counterObserver = new IntersectionObserver(
+      // ── Stat Pill Entrance Animation (FIX 3) ──
+      const statPills = document.querySelectorAll('.stat-pill');
+      const statsObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              animateCounter(entry.target);
-              counterObserver.unobserve(entry.target);
+              const pills = entry.target.querySelectorAll('.stat-pill');
+              pills.forEach((pill, i) => {
+                pill.style.opacity = '0';
+                pill.style.transform = 'translateY(20px)';
+                pill.style.transition = 'opacity 0.5s ease ' + (i * 0.12) + 's, transform 0.5s ease ' + (i * 0.12) + 's';
+                requestAnimationFrame(() => {
+                  pill.style.opacity = '1';
+                  pill.style.transform = 'translateY(0)';
+                });
+              });
+              statsObserver.unobserve(entry.target);
             }
           });
         },
-        { threshold: 0.5 }
+        { threshold: 0.3 }
       );
-      counters.forEach((el) => counterObserver.observe(el));
-
-      function animateCounter(el) {
-        const target = parseInt(el.dataset.target, 10);
-        const duration = 2000;
-        const startTime = performance.now();
-
-        function update(currentTime) {
-          const elapsed = currentTime - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          const current = Math.floor(eased * target);
-          el.textContent = current.toLocaleString('he-IL');
-          if (progress < 1) {
-            requestAnimationFrame(update);
-          } else {
-            el.textContent = target.toLocaleString('he-IL') + '+';
-          }
-        }
-        requestAnimationFrame(update);
-      }
+      const proofGrid = document.querySelector('.proof-grid');
+      if (proofGrid) statsObserver.observe(proofGrid);
 
       // ── Audience Expandable Panels ──
       const audienceCards = document.querySelectorAll('.audience-card[data-panel]');
@@ -2407,42 +2657,6 @@
           }
         });
       });
-
-      // ── Testimonial Carousel ──
-      const slides = document.querySelectorAll('.testimonial-slide');
-      const dots = document.querySelectorAll('.testimonial-dot');
-      let currentSlide = 0;
-      let autoRotateInterval;
-
-      function showSlide(index) {
-        slides.forEach((s) => s.classList.remove('active'));
-        dots.forEach((d) => d.classList.remove('active'));
-        slides[index].classList.add('active');
-        dots[index].classList.add('active');
-        currentSlide = index;
-      }
-
-      function nextSlide() {
-        showSlide((currentSlide + 1) % slides.length);
-      }
-
-      function startAutoRotate() {
-        autoRotateInterval = setInterval(nextSlide, 5000);
-      }
-
-      function resetAutoRotate() {
-        clearInterval(autoRotateInterval);
-        startAutoRotate();
-      }
-
-      dots.forEach((dot) => {
-        dot.addEventListener('click', () => {
-          showSlide(parseInt(dot.dataset.index, 10));
-          resetAutoRotate();
-        });
-      });
-
-      startAutoRotate();
 
       // ── Subtle Parallax on Scroll ──
       const heroContent = document.querySelector('.hero-content');
