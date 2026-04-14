@@ -248,8 +248,8 @@
       align-items: center;
       gap: 6px;
       padding: 9px 22px;
-      background: var(--white);
-      color: var(--navy);
+      background: var(--gradient-cyan);
+      color: var(--white);
       font-size: 14px;
       font-weight: 600;
       border-radius: var(--r-full);
@@ -257,9 +257,8 @@
       white-space: nowrap;
     }
     .btn-cta-nav:hover {
-      background: var(--cyan);
-      color: var(--white);
       box-shadow: 0 4px 16px rgba(56, 196, 242, 0.3);
+      transform: translateY(-1px);
     }
 
     /* Hamburger */
@@ -641,7 +640,7 @@
        HOW IT WORKS — 3 Steps (FIX 10)
     ═══════════════════════════════════════════════════════ */
     .how-it-works {
-      background: var(--white);
+      background: linear-gradient(180deg, var(--navy-deeper) 0%, var(--navy-dark) 30px, var(--white) 120px, var(--white) 100%);
       padding: var(--section-padding) 24px;
       text-align: center;
     }
@@ -855,7 +854,7 @@
        5. VIDEO DEMO — Navy Dark Section
     ═══════════════════════════════════════════════════════ */
     .video-demo {
-      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-dark) 100%);
+      background: linear-gradient(180deg, var(--light-bg) 0%, var(--navy) 80px, var(--navy-dark) 100%);
       padding: var(--section-padding) 24px;
       text-align: center;
       position: relative;
@@ -917,214 +916,315 @@
     }
 
     /* ═══════════════════════════════════════════════════════
-       6. AUDIENCE — Expandable Panels
+       6. AUDIENCE — Premium Tab-Based Showcase
     ═══════════════════════════════════════════════════════ */
     .audience {
-      background: var(--light-bg-alt);
-      padding: var(--section-padding) 24px;
+      background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy-deeper) 50%, var(--navy-dark) 100%);
+      padding: 110px 24px 120px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .audience::before {
+      content: '';
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      top: -200px;
+      right: -200px;
+      background: radial-gradient(circle, rgba(56, 196, 242, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .audience .section-headline {
+      color: var(--white);
+    }
+    .audience-subtitle {
+      font-size: 17px;
+      color: rgba(255, 255, 255, 0.4);
+      max-width: 420px;
+      margin: 14px auto 0;
+      line-height: 1.7;
     }
 
-    .audience-grid {
+    /* ── Tab Cards ── */
+    .audience-tabs {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 16px;
-      max-width: 1060px;
-      margin: 48px auto 0;
+      margin: 52px auto 0;
+      max-width: 860px;
+      position: relative;
+      z-index: 2;
     }
-    .audience-card {
-      background: var(--white);
-      border: 1px solid var(--border-color);
-      border-radius: var(--r);
-      padding: 32px 20px;
-      text-align: center;
+    .audience-tab {
+      padding: 22px 18px;
+      font-family: var(--font-he);
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.5);
       cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: var(--r);
+      position: relative;
       transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      border-right: 4px solid transparent;
     }
-    .audience-card:hover {
-      transform: translateY(-3px);
+    .audience-tab[data-target="panel-creators"] { border-right-color: var(--cyan); }
+    .audience-tab[data-target="panel-experts"] { border-right-color: var(--pink); }
+    .audience-tab[data-target="panel-colleges"] { border-right-color: var(--green); }
+    .audience-tab[data-target="panel-orgs"] { border-right-color: var(--yellow); }
+
+    .audience-tab:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: rgba(255, 255, 255, 0.7);
+      transform: translateY(-2px);
+    }
+    .audience-tab.active {
+      background: var(--white);
+      color: var(--navy-dark);
+      border-color: rgba(37, 62, 122, 0.08);
       box-shadow: var(--shadow-md);
     }
-    .audience-card.active {
-      border-color: var(--cyan);
-      box-shadow: var(--shadow-md), 0 0 0 1px rgba(56, 196, 242, 0.15);
-    }
-    .audience-icon {
-      margin-bottom: 14px;
-      display: flex;
-      justify-content: center;
-    }
-    .audience-icon .icon-box {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-    }
-    .audience-icon .icon-box svg {
-      width: 26px;
-      height: 26px;
-    }
-    .audience-card-title {
-      font-family: var(--font-brand);
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--navy-dark);
-      margin-bottom: 6px;
-    }
-    .audience-card-desc {
-      font-size: 13px;
-      font-weight: 400;
-      color: rgba(26, 47, 94, 0.55);
-      line-height: 1.5;
-      margin-bottom: 14px;
-    }
-    /* FIX 7: Better affordance button */
-    .audience-card-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 18px;
-      background: rgba(56, 196, 242, 0.08);
-      color: var(--cyan);
-      font-size: 13px;
-      font-weight: 600;
-      border-radius: var(--r-full);
-      border: 1.5px solid rgba(56, 196, 242, 0.2);
-      transition: all 0.25s;
-      font-family: var(--font-he);
-      cursor: pointer;
-    }
-    .audience-card-btn:hover {
-      background: rgba(56, 196, 242, 0.14);
-      border-color: var(--cyan);
-    }
-    .audience-card-btn .arrow-icon {
-      display: inline-block;
-      transition: transform 0.3s;
-    }
-    .audience-card:hover .audience-card-btn .arrow-icon {
-      animation: arrowBounce 0.6s ease infinite;
-    }
-    @keyframes arrowBounce {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(-4px); }
-    }
+    .audience-tab[data-target="panel-creators"].active { border-right-color: var(--cyan); }
+    .audience-tab[data-target="panel-experts"].active { border-right-color: var(--pink); }
+    .audience-tab[data-target="panel-colleges"].active { border-right-color: var(--green); }
+    .audience-tab[data-target="panel-orgs"].active { border-right-color: var(--yellow); }
 
-    /* Expandable Panel */
-    .audience-panel {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
-      opacity: 0;
-      grid-column: 1 / -1;
+    .audience-tab-icon {
+      width: 22px;
+      height: 22px;
+      opacity: 0.5;
+      transition: all 0.3s;
     }
-    .audience-panel.open {
-      max-height: 600px;
+    .audience-tab.active .audience-tab-icon {
       opacity: 1;
     }
-    .audience-panel-inner {
-      background: linear-gradient(135deg, var(--navy-deeper), var(--navy-dark));
-      border-radius: var(--r);
-      padding: 48px 40px;
-      text-align: right;
-      color: var(--white);
+    .audience-tab[data-target="panel-creators"].active .audience-tab-icon { color: var(--cyan); }
+    .audience-tab[data-target="panel-experts"].active .audience-tab-icon { color: var(--pink); }
+    .audience-tab[data-target="panel-colleges"].active .audience-tab-icon { color: var(--green); }
+    .audience-tab[data-target="panel-orgs"].active .audience-tab-icon { color: var(--yellow); }
+
+    /* ── Display Panel ── */
+    .audience-display {
+      max-width: 960px;
+      margin: 44px auto 0;
       position: relative;
-      margin-top: 14px;
+      z-index: 2;
     }
-    .panel-close {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
+
+    .audience-panel {
+      display: none;
+      animation: audienceFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .audience-panel.active {
+      display: block;
+    }
+    @keyframes audienceFadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .audience-panel-inner {
+      background: var(--white);
+      border: 1px solid var(--border-color);
+      border-right: 5px solid var(--cyan);
+      border-radius: 16px;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      overflow: hidden;
+      text-align: right;
+      box-shadow: var(--shadow-lg);
+    }
+    /* Color-match panel border to tab */
+    #panel-creators .audience-panel-inner { border-right-color: var(--cyan); }
+    #panel-experts .audience-panel-inner { border-right-color: var(--pink); }
+    #panel-colleges .audience-panel-inner { border-right-color: var(--green); }
+    #panel-orgs .audience-panel-inner { border-right-color: var(--yellow); }
+
+    /* ── Panel Left — Hero ── */
+    .panel-hero {
+      padding: 52px 44px;
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-      cursor: pointer;
-      color: var(--white);
-      font-size: 18px;
-      transition: background 0.2s;
+      border-left: 1px solid var(--border-color);
     }
-    .panel-close:hover { background: rgba(255, 255, 255, 0.2); }
+    .panel-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 18px;
+    }
+    #panel-creators .panel-label { color: var(--cyan); }
+    #panel-experts .panel-label { color: var(--pink); }
+    #panel-colleges .panel-label { color: var(--green); }
+    #panel-orgs .panel-label { color: #b8a000; }
 
     .panel-hero-text {
       font-family: var(--font-brand);
-      font-size: clamp(22px, 3vw, 30px);
+      font-size: clamp(26px, 3.2vw, 34px);
       font-weight: 700;
-      margin-bottom: 28px;
-      line-height: 1.2;
+      color: var(--navy-dark);
+      line-height: 1.3;
+      margin-bottom: 14px;
     }
-
-    .panel-features {
-      display: flex;
-      gap: 18px;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-    }
-    .panel-feature {
-      flex: 1;
-      min-width: 170px;
-      padding: 18px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: var(--r-sm);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    .panel-feature-title {
-      font-weight: 600;
+    .panel-hero-desc {
       font-size: 15px;
-      margin-bottom: 4px;
-    }
-    .panel-feature-desc {
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.5);
       font-weight: 400;
+      color: rgba(26, 47, 94, 0.55);
+      line-height: 1.75;
+      margin-bottom: 32px;
+      max-width: 380px;
     }
-
-    .panel-case-study {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: var(--r-sm);
-      padding: 20px;
-      margin-bottom: 24px;
-    }
-    .panel-case-study p {
-      font-size: 14px;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.7);
-      line-height: 1.7;
-    }
-    .panel-case-study strong {
-      color: var(--cyan);
-      font-weight: 600;
-    }
-
     .panel-cta {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 11px 28px;
+      align-self: flex-start;
+      gap: 10px;
+      padding: 13px 30px;
       background: var(--gradient-cyan);
       color: var(--white);
       font-size: 15px;
       font-weight: 600;
       border-radius: var(--r-full);
-      transition: all 0.25s;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 16px rgba(56, 196, 242, 0.15);
     }
     .panel-cta:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(56, 196, 242, 0.3);
+      box-shadow: 0 8px 28px rgba(56, 196, 242, 0.25);
+    }
+
+    /* ── Panel Right — Features + Quote ── */
+    .panel-content {
+      padding: 52px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .panel-stat-row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .panel-stat-number {
+      font-family: var(--font-brand);
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    #panel-creators .panel-stat-number { color: var(--cyan); }
+    #panel-experts .panel-stat-number { color: var(--pink); }
+    #panel-colleges .panel-stat-number { color: var(--green); }
+    #panel-orgs .panel-stat-number { color: #b8a000; }
+
+    .panel-stat-label {
+      font-size: 14px;
+      color: rgba(26, 47, 94, 0.45);
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    .panel-features {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+    .panel-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .panel-feature-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    #panel-creators .panel-feature-check { background: rgba(56, 196, 242, 0.1); }
+    #panel-experts .panel-feature-check { background: rgba(240, 86, 128, 0.1); }
+    #panel-colleges .panel-feature-check { background: rgba(125, 197, 122, 0.1); }
+    #panel-orgs .panel-feature-check { background: rgba(234, 214, 84, 0.15); }
+
+    .panel-feature-check svg {
+      width: 12px;
+      height: 12px;
+    }
+    #panel-creators .panel-feature-check svg { color: var(--cyan); }
+    #panel-experts .panel-feature-check svg { color: var(--pink); }
+    #panel-colleges .panel-feature-check svg { color: var(--green); }
+    #panel-orgs .panel-feature-check svg { color: #b8a000; }
+
+    .panel-feature-text {
+      flex: 1;
+    }
+    .panel-feature-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--navy-dark);
+      margin-bottom: 2px;
+    }
+    .panel-feature-desc {
+      font-size: 13.5px;
+      color: rgba(26, 47, 94, 0.45);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    /* Quote */
+    .panel-quote {
+      padding-top: 24px;
+      border-top: 1px solid var(--border-color);
+    }
+    .panel-quote-text {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(26, 47, 94, 0.55);
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+    .panel-quote-text strong {
+      color: var(--navy-dark);
+      font-style: normal;
+      font-weight: 600;
+    }
+    .panel-quote-author {
+      font-size: 13px;
+      color: rgba(26, 47, 94, 0.35);
+      font-weight: 500;
     }
 
     @media (max-width: 768px) {
-      .audience-grid { grid-template-columns: repeat(2, 1fr); }
-      .audience { padding: var(--section-padding-mobile) 20px; }
-      .audience-panel-inner { padding: 32px 20px; }
-      .panel-features { flex-direction: column; }
+      .audience { padding: 80px 20px 90px; }
+      .audience-tabs { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .audience-tab { font-size: 13.5px; padding: 16px 12px; }
+      .audience-panel-inner { grid-template-columns: 1fr; }
+      .panel-hero { padding: 36px 24px 20px; border-left: none; border-bottom: 1px solid var(--border-color); }
+      .panel-content { padding: 24px 24px 36px; }
+      .panel-stat-row { margin-bottom: 28px; padding-bottom: 24px; }
     }
     @media (max-width: 480px) {
-      .audience-grid { grid-template-columns: 1fr; }
+      .audience-tab-icon { display: none; }
+      .panel-hero { padding: 32px 22px 20px; }
+      .panel-content { padding: 20px 22px 32px; }
+      .panel-stat-number { font-size: 38px; }
     }
 
     /* ═══════════════════════════════════════════════════════
@@ -1142,95 +1242,70 @@
       font-size: clamp(30px, 4vw, 40px);
       font-weight: 700;
       color: var(--white);
-      margin-bottom: 48px;
+      margin-bottom: 52px;
     }
 
-    .comparison-cards {
+    .advantages-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      max-width: 860px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 960px;
       margin: 0 auto;
     }
-    .comparison-card {
-      border-radius: var(--r);
-      padding: 36px 28px;
-      text-align: right;
-    }
-    .comparison-card.old {
-      background: rgba(255, 255, 255, 0.03);
+    .advantage-card {
+      background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--r);
+      padding: 30px 24px;
+      text-align: right;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .comparison-card.new {
-      background: rgba(56, 196, 242, 0.06);
-      border: 1px solid rgba(56, 196, 242, 0.15);
+    .advantage-card:hover {
+      background: rgba(255, 255, 255, 0.07);
+      transform: translateY(-3px);
     }
-    .comparison-card-header {
+    .advantage-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(56, 196, 242, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .advantage-icon svg {
+      width: 20px;
+      height: 20px;
+      color: var(--cyan);
+    }
+    .advantage-title {
       font-family: var(--font-brand);
       font-size: 17px;
       font-weight: 700;
-      margin-bottom: 24px;
+      color: var(--white);
+      margin-bottom: 6px;
     }
-    .comparison-card.old .comparison-card-header { color: rgba(255, 255, 255, 0.35); }
-    .comparison-card.new .comparison-card-header { color: var(--cyan); }
-
-    .comparison-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      font-size: 14px;
+    .advantage-desc {
+      font-size: 13.5px;
       font-weight: 400;
+      color: rgba(255, 255, 255, 0.4);
+      line-height: 1.6;
     }
-    .comparison-card.old .comparison-row { color: rgba(255, 255, 255, 0.35); }
-    .comparison-card.new .comparison-row { color: rgba(255, 255, 255, 0.8); }
-    .comparison-icon {
-      font-size: 15px;
-      flex-shrink: 0;
-    }
-    .comparison-card.old .comparison-icon { opacity: 0.4; }
-    .comparison-row.positive { color: rgba(255, 255, 255, 0.6) !important; }
-    .comparison-row.positive .comparison-icon { opacity: 0.7 !important; }
-    .comparison-row.negative-new { color: rgba(255, 255, 255, 0.4) !important; }
-
-    .comparison-price-row {
-      margin-top: 20px;
-      padding: 18px;
-      border-radius: var(--r-sm);
-      text-align: center;
-    }
-    .comparison-card.old .comparison-price-row {
-      background: rgba(240, 86, 128, 0.06);
-    }
-    .comparison-card.new .comparison-price-row {
-      background: rgba(56, 196, 242, 0.08);
-    }
-    .comparison-price {
-      font-family: var(--font-brand);
-      font-size: 26px;
-      font-weight: 700;
-    }
-    .comparison-card.old .comparison-price { color: rgba(255, 255, 255, 0.3); }
-    .comparison-card.new .comparison-price { color: var(--cyan); }
-    .comparison-price-label {
-      font-size: 12px;
-      font-weight: 400;
-      margin-top: 4px;
-    }
-    .comparison-card.old .comparison-price-label { color: rgba(255, 255, 255, 0.2); }
-    .comparison-card.new .comparison-price-label { color: rgba(255, 255, 255, 0.45); }
 
     @media (max-width: 768px) {
-      .comparison-cards { grid-template-columns: 1fr; }
+      .advantages-grid { grid-template-columns: 1fr 1fr; }
       .comparison { padding: var(--section-padding-mobile) 20px; }
+    }
+    @media (max-width: 480px) {
+      .advantages-grid { grid-template-columns: 1fr; max-width: 360px; }
     }
 
     /* ═══════════════════════════════════════════════════════
        8. PRICING — 4 Plans Synced with Payment Screen
     ═══════════════════════════════════════════════════════ */
     .pricing {
-      background: var(--light-bg);
+      background: linear-gradient(180deg, var(--navy-deeper) 0%, var(--light-bg) 80px, var(--light-bg) 100%);
       padding: var(--section-padding) 24px;
       text-align: center;
     }
@@ -1288,7 +1363,7 @@
       gap: 18px;
       max-width: 1100px;
       margin: 0 auto;
-      align-items: start;
+      align-items: stretch;
     }
 
     .pricing-card {
@@ -1300,6 +1375,8 @@
       transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
     }
     .pricing-card:hover {
       transform: translateY(-4px);
@@ -1404,6 +1481,7 @@
     .pricing-features {
       text-align: right;
       margin-bottom: 20px;
+      flex: 1;
     }
     .pricing-features li {
       display: flex;
@@ -1486,60 +1564,6 @@
     }
 
     /* ═══════════════════════════════════════════════════════
-       9. VALUE PROPS — Why WHITEBOARD (FIX 6)
-    ═══════════════════════════════════════════════════════ */
-    .value-props {
-      background: var(--white);
-      padding: var(--section-padding) 24px;
-      text-align: center;
-      position: relative;
-    }
-
-    .value-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      max-width: 1000px;
-      margin: 48px auto 0;
-    }
-    .value-card {
-      background: var(--light-bg);
-      border-radius: var(--r);
-      padding: 36px 28px;
-      text-align: center;
-      border-top: 3px solid transparent;
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .value-card:nth-child(1) { border-top-color: var(--cyan); }
-    .value-card:nth-child(2) { border-top-color: var(--pink); }
-    .value-card:nth-child(3) { border-top-color: var(--green); }
-    .value-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-md);
-    }
-    .value-card .icon-box-lg {
-      margin: 0 auto 20px;
-    }
-    .value-card-title {
-      font-family: var(--font-brand);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--navy-dark);
-      margin-bottom: 10px;
-    }
-    .value-card-desc {
-      font-size: 14px;
-      font-weight: 400;
-      color: rgba(26, 47, 94, 0.6);
-      line-height: 1.7;
-    }
-
-    @media (max-width: 768px) {
-      .value-grid { grid-template-columns: 1fr; max-width: 420px; }
-      .value-props { padding: var(--section-padding-mobile) 20px; }
-    }
-
-    /* ═══════════════════════════════════════════════════════
        10. FAQ — Minimal Accordion (FIX 9)
     ═══════════════════════════════════════════════════════ */
     .faq {
@@ -1601,7 +1625,7 @@
        11. FINAL CTA — Navy Gradient
     ═══════════════════════════════════════════════════════ */
     .final-cta {
-      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deeper) 100%);
+      background: linear-gradient(180deg, var(--light-bg) 0%, var(--navy) 80px, var(--navy-deeper) 100%);
       padding: var(--section-padding) 24px;
       text-align: center;
       position: relative;
@@ -1748,7 +1772,7 @@
   ═══════════════════════════════════════════════════ -->
   <nav class="navbar" id="navbar" role="navigation" aria-label="ניווט ראשי">
     <div class="container">
-      <a href="#" class="navbar-logo" aria-label="WHITEBOARD דף הבית">WHITEBOARD</a>
+      <a href="#" class="navbar-logo" aria-label="WHITEBOARD דף הבית"><img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-08.png" alt="WHITEBOARD" style="height:32px;width:auto;"></a>
       <div class="navbar-links">
         <a href="#features">יכולות</a>
         <a href="#audience">למי מתאים</a>
@@ -1787,8 +1811,8 @@
       <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD" class="hero-logo" style="opacity:1;">
 
       <h1>
-        בנה אקדמיה דיגיטלית.
-        <span class="line-gradient">תוך דקות.</span>
+        הפוך את הידע שלך
+        <span class="line-gradient">למערכת קורסים דיגיטליים.</span>
       </h1>
       <p class="hero-subtitle">קורסים, קהילות, בתי ספר ותכניות הכשרה — הכל במערכת אחת.<br>עם AI שעוזר לך בדרך.</p>
 
@@ -1801,20 +1825,6 @@
         </a>
       </div>
 
-      <div class="hero-trust">
-        <span class="trust-pill">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          אפס עמלות
-        </span>
-        <span class="trust-pill">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          30 יום חינם
-        </span>
-        <span class="trust-pill">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          ללא כרטיס אשראי
-        </span>
-      </div>
     </div>
 
     <!-- FIX 5: Video placeholder with cover image -->
@@ -1829,60 +1839,8 @@
       </div>
     </div>
 
-    <!-- FIX 4: BOARDi in hero -->
-    <img src="../BOARDi/PNG/BOARDi_1.png" alt="BOARDi" class="hero-boardi boardi-float">
   </section>
 
-  <!-- ═══════════════════════════════════════════════════
-       2. SOCIAL PROOF — Factual Stats (FIX 3)
-  ═══════════════════════════════════════════════════ -->
-  <section class="social-proof" id="social-proof">
-    <div class="proof-grid reveal">
-      <!-- Stat 1: 0% commission -->
-      <div class="stat-pill">
-        <div class="icon-box cyan">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <div class="stat-pill-text">
-          <div class="stat-pill-value">0% עמלה</div>
-          <div class="stat-pill-label">הכל שלך</div>
-        </div>
-      </div>
-
-      <!-- Stat 2: 6 templates -->
-      <div class="stat-pill">
-        <div class="icon-box cyan">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        </div>
-        <div class="stat-pill-text">
-          <div class="stat-pill-value">6 תבניות</div>
-          <div class="stat-pill-label">לבית ספר</div>
-        </div>
-      </div>
-
-      <!-- Stat 3: 30 days free -->
-      <div class="stat-pill">
-        <div class="icon-box cyan">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        </div>
-        <div class="stat-pill-text">
-          <div class="stat-pill-value">30 יום חינם</div>
-          <div class="stat-pill-label">ללא כרטיס</div>
-        </div>
-      </div>
-
-      <!-- Stat 4: Built-in AI -->
-      <div class="stat-pill">
-        <div class="icon-box cyan">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
-        </div>
-        <div class="stat-pill-text">
-          <div class="stat-pill-value">AI מובנה</div>
-          <div class="stat-pill-label">BOARDi</div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ═══════════════════════════════════════════════════
        HOW IT WORKS — 3 Steps (FIX 10)
@@ -1966,10 +1924,6 @@
 
         <!-- Medium: AI — FIX 4: BOARDi image -->
         <div class="bento-card medium reveal reveal-delay-6">
-          <span class="bento-badge">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            בקרוב
-          </span>
           <div class="bento-visual bento-visual-ai">
             <img src="../BOARDi/PNG/BOARDi_3.png" alt="BOARDi AI" class="bento-boardi-img">
           </div>
@@ -1978,10 +1932,6 @@
         </div>
       </div>
 
-      <!-- FIX 11: Distinct CTA after features -->
-      <div class="features-cta-wrap reveal reveal-delay-3">
-        <a href="#" class="section-cta outline">גלה את כל הפיצ'רים &larr;</a>
-      </div>
     </div>
   </section>
 
@@ -2007,160 +1957,211 @@
   ═══════════════════════════════════════════════════ -->
   <section class="audience" id="audience">
     <div class="container">
-      <h2 class="section-headline reveal">נבנה בשבילך.</h2>
+      <h2 class="section-headline reveal">בחרו את הנתיב שלכם.</h2>
 
-      <div class="audience-grid" id="audienceGrid">
-        <!-- Card 1: Creators -->
-        <div class="audience-card reveal reveal-delay-1" data-panel="panel-creators">
-          <div class="audience-icon">
-            <div class="icon-box cyan">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            </div>
-          </div>
-          <div class="audience-card-title">יוצרים</div>
-          <div class="audience-card-desc">יוצרי תוכן, בלוגרים ויזמים דיגיטליים שרוצים למנף ידע.</div>
-          <button class="audience-card-btn">לחץ לפרטים נוספים <span class="arrow-icon">&larr;</span></button>
-        </div>
+      <!-- Tab Bar -->
+      <div class="audience-tabs reveal" role="tablist">
+        <button class="audience-tab active" role="tab" aria-selected="true" data-target="panel-creators">
+          <svg class="audience-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          יוצרי תוכן
+        </button>
+        <button class="audience-tab" role="tab" aria-selected="false" data-target="panel-experts">
+          <svg class="audience-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          מומחים ומרצים
+        </button>
+        <button class="audience-tab" role="tab" aria-selected="false" data-target="panel-colleges">
+          <svg class="audience-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          מכללות ומוסדות
+        </button>
+        <button class="audience-tab" role="tab" aria-selected="false" data-target="panel-orgs">
+          <svg class="audience-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+          ארגונים וחברות
+        </button>
+      </div>
 
-        <!-- Card 2: Experts -->
-        <div class="audience-card reveal reveal-delay-2" data-panel="panel-experts">
-          <div class="audience-icon">
-            <div class="icon-box pink">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-            </div>
-          </div>
-          <div class="audience-card-title">מומחים</div>
-          <div class="audience-card-desc">מרצים, יועצים ומאמנים עם ידע מקצועי למכור.</div>
-          <button class="audience-card-btn">לחץ לפרטים נוספים <span class="arrow-icon">&larr;</span></button>
-        </div>
-
-        <!-- Card 3: Colleges -->
-        <div class="audience-card reveal reveal-delay-3" data-panel="panel-colleges">
-          <div class="audience-icon">
-            <div class="icon-box green">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            </div>
-          </div>
-          <div class="audience-card-title">מכללות</div>
-          <div class="audience-card-desc">מוסדות לימוד שצריכים מערכת מלאה לניהול סטודנטים.</div>
-          <button class="audience-card-btn">לחץ לפרטים נוספים <span class="arrow-icon">&larr;</span></button>
-        </div>
-
-        <!-- Card 4: Organizations -->
-        <div class="audience-card reveal reveal-delay-4" data-panel="panel-orgs">
-          <div class="audience-icon">
-            <div class="icon-box navy">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-            </div>
-          </div>
-          <div class="audience-card-title">ארגונים</div>
-          <div class="audience-card-desc">חברות שמחפשות פלטפורמה להכשרת עובדים.</div>
-          <button class="audience-card-btn">לחץ לפרטים נוספים <span class="arrow-icon">&larr;</span></button>
-        </div>
+      <!-- Display Area -->
+      <div class="audience-display">
 
         <!-- Panel: Creators -->
-        <div class="audience-panel" id="panel-creators">
+        <div class="audience-panel active" id="panel-creators" role="tabpanel">
           <div class="audience-panel-inner">
-            <button class="panel-close" aria-label="סגור">&times;</button>
-            <div class="panel-hero-text">הבמה שלך. הקהל שלך.<br><span class="gradient-text">ההכנסה שלך.</span></div>
-            <div class="panel-features">
-              <div class="panel-feature">
-                <div class="panel-feature-title">קורסים ללא הגבלה</div>
-                <div class="panel-feature-desc">צרו כמה קורסים שתרצו, ללא הגבלה על תלמידים או תוכן.</div>
+            <div class="panel-hero">
+              <div class="panel-label">ליוצרי תוכן</div>
+              <div class="panel-hero-text">מנפו את הקהילה שלכם<br><span class="gradient-text">לרווח.</span></div>
+              <div class="panel-hero-desc">קורסים, קהילת מנויים ודיוור אוטומטי — הכל במקום אחד. בלי עמלות, בלי פשרות.</div>
+              <a href="#" class="panel-cta">התחל בחינם &larr;</a>
+            </div>
+            <div class="panel-content">
+              <div class="panel-stat-row">
+                <span class="panel-stat-number">&#8362;12,000</span>
+                <span class="panel-stat-label">הכנסה חודשית ממוצעת<br>ליוצר פעיל</span>
               </div>
-              <div class="panel-feature">
-                <div class="panel-feature-title">מועדון קהילה</div>
-                <div class="panel-feature-desc">בנו קהילה סגורה עם תוכן בלעדי ומנוי חודשי.</div>
+              <div class="panel-features">
+                <div class="panel-feature">
+                  <div class="panel-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="panel-feature-text">
+                    <div class="panel-feature-title">קורסים ללא הגבלה</div>
+                    <div class="panel-feature-desc">צרו כמה שתרצו, ללא הגבלה על תלמידים או תוכן.</div>
+                  </div>
+                </div>
+                <div class="panel-feature">
+                  <div class="panel-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="panel-feature-text">
+                    <div class="panel-feature-title">מועדון קהילה</div>
+                    <div class="panel-feature-desc">קהילה סגורה עם תוכן בלעדי, צ'אט ומנוי חודשי.</div>
+                  </div>
+                </div>
+                <div class="panel-feature">
+                  <div class="panel-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="panel-feature-text">
+                    <div class="panel-feature-title">BOARDi AI</div>
+                    <div class="panel-feature-desc">עוזר AI שיוצר תוכן, עונה לתלמידים ומנתח ביצועים.</div>
+                  </div>
+                </div>
               </div>
-              <div class="panel-feature">
-                <div class="panel-feature-title">BOARDi AI</div>
-                <div class="panel-feature-desc">עוזר AI שיוצר תוכן, עונה לתלמידים ומנתח ביצועים.</div>
+              <div class="panel-quote">
+                <div class="panel-quote-text">"הקמתי 3 קורסים ומועדון עם 200 חברים תוך חודש. <strong>סוף סוף הכל במקום אחד.</strong>"</div>
+                <div class="panel-quote-author">— מיכל לוי, יוצרת תוכן</div>
               </div>
             </div>
-            <div class="panel-case-study">
-              <p><strong>מיכל לוי</strong> — יוצרת תוכן. הקימה 3 קורסים ומועדון עם 200 חברים תוך חודש. הכנסה חודשית: <strong>&#8362;12,000</strong></p>
-            </div>
-            <a href="#" class="panel-cta">התחל כיוצר &larr;</a>
           </div>
         </div>
 
         <!-- Panel: Experts -->
-        <div class="audience-panel" id="panel-experts">
+        <div class="audience-panel" id="panel-experts" role="tabpanel">
           <div class="audience-panel-inner">
-            <button class="panel-close" aria-label="סגור">&times;</button>
-            <div class="panel-hero-text">הידע שלך.<br><span class="gradient-text">הפלטפורמה שלנו.</span></div>
-            <div class="panel-features">
-              <div class="panel-feature">
-                <div class="panel-feature-title">תכניות הכשרה</div>
-                <div class="panel-feature-desc">בנו מסלולי לימוד מקצועיים עם תעודות סיום.</div>
+            <div class="panel-hero">
+              <div class="panel-label">למומחים ומרצים</div>
+              <div class="panel-hero-text">תייעלו את ההכשרה שלכם<br><span class="gradient-text">בלי לפגוע באיכות הלמידה.</span></div>
+              <div class="panel-hero-desc">קורסים מקצועיים, תעודות סיום ומעקב תלמידים — בלי עמלות נסתרות ובלי ניהול ידני.</div>
+              <a href="#" class="panel-cta">התחל בחינם &larr;</a>
+            </div>
+            <div class="panel-content">
+              <div class="panel-stat-row">
+                <span class="panel-stat-number">15</span>
+                <span class="panel-stat-label">שעות חיסכון בחודש<br>על ניהול ידני</span>
               </div>
-              <div class="panel-feature">
-                <div class="panel-feature-title">תעודות סיום</div>
-                <div class="panel-feature-desc">הנפיקו תעודות מותאמות אישית בסיום כל קורס.</div>
+              <div class="panel-features">
+                <div class="panel-feature">
+                  <div class="panel-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="panel-feature-text">
+                    <div class="panel-feature-title">תכניות הכשרה</div>
+                    <div class="panel-feature-desc">מסלולי לימוד מובנים עם שלבים ותנאי מעבר.</div>
+                  </div>
+                </div>
+                <div class="panel-feature">
+                  <div class="panel-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="panel-feature-text">
+                    <div class="panel-feature-title">תעודות סיום</div>
+                    <div class="panel-feature-desc">תעודות מותאמות אישית בסיום כל קורס.</div>
+                  </div>
+                </div>
+                <div class="panel-feature">
+                  <div class="panel-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="panel-feature-text">
+                    <div class="panel-feature-title">0% עמלה</div>
+                    <div class="panel-feature-desc">כל שקל שנכנס — שלכם. בלי עמלות נסתרות.</div>
+                  </div>
+                </div>
               </div>
-              <div class="panel-feature">
-                <div class="panel-feature-title">אנליטיקס מתקדם</div>
-                <div class="panel-feature-desc">עקבו אחרי ביצועים, מכירות והתקדמות תלמידים.</div>
+              <div class="panel-quote">
+                <div class="panel-quote-text">"העברתי הכל מסקולר. חסכתי <strong>&#8362;1,800 בשנה</strong> ו-<strong>15 שעות בחודש</strong>. זה פשוט עובד."</div>
+                <div class="panel-quote-author">— דוד כהן, מרצה לשיווק דיגיטלי</div>
               </div>
             </div>
-            <div class="panel-case-study">
-              <p><strong>דוד כהן</strong> — מרצה לשיווק. העביר את כל הקורסים מסקולר ל-WHITEBOARD. חסך <strong>&#8362;1,800/שנה</strong> ו-<strong>15 שעות עבודה בחודש</strong>.</p>
-            </div>
-            <a href="#" class="panel-cta">התחל כמומחה &larr;</a>
           </div>
         </div>
 
         <!-- Panel: Colleges -->
-        <div class="audience-panel" id="panel-colleges">
+        <div class="audience-panel" id="panel-colleges" role="tabpanel">
           <div class="audience-panel-inner">
-            <button class="panel-close" aria-label="סגור">&times;</button>
-            <div class="panel-hero-text">המכללה שלך.<br><span class="gradient-text">המערכת שלנו.</span></div>
-            <div class="panel-features">
-              <div class="panel-feature">
-                <div class="panel-feature-title">בתי ספר עם 6 תבניות</div>
-                <div class="panel-feature-desc">עיצוב מותאם עם דפי נחיתה, מותג ודומיין מותאם אישית.</div>
+            <div class="panel-hero">
+              <div class="panel-label">למכללות ומוסדות</div>
+              <div class="panel-hero-text">חווית למידה דיגיטלית<br><span class="gradient-text">שמתאימה ל-2026.</span></div>
+              <div class="panel-hero-desc">מרצים, תלמידים, תשלומים, אתרי קורסים ותקשורת אוטומטית — מערכת אחת לכל הניהול.</div>
+              <a href="#" class="panel-cta">התחל בחינם &larr;</a>
+            </div>
+            <div class="panel-content">
+              <div class="panel-stat-row">
+                <span class="panel-stat-number">500+</span>
+                <span class="panel-stat-label">תלמידים במכללה אחת<br>מערכת אחת</span>
               </div>
-              <div class="panel-feature">
-                <div class="panel-feature-title">ניהול תלמידים</div>
-                <div class="panel-feature-desc">מעקב מלא אחרי הרשמות, תשלומים והתקדמות.</div>
+              <div class="panel-features">
+                <div class="panel-feature">
+                  <div class="panel-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="panel-feature-text">
+                    <div class="panel-feature-title">6 תבניות אתר</div>
+                    <div class="panel-feature-desc">עיצוב מותאם עם דפי נחיתה, מותג ודומיין מותאם אישית.</div>
+                  </div>
+                </div>
+                <div class="panel-feature">
+                  <div class="panel-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="panel-feature-text">
+                    <div class="panel-feature-title">ניהול תלמידים ומרצים</div>
+                    <div class="panel-feature-desc">מעקב מלא אחרי הרשמות, תשלומים, הרשאות והתקדמות.</div>
+                  </div>
+                </div>
+                <div class="panel-feature">
+                  <div class="panel-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="panel-feature-text">
+                    <div class="panel-feature-title">דיוור אוטומטי</div>
+                    <div class="panel-feature-desc">תזכורות, עדכונים, קמפיינים ומבצעים — אוטומטית.</div>
+                  </div>
+                </div>
               </div>
-              <div class="panel-feature">
-                <div class="panel-feature-title">דיוור מתקדם</div>
-                <div class="panel-feature-desc">תקשורת אוטומטית עם תלמידים — תזכורות, עדכונים ומבצעים.</div>
+              <div class="panel-quote">
+                <div class="panel-quote-text">"3 מרצים, מערכת אחת לכל הניהול. <strong>חסכנו 3 כלים נפרדים.</strong>"</div>
+                <div class="panel-quote-author">— מכללת נוף, 500 תלמידים</div>
               </div>
             </div>
-            <div class="panel-case-study">
-              <p><strong>מכללת נוף</strong> — 500 תלמידים, 12 קורסים, 3 מרצים. מערכת אחת לכל הניהול.</p>
-            </div>
-            <a href="#" class="panel-cta">התחל כמכללה &larr;</a>
           </div>
         </div>
 
         <!-- Panel: Organizations -->
-        <div class="audience-panel" id="panel-orgs">
+        <div class="audience-panel" id="panel-orgs" role="tabpanel">
           <div class="audience-panel-inner">
-            <button class="panel-close" aria-label="סגור">&times;</button>
-            <div class="panel-hero-text">הכשרת עובדים.<br><span class="gradient-text">ברמה אחרת.</span></div>
-            <div class="panel-features">
-              <div class="panel-feature">
-                <div class="panel-feature-title">תכניות הכשרה</div>
-                <div class="panel-feature-desc">מסלולי onboarding והכשרה מקצועית לכל מחלקה.</div>
+            <div class="panel-hero">
+              <div class="panel-label">לארגונים וחברות</div>
+              <div class="panel-hero-text">רכזו את הידע הארגוני<br><span class="gradient-text">עם פילוח הרשאות מתקדם.</span></div>
+              <div class="panel-hero-desc">מסלולי onboarding, דוחות מותאמים ואינטגרציות מלאות — פלטפורמה ארגונית להכשרה פנימית.</div>
+              <a href="#" class="panel-cta">צור קשר &larr;</a>
+            </div>
+            <div class="panel-content">
+              <div class="panel-stat-row">
+                <span class="panel-stat-number">40%</span>
+                <span class="panel-stat-label">ירידה בזמן<br>onboarding</span>
               </div>
-              <div class="panel-feature">
-                <div class="panel-feature-title">API מלא</div>
-                <div class="panel-feature-desc">אינטגרציה מלאה עם המערכות הקיימות בארגון.</div>
+              <div class="panel-features">
+                <div class="panel-feature">
+                  <div class="panel-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="panel-feature-text">
+                    <div class="panel-feature-title">תכניות הכשרה</div>
+                    <div class="panel-feature-desc">מסלולי onboarding והכשרה מקצועית לכל מחלקה.</div>
+                  </div>
+                </div>
+                <div class="panel-feature">
+                  <div class="panel-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="panel-feature-text">
+                    <div class="panel-feature-title">API מלא</div>
+                    <div class="panel-feature-desc">אינטגרציה מלאה עם המערכות הקיימות בארגון.</div>
+                  </div>
+                </div>
+                <div class="panel-feature">
+                  <div class="panel-feature-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="panel-feature-text">
+                    <div class="panel-feature-title">אנליטיקס ארגוני</div>
+                    <div class="panel-feature-desc">דוחות מותאמים, ניהול הרשאות מתקדם ו-SSO.</div>
+                  </div>
+                </div>
               </div>
-              <div class="panel-feature">
-                <div class="panel-feature-title">אנליטיקס ארגוני</div>
-                <div class="panel-feature-desc">דוחות מותאמים, SSO (בקרוב) וניהול הרשאות מתקדם.</div>
+              <div class="panel-quote">
+                <div class="panel-quote-text">"ירידה של <strong>40% בזמן onboarding</strong>. הכל אוטומטי, הכל מדיד."</div>
+                <div class="panel-quote-author">— TechFlow, 2,000 עובדים</div>
               </div>
             </div>
-            <div class="panel-case-study">
-              <p><strong>חברת TechFlow</strong> — 2,000 עובדים, 8 תכניות הכשרה, ירידה של <strong>40%</strong> בזמן onboarding.</p>
-            </div>
-            <a href="#" class="panel-cta">צור קשר &larr;</a>
           </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -2169,38 +2170,54 @@
        6. COMPARISON (FIX 8 — Balanced rows)
   ═══════════════════════════════════════════════════ -->
   <section class="comparison" id="comparison">
-    <div class="container-narrow">
-      <h2 class="reveal">למה לעבור ל-<span class="gradient-text">WHITEBOARD</span>?</h2>
+    <div class="container">
+      <h2 class="reveal">למה דווקא <span class="gradient-text">וויטבורד</span>?</h2>
 
-      <div class="comparison-cards">
-        <div class="comparison-card old reveal reveal-delay-1">
-          <div class="comparison-card-header">Schooler (המצב הנוכחי)</div>
-          <div class="comparison-row"><span class="comparison-icon">&#10060;</span> 3-4 כלים שונים לניהול</div>
-          <div class="comparison-row"><span class="comparison-icon">&#10060;</span> עמלות של 5-10% על כל מכירה</div>
-          <div class="comparison-row"><span class="comparison-icon">&#10060;</span> עיצוב מוגבל ותבניתי</div>
-          <div class="comparison-row"><span class="comparison-icon">&#10060;</span> תמיכה באנגלית בלבד</div>
-          <div class="comparison-row"><span class="comparison-icon">&#10060;</span> ללא AI מובנה</div>
-          <!-- FIX 8: Honest row where Schooler wins -->
-          <div class="comparison-row positive"><span class="comparison-icon">&#10004;</span> ותיק בשוק (מאז 2018)</div>
-          <div class="comparison-price-row">
-            <div class="comparison-price">&#8362;350+/חודש</div>
-            <div class="comparison-price-label">+ עמלות על כל מכירה</div>
-          </div>
+      <div class="advantages-grid">
+        <div class="advantage-card reveal reveal-delay-1">
+          <div class="advantage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="advantage-title">0% עמלות</div>
+          <div class="advantage-desc">כל שקל שנכנס — שלכם. ללא עמלות נסתרות, לעולם.</div>
         </div>
-
-        <div class="comparison-card new reveal reveal-delay-2">
-          <div class="comparison-card-header">עם WHITEBOARD</div>
-          <div class="comparison-row"><span class="comparison-icon">&#10004;</span> הכל במערכת אחת</div>
-          <div class="comparison-row"><span class="comparison-icon">&#10004;</span> אפס עמלות — 100% שלך</div>
-          <div class="comparison-row"><span class="comparison-icon">&#10004;</span> 6 תבניות + מותג מותאם</div>
-          <div class="comparison-row"><span class="comparison-icon">&#10004;</span> תמיכה מלאה בעברית</div>
-          <div class="comparison-row"><span class="comparison-icon">&#10004;</span> BOARDi AI מובנה</div>
-          <!-- FIX 8: Honest row where WHITEBOARD is newer -->
-          <div class="comparison-row negative-new"><span class="comparison-icon">&#10060;</span> חדש — 2025 (אבל רעננים!)</div>
-          <div class="comparison-price-row">
-            <div class="comparison-price">&#8362;149/חודש</div>
-            <div class="comparison-price-label">ללא עמלות, ללא הפתעות</div>
-          </div>
+        <div class="advantage-card reveal reveal-delay-1">
+          <div class="advantage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+          <div class="advantage-title">הכל במקום אחד</div>
+          <div class="advantage-desc">קורסים, מועדונים, בתי ספר, דיוור ואנליטיקס — מערכת אחת.</div>
+        </div>
+        <div class="advantage-card reveal reveal-delay-1">
+          <div class="advantage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="advantage-title">עברית מלאה</div>
+          <div class="advantage-desc">ממשק RTL מושלם, תמיכה בעברית ותוכן מותאם לשוק הישראלי.</div>
+        </div>
+        <div class="advantage-card reveal reveal-delay-2">
+          <div class="advantage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-2 4-4 4s-4-2.05-4-4a4 4 0 0 1 4-4z"/><path d="M20 17.5c0 2.5-3.6 4.5-8 4.5s-8-2-8-4.5"/></svg></div>
+          <div class="advantage-title">BOARDi AI</div>
+          <div class="advantage-desc">עוזר AI שיוצר קורסים, עונה לתלמידים ומנתח ביצועים אוטומטית.</div>
+        </div>
+        <div class="advantage-card reveal reveal-delay-2">
+          <div class="advantage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="advantage-title">6 תבניות אתר</div>
+          <div class="advantage-desc">בית ספר מותאם אישית עם דומיין, מותג ודפי נחיתה מעוצבים.</div>
+        </div>
+        <div class="advantage-card reveal reveal-delay-2">
+          <div class="advantage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div class="advantage-title">דיוור מובנה</div>
+          <div class="advantage-desc">קמפיינים, סדרות אוטומטיות ותקשורת עם תלמידים — בלי כלים חיצוניים.</div>
+        </div>
+        <div class="advantage-card reveal reveal-delay-3">
+          <div class="advantage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+          <div class="advantage-title">אנליטיקס מתקדם</div>
+          <div class="advantage-desc">דוחות מכירות, התקדמות תלמידים, מקורות הרשמה ונתוני נטישה.</div>
+        </div>
+        <div class="advantage-card reveal reveal-delay-3">
+          <div class="advantage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="advantage-title">מועדוני קהילה</div>
+          <div class="advantage-desc">קהילות סגורות עם צ'אט, אירועים, לידרבורד ומנוי חודשי.</div>
+        </div>
+        <div class="advantage-card reveal reveal-delay-3">
+          <div class="advantage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></div>
+          <div class="advantage-title">תעודות סיום</div>
+          <div class="advantage-desc">תעודות מותאמות אישית שמונפקות אוטומטית בסיום כל קורס.</div>
         </div>
       </div>
     </div>
@@ -2318,43 +2335,6 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════
-       8. VALUE PROPS — Why WHITEBOARD (FIX 6 — replaces fake testimonials)
-  ═══════════════════════════════════════════════════ -->
-  <section class="value-props" id="value-props">
-    <div class="container">
-      <h2 class="section-headline reveal">למה לבחור ב-<span class="gradient-text">WHITEBOARD</span>?</h2>
-
-      <div class="value-grid">
-        <!-- Card 1: Zero Fees -->
-        <div class="value-card reveal reveal-delay-1">
-          <div class="icon-box icon-box-lg cyan" style="margin:0 auto 20px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div class="value-card-title">אפס עמלות</div>
-          <div class="value-card-desc">בניגוד למתחרים, אנחנו לא גובים עמלה על העסקאות שלך. כל שקל שלך — שלך.</div>
-        </div>
-
-        <!-- Card 2: All-in-One -->
-        <div class="value-card reveal reveal-delay-2">
-          <div class="icon-box icon-box-lg pink" style="margin:0 auto 20px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          </div>
-          <div class="value-card-title">הכל במקום אחד</div>
-          <div class="value-card-desc">לא צריך Vimeo לוידאו, לא צריך רב מסר למיילים. הכל מובנה במערכת.</div>
-        </div>
-
-        <!-- Card 3: Hebrew Support -->
-        <div class="value-card reveal reveal-delay-3">
-          <div class="icon-box icon-box-lg green" style="margin:0 auto 20px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div class="value-card-title">תמיכה בעברית מלאה</div>
-          <div class="value-card-desc">ממשק מלא בעברית, RTL מושלם, ותמיכה ישירה בעברית.</div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ═══════════════════════════════════════════════════
        9. FAQ (FIX 9 — Expanded answers)
@@ -2570,42 +2550,26 @@
       const proofGrid = document.querySelector('.proof-grid');
       if (proofGrid) statsObserver.observe(proofGrid);
 
-      // ── Audience Expandable Panels ──
-      const audienceCards = document.querySelectorAll('.audience-card[data-panel]');
-      let openPanel = null;
+      // ── Audience Tabs ──
+      const audienceTabs = document.querySelectorAll('.audience-tab');
+      const audiencePanels = document.querySelectorAll('.audience-panel');
 
-      audienceCards.forEach((card) => {
-        card.addEventListener('click', () => {
-          const panelId = card.dataset.panel;
-          const panel = document.getElementById(panelId);
+      audienceTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const targetId = tab.dataset.target;
 
-          if (openPanel && openPanel !== panel) {
-            openPanel.classList.remove('open');
-            document.querySelector('.audience-card.active')?.classList.remove('active');
+          audienceTabs.forEach((t) => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+
+          audiencePanels.forEach((p) => p.classList.remove('active'));
+          const target = document.getElementById(targetId);
+          if (target) {
+            target.classList.add('active');
           }
-
-          if (panel.classList.contains('open')) {
-            panel.classList.remove('open');
-            card.classList.remove('active');
-            openPanel = null;
-          } else {
-            panel.classList.add('open');
-            card.classList.add('active');
-            openPanel = panel;
-            setTimeout(() => {
-              panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 100);
-          }
-        });
-      });
-
-      document.querySelectorAll('.panel-close').forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const panel = btn.closest('.audience-panel');
-          panel.classList.remove('open');
-          document.querySelector('.audience-card.active')?.classList.remove('active');
-          openPanel = null;
         });
       });
 

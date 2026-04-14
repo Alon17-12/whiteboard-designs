@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הסיכומים שלי | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ── DESIGN TOKENS ───────────────────────────── */
+  :root {
+    --navy:        #253E7A;
+    --navy-dark:   #1a2f5e;
+    --navy-light:  #3a5499;
+    --cyan:        #38C4F2;
+    --cyan-light:  rgba(56,196,242,0.12);
+    --light-blue:  #E3F4FD;
+    --pink:        #F05680;
+    --pink-light:  rgba(240,86,128,0.12);
+    --yellow:      #EAD654;
+    --yellow-light:rgba(234,214,84,0.15);
+    --green:       #7DC57A;
+    --green-light: rgba(125,197,122,0.12);
+    --amber:       #D4A843;
+    --amber-light: rgba(212,168,67,0.15);
+    --white:       #FFFFFF;
+    --font-he:     'Heebo', sans-serif;
+    --font-en:     'Fredoka', sans-serif;
+    --radius-sm:   10px;
+    --radius-md:   16px;
+    --radius-lg:   22px;
+
+    /* LIGHT MODE */
+    --bg:           #F0F6FF;
+    --surface:      #FFFFFF;
+    --surface-2:    #f5f8ff;
+    --border:       rgba(37,62,122,0.1);
+    --border-hover: rgba(56,196,242,0.4);
+    --text-main:    #1a2f5e;
+    --text-sub:     rgba(37,62,122,0.55);
+    --text-light:   rgba(37,62,122,0.38);
+    --shadow-sm:    0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:    0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:    0 16px 48px rgba(37,62,122,0.14);
+
+    --sidebar-bg:        var(--navy);
+    --sidebar-border:    rgba(255,255,255,0.1);
+    --sidebar-hover:     rgba(255,255,255,0.08);
+    --sidebar-active-bg: rgba(56,196,242,0.2);
+    --sidebar-active-cl: var(--cyan);
+    --sidebar-text:      rgba(255,255,255,0.65);
+    --progress-track:    rgba(37,62,122,0.08);
+    --section-count-cl:  #1a8bb5;
+
+    /* NOTEBOOK TOKENS */
+    --paper-bg:      #FEFCF6;
+    --ruled-lines:   rgba(37,62,122,0.05);
+    --margin-area:   rgba(240,86,128,0.04);
+    --paper-shadow:  0 2px 20px rgba(0,0,0,0.08);
+  }
+
+  [data-theme="dark"] {
+    --bg:           #0c1424;
+    --surface:      #131e35;
+    --surface-2:    #1a2740;
+    --border:       rgba(255,255,255,0.07);
+    --border-hover: rgba(56,196,242,0.4);
+    --text-main:    #dde5f5;
+    --text-sub:     rgba(221,229,245,0.5);
+    --text-light:   rgba(221,229,245,0.3);
+    --shadow-sm:    0 2px 12px rgba(0,0,0,0.3);
+    --shadow-md:    0 6px 28px rgba(0,0,0,0.4);
+    --shadow-lg:    0 16px 48px rgba(0,0,0,0.55);
+
+    --sidebar-bg:        #0d1628;
+    --sidebar-border:    rgba(255,255,255,0.05);
+    --sidebar-hover:     rgba(255,255,255,0.06);
+    --sidebar-active-bg: rgba(56,196,242,0.15);
+    --sidebar-active-cl: var(--cyan);
+    --sidebar-text:      rgba(255,255,255,0.55);
+    --progress-track:    rgba(255,255,255,0.08);
+    --section-count-cl:  var(--cyan);
+    --light-blue:        rgba(56,196,242,0.08);
+
+    /* NOTEBOOK TOKENS DARK */
+    --paper-bg:      #1a1e28;
+    --ruled-lines:   rgba(255,255,255,0.04);
+    --margin-area:   rgba(240,86,128,0.03);
+    --paper-shadow:  0 2px 20px rgba(0,0,0,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── THEME TOGGLE ────────────────────────────── */
+  .theme-toggle {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+    color: var(--text-sub);
+  }
+  .theme-toggle:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  .theme-toggle svg { width: 18px; height: 18px; }
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="dark"] .icon-sun  { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* ── SIDEBAR ─────────────────────────────────── */
+  .sidebar {
+    width: 220px;
+    background: var(--sidebar-bg);
+    border-left: 1px solid var(--sidebar-border);
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    padding: 24px 0;
+    flex-shrink: 0;
+    position: fixed;
+    right: 0; top: 0; bottom: 0;
+    z-index: 50;
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .sidebar-logo {
+    padding: 16px 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sidebar-logo img { width: 150px; object-fit: contain; display: block; }
+
+  .sidebar-section { padding: 8px 12px; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer; transition: all 0.2s;
+    text-decoration: none;
+    color: var(--sidebar-text);
+    font-size: 14px; font-weight: 500;
+  }
+  .nav-item:hover { background: var(--sidebar-hover); color: white; }
+  .nav-item.active {
+    background: var(--sidebar-active-bg);
+    color: var(--sidebar-active-cl);
+    font-weight: 700;
+  }
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .profile-mini {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer; transition: background 0.2s;
+  }
+  .profile-mini:hover { background: rgba(255,255,255,0.08); }
+
+  .avatar-sm {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--navy-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+
+  .profile-mini-name { font-size: 13px; font-weight: 600; color: white; }
+  .profile-mini-role { font-size: 11px; color: rgba(255,255,255,0.45); }
+
+  .profile-edit-btn {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background 0.2s, border-color 0.2s;
+    color: rgba(255,255,255,0.4); flex-shrink: 0; margin-right: auto;
+  }
+  .profile-edit-btn:hover { background: rgba(255,255,255,0.1); color: white; border-color: rgba(255,255,255,0.3); }
+  .profile-edit-btn svg { width: 13px; height: 13px; }
+
+  /* ── MODE SWITCHER ─────────────────────────────── */
+  .mode-switcher { margin-bottom: 10px; padding: 10px 12px; }
+  .mode-switcher-label {
+    font-size: 10px; font-weight: 700;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px; padding-right: 2px;
+  }
+  .mode-toggle-row {
+    display: flex;
+    background: rgba(0,0,0,0.25);
+    border-radius: 8px; padding: 3px; gap: 2px;
+  }
+  .mode-btn {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    padding: 6px 4px; border-radius: 6px; border: none;
+    font-family: var(--font-he); font-size: 12px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    color: rgba(255,255,255,0.45); background: transparent; white-space: nowrap;
+  }
+  .mode-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .mode-btn.active { background: rgba(56,196,242,0.25); color: var(--cyan); }
+  .mode-btn:hover:not(.active) { color: rgba(255,255,255,0.7); }
+
+  /* ── MAIN ────────────────────────────────────── */
+  .main { margin-right: 220px; flex: 1; display: flex; flex-direction: column; }
+
+  /* ── TOP BAR ─────────────────────────────────── */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 40;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .topbar-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+  .breadcrumb-link { color: var(--text-sub); cursor: pointer; transition: color 0.2s; text-decoration: none; }
+  .breadcrumb-link:hover { color: var(--navy); }
+  .breadcrumb-sep { color: var(--text-light); font-size: 16px; }
+  .breadcrumb-current { color: var(--text-main); font-weight: 700; }
+
+  .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+  .icon-btn {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+    color: var(--text-sub); position: relative;
+  }
+  .icon-btn:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+
+  .lang-toggle {
+    display: flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer; font-size: 20px;
+    transition: border-color 0.2s, transform 0.15s; line-height: 1;
+  }
+  .lang-toggle:hover { border-color: var(--cyan); transform: scale(1.08); }
+
+  /* ── PAGE BODY ───────────────────────────────── */
+  .page-body { padding: 20px 32px 32px; flex: 1; }
+
+  /* ── PAGE HEADER ─────────────────────────────── */
+  .page-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 20px; gap: 20px;
+  }
+  .page-title-wrap { display: flex; align-items: center; gap: 12px; }
+  .boardi-title-img {
+    width: 88px; flex-shrink: 0;
+    filter: drop-shadow(0 4px 12px rgba(37,62,122,0.18));
+  }
+  .page-title { font-size: 26px; font-weight: 900; color: var(--text-main); line-height: 1.2; }
+  .page-subtitle { font-size: 13px; color: var(--text-sub); margin-top: 4px; }
+
+  .header-actions { display: flex; align-items: center; gap: 10px; padding-top: 8px; }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 18px; border-radius: 20px;
+    font-family: var(--font-he); font-size: 13px; font-weight: 700;
+    background: var(--surface);
+    color: var(--text-main);
+    border: 1.5px solid var(--border);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+  .btn-secondary svg { width: 15px; height: 15px; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 20px; border-radius: 20px;
+    font-family: var(--font-he); font-size: 13px; font-weight: 700;
+    background: linear-gradient(135deg, var(--cyan), #1db0d8);
+    color: white; border: none; cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 12px rgba(56,196,242,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(56,196,242,0.4); }
+  .btn-primary svg { width: 15px; height: 15px; }
+
+  /* ── FILTER BAR ──────────────────────────────── */
+  .filter-bar {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 18px; flex-wrap: wrap;
+  }
+
+  .filter-tab {
+    padding: 7px 16px; border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    font-family: var(--font-he); font-size: 13px; font-weight: 600;
+    color: var(--text-sub); cursor: pointer; transition: all 0.2s;
+  }
+  .filter-tab:hover { border-color: var(--cyan); color: var(--text-main); }
+  .filter-tab.active {
+    background: var(--navy); border-color: var(--navy); color: white;
+  }
+  [data-theme="dark"] .filter-tab.active {
+    background: var(--cyan); border-color: var(--cyan); color: #0b1424;
+  }
+
+  .search-wrap { position: relative; margin-right: auto; }
+  .search-icon {
+    position: absolute; right: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light); width: 15px; height: 15px;
+  }
+  .search-input {
+    height: 38px;
+    border: 1.5px solid var(--border);
+    border-radius: 30px;
+    padding: 0 38px 0 16px;
+    font-family: var(--font-he); font-size: 13px;
+    color: var(--text-main);
+    background: var(--surface); outline: none;
+    transition: all 0.2s; width: 210px;
+  }
+  .search-input::placeholder { color: var(--text-light); }
+  .search-input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(56,196,242,0.12);
+    width: 250px;
+  }
+
+  .filter-select {
+    padding: 7px 16px; border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    font-family: var(--font-he); font-size: 13px; font-weight: 600;
+    color: var(--text-sub); cursor: pointer; outline: none;
+    transition: all 0.2s; appearance: none; padding-left: 32px;
+  }
+  .filter-select:hover, .filter-select:focus { border-color: var(--cyan); color: var(--text-main); }
+
+  /* ── NOTES GRID ──────────────────────────────── */
+  .notes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  /* ── NOTE CARD (UPDATED — cover + course name) ── */
+  .note-card {
+    background: var(--surface);
+    border-radius: 18px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.25s, box-shadow 0.25s, background 0.3s;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .note-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+
+  .note-card-cover {
+    aspect-ratio: 16 / 9;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 18px 12px;
+    background: linear-gradient(135deg, #1a2f5e, #38C4F2);
+  }
+  .note-card-cover.cover-cyan { background: linear-gradient(135deg, #1a2f5e, #38C4F2); }
+  .note-card-cover.cover-pink { background: linear-gradient(135deg, #1a2f5e, #F05680); }
+  .note-card-cover.cover-green { background: linear-gradient(135deg, #1a2f5e, #7DC57A); }
+  .note-card-cover.cover-yellow { background: linear-gradient(135deg, #1a2f5e, #D4A843); }
+
+  .note-card-course-name {
+    font-family: var(--font-en);
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  }
+
+  .note-card-body {
+    padding: 14px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .note-course-badge {
+    display: none;
+  }
+  .badge-cyan  { background: var(--cyan-light); color: #1a8bb5; }
+  .badge-pink  { background: var(--pink-light); color: #c23e60; }
+  .badge-green { background: var(--green-light); color: #4a8e48; }
+  .badge-yellow { background: var(--yellow-light); color: #9e8a1e; }
+
+  [data-theme="dark"] .badge-cyan  { color: var(--cyan); }
+  [data-theme="dark"] .badge-pink  { color: var(--pink); }
+  [data-theme="dark"] .badge-green { color: var(--green); }
+  [data-theme="dark"] .badge-yellow { color: var(--yellow); }
+
+  .note-lesson {
+    font-size: 12px; color: var(--text-sub); font-weight: 600;
+  }
+
+  .note-mini-title {
+    font-size: 15px; font-weight: 800; color: var(--text-main);
+    line-height: 1.3;
+  }
+
+  .note-timestamp {
+    font-size: 11px; color: var(--text-light); font-weight: 500;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .note-timestamp .ts-icon { font-size: 12px; }
+
+  .ts-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    direction: ltr;
+    color: var(--cyan); font-weight: 700; font-size: 12px;
+    font-family: var(--font-en);
+    text-decoration: none; cursor: pointer;
+    padding: 2px 10px; border-radius: 12px;
+    background: var(--cyan-light);
+    transition: all 0.2s;
+  }
+  .ts-link:hover { background: var(--cyan); color: #fff; }
+  .ts-link svg { width: 11px; height: 11px; flex-shrink: 0; }
+
+  .note-content-preview {
+    font-size: 13px; font-weight: 500; color: var(--text-sub);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .note-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 10px; border-top: 1px solid var(--border);
+    margin-top: auto;
+  }
+
+  .note-footer-meta {
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .note-date {
+    font-size: 11px; color: var(--text-light);
+    margin-right: auto;
+  }
+
+  .note-word-count {
+    font-size: 11px; color: var(--text-light); font-weight: 500;
+  }
+
+  .note-actions { display: flex; gap: 6px; }
+
+  .note-action-btn {
+    width: 28px; height: 28px;
+    border-radius: 6px; border: 1px solid var(--border);
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+    color: var(--text-light);
+  }
+  .note-action-btn:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  .note-action-btn.danger:hover { background: rgba(240,86,128,0.1); color: var(--pink); border-color: var(--pink); }
+  .note-action-btn svg { width: 14px; height: 14px; }
+
+  /* ── NOTEBOOK VIEW (BY COURSE) ─────────────────── */
+  .notebook-view {
+    display: none;
+  }
+  .notebook-view.active {
+    display: block;
+  }
+
+  /* Course selector pills */
+  .course-selector {
+    display: flex; gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .course-selector::-webkit-scrollbar { height: 4px; }
+  .course-selector::-webkit-scrollbar-track { background: transparent; }
+  .course-selector::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .course-pill {
+    padding: 8px 20px;
+    border-radius: 24px;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    font-family: var(--font-he); font-size: 13px; font-weight: 700;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: all 0.25s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .course-pill:hover {
+    border-color: var(--border-hover);
+    color: var(--text-main);
+  }
+  .course-pill.active-cyan {
+    background: var(--cyan-light); border-color: var(--cyan); color: #1a8bb5;
+  }
+  .course-pill.active-pink {
+    background: var(--pink-light); border-color: var(--pink); color: #c23e60;
+  }
+  .course-pill.active-green {
+    background: var(--green-light); border-color: var(--green); color: #4a8e48;
+  }
+  .course-pill.active-yellow {
+    background: var(--yellow-light); border-color: var(--yellow); color: #9e8a1e;
+  }
+  [data-theme="dark"] .course-pill.active-cyan  { color: var(--cyan); }
+  [data-theme="dark"] .course-pill.active-pink   { color: var(--pink); }
+  [data-theme="dark"] .course-pill.active-green  { color: var(--green); }
+  [data-theme="dark"] .course-pill.active-yellow { color: var(--yellow); }
+
+  /* Chapter navigation pills */
+  .chapter-nav {
+    display: flex; gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .chapter-nav::-webkit-scrollbar { height: 4px; }
+  .chapter-nav::-webkit-scrollbar-track { background: transparent; }
+  .chapter-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .chapter-pill {
+    padding: 6px 14px;
+    border-radius: 18px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    font-family: var(--font-he); font-size: 12px; font-weight: 600;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .chapter-pill:hover {
+    border-color: var(--cyan); color: var(--text-main);
+  }
+  .chapter-pill.active {
+    background: var(--navy); border-color: var(--navy); color: white;
+  }
+  [data-theme="dark"] .chapter-pill.active {
+    background: var(--cyan); border-color: var(--cyan); color: #0b1424;
+  }
+
+  /* The notebook itself */
+  .notebook {
+    background: var(--paper-bg);
+    border-radius: 4px 18px 18px 4px;
+    border-right: 4px solid var(--cyan);
+    box-shadow: var(--paper-shadow);
+    position: relative;
+    overflow: hidden;
+    max-height: calc(100vh - 320px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .notebook::-webkit-scrollbar { width: 6px; }
+  .notebook::-webkit-scrollbar-track { background: transparent; }
+  .notebook::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* Ruled lines background */
+  .notebook-inner {
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 31px,
+        var(--ruled-lines) 31px,
+        var(--ruled-lines) 32px
+      );
+    position: relative;
+    min-height: 400px;
+  }
+
+  /* Margin strip (left side in RTL = visual right) */
+  .notebook-inner::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 48px;
+    background: var(--margin-area);
+    border-left: 2px solid rgba(240,86,128,0.12);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Chapter divider */
+  .nb-chapter {
+    padding: 32px 32px 0 64px;
+    position: relative;
+    display: none;
+  }
+  .nb-chapter:first-child { padding-top: 28px; }
+
+  .nb-chapter-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--navy);
+  }
+  [data-theme="dark"] .nb-chapter-header {
+    border-bottom-color: var(--cyan);
+  }
+
+  .nb-chapter-number {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 800;
+    flex-shrink: 0;
+    font-family: var(--font-en);
+  }
+  [data-theme="dark"] .nb-chapter-number {
+    background: var(--cyan); color: #0b1424;
+  }
+
+  .nb-chapter-title {
+    font-size: 20px; font-weight: 900;
+    color: var(--navy);
+    line-height: 1.3;
+  }
+  [data-theme="dark"] .nb-chapter-title {
+    color: var(--cyan);
+  }
+
+  /* Lesson entry — hidden by default, shown by JS per chapter */
+  .nb-lesson {
+    padding: 20px 32px 24px 64px;
+    position: relative;
+    display: none;
+  }
+  .nb-lesson.visible { display: block; }
+
+  .nb-lesson-header {
+    font-size: 14px; font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  [data-theme="dark"] .nb-lesson-header {
+    color: #8bb8e8;
+  }
+
+  .nb-lesson-timestamp {
+    font-size: 12px; color: var(--text-light);
+    display: flex; align-items: center; gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  .nb-lesson-mini-title {
+    font-size: 17px; font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .nb-lesson-content {
+    font-size: 14px; line-height: 1.8;
+    color: var(--text-main);
+  }
+  .nb-lesson-content p { margin-bottom: 10px; }
+  .nb-lesson-content strong { font-weight: 700; }
+  .nb-lesson-content ul {
+    padding-right: 20px;
+    margin-bottom: 10px;
+  }
+  .nb-lesson-content li {
+    margin-bottom: 4px;
+  }
+
+  .nb-lesson-date {
+    font-size: 11px; color: var(--text-light);
+    margin-top: 12px;
+    text-align: right;
+  }
+
+  .nb-lesson-divider {
+    border: none;
+    border-top: 1.5px dashed var(--border);
+    margin: 0 32px 0 64px;
+    display: none;
+  }
+
+  /* ── MODAL ───────────────────────────────────── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(26,47,94,0.5);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+  [data-theme="dark"] .modal-overlay { background: rgba(0,0,0,0.6); }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 22px;
+    width: 700px; max-width: 92vw;
+    max-height: 85vh;
+    box-shadow: var(--shadow-lg);
+    display: flex; flex-direction: column;
+    transform: translateY(20px);
+    transition: transform 0.3s;
+    overflow: hidden;
+  }
+  .modal-overlay.active .modal { transform: translateY(0); }
+
+  .modal-header {
+    padding: 24px 28px 16px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-header-info { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+
+  .modal-header-top {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+
+  .modal-lesson { font-size: 14px; font-weight: 600; color: var(--text-sub); }
+  .modal-date { font-size: 12px; color: var(--text-light); }
+
+  .modal-close {
+    width: 36px; height: 36px;
+    border-radius: 10px; border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+    color: var(--text-sub); flex-shrink: 0;
+  }
+  .modal-close:hover { background: rgba(240,86,128,0.1); color: var(--pink); border-color: var(--pink); }
+  .modal-close svg { width: 18px; height: 18px; }
+
+  .modal-body {
+    padding: 24px 28px;
+    overflow-y: auto; flex: 1;
+  }
+
+  .modal-note-title {
+    font-size: 20px; font-weight: 900; color: var(--text-main);
+    margin-bottom: 16px; line-height: 1.4;
+  }
+
+  .modal-note-content {
+    font-size: 14px; line-height: 1.8; color: var(--text-main);
+  }
+  .modal-note-content p { margin-bottom: 12px; }
+  .modal-note-content strong { font-weight: 700; }
+
+  .modal-separator {
+    height: 1px; background: var(--border);
+    margin: 20px 0;
+  }
+
+  .modal-add-section { padding: 0 28px 20px; }
+
+  .modal-add-label {
+    font-size: 13px; font-weight: 700; color: var(--text-sub);
+    margin-bottom: 8px;
+  }
+
+  .modal-textarea-wrap { display: flex; gap: 10px; }
+
+  .modal-textarea {
+    flex: 1; min-height: 60px;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 16px;
+    font-family: var(--font-he); font-size: 13px;
+    color: var(--text-main);
+    background: var(--surface-2);
+    outline: none; resize: vertical;
+    transition: border-color 0.2s;
+  }
+  .modal-textarea::placeholder { color: var(--text-light); }
+  .modal-textarea:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(56,196,242,0.1);
+  }
+
+  .btn-save {
+    align-self: flex-end;
+    padding: 10px 22px; border-radius: 14px;
+    font-family: var(--font-he); font-size: 13px; font-weight: 700;
+    background: linear-gradient(135deg, var(--cyan), #1db0d8);
+    color: white; border: none; cursor: pointer;
+    transition: all 0.2s; white-space: nowrap;
+    box-shadow: 0 3px 12px rgba(56,196,242,0.3);
+  }
+  .btn-save:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(56,196,242,0.4); }
+
+  .modal-footer {
+    padding: 16px 28px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .btn-danger {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 20px;
+    font-family: var(--font-he); font-size: 12px; font-weight: 700;
+    background: rgba(240,86,128,0.08);
+    color: var(--pink); border: 1.5px solid rgba(240,86,128,0.2);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-danger:hover { background: rgba(240,86,128,0.15); border-color: var(--pink); }
+  .btn-danger svg { width: 14px; height: 14px; }
+
+  .btn-export {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 20px;
+    font-family: var(--font-he); font-size: 12px; font-weight: 700;
+    background: var(--surface-2);
+    color: var(--text-sub); border: 1.5px solid var(--border);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-export:hover { border-color: var(--cyan); color: var(--cyan); }
+  .btn-export svg { width: 14px; height: 14px; }
+
+  /* ── STATS ROW (above grid) ────────────────────── */
+  .notes-stats {
+    display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .stat-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 12px; border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 12px; font-weight: 600; color: var(--text-sub);
+  }
+  .stat-chip strong { color: var(--text-main); font-weight: 800; }
+
+  /* ── VISIBILITY HELPERS ────────────────────────── */
+  .view-grid { display: grid; }
+  .view-grid.hidden { display: none; }
+  .notebook-view.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD">
+  </div>
+
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+      הקורסים שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+      המועדונים שלי
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <polyline points="10 9 9 9 8 9"/>
+      </svg>
+      הסיכומים שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      הגדרות
+    </a>
+  </div>
+
+  <div class="sidebar-bottom">
+    <!-- MODE SWITCHER -->
+    <div class="mode-switcher">
+      <div class="mode-switcher-label">מצב תצוגה</div>
+      <div class="mode-toggle-row">
+        <button class="mode-btn active" onclick="setMode('student')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          תלמיד
+        </button>
+        <button class="mode-btn" onclick="setMode('teacher')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          מרצה
+        </button>
+      </div>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div>
+        <div class="profile-mini-name">אלון</div>
+        <div class="profile-mini-role">תלמיד/ה</div>
+      </div>
+      <button class="profile-edit-btn" title="ערוך פרופיל">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">בית</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">הסיכומים שלי</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="lang-toggle" id="langToggle" onclick="toggleLang()" title="החלף שפה">🇮🇱</button>
+      <button class="theme-toggle icon-btn" onclick="toggleTheme()" title="החלף מצב תצוגה">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+      <button class="icon-btn" title="הגדרות">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div>
+        <div class="page-title-wrap">
+          <img src="../SVG/5.svg" alt="BOARDi" class="boardi-title-img">
+          <div>
+            <div class="page-title">הסיכומים שלי</div>
+            <div class="page-subtitle">כל הפתקים והסיכומים שכתבתם במהלך הלמידה</div>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          פתק חדש +
+        </button>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <button class="filter-tab active" data-tab="all">הכל</button>
+      <button class="filter-tab" data-tab="course">לפי קורס</button>
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" class="search-input" placeholder="חיפוש בפתקים...">
+      </div>
+      <select class="filter-select">
+        <option>מיון לפי: אחרון</option>
+        <option>מיון לפי: ישן ביותר</option>
+        <option>מיון לפי: קורס</option>
+      </select>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- VIEW: CARD GRID ("הכל" + "לפי תאריך")       -->
+    <!-- ============================================ -->
+    <div class="notes-grid view-grid" id="gridView">
+
+      <!-- Note 1 -->
+      <div class="note-card" onclick="goToLesson('ch3-12')">
+        <div class="note-card-cover cover-cyan"><span class="note-card-course-name">עיצוב UX/UI מתקדם</span></div>
+        <div class="note-card-body">
+        <span class="note-course-badge badge-cyan">עיצוב UX/UI מתקדם</span>
+        <div class="note-lesson">שיעור 12: בניית דף נחיתה</div>
+        <div class="note-mini-title">Mobile-First ו-Grid System</div>
+        <div class="note-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 14:32</a></div>
+        <div class="note-content-preview">נקודות חשובות: mobile-first approach, שימוש ב-grid system, חשיבות ה-whitespace בעיצוב מודרני...</div>
+        <div class="note-footer">
+          <div class="note-footer-meta">
+            <span class="note-date">לפני 2 שעות</span>
+            <span class="note-word-count">124 מילים</span>
+          </div>
+          <div class="note-actions">
+            <button class="note-action-btn" title="עריכה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="note-action-btn danger" title="מחיקה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+              </div>
+      </div>
+
+      <!-- Note 2 -->
+      <div class="note-card" onclick="goToLesson('ch1')">
+        <div class="note-card-cover cover-pink"><span class="note-card-course-name">AI לעסקים קטנים</span></div>
+        <div class="note-card-body">
+        <span class="note-course-badge badge-pink">AI לעסקים קטנים</span>
+        <div class="note-lesson">שיעור 8: כלי AI לכתיבה</div>
+        <div class="note-mini-title">ChatGPT vs Claude — השוואה</div>
+        <div class="note-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 22:10</a></div>
+        <div class="note-content-preview">ChatGPT vs Claude — הבדלים מרכזיים. Claude טוב יותר לכתיבה ארוכה, GPT טוב יותר לקוד...</div>
+        <div class="note-footer">
+          <div class="note-footer-meta">
+            <span class="note-date">אתמול</span>
+            <span class="note-word-count">89 מילים</span>
+          </div>
+          <div class="note-actions">
+            <button class="note-action-btn" title="עריכה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="note-action-btn danger" title="מחיקה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+              </div>
+      </div>
+
+      <!-- Note 3 -->
+      <div class="note-card" onclick="goToLesson('ch3-11')">
+        <div class="note-card-cover cover-cyan"><span class="note-card-course-name">עיצוב UX/UI מתקדם</span></div>
+        <div class="note-card-body">
+        <span class="note-course-badge badge-cyan">עיצוב UX/UI מתקדם</span>
+        <div class="note-lesson">שיעור 11: עיצוב mobile-first</div>
+        <div class="note-mini-title">להתחיל מהמובייל</div>
+        <div class="note-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 18:45</a></div>
+        <div class="note-content-preview">רספונסיביות: breakpoints מומלצים — 375, 768, 1024, 1440. להתחיל תמיד מהמובייל...</div>
+        <div class="note-footer">
+          <div class="note-footer-meta">
+            <span class="note-date">לפני 3 ימים</span>
+            <span class="note-word-count">156 מילים</span>
+          </div>
+          <div class="note-actions">
+            <button class="note-action-btn" title="עריכה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="note-action-btn danger" title="מחיקה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+              </div>
+      </div>
+
+      <!-- Note 4 -->
+      <div class="note-card" onclick="goToLesson('ch1')">
+        <div class="note-card-cover cover-green"><span class="note-card-course-name">שיווק במדיה חברתית</span></div>
+        <div class="note-card-body">
+        <span class="note-course-badge badge-green">שיווק במדיה חברתית</span>
+        <div class="note-lesson">שיעור 5: אסטרטגיית תוכן</div>
+        <div class="note-mini-title">חוק 80/20 בתוכן</div>
+        <div class="note-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 9:55</a></div>
+        <div class="note-content-preview">חוק 80/20 בתוכן — 80% ערך, 20% מכירה. פורמטים מנצחים: carousel, reels קצרים...</div>
+        <div class="note-footer">
+          <div class="note-footer-meta">
+            <span class="note-date">לפני 4 ימים</span>
+            <span class="note-word-count">98 מילים</span>
+          </div>
+          <div class="note-actions">
+            <button class="note-action-btn" title="עריכה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="note-action-btn danger" title="מחיקה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+              </div>
+      </div>
+
+      <!-- Note 5 -->
+      <div class="note-card" onclick="goToLesson('ch1')">
+        <div class="note-card-cover cover-pink"><span class="note-card-course-name">AI לעסקים קטנים</span></div>
+        <div class="note-card-body">
+        <span class="note-course-badge badge-pink">AI לעסקים קטנים</span>
+        <div class="note-lesson">שיעור 7: אוטומציות</div>
+        <div class="note-mini-title">Zapier vs Make — מה עדיף?</div>
+        <div class="note-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 11:20</a></div>
+        <div class="note-content-preview">Zapier + Make — השוואה. Make זול יותר אבל מורכב. Zapier אינטואיטיבי אבל יקר...</div>
+        <div class="note-footer">
+          <div class="note-footer-meta">
+            <span class="note-date">לפני שבוע</span>
+            <span class="note-word-count">112 מילים</span>
+          </div>
+          <div class="note-actions">
+            <button class="note-action-btn" title="עריכה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="note-action-btn danger" title="מחיקה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+              </div>
+      </div>
+
+      <!-- Note 6 -->
+      <div class="note-card" onclick="goToLesson('ch1')">
+        <div class="note-card-cover cover-yellow"><span class="note-card-course-name">בניית דף נחיתה שמוכר</span></div>
+        <div class="note-card-body">
+        <span class="note-course-badge badge-yellow">בניית דף נחיתה שמוכר</span>
+        <div class="note-lesson">שיעור 10: CTA שעובד</div>
+        <div class="note-mini-title">כפתור CTA מושלם</div>
+        <div class="note-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 7:15</a></div>
+        <div class="note-content-preview">כפתור CTA: צבע מנוגד לרקע, טקסט אקטיבי (לא 'שלח' אלא 'קבל גישה'), מעל ל-fold...</div>
+        <div class="note-footer">
+          <div class="note-footer-meta">
+            <span class="note-date">לפני שבוע</span>
+            <span class="note-word-count">78 מילים</span>
+          </div>
+          <div class="note-actions">
+            <button class="note-action-btn" title="עריכה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="note-action-btn danger" title="מחיקה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+              </div>
+      </div>
+
+      <!-- Note 7 -->
+      <div class="note-card" onclick="goToLesson('ch2-6')">
+        <div class="note-card-cover cover-cyan"><span class="note-card-course-name">עיצוב UX/UI מתקדם</span></div>
+        <div class="note-card-body">
+        <span class="note-course-badge badge-cyan">עיצוב UX/UI מתקדם</span>
+        <div class="note-lesson">שיעור 9: צבעים וטיפוגרפיה</div>
+        <div class="note-mini-title">מערכות צבעים ו-Line-Height</div>
+        <div class="note-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 14:32</a></div>
+        <div class="note-content-preview">מערכת צבעים: primary, secondary, accent, neutral. Line-height 1.5 לגוף, 1.2 לכותרות...</div>
+        <div class="note-footer">
+          <div class="note-footer-meta">
+            <span class="note-date">15.03.2026</span>
+            <span class="note-word-count">145 מילים</span>
+          </div>
+          <div class="note-actions">
+            <button class="note-action-btn" title="עריכה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="note-action-btn danger" title="מחיקה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+              </div>
+      </div>
+
+      <!-- Note 8 -->
+      <div class="note-card" onclick="goToLesson('ch1')">
+        <div class="note-card-cover cover-green"><span class="note-card-course-name">שיווק במדיה חברתית</span></div>
+        <div class="note-card-body">
+        <span class="note-course-badge badge-green">שיווק במדיה חברתית</span>
+        <div class="note-lesson">שיעור 3: בניית קהילה</div>
+        <div class="note-mini-title">קהילה > עוקבים</div>
+        <div class="note-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 5:40</a></div>
+        <div class="note-content-preview">קהילה > עוקבים. מעורבות חשובה מגודל. טכניקות: שאלות, סקרים, UGC, תגובות אישיות...</div>
+        <div class="note-footer">
+          <div class="note-footer-meta">
+            <span class="note-date">10.03.2026</span>
+            <span class="note-word-count">67 מילים</span>
+          </div>
+          <div class="note-actions">
+            <button class="note-action-btn" title="עריכה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="note-action-btn danger" title="מחיקה" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+              </div>
+      </div>
+
+    </div><!-- /notes-grid -->
+
+    <!-- ============================================ -->
+    <!-- VIEW: NOTEBOOK ("לפי קורס")                  -->
+    <!-- ============================================ -->
+    <div class="notebook-view hidden" id="notebookView">
+
+      <!-- CHAPTER SELECTOR (horizontal scroll) -->
+      <div class="course-selector" id="courseSelector">
+        <button class="course-pill active-cyan" data-course="ch1" data-color="cyan">מבוא</button>
+        <button class="course-pill" data-course="ch2" data-color="cyan">יסודות העיצוב</button>
+        <button class="course-pill" data-course="ch3" data-color="cyan">Mobile First</button>
+      </div>
+
+      <!-- LESSON NAVIGATION + PDF EXPORT -->
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="chapter-nav" id="chapterNav" style="flex:1;">
+          <button class="chapter-pill active" data-chapter="ch1">שיעור 1: ברוכים הבאים</button>
+          <button class="chapter-pill" data-chapter="ch1-2">שיעור 2: איך ללמוד</button>
+          <button class="chapter-pill" data-chapter="ch2-5">שיעור 5: עקרונות עיצוב</button>
+          <button class="chapter-pill" data-chapter="ch2-6">שיעור 6: צבעים וטיפו׳</button>
+          <button class="chapter-pill" data-chapter="ch3-9">שיעור 9: רספונסיביות</button>
+          <button class="chapter-pill" data-chapter="ch3-11">שיעור 11: mobile-first</button>
+          <button class="chapter-pill" data-chapter="ch3-12">שיעור 12: דף נחיתה</button>
+        </div>
+        <button class="btn-secondary" style="flex-shrink:0;" onclick="openPdfModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          יצוא מחברת ל-PDF
+        </button>
+      </div>
+
+      <!-- THE NOTEBOOK -->
+      <div class="notebook" id="notebookContent" style="border-right-color: var(--cyan);">
+        <div class="notebook-inner">
+
+          <!-- ═══ CHAPTER 1 ═══ -->
+          <div class="nb-chapter" id="ch1-header" data-ch="ch1">
+            <div class="nb-chapter-header">
+              <div class="nb-chapter-number">1</div>
+              <div class="nb-chapter-title">פרק 1: מבוא</div>
+            </div>
+          </div>
+
+          <!-- Lesson 1 -->
+          <div class="nb-lesson" id="ch1" data-ch="ch1">
+            <div class="nb-lesson-header">שיעור 1: ברוכים הבאים לקורס</div>
+            <div class="nb-lesson-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 3:15</a></div>
+            <div class="nb-lesson-mini-title">מטרות הקורס וציפיות</div>
+            <div class="nb-lesson-content">
+              <p>הקורס מיועד לאנשים שרוצים לעבור מעיצוב בסיסי לעיצוב מקצועי. נלמד את העקרונות, הכלים והתהליכים שמעצבים אמיתיים משתמשים בהם ביומיום.</p>
+              <p>ציפיות: להגיע לרמה שבה תוכלו לבנות פרויקט עיצוב מלא מ-A עד Z.</p>
+            </div>
+            <div class="nb-lesson-date">02.03.2026</div>
+          </div>
+          <hr class="nb-lesson-divider" data-ch="ch1">
+
+          <!-- Lesson 2 -->
+          <div class="nb-lesson" id="ch1-2" data-ch="ch1">
+            <div class="nb-lesson-header">שיעור 2: איך ללמוד את הקורס</div>
+            <div class="nb-lesson-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 8:42</a></div>
+            <div class="nb-lesson-mini-title">שיטת הלמידה האופטימלית</div>
+            <div class="nb-lesson-content">
+              <p>שיטת הלמידה המומלצת: צפייה בשיעור פעם אחת בלי לעצור, ואז צפייה שנייה עם תרגול מקביל. לרשום סיכום קצר אחרי כל שיעור — זה מה שהופך צפייה פסיבית ללמידה אקטיבית.</p>
+              <p>טיפ: לא לדלג על תרגילים, גם אם הם נראים פשוטים.</p>
+            </div>
+            <div class="nb-lesson-date">02.03.2026</div>
+          </div>
+          <hr class="nb-lesson-divider" data-ch="ch1">
+
+          <!-- ═══ CHAPTER 2 ═══ -->
+          <div class="nb-chapter" id="ch2-header" data-ch="ch2">
+            <div class="nb-chapter-header">
+              <div class="nb-chapter-number">2</div>
+              <div class="nb-chapter-title">פרק 2: יסודות העיצוב</div>
+            </div>
+          </div>
+
+          <!-- Lesson 5 -->
+          <div class="nb-lesson" id="ch2-5" data-ch="ch2">
+            <div class="nb-lesson-header">שיעור 5: עקרונות עיצוב בסיסיים</div>
+            <div class="nb-lesson-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 12:08</a></div>
+            <div class="nb-lesson-mini-title">עקרונות CRAP</div>
+            <div class="nb-lesson-content">
+              <p>ארבעת עקרונות העיצוב הבסיסיים (CRAP):</p>
+              <p><strong>Contrast (ניגודיות)</strong> — יוצרים היררכיה ויזואלית. כותרת גדולה ושחורה מול טקסט גוף קטן ואפור. לעולם לא "כמעט אותו דבר" — או זהה או שונה לגמרי.</p>
+              <p><strong>Repetition (חזרתיות)</strong> — עקביות ויזואלית: אותו סגנון כפתורים, אותם צבעים, אותם מרווחים. יוצרת תחושת מקצועיות ואחידות.</p>
+              <p><strong>Alignment (יישור)</strong> — כל אלמנט חייב להיות מיושר לאלמנט אחר. לא לפזר דברים באקראי. grid עוזר בזה מאוד.</p>
+              <p><strong>Proximity (קרבה)</strong> — דברים קשורים צריכים להיות קרובים. דברים לא קשורים — רחוקים. ככה המוח מבין את המבנה בלי לקרוא מילה.</p>
+            </div>
+            <div class="nb-lesson-date">08.03.2026</div>
+          </div>
+          <hr class="nb-lesson-divider" data-ch="ch2">
+
+          <!-- Lesson 6 -->
+          <div class="nb-lesson" id="ch2-6" data-ch="ch2">
+            <div class="nb-lesson-header">שיעור 6: צבעים וטיפוגרפיה</div>
+            <div class="nb-lesson-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 14:32</a></div>
+            <div class="nb-lesson-mini-title">מערכות צבעים ו-Line-Height</div>
+            <div class="nb-lesson-content">
+              <p><strong>מערכת צבעים:</strong> כל פרויקט צריך לפחות 4 צבעים מוגדרים:</p>
+              <ul>
+                <li><strong>Primary</strong> — הצבע הראשי של המותג</li>
+                <li><strong>Secondary</strong> — צבע משלים, לאלמנטים משניים</li>
+                <li><strong>Accent</strong> — צבע הדגשה, ל-CTA ולדברים שצריכים לבלוט</li>
+                <li><strong>Neutral</strong> — גווני אפור לטקסט, רקעים, מסגרות</li>
+              </ul>
+              <p><strong>טיפוגרפיה:</strong> Line-height של 1.5 לטקסט גוף (body), 1.2 לכותרות. מרווח בין פסקאות — לפחות 0.75em. לא יותר מ-2-3 גופנים בפרויקט.</p>
+              <p>כלי מומלץ: Coolors.co ליצירת פלטות צבעים.</p>
+            </div>
+            <div class="nb-lesson-date">15.03.2026</div>
+          </div>
+          <hr class="nb-lesson-divider" data-ch="ch2">
+
+          <!-- ═══ CHAPTER 3 ═══ -->
+          <div class="nb-chapter" id="ch3-header" data-ch="ch3">
+            <div class="nb-chapter-header">
+              <div class="nb-chapter-number">3</div>
+              <div class="nb-chapter-title">פרק 3: Mobile First</div>
+            </div>
+          </div>
+
+          <!-- Lesson 9 -->
+          <div class="nb-lesson" id="ch3-9" data-ch="ch3">
+            <div class="nb-lesson-header">שיעור 9: עקרונות רספונסיביות</div>
+            <div class="nb-lesson-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 6:20</a></div>
+            <div class="nb-lesson-mini-title">Breakpoints מומלצים</div>
+            <div class="nb-lesson-content">
+              <p>ה-breakpoints הסטנדרטיים שכדאי להשתמש בהם:</p>
+              <ul>
+                <li><strong>375px</strong> — מובייל (iPhone SE ומעלה)</li>
+                <li><strong>768px</strong> — טאבלט</li>
+                <li><strong>1024px</strong> — לפטופ קטן / טאבלט landscape</li>
+                <li><strong>1440px</strong> — דסקטופ סטנדרטי</li>
+              </ul>
+              <p>טיפ: לא חייבים את כולם. להתחיל מ-375 ו-1024 ולהוסיף breakpoints רק כשהעיצוב "נשבר".</p>
+            </div>
+            <div class="nb-lesson-date">20.03.2026</div>
+          </div>
+          <hr class="nb-lesson-divider" data-ch="ch3">
+
+          <!-- Lesson 11 -->
+          <div class="nb-lesson" id="ch3-11" data-ch="ch3">
+            <div class="nb-lesson-header">שיעור 11: עיצוב mobile-first</div>
+            <div class="nb-lesson-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 18:45</a></div>
+            <div class="nb-lesson-mini-title">להתחיל מהמובייל</div>
+            <div class="nb-lesson-content">
+              <p>למה mobile-first? כי 70% מהתנועה בישראל מגיעה מהמובייל. עדיף לעצב את החוויה הבסיסית קודם (מובייל) ולהוסיף אלמנטים בדסקטופ, מאשר להתחיל מדסקטופ "עשיר" ולנסות לצמצם למובייל.</p>
+              <p><strong>הגישה:</strong> מתחילים ב-375px, מעצבים הכל בעמודה אחת, ואז מרחיבים. בדסקטופ אפשר להוסיף עמודות, sidebars, אלמנטים דקורטיביים.</p>
+              <p><strong>טעות נפוצה:</strong> להסתיר אלמנטים במובייל עם display:none. זה לא mobile-first — זה desktop-minus. במקום זה, להתחיל בלי האלמנט ולהוסיף אותו בדסקטופ.</p>
+            </div>
+            <div class="nb-lesson-date">25.03.2026</div>
+          </div>
+          <hr class="nb-lesson-divider" data-ch="ch3">
+
+          <!-- Lesson 12 -->
+          <div class="nb-lesson" id="ch3-12" data-ch="ch3">
+            <div class="nb-lesson-header">שיעור 12: בניית דף נחיתה</div>
+            <div class="nb-lesson-timestamp"><a class="ts-link" href="#" title="צפה ברגע הזה בשיעור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> 14:32</a></div>
+            <div class="nb-lesson-mini-title">Mobile-First ו-Grid System</div>
+            <div class="nb-lesson-content">
+              <p><strong>1. Mobile-First Approach</strong><br>
+              תמיד להתחיל את העיצוב ממסך קטן ולהרחיב כלפי מעלה. הסיבה העיקרית — רוב התנועה מגיעה מהמובייל (כ-70% בישראל). עדיף לצמצם ולהוסיף מאשר להתחיל מלא ולחתוך.</p>
+
+              <p><strong>2. Grid System</strong><br>
+              שימוש ב-12 עמודות כסטנדרט. Gutters של 16-24px. במובייל לרדת ל-4 עמודות. שימוש ב-CSS Grid או Flexbox — להימנע מ-float בעיצוב מודרני.</p>
+
+              <p><strong>3. Whitespace</strong><br>
+              whitespace הוא לא "שטח מבוזבז" — הוא כלי עיצובי. מאפשר לעין לנוח, יוצר היררכיה ויזואלית, ומשפר readability. כלל אצבע: padding של לפחות 24px בין אלמנטים.</p>
+
+              <p><strong>4. טיפ מהמרצה</strong><br>
+              "אם אתם מרגישים שיש מספיק רווח — תוסיפו עוד קצת." זה תמיד עובד.</p>
+            </div>
+            <div class="nb-lesson-date">10.04.2026</div>
+          </div>
+
+        </div><!-- /notebook-inner -->
+      </div><!-- /notebook -->
+
+    </div><!-- /notebook-view -->
+
+  </div><!-- /page-body -->
+</div><!-- /main -->
+
+<!-- NOTE DETAIL MODAL -->
+<div class="modal-overlay" id="noteModal" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-header-info">
+        <div class="modal-header-top">
+          <span class="note-course-badge badge-cyan" id="modalBadge">עיצוב UX/UI מתקדם</span>
+          <span class="modal-date" id="modalDate">לפני 2 שעות</span>
+        </div>
+        <div class="modal-lesson" id="modalLesson">שיעור 12: בניית דף נחיתה</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()" title="סגור">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-note-title" id="modalTitle">נקודות חשובות מהשיעור על בניית דף נחיתה</div>
+      <div class="modal-note-content" id="modalContent">
+        <p><strong>1. Mobile-First Approach</strong><br>
+        תמיד להתחיל את העיצוב ממסך קטן ולהרחיב כלפי מעלה. הסיבה העיקרית — רוב התנועה מגיעה מהמובייל (כ-70% בישראל). עדיף לצמצם ולהוסיף מאשר להתחיל מלא ולחתוך.</p>
+
+        <p><strong>2. Grid System</strong><br>
+        שימוש ב-12 עמודות כסטנדרט. Gutters של 16-24px. במובייל לרדת ל-4 עמודות. שימוש ב-CSS Grid או Flexbox — להימנע מ-float בעיצוב מודרני.</p>
+
+        <p><strong>3. Whitespace</strong><br>
+        whitespace הוא לא "שטח מבוזבז" — הוא כלי עיצובי. מאפשר לעין לנוח, יוצר היררכיה ויזואלית, ומשפר readability. כלל אצבע: padding של לפחות 24px בין אלמנטים.</p>
+
+        <p><strong>4. טיפ מהמרצה</strong><br>
+        "אם אתם מרגישים שיש מספיק רווח — תוסיפו עוד קצת." זה תמיד עובד.</p>
+      </div>
+
+      <div class="modal-separator"></div>
+
+      <div class="modal-add-label">הוסף לפתק...</div>
+      <div class="modal-textarea-wrap">
+        <textarea class="modal-textarea" placeholder="כתוב כאן הערות נוספות..."></textarea>
+        <button class="btn-save">שמור</button>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-export">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        יצוא PDF
+      </button>
+      <button class="btn-danger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        מחק פתק
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PDF EXPORT MODAL -->
+<div class="modal-overlay" id="pdfModal" onclick="closePdfModal(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:780px;">
+    <div class="modal-header">
+      <div class="modal-header-info">
+        <div class="modal-header-top">
+          <span class="note-course-badge badge-cyan" style="display:inline-flex;">עיצוב UX/UI מתקדם</span>
+        </div>
+        <div style="font-size:18px;font-weight:900;color:var(--text-main);margin-top:4px;">יצוא מחברת ל-PDF</div>
+      </div>
+      <button class="modal-close" onclick="closePdfModal()" title="סגור">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="modal-body" style="padding:0;">
+      <!-- BOARDi + message -->
+      <div style="display:flex;align-items:center;gap:16px;padding:20px 28px;background:var(--surface-2);border-bottom:1px solid var(--border);">
+        <img src="../BOARDi/SVG/5.svg" alt="BOARDi" style="width:64px;flex-shrink:0;filter:drop-shadow(0 3px 8px rgba(37,62,122,0.15));">
+        <div>
+          <div style="font-size:15px;font-weight:700;color:var(--text-main);margin-bottom:2px;">BOARDi מכין לך את ה-PDF</div>
+          <div style="font-size:13px;color:var(--text-sub);line-height:1.6;">הסיכום יכלול את כל הפתקים שכתבת בקורס, מסודרים לפי פרקים ושיעורים. תוכל להוריד אותו או לשתף.</div>
+        </div>
+      </div>
+
+      <!-- Export options -->
+      <div style="padding:24px 28px;">
+        <div style="font-size:13px;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;">הגדרות יצוא</div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;border:1.5px solid var(--border);border-radius:12px;transition:all 0.2s;">
+            <input type="checkbox" checked style="accent-color:var(--cyan);width:16px;height:16px;">
+            <span style="font-size:14px;color:var(--text-main);font-weight:600;">כלול כותרות פרקים</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;border:1.5px solid var(--border);border-radius:12px;transition:all 0.2s;">
+            <input type="checkbox" checked style="accent-color:var(--cyan);width:16px;height:16px;">
+            <span style="font-size:14px;color:var(--text-main);font-weight:600;">כלול ציוני זמן (timestamps)</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;border:1.5px solid var(--border);border-radius:12px;transition:all 0.2s;">
+            <input type="checkbox" style="accent-color:var(--cyan);width:16px;height:16px;">
+            <span style="font-size:14px;color:var(--text-main);font-weight:600;">כלול לוגו WHITEBOARD</span>
+          </label>
+        </div>
+
+        <!-- Preview -->
+        <div style="font-size:13px;font-weight:700;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">תצוגה מקדימה</div>
+
+        <div style="background:#FEFCF6;border:1px solid var(--border);border-radius:14px;padding:28px 32px;box-shadow:inset 0 1px 3px rgba(0,0,0,0.04);max-height:320px;overflow-y:auto;">
+          <!-- PDF Preview -->
+          <div style="text-align:center;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid rgba(37,62,122,0.08);">
+            <div style="font-family:var(--font-en);font-size:20px;font-weight:700;color:var(--navy);margin-bottom:4px;">עיצוב UX/UI מתקדם</div>
+            <div style="font-size:12px;color:var(--text-light);">סיכומים מאת אלון גבאי · 7 שיעורים · יצוא 14.04.2026</div>
+          </div>
+
+          <!-- Chapter 1 preview -->
+          <div style="margin-bottom:18px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+              <div style="width:22px;height:22px;border-radius:50%;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">1</div>
+              <div style="font-family:var(--font-en);font-size:15px;font-weight:700;color:var(--navy);">מבוא</div>
+            </div>
+            <div style="padding-right:30px;">
+              <div style="margin-bottom:10px;">
+                <div style="font-size:12px;font-weight:700;color:var(--text-main);">שיעור 1: ברוכים הבאים לקורס</div>
+                <div style="font-size:11px;color:var(--text-light);direction:ltr;display:inline-block;">⏱ 3:15</div>
+                <div style="font-size:11px;color:var(--text-sub);margin-top:3px;line-height:1.5;">הקורס מיועד לאנשים שרוצים לעבור מעיצוב בסיסי לעיצוב מקצועי...</div>
+              </div>
+              <div style="margin-bottom:10px;">
+                <div style="font-size:12px;font-weight:700;color:var(--text-main);">שיעור 2: איך ללמוד את הקורס</div>
+                <div style="font-size:11px;color:var(--text-light);direction:ltr;display:inline-block;">⏱ 8:42</div>
+                <div style="font-size:11px;color:var(--text-sub);margin-top:3px;line-height:1.5;">שיטת הלמידה המומלצת: צפייה בשיעור פעם אחת בלי לעצור...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chapter 2 preview -->
+          <div style="margin-bottom:18px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+              <div style="width:22px;height:22px;border-radius:50%;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">2</div>
+              <div style="font-family:var(--font-en);font-size:15px;font-weight:700;color:var(--navy);">יסודות העיצוב</div>
+            </div>
+            <div style="padding-right:30px;">
+              <div style="margin-bottom:10px;">
+                <div style="font-size:12px;font-weight:700;color:var(--text-main);">שיעור 5: עקרונות עיצוב בסיסיים</div>
+                <div style="font-size:11px;color:var(--text-sub);margin-top:3px;line-height:1.5;">ארבעת עקרונות העיצוב הבסיסיים (CRAP): Contrast, Repetition, Alignment, Proximity...</div>
+              </div>
+              <div style="margin-bottom:10px;">
+                <div style="font-size:12px;font-weight:700;color:var(--text-main);">שיעור 6: צבעים וטיפוגרפיה</div>
+                <div style="font-size:11px;color:var(--text-sub);margin-top:3px;line-height:1.5;">מערכת צבעים: primary, secondary, accent, neutral. Line-height 1.5 לגוף...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chapter 3 preview -->
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+              <div style="width:22px;height:22px;border-radius:50%;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">3</div>
+              <div style="font-family:var(--font-en);font-size:15px;font-weight:700;color:var(--navy);">Mobile First</div>
+            </div>
+            <div style="padding-right:30px;">
+              <div style="margin-bottom:10px;">
+                <div style="font-size:12px;font-weight:700;color:var(--text-main);">שיעור 9: עקרונות רספונסיביות</div>
+                <div style="font-size:11px;color:var(--text-sub);margin-top:3px;line-height:1.5;">Breakpoints מומלצים: 375px, 768px, 1024px, 1440px...</div>
+              </div>
+              <div style="font-size:11px;color:var(--text-light);text-align:center;padding-top:6px;">...ועוד 2 שיעורים</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer" style="gap:10px;">
+      <button class="btn-export" onclick="closePdfModal()">
+        ביטול
+      </button>
+      <button class="btn-secondary" style="gap:6px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        שתף קישור
+      </button>
+      <button class="btn-primary" style="gap:6px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        הורד PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── PDF Modal ──
+  function openPdfModal() { document.getElementById('pdfModal').classList.add('active'); }
+  function closePdfModal(e) {
+    if (e && e.target !== e.currentTarget) return;
+    document.getElementById('pdfModal').classList.remove('active');
+  }
+
+  // ── Theme toggle ──
+  function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+  }
+
+  // ── Lang toggle ──
+  let isHe = true;
+  function toggleLang() {
+    isHe = !isHe;
+    document.getElementById('langToggle').textContent = isHe ? '\u{1F1EE}\u{1F1F1}' : '\u{1F1FA}\u{1F1F8}';
+  }
+
+  // ── Mode switcher ──
+  function setMode(mode) {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    event.target.closest('.mode-btn').classList.add('active');
+  }
+
+  // ── Card click → switch to notebook + scroll ──
+  function goToLesson(lessonId) {
+    // Switch to "לפי קורס" tab
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.filter-tab[data-tab="course"]').classList.add('active');
+    gridView.classList.add('hidden');
+    gridView.style.display = 'none';
+    notebookView.classList.remove('hidden');
+    notebookView.style.display = 'block';
+
+    // Scroll to lesson
+    setTimeout(() => {
+      const target = document.getElementById(lessonId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.style.background = 'rgba(56,196,242,0.06)';
+        setTimeout(() => { target.style.background = ''; }, 2000);
+      }
+    }, 100);
+  }
+
+  // Keep modal for backward compat
+  function openModal(index) {
+    document.getElementById('noteModal').classList.add('active');
+  }
+  function closeModal(e) {
+    if (e && e.target !== e.currentTarget && !e.target.closest('.modal-close')) return;
+    document.getElementById('noteModal').classList.remove('active');
+  }
+
+  // ── Tab switching ──
+  const gridView = document.getElementById('gridView');
+  const notebookView = document.getElementById('notebookView');
+
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      const tabType = tab.getAttribute('data-tab');
+
+      if (tabType === 'course') {
+        // Show notebook, hide grid
+        gridView.classList.add('hidden');
+        gridView.style.display = 'none';
+        notebookView.classList.remove('hidden');
+        notebookView.style.display = 'block';
+      } else {
+        // Show grid, hide notebook
+        notebookView.classList.add('hidden');
+        notebookView.style.display = 'none';
+        gridView.classList.remove('hidden');
+        gridView.style.display = 'grid';
+      }
+    });
+  });
+
+  // ── Chapter ↔ Lesson mapping ──
+  const chapterLessons = {
+    ch1: [
+      { id: 'ch1', label: 'שיעור 1: ברוכים הבאים' },
+      { id: 'ch1-2', label: 'שיעור 2: איך ללמוד' }
+    ],
+    ch2: [
+      { id: 'ch2-5', label: 'שיעור 5: עקרונות עיצוב' },
+      { id: 'ch2-6', label: 'שיעור 6: צבעים וטיפו׳' }
+    ],
+    ch3: [
+      { id: 'ch3-9', label: 'שיעור 9: רספונסיביות' },
+      { id: 'ch3-11', label: 'שיעור 11: mobile-first' },
+      { id: 'ch3-12', label: 'שיעור 12: דף נחיתה' }
+    ]
+  };
+
+  let activeChapter = 'ch1';
+  const lessonNav = document.getElementById('chapterNav');
+  const notebookEl = document.getElementById('notebookContent');
+
+  function buildLessonNav(chapterId) {
+    const lessons = chapterLessons[chapterId] || [];
+    lessonNav.innerHTML = lessons.map((l, i) =>
+      '<button class="chapter-pill' + (i === 0 ? ' active' : '') + '" data-lesson="' + l.id + '">' + l.label + '</button>'
+    ).join('');
+
+    // Attach click events to new pills
+    lessonNav.querySelectorAll('.chapter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        lessonNav.querySelectorAll('.chapter-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const target = document.getElementById(pill.getAttribute('data-lesson'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  function showChapter(chapterId) {
+    activeChapter = chapterId;
+
+    // Update chapter pills
+    document.querySelectorAll('.course-pill').forEach(p => p.className = 'course-pill');
+    const activePill = document.querySelector('.course-pill[data-course="' + chapterId + '"]');
+    if (activePill) activePill.classList.add('active-cyan');
+
+    // Hide all notebook content
+    notebookEl.querySelectorAll('.nb-chapter, .nb-lesson, .nb-lesson-divider').forEach(el => {
+      el.style.display = 'none';
+    });
+    // Show the chapter header
+    const chHeader = notebookEl.querySelector('#' + chapterId + '-header');
+    if (chHeader) chHeader.style.display = 'block';
+
+    // Show lessons + dividers that belong to this chapter
+    notebookEl.querySelectorAll('[data-ch="' + chapterId + '"]').forEach(el => {
+      el.style.display = 'block';
+    });
+
+    // Rebuild lesson nav
+    buildLessonNav(chapterId);
+
+    // Scroll notebook to top
+    notebookEl.scrollTop = 0;
+  }
+
+  // ── Chapter selector clicks ──
+  document.querySelectorAll('.course-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      showChapter(pill.getAttribute('data-course'));
+    });
+  });
+
+  // ── Scroll spy: highlight active lesson pill ──
+  if (notebookEl) {
+    notebookEl.addEventListener('scroll', () => {
+      const lessons = notebookEl.querySelectorAll('.nb-lesson[data-ch="' + activeChapter + '"]');
+      let current = null;
+      const rect = notebookEl.getBoundingClientRect();
+
+      lessons.forEach(l => {
+        if (l.getBoundingClientRect().top <= rect.top + 100) current = l.id;
+      });
+
+      if (current) {
+        lessonNav.querySelectorAll('.chapter-pill').forEach(p => {
+          p.classList.toggle('active', p.getAttribute('data-lesson') === current);
+        });
+      }
+    });
+  }
+
+  // Initialize: show chapter 1
+  showChapter('ch1');
+</script>
+
+</body>
+</html>

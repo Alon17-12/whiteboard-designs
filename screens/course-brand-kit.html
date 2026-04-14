@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ערכת מותג - קורס | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+    --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+    --pink:#F05680;--pink-light:rgba(240,86,128,0.12);
+    --yellow:#EAD654;--green:#7DC57A;--green-light:rgba(125,197,122,0.12);
+    --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+    --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+    --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+    --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+    --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --sidebar-bg:var(--navy);--sidebar-text:rgba(255,255,255,0.65);
+    --sidebar-hover:rgba(255,255,255,0.08);--sidebar-active-bg:rgba(56,196,242,0.2);
+    --sidebar-active-cl:var(--cyan);--sidebar-border:rgba(255,255,255,0.1);
+    /* brand defaults */
+    --brand-primary:#253E7A;--brand-secondary:#38C4F2;
+    --brand-bg:#F0F6FF;--brand-btn-radius:30px;
+    --brand-heading-font:'Fredoka',sans-serif;
+    --brand-body-font:'Heebo',sans-serif;
+    --brand-font-size:16px;
+  }
+  [data-theme="dark"] {
+    --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+    --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+    --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+    --light-blue:rgba(56,196,242,0.08);--sidebar-bg:#0d1628;
+    --sidebar-text:rgba(255,255,255,0.55);--sidebar-hover:rgba(255,255,255,0.06);
+    --sidebar-active-bg:rgba(56,196,242,0.15);--sidebar-border:rgba(255,255,255,0.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;transition:background .3s,color .3s;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{width:220px;background:var(--sidebar-bg);border-left:1px solid var(--sidebar-border);min-height:100vh;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;position:fixed;right:0;top:0;bottom:0;z-index:50;}
+  .sidebar-logo{padding:16px 16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
+  .sidebar-logo img{width:150px;object-fit:contain;}
+  .sidebar-section{padding:8px 12px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--sidebar-text);font-size:14px;font-weight:500;margin-bottom:2px;}
+  .nav-item:hover{background:var(--sidebar-hover);color:white;}
+  .nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-cl);font-weight:700;}
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;}
+  .sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);}
+  .mode-switcher{margin-bottom:10px;}
+  .mode-switcher-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
+  .mode-toggle-row{display:flex;background:rgba(0,0,0,0.25);border-radius:8px;padding:3px;gap:2px;}
+  .mode-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 4px;border-radius:6px;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.45);background:transparent;white-space:nowrap;}
+  .mode-btn svg{width:13px;height:13px;}
+  .mode-btn.active{background:rgba(56,196,242,0.25);color:var(--cyan);}
+  .profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;}
+  .profile-mini:hover{background:rgba(255,255,255,0.08);}
+  .avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+  .profile-mini-name{font-size:13px;font-weight:600;color:white;}
+  .profile-mini-role{font-size:11px;color:rgba(255,255,255,0.45);}
+  .profile-edit-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;color:rgba(255,255,255,0.4);flex-shrink:0;margin-right:auto;}
+  .profile-edit-btn:hover{background:rgba(255,255,255,0.1);color:white;}
+  .profile-edit-btn svg{width:13px;height:13px;}
+
+  /* ── MAIN ── */
+  .main{margin-right:220px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+  /* ── TOPBAR ── */
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:var(--shadow-sm);}
+  .topbar-breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .breadcrumb-link{color:var(--text-sub);cursor:pointer;transition:color .2s;text-decoration:none;}
+  .breadcrumb-link:hover{color:var(--text-main);}
+  .breadcrumb-sep{color:var(--text-light);}
+  .breadcrumb-current{color:var(--text-main);font-weight:700;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;}
+  .lang-switch{display:flex;background:var(--bg);border-radius:30px;padding:3px;gap:2px;}
+  .lang-btn{padding:5px 12px;border-radius:30px;font-size:13px;font-weight:600;color:var(--text-sub);cursor:pointer;border:none;background:none;font-family:var(--font-he);}
+  .lang-btn.active{background:var(--surface);color:var(--navy);box-shadow:var(--shadow-sm);}
+  .icon-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+  .icon-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .icon-sun{display:none;}.icon-moon{display:block;}
+  [data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+  /* ── PAGE BODY ── */
+  .page-body{padding:32px;flex:1;overflow:hidden;display:flex;flex-direction:column;gap:24px;}
+
+  /* Page header */
+  .page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;}
+  .page-title-wrap{display:flex;align-items:center;gap:16px;}
+  .boardi-img{width:88px;flex-shrink:0;filter:drop-shadow(0 4px 12px rgba(37,62,122,0.18));}
+  .page-badge{display:inline-flex;align-items:center;gap:6px;background:var(--cyan-light);border:1px solid rgba(56,196,242,0.3);color:#1a8bb5;font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:10px;}
+  .page-title{font-family:var(--font-en);font-size:28px;font-weight:900;color:var(--navy);line-height:1.2;}
+  .page-subtitle{font-size:14px;color:var(--text-sub);margin-top:4px;}
+
+  /* ── TWO COLUMN LAYOUT ── */
+  .two-col{display:flex;gap:28px;flex:1;overflow:hidden;min-height:0;}
+  .editor-col{flex:0 0 58%;overflow-y:auto;padding-left:4px;display:flex;flex-direction:column;gap:20px;padding-bottom:24px;}
+  .preview-col{flex:1;position:sticky;top:0;height:calc(100vh - 64px - 140px);overflow-y:auto;display:flex;flex-direction:column;}
+
+  /* ── CARDS ── */
+  .card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);box-shadow:var(--shadow-sm);padding:24px;}
+  .card-title{font-size:15px;font-weight:900;color:var(--text-main);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .card-title svg{width:18px;height:18px;color:var(--cyan);}
+
+  /* Upload area */
+  .upload-area{border:2px dashed var(--border);border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .2s;background:var(--bg);text-align:center;}
+  .upload-area:hover{border-color:var(--cyan);background:var(--light-blue);}
+  .upload-area svg{color:var(--text-light);}
+  .upload-text{font-size:13px;font-weight:700;color:var(--text-main);}
+  .upload-sub{font-size:11px;color:var(--text-sub);}
+  .logo-upload{width:120px;height:120px;}
+  .cover-upload{width:100%;height:200px;}
+
+  /* Logo placeholder */
+  .logo-placeholder{width:80px;height:80px;border-radius:var(--radius-md);background:linear-gradient(135deg,var(--navy),var(--navy-light));display:flex;align-items:center;justify-content:center;font-family:var(--font-en);font-size:24px;font-weight:900;color:white;margin-top:12px;}
+
+  /* Color row */
+  .color-row{display:flex;gap:16px;flex-wrap:wrap;}
+  .color-item{flex:1;min-width:140px;display:flex;flex-direction:column;gap:8px;}
+  .color-label{font-size:12px;font-weight:700;color:var(--text-sub);}
+  .color-input-row{display:flex;align-items:center;gap:10px;}
+  .color-circle{width:42px;height:42px;border-radius:50%;border:2px solid var(--border);cursor:pointer;position:relative;overflow:hidden;flex-shrink:0;transition:transform .15s,box-shadow .15s;}
+  .color-circle:hover{transform:scale(1.08);box-shadow:0 3px 12px rgba(0,0,0,0.22);}
+  .color-circle input[type="color"]{position:absolute;inset:-4px;width:calc(100% + 8px);height:calc(100% + 8px);opacity:0;cursor:pointer;border:none;padding:0;}
+  .hex-input{flex:1;height:42px;border:1.5px solid var(--border);border-radius:30px;padding:0 14px;font-family:monospace;font-size:13px;font-weight:700;color:var(--text-main);background:var(--bg);outline:none;transition:border-color .2s;direction:ltr;text-align:center;}
+  .hex-input:focus{border-color:var(--cyan);}
+
+  /* Typography */
+  .typo-row{display:flex;flex-direction:column;gap:14px;}
+  .typo-item{display:flex;flex-direction:column;gap:6px;}
+  .typo-label{font-size:12px;font-weight:700;color:var(--text-sub);}
+  .font-select{width:100%;height:42px;font-family:var(--font-he);font-size:13px;padding:0 14px;border-radius:30px;border:1.5px solid var(--border);background:var(--bg);color:var(--text-main);outline:none;cursor:pointer;transition:border-color .2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;}
+  .font-select:focus{border-color:var(--cyan);}
+  .size-select{width:120px;height:42px;font-family:var(--font-he);font-size:13px;padding:0 14px;border-radius:30px;border:1.5px solid var(--border);background:var(--bg);color:var(--text-main);outline:none;cursor:pointer;transition:border-color .2s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;}
+  .size-select:focus{border-color:var(--cyan);}
+
+  /* Button shape radio */
+  .btn-shape-row{display:flex;gap:12px;}
+  .btn-shape-option{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border-radius:var(--radius-md);border:2px solid var(--border);cursor:pointer;transition:all .2s;background:var(--bg);}
+  .btn-shape-option:hover{border-color:var(--cyan);background:var(--light-blue);}
+  .btn-shape-option.active{border-color:var(--cyan);background:var(--cyan-light);box-shadow:0 0 0 3px rgba(56,196,242,0.15);}
+  .btn-shape-preview{width:100%;height:36px;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;color:white;cursor:pointer;}
+  .btn-shape-label{font-size:11px;font-weight:700;color:var(--text-sub);}
+
+  /* ── PREVIEW PANEL ── */
+  .preview-panel{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden;flex:1;display:flex;flex-direction:column;}
+  .preview-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .preview-title{font-size:13px;font-weight:900;color:var(--text-main);display:flex;align-items:center;gap:8px;}
+  .preview-title svg{width:16px;height:16px;color:var(--cyan);}
+  .preview-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:var(--green-light);color:#3d8a3a;border:1px solid rgba(125,197,122,0.3);}
+  .preview-body{flex:1;overflow-y:auto;padding:20px;background:var(--surface-2);}
+
+  /* Mock landing page in preview */
+  .mock-lp{width:100%;max-width:480px;margin:0 auto;background:white;border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.08);}
+  .mock-cover{width:100%;height:180px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .mock-cover-placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,0.7);}
+  .mock-cover-placeholder svg{width:32px;height:32px;opacity:.5;}
+  .mock-cover-placeholder span{font-size:12px;font-weight:600;}
+  .mock-body{padding:24px;}
+  .mock-course-title{font-size:22px;font-weight:900;line-height:1.3;margin-bottom:8px;}
+  .mock-course-desc{font-size:14px;line-height:1.6;margin-bottom:20px;opacity:.7;}
+  .mock-cta{width:100%;padding:14px;border:none;font-size:15px;font-weight:900;color:white;cursor:pointer;transition:opacity .2s;margin-bottom:24px;}
+  .mock-cta:hover{opacity:.9;}
+  .mock-lessons-title{font-size:14px;font-weight:800;margin-bottom:12px;}
+  .mock-lesson{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius-sm);border:1px solid rgba(0,0,0,0.06);margin-bottom:8px;transition:background .15s;}
+  .mock-lesson:hover{background:rgba(0,0,0,0.02);}
+  .mock-lesson-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:white;flex-shrink:0;}
+  .mock-lesson-text{font-size:13px;font-weight:600;}
+  .mock-lesson-dur{margin-right:auto;font-size:11px;opacity:.5;}
+
+  /* ── BOTTOM BAR ── */
+  .bottom-bar{display:flex;gap:12px;padding-top:4px;flex-shrink:0;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:30px;font-family:var(--font-he);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;border:none;white-space:nowrap;}
+  .btn svg{width:16px;height:16px;}
+  .btn-primary{background:linear-gradient(135deg,var(--cyan),#1db0d8);color:white;box-shadow:0 4px 16px rgba(56,196,242,0.35);}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(56,196,242,0.45);}
+  .btn-secondary{background:var(--surface);color:var(--navy);border:1.5px solid var(--border);}
+  .btn-secondary:hover{background:var(--light-blue);border-color:var(--cyan);}
+
+  /* scrollbar */
+  .editor-col::-webkit-scrollbar,.preview-body::-webkit-scrollbar{width:5px;}
+  .editor-col::-webkit-scrollbar-track,.preview-body::-webkit-scrollbar-track{background:transparent;}
+  .editor-col::-webkit-scrollbar-thumb,.preview-body::-webkit-scrollbar-thumb{background:rgba(37,62,122,0.12);border-radius:10px;}
+  .editor-col::-webkit-scrollbar-thumb:hover,.preview-body::-webkit-scrollbar-thumb:hover{background:rgba(37,62,122,0.25);}
+
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo"><img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD"></div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      לוח הבקרה
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>
+      בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      הגדרות
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <div class="mode-switcher-label">מצב תצוגה</div>
+      <div class="mode-toggle-row">
+        <button class="mode-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          תלמיד
+        </button>
+        <button class="mode-btn active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          מרצה
+        </button>
+      </div>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div>
+        <div class="profile-mini-name">אלון</div>
+        <div class="profile-mini-role">מרצה</div>
+      </div>
+      <button class="profile-edit-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">מרכזי הידע שלי</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-link">עריכת וידאו בהליך מהיר</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">ערכת מותג</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="lang-switch">
+        <button class="lang-btn active">🇮🇱 עב</button>
+        <button class="lang-btn">🇺🇸 EN</button>
+      </div>
+      <button class="icon-btn" onclick="toggleTheme()">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="icon-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div>
+        <div class="page-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          עריכת וידאו בהליך מהיר
+        </div>
+        <div class="page-title">ערכת מותג</div>
+        <div class="page-subtitle">עצבו את המראה של הקורס שלכם</div>
+      </div>
+      <div class="page-title-wrap">
+        <img class="boardi-img" src="../SVG/3.svg" alt="BOARDi">
+      </div>
+    </div>
+
+    <!-- Two column layout -->
+    <div class="two-col">
+
+      <!-- LEFT: Editor -->
+      <div class="editor-col">
+
+        <!-- 1. Logo -->
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            לוגו קורס
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:20px;">
+            <div class="upload-area logo-upload" id="logoUpload">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <div class="upload-text">העלו לוגו</div>
+              <div class="upload-sub">PNG, SVG, JPG</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+              <div class="typo-label">תצוגה נוכחית</div>
+              <div class="logo-placeholder" id="logoPreview">עו</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Colors -->
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a7 7 0 0 0 0 14 3.5 3.5 0 0 1 0 7 10 10 0 1 0 0-20z"/></svg>
+            צבעים
+          </div>
+          <div class="color-row">
+            <div class="color-item">
+              <div class="color-label">צבע ראשי</div>
+              <div class="color-input-row">
+                <div class="color-circle" id="primarySwatch" style="background:#253E7A;">
+                  <input type="color" value="#253E7A" id="primaryColor" oninput="updateColor('primary',this.value)">
+                </div>
+                <input type="text" class="hex-input" id="primaryHex" value="#253E7A" maxlength="7" oninput="updateColorFromHex('primary',this.value)">
+              </div>
+            </div>
+            <div class="color-item">
+              <div class="color-label">צבע משני</div>
+              <div class="color-input-row">
+                <div class="color-circle" id="secondarySwatch" style="background:#38C4F2;">
+                  <input type="color" value="#38C4F2" id="secondaryColor" oninput="updateColor('secondary',this.value)">
+                </div>
+                <input type="text" class="hex-input" id="secondaryHex" value="#38C4F2" maxlength="7" oninput="updateColorFromHex('secondary',this.value)">
+              </div>
+            </div>
+            <div class="color-item">
+              <div class="color-label">צבע רקע</div>
+              <div class="color-input-row">
+                <div class="color-circle" id="bgSwatch" style="background:#F0F6FF;">
+                  <input type="color" value="#F0F6FF" id="bgColor" oninput="updateColor('bg',this.value)">
+                </div>
+                <input type="text" class="hex-input" id="bgHex" value="#F0F6FF" maxlength="7" oninput="updateColorFromHex('bg',this.value)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Typography -->
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+            טיפוגרפיה
+          </div>
+          <div class="typo-row">
+            <div class="typo-item">
+              <div class="typo-label">גופן כותרות</div>
+              <select class="font-select" id="headingFont" onchange="updatePreview()">
+                <option value="'Fredoka',sans-serif" selected>Fredoka</option>
+                <option value="'Heebo',sans-serif">Heebo</option>
+                <option value="'Assistant',sans-serif">Assistant</option>
+                <option value="'Rubik',sans-serif">Rubik</option>
+                <option value="'Frank Ruhl Libre',serif">Frank Ruhl Libre</option>
+              </select>
+            </div>
+            <div class="typo-item">
+              <div class="typo-label">גופן גוף</div>
+              <select class="font-select" id="bodyFont" onchange="updatePreview()">
+                <option value="'Fredoka',sans-serif">Fredoka</option>
+                <option value="'Heebo',sans-serif" selected>Heebo</option>
+                <option value="'Assistant',sans-serif">Assistant</option>
+                <option value="'Rubik',sans-serif">Rubik</option>
+              </select>
+            </div>
+            <div class="typo-item">
+              <div class="typo-label">גודל טקסט</div>
+              <select class="size-select" id="fontSize" onchange="updatePreview()">
+                <option value="14px">14px</option>
+                <option value="15px">15px</option>
+                <option value="16px" selected>16px</option>
+                <option value="17px">17px</option>
+                <option value="18px">18px</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Buttons -->
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="8" rx="4"/><line x1="9" y1="12" x2="15" y2="12"/></svg>
+            כפתורים
+          </div>
+          <div class="typo-label" style="margin-bottom:12px;">צורת כפתור</div>
+          <div class="btn-shape-row">
+            <div class="btn-shape-option active" data-radius="30px" onclick="selectBtnShape(this,'30px')">
+              <div class="btn-shape-preview" id="btnPreview1" style="border-radius:30px;background:#253E7A;">מעוגל</div>
+              <div class="btn-shape-label">מעוגל</div>
+            </div>
+            <div class="btn-shape-option" data-radius="10px" onclick="selectBtnShape(this,'10px')">
+              <div class="btn-shape-preview" id="btnPreview2" style="border-radius:10px;background:#253E7A;">חצי מעוגל</div>
+              <div class="btn-shape-label">חצי מעוגל</div>
+            </div>
+            <div class="btn-shape-option" data-radius="4px" onclick="selectBtnShape(this,'4px')">
+              <div class="btn-shape-preview" id="btnPreview3" style="border-radius:4px;background:#253E7A;">מרובע</div>
+              <div class="btn-shape-label">מרובע</div>
+            </div>
+          </div>
+          <div style="margin-top:14px;">
+            <div class="typo-label">צבע כפתור: משתמש בצבע הראשי</div>
+          </div>
+        </div>
+
+        <!-- 5. Cover image -->
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            תמונת רקע / קאבר
+          </div>
+          <div class="upload-area cover-upload" id="coverUpload">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="36" height="36"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div class="upload-text">העלו תמונת קאבר לקורס</div>
+            <div class="upload-sub">PNG, JPG · מומלץ 1200x600 · עד 5MB</div>
+          </div>
+        </div>
+
+        <!-- Bottom actions -->
+        <div class="bottom-bar">
+          <button class="btn btn-primary" onclick="saveBrand()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            שמור שינויים
+          </button>
+          <button class="btn btn-secondary" onclick="resetBrand()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+            אפס לברירת מחדל
+          </button>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Live Preview -->
+      <div class="preview-col">
+        <div class="preview-panel">
+          <div class="preview-header">
+            <div class="preview-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              תצוגה מקדימה
+            </div>
+            <div class="preview-badge">עדכון חי</div>
+          </div>
+          <div class="preview-body">
+            <div class="mock-lp" id="mockLP">
+              <!-- Cover -->
+              <div class="mock-cover" id="mockCover" style="background:linear-gradient(135deg,#1a2040,#253E7A);">
+                <div class="mock-cover-placeholder">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <span>תמונת קאבר</span>
+                </div>
+              </div>
+              <!-- Body -->
+              <div class="mock-body" id="mockBody">
+                <div class="mock-course-title" id="mockTitle" style="font-family:'Fredoka',sans-serif;color:#253E7A;">עריכת וידאו בהליך מהיר</div>
+                <div class="mock-course-desc" id="mockDesc" style="font-family:'Heebo',sans-serif;font-size:16px;color:#253E7A;">
+                  למדו לערוך סרטוני וידאו מקצועיים בצורה מהירה ויעילה. הקורס מכסה את כל הכלים והטכניקות החיוניות.
+                </div>
+                <button class="mock-cta" id="mockCTA" style="background:#253E7A;border-radius:30px;font-family:'Heebo',sans-serif;">התחל ללמוד</button>
+                <div class="mock-lessons-title" id="mockLessonsTitle" style="font-family:'Fredoka',sans-serif;color:#253E7A;">תוכן הקורס</div>
+                <div class="mock-lesson">
+                  <div class="mock-lesson-num" id="lessonNum1" style="background:#253E7A;">1</div>
+                  <div class="mock-lesson-text" id="lessonText1" style="font-family:'Heebo',sans-serif;color:#253E7A;">מבוא לעריכת וידאו</div>
+                  <div class="mock-lesson-dur">12:30</div>
+                </div>
+                <div class="mock-lesson">
+                  <div class="mock-lesson-num" id="lessonNum2" style="background:#253E7A;">2</div>
+                  <div class="mock-lesson-text" id="lessonText2" style="font-family:'Heebo',sans-serif;color:#253E7A;">חיתוך ועריכה בסיסית</div>
+                  <div class="mock-lesson-dur">18:45</div>
+                </div>
+                <div class="mock-lesson">
+                  <div class="mock-lesson-num" id="lessonNum3" style="background:#253E7A;">3</div>
+                  <div class="mock-lesson-text" id="lessonText3" style="font-family:'Heebo',sans-serif;color:#253E7A;">אפקטים ומעברים</div>
+                  <div class="mock-lesson-dur">15:20</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // Theme toggle
+  function toggleTheme() {
+    const html = document.documentElement;
+    html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  }
+
+  // Color updates
+  function updateColor(type, value) {
+    document.getElementById(type + 'Hex').value = value.toUpperCase();
+    document.getElementById(type + 'Swatch').style.background = value;
+    updatePreview();
+  }
+
+  function updateColorFromHex(type, value) {
+    if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+      document.getElementById(type + 'Color').value = value;
+      document.getElementById(type + 'Swatch').style.background = value;
+      updatePreview();
+    }
+  }
+
+  // Button shape
+  function selectBtnShape(el, radius) {
+    document.querySelectorAll('.btn-shape-option').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    document.documentElement.style.setProperty('--brand-btn-radius', radius);
+    updatePreview();
+  }
+
+  // Update preview
+  function updatePreview() {
+    const primary = document.getElementById('primaryHex').value;
+    const secondary = document.getElementById('secondaryHex').value;
+    const bg = document.getElementById('bgHex').value;
+    const headingFont = document.getElementById('headingFont').value;
+    const bodyFont = document.getElementById('bodyFont').value;
+    const fontSize = document.getElementById('fontSize').value;
+    const activeShape = document.querySelector('.btn-shape-option.active');
+    const btnRadius = activeShape ? activeShape.dataset.radius : '30px';
+
+    // Update button shape previews color
+    document.querySelectorAll('.btn-shape-preview').forEach(b => b.style.background = primary);
+
+    // Update logo placeholder
+    document.getElementById('logoPreview').style.background = `linear-gradient(135deg,${primary},${secondary})`;
+
+    // Mock cover
+    document.getElementById('mockCover').style.background = `linear-gradient(135deg,${darken(primary,0.3)},${primary})`;
+
+    // Mock title
+    const mockTitle = document.getElementById('mockTitle');
+    mockTitle.style.fontFamily = headingFont;
+    mockTitle.style.color = primary;
+
+    // Mock desc
+    const mockDesc = document.getElementById('mockDesc');
+    mockDesc.style.fontFamily = bodyFont;
+    mockDesc.style.fontSize = fontSize;
+    mockDesc.style.color = primary;
+
+    // Mock CTA
+    const mockCTA = document.getElementById('mockCTA');
+    mockCTA.style.background = primary;
+    mockCTA.style.borderRadius = btnRadius;
+    mockCTA.style.fontFamily = bodyFont;
+
+    // Mock lessons title
+    const mockLessonsTitle = document.getElementById('mockLessonsTitle');
+    mockLessonsTitle.style.fontFamily = headingFont;
+    mockLessonsTitle.style.color = primary;
+
+    // Lesson nums & text
+    for (let i = 1; i <= 3; i++) {
+      document.getElementById('lessonNum' + i).style.background = primary;
+      const lt = document.getElementById('lessonText' + i);
+      lt.style.fontFamily = bodyFont;
+      lt.style.color = primary;
+    }
+
+    // Mock body bg
+    document.getElementById('mockBody').style.background = bg;
+    document.getElementById('mockLP').style.background = bg;
+  }
+
+  // Darken helper
+  function darken(hex, amount) {
+    hex = hex.replace('#', '');
+    let r = parseInt(hex.substr(0, 2), 16);
+    let g = parseInt(hex.substr(2, 2), 16);
+    let b = parseInt(hex.substr(4, 2), 16);
+    r = Math.max(0, Math.round(r * (1 - amount)));
+    g = Math.max(0, Math.round(g * (1 - amount)));
+    b = Math.max(0, Math.round(b * (1 - amount)));
+    return '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
+  }
+
+  // Save
+  function saveBrand() {
+    const btn = document.querySelector('.btn-primary');
+    const origText = btn.querySelector('svg').nextSibling.textContent;
+    btn.querySelector('svg').nextSibling.textContent = ' נשמר בהצלחה!';
+    btn.style.background = 'linear-gradient(135deg,#7DC57A,#5aaa57)';
+    setTimeout(() => {
+      btn.querySelector('svg').nextSibling.textContent = ' שמור שינויים';
+      btn.style.background = '';
+    }, 2000);
+  }
+
+  // Reset
+  function resetBrand() {
+    document.getElementById('primaryColor').value = '#253E7A';
+    document.getElementById('primaryHex').value = '#253E7A';
+    document.getElementById('primarySwatch').style.background = '#253E7A';
+
+    document.getElementById('secondaryColor').value = '#38C4F2';
+    document.getElementById('secondaryHex').value = '#38C4F2';
+    document.getElementById('secondarySwatch').style.background = '#38C4F2';
+
+    document.getElementById('bgColor').value = '#F0F6FF';
+    document.getElementById('bgHex').value = '#F0F6FF';
+    document.getElementById('bgSwatch').style.background = '#F0F6FF';
+
+    document.getElementById('headingFont').value = "'Fredoka',sans-serif";
+    document.getElementById('bodyFont').value = "'Heebo',sans-serif";
+    document.getElementById('fontSize').value = '16px';
+
+    document.querySelectorAll('.btn-shape-option').forEach(o => o.classList.remove('active'));
+    document.querySelector('.btn-shape-option[data-radius="30px"]').classList.add('active');
+
+    updatePreview();
+  }
+
+  // Mode switcher
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

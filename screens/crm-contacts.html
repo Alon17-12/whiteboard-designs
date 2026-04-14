@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>כל אנשי הקשר שלי | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:       #253E7A;
+    --navy-dark:  #1a2f5e;
+    --navy-light: #3a5499;
+    --cyan:       #38C4F2;
+    --cyan-light: rgba(56,196,242,0.12);
+    --light-blue: #E3F4FD;
+    --pink:       #F05680;
+    --pink-light: rgba(240,86,128,0.12);
+    --yellow:     #EAD654;
+    --green:      #7DC57A;
+    --green-light:rgba(125,197,122,0.12);
+    --purple:     #9b59b6;
+    --purple-light:rgba(155,89,182,0.12);
+    --orange:     #e67e22;
+    --orange-light:rgba(230,126,34,0.12);
+    --white:      #FFFFFF;
+    --bg:         #F0F6FF;
+    --surface:    #FFFFFF;
+    --border:     rgba(37,62,122,0.1);
+    --text-main:  #1a2f5e;
+    --text-sub:   rgba(37,62,122,0.55);
+    --text-light: rgba(37,62,122,0.38);
+    --font-he:    'Heebo', sans-serif;
+    --font-en:    'Fredoka', sans-serif;
+    --radius-sm:  10px;
+    --radius-md:  16px;
+    --radius-lg:  22px;
+    --shadow-sm:  0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:  0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:  0 16px 48px rgba(37,62,122,0.14);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ── SIDEBAR ─────────────────────────────────── */
+  .sidebar {
+    width: 220px;
+    background: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 0;
+    flex-shrink: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 50;
+  }
+
+  .sidebar-logo {
+    padding: 16px 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar-logo img.logo-img {
+    width: 150px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .sidebar-section {
+    padding: 8px 12px;
+    margin-bottom: 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: rgba(255,255,255,0.65);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .nav-item:hover {
+    background: rgba(255,255,255,0.08);
+    color: white;
+  }
+
+  .nav-item.active {
+    background: rgba(56,196,242,0.2);
+    color: var(--cyan);
+    font-weight: 700;
+  }
+
+  .nav-item svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .mode-switcher {
+    display: flex;
+    background: rgba(0,0,0,0.2);
+    border-radius: 30px;
+    padding: 3px;
+    margin-bottom: 12px;
+  }
+
+  .mode-btn {
+    flex: 1;
+    padding: 6px 10px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    background: none;
+    font-family: var(--font-he);
+  }
+
+  .mode-btn.active {
+    background: var(--cyan);
+    color: white;
+  }
+
+  .profile-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .profile-mini:hover { background: rgba(255,255,255,0.08); }
+
+  .avatar-sm {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--navy-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .profile-mini-info { flex: 1; overflow: hidden; }
+  .profile-mini-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .profile-mini-role {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+  }
+
+  /* ── MAIN ──────────────────────────────────────── */
+  .main {
+    margin-right: 220px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ── TOP BAR ───────────────────────────────────── */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .topbar-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .breadcrumb-link { color: var(--text-sub); cursor: pointer; transition: color 0.2s; }
+  .breadcrumb-link:hover { color: var(--navy); }
+  .breadcrumb-sep { color: var(--text-light); font-size: 16px; }
+  .breadcrumb-current { color: var(--navy); font-weight: 700; }
+
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+  .lang-switch {
+    display: flex;
+    background: var(--bg);
+    border-radius: 30px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .lang-btn {
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: var(--font-he);
+  }
+  .lang-btn.active { background: var(--surface); color: var(--navy); box-shadow: var(--shadow-sm); }
+
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-sub);
+  }
+  .icon-btn:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+
+  /* ── PAGE ──────────────────────────────────────── */
+  .page-body { padding: 32px; flex: 1; }
+
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 20px;
+  }
+
+  .page-title-wrap { display: flex; align-items: center; gap: 16px; }
+
+  .boardi-title-img {
+    width: 88px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 4px 12px rgba(37,62,122,0.18));
+  }
+
+  .page-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cyan-light);
+    border: 1px solid rgba(56,196,242,0.3);
+    color: #1a8bb5;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+
+  .page-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--text-sub);
+    margin-top: 4px;
+  }
+
+  .header-actions { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+
+  /* ── BUTTONS ─────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--cyan), #1db0d8);
+    color: white;
+    box-shadow: 0 4px 16px rgba(56,196,242,0.35);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(56,196,242,0.45); }
+
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--navy);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--light-blue); border-color: var(--cyan); }
+
+  .btn svg { width: 16px; height: 16px; }
+
+  /* ── STATS ROW ───────────────────────────────── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+  .stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .stat-icon svg { width: 20px; height: 20px; }
+  .stat-info { flex: 1; min-width: 0; }
+  .stat-value { font-size: 22px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 3px; }
+  .stat-label { font-size: 11.5px; color: var(--text-sub); font-weight: 500; }
+
+  /* ── TABLE CONTAINER ─────────────────────────── */
+  .table-section {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .table-toolbar {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg);
+    border-radius: 30px;
+    padding: 4px;
+  }
+
+  .filter-tab {
+    padding: 6px 14px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-sub);
+    border: none;
+    background: none;
+    font-family: var(--font-he);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .filter-tab.active { background: var(--surface); color: var(--navy); box-shadow: var(--shadow-sm); }
+  .filter-tab:hover:not(.active) { color: var(--navy); }
+  .filter-tab .count {
+    background: rgba(37,62,122,0.1);
+    color: var(--navy);
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 11px;
+  }
+  .filter-tab.active .count.leads { background: rgba(234,214,84,0.2); color: #8a7800; }
+  .filter-tab.active .count.students { background: rgba(125,197,122,0.2); color: #2d7a2a; }
+  .filter-tab.active .count.members { background: rgba(56,196,242,0.2); color: #1a8bb5; }
+  .filter-tab.active .count.drop { background: rgba(240,86,128,0.2); color: #c02050; }
+
+  .toolbar-spacer { flex: 1; }
+
+  .search-wrap { position: relative; width: 280px; }
+  .search-icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    width: 16px;
+    height: 16px;
+  }
+  .search-input {
+    width: 100%;
+    height: 38px;
+    border: 1.5px solid var(--border);
+    border-radius: 30px;
+    padding: 0 42px 0 16px;
+    font-family: var(--font-he);
+    font-size: 13px;
+    color: var(--text-main);
+    background: var(--bg);
+    outline: none;
+    transition: all 0.2s;
+  }
+  .search-input::placeholder { color: var(--text-light); }
+  .search-input:focus { border-color: var(--cyan); background: white; box-shadow: 0 0 0 3px rgba(56,196,242,0.15); }
+
+  .btn-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    cursor: pointer;
+    font-family: var(--font-he);
+  }
+  .btn-filter:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  .btn-filter svg { width: 14px; height: 14px; }
+
+  /* ── TABLE ───────────────────────────────────── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--bg); border-bottom: 2px solid var(--border); }
+  th {
+    padding: 13px 20px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-sub);
+    text-align: right;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { color: var(--navy); }
+  .sort-icon { display: inline-flex; align-items: center; margin-right: 4px; opacity: 0.5; vertical-align: middle; }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(37,62,122,0.06);
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(227,244,253,0.5); }
+
+  td {
+    padding: 14px 20px;
+    font-size: 14px;
+    color: var(--text-main);
+    vertical-align: middle;
+  }
+
+  .contact-cell { display: flex; align-items: center; gap: 12px; }
+  .avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    font-family: var(--font-en);
+  }
+  .contact-name { font-weight: 700; color: var(--navy); font-size: 14px; }
+  .contact-meta { font-size: 12px; color: var(--text-light); margin-top: 1px; }
+
+  .email-cell { font-size: 13px; color: var(--text-sub); }
+  .phone-cell { font-size: 13px; color: var(--text-sub); direction: ltr; text-align: right; }
+
+  /* ── TYPE BADGES ─────────────────────────────── */
+  .type-badges { display: flex; flex-wrap: wrap; gap: 4px; }
+  .type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .type-badge svg { width: 10px; height: 10px; }
+  .type-lead    { background: rgba(234,214,84,0.18); color: #8a7800; }
+  .type-student { background: rgba(125,197,122,0.15); color: #2d7a2a; }
+  .type-member  { background: rgba(56,196,242,0.15); color: #1a8bb5; }
+  .type-drop    { background: rgba(240,86,128,0.12); color: #c02050; }
+  .type-teacher { background: rgba(37,62,122,0.1); color: var(--navy); }
+  .type-vip     { background: rgba(155,89,182,0.15); color: #7d3c98; }
+
+  /* ── SOURCE BADGE ────────────────────────────── */
+  .source-cell { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-sub); }
+  .source-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .source-direct   { background: var(--cyan); }
+  .source-landing  { background: var(--pink); }
+  .source-email    { background: var(--green); }
+  .source-referral { background: var(--purple); }
+  .source-ads      { background: var(--orange); }
+
+  /* ── TAGS ────────────────────────────────────── */
+  .tags-cell { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag {
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-sub);
+  }
+
+  .date-cell { font-size: 13px; color: var(--text-sub); white-space: nowrap; }
+
+  /* ── ACTIONS ─────────────────────────────────── */
+  .actions-cell { display: flex; align-items: center; gap: 6px; }
+  .action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-sub);
+  }
+  .action-btn:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  .action-btn svg { width: 14px; height: 14px; }
+
+  /* ── TABLE FOOTER ────────────────────────────── */
+  .table-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-sub);
+    background: var(--bg);
+  }
+
+  .pagination { display: flex; align-items: center; gap: 4px; }
+  .page-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    transition: all 0.2s;
+    font-family: var(--font-he);
+  }
+  .page-btn:hover { background: var(--light-blue); border-color: var(--cyan); color: var(--navy); }
+  .page-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+  /* ── AVATAR COLORS ───────────────────────────── */
+  .av-1 { background: linear-gradient(135deg, #38C4F2, #1a8bb5); }
+  .av-2 { background: linear-gradient(135deg, #F05680, #c02050); }
+  .av-3 { background: linear-gradient(135deg, #7DC57A, #4da84a); }
+  .av-4 { background: linear-gradient(135deg, #EAD654, #c8a800); }
+  .av-5 { background: linear-gradient(135deg, #253E7A, #1a2f5e); }
+  .av-6 { background: linear-gradient(135deg, #9b59b6, #7d3c98); }
+  .av-7 { background: linear-gradient(135deg, #e67e22, #ca6f1e); }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <img class="logo-img" src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD">
+  </div>
+
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      לוח הבקרה
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      מרכזי הידע שלי
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      אנשי הקשר שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-2 4-4 4s-4-2.05-4-4a4 4 0 0 1 4-4z"/><path d="M20 17.5c0 2.5-3.6 4.5-8 4.5s-8-2-8-4.5"/></svg>
+      בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      הגדרות
+    </a>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <button class="mode-btn">תלמיד</button>
+      <button class="mode-btn active">מרצה</button>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div class="profile-mini-info">
+        <div class="profile-mini-name">אלון</div>
+        <div class="profile-mini-role">מרצה</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">בית</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">כל אנשי הקשר שלי</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="lang-switch">
+        <button class="lang-btn active">🇮🇱</button>
+        <button class="lang-btn">🇺🇸</button>
+      </div>
+      <div class="icon-btn" title="מצב כהה">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </div>
+      <div class="icon-btn" title="הגדרות">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="page-title-wrap">
+        <div>
+          <div class="page-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            CRM
+          </div>
+          <h1 class="page-title">כל אנשי הקשר שלי</h1>
+          <p class="page-subtitle">מאגר מרכזי של כל הלידים, התלמידים והחברים שלכם — במקום אחד</p>
+        </div>
+        <img class="boardi-title-img" src="../BOARDi/SVG/4.svg" alt="BOARDi">
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          יצוא
+        </button>
+        <button class="btn btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          יבוא
+        </button>
+        <button class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          איש קשר חדש
+        </button>
+      </div>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: var(--cyan-light);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">1,284</div>
+          <div class="stat-label">סה"כ אנשי קשר</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: var(--green-light);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">687</div>
+          <div class="stat-label">תלמידים</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: var(--cyan-light);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-2 4-4 4s-4-2.05-4-4a4 4 0 0 1 4-4z"/><path d="M20 17.5c0 2.5-3.6 4.5-8 4.5s-8-2-8-4.5c0-2 2-3.5 4-4"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">412</div>
+          <div class="stat-label">חברי מועדון</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(234,214,84,0.18);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8a7800" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">342</div>
+          <div class="stat-label">לידים</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: var(--pink-light);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">58</div>
+          <div class="stat-label">ביטולי הרשמה</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE SECTION -->
+    <div class="table-section">
+      <div class="table-toolbar">
+        <div class="filter-tabs">
+          <button class="filter-tab active">הכל <span class="count">1,284</span></button>
+          <button class="filter-tab">תלמידים <span class="count students">687</span></button>
+          <button class="filter-tab">חברי מועדון <span class="count members">412</span></button>
+          <button class="filter-tab">לידים <span class="count leads">342</span></button>
+          <button class="filter-tab">ביטולי הרשמה <span class="count drop">58</span></button>
+        </div>
+
+        <div class="toolbar-spacer"></div>
+
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" class="search-input" placeholder="חיפוש שם, מייל, טלפון...">
+        </div>
+
+        <button class="btn-filter">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          סינון מתקדם
+        </button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="sortable">שם <span class="sort-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg></span></th>
+              <th>מייל</th>
+              <th>טלפון</th>
+              <th>סוג</th>
+              <th>מקור</th>
+              <th>תגיות</th>
+              <th class="sortable">תאריך הצטרפות <span class="sort-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg></span></th>
+              <th>פעולות</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="contact-cell">
+                  <div class="avatar av-1">א</div>
+                  <div>
+                    <div class="contact-name">אלון שמרלינג</div>
+                    <div class="contact-meta">#1042</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="email-cell">alon@gmail.com</span></td>
+              <td><span class="phone-cell">054-1234567</span></td>
+              <td>
+                <div class="type-badges">
+                  <span class="type-badge type-student">תלמיד</span>
+                  <span class="type-badge type-member">חבר מועדון</span>
+                </div>
+              </td>
+              <td><span class="source-cell"><span class="source-dot source-landing"></span>דף נחיתה</span></td>
+              <td>
+                <div class="tags-cell">
+                  <span class="tag">VIP</span>
+                  <span class="tag">תל אביב</span>
+                </div>
+              </td>
+              <td><span class="date-cell">29.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn" title="צפה בפרטים">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </div>
+                  <div class="action-btn" title="שלח מייל">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  </div>
+                  <div class="action-btn" title="הוסף הערה">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contact-cell">
+                  <div class="avatar av-2">מ</div>
+                  <div>
+                    <div class="contact-name">מיכל לוי</div>
+                    <div class="contact-meta">#1041</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="email-cell">michal@levy.co.il</span></td>
+              <td><span class="phone-cell">052-9876543</span></td>
+              <td>
+                <div class="type-badges">
+                  <span class="type-badge type-lead">ליד</span>
+                </div>
+              </td>
+              <td><span class="source-cell"><span class="source-dot source-ads"></span>פרסום</span></td>
+              <td>
+                <div class="tags-cell">
+                  <span class="tag">חם</span>
+                </div>
+              </td>
+              <td><span class="date-cell">28.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contact-cell">
+                  <div class="avatar av-3">ד</div>
+                  <div>
+                    <div class="contact-name">דוד כהן</div>
+                    <div class="contact-meta">#1040</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="email-cell">david.cohen@mail.com</span></td>
+              <td><span class="phone-cell">050-5551234</span></td>
+              <td>
+                <div class="type-badges">
+                  <span class="type-badge type-student">תלמיד</span>
+                </div>
+              </td>
+              <td><span class="source-cell"><span class="source-dot source-email"></span>דיוור</span></td>
+              <td>
+                <div class="tags-cell">
+                  <span class="tag">ירושלים</span>
+                  <span class="tag">שיווק</span>
+                </div>
+              </td>
+              <td><span class="date-cell">26.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contact-cell">
+                  <div class="avatar av-4">ר</div>
+                  <div>
+                    <div class="contact-name">רותם אברהם</div>
+                    <div class="contact-meta">#1039</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="email-cell">rotem.a@gmail.com</span></td>
+              <td><span class="phone-cell">054-7778899</span></td>
+              <td>
+                <div class="type-badges">
+                  <span class="type-badge type-member">חבר מועדון</span>
+                  <span class="type-badge type-vip">VIP</span>
+                </div>
+              </td>
+              <td><span class="source-cell"><span class="source-dot source-referral"></span>הפניה</span></td>
+              <td>
+                <div class="tags-cell">
+                  <span class="tag">חיפה</span>
+                </div>
+              </td>
+              <td><span class="date-cell">22.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contact-cell">
+                  <div class="avatar av-5">י</div>
+                  <div>
+                    <div class="contact-name">יוסי מזרחי</div>
+                    <div class="contact-meta">#1038</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="email-cell">yossi.m@business.co.il</span></td>
+              <td><span class="phone-cell">052-3344556</span></td>
+              <td>
+                <div class="type-badges">
+                  <span class="type-badge type-drop">בוטל</span>
+                </div>
+              </td>
+              <td><span class="source-cell"><span class="source-dot source-direct"></span>ישיר</span></td>
+              <td>
+                <div class="tags-cell">
+                  <span class="tag">השבה</span>
+                </div>
+              </td>
+              <td><span class="date-cell">18.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contact-cell">
+                  <div class="avatar av-6">נ</div>
+                  <div>
+                    <div class="contact-name">נעמה גולן</div>
+                    <div class="contact-meta">#1037</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="email-cell">naama.golan@mail.com</span></td>
+              <td><span class="phone-cell">054-1122334</span></td>
+              <td>
+                <div class="type-badges">
+                  <span class="type-badge type-student">תלמיד</span>
+                  <span class="type-badge type-member">חבר מועדון</span>
+                </div>
+              </td>
+              <td><span class="source-cell"><span class="source-dot source-landing"></span>דף נחיתה</span></td>
+              <td>
+                <div class="tags-cell">
+                  <span class="tag">ראשון לציון</span>
+                  <span class="tag">מתחיל</span>
+                </div>
+              </td>
+              <td><span class="date-cell">15.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contact-cell">
+                  <div class="avatar av-7">ש</div>
+                  <div>
+                    <div class="contact-name">שירה בן-דוד</div>
+                    <div class="contact-meta">#1036</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="email-cell">shira.bd@startup.io</span></td>
+              <td><span class="phone-cell">050-9988776</span></td>
+              <td>
+                <div class="type-badges">
+                  <span class="type-badge type-lead">ליד</span>
+                </div>
+              </td>
+              <td><span class="source-cell"><span class="source-dot source-ads"></span>פרסום</span></td>
+              <td>
+                <div class="tags-cell">
+                  <span class="tag">קר</span>
+                </div>
+              </td>
+              <td><span class="date-cell">12.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contact-cell">
+                  <div class="avatar av-1">ת</div>
+                  <div>
+                    <div class="contact-name">תום ישראלי</div>
+                    <div class="contact-meta">#1035</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="email-cell">tom.israeli@mail.com</span></td>
+              <td><span class="phone-cell">054-4455667</span></td>
+              <td>
+                <div class="type-badges">
+                  <span class="type-badge type-student">תלמיד</span>
+                </div>
+              </td>
+              <td><span class="source-cell"><span class="source-dot source-email"></span>דיוור</span></td>
+              <td>
+                <div class="tags-cell">
+                  <span class="tag">תל אביב</span>
+                </div>
+              </td>
+              <td><span class="date-cell">10.03.2026</span></td>
+              <td>
+                <div class="actions-cell">
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-footer">
+        <div>מציג 1-8 מתוך 1,284 אנשי קשר</div>
+        <div class="pagination">
+          <div class="page-btn">‹</div>
+          <div class="page-btn active">1</div>
+          <div class="page-btn">2</div>
+          <div class="page-btn">3</div>
+          <div class="page-btn">...</div>
+          <div class="page-btn">161</div>
+          <div class="page-btn">›</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
