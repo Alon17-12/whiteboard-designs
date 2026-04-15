@@ -816,6 +816,267 @@
     .insights-grid { grid-template-columns: 1fr; }
     .dash-grid, .dash-grid-bottom { grid-template-columns: 1fr; }
   }
+
+  /* ═══════════════════════════════════════════════════
+     MODAL SYSTEM
+     ═══════════════════════════════════════════════════ */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(26,47,94,0.45);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    align-items: flex-start; justify-content: center;
+    padding: 60px 20px 20px;
+    overflow-y: auto;
+    opacity: 0;
+    transition: opacity .25s;
+  }
+  [data-theme="dark"] .modal-backdrop {
+    background: rgba(0,0,0,0.6);
+  }
+  .modal-backdrop.open { display: flex; opacity: 1; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 540px;
+    transform: translateY(20px) scale(.96);
+    transition: transform .3s cubic-bezier(.4,.8,.3,1);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .modal.wide { max-width: 680px; }
+  .modal-backdrop.open .modal { transform: translateY(0) scale(1); }
+
+  .modal-head {
+    display: flex; align-items: flex-start;
+    padding: 24px 26px 18px;
+    gap: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-head-icon {
+    width: 46px; height: 46px;
+    border-radius: 13px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-head-icon svg { width: 22px; height: 22px; }
+  .modal-head-text { flex: 1; }
+  .modal-title { font-size: 19px; font-weight: 800; color: var(--text-main); line-height: 1.25; margin-bottom: 4px; }
+  .modal-subtitle { font-size: 13px; color: var(--text-sub); line-height: 1.4; }
+  .modal-close {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-sub);
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+  .modal-close:hover { background: var(--pink-light); color: var(--pink); border-color: var(--pink); }
+  .modal-close svg { width: 16px; height: 16px; }
+
+  .modal-body {
+    padding: 22px 26px;
+    max-height: calc(100vh - 280px);
+    overflow-y: auto;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+
+  .modal-footer {
+    display: flex; justify-content: flex-start; gap: 10px;
+    padding: 18px 26px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+
+  /* FORM CONTROLS */
+  .form-field { display: flex; flex-direction: column; gap: 8px; }
+  .form-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .form-label {
+    font-size: 13px; font-weight: 700; color: var(--text-main);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .form-label .req { color: var(--pink); }
+  .form-hint { font-size: 11.5px; color: var(--text-light); font-weight: 400; }
+
+  .form-input, .form-textarea, .form-select {
+    width: 100%;
+    padding: 11px 14px;
+    background: var(--surface-2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-he);
+    font-size: 14px;
+    color: var(--text-main);
+    transition: all .2s;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus {
+    outline: none;
+    border-color: var(--cyan);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(56,196,242,0.15);
+  }
+  .form-input::placeholder, .form-textarea::placeholder { color: var(--text-light); }
+  .form-textarea { resize: vertical; min-height: 90px; font-family: var(--font-he); }
+  .form-select { cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23253E7A' stroke-width='2.5'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: left 14px center;
+    padding-left: 36px;
+  }
+  [data-theme="dark"] .form-select {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2338C4F2' stroke-width='2.5'><polyline points='6 9 12 15 18 9'/></svg>");
+  }
+
+  /* SEGMENTED */
+  .segmented {
+    display: flex;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+    gap: 3px;
+  }
+  .seg-btn {
+    flex: 1;
+    padding: 9px 10px;
+    border: none; background: transparent;
+    color: var(--text-sub);
+    font-family: var(--font-he); font-size: 13px; font-weight: 600;
+    border-radius: 7px; cursor: pointer; transition: all .2s;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .seg-btn svg { width: 14px; height: 14px; }
+  .seg-btn.active {
+    background: var(--surface);
+    color: var(--navy);
+    box-shadow: 0 1px 4px rgba(37,62,122,0.08);
+  }
+  [data-theme="dark"] .seg-btn.active { color: var(--cyan); background: var(--navy-dark); }
+
+  /* PILL TEMPLATES */
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill-opt {
+    padding: 8px 14px;
+    background: var(--surface-2);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    font-family: var(--font-he); font-size: 12.5px; font-weight: 600;
+    color: var(--text-sub);
+    cursor: pointer; transition: all .2s;
+  }
+  .pill-opt:hover { color: var(--text-main); border-color: var(--cyan); }
+  .pill-opt.active { background: var(--cyan); color: white; border-color: var(--cyan); }
+  [data-theme="dark"] .pill-opt.active { color: var(--navy-dark); }
+
+  /* UPLOAD ZONE */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-md);
+    padding: 22px;
+    text-align: center;
+    cursor: pointer;
+    background: var(--surface-2);
+    transition: all .2s;
+  }
+  .upload-zone:hover { border-color: var(--cyan); background: var(--light-blue); }
+  [data-theme="dark"] .upload-zone:hover { background: var(--cyan-light); }
+  .upload-zone svg { width: 28px; height: 28px; color: var(--cyan); margin-bottom: 8px; }
+  .upload-zone-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
+  .upload-zone-sub { font-size: 11.5px; color: var(--text-light); }
+
+  /* TOGGLE ROW */
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .toggle-label { font-size: 13.5px; font-weight: 600; color: var(--text-main); }
+  .toggle-sub { font-size: 11.5px; color: var(--text-light); margin-top: 2px; }
+
+  .toggle {
+    width: 38px; height: 22px; border-radius: 11px;
+    background: var(--border);
+    position: relative; cursor: pointer;
+    transition: background .2s;
+    flex-shrink: 0;
+  }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px; right: 2px;
+    width: 18px; height: 18px;
+    background: white;
+    border-radius: 50%;
+    transition: all .25s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle.on { background: var(--cyan); }
+  .toggle.on::after { right: 18px; }
+
+  /* ═══════════════════════════════════════════════════
+     TOAST
+     ═══════════════════════════════════════════════════ */
+  .toast-container {
+    position: fixed;
+    bottom: 24px; left: 24px;
+    display: flex; flex-direction: column; gap: 10px;
+    z-index: 200;
+    pointer-events: none;
+  }
+  .toast {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    min-width: 260px; max-width: 400px;
+    pointer-events: auto;
+    transform: translateX(-20px);
+    opacity: 0;
+    animation: toastIn .35s ease forwards, toastOut .35s ease forwards 3.5s;
+  }
+  @keyframes toastIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes toastOut {
+    to { opacity: 0; transform: translateX(-20px); }
+  }
+  .toast-icon {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .toast-icon svg { width: 16px; height: 16px; }
+  .toast.success .toast-icon { background: var(--green-light); color: var(--green); }
+  .toast.info    .toast-icon { background: var(--cyan-light); color: var(--cyan); }
+  .toast.warn    .toast-icon { background: var(--yellow-light); color: #b89c00; }
+  [data-theme="dark"] .toast.warn .toast-icon { color: var(--yellow); }
+  .toast.error   .toast-icon { background: var(--pink-light); color: var(--pink); }
+
+  .toast-body { flex: 1; }
+  .toast-title { font-size: 13.5px; font-weight: 700; color: var(--text-main); }
+  .toast-msg { font-size: 12px; color: var(--text-sub); margin-top: 1px; }
+
+  /* removing states */
+  .removing { animation: slideOut .4s ease forwards !important; pointer-events: none; }
+  @keyframes slideOut {
+    to { opacity: 0; transform: translateX(40px); max-height: 0; padding-top: 0; padding-bottom: 0; margin: 0; border-width: 0; }
+  }
+
+  .task.removing { overflow: hidden; }
+  .insight-card.removing { overflow: hidden; }
 </style>
 </head>
 <body>
@@ -1491,8 +1752,18 @@
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════
+     MODAL + TOAST CONTAINERS
+     ═══════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" id="modal"></div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+
 <script>
-  // ─── THEME TOGGLE ───────────────────────────────
+  // ═══════════════════════════════════════════════════
+  // THEME / TABS / LANG / MODE
+  // ═══════════════════════════════════════════════════
   const themeToggle = document.getElementById('themeToggle');
   const html = document.documentElement;
   themeToggle.addEventListener('click', () => {
@@ -1500,15 +1771,14 @@
       html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
   });
 
-  // ─── CHART TABS ─────────────────────────────────
   document.querySelectorAll('.chart-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
+      toast('info', 'טווח תקופה עודכן', 'טוען נתונים חדשים לגרף…');
     });
   });
 
-  // ─── LANG ───────────────────────────────────────
   document.querySelectorAll('.lang-btn').forEach(b => {
     b.addEventListener('click', () => {
       document.querySelectorAll('.lang-btn').forEach(x => x.classList.remove('active'));
@@ -1516,15 +1786,642 @@
     });
   });
 
-  // ─── MODE SWITCHER ──────────────────────────────
   document.querySelectorAll('.mode-btn').forEach(b => {
     b.addEventListener('click', () => {
+      const isStudent = b.textContent.trim() === 'תלמיד';
       document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('active'));
       b.classList.add('active');
+      if (isStudent) toast('info', 'מעבר למצב תלמיד', 'פותח את הקורסים שלי…');
     });
   });
 
-  // ─── KPI COUNT UP ───────────────────────────────
+  // ═══════════════════════════════════════════════════
+  // TOAST SYSTEM
+  // ═══════════════════════════════════════════════════
+  const toastContainer = document.getElementById('toastContainer');
+  const TOAST_ICONS = {
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>',
+    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    warn:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+    error:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+  };
+  function toast(type, title, msg = '') {
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.innerHTML = `
+      <div class="toast-icon">${TOAST_ICONS[type] || TOAST_ICONS.info}</div>
+      <div class="toast-body">
+        <div class="toast-title">${title}</div>
+        ${msg ? `<div class="toast-msg">${msg}</div>` : ''}
+      </div>`;
+    toastContainer.appendChild(el);
+    setTimeout(() => el.remove(), 4100);
+  }
+
+  // ═══════════════════════════════════════════════════
+  // MODAL SYSTEM
+  // ═══════════════════════════════════════════════════
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const modalEl = document.getElementById('modal');
+
+  function openModal(html, wide = false) {
+    modalEl.classList.toggle('wide', wide);
+    modalEl.innerHTML = html;
+    modalBackdrop.classList.add('open');
+    // bind close buttons
+    modalEl.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
+    // toggles
+    modalEl.querySelectorAll('.toggle').forEach(t => t.addEventListener('click', () => t.classList.toggle('on')));
+    // pill picker (single)
+    modalEl.querySelectorAll('.pill-row[data-single]').forEach(row => {
+      row.querySelectorAll('.pill-opt').forEach(p => {
+        p.addEventListener('click', () => {
+          row.querySelectorAll('.pill-opt').forEach(x => x.classList.remove('active'));
+          p.classList.add('active');
+        });
+      });
+    });
+    // segmented
+    modalEl.querySelectorAll('.segmented').forEach(seg => {
+      seg.querySelectorAll('.seg-btn').forEach(b => {
+        b.addEventListener('click', () => {
+          seg.querySelectorAll('.seg-btn').forEach(x => x.classList.remove('active'));
+          b.classList.add('active');
+        });
+      });
+    });
+  }
+  function closeModal() {
+    modalBackdrop.classList.remove('open');
+  }
+  modalBackdrop.addEventListener('click', e => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modalBackdrop.classList.contains('open')) closeModal();
+  });
+
+  // ═══════════════════════════════════════════════════
+  // MODAL TEMPLATES
+  // ═══════════════════════════════════════════════════
+  const head = (color, icon, title, subtitle) => `
+    <div class="modal-head">
+      <div class="modal-head-icon" style="background:${color}20;color:${color};">
+        ${icon}
+      </div>
+      <div class="modal-head-text">
+        <div class="modal-title">${title}</div>
+        <div class="modal-subtitle">${subtitle}</div>
+      </div>
+      <button class="modal-close" data-close>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`;
+
+  const footer = (primaryLabel, action) => `
+    <div class="modal-footer">
+      <button class="btn btn-primary" data-action="${action}">${primaryLabel}</button>
+      <button class="btn btn-secondary" data-close>ביטול</button>
+    </div>`;
+
+  // ── Quick Action Modals ──────────────────────────
+  const MODALS = {
+    course: () => ({
+      html: head('#38C4F2',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+        'צור קורס חדש', 'מלא את הפרטים הבסיסיים — תמיד אפשר לערוך אחר כך') + `
+      <div class="modal-body">
+        <div class="upload-zone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div class="upload-zone-title">העלה תמונת קאבר</div>
+          <div class="upload-zone-sub">JPG או PNG, מומלץ 1280×720</div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">שם הקורס <span class="req">*</span></label>
+          <input class="form-input" placeholder="לדוגמה: יסודות העיצוב">
+        </div>
+        <div class="form-field-row">
+          <div class="form-field">
+            <label class="form-label">קטגוריה</label>
+            <select class="form-select">
+              <option>עיצוב</option>
+              <option>שיווק</option>
+              <option>טכנולוגיה</option>
+              <option>יזמות</option>
+              <option>אישי</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label">מחיר (₪)</label>
+            <input class="form-input" type="number" placeholder="497">
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">תיאור קצר</label>
+          <textarea class="form-textarea" placeholder="מה תרוויח התלמיד מהקורס?"></textarea>
+        </div>
+      </div>` + footer('צור קורס', 'create-course')
+    }),
+
+    lesson: () => ({
+      html: head('#38C4F2',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+        'שיעור חדש', 'הוסף שיעור לקורס קיים') + `
+      <div class="modal-body">
+        <div class="form-field">
+          <label class="form-label">בחר קורס <span class="req">*</span></label>
+          <select class="form-select">
+            <option>יסודות העיצוב</option>
+            <option>שיווק דיגיטלי למתקדמים</option>
+            <option>בניית אתרים עם WordPress</option>
+            <option>עיצוב UX לאפליקציות</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">שם השיעור <span class="req">*</span></label>
+          <input class="form-input" placeholder="לדוגמה: שיעור 1 — הקדמה">
+        </div>
+        <div class="form-field">
+          <label class="form-label">סוג שיעור</label>
+          <div class="segmented">
+            <button class="seg-btn active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              וידאו
+            </button>
+            <button class="seg-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+              טקסט
+            </button>
+            <button class="seg-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-4"/><polyline points="9 7 12 4 15 7"/><line x1="12" y1="4" x2="12" y2="14"/></svg>
+              מבחן
+            </button>
+          </div>
+        </div>
+        <div class="upload-zone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div class="upload-zone-title">העלה קובץ וידאו</div>
+          <div class="upload-zone-sub">MP4 עד 2GB</div>
+        </div>
+      </div>` + footer('שמור שיעור', 'create-lesson')
+    }),
+
+    campaign: () => ({
+      html: head('#F05680',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+        'קמפיין דיוור חדש', 'שלח מייל לקהל שלך') + `
+      <div class="modal-body">
+        <div class="form-field">
+          <label class="form-label">כותרת המייל <span class="req">*</span></label>
+          <input class="form-input" placeholder="לדוגמה: יש לנו משהו מיוחד בשבילך">
+        </div>
+        <div class="form-field">
+          <label class="form-label">קהל יעד</label>
+          <select class="form-select">
+            <option>כל התלמידים (248)</option>
+            <option>תלמידי "יסודות העיצוב" (87)</option>
+            <option>תלמידי "שיווק דיגיטלי" (64)</option>
+            <option>לידים שלא רכשו (93)</option>
+            <option>חברי מועדון "יזמות" (48)</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">תבנית עיצוב</label>
+          <div class="pill-row" data-single>
+            <div class="pill-opt active">קלאסי</div>
+            <div class="pill-opt">מודרני</div>
+            <div class="pill-opt">מינימלי</div>
+            <div class="pill-opt">חגיגי</div>
+            <div class="pill-opt">התחל מאפס</div>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">מתי לשלוח</label>
+          <div class="segmented">
+            <button class="seg-btn active">שלח עכשיו</button>
+            <button class="seg-btn">תזמן</button>
+          </div>
+        </div>
+      </div>` + footer('המשך לעורך', 'create-campaign')
+    }),
+
+    student: () => ({
+      html: head('#7DC57A',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>',
+        'הוסף תלמיד', 'הזן פרטים או ייבא רשימה') + `
+      <div class="modal-body">
+        <div class="segmented">
+          <button class="seg-btn active">הזנה ידנית</button>
+          <button class="seg-btn">ייבוא CSV</button>
+        </div>
+        <div class="form-field-row">
+          <div class="form-field">
+            <label class="form-label">שם פרטי <span class="req">*</span></label>
+            <input class="form-input" placeholder="ישראל">
+          </div>
+          <div class="form-field">
+            <label class="form-label">שם משפחה <span class="req">*</span></label>
+            <input class="form-input" placeholder="ישראלי">
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">אימייל <span class="req">*</span></label>
+          <input class="form-input" type="email" placeholder="name@example.com">
+        </div>
+        <div class="form-field">
+          <label class="form-label">טלפון</label>
+          <input class="form-input" type="tel" placeholder="050-1234567" dir="ltr" style="text-align:right;">
+        </div>
+        <div class="form-field">
+          <label class="form-label">רשום לקורס</label>
+          <select class="form-select">
+            <option>— ללא רישום —</option>
+            <option>יסודות העיצוב</option>
+            <option>שיווק דיגיטלי למתקדמים</option>
+            <option>בניית אתרים עם WordPress</option>
+          </select>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">שלח מייל הזמנה</div>
+            <div class="toggle-sub">יקבל לינק אישי להצטרפות</div>
+          </div>
+          <div class="toggle on"></div>
+        </div>
+      </div>` + footer('הוסף תלמיד', 'add-student')
+    }),
+
+    event: () => ({
+      html: head('#EAD654',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+        'תזמן אירוע', 'וובינר, שידור חי או מפגש') + `
+      <div class="modal-body">
+        <div class="form-field">
+          <label class="form-label">שם האירוע <span class="req">*</span></label>
+          <input class="form-input" placeholder="לדוגמה: שיעור פתיחה — שיווק דיגיטלי">
+        </div>
+        <div class="form-field">
+          <label class="form-label">סוג</label>
+          <div class="segmented">
+            <button class="seg-btn active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              וובינר
+            </button>
+            <button class="seg-btn">שידור חי</button>
+            <button class="seg-btn">מפגש פיזי</button>
+          </div>
+        </div>
+        <div class="form-field-row">
+          <div class="form-field">
+            <label class="form-label">תאריך</label>
+            <input class="form-input" type="date" dir="ltr" style="text-align:right;">
+          </div>
+          <div class="form-field">
+            <label class="form-label">שעה</label>
+            <input class="form-input" type="time" dir="ltr" style="text-align:right;">
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">משך (דקות)</label>
+          <select class="form-select">
+            <option>30 דקות</option>
+            <option selected>60 דקות</option>
+            <option>90 דקות</option>
+            <option>120 דקות</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">קהל יעד</label>
+          <select class="form-select">
+            <option>כולם</option>
+            <option>תלמידי קורס ספציפי</option>
+            <option>חברי מועדון</option>
+            <option>פתוח לכולם (ללא רישום)</option>
+          </select>
+        </div>
+      </div>` + footer('תזמן אירוע', 'create-event')
+    }),
+
+    post: () => ({
+      html: head('#38C4F2',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+        'פוסט במועדון', 'שתף עדכון עם חברי המועדון') + `
+      <div class="modal-body">
+        <div class="form-field">
+          <label class="form-label">מועדון <span class="req">*</span></label>
+          <select class="form-select">
+            <option>יזמות דיגיטלית (48 חברים)</option>
+            <option>קהילת מעצבים (87 חברים)</option>
+            <option>שיווק מתקדם (62 חברים)</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">כותרת הפוסט</label>
+          <input class="form-input" placeholder="משהו שיעניין את חברי המועדון">
+        </div>
+        <div class="form-field">
+          <label class="form-label">תוכן הפוסט <span class="req">*</span></label>
+          <textarea class="form-textarea" placeholder="מה רצית לשתף?" style="min-height:120px;"></textarea>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">הצמד לראש הפיד</div>
+            <div class="toggle-sub">יופיע למעלה למשך 7 ימים</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">אפשר תגובות</div>
+            <div class="toggle-sub">חברים יוכלו להגיב לפוסט</div>
+          </div>
+          <div class="toggle on"></div>
+        </div>
+      </div>` + footer('פרסם פוסט', 'create-post')
+    }),
+
+    brand: () => ({
+      html: head('#F05680',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
+        'ערכת מותג', 'עדכן את הזהות הוויזואלית') + `
+      <div class="modal-body">
+        <div class="form-field">
+          <label class="form-label">לוגו ראשי</label>
+          <div class="upload-zone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div class="upload-zone-title">העלה לוגו</div>
+            <div class="upload-zone-sub">PNG או SVG, רקע שקוף מומלץ</div>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">פלטת צבעים</label>
+          <div class="form-field-row" style="grid-template-columns:repeat(4,1fr);gap:8px;">
+            <input class="form-input" type="color" value="#253E7A" style="height:44px;padding:4px;">
+            <input class="form-input" type="color" value="#38C4F2" style="height:44px;padding:4px;">
+            <input class="form-input" type="color" value="#F05680" style="height:44px;padding:4px;">
+            <input class="form-input" type="color" value="#7DC57A" style="height:44px;padding:4px;">
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">פונט ראשי</label>
+          <select class="form-select">
+            <option>Heebo (ברירת מחדל)</option>
+            <option>Assistant</option>
+            <option>Rubik</option>
+            <option>Secular One</option>
+          </select>
+        </div>
+      </div>` + footer('שמור שינויים', 'save-brand')
+    }),
+
+    export: () => ({
+      html: head('#38C4F2',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+        'ייצוא דוח', 'קבל דוח מפורט של נתוני המערכת') + `
+      <div class="modal-body">
+        <div class="form-field">
+          <label class="form-label">סוג דוח</label>
+          <div class="pill-row" data-single>
+            <div class="pill-opt active">הכנסות</div>
+            <div class="pill-opt">תלמידים</div>
+            <div class="pill-opt">ביצועי קורסים</div>
+            <div class="pill-opt">דיוור</div>
+            <div class="pill-opt">דוח מלא</div>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">טווח תאריכים</label>
+          <select class="form-select">
+            <option>7 ימים אחרונים</option>
+            <option selected>30 ימים אחרונים</option>
+            <option>90 ימים אחרונים</option>
+            <option>מתחילת השנה</option>
+            <option>טווח מותאם</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">פורמט</label>
+          <div class="segmented">
+            <button class="seg-btn active">PDF</button>
+            <button class="seg-btn">Excel</button>
+            <button class="seg-btn">CSV</button>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">שלח עותק למייל</div>
+            <div class="toggle-sub">alon@alon-gabay.co.il</div>
+          </div>
+          <div class="toggle on"></div>
+        </div>
+      </div>` + footer('צור דוח', 'generate-report')
+    }),
+
+    settings: () => ({
+      html: head('#253E7A',
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+        'הגדרות מהירות', 'העדפות כלליות') + `
+      <div class="modal-body">
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">התראות דסקטופ</div>
+            <div class="toggle-sub">קבל התראות בדפדפן</div>
+          </div>
+          <div class="toggle on"></div>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">דוח יומי במייל</div>
+            <div class="toggle-sub">סיכום יומי ב-09:00</div>
+          </div>
+          <div class="toggle on"></div>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">תובנות BOARDi אוטומטיות</div>
+            <div class="toggle-sub">BOARDi יוזם פעולות בעצמו</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">שפת ממשק</label>
+          <select class="form-select">
+            <option>עברית</option>
+            <option>English</option>
+          </select>
+        </div>
+      </div>` + footer('שמור הגדרות', 'save-settings')
+    })
+  };
+
+  function openQuickAction(key) {
+    const m = MODALS[key];
+    if (!m) return;
+    const { html } = m();
+    openModal(html, key === 'brand' || key === 'event');
+  }
+
+  // ═══════════════════════════════════════════════════
+  // WIRE UP: HEADER BUTTONS
+  // ═══════════════════════════════════════════════════
+  document.querySelector('.header-actions .btn-primary').addEventListener('click', () => openQuickAction('course'));
+  document.querySelector('.header-actions .btn-secondary').addEventListener('click', () => openQuickAction('export'));
+
+  // topbar settings (second icon-btn — first is theme)
+  const iconBtns = document.querySelectorAll('.topbar-actions .icon-btn');
+  // iconBtns order: theme, settings
+  if (iconBtns[1]) iconBtns[1].addEventListener('click', () => openQuickAction('settings'));
+
+  // ═══════════════════════════════════════════════════
+  // WIRE UP: KPI CARDS (click to drill)
+  // ═══════════════════════════════════════════════════
+  const kpiLabels = ['הכנסות היום', 'תלמידים פעילים', 'קורסים פעילים', 'שיעור השלמת קורס'];
+  document.querySelectorAll('.kpi-card').forEach((card, i) => {
+    card.addEventListener('click', () => {
+      toast('info', `פותח אנליטיקס — ${kpiLabels[i]}`, 'טוען נתונים מפורטים…');
+    });
+  });
+
+  // ═══════════════════════════════════════════════════
+  // WIRE UP: INSIGHTS PANEL
+  // ═══════════════════════════════════════════════════
+  document.querySelector('.insights-refresh').addEventListener('click', function() {
+    this.style.pointerEvents = 'none';
+    const svg = this.querySelector('svg');
+    svg.style.animation = 'spin 0.8s linear';
+    toast('info', 'BOARDi מנתח מחדש את הנתונים', 'תוך כמה שניות…');
+    setTimeout(() => {
+      svg.style.animation = '';
+      this.style.pointerEvents = '';
+      toast('success', 'תובנות חדשות מוכנות', 'BOARDi סיים לנתח — 3 תובנות רעננות בשבילך');
+    }, 1400);
+  });
+
+  // insight primary + ghost buttons
+  document.querySelectorAll('.insight-card').forEach((card, i) => {
+    const primary = card.querySelector('.insight-btn.primary');
+    const ghost = card.querySelector('.insight-btn.ghost');
+    const titles = [
+      'פותח עורך קמפיין דיוור',
+      'BOARDi מכין ניתוח אסטרטגי',
+      'טוען ניתוח מעמיק של שיעור 4'
+    ];
+    primary?.addEventListener('click', e => {
+      e.stopPropagation();
+      toast('info', titles[i], 'BOARDi עובד — תוצאות תוך רגע');
+    });
+    ghost?.addEventListener('click', e => {
+      e.stopPropagation();
+      card.classList.add('removing');
+      setTimeout(() => card.remove(), 400);
+      toast('success', 'התובנה נדחתה', 'לא תופיע בשוב 24 שעות הקרובות');
+    });
+  });
+
+  // ═══════════════════════════════════════════════════
+  // WIRE UP: TASKS
+  // ═══════════════════════════════════════════════════
+  const TASK_ACTIONS = [
+    { title: 'פותח ניהול תשלומים', msg: 'מציג 2 התשלומים הנכשלים' },
+    { title: 'פותח סקירת תלמידים חדשים', msg: '3 בקשות ממתינות' },
+    { title: 'פותח הודעות במועדון', msg: '8 הודעות חדשות' },
+    { title: 'מתחבר לשיעור חי', msg: 'טוען חדר שידור…' },
+    { title: 'ממשיך טיוטת קמפיין', msg: 'פותח את עורך המיילים' }
+  ];
+  document.querySelectorAll('.task').forEach((task, i) => {
+    const btn = task.querySelector('.task-action');
+    btn?.addEventListener('click', e => {
+      e.stopPropagation();
+      const action = TASK_ACTIONS[i] || TASK_ACTIONS[0];
+      toast('success', action.title, action.msg);
+      task.classList.add('removing');
+      setTimeout(() => task.remove(), 400);
+    });
+  });
+
+  // ═══════════════════════════════════════════════════
+  // WIRE UP: TOP COURSES
+  // ═══════════════════════════════════════════════════
+  document.querySelectorAll('.course-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const name = row.querySelector('.course-name').textContent;
+      toast('info', `פותח את "${name}"`, 'טוען דף ניהול קורס');
+    });
+  });
+
+  // ═══════════════════════════════════════════════════
+  // WIRE UP: QUICK ACTIONS (6 tiles)
+  // ═══════════════════════════════════════════════════
+  const QA_KEYS = ['lesson', 'campaign', 'student', 'event', 'post', 'brand'];
+  document.querySelectorAll('.qa-tile').forEach((tile, i) => {
+    tile.addEventListener('click', () => openQuickAction(QA_KEYS[i]));
+  });
+
+  // ═══════════════════════════════════════════════════
+  // WIRE UP: ACTIVITY + CARD LINKS
+  // ═══════════════════════════════════════════════════
+  document.querySelectorAll('.activity-item').forEach(item => {
+    item.addEventListener('click', () => {
+      toast('info', 'פותח פרטי פעילות', 'מציג הקשר מלא');
+    });
+  });
+
+  document.querySelectorAll('.card-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const card = link.closest('.card');
+      const title = card.querySelector('.card-title').textContent.trim();
+      toast('info', `פותח את "${title}" המלא`, 'טוען את הדף המלא');
+    });
+  });
+
+  // ═══════════════════════════════════════════════════
+  // WIRE UP: SIDEBAR NAV
+  // ═══════════════════════════════════════════════════
+  const NAV_TARGETS = [
+    null, // לוח הבקרה — current
+    'מרכזי הידע שלי',
+    'בורדי',
+    'הספריה שלי',
+    'הגדרות'
+  ];
+  document.querySelectorAll('.sidebar .nav-item').forEach((item, i) => {
+    if (NAV_TARGETS[i] === null) return;
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      toast('info', `מעבר ל"${NAV_TARGETS[i]}"`, 'טוען…');
+    });
+  });
+
+  document.querySelector('.profile-mini')?.addEventListener('click', () => openQuickAction('settings'));
+
+  // ═══════════════════════════════════════════════════
+  // MODAL PRIMARY ACTIONS
+  // ═══════════════════════════════════════════════════
+  const ACTION_TOASTS = {
+    'create-course':   { type: 'success', title: 'הקורס נוצר בהצלחה', msg: 'נפתח עורך הקורס כדי להוסיף שיעורים' },
+    'create-lesson':   { type: 'success', title: 'השיעור נוסף', msg: 'הקובץ הועלה ומעובד ברקע' },
+    'create-campaign': { type: 'success', title: 'עובר לעורך הדיוור', msg: 'כל הפרטים נשמרו' },
+    'add-student':     { type: 'success', title: 'התלמיד נוסף', msg: 'מייל הזמנה נשלח' },
+    'create-event':    { type: 'success', title: 'האירוע תוזמן', msg: 'הזמנות יישלחו למשתתפים' },
+    'create-post':     { type: 'success', title: 'הפוסט פורסם', msg: 'החברים יראו אותו בפיד' },
+    'save-brand':      { type: 'success', title: 'ערכת המותג עודכנה', msg: 'כל המסכים יעודכנו בהתאם' },
+    'generate-report': { type: 'success', title: 'הדוח מוכן להורדה', msg: 'עותק נשלח גם למייל' },
+    'save-settings':   { type: 'success', title: 'ההגדרות נשמרו', msg: 'השינויים תקפים מיד' }
+  };
+
+  modalEl.addEventListener('click', e => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const t = ACTION_TOASTS[action];
+    closeModal();
+    if (t) toast(t.type, t.title, t.msg);
+  });
+
+  // ═══════════════════════════════════════════════════
+  // KPI COUNT UP
+  // ═══════════════════════════════════════════════════
   function animateNumber(el, target, duration = 1200, prefix = '', suffix = '') {
     const startTime = performance.now();
     function tick(now) {
@@ -1537,14 +2434,13 @@
     requestAnimationFrame(tick);
   }
 
-  // animate KPIs after mount
   window.addEventListener('load', () => {
     const kpis = document.querySelectorAll('.kpi-value');
     const vals = [
-      { text: '₪4,820',  prefix: '₪',  target: 4820 },
-      { text: '248',     prefix: '',   target: 248 },
-      { text: '7',       prefix: '',   target: 7 },
-      { text: '68%',     prefix: '',   target: 68, suffix: '%' },
+      { prefix: '₪', target: 4820 },
+      { prefix: '',  target: 248 },
+      { prefix: '',  target: 7 },
+      { prefix: '',  target: 68, suffix: '%' },
     ];
     kpis.forEach((el, i) => {
       const v = vals[i];
@@ -1552,6 +2448,11 @@
       animateNumber(el, v.target, 1100 + i * 150, v.prefix || '', v.suffix || '');
     });
   });
+
+  // spin keyframe for refresh icon
+  const styleEl = document.createElement('style');
+  styleEl.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+  document.head.appendChild(styleEl);
 </script>
 
 </body>
