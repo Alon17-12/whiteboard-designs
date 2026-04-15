@@ -753,37 +753,168 @@
     gap: 20px;
   }
 
-  /* ── QUICK ACTIONS ─────────────────────────── */
-  .qa-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+  /* ── TOP STUDENTS (WINNERS) ────────────────── */
+  .winners-wrap {
+    display: flex; flex-direction: column; gap: 12px;
   }
-  .qa-tile {
-    padding: 18px 14px;
+  .winners-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .winner-card {
+    position: relative;
     background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    transition: all .25s;
     cursor: pointer;
-    transition: all .2s;
-    display: flex; flex-direction: column; gap: 10px;
-    text-align: right;
+    overflow: hidden;
+    display: flex; gap: 14px;
+    align-items: center;
   }
-  .qa-tile:hover {
+  .winner-card:hover {
     transform: translateY(-2px);
-    border-color: var(--cyan);
-    background: var(--light-blue);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-hover);
   }
-  [data-theme="dark"] .qa-tile:hover { background: var(--cyan-light); }
 
-  .qa-icon {
-    width: 40px; height: 40px; border-radius: 11px;
+  /* HERO #1 */
+  .winner-hero {
+    background: linear-gradient(135deg, rgba(234,214,84,0.14), rgba(234,214,84,0.04));
+    border-color: rgba(234,214,84,0.5);
+    padding: 22px;
+  }
+  [data-theme="dark"] .winner-hero {
+    background: linear-gradient(135deg, rgba(234,214,84,0.12), rgba(234,214,84,0.03));
+  }
+  .winner-hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(234,214,84,0.2), transparent 70%);
+    pointer-events: none;
+  }
+
+  .winner-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-family: var(--font-en);
+    font-weight: 700; font-size: 20px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
   }
-  .qa-icon svg { width: 20px; height: 20px; }
+  .winner-hero .winner-avatar {
+    width: 72px; height: 72px;
+    font-size: 26px;
+    box-shadow: 0 6px 18px rgba(234,214,84,0.4);
+  }
 
-  .qa-label { font-size: 13.5px; font-weight: 700; color: var(--text-main); line-height: 1.3; }
-  .qa-sub { font-size: 11.5px; color: var(--text-sub); }
+  /* Crown/medal badge */
+  .winner-medal {
+    position: absolute;
+    top: -8px; right: -6px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-en);
+    font-weight: 800; font-size: 12px;
+    color: white;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    border: 2.5px solid var(--surface);
+  }
+  [data-theme="dark"] .winner-medal { border-color: var(--surface-2); }
+  .winner-medal.gold   { background: linear-gradient(135deg, #FFD764, #EAD654); color: #7a5d00; }
+  .winner-medal.silver { background: linear-gradient(135deg, #d8dce3, #a9b0bd); color: #3d4050; }
+  .winner-medal.bronze { background: linear-gradient(135deg, #e2a06b, #b57945); color: #4a2f15; }
+
+  .winner-crown {
+    position: absolute;
+    top: -14px; right: 50%;
+    transform: translateX(50%);
+    font-size: 22px;
+    filter: drop-shadow(0 3px 6px rgba(234,214,84,0.5));
+    animation: crownBounce 2.4s ease-in-out infinite;
+  }
+  @keyframes crownBounce {
+    0%, 100% { transform: translateX(50%) translateY(0); }
+    50%      { transform: translateX(50%) translateY(-3px); }
+  }
+
+  .winner-info { flex: 1; min-width: 0; position: relative; z-index: 2; }
+  .winner-name {
+    font-size: 15px; font-weight: 800; color: var(--text-main);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 2px;
+  }
+  .winner-hero .winner-name { font-size: 18px; }
+  .winner-course {
+    font-size: 12px; color: var(--text-sub);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 10px;
+  }
+  .winner-hero .winner-course { font-size: 13px; }
+
+  .winner-stats {
+    display: flex; gap: 14px;
+    align-items: center;
+  }
+  .winner-stat {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px;
+  }
+  .winner-hero .winner-stat { font-size: 13px; }
+  .winner-stat-icon {
+    width: 22px; height: 22px;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .winner-stat-icon.time   { background: var(--cyan-light); color: var(--cyan); }
+  .winner-stat-icon.done   { background: var(--green-light); color: var(--green); }
+  .winner-stat-icon.streak { background: var(--pink-light); color: var(--pink); }
+  .winner-stat-icon svg { width: 13px; height: 13px; }
+
+  .winner-stat-value {
+    font-family: var(--font-en);
+    font-weight: 800;
+    color: var(--text-main);
+    direction: ltr;
+  }
+  .winner-stat-label { color: var(--text-light); font-size: 11px; }
+
+  /* score ring for the hero */
+  .winner-score {
+    position: relative;
+    width: 58px; height: 58px;
+    flex-shrink: 0;
+    z-index: 2;
+  }
+  .winner-score svg { transform: rotate(-90deg); }
+  .winner-score-circle {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 5;
+  }
+  .winner-score-progress {
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: 157;
+    stroke-dashoffset: 157;
+    animation: ringFill 1.4s cubic-bezier(.4,.8,.3,1) forwards;
+  }
+  @keyframes ringFill {
+    to { stroke-dashoffset: var(--ring-offset, 0); }
+  }
+  .winner-score-text {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-en); font-weight: 800; font-size: 14px;
+    color: var(--text-main);
+  }
 
   /* ── ENGAGEMENT MINI ───────────────────────── */
   .engage-list { display: flex; flex-direction: column; gap: 14px; }
@@ -1619,77 +1750,148 @@
     <!-- QUICK ACTIONS + ENGAGEMENT -->
     <div class="dash-grid-bottom" style="margin-top:20px;">
 
-      <!-- QUICK ACTIONS -->
+      <!-- TOP STUDENTS OF THE WEEK -->
       <div class="card">
         <div class="card-head">
           <div class="card-title">
-            <div class="card-title-icon" style="background:var(--pink-light); color:var(--pink);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div class="card-title-icon" style="background:var(--yellow-light); color:#b89c00;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
             </div>
-            פעולות מהירות
+            מצטייני השבוע
           </div>
+          <a class="card-link">
+            לוח מובילים
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          </a>
         </div>
 
-        <div class="qa-grid">
-          <button class="qa-tile">
-            <div class="qa-icon" style="background:var(--cyan-light); color:var(--cyan);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-            </div>
-            <div>
-              <div class="qa-label">שיעור חדש</div>
-              <div class="qa-sub">הוסף לקורס קיים</div>
-            </div>
-          </button>
+        <div class="winners-wrap">
 
-          <button class="qa-tile">
-            <div class="qa-icon" style="background:var(--pink-light); color:var(--pink);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <!-- #1 WINNER -->
+          <div class="winner-card winner-hero" data-student="יעל כהן">
+            <div class="winner-avatar" style="background:linear-gradient(135deg,#EAD654,#c2a836);">
+              <span class="winner-crown">👑</span>
+              י
+              <span class="winner-medal gold">1</span>
             </div>
-            <div>
-              <div class="qa-label">קמפיין דיוור</div>
-              <div class="qa-sub">שלח לקהל שלך</div>
+            <div class="winner-info">
+              <div class="winner-name">יעל כהן</div>
+              <div class="winner-course">שיווק דיגיטלי למתקדמים</div>
+              <div class="winner-stats">
+                <div class="winner-stat">
+                  <div class="winner-stat-icon time">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </div>
+                  <span class="winner-stat-value">14h</span>
+                  <span class="winner-stat-label">צפייה</span>
+                </div>
+                <div class="winner-stat">
+                  <div class="winner-stat-icon done">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <span class="winner-stat-value">18</span>
+                  <span class="winner-stat-label">שיעורים</span>
+                </div>
+                <div class="winner-stat">
+                  <div class="winner-stat-icon streak">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                  </div>
+                  <span class="winner-stat-value">12</span>
+                  <span class="winner-stat-label">ימי רצף</span>
+                </div>
+              </div>
             </div>
-          </button>
+            <div class="winner-score">
+              <svg width="58" height="58" viewBox="0 0 58 58">
+                <circle class="winner-score-circle" cx="29" cy="29" r="25"/>
+                <circle class="winner-score-progress" cx="29" cy="29" r="25" style="--ring-offset: 9.4;"/>
+              </svg>
+              <div class="winner-score-text">94%</div>
+            </div>
+          </div>
 
-          <button class="qa-tile">
-            <div class="qa-icon" style="background:var(--green-light); color:var(--green);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-            </div>
-            <div>
-              <div class="qa-label">הוסף תלמיד</div>
-              <div class="qa-sub">ידני או ייבוא</div>
-            </div>
-          </button>
+          <!-- Row: #2, #3 -->
+          <div class="winners-row">
 
-          <button class="qa-tile">
-            <div class="qa-icon" style="background:var(--yellow-light); color:#b89c00;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <!-- #2 -->
+            <div class="winner-card" data-student="רון ברק">
+              <div class="winner-avatar" style="background:linear-gradient(135deg,#a9b0bd,#7a8294);">
+                ר
+                <span class="winner-medal silver">2</span>
+              </div>
+              <div class="winner-info">
+                <div class="winner-name">רון ברק</div>
+                <div class="winner-course">יסודות העיצוב</div>
+                <div class="winner-stats">
+                  <div class="winner-stat">
+                    <div class="winner-stat-icon time">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <span class="winner-stat-value">11h</span>
+                  </div>
+                  <div class="winner-stat">
+                    <div class="winner-stat-icon done">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span class="winner-stat-value">15</span>
+                  </div>
+                  <div class="winner-stat">
+                    <div class="winner-stat-icon streak">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                    </div>
+                    <span class="winner-stat-value">9</span>
+                  </div>
+                </div>
+              </div>
+              <div class="winner-score">
+                <svg width="48" height="48" viewBox="0 0 58 58">
+                  <circle class="winner-score-circle" cx="29" cy="29" r="25"/>
+                  <circle class="winner-score-progress" cx="29" cy="29" r="25" style="--ring-offset: 20.4; stroke: #38C4F2;"/>
+                </svg>
+                <div class="winner-score-text" style="font-size:12px;">87%</div>
+              </div>
             </div>
-            <div>
-              <div class="qa-label">תזמן אירוע</div>
-              <div class="qa-sub">וובינר / שידור חי</div>
-            </div>
-          </button>
 
-          <button class="qa-tile">
-            <div class="qa-icon" style="background:var(--cyan-light); color:var(--cyan);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <!-- #3 -->
+            <div class="winner-card" data-student="מאיה לוי">
+              <div class="winner-avatar" style="background:linear-gradient(135deg,#e2a06b,#b57945);">
+                מ
+                <span class="winner-medal bronze">3</span>
+              </div>
+              <div class="winner-info">
+                <div class="winner-name">מאיה לוי</div>
+                <div class="winner-course">בניית אתרים</div>
+                <div class="winner-stats">
+                  <div class="winner-stat">
+                    <div class="winner-stat-icon time">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <span class="winner-stat-value">9h</span>
+                  </div>
+                  <div class="winner-stat">
+                    <div class="winner-stat-icon done">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span class="winner-stat-value">12</span>
+                  </div>
+                  <div class="winner-stat">
+                    <div class="winner-stat-icon streak">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                    </div>
+                    <span class="winner-stat-value">7</span>
+                  </div>
+                </div>
+              </div>
+              <div class="winner-score">
+                <svg width="48" height="48" viewBox="0 0 58 58">
+                  <circle class="winner-score-circle" cx="29" cy="29" r="25"/>
+                  <circle class="winner-score-progress" cx="29" cy="29" r="25" style="--ring-offset: 34.5; stroke: #F05680;"/>
+                </svg>
+                <div class="winner-score-text" style="font-size:12px;">78%</div>
+              </div>
             </div>
-            <div>
-              <div class="qa-label">פוסט במועדון</div>
-              <div class="qa-sub">עדכון לחברים</div>
-            </div>
-          </button>
 
-          <button class="qa-tile">
-            <div class="qa-icon" style="background:var(--pink-light); color:var(--pink);">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            </div>
-            <div>
-              <div class="qa-label">ערכת מותג</div>
-              <div class="qa-sub">עדכן את הזהות</div>
-            </div>
-          </button>
+          </div>
         </div>
       </div>
 
@@ -2350,11 +2552,13 @@
   });
 
   // ═══════════════════════════════════════════════════
-  // WIRE UP: QUICK ACTIONS (6 tiles)
+  // WIRE UP: TOP STUDENTS
   // ═══════════════════════════════════════════════════
-  const QA_KEYS = ['lesson', 'campaign', 'student', 'event', 'post', 'brand'];
-  document.querySelectorAll('.qa-tile').forEach((tile, i) => {
-    tile.addEventListener('click', () => openQuickAction(QA_KEYS[i]));
+  document.querySelectorAll('.winner-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const name = card.dataset.student;
+      toast('info', `פותח פרופיל — ${name}`, 'טוען CRM ונתוני למידה');
+    });
   });
 
   // ═══════════════════════════════════════════════════
