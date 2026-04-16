@@ -2050,164 +2050,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
       </div>
 
       <!-- ═══ NOTEBOOK SUMMARY POPUP ═══ -->
-      <!-- ═══ NOTEBOOK DOCS-STYLE SUMMARY ═══ -->
-      <div id="nbSummaryOverlay" onclick="closeNbSummary()" style="display:none;position:fixed;inset:0;background:rgba(20,30,50,0.55);backdrop-filter:blur(4px);z-index:200;"></div>
-      <div id="nbSummaryModal" style="display:none;position:fixed;top:2vh;left:50%;transform:translateX(-50%) scale(.97);opacity:0;width:720px;height:96vh;z-index:210;overflow:hidden;transition:transform .3s cubic-bezier(.4,.8,.3,1),opacity .3s;flex-direction:column;border-radius:8px;box-shadow:0 8px 60px rgba(0,0,0,0.3);">
-        <!-- Toolbar — Google Docs style -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e0e0e0;flex-shrink:0;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" width="18" height="18"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-            <div>
-              <div style="font-size:14px;font-weight:800;color:#1a1a1a;">מחברת הקורס — יסודות העיצוב</div>
-              <div style="font-size:10.5px;color:#6B7280;">אלון גבאי &bull; עודכן: היום, 14:32</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <button onclick="alert('מייצא PDF...')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:4px;border:1px solid #e0e0e0;background:#fff;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;color:#6B7280;transition:all .15s;" onmouseenter="this.style.borderColor='#38C4F2';this.style.color='#38C4F2'" onmouseleave="this.style.borderColor='#e0e0e0';this.style.color='#6B7280'">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              ייצוא PDF
-            </button>
-            <button onclick="closeNbSummary()" style="width:30px;height:30px;border-radius:4px;border:1px solid #e0e0e0;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#6B7280;transition:color .15s;" onmouseenter="this.style.color='#F05680'" onmouseleave="this.style.color='#6B7280'">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Document scroll area — grey desk background -->
-        <div style="flex:1;overflow-y:auto;padding:28px 24px;background:#EAECF0;">
-
-          <!-- A4 Paper -->
-          <div style="max-width:640px;margin:0 auto;background:#FDFBF7;border:1px solid #E0E0E0;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,0.06);padding:52px 48px;font-family:var(--font);line-height:1.7;">
-
-            <!-- ── Doc Header ── -->
-            <div style="text-align:center;margin-bottom:40px;padding-bottom:22px;border-bottom:2px solid #38C4F2;">
-              <div style="font-family:var(--font-brand);font-size:22px;font-weight:900;color:#1a1a1a;margin-bottom:3px;">מחברת הקורס</div>
-              <div style="font-size:14px;color:#4A4A4A;font-weight:500;">יסודות העיצוב — תכנית הכשרה לעיצוב דיגיטלי</div>
-              <div style="font-size:11.5px;color:#9CA3AF;margin-top:8px;">תלמיד: אלון גבאי &bull; 7 שאלות &bull; 3 פרקים</div>
-            </div>
-
-            <!-- ════════════ פרק 1 ════════════ -->
-            <div style="margin-bottom:36px;">
-              <div style="display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1.5px solid #E0E0E0;margin-bottom:20px;">
-                <span style="width:26px;height:26px;border-radius:6px;background:rgba(56,196,242,0.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-weight:800;font-size:12px;color:#38C4F2;">1</span>
-                <span style="font-size:16px;font-weight:800;color:#1a1a1a;">מבוא לעיצוב</span>
-              </div>
-
-              <!-- שיעור 1 -->
-              <div style="margin-right:14px;margin-bottom:22px;">
-                <div style="font-size:12px;font-weight:700;color:#6B7280;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" width="11" height="11"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-                  שיעור 1: מבוא ויעדי הקורס
-                </div>
-
-                <!-- Q1 — answered -->
-                <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #38C4F2;background:transparent;">
-                  <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q1 &bull; שאלה פתוחה</div>
-                  <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">מה הדבר הראשון שצריך לחשוב עליו לפני שמתחילים לעצב?</div>
-                  <div style="padding:12px 14px;background:#fff;border:1px solid #E0E0E0;border-radius:3px;font-size:13.5px;color:#374151;line-height:1.7;">הקהל — צריך להבין למי מעצבים, מה הצרכים, ומה המטרה של המוצר. תמיד הקהל קודם לכל שיקול עיצובי.</div>
-                  <div style="font-size:10px;color:#9CA3AF;margin-top:7px;direction:ltr;text-align:left;font-family:var(--font-brand);">14:32 &bull; 15.04.2026</div>
-                </div>
-
-                <!-- Q2 — answered (multiple choice) -->
-                <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #F05680;background:transparent;">
-                  <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q2 &bull; שאלה אמריקאית</div>
-                  <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">מהם שלושת העקרונות המרכזיים של עיצוב טוב?</div>
-                  <div style="padding:12px 14px;background:#fff;border:1px solid #E0E0E0;border-radius:3px;font-size:13.5px;color:#374151;">
-                    <span style="display:inline-block;padding:4px 12px;border-radius:3px;background:rgba(56,196,242,0.08);color:#38C4F2;font-size:12.5px;font-weight:700;border:1px solid rgba(56,196,242,0.2);">פשטות, עקביות, נגישות</span>
-                  </div>
-                  <div style="font-size:10px;color:#9CA3AF;margin-top:7px;direction:ltr;text-align:left;font-family:var(--font-brand);">14:50 &bull; 15.04.2026</div>
-                </div>
-              </div>
-
-              <!-- שיעור 2 -->
-              <div style="margin-right:14px;margin-bottom:22px;">
-                <div style="font-size:12px;font-weight:700;color:#6B7280;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" width="11" height="11"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-                  שיעור 2: עקרונות יסוד
-                </div>
-
-                <!-- Q3 — answered (T/F) -->
-                <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #7DC57A;background:transparent;">
-                  <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q3 &bull; נכון / לא נכון</div>
-                  <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">עיצוב טוב חייב להיות מורכב כדי להרשים.</div>
-                  <div style="padding:12px 14px;background:#fff;border:1px solid #E0E0E0;border-radius:3px;font-size:13.5px;">
-                    <span style="display:inline-block;padding:4px 12px;border-radius:3px;background:rgba(240,86,128,0.08);color:#F05680;font-size:12.5px;font-weight:700;border:1px solid rgba(240,86,128,0.2);">לא נכון</span>
-                  </div>
-                  <div style="font-size:10px;color:#9CA3AF;margin-top:7px;direction:ltr;text-align:left;font-family:var(--font-brand);">15:10 &bull; 15.04.2026</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ════════════ פרק 2 ════════════ -->
-            <div style="margin-bottom:36px;">
-              <div style="display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1.5px solid #E0E0E0;margin-bottom:20px;">
-                <span style="width:26px;height:26px;border-radius:6px;background:rgba(240,86,128,0.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-weight:800;font-size:12px;color:#F05680;">2</span>
-                <span style="font-size:16px;font-weight:800;color:#1a1a1a;">צבע וטיפוגרפיה</span>
-              </div>
-
-              <!-- שיעור 3 (נוכחי) -->
-              <div style="margin-right:14px;margin-bottom:22px;">
-                <div style="font-size:12px;font-weight:700;color:#6B7280;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#F05680" stroke-width="2" width="11" height="11"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-                  שיעור 3: צבע ומשמעות
-                  <span style="padding:2px 7px;border-radius:3px;background:rgba(56,196,242,0.08);color:#38C4F2;font-size:9.5px;font-weight:800;border:1px solid rgba(56,196,242,0.2);">נוכחי</span>
-                </div>
-
-                <!-- Q4 — unanswered -->
-                <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #38C4F2;background:transparent;">
-                  <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q4 &bull; שאלה פתוחה</div>
-                  <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">מה ההבדל בין צבעים חמים לקרים? תן 3 דוגמאות לכל קבוצה.</div>
-                  <div style="padding:12px 14px;border:1.5px dashed #D1D5DB;border-radius:3px;font-size:12.5px;color:#9CA3AF;font-style:italic;">טרם נענתה</div>
-                </div>
-
-                <!-- Q5 — unanswered -->
-                <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #F05680;background:transparent;">
-                  <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q5 &bull; שאלה אמריקאית</div>
-                  <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">איזה צבע נחשב צבע משלים לכחול?</div>
-                  <div style="padding:12px 14px;border:1.5px dashed #D1D5DB;border-radius:3px;font-size:12.5px;color:#9CA3AF;font-style:italic;">טרם נענתה</div>
-                </div>
-
-                <!-- Q6 — unanswered -->
-                <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #7DC57A;background:transparent;">
-                  <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q6 &bull; נכון / לא נכון</div>
-                  <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">צבע לבן הוא שילוב של כל הצבעים בספקטרום האור.</div>
-                  <div style="padding:12px 14px;border:1.5px dashed #D1D5DB;border-radius:3px;font-size:12.5px;color:#9CA3AF;font-style:italic;">טרם נענתה</div>
-                </div>
-
-                <!-- Q7 — unanswered (file) -->
-                <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #EAD654;background:transparent;">
-                  <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q7 &bull; העלאת קובץ</div>
-                  <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">העלה את התרגיל שהכנת — קולאז' צבעים חמים וקרים</div>
-                  <div style="padding:12px 14px;border:1.5px dashed #D1D5DB;border-radius:3px;font-size:12.5px;color:#9CA3AF;font-style:italic;">טרם הועלה קובץ</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ════════════ פרק 3 (נעול) ════════════ -->
-            <div style="margin-bottom:20px;opacity:0.55;">
-              <div style="display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1.5px solid #E0E0E0;margin-bottom:16px;">
-                <span style="width:26px;height:26px;border-radius:6px;background:rgba(234,214,84,0.15);display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-weight:800;font-size:12px;color:#b89c00;">3</span>
-                <span style="font-size:16px;font-weight:800;color:#1a1a1a;">קומפוזיציה</span>
-                <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:3px;border:1px solid #E0E0E0;font-size:10.5px;font-weight:600;color:#9CA3AF;">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  נעול
-                </span>
-              </div>
-              <div style="text-align:center;padding:24px 16px;color:#9CA3AF;font-size:12.5px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="opacity:.4;margin-bottom:6px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><br>
-                סיים את פרק 2 כדי לפתוח את השאלות
-              </div>
-            </div>
-
-            <!-- Footer -->
-            <div style="margin-top:32px;padding-top:14px;border-top:1px solid #E0E0E0;text-align:center;font-size:10.5px;color:#9CA3AF;">
-              נוצר ב-WHITEBOARD &bull; תכנית הכשרה לעיצוב דיגיטלי
-            </div>
-
-          </div><!-- /paper -->
-        </div><!-- /scroll area -->
-      </div><!-- /modal -->
-
     </div><!-- /sb-content -->
 
 
@@ -2379,6 +2221,135 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 
 <!-- Toast container -->
 <div class="toast-container" id="toastContainer"></div>
+
+<!-- ═══ NOTEBOOK DOCS SUMMARY (outside sidebar for proper z-index/overflow) ═══ -->
+<div id="nbSummaryOverlay" onclick="closeNbSummary()" style="display:none;position:fixed;inset:0;background:rgba(20,30,50,0.55);backdrop-filter:blur(4px);z-index:900;"></div>
+<div id="nbSummaryModal" style="display:none;position:fixed;top:2vh;left:50%;transform:translateX(-50%) scale(.97);opacity:0;width:720px;height:96vh;z-index:910;overflow:hidden;transition:transform .3s cubic-bezier(.4,.8,.3,1),opacity .3s;flex-direction:column;border-radius:8px;box-shadow:0 8px 60px rgba(0,0,0,0.3);">
+  <!-- Toolbar -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e0e0e0;flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" width="18" height="18"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <div>
+        <div style="font-size:14px;font-weight:800;color:#1a1a1a;">מחברת הקורס — יסודות העיצוב</div>
+        <div style="font-size:10.5px;color:#6B7280;">אלון גבאי &bull; עודכן: היום, 14:32</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button onclick="alert('מייצא PDF...')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:4px;border:1px solid #e0e0e0;background:#fff;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;color:#6B7280;transition:all .15s;" onmouseenter="this.style.borderColor='#38C4F2';this.style.color='#38C4F2'" onmouseleave="this.style.borderColor='#e0e0e0';this.style.color='#6B7280'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        ייצוא PDF
+      </button>
+      <button onclick="closeNbSummary()" style="width:30px;height:30px;border-radius:4px;border:1px solid #e0e0e0;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#6B7280;transition:color .15s;" onmouseenter="this.style.color='#F05680'" onmouseleave="this.style.color='#6B7280'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- Document scroll area -->
+  <div style="flex:1;overflow-y:auto;padding:28px 24px;background:#EAECF0;">
+    <div style="max-width:640px;margin:0 auto;background:#FDFBF7;border:1px solid #E0E0E0;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,0.06);padding:52px 48px;font-family:var(--font);line-height:1.7;">
+      <!-- Doc Header -->
+      <div style="text-align:center;margin-bottom:40px;padding-bottom:22px;border-bottom:2px solid #38C4F2;">
+        <div style="font-family:var(--font-brand);font-size:22px;font-weight:900;color:#1a1a1a;margin-bottom:3px;">מחברת הקורס</div>
+        <div style="font-size:14px;color:#4A4A4A;font-weight:500;">יסודות העיצוב — תכנית הכשרה לעיצוב דיגיטלי</div>
+        <div style="font-size:11.5px;color:#9CA3AF;margin-top:8px;">תלמיד: אלון גבאי &bull; 7 שאלות &bull; 3 פרקים</div>
+      </div>
+      <!-- פרק 1 -->
+      <div style="margin-bottom:36px;">
+        <div style="display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1.5px solid #E0E0E0;margin-bottom:20px;">
+          <span style="width:26px;height:26px;border-radius:6px;background:rgba(56,196,242,0.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-weight:800;font-size:12px;color:#38C4F2;">1</span>
+          <span style="font-size:16px;font-weight:800;color:#1a1a1a;">מבוא לעיצוב</span>
+        </div>
+        <div style="margin-right:14px;margin-bottom:22px;">
+          <div style="font-size:12px;font-weight:700;color:#6B7280;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" width="11" height="11"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            שיעור 1: מבוא ויעדי הקורס
+          </div>
+          <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #38C4F2;">
+            <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q1 &bull; שאלה פתוחה</div>
+            <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">מה הדבר הראשון שצריך לחשוב עליו לפני שמתחילים לעצב?</div>
+            <div style="padding:12px 14px;background:#fff;border:1px solid #E0E0E0;border-radius:3px;font-size:13.5px;color:#374151;line-height:1.7;">הקהל — צריך להבין למי מעצבים, מה הצרכים, ומה המטרה של המוצר. תמיד הקהל קודם לכל שיקול עיצובי.</div>
+            <div style="font-size:10px;color:#9CA3AF;margin-top:7px;direction:ltr;text-align:left;font-family:var(--font-brand);">14:32 &bull; 15.04.2026</div>
+          </div>
+          <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #F05680;">
+            <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q2 &bull; שאלה אמריקאית</div>
+            <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">מהם שלושת העקרונות המרכזיים של עיצוב טוב?</div>
+            <div style="padding:12px 14px;background:#fff;border:1px solid #E0E0E0;border-radius:3px;font-size:13.5px;color:#374151;">
+              <span style="display:inline-block;padding:4px 12px;border-radius:3px;background:rgba(56,196,242,0.08);color:#38C4F2;font-size:12.5px;font-weight:700;border:1px solid rgba(56,196,242,0.2);">פשטות, עקביות, נגישות</span>
+            </div>
+            <div style="font-size:10px;color:#9CA3AF;margin-top:7px;direction:ltr;text-align:left;font-family:var(--font-brand);">14:50 &bull; 15.04.2026</div>
+          </div>
+        </div>
+        <div style="margin-right:14px;margin-bottom:22px;">
+          <div style="font-size:12px;font-weight:700;color:#6B7280;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" width="11" height="11"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            שיעור 2: עקרונות יסוד
+          </div>
+          <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #7DC57A;">
+            <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q3 &bull; נכון / לא נכון</div>
+            <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">עיצוב טוב חייב להיות מורכב כדי להרשים.</div>
+            <div style="padding:12px 14px;background:#fff;border:1px solid #E0E0E0;border-radius:3px;font-size:13.5px;">
+              <span style="display:inline-block;padding:4px 12px;border-radius:3px;background:rgba(240,86,128,0.08);color:#F05680;font-size:12.5px;font-weight:700;border:1px solid rgba(240,86,128,0.2);">לא נכון</span>
+            </div>
+            <div style="font-size:10px;color:#9CA3AF;margin-top:7px;direction:ltr;text-align:left;font-family:var(--font-brand);">15:10 &bull; 15.04.2026</div>
+          </div>
+        </div>
+      </div>
+      <!-- פרק 2 -->
+      <div style="margin-bottom:36px;">
+        <div style="display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1.5px solid #E0E0E0;margin-bottom:20px;">
+          <span style="width:26px;height:26px;border-radius:6px;background:rgba(240,86,128,0.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-weight:800;font-size:12px;color:#F05680;">2</span>
+          <span style="font-size:16px;font-weight:800;color:#1a1a1a;">צבע וטיפוגרפיה</span>
+        </div>
+        <div style="margin-right:14px;margin-bottom:22px;">
+          <div style="font-size:12px;font-weight:700;color:#6B7280;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#F05680" stroke-width="2" width="11" height="11"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            שיעור 3: צבע ומשמעות
+            <span style="padding:2px 7px;border-radius:3px;background:rgba(56,196,242,0.08);color:#38C4F2;font-size:9.5px;font-weight:800;border:1px solid rgba(56,196,242,0.2);">נוכחי</span>
+          </div>
+          <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #38C4F2;">
+            <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q4 &bull; שאלה פתוחה</div>
+            <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">מה ההבדל בין צבעים חמים לקרים? תן 3 דוגמאות לכל קבוצה.</div>
+            <div style="padding:12px 14px;border:1.5px dashed #D1D5DB;border-radius:3px;font-size:12.5px;color:#9CA3AF;font-style:italic;">טרם נענתה</div>
+          </div>
+          <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #F05680;">
+            <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q5 &bull; שאלה אמריקאית</div>
+            <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">איזה צבע נחשב צבע משלים לכחול?</div>
+            <div style="padding:12px 14px;border:1.5px dashed #D1D5DB;border-radius:3px;font-size:12.5px;color:#9CA3AF;font-style:italic;">טרם נענתה</div>
+          </div>
+          <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #7DC57A;">
+            <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q6 &bull; נכון / לא נכון</div>
+            <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">צבע לבן הוא שילוב של כל הצבעים בספקטרום האור.</div>
+            <div style="padding:12px 14px;border:1.5px dashed #D1D5DB;border-radius:3px;font-size:12.5px;color:#9CA3AF;font-style:italic;">טרם נענתה</div>
+          </div>
+          <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #EAD654;">
+            <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q7 &bull; העלאת קובץ</div>
+            <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">העלה את התרגיל שהכנת — קולאז' צבעים חמים וקרים</div>
+            <div style="padding:12px 14px;border:1.5px dashed #D1D5DB;border-radius:3px;font-size:12.5px;color:#9CA3AF;font-style:italic;">טרם הועלה קובץ</div>
+          </div>
+        </div>
+      </div>
+      <!-- פרק 3 (נעול) -->
+      <div style="margin-bottom:20px;opacity:0.55;">
+        <div style="display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1.5px solid #E0E0E0;margin-bottom:16px;">
+          <span style="width:26px;height:26px;border-radius:6px;background:rgba(234,214,84,0.15);display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-weight:800;font-size:12px;color:#b89c00;">3</span>
+          <span style="font-size:16px;font-weight:800;color:#1a1a1a;">קומפוזיציה</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:3px;border:1px solid #E0E0E0;font-size:10.5px;font-weight:600;color:#9CA3AF;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            נעול
+          </span>
+        </div>
+        <div style="text-align:center;padding:24px 16px;color:#9CA3AF;font-size:12.5px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="opacity:.4;margin-bottom:6px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><br>
+          סיים את פרק 2 כדי לפתוח את השאלות
+        </div>
+      </div>
+      <!-- Footer -->
+      <div style="margin-top:32px;padding-top:14px;border-top:1px solid #E0E0E0;text-align:center;font-size:10.5px;color:#9CA3AF;">
+        נוצר ב-WHITEBOARD &bull; תכנית הכשרה לעיצוב דיגיטלי
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 // Mode
@@ -2968,13 +2939,13 @@ function nbSaveAnswer(btn) {
 function openNbSummary() {
   document.getElementById('nbSummaryOverlay').style.display = 'block';
   const modal = document.getElementById('nbSummaryModal');
-  modal.style.display = 'block';
-  requestAnimationFrame(() => { modal.style.opacity = '1'; modal.style.transform = 'translate(-50%,-50%) scale(1)'; });
+  modal.style.display = 'flex';
+  requestAnimationFrame(() => { modal.style.opacity = '1'; modal.style.transform = 'translateX(-50%) scale(1)'; });
 }
 function closeNbSummary() {
   const modal = document.getElementById('nbSummaryModal');
   modal.style.opacity = '0';
-  modal.style.transform = 'translate(-50%,-50%) scale(.96)';
+  modal.style.transform = 'translateX(-50%) scale(.97)';
   setTimeout(() => { modal.style.display = 'none'; document.getElementById('nbSummaryOverlay').style.display = 'none'; }, 300);
 }
 
