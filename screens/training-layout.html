@@ -238,6 +238,29 @@
   [data-theme="dark"] .meeting-badge{color:#7DC57A;}
   [data-theme="dark"] .icon-doc{color:#8899bb;}
 
+  /* ── LESSON TYPE PICKER ── */
+  .type-picker-overlay{display:none;position:fixed;inset:0;z-index:400;}
+  .type-picker-overlay.open{display:block;}
+  .type-picker{display:none;position:fixed;z-index:410;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:0 12px 40px rgba(0,0,0,0.18);width:320px;padding:8px;animation:fadeIn .15s ease;}
+  .type-picker.open{display:block;}
+  .type-picker-title{font-size:12px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.8px;padding:8px 10px 6px;margin-bottom:2px;}
+  .type-opt{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;}
+  .type-opt:hover{background:var(--light-blue);}
+  [data-theme="dark"] .type-opt:hover{background:rgba(56,196,242,0.08);}
+  .type-opt-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .type-opt-icon svg{width:17px;height:17px;}
+  .type-opt-text{flex:1;}
+  .type-opt-name{font-size:13.5px;font-weight:700;color:var(--text-main);}
+  .type-opt-desc{font-size:11px;color:var(--text-sub);}
+  .type-opt-badge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:8px;background:rgba(125,197,122,0.12);color:#4a9e47;border:1px solid rgba(125,197,122,0.25);}
+  [data-theme="dark"] .type-opt-badge{color:#7DC57A;}
+
+  /* ── MEETING CONFIG MODAL ── */
+  .meeting-config-overlay{display:none;position:fixed;inset:0;background:rgba(26,47,94,0.45);backdrop-filter:blur(4px);z-index:500;}
+  .meeting-config-overlay.open{display:block;}
+  .meeting-config{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);opacity:0;width:460px;background:var(--surface);border-radius:var(--radius-lg);box-shadow:0 24px 64px rgba(0,0,0,0.25);z-index:510;overflow:hidden;border:1px solid var(--border);transition:transform .3s cubic-bezier(.4,.8,.3,1),opacity .3s;}
+  .meeting-config.open{display:block;transform:translate(-50%,-50%) scale(1);opacity:1;}
+
   .lesson-title{font-weight:600;color:var(--text-main);}
   .duration{font-size:11px;color:var(--text-light);display:flex;align-items:center;gap:3px;margin-top:2px;}
   .duration svg{width:11px;height:11px;}
@@ -778,6 +801,93 @@
   <div class="status-option" onclick="setStatus('hidden')"><div class="status-dot" style="background:var(--text-light);"></div>מוסתר</div>
 </div>
 
+<!-- Lesson Type Picker -->
+<div class="type-picker-overlay" id="typePickerOverlay" onclick="closeTypePicker()"></div>
+<div class="type-picker" id="typePicker">
+  <div class="type-picker-title">בחר סוג שיעור</div>
+  <div class="type-opt" onclick="addTypedLesson('video')">
+    <div class="type-opt-icon icon-video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+    <div class="type-opt-text"><div class="type-opt-name">שיעור וידאו</div><div class="type-opt-desc">שיעור מוקלט עם סרטון</div></div>
+  </div>
+  <div class="type-opt" onclick="addTypedLesson('text')">
+    <div class="type-opt-icon icon-doc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+    <div class="type-opt-text"><div class="type-opt-name">שיעור טקסט</div><div class="type-opt-desc">תוכן כתוב, תמונות ומשאבים</div></div>
+  </div>
+  <div class="type-opt" onclick="addTypedLesson('quiz')">
+    <div class="type-opt-icon icon-quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+    <div class="type-opt-text"><div class="type-opt-name">בוחן</div><div class="type-opt-desc">שאלות עם ציון</div></div>
+  </div>
+  <div style="height:1px;background:var(--border);margin:4px 10px;"></div>
+  <div class="type-opt" onclick="openMeetingConfig()">
+    <div class="type-opt-icon icon-meeting"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="12" cy="15" r="2"/></svg></div>
+    <div class="type-opt-text"><div class="type-opt-name">פגישה אישית</div><div class="type-opt-desc">מפגש 1-על-1 עם תלמיד</div></div>
+    <span class="type-opt-badge">תכנית הכשרה</span>
+  </div>
+</div>
+
+<!-- Meeting Config Modal -->
+<div class="meeting-config-overlay" id="meetingConfigOverlay" onclick="closeMeetingConfig()"></div>
+<div class="meeting-config" id="meetingConfig">
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="width:42px;height:42px;border-radius:12px;background:rgba(125,197,122,0.12);display:flex;align-items:center;justify-content:center;color:var(--green);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="12" cy="15" r="2"/></svg>
+      </div>
+      <div>
+        <div style="font-size:17px;font-weight:800;color:var(--text-main);">הוסף פגישה אישית</div>
+        <div style="font-size:12px;color:var(--text-sub);">מפגש 1-על-1 עם תלמיד בתכנית</div>
+      </div>
+    </div>
+    <button onclick="closeMeetingConfig()" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .15s;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <!-- Body -->
+  <div style="padding:22px 24px;display:flex;flex-direction:column;gap:16px;">
+    <!-- Calendar status -->
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(125,197,122,0.06);border:1px solid rgba(125,197,122,0.2);border-radius:var(--radius-sm);">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;"></span>
+      <span style="font-size:12.5px;color:var(--text-main);font-weight:600;">Google Calendar מחובר</span>
+      <span style="font-size:11px;color:var(--text-light);margin-right:auto;">alon@alon-gabay.co.il</span>
+    </div>
+    <!-- Meeting title -->
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <label style="font-size:13px;font-weight:700;color:var(--text-main);">כותרת המפגש</label>
+      <input id="meetingTitleInput" type="text" value="" placeholder="שם השיעור ישמש כברירת מחדל" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2);font-family:var(--font-he);font-size:14px;color:var(--text-main);outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">
+      <div style="font-size:11px;color:var(--text-light);">אם ריק — שם השיעור ישמש ככותרת הפגישה</div>
+    </div>
+    <!-- Duration -->
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <label style="font-size:13px;font-weight:700;color:var(--text-main);">משך הפגישה</label>
+      <select style="width:100%;max-width:200px;padding:10px 14px;padding-left:36px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2);font-family:var(--font-he);font-size:13px;color:var(--text-main);cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23253E7A' stroke-width='2.5'><polyline points='6 9 12 15 18 9'/></svg>&quot;);background-repeat:no-repeat;background-position:left 14px center;">
+        <option value="15">15 דקות</option>
+        <option value="30" selected>30 דקות</option>
+        <option value="45">45 דקות</option>
+        <option value="60">60 דקות</option>
+      </select>
+    </div>
+    <!-- Require completion -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--text-main);">חובה לביצוע להמשך</div>
+        <div style="font-size:11px;color:var(--text-light);">התלמיד חייב לבצע את הפגישה כדי להתקדם</div>
+      </div>
+      <div style="width:38px;height:22px;border-radius:11px;background:var(--cyan);position:relative;cursor:pointer;transition:background .2s;" onclick="this.classList.toggle('off');this.style.background=this.classList.contains('off')?'var(--border)':'var(--cyan)'">
+        <div style="position:absolute;top:2px;right:2px;width:18px;height:18px;background:white;border-radius:50%;transition:all .25s;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+  <div style="display:flex;justify-content:flex-start;gap:10px;padding:16px 24px;border-top:1px solid var(--border);background:var(--surface-2);">
+    <button onclick="confirmMeetingLesson()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:30px;border:none;background:linear-gradient(135deg,var(--cyan),#1db0d8);color:white;font-family:var(--font-he);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(56,196,242,0.35);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      הוסף פגישה
+    </button>
+    <button onclick="closeMeetingConfig()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:30px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-sub);font-family:var(--font-he);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;">ביטול</button>
+  </div>
+</div>
+
 <!-- Meeting Calendar Modal -->
 <div id="meetingOverlay" onclick="closeMeetingCalendar()" style="display:none;position:fixed;inset:0;background:rgba(26,47,94,0.45);backdrop-filter:blur(4px);z-index:500;"></div>
 <div id="meetingModal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);opacity:0;width:520px;background:var(--surface);border-radius:var(--radius-lg);box-shadow:0 24px 64px rgba(0,0,0,0.25);z-index:510;overflow:hidden;border:1px solid var(--border);transition:transform .3s cubic-bezier(.4,.8,.3,1),opacity .3s;">
@@ -1060,14 +1170,58 @@ document.querySelectorAll('.course-card').forEach(card => {
   });
 });
 
-// ── Visual-only add actions ──
+// ── Lesson type picker ──
+let currentAddRow = null;
 function addLessonClick(el) {
-  el.style.color = 'var(--cyan)';
-  el.style.background = 'rgba(56,196,242,0.06)';
-  setTimeout(() => {
-    el.style.color = '';
-    el.style.background = '';
-  }, 600);
+  currentAddRow = el;
+  const rect = el.getBoundingClientRect();
+  const picker = document.getElementById('typePicker');
+  const overlay = document.getElementById('typePickerOverlay');
+  picker.style.top = (rect.top - picker.offsetHeight - 8) + 'px';
+  picker.style.right = (window.innerWidth - rect.right) + 'px';
+  // If picker would go off-screen top, show below
+  if (rect.top - 280 < 0) picker.style.top = (rect.bottom + 8) + 'px';
+  picker.classList.add('open');
+  overlay.classList.add('open');
+}
+function closeTypePicker() {
+  document.getElementById('typePicker').classList.remove('open');
+  document.getElementById('typePickerOverlay').classList.remove('open');
+}
+function addTypedLesson(type) {
+  closeTypePicker();
+  if (currentAddRow) {
+    currentAddRow.style.color = 'var(--cyan)';
+    currentAddRow.style.background = 'rgba(56,196,242,0.06)';
+    setTimeout(() => { currentAddRow.style.color = ''; currentAddRow.style.background = ''; }, 800);
+  }
+}
+function openMeetingConfig() {
+  closeTypePicker();
+  document.getElementById('meetingConfigOverlay').classList.add('open');
+  const m = document.getElementById('meetingConfig');
+  m.classList.add('open');
+  // Pre-fill title with empty (default = lesson name)
+  document.getElementById('meetingTitleInput').value = '';
+  document.getElementById('meetingTitleInput').placeholder = 'שם השיעור ישמש כברירת מחדל';
+}
+function closeMeetingConfig() {
+  document.getElementById('meetingConfig').classList.remove('open');
+  document.getElementById('meetingConfigOverlay').classList.remove('open');
+}
+function confirmMeetingLesson() {
+  closeMeetingConfig();
+  if (currentAddRow) {
+    currentAddRow.style.color = 'var(--green)';
+    currentAddRow.style.background = 'rgba(125,197,122,0.06)';
+    const titleEl = document.getElementById('meetingTitleInput');
+    const title = titleEl.value || 'פגישה אישית';
+    currentAddRow.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg> נוסף: ' + title;
+    setTimeout(() => {
+      currentAddRow.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> הוסף שיעור';
+      currentAddRow.style.color = ''; currentAddRow.style.background = '';
+    }, 2000);
+  }
 }
 
 function addSectionClick() {
