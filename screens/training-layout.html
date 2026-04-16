@@ -232,6 +232,10 @@
   .icon-video{background:rgba(56,196,242,0.15);color:#1db0d8;box-shadow:0 2px 8px rgba(56,196,242,0.2);}
   .icon-doc{background:rgba(37,62,122,0.12);color:#253E7A;box-shadow:0 2px 8px rgba(37,62,122,0.15);}
   .icon-quiz{background:rgba(240,86,128,0.15);color:#e03060;box-shadow:0 2px 8px rgba(240,86,128,0.2);}
+  .icon-meeting{background:rgba(125,197,122,0.15);color:#4a9e47;box-shadow:0 2px 8px rgba(125,197,122,0.2);}
+  .meeting-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:rgba(125,197,122,0.12);color:#4a9e47;border:1px solid rgba(125,197,122,0.25);}
+  [data-theme="dark"] .icon-meeting{color:#7DC57A;}
+  [data-theme="dark"] .meeting-badge{color:#7DC57A;}
   [data-theme="dark"] .icon-doc{color:#8899bb;}
 
   .lesson-title{font-weight:600;color:var(--text-main);}
@@ -658,6 +662,19 @@
                   <td><span class="date-text">19.03.26</span></td>
                   <td><div class="row-actions"><button class="row-icon-btn" title="עריכה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="row-icon-btn" title="מחיקה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td>
                 </tr>
+
+                <!-- Meeting row -->
+                <tr class="lesson-row">
+                  <td><div class="drag-handle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="19" r="1"/></svg></div></td>
+                  <td><div class="cb-wrap"><input type="checkbox"></div></td>
+                  <td><span class="lesson-num">5</span></td>
+                  <td><div class="lesson-name-cell"><div class="lesson-type-icon icon-meeting"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="12" cy="15" r="2"/></svg></div><div><div class="lesson-title">פגישה אישית — סיכום פרק <span class="meeting-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="9" height="9"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>1-על-1</span></div><div class="duration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>30 דקות</div></div></div></td>
+                  <td><span class="type-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>פגישה</span></td>
+                  <td><span class="source-tag" onclick="openMeetingCalendar()" style="cursor:pointer;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>פתח יומן</span></td>
+                  <td><span class="pill pill-pub" onclick="toggleStatus(this)">פעיל</span></td>
+                  <td><span class="date-text">16.04.26</span></td>
+                  <td><div class="row-actions"><button class="row-icon-btn" title="עריכה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="row-icon-btn" title="מחיקה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -761,7 +778,116 @@
   <div class="status-option" onclick="setStatus('hidden')"><div class="status-dot" style="background:var(--text-light);"></div>מוסתר</div>
 </div>
 
+<!-- Meeting Calendar Modal -->
+<div id="meetingOverlay" onclick="closeMeetingCalendar()" style="display:none;position:fixed;inset:0;background:rgba(26,47,94,0.45);backdrop-filter:blur(4px);z-index:500;"></div>
+<div id="meetingModal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);opacity:0;width:520px;background:var(--surface);border-radius:var(--radius-lg);box-shadow:0 24px 64px rgba(0,0,0,0.25);z-index:510;overflow:hidden;border:1px solid var(--border);transition:transform .3s cubic-bezier(.4,.8,.3,1),opacity .3s;">
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="width:42px;height:42px;border-radius:12px;background:rgba(125,197,122,0.12);display:flex;align-items:center;justify-content:center;color:var(--green);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div>
+        <div style="font-size:17px;font-weight:800;color:var(--text-main);">יומן פגישות — סיכום פרק</div>
+        <div style="font-size:12px;color:var(--text-sub);">צבע וטיפוגרפיה • 30 דקות</div>
+      </div>
+    </div>
+    <button onclick="closeMeetingCalendar()" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .15s;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <!-- Week selector -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--surface-2);border-bottom:1px solid var(--border);">
+    <button class="btn btn-ghost" style="padding:6px 10px;font-size:12px;" onclick="this.closest('div').querySelector('.week-label').textContent='6-10 אפריל 2026'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <span class="week-label" style="font-size:14px;font-weight:800;color:var(--text-main);font-family:var(--font-en);">13-17 אפריל 2026</span>
+    <button class="btn btn-ghost" style="padding:6px 10px;font-size:12px;" onclick="this.closest('div').querySelector('.week-label').textContent='20-24 אפריל 2026'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+  </div>
+  <!-- Mini calendar grid -->
+  <div style="padding:16px 24px;overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead>
+        <tr>
+          <th style="padding:8px 4px;color:var(--text-light);font-weight:700;font-size:11px;text-align:center;width:50px;"></th>
+          <th style="padding:8px 4px;color:var(--text-main);font-weight:700;font-size:11.5px;text-align:center;">ראשון<br><span style="color:var(--text-light);font-family:var(--font-en);font-size:10px;">13</span></th>
+          <th style="padding:8px 4px;color:var(--text-main);font-weight:700;font-size:11.5px;text-align:center;">שני<br><span style="color:var(--text-light);font-family:var(--font-en);font-size:10px;">14</span></th>
+          <th style="padding:8px 4px;color:var(--text-main);font-weight:700;font-size:11.5px;text-align:center;">שלישי<br><span style="color:var(--text-light);font-family:var(--font-en);font-size:10px;">15</span></th>
+          <th style="padding:8px 4px;color:var(--text-main);font-weight:700;font-size:11.5px;text-align:center;">רביעי<br><span style="color:var(--text-light);font-family:var(--font-en);font-size:10px;">16</span></th>
+          <th style="padding:8px 4px;color:var(--text-main);font-weight:700;font-size:11.5px;text-align:center;">חמישי<br><span style="color:var(--text-light);font-family:var(--font-en);font-size:10px;">17</span></th>
+        </tr>
+      </thead>
+      <tbody id="calBody"></tbody>
+    </table>
+  </div>
+  <!-- Footer -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-top:1px solid var(--border);background:var(--surface-2);">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--green);"></span>
+      <span style="font-size:11.5px;color:var(--text-sub);">זמין</span>
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--cyan);margin-right:10px;"></span>
+      <span style="font-size:11.5px;color:var(--text-sub);">תפוס</span>
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--border);margin-right:10px;"></span>
+      <span style="font-size:11.5px;color:var(--text-sub);">לא זמין</span>
+    </div>
+    <span style="font-size:11px;color:var(--text-light);">Google Calendar מחובר</span>
+  </div>
+</div>
+
 <script>
+// ── Meeting Calendar ──
+const SLOTS = [
+  {h:'09:00'},{h:'09:30'},{h:'10:00'},{h:'10:30'},{h:'11:00'},{h:'11:30'},
+  {h:'12:00'},{h:'12:30'},{h:'14:00'},{h:'14:30'},{h:'15:00'},{h:'15:30'},
+  {h:'16:00'},{h:'16:30'},{h:'17:00'}
+];
+const BOOKED = {
+  '0-2':'יעל כ.','1-4':'רון ב.','2-0':'דנה כ.','3-6':'מאיה ל.','4-3':'אבי י.'
+};
+const UNAVAIL = ['0-0','0-1','1-0','1-1','2-8','2-9','3-0','4-8','4-9','4-10'];
+
+function buildCal(){
+  const body = document.getElementById('calBody');
+  body.innerHTML = '';
+  SLOTS.forEach((slot,si)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td style="padding:4px 6px;font-family:var(--font-en);font-size:11px;color:var(--text-light);text-align:center;font-weight:600;direction:ltr;">${slot.h}</td>`;
+    for(let d=0;d<5;d++){
+      const key = d+'-'+si;
+      const td = document.createElement('td');
+      td.style.cssText = 'padding:3px;text-align:center;';
+      if(BOOKED[key]){
+        td.innerHTML = `<div style="padding:6px 4px;border-radius:6px;background:rgba(56,196,242,0.12);color:var(--cyan);font-size:10px;font-weight:700;cursor:default;">${BOOKED[key]}</div>`;
+      } else if(UNAVAIL.includes(key)){
+        td.innerHTML = `<div style="padding:6px 4px;border-radius:6px;background:var(--surface-2);color:var(--text-light);font-size:9px;">—</div>`;
+      } else {
+        td.innerHTML = `<div onclick="selectSlot(this)" style="padding:6px 4px;border-radius:6px;border:1.5px dashed var(--border);color:var(--green);font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--green)';this.style.background='rgba(125,197,122,0.08)'" onmouseleave="if(!this.classList.contains('selected')){this.style.borderColor='var(--border)';this.style.background=''}">פנוי</div>`;
+      }
+      tr.appendChild(td);
+    }
+    body.appendChild(tr);
+  });
+}
+function selectSlot(el){
+  document.querySelectorAll('#calBody .selected').forEach(s=>{s.classList.remove('selected');s.style.background='';s.style.borderColor='var(--border)';s.style.color='var(--green)';s.textContent='פנוי';});
+  el.classList.add('selected');
+  el.style.background='var(--green)';el.style.color='white';el.style.borderColor='var(--green)';el.style.borderStyle='solid';el.textContent='נבחר';
+}
+function openMeetingCalendar(){
+  buildCal();
+  document.getElementById('meetingOverlay').style.display='block';
+  const m=document.getElementById('meetingModal');
+  m.style.display='block';
+  requestAnimationFrame(()=>{m.style.opacity='1';m.style.transform='translate(-50%,-50%) scale(1)';});
+}
+function closeMeetingCalendar(){
+  const m=document.getElementById('meetingModal');
+  m.style.opacity='0';m.style.transform='translate(-50%,-50%) scale(.96)';
+  setTimeout(()=>{m.style.display='none';document.getElementById('meetingOverlay').style.display='none';},300);
+}
+
 // ── Course data for switching ──
 const courseData = {
   1: { name: 'יסודות העיצוב', chapters: 3, lessons: 12 },
