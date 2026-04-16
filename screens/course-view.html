@@ -1942,121 +1942,162 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
             חזרה
           </button>
           <span class="sbp-title">מחברת הקורס</span>
-          <img src="../BOARDi/SVG/4.svg" alt="BOARDi" style="width:28px;height:28px;flex-shrink:0;">
+          <button onclick="openNbSummary()" title="צפה בכל התשובות" style="width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .15s;flex-shrink:0;" onmouseenter="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-sub)'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
         </div>
 
-        <!-- Notebook tabs -->
-        <div style="display:flex;gap:4px;padding:8px 12px;background:var(--surface-2);border-bottom:1px solid var(--border);">
-          <button class="nb-tab active" id="nbTabCurrent" onclick="switchNbTab('current')" style="flex:1;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;color:var(--cyan);transition:all .2s;">שאלה נוכחית</button>
-          <button class="nb-tab" id="nbTabAll" onclick="switchNbTab('all')" style="flex:1;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:transparent;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;color:var(--text-sub);transition:all .2s;">כל התשובות שלי</button>
+        <!-- Question counter + nav -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface-2);">
+          <button onclick="nbNav(-1)" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-sub)'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:13px;font-weight:800;color:var(--text-main);">שאלה <span id="nbCurrentNum" style="font-family:var(--font-brand);color:var(--cyan);">1</span> מתוך <span id="nbTotalNum" style="font-family:var(--font-brand);">4</span></span>
+            <!-- progress dots -->
+            <div id="nbDots" style="display:flex;gap:4px;"></div>
+          </div>
+          <button onclick="nbNav(1)" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-sub)'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
         </div>
 
-        <!-- Current question tab -->
-        <div class="nb-content" id="nbCurrent" style="padding:14px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;flex:1;">
+        <!-- Single question display area -->
+        <div id="nbQuestionArea" style="padding:14px;overflow-y:auto;flex:1;">
 
           <!-- Q1: Free text -->
-          <div class="nb-q-card" style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-              <span style="width:26px;height:26px;border-radius:8px;background:rgba(56,196,242,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--cyan);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-              </span>
-              <span style="font-size:11px;font-weight:700;color:var(--text-sub);">שאלה פתוחה</span>
+          <div class="nb-slide" data-q="1" style="display:block;">
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="width:26px;height:26px;border-radius:8px;background:rgba(56,196,242,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--cyan);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </span>
+                <span style="font-size:11px;font-weight:700;color:var(--text-sub);">שאלה פתוחה</span>
+              </div>
+              <p style="font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:14px;">מה ההבדל בין צבעים חמים לקרים? תן 3 דוגמאות לכל קבוצה.</p>
+              <textarea placeholder="כתוב את התשובה שלך כאן..." style="width:100%;min-height:100px;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);font-family:var(--font);font-size:13px;color:var(--text-main);resize:vertical;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+              <button onclick="nbSaveAnswer(this)" style="margin-top:10px;padding:9px 18px;border-radius:20px;border:none;background:var(--cyan);color:white;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;width:100%;">שמור תשובה</button>
             </div>
-            <p style="font-size:13.5px;font-weight:700;color:var(--text-main);line-height:1.55;margin-bottom:12px;">מה ההבדל בין צבעים חמים לקרים? תן 3 דוגמאות לכל קבוצה.</p>
-            <textarea placeholder="כתוב את התשובה שלך כאן..." style="width:100%;min-height:80px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);font-family:var(--font);font-size:13px;color:var(--text-main);resize:vertical;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'"></textarea>
-            <button onclick="this.textContent='נשמר!';this.style.background='var(--green)';setTimeout(()=>{this.textContent='שמור תשובה';this.style.background=''},1500);" style="margin-top:8px;padding:8px 16px;border-radius:20px;border:none;background:var(--cyan);color:white;font-family:var(--font);font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s;">שמור תשובה</button>
           </div>
 
           <!-- Q2: Multiple choice -->
-          <div class="nb-q-card" style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-              <span style="width:26px;height:26px;border-radius:8px;background:rgba(240,86,128,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--pink);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-              </span>
-              <span style="font-size:11px;font-weight:700;color:var(--text-sub);">שאלה אמריקאית</span>
-            </div>
-            <p style="font-size:13.5px;font-weight:700;color:var(--text-main);line-height:1.55;margin-bottom:12px;">איזה צבע נחשב צבע משלים לכחול?</p>
-            <div style="display:flex;flex-direction:column;gap:6px;" id="mcqOptions">
-              <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
-                <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)">
-                <span style="font-size:13px;color:var(--text-main);font-weight:500;">כתום</span>
-              </label>
-              <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
-                <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)">
-                <span style="font-size:13px;color:var(--text-main);font-weight:500;">ירוק</span>
-              </label>
-              <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
-                <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)">
-                <span style="font-size:13px;color:var(--text-main);font-weight:500;">אדום</span>
-              </label>
-              <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
-                <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)">
-                <span style="font-size:13px;color:var(--text-main);font-weight:500;">סגול</span>
-              </label>
+          <div class="nb-slide" data-q="2" style="display:none;">
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="width:26px;height:26px;border-radius:8px;background:rgba(240,86,128,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--pink);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                </span>
+                <span style="font-size:11px;font-weight:700;color:var(--text-sub);">שאלה אמריקאית</span>
+              </div>
+              <p style="font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:14px;">איזה צבע נחשב צבע משלים לכחול?</p>
+              <div style="display:flex;flex-direction:column;gap:6px;" id="mcqOptions">
+                <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
+                  <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)"><span style="font-size:13px;color:var(--text-main);font-weight:500;">כתום</span>
+                </label>
+                <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
+                  <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)"><span style="font-size:13px;color:var(--text-main);font-weight:500;">ירוק</span>
+                </label>
+                <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
+                  <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)"><span style="font-size:13px;color:var(--text-main);font-weight:500;">אדום</span>
+                </label>
+                <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
+                  <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)"><span style="font-size:13px;color:var(--text-main);font-weight:500;">סגול</span>
+                </label>
+              </div>
             </div>
           </div>
 
           <!-- Q3: True/False -->
-          <div class="nb-q-card" style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-              <span style="width:26px;height:26px;border-radius:8px;background:rgba(125,197,122,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>
-              </span>
-              <span style="font-size:11px;font-weight:700;color:var(--text-sub);">נכון / לא נכון</span>
-            </div>
-            <p style="font-size:13.5px;font-weight:700;color:var(--text-main);line-height:1.55;margin-bottom:12px;">צבע לבן הוא שילוב של כל הצבעים בספקטרום האור.</p>
-            <div style="display:flex;gap:8px;">
-              <button class="tf-btn" onclick="selectTF(this,'true')" style="flex:1;padding:10px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
-                נכון
-              </button>
-              <button class="tf-btn" onclick="selectTF(this,'false')" style="flex:1;padding:10px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                לא נכון
-              </button>
+          <div class="nb-slide" data-q="3" style="display:none;">
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="width:26px;height:26px;border-radius:8px;background:rgba(125,197,122,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span style="font-size:11px;font-weight:700;color:var(--text-sub);">נכון / לא נכון</span>
+              </div>
+              <p style="font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:14px;">צבע לבן הוא שילוב של כל הצבעים בספקטרום האור.</p>
+              <div style="display:flex;gap:8px;">
+                <button class="tf-btn" onclick="selectTF(this,'true')" style="flex:1;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>נכון
+                </button>
+                <button class="tf-btn" onclick="selectTF(this,'false')" style="flex:1;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>לא נכון
+                </button>
+              </div>
             </div>
           </div>
 
           <!-- Q4: File upload -->
-          <div class="nb-q-card" style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-              <span style="width:26px;height:26px;border-radius:8px;background:rgba(234,214,84,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#b89c00;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              </span>
-              <span style="font-size:11px;font-weight:700;color:var(--text-sub);">העלאת קובץ</span>
-            </div>
-            <p style="font-size:13.5px;font-weight:700;color:var(--text-main);line-height:1.55;margin-bottom:12px;">העלה את התרגיל שהכנת — קולאז' צבעים חמים וקרים</p>
-            <div style="border:2px dashed var(--border);border-radius:13px;padding:22px;text-align:center;cursor:pointer;background:var(--surface);transition:all .2s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)'">
-              <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" width="28" height="28" style="margin-bottom:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              <div style="font-size:13px;font-weight:700;color:var(--text-main);">גרור קובץ לכאן או לחץ לבחירה</div>
-              <div style="font-size:11.5px;color:var(--text-xs);margin-top:3px;">PDF, JPG, PNG עד 20MB</div>
+          <div class="nb-slide" data-q="4" style="display:none;">
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <span style="width:26px;height:26px;border-radius:8px;background:rgba(234,214,84,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#b89c00;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </span>
+                <span style="font-size:11px;font-weight:700;color:var(--text-sub);">העלאת קובץ</span>
+              </div>
+              <p style="font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:14px;">העלה את התרגיל שהכנת — קולאז' צבעים חמים וקרים</p>
+              <div style="border:2px dashed var(--border);border-radius:13px;padding:28px;text-align:center;cursor:pointer;background:var(--surface);transition:all .2s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" width="32" height="32" style="margin-bottom:10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <div style="font-size:13.5px;font-weight:700;color:var(--text-main);">גרור קובץ לכאן או לחץ</div>
+                <div style="font-size:11.5px;color:var(--text-xs);margin-top:4px;">PDF, JPG, PNG עד 20MB</div>
+              </div>
             </div>
           </div>
 
         </div>
+      </div>
 
-        <!-- All answers tab -->
-        <div class="nb-content" id="nbAll" style="padding:14px;display:none;flex-direction:column;gap:14px;overflow-y:auto;flex:1;">
-          <!-- Answered -->
-          <div style="font-size:11px;font-weight:700;color:var(--text-xs);text-transform:uppercase;letter-spacing:1px;padding:0 4px;">שיעור 1: מבוא ויעדי הקורס</div>
-          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px;">
-            <p style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:6px;">מה הדבר הראשון שצריך לחשוב עליו לפני שמתחילים לעצב?</p>
-            <p style="font-size:13px;color:var(--text-main);line-height:1.55;">הקהל — צריך להבין למי מעצבים, מה הצרכים, ומה המטרה של המוצר.</p>
-            <div style="font-size:11px;color:var(--text-xs);margin-top:6px;direction:ltr;display:inline-block;">14:32 • אתמול</div>
+      <!-- ═══ NOTEBOOK SUMMARY POPUP ═══ -->
+      <div id="nbSummaryOverlay" onclick="closeNbSummary()" style="display:none;position:fixed;inset:0;background:rgba(26,47,94,0.45);backdrop-filter:blur(4px);z-index:200;"></div>
+      <div id="nbSummaryModal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);opacity:0;width:560px;max-height:80vh;background:var(--surface);border-radius:18px;box-shadow:0 24px 64px rgba(0,0,0,0.25);z-index:210;overflow:hidden;border:1px solid var(--border);transition:transform .3s cubic-bezier(.4,.8,.3,1),opacity .3s;">
+        <!-- Modal head -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img src="../BOARDi/SVG/4.svg" alt="BOARDi" style="width:36px;height:36px;">
+            <div>
+              <div style="font-size:17px;font-weight:900;color:var(--text-main);">מחברת הקורס — סיכום</div>
+              <div style="font-size:12px;color:var(--text-sub);">שיעור 3: צבע ומשמעות • 4 שאלות</div>
+            </div>
           </div>
-          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px;">
-            <p style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:6px;">מהם שלושת העקרונות המרכזיים של עיצוב טוב?</p>
-            <p style="font-size:13px;color:var(--text-main);line-height:1.55;">פשטות, עקביות, ונגישות. כל עיצוב צריך לשרת את המשתמש.</p>
-            <div style="font-size:11px;color:var(--text-xs);margin-top:6px;direction:ltr;display:inline-block;">14:50 • אתמול</div>
-          </div>
-
-          <div style="font-size:11px;font-weight:700;color:var(--text-xs);text-transform:uppercase;letter-spacing:1px;padding:0 4px;margin-top:8px;">שיעור 3: צבע ומשמעות (נוכחי)</div>
-          <div style="border:1.5px dashed var(--border);border-radius:10px;padding:18px;text-align:center;color:var(--text-xs);font-size:12.5px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="margin-bottom:6px;opacity:.4;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><br>
-            השלם את השאלות בלשונית "שאלה נוכחית"
+          <div style="display:flex;gap:8px;">
+            <button onclick="alert('מוריד PDF...')" style="display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-sub)'">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              PDF
+            </button>
+            <button onclick="closeNbSummary()" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .15s;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
           </div>
         </div>
-
+        <!-- Modal body -->
+        <div style="padding:20px 24px;overflow-y:auto;max-height:calc(80vh - 90px);display:flex;flex-direction:column;gap:14px;">
+          <!-- Summary Q1 -->
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;"><span style="font-size:11px;font-weight:800;color:var(--cyan);font-family:var(--font-brand);">Q1</span><span style="font-size:11px;font-weight:700;color:var(--text-xs);">שאלה פתוחה</span></div>
+            <p style="font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:8px;">מה ההבדל בין צבעים חמים לקרים?</p>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12.5px;color:var(--text-sub);line-height:1.55;font-style:italic;">טרם נענתה</div>
+          </div>
+          <!-- Summary Q2 -->
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;"><span style="font-size:11px;font-weight:800;color:var(--pink);font-family:var(--font-brand);">Q2</span><span style="font-size:11px;font-weight:700;color:var(--text-xs);">אמריקאית</span></div>
+            <p style="font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:8px;">איזה צבע נחשב צבע משלים לכחול?</p>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12.5px;color:var(--text-sub);line-height:1.55;font-style:italic;">טרם נענתה</div>
+          </div>
+          <!-- Summary Q3 -->
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;"><span style="font-size:11px;font-weight:800;color:var(--green);font-family:var(--font-brand);">Q3</span><span style="font-size:11px;font-weight:700;color:var(--text-xs);">נכון / לא נכון</span></div>
+            <p style="font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:8px;">צבע לבן הוא שילוב של כל הצבעים בספקטרום האור.</p>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12.5px;color:var(--text-sub);line-height:1.55;font-style:italic;">טרם נענתה</div>
+          </div>
+          <!-- Summary Q4 -->
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;"><span style="font-size:11px;font-weight:800;color:#b89c00;font-family:var(--font-brand);">Q4</span><span style="font-size:11px;font-weight:700;color:var(--text-xs);">העלאת קובץ</span></div>
+            <p style="font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:8px;">העלה קולאז' צבעים חמים וקרים</p>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12.5px;color:var(--text-sub);line-height:1.55;font-style:italic;">טרם הועלה קובץ</div>
+          </div>
+        </div>
       </div>
 
     </div><!-- /sb-content -->
@@ -2773,20 +2814,60 @@ function syncPubBtn(){
 // ══════════════════════════════════
 // NOTEBOOK (מחברת הקורס)
 // ══════════════════════════════════
-function switchNbTab(tab) {
-  const cur = document.getElementById('nbCurrent');
-  const all = document.getElementById('nbAll');
-  const tabCur = document.getElementById('nbTabCurrent');
-  const tabAll = document.getElementById('nbTabAll');
-  if (tab === 'current') {
-    cur.style.display = 'flex'; all.style.display = 'none';
-    tabCur.style.background = 'var(--surface)'; tabCur.style.color = 'var(--cyan)';
-    tabAll.style.background = 'transparent'; tabAll.style.color = 'var(--text-sub)';
-  } else {
-    cur.style.display = 'none'; all.style.display = 'flex';
-    tabAll.style.background = 'var(--surface)'; tabAll.style.color = 'var(--cyan)';
-    tabCur.style.background = 'transparent'; tabCur.style.color = 'var(--text-sub)';
+let nbCurrent = 1;
+const nbTotal = 4;
+
+function nbNav(dir) {
+  let next = nbCurrent + dir;
+  if (next < 1) next = nbTotal;
+  if (next > nbTotal) next = 1;
+  // fade out current
+  const cur = document.querySelector('.nb-slide[data-q="'+nbCurrent+'"]');
+  cur.style.opacity = '0';
+  cur.style.transition = 'opacity .15s';
+  setTimeout(() => {
+    cur.style.display = 'none';
+    nbCurrent = next;
+    const nxt = document.querySelector('.nb-slide[data-q="'+nbCurrent+'"]');
+    nxt.style.display = 'block';
+    nxt.style.opacity = '0';
+    requestAnimationFrame(() => { nxt.style.transition = 'opacity .2s'; nxt.style.opacity = '1'; });
+    document.getElementById('nbCurrentNum').textContent = nbCurrent;
+    updateNbDots();
+  }, 150);
+}
+
+function updateNbDots() {
+  const container = document.getElementById('nbDots');
+  container.innerHTML = '';
+  for (let i = 1; i <= nbTotal; i++) {
+    const dot = document.createElement('div');
+    dot.style.cssText = 'width:7px;height:7px;border-radius:50%;transition:all .2s;cursor:pointer;';
+    dot.style.background = i === nbCurrent ? 'var(--cyan)' : 'var(--border)';
+    dot.onclick = () => { if (i !== nbCurrent) { const d = i > nbCurrent ? 1 : -1; while(nbCurrent !== i) nbNav(d); } };
+    container.appendChild(dot);
   }
+}
+updateNbDots();
+
+function nbSaveAnswer(btn) {
+  btn.textContent = 'נשמר!';
+  btn.style.background = 'var(--green)';
+  setTimeout(() => { btn.textContent = 'שמור תשובה'; btn.style.background = ''; }, 1500);
+}
+
+// Summary popup
+function openNbSummary() {
+  document.getElementById('nbSummaryOverlay').style.display = 'block';
+  const modal = document.getElementById('nbSummaryModal');
+  modal.style.display = 'block';
+  requestAnimationFrame(() => { modal.style.opacity = '1'; modal.style.transform = 'translate(-50%,-50%) scale(1)'; });
+}
+function closeNbSummary() {
+  const modal = document.getElementById('nbSummaryModal');
+  modal.style.opacity = '0';
+  modal.style.transform = 'translate(-50%,-50%) scale(.96)';
+  setTimeout(() => { modal.style.display = 'none'; document.getElementById('nbSummaryOverlay').style.display = 'none'; }, 300);
 }
 
 function highlightMcq(radio) {
