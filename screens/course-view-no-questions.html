@@ -1947,105 +1947,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
           </button>
         </div>
 
-        <!-- Question counter + nav -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface-2);">
-          <button onclick="nbNav(-1)" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-sub)'">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg>
+        <!-- BOARDi empty state — no questions for this lesson -->
+        <div style="padding:24px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;gap:12px;">
+          <img src="../BOARDi/SVG/2.svg" alt="BOARDi" style="width:110px;filter:drop-shadow(0 6px 16px rgba(37,62,122,0.18));margin-bottom:4px;">
+          <div style="font-size:16px;font-weight:800;color:var(--text-main);line-height:1.3;">אין שאלות בשיעור הזה</div>
+          <p style="font-size:13px;color:var(--text-sub);line-height:1.6;max-width:220px;">השיעור הזה לא כולל שאלות במחברת. אפשר להמשיך לצפות בשיעור או לעיין בתשובות קודמות.</p>
+          <button onclick="openNbSummary()" style="margin-top:6px;display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .2s;" onmouseenter="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-sub)'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            צפה בתשובות קודמות
           </button>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:13px;font-weight:800;color:var(--text-main);">שאלה <span id="nbCurrentNum" style="font-family:var(--font-brand);color:var(--cyan);">1</span> מתוך <span id="nbTotalNum" style="font-family:var(--font-brand);">4</span></span>
-            <!-- progress dots -->
-            <div id="nbDots" style="display:flex;gap:4px;"></div>
-          </div>
-          <button onclick="nbNav(1)" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-sub)'">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-        </div>
-
-        <!-- Single question display area -->
-        <div id="nbQuestionArea" style="padding:14px;overflow-y:auto;flex:1;">
-
-          <!-- Q1: Free text -->
-          <div class="nb-slide" data-q="1" style="display:block;">
-            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                <span style="width:26px;height:26px;border-radius:8px;background:rgba(56,196,242,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--cyan);">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                </span>
-                <span style="font-size:11px;font-weight:700;color:var(--text-sub);">שאלה פתוחה</span>
-              </div>
-              <p style="font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:14px;">מה ההבדל בין צבעים חמים לקרים? תן 3 דוגמאות לכל קבוצה.</p>
-              <textarea placeholder="כתוב את התשובה שלך כאן..." style="width:100%;min-height:100px;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);font-family:var(--font);font-size:13px;color:var(--text-main);resize:vertical;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'"></textarea>
-              <button onclick="nbSaveAnswer(this)" style="margin-top:10px;padding:9px 18px;border-radius:20px;border:none;background:var(--cyan);color:white;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;width:100%;">שמור תשובה</button>
-            </div>
-          </div>
-
-          <!-- Q2: Multiple choice -->
-          <div class="nb-slide" data-q="2" style="display:none;">
-            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                <span style="width:26px;height:26px;border-radius:8px;background:rgba(240,86,128,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--pink);">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                </span>
-                <span style="font-size:11px;font-weight:700;color:var(--text-sub);">שאלה אמריקאית</span>
-              </div>
-              <p style="font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:14px;">איזה צבע נחשב צבע משלים לכחול?</p>
-              <div style="display:flex;flex-direction:column;gap:6px;" id="mcqOptions">
-                <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
-                  <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)"><span style="font-size:13px;color:var(--text-main);font-weight:500;">כתום</span>
-                </label>
-                <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
-                  <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)"><span style="font-size:13px;color:var(--text-main);font-weight:500;">ירוק</span>
-                </label>
-                <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
-                  <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)"><span style="font-size:13px;color:var(--text-main);font-weight:500;">אדום</span>
-                </label>
-                <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
-                  <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)"><span style="font-size:13px;color:var(--text-main);font-weight:500;">סגול</span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Q3: True/False -->
-          <div class="nb-slide" data-q="3" style="display:none;">
-            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                <span style="width:26px;height:26px;border-radius:8px;background:rgba(125,197,122,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green);">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>
-                </span>
-                <span style="font-size:11px;font-weight:700;color:var(--text-sub);">נכון / לא נכון</span>
-              </div>
-              <p style="font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:14px;">צבע לבן הוא שילוב של כל הצבעים בספקטרום האור.</p>
-              <div style="display:flex;gap:8px;">
-                <button class="tf-btn" onclick="selectTF(this,'true')" style="flex:1;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>נכון
-                </button>
-                <button class="tf-btn" onclick="selectTF(this,'false')" style="flex:1;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>לא נכון
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Q4: File upload -->
-          <div class="nb-slide" data-q="4" style="display:none;">
-            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                <span style="width:26px;height:26px;border-radius:8px;background:rgba(234,214,84,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#b89c00;">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                </span>
-                <span style="font-size:11px;font-weight:700;color:var(--text-sub);">העלאת קובץ</span>
-              </div>
-              <p style="font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:14px;">העלה את התרגיל שהכנת — קולאז' צבעים חמים וקרים</p>
-              <div style="border:2px dashed var(--border);border-radius:13px;padding:28px;text-align:center;cursor:pointer;background:var(--surface);transition:all .2s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)'">
-                <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" width="32" height="32" style="margin-bottom:10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                <div style="font-size:13.5px;font-weight:700;color:var(--text-main);">גרור קובץ לכאן או לחץ</div>
-                <div style="font-size:11.5px;color:var(--text-xs);margin-top:4px;">PDF, JPG, PNG עד 20MB</div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
 
