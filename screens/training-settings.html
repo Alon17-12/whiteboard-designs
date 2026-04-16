@@ -96,6 +96,11 @@
   .stat{font-size:12px;color:var(--text-sub);display:flex;align-items:center;gap:5px;}
   .stat svg{width:14px;height:14px;}
   .program-actions{display:flex;gap:8px;align-items:center;}
+  #publishBtn[data-state="unsaved"]{background:rgba(234,214,84,0.13);color:#7a6200;border-color:rgba(200,168,0,0.35);}
+  [data-theme="dark"] #publishBtn[data-state="unsaved"]{background:rgba(234,214,84,0.1);color:#d4bc2e;border-color:rgba(234,214,84,0.28);}
+  #publishBtn[data-state="published"]{background:rgba(125,197,122,0.13);color:#3a8838;border-color:rgba(100,180,97,0.38);}
+  [data-theme="dark"] #publishBtn[data-state="published"]{background:rgba(125,197,122,0.1);color:#7DC57A;border-color:rgba(125,197,122,0.28);}
+  #publishBtn[data-hovering="true"]{background:linear-gradient(135deg,var(--cyan),#1db0d8) !important;color:white !important;border-color:transparent !important;box-shadow:0 4px 16px rgba(56,196,242,0.35) !important;}
 
   /* ── BUTTONS ── */
   .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:30px;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:none;white-space:nowrap;}
@@ -336,9 +341,9 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           תצוגה מקדימה
         </button>
-        <button class="btn btn-primary">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          פרסם תכנית
+        <button class="btn" id="publishBtn" data-state="unsaved" onclick="clickPublish()" onmouseenter="this.dataset.hovering='true'" onmouseleave="this.dataset.hovering='false'" style="min-width:196px;justify-content:center;border:1.5px solid rgba(200,168,0,0.35);background:rgba(234,214,84,0.13);color:#7a6200;transition:all .3s;">
+          <svg id="pubIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="pubLabel">שינויים שלא נשמרו</span>
         </button>
       </div>
     </div>
@@ -364,7 +369,7 @@
       </a>
       <a class="anchor-link" href="#sec-pricing" data-target="sec-pricing">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        תמחור ותשלומים
+        תמחור
       </a>
       <a class="anchor-link" href="#sec-notebook" data-target="sec-notebook">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
@@ -415,38 +420,6 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label">תמונת קאבר</label>
-          <div class="cover-preview">
-            <div class="cover-placeholder-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
-            <div class="cover-placeholder-text">1280 x 720px &middot; יחס 16:9 מומלץ</div>
-            <div class="cover-overlay">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              <div class="cover-overlay-text">העלה תמונת קאבר</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">קטגוריה</label>
-          <select class="field-input">
-            <option value="design" selected>עיצוב</option>
-            <option value="marketing">שיווק</option>
-            <option value="tech">טכנולוגיה</option>
-            <option value="entrepreneurship">יזמות</option>
-            <option value="personal">אישי</option>
-          </select>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">רמת קושי</label>
-          <div class="segmented" data-group="difficulty">
-            <button class="seg-btn active" onclick="setSegment(this)">מתחיל</button>
-            <button class="seg-btn" onclick="setSegment(this)">בינוני</button>
-            <button class="seg-btn" onclick="setSegment(this)">מתקדם</button>
-          </div>
-        </div>
-
-        <div class="field-group">
           <label class="field-label">משך מוערך</label>
           <input class="field-input" type="text" value="כ-3 חודשים" placeholder="לדוגמה: כ-3 חודשים" style="max-width:260px;">
         </div>
@@ -476,7 +449,7 @@
       <div class="settings-card" id="sec-pricing">
         <div class="card-header">
           <div class="card-icon card-icon-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-          <div><div class="card-title">תמחור ותשלומים</div><div class="card-desc">הגדרות מחיר, תשלומים וקופונים</div></div>
+          <div><div class="card-title">תמחור</div><div class="card-desc">מחיר התכנית ותקופת גישה</div></div>
         </div>
 
         <div class="field-group">
@@ -487,67 +460,19 @@
           </div>
         </div>
 
-        <div class="toggle-row">
-          <div class="toggle-row-text">
-            <div class="toggle-row-label">אפשר תשלומים</div>
-            <div class="toggle-row-desc">אפשר לתלמידים לחלק את התשלום למספר תשלומים</div>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" id="installmentsToggle" onchange="toggleConditional('installmentsToggle','installmentsFields')">
-            <div class="toggle-track"></div>
-            <div class="toggle-thumb"></div>
-          </label>
-        </div>
-        <div class="conditional-fields" id="installmentsFields">
-          <div class="field-group">
-            <label class="field-label">מספר תשלומים</label>
-            <select class="field-input" style="max-width:200px;">
-              <option value="2">2 תשלומים</option>
-              <option value="3" selected>3 תשלומים</option>
-              <option value="6">6 תשלומים</option>
-              <option value="12">12 תשלומים</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="toggle-row">
-          <div class="toggle-row-text">
-            <div class="toggle-row-label">קופון הנחה</div>
-            <div class="toggle-row-desc">צור קוד קופון שיעניק הנחה לתלמידים</div>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" id="couponToggle" onchange="toggleConditional('couponToggle','couponFields')">
-            <div class="toggle-track"></div>
-            <div class="toggle-thumb"></div>
-          </label>
-        </div>
-        <div class="conditional-fields" id="couponFields">
-          <div class="field-group">
-            <label class="field-label">קוד קופון</label>
-            <input class="field-input" type="text" placeholder="לדוגמה: DESIGN2026" style="max-width:260px;direction:ltr;text-align:left;">
-          </div>
-          <div class="field-group">
-            <label class="field-label">אחוז הנחה</label>
-            <div style="display:flex;align-items:center;gap:8px;max-width:160px;">
-              <input class="field-input" type="number" value="15" min="1" max="100" style="text-align:center;">
-              <span style="font-size:14px;font-weight:700;color:var(--text-sub);">%</span>
-            </div>
-          </div>
-        </div>
-
         <div class="field-group" style="margin-top:14px;">
           <label class="field-label">תקופת גישה</label>
-          <select class="field-input" style="max-width:260px;">
-            <option value="unlimited" selected>ללא הגבלה</option>
-            <option value="3m">3 חודשים</option>
-            <option value="6m">6 חודשים</option>
-            <option value="1y">שנה</option>
-          </select>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">מדיניות ביטול</label>
-          <textarea class="field-input" placeholder="פרט את מדיניות הביטול והחזר הכספי..." style="min-height:72px;">ניתן לבטל את ההרשמה בתוך 14 ימים מרגע הרכישה ולקבל החזר כספי מלא, בתנאי שלא נצפו יותר מ-20% מתכני התכנית.</textarea>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <input class="field-input" type="number" value="6" min="1" style="max-width:80px;text-align:center;">
+            <select class="field-input" style="max-width:160px;" id="accessPeriodUnit">
+              <option value="days">ימים</option>
+              <option value="weeks">שבועות</option>
+              <option value="months" selected>חודשים</option>
+              <option value="years">שנים</option>
+              <option value="forever">לתמיד (ללא הגבלה)</option>
+            </select>
+          </div>
+          <div class="field-hint">קבע כמה זמן התלמיד יקבל גישה לתכנית מרגע הרכישה</div>
         </div>
       </div>
 
@@ -576,17 +501,20 @@
             <div class="toggle-row-desc">כאשר כבוי, השאלות נחשפות רק תוך כדי צפייה בסרטון בנקודת הזמן שנקבעה</div>
           </div>
           <label class="toggle">
-            <input type="checkbox">
+            <input type="checkbox" id="previsibleToggle" onchange="toggleConditional('previsibleToggle','triggerFields',true)">
             <div class="toggle-track"></div>
             <div class="toggle-thumb"></div>
           </label>
         </div>
 
-        <div class="field-group" style="margin-top:14px;">
-          <label class="field-label">טריגר לשאלה</label>
-          <div class="segmented" data-group="trigger">
-            <button class="seg-btn active" onclick="setSegment(this)">75% מהסרטון</button>
-            <button class="seg-btn" onclick="setSegment(this)">טיימליין ידני</button>
+        <div class="conditional-fields" id="triggerFields" style="display:block;">
+          <div class="field-group">
+            <label class="field-label">טריגר לשאלה</label>
+            <div class="field-hint" style="margin-bottom:8px;">מתי תופיע השאלה לתלמיד תוך כדי צפייה?</div>
+            <div class="segmented" data-group="trigger">
+              <button class="seg-btn active" onclick="setSegment(this)">75% מהסרטון</button>
+              <button class="seg-btn" onclick="setSegment(this)">טיימליין ידני</button>
+            </div>
           </div>
         </div>
 
@@ -719,13 +647,27 @@
         <div class="toggle-row">
           <div class="toggle-row-text">
             <div class="toggle-row-label">הפעל פגישות אישיות</div>
-            <div class="toggle-row-desc">תלמידים יוכלו לקבוע פגישות אישיות איתך</div>
+            <div class="toggle-row-desc">תלמידים יוכלו לבקש פגישות אישיות איתך</div>
           </div>
           <label class="toggle">
             <input type="checkbox" id="meetingsToggle" onchange="toggleConditional('meetingsToggle','meetingsFields')">
             <div class="toggle-track"></div>
             <div class="toggle-thumb"></div>
           </label>
+        </div>
+
+        <div class="conditional-fields" id="meetingsApprovalWrap" style="display:none;">
+          <div class="toggle-row" style="background:rgba(234,214,84,0.06);border:1px solid rgba(234,214,84,0.2);border-radius:var(--radius-sm);">
+            <div class="toggle-row-text">
+              <div class="toggle-row-label">דרוש אישור לתאום פגישה</div>
+              <div class="toggle-row-desc">כשפעיל — תלמיד שמבקש פגישה יחכה לאישור שלך לפני שהפגישה תופיע ביומן. תקבל התראה על כל בקשה חדשה.</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" checked>
+              <div class="toggle-track"></div>
+              <div class="toggle-thumb"></div>
+            </label>
+          </div>
         </div>
 
         <div class="conditional-fields" id="meetingsFields">
@@ -859,52 +801,10 @@
       <div class="settings-card" id="sec-advanced">
         <div class="card-header">
           <div class="card-icon card-icon-navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
-          <div><div class="card-title">הגדרות מתקדמות</div><div class="card-desc">הגדרות שליטה, גישה ומחיקה</div></div>
+          <div><div class="card-title">הגדרות מתקדמות</div><div class="card-desc">מחיקה</div></div>
         </div>
 
-        <div class="toggle-row">
-          <div class="toggle-row-text">
-            <div class="toggle-row-label">הגבל מספר תלמידים</div>
-            <div class="toggle-row-desc">קבע מספר מקסימלי של תלמידים שיכולים להירשם</div>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" id="limitStudentsToggle" onchange="toggleConditional('limitStudentsToggle','limitStudentsFields')">
-            <div class="toggle-track"></div>
-            <div class="toggle-thumb"></div>
-          </label>
-        </div>
-        <div class="conditional-fields" id="limitStudentsFields">
-          <div class="field-group" style="margin-bottom:0;">
-            <label class="field-label">מספר תלמידים מקסימלי</label>
-            <input class="field-input" type="number" value="50" min="1" style="max-width:140px;text-align:center;">
-          </div>
-        </div>
-
-        <div class="toggle-row">
-          <div class="toggle-row-text">
-            <div class="toggle-row-label">הסתר מחנות</div>
-            <div class="toggle-row-desc">התכנית לא תופיע בחנות הקורסים הציבורית</div>
-          </div>
-          <label class="toggle">
-            <input type="checkbox">
-            <div class="toggle-track"></div>
-            <div class="toggle-thumb"></div>
-          </label>
-        </div>
-
-        <div class="toggle-row">
-          <div class="toggle-row-text">
-            <div class="toggle-row-label">אפשר הרשמה ידנית בלבד</div>
-            <div class="toggle-row-desc">רק מרצה יוכל לרשום תלמידים — לא תהיה אפשרות הרשמה עצמאית</div>
-          </div>
-          <label class="toggle">
-            <input type="checkbox">
-            <div class="toggle-track"></div>
-            <div class="toggle-thumb"></div>
-          </label>
-        </div>
-
-        <div style="margin-top:20px;">
+        <div>
           <div class="danger-zone">
             <div>
               <div class="danger-title">מחק תכנית זו לצמיתות</div>
@@ -974,13 +874,21 @@ function setSegment(btn) {
 }
 
 // ── TOGGLE CONDITIONAL FIELDS ──
-function toggleConditional(toggleId, fieldsId) {
+function toggleConditional(toggleId, fieldsId, inverse) {
   const checked = document.getElementById(toggleId).checked;
   const fields = document.getElementById(fieldsId);
-  if (checked) {
+  const show = inverse ? !checked : checked;
+  if (show) {
     fields.classList.add('visible');
+    fields.style.display = 'block';
   } else {
     fields.classList.remove('visible');
+    fields.style.display = 'none';
+  }
+  // Also show meetingsApproval when meetings toggle is on
+  if (toggleId === 'meetingsToggle') {
+    const approval = document.getElementById('meetingsApprovalWrap');
+    if (approval) approval.style.display = checked ? 'block' : 'none';
   }
 }
 
@@ -1044,6 +952,29 @@ function saveSettings() {
 }
 
 // ── DELETE CONFIRM ──
+// ── PUBLISH BUTTON ──
+const pubLabels = { unsaved: 'שינויים שלא נשמרו', published: 'השינויים פורסמו בהצלחה', hover: 'פרסם שינויים' };
+function clickPublish() {
+  const btn = document.getElementById('publishBtn');
+  const lbl = document.getElementById('pubLabel');
+  const icon = document.getElementById('pubIcon');
+  btn.dataset.state = 'published';
+  btn.dataset.hovering = 'false';
+  lbl.textContent = pubLabels.published;
+  icon.innerHTML = '<polyline points="20 6 9 17 4 12" fill="none" stroke="currentColor" stroke-width="2.5"/>';
+  setTimeout(() => {
+    btn.dataset.state = 'unsaved';
+    lbl.textContent = pubLabels.unsaved;
+    icon.innerHTML = '<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="currentColor" stroke-width="2"/>';
+  }, 2500);
+}
+document.getElementById('publishBtn').addEventListener('mouseenter', function() {
+  if (this.dataset.state === 'unsaved') document.getElementById('pubLabel').textContent = pubLabels.hover;
+});
+document.getElementById('publishBtn').addEventListener('mouseleave', function() {
+  if (this.dataset.state === 'unsaved') document.getElementById('pubLabel').textContent = pubLabels.unsaved;
+});
+
 function confirmDelete() {
   if (confirm('האם אתה בטוח שברצונך למחוק את התכנית לצמיתות? פעולה זו בלתי הפיכה.')) {
     const toast = document.getElementById('toast');
