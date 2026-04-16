@@ -489,12 +489,13 @@
             <div class="toggle-row-desc">מחברת שאלות דיגיטלית שמלווה את התלמיד לאורך הצפייה</div>
           </div>
           <label class="toggle">
-            <input type="checkbox" checked>
+            <input type="checkbox" checked id="notebookToggle" onchange="toggleConditional('notebookToggle','notebookFields')">
             <div class="toggle-track"></div>
             <div class="toggle-thumb"></div>
           </label>
         </div>
 
+        <div class="conditional-fields visible" id="notebookFields">
         <div class="toggle-row">
           <div class="toggle-row-text">
             <div class="toggle-row-label">שאלות גלויות מראש</div>
@@ -512,7 +513,7 @@
             <label class="field-label">טריגר לשאלה</label>
             <div class="field-hint" style="margin-bottom:8px;">מתי תופיע השאלה לתלמיד תוך כדי צפייה?</div>
             <div class="segmented" data-group="trigger">
-              <button class="seg-btn active" onclick="setSegment(this)">75% מהסרטון</button>
+              <button class="seg-btn active" onclick="setSegment(this)">ברירת מחדל</button>
               <button class="seg-btn" onclick="setSegment(this)">טיימליין ידני</button>
             </div>
           </div>
@@ -541,6 +542,7 @@
             <div class="toggle-thumb"></div>
           </label>
         </div>
+        </div><!-- /notebookFields -->
       </div>
 
       <!-- ═══ SECTION 4: סדר קורסים ונעילה ═══ -->
@@ -822,14 +824,7 @@
   </div><!-- /page-body -->
 </div><!-- /main -->
 
-<!-- FLOATING SAVE -->
-<div class="floating-save" id="floatingSave">
-  <span style="font-size:13px;color:var(--text-sub);font-weight:600;">שינויים שלא נשמרו</span>
-  <button class="btn btn-primary" onclick="saveSettings()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-    שמור הגדרות
-  </button>
-</div>
+<!-- removed floating save — publish button in header handles this -->
 
 <!-- TOAST -->
 <div class="toast" id="toast">ההגדרות נשמרו בהצלחה</div>
