@@ -111,7 +111,26 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 /* ══ PROGRAM HEADER ══ */
 .program-header{
   background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border);
-  padding:28px 32px 24px;box-shadow:var(--sh-sm);
+  box-shadow:var(--sh-sm);
+  display:flex;align-items:stretch;overflow:hidden;
+}
+.program-header-text{
+  flex:1;padding:28px 32px 24px;display:flex;flex-direction:column;justify-content:center;
+}
+.program-header-cover{
+  width:320px;flex-shrink:0;
+  background:linear-gradient(135deg,#253E7A 0%,#38C4F2 50%,#F05680 100%);
+  position:relative;overflow:hidden;
+}
+.program-header-cover::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 40%,rgba(255,255,255,0.2),transparent 60%);
+}
+.program-header-cover-label{
+  position:absolute;bottom:12px;left:12px;
+  background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);
+  padding:4px 10px;border-radius:6px;
+  font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.85);
 }
 .program-title{font-family:var(--font-brand);font-size:28px;font-weight:700;color:var(--text-main);margin-bottom:6px;}
 [data-theme="dark"] .program-title{color:#fff;}
@@ -322,14 +341,34 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 
       <!-- PROGRAM HEADER -->
       <div class="program-header">
-        <div class="program-title">תכנית הכשרה לעיצוב דיגיטלי</div>
-        <div class="program-subtitle">4 קורסים &bull; 32 שיעורים &bull; כ-3 חודשים</div>
-        <div class="progress-section">
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-fill cyan" data-width="28"></div>
+        <div class="program-header-text">
+          <div class="program-title">תכנית הכשרה לעיצוב דיגיטלי</div>
+          <div class="program-subtitle">4 קורסים &bull; 32 שיעורים &bull; כ-3 חודשים</div>
+          <div class="progress-section">
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill cyan" data-width="28"></div>
+            </div>
+            <div class="progress-label">28% הושלם</div>
           </div>
-          <div class="progress-label">28% הושלם</div>
         </div>
+        <div class="program-header-cover">
+          <span class="program-header-cover-label">16:9</span>
+        </div>
+      </div>
+
+      <!-- MEETING CARD (shown only if meeting within 2 weeks) -->
+      <div class="meeting-card" id="meetingCard">
+        <div class="meeting-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="meeting-info">
+          <div class="meeting-title">יש לך פגישה אישית קרובה</div>
+          <div class="meeting-detail">יום רביעי, 16:00 — סיכום פרק צבע וטיפוגרפיה</div>
+        </div>
+        <button class="meeting-btn" onclick="showToast('פותח ביומן','cyan')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          פתח ביומן
+        </button>
       </div>
 
       <!-- COURSES LIST -->
@@ -423,20 +462,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 
       </div>
 
-      <!-- MEETING CARD -->
-      <div class="meeting-card">
-        <div class="meeting-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        </div>
-        <div class="meeting-info">
-          <div class="meeting-title">יש לך פגישה אישית קרובה</div>
-          <div class="meeting-detail">יום רביעי, 16:00 — סיכום פרק צבע וטיפוגרפיה</div>
-        </div>
-        <button class="meeting-btn" onclick="showToast('פותח ביומן','cyan')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          פתח ביומן
-        </button>
-      </div>
+      <!-- meeting card removed from here — moved to top -->
 
     </div>
   </main>
