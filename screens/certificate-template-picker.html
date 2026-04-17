@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תעודה - בחירת תבנית | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+    --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+    --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+    --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+    --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+    --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+    --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+    --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --sidebar-bg:var(--navy);--sidebar-text:rgba(255,255,255,0.65);
+    --sidebar-hover:rgba(255,255,255,0.08);--sidebar-active-bg:rgba(56,196,242,0.2);
+    --sidebar-active-cl:var(--cyan);--sidebar-border:rgba(255,255,255,0.1);
+  }
+  [data-theme="dark"] {
+    --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+    --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+    --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+    --light-blue:rgba(56,196,242,0.08);--sidebar-bg:#0d1628;
+    --sidebar-text:rgba(255,255,255,0.55);--sidebar-hover:rgba(255,255,255,0.06);
+    --sidebar-active-bg:rgba(56,196,242,0.15);--sidebar-border:rgba(255,255,255,0.05);
+    --cyan-light:rgba(56,196,242,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;transition:background .3s,color .3s;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{width:220px;background:var(--sidebar-bg);border-left:1px solid var(--sidebar-border);min-height:100vh;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;position:fixed;right:0;top:0;bottom:0;z-index:50;transition:background .3s;}
+  .sidebar-logo{padding:16px 16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
+  .sidebar-logo img{width:150px;object-fit:contain;}
+  .sidebar-logo-text{font-family:var(--font-en);font-size:22px;font-weight:700;color:white;letter-spacing:1px;}
+  .sidebar-section{padding:8px 12px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--sidebar-text);font-size:14px;font-weight:500;}
+  .nav-item:hover{background:var(--sidebar-hover);color:white;}
+  .nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-cl);font-weight:700;}
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;}
+  .sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);}
+  .mode-switcher{margin-bottom:10px;}
+  .mode-switcher-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;padding-right:2px;}
+  .mode-toggle-row{display:flex;background:rgba(0,0,0,0.25);border-radius:8px;padding:3px;gap:2px;}
+  .mode-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 4px;border-radius:6px;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.45);background:transparent;white-space:nowrap;}
+  .mode-btn svg{width:13px;height:13px;}
+  .mode-btn.active{background:rgba(56,196,242,0.25);color:var(--cyan);}
+  .profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;}
+  .profile-mini:hover{background:rgba(255,255,255,0.08);}
+  .avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+  .profile-mini-name{font-size:13px;font-weight:600;color:white;}
+  .profile-mini-role{font-size:11px;color:rgba(255,255,255,0.45);}
+  .profile-edit-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;color:rgba(255,255,255,0.4);flex-shrink:0;margin-right:auto;}
+  .profile-edit-btn:hover{background:rgba(255,255,255,0.1);color:white;}
+  .profile-edit-btn svg{width:13px;height:13px;}
+
+  /* ── MAIN ── */
+  .main{margin-right:220px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:var(--shadow-sm);transition:background .3s;}
+  .topbar-breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .breadcrumb-link{color:var(--text-sub);cursor:pointer;transition:color .2s;}
+  .breadcrumb-link:hover{color:var(--text-main);}
+  .breadcrumb-sep{color:var(--text-light);}
+  .breadcrumb-current{color:var(--text-main);font-weight:700;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;}
+  .icon-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+  .icon-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .icon-sun{display:none;}.icon-moon{display:block;}
+  [data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+  [data-theme="dark"] .icon-btn:hover{color:var(--cyan);border-color:rgba(56,196,242,0.4);}
+
+  /* ── PROGRAM HEADER ── */
+  .program-header{background:var(--surface);border-bottom:1px solid var(--border);padding:24px 32px 0;transition:background .3s;}
+  .program-tabs{display:flex;gap:4px;overflow-x:auto;margin-top:16px;}
+  .ptab{display:flex;align-items:center;gap:6px;padding:10px 15px;font-size:13px;font-weight:600;color:var(--text-sub);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;}
+  .ptab svg{width:14px;height:14px;opacity:.6;transition:opacity .2s;}
+  .ptab:hover{color:var(--text-main);}
+  .ptab:hover svg{opacity:1;}
+  .ptab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+  .ptab.active svg{opacity:1;}
+  .program-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
+  .program-title-wrap{display:flex;align-items:center;gap:14px;}
+  .program-icon{width:52px;height:52px;border-radius:var(--radius-md);background:linear-gradient(135deg,#0d1b3e,#253E7A);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .program-icon svg{width:24px;height:24px;color:rgba(255,255,255,0.85);}
+  .program-name{font-size:22px;font-weight:900;color:var(--text-main);}
+  .program-meta-row{display:flex;align-items:center;gap:16px;margin-top:6px;flex-wrap:wrap;}
+  .badge{font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;}
+  .badge-pub{background:rgba(125,197,122,0.15);color:#3d8a3a;border:1px solid rgba(125,197,122,0.3);}
+  [data-theme="dark"] .badge-pub{color:#7DC57A;}
+  .stat{font-size:12px;color:var(--text-sub);display:flex;align-items:center;gap:5px;}
+  .stat svg{width:14px;height:14px;}
+  .program-actions{display:flex;gap:8px;align-items:center;}
+
+  /* ── BUTTONS ── */
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:30px;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:none;white-space:nowrap;}
+  .btn svg{width:15px;height:15px;}
+  .btn-primary{background:linear-gradient(135deg,var(--cyan),#1db0d8);color:white;box-shadow:0 3px 14px rgba(56,196,242,0.3);}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(56,196,242,0.4);}
+  .btn-ghost{background:transparent;color:var(--text-sub);border:1.5px solid var(--border);}
+  .btn-ghost:hover{background:var(--light-blue);color:var(--text-main);border-color:var(--cyan);}
+
+  /* ── PAGE BODY ── */
+  .page-body{flex:1;padding:28px 32px 140px;display:flex;gap:28px;}
+
+  /* ── TWO COLUMNS ── */
+  .col-left{width:40%;flex-shrink:0;display:flex;flex-direction:column;gap:20px;}
+  .col-right{width:60%;display:flex;flex-direction:column;gap:20px;}
+
+  /* ── TEMPLATE GALLERY ── */
+  .gallery-header{margin-bottom:4px;}
+  .gallery-title{font-size:16px;font-weight:900;color:var(--text-main);}
+  .gallery-subtitle{font-size:12px;color:var(--text-sub);margin-top:4px;}
+  .template-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .template-card{position:relative;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;transition:all .2s;min-height:180px;}
+  .template-card:hover{border-color:rgba(56,196,242,0.4);transform:translateY(-2px);box-shadow:var(--shadow-md);}
+  .template-card.active{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.2);}
+  .template-card .checkmark{position:absolute;top:10px;left:10px;width:26px;height:26px;border-radius:50%;background:var(--cyan);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0.6);transition:all .2s;}
+  .template-card.active .checkmark{opacity:1;transform:scale(1);}
+  .checkmark svg{width:14px;height:14px;color:white;}
+  .template-preview{width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+  .template-label{padding:10px 14px;font-size:13px;font-weight:700;color:var(--text-main);text-align:center;border-top:1px solid var(--border);background:var(--surface);}
+
+  /* ── MINI PREVIEWS ── */
+  .mini-classic{background:#f5f3ee;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;position:relative;}
+  .mini-classic::before{content:'';position:absolute;inset:8px;border:2px solid #253E7A;border-radius:4px;}
+  .mini-classic::after{content:'';position:absolute;inset:11px;border:1px solid #EAD654;border-radius:3px;}
+  .mini-classic-text{font-size:10px;font-weight:700;color:#253E7A;text-align:center;z-index:1;}
+  .mini-classic-line{width:40px;height:2px;background:#EAD654;margin:4px 0;z-index:1;}
+
+  .mini-modern{background:#ffffff;padding:16px;display:flex;align-items:center;width:100%;height:100%;position:relative;overflow:hidden;}
+  .mini-modern::before{content:'';position:absolute;left:0;top:0;bottom:0;width:40%;background:linear-gradient(135deg,rgba(56,196,242,0.15),rgba(56,196,242,0.05));clip-path:polygon(0 0, 100% 0, 70% 100%, 0 100%);}
+  .mini-modern-content{display:flex;flex-direction:column;gap:4px;margin-right:auto;z-index:1;padding-right:12px;}
+  .mini-modern-line{height:2px;border-radius:1px;background:#38C4F2;}
+  .mini-modern-line:nth-child(1){width:50px;}
+  .mini-modern-line:nth-child(2){width:35px;opacity:.5;}
+  .mini-modern-line:nth-child(3){width:45px;opacity:.3;}
+
+  .mini-pro{background:#1a2a52;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;gap:6px;}
+  .mini-pro-line{height:1px;background:#EAD654;opacity:.6;}
+  .mini-pro-line:nth-child(1){width:30px;}
+  .mini-pro-line:nth-child(3){width:50px;}
+  .mini-pro-text{font-size:9px;font-weight:700;color:rgba(255,255,255,0.8);text-align:center;}
+  .mini-pro-block{width:20px;height:20px;border:1px solid rgba(234,214,84,0.4);border-radius:2px;margin-top:4px;}
+
+  .mini-creative{background:linear-gradient(135deg,#38C4F2,#F05680);padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;position:relative;overflow:hidden;}
+  .mini-creative::before{content:'';position:absolute;top:-20px;right:-20px;width:60px;height:60px;background:rgba(255,255,255,0.12);transform:rotate(45deg);}
+  .mini-creative::after{content:'';position:absolute;bottom:-10px;left:-10px;width:40px;height:40px;background:rgba(255,255,255,0.08);transform:rotate(25deg);}
+  .mini-creative-text{font-size:10px;font-weight:700;color:white;text-align:center;z-index:1;}
+  .mini-creative-dots{display:flex;gap:4px;margin-top:6px;z-index:1;}
+  .mini-creative-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.5);}
+
+  /* ── CERTIFICATE PREVIEW ── */
+  .preview-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm);transition:background .3s,border-color .3s;}
+  .preview-label{font-size:13px;font-weight:700;color:var(--text-sub);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .preview-label svg{width:16px;height:16px;}
+  .cert-frame{width:100%;aspect-ratio:1.414/1;border-radius:var(--radius-md);overflow:hidden;position:relative;transition:all .3s;}
+
+  /* ── CERT TEMPLATE: CLASSIC ── */
+  .cert-classic{background:#f9f7f1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 48px;position:relative;}
+  .cert-classic::before{content:'';position:absolute;inset:12px;border:3px solid #253E7A;border-radius:6px;}
+  .cert-classic::after{content:'';position:absolute;inset:18px;border:1.5px solid #EAD654;border-radius:4px;}
+  .cert-classic .cert-content{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .cert-classic .cert-logo{font-family:var(--font-en);font-size:14px;font-weight:700;color:#253E7A;letter-spacing:2px;opacity:.7;}
+  .cert-classic .cert-heading{font-size:28px;font-weight:900;color:#253E7A;font-family:var(--font-he);}
+  .cert-classic .cert-program{font-size:14px;font-weight:600;color:#3a5499;}
+  .cert-classic .cert-awarded{font-size:12px;color:#666;margin-top:4px;}
+  .cert-classic .cert-student{font-size:22px;font-weight:700;color:#253E7A;border-bottom:2px solid #EAD654;padding-bottom:4px;margin:4px 0;}
+  .cert-classic .cert-desc{font-size:11px;color:#666;max-width:400px;line-height:1.6;}
+  .cert-classic .cert-bottom{display:flex;align-items:flex-end;justify-content:space-between;width:100%;margin-top:16px;gap:20px;}
+  .cert-classic .cert-qr{width:52px;height:52px;border:1.5px solid #ccc;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#999;font-family:var(--font-en);}
+  .cert-classic .cert-sig{text-align:center;}
+  .cert-classic .cert-sig-line{width:120px;height:1px;background:#253E7A;margin-bottom:4px;}
+  .cert-classic .cert-sig-name{font-size:11px;font-weight:600;color:#253E7A;}
+  .cert-classic .cert-meta{text-align:center;display:flex;flex-direction:column;gap:2px;}
+  .cert-classic .cert-date{font-size:10px;color:#999;}
+  .cert-classic .cert-serial{font-size:9px;color:#bbb;font-family:var(--font-en);}
+  .cert-classic .cert-footer{font-size:9px;color:#bbb;font-family:var(--font-en);letter-spacing:1px;margin-top:8px;}
+
+  /* ── CERT TEMPLATE: MODERN ── */
+  .cert-modern{background:#ffffff;display:flex;padding:0;position:relative;overflow:hidden;}
+  .cert-modern .cert-accent{position:absolute;left:0;top:0;bottom:0;width:35%;background:linear-gradient(160deg,rgba(56,196,242,0.12),rgba(56,196,242,0.04));clip-path:polygon(0 0, 100% 0, 65% 100%, 0 100%);}
+  .cert-modern .cert-accent-circle{position:absolute;top:20px;left:20px;width:80px;height:80px;border-radius:50%;border:3px solid rgba(56,196,242,0.2);}
+  .cert-modern .cert-content{position:relative;z-index:1;padding:40px 48px;display:flex;flex-direction:column;justify-content:center;width:100%;}
+  .cert-modern .cert-logo{font-family:var(--font-en);font-size:12px;font-weight:600;color:#38C4F2;letter-spacing:2px;margin-bottom:8px;}
+  .cert-modern .cert-heading{font-size:26px;font-weight:900;color:#1a2f5e;font-family:var(--font-he);}
+  .cert-modern .cert-program{font-size:13px;font-weight:600;color:#38C4F2;margin-top:4px;}
+  .cert-modern .cert-awarded{font-size:12px;color:#888;margin-top:12px;}
+  .cert-modern .cert-student{font-size:22px;font-weight:700;color:#1a2f5e;margin:4px 0;position:relative;display:inline-block;}
+  .cert-modern .cert-student::after{content:'';position:absolute;bottom:-2px;right:0;width:100%;height:3px;background:var(--cyan);border-radius:2px;}
+  .cert-modern .cert-desc{font-size:11px;color:#888;max-width:380px;line-height:1.6;margin-top:8px;}
+  .cert-modern .cert-bottom{display:flex;align-items:flex-end;justify-content:space-between;width:100%;margin-top:20px;gap:20px;}
+  .cert-modern .cert-qr{width:48px;height:48px;border:1.5px solid #ddd;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa;font-family:var(--font-en);}
+  .cert-modern .cert-sig{text-align:center;}
+  .cert-modern .cert-sig-line{width:110px;height:2px;background:var(--cyan);margin-bottom:4px;border-radius:1px;}
+  .cert-modern .cert-sig-name{font-size:11px;font-weight:600;color:#1a2f5e;}
+  .cert-modern .cert-meta{display:flex;flex-direction:column;gap:2px;}
+  .cert-modern .cert-date{font-size:10px;color:#aaa;}
+  .cert-modern .cert-serial{font-size:9px;color:#ccc;font-family:var(--font-en);}
+  .cert-modern .cert-footer{font-size:9px;color:#ccc;font-family:var(--font-en);letter-spacing:1px;margin-top:10px;}
+
+  /* ── CERT TEMPLATE: PROFESSIONAL ── */
+  .cert-pro{background:linear-gradient(145deg,#0d1b3e,#1a2f5e);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 48px;position:relative;}
+  .cert-pro::before{content:'';position:absolute;top:16px;right:16px;left:16px;height:2px;background:linear-gradient(90deg,transparent,#EAD654,transparent);}
+  .cert-pro::after{content:'';position:absolute;bottom:16px;right:16px;left:16px;height:2px;background:linear-gradient(90deg,transparent,#EAD654,transparent);}
+  .cert-pro .cert-content{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .cert-pro .cert-logo{font-family:var(--font-en);font-size:14px;font-weight:700;color:#EAD654;letter-spacing:3px;}
+  .cert-pro .cert-heading{font-size:28px;font-weight:900;color:white;font-family:var(--font-he);}
+  .cert-pro .cert-divider{width:80px;height:1px;background:#EAD654;margin:4px 0;}
+  .cert-pro .cert-program{font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);}
+  .cert-pro .cert-awarded{font-size:12px;color:rgba(255,255,255,0.45);margin-top:6px;}
+  .cert-pro .cert-student{font-size:22px;font-weight:700;color:#EAD654;margin:4px 0;}
+  .cert-pro .cert-desc{font-size:11px;color:rgba(255,255,255,0.45);max-width:400px;line-height:1.6;}
+  .cert-pro .cert-bottom{display:flex;align-items:flex-end;justify-content:space-between;width:100%;margin-top:16px;gap:20px;}
+  .cert-pro .cert-qr{width:52px;height:52px;border:1.5px solid rgba(234,214,84,0.3);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(234,214,84,0.5);font-family:var(--font-en);}
+  .cert-pro .cert-sig{text-align:center;}
+  .cert-pro .cert-sig-line{width:120px;height:1px;background:#EAD654;margin-bottom:4px;}
+  .cert-pro .cert-sig-name{font-size:11px;font-weight:600;color:rgba(255,255,255,0.7);}
+  .cert-pro .cert-meta{text-align:center;display:flex;flex-direction:column;gap:2px;}
+  .cert-pro .cert-date{font-size:10px;color:rgba(255,255,255,0.35);}
+  .cert-pro .cert-serial{font-size:9px;color:rgba(255,255,255,0.25);font-family:var(--font-en);}
+  .cert-pro .cert-footer{font-size:9px;color:rgba(255,255,255,0.2);font-family:var(--font-en);letter-spacing:1px;margin-top:8px;}
+
+  /* ── CERT TEMPLATE: CREATIVE ── */
+  .cert-creative{background:linear-gradient(135deg,#38C4F2,#a855f7,#F05680);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 48px;position:relative;overflow:hidden;}
+  .cert-creative .stripe1{position:absolute;top:-30px;right:-40px;width:200px;height:60px;background:rgba(255,255,255,0.08);transform:rotate(-25deg);}
+  .cert-creative .stripe2{position:absolute;bottom:-20px;left:-30px;width:160px;height:50px;background:rgba(255,255,255,0.06);transform:rotate(-25deg);}
+  .cert-creative .stripe3{position:absolute;top:40%;left:-20px;width:120px;height:30px;background:rgba(255,255,255,0.05);transform:rotate(-25deg);}
+  .cert-creative .cert-content{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .cert-creative .cert-logo{font-family:var(--font-en);font-size:14px;font-weight:700;color:rgba(255,255,255,0.8);letter-spacing:2px;}
+  .cert-creative .cert-heading{font-size:28px;font-weight:900;color:white;font-family:var(--font-he);}
+  .cert-creative .cert-program{font-size:13px;font-weight:600;color:rgba(255,255,255,0.85);}
+  .cert-creative .cert-awarded{font-size:12px;color:rgba(255,255,255,0.55);margin-top:6px;}
+  .cert-creative .cert-student{font-size:22px;font-weight:700;color:white;margin:4px 0;text-shadow:0 2px 8px rgba(0,0,0,0.15);}
+  .cert-creative .cert-desc{font-size:11px;color:rgba(255,255,255,0.55);max-width:400px;line-height:1.6;}
+  .cert-creative .cert-bottom{display:flex;align-items:flex-end;justify-content:space-between;width:100%;margin-top:16px;gap:20px;}
+  .cert-creative .cert-qr{width:52px;height:52px;border:1.5px solid rgba(255,255,255,0.25);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,0.5);font-family:var(--font-en);}
+  .cert-creative .cert-sig{text-align:center;}
+  .cert-creative .cert-sig-line{width:120px;height:2px;background:rgba(255,255,255,0.4);margin-bottom:4px;border-radius:1px;}
+  .cert-creative .cert-sig-name{font-size:11px;font-weight:600;color:rgba(255,255,255,0.8);}
+  .cert-creative .cert-meta{text-align:center;display:flex;flex-direction:column;gap:2px;}
+  .cert-creative .cert-date{font-size:10px;color:rgba(255,255,255,0.4);}
+  .cert-creative .cert-serial{font-size:9px;color:rgba(255,255,255,0.3);font-family:var(--font-en);}
+  .cert-creative .cert-footer{font-size:9px;color:rgba(255,255,255,0.25);font-family:var(--font-en);letter-spacing:1px;margin-top:8px;}
+
+  /* ── SETTINGS CARD ── */
+  .settings-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-sm);transition:background .3s,border-color .3s;}
+  .settings-card:hover{border-color:rgba(56,196,242,0.2);}
+  .card-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+  .card-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .card-icon svg{width:17px;height:17px;}
+  .card-icon-cyan{background:rgba(56,196,242,0.12);color:#1db0d8;}
+  .card-icon-pink{background:rgba(240,86,128,0.12);color:var(--pink);}
+  .card-icon-green{background:rgba(125,197,122,0.12);color:#3a8838;}
+  .card-icon-yellow{background:rgba(234,214,84,0.15);color:#8a7200;}
+  .card-title{font-size:16px;font-weight:900;color:var(--text-main);}
+  .card-desc{font-size:12px;color:var(--text-sub);margin-top:2px;}
+
+  /* ── FORM ELEMENTS ── */
+  .field-group{margin-bottom:16px;}
+  .field-group:last-child{margin-bottom:0;}
+  .field-label{font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:6px;display:block;}
+  .field-input{width:100%;font-family:var(--font-he);font-size:14px;padding:11px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);outline:none;transition:border-color .2s,box-shadow .2s;}
+  .field-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
+  .field-input::placeholder{color:var(--text-light);}
+  textarea.field-input{resize:vertical;min-height:70px;line-height:1.6;}
+
+  /* ── UPLOAD ZONE ── */
+  .upload-zone{display:flex;align-items:center;gap:14px;padding:14px 18px;border:2px dashed var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;}
+  .upload-zone:hover{border-color:var(--cyan);background:var(--light-blue);}
+  .upload-zone svg{width:20px;height:20px;color:var(--text-light);flex-shrink:0;}
+  .upload-zone-text{font-size:12px;color:var(--text-sub);}
+  .upload-zone-text strong{color:var(--cyan);}
+
+  /* ── CHECKBOX ── */
+  .checkbox-row{display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer;user-select:none;}
+  .checkbox-row:not(:last-child){border-bottom:1px solid var(--border);}
+  .custom-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;background:var(--surface);}
+  .custom-check.checked{background:var(--cyan);border-color:var(--cyan);}
+  .custom-check svg{width:12px;height:12px;color:white;opacity:0;transition:opacity .15s;}
+  .custom-check.checked svg{opacity:1;}
+  .checkbox-label{font-size:13px;font-weight:600;color:var(--text-main);}
+
+  /* ── TOGGLE ── */
+  .toggle-row{display:flex;align-items:center;gap:14px;padding:14px 0;}
+  .toggle-row-text{flex:1;}
+  .toggle-row-label{font-size:14px;font-weight:700;color:var(--text-main);margin-bottom:2px;}
+  .toggle-row-desc{font-size:12px;color:var(--text-sub);line-height:1.5;}
+  .toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+  .toggle input{opacity:0;width:0;height:0;}
+  .toggle-track{position:absolute;inset:0;border-radius:20px;background:var(--border);transition:background .2s;cursor:pointer;border:1.5px solid rgba(37,62,122,0.15);}
+  .toggle input:checked+.toggle-track{background:var(--cyan);border-color:var(--cyan);}
+  .toggle-thumb{position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:white;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+  .toggle input:checked~.toggle-thumb{transform:translateX(-20px);}
+
+  /* ── STICKY BOTTOM BAR ── */
+  .action-bar{position:fixed;bottom:0;left:0;right:220px;z-index:100;background:var(--surface);border-top:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 -4px 20px rgba(37,62,122,0.08);transition:background .3s;}
+  .action-bar .btn{padding:11px 28px;font-size:14px;}
+
+  /* ── TOAST ── */
+  .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);z-index:200;background:var(--navy);color:white;padding:12px 28px;border-radius:var(--radius-md);font-size:13px;font-weight:700;box-shadow:0 8px 28px rgba(0,0,0,0.25);opacity:0;transition:all .3s ease;pointer-events:none;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+  @keyframes cardFadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  *:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:4px;}
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--text-light);}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo"><span class="sidebar-logo-text">WHITEBOARD</span></div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>לוח הבקרה
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <div class="mode-switcher-label">מצב תצוגה</div>
+      <div class="mode-toggle-row">
+        <button class="mode-btn" onclick="setMode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>תלמיד</button>
+        <button class="mode-btn active" onclick="setMode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>מרצה</button>
+      </div>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div><div class="profile-mini-name">אלון</div><div class="profile-mini-role">מרצה</div></div>
+      <button class="profile-edit-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">מרכזי הידע</span><span class="breadcrumb-sep">&#x203A;</span>
+      <span class="breadcrumb-link">תכנית הכשרה</span><span class="breadcrumb-sep">&#x203A;</span>
+      <span class="breadcrumb-current">תעודה</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleTheme()">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- PROGRAM HEADER -->
+  <div class="program-header">
+    <div class="program-title-row">
+      <div class="program-title-wrap">
+        <div class="program-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <div class="program-name">תכנית הכשרה לעיצוב דיגיטלי</div>
+          <div class="program-meta-row">
+            <span class="badge badge-pub">פורסם</span>
+            <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>4 קורסים</span>
+            <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>32 שיעורים</span>
+            <span class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>248 תלמידים</span>
+          </div>
+        </div>
+      </div>
+      <div class="program-actions">
+        <button class="btn btn-ghost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          תצוגה מקדימה
+        </button>
+      </div>
+    </div>
+    <div class="program-tabs">
+      <div class="ptab" onclick="tabClick(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="4" rx="1"/><rect x="3" y="10" width="11" height="11" rx="1"/><rect x="17" y="10" width="4" height="11" rx="1"/></svg>ליי-אאוט</div>
+      <div class="ptab" onclick="tabClick(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות</div>
+      <div class="ptab" onclick="tabClick(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>התלמידים שלי</div>
+      <div class="ptab" onclick="tabClick(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>ערכת מותג</div>
+      <div class="ptab active" onclick="tabClick(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>תעודה</div>
+      <div class="ptab" onclick="tabClick(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>דיוור</div>
+      <div class="ptab" onclick="tabClick(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>אנליטיקס</div>
+      <div class="ptab" onclick="tabClick(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>פגישות</div>
+    </div>
+  </div>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+
+    <!-- LEFT COLUMN: Template Gallery -->
+    <div class="col-left">
+      <div class="gallery-header">
+        <div class="gallery-title">בחר תבנית תעודה</div>
+        <div class="gallery-subtitle">ערכת המותג שלך תוזרק אוטומטית</div>
+      </div>
+
+      <div class="template-grid">
+        <!-- Template 1: Classic -->
+        <div class="template-card" data-template="classic" onclick="selectTemplate('classic',this)">
+          <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="template-preview">
+            <div class="mini-classic">
+              <div class="mini-classic-text">תעודת סיום</div>
+              <div class="mini-classic-line"></div>
+              <div class="mini-classic-text" style="font-size:8px;opacity:.6;">שם התלמיד</div>
+            </div>
+          </div>
+          <div class="template-label">קלאסית</div>
+        </div>
+
+        <!-- Template 2: Modern -->
+        <div class="template-card active" data-template="modern" onclick="selectTemplate('modern',this)">
+          <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="template-preview">
+            <div class="mini-modern">
+              <div class="mini-modern-content">
+                <div class="mini-modern-line"></div>
+                <div class="mini-modern-line"></div>
+                <div class="mini-modern-line"></div>
+              </div>
+            </div>
+          </div>
+          <div class="template-label">מודרנית</div>
+        </div>
+
+        <!-- Template 3: Professional -->
+        <div class="template-card" data-template="pro" onclick="selectTemplate('pro',this)">
+          <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="template-preview">
+            <div class="mini-pro">
+              <div class="mini-pro-line"></div>
+              <div class="mini-pro-text">CERTIFICATE</div>
+              <div class="mini-pro-line"></div>
+              <div class="mini-pro-block"></div>
+            </div>
+          </div>
+          <div class="template-label">מקצועית</div>
+        </div>
+
+        <!-- Template 4: Creative -->
+        <div class="template-card" data-template="creative" onclick="selectTemplate('creative',this)">
+          <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="template-preview">
+            <div class="mini-creative">
+              <div class="mini-creative-text">תעודת סיום</div>
+              <div class="mini-creative-dots">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+          <div class="template-label">יצירתית</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Preview + Settings -->
+    <div class="col-right">
+
+      <!-- LIVE PREVIEW -->
+      <div class="preview-wrap">
+        <div class="preview-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          תצוגה מקדימה חיה
+        </div>
+
+        <div class="cert-frame" id="certFrame">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- SETTINGS CARD -->
+      <div class="settings-card">
+        <div class="card-header">
+          <div class="card-icon card-icon-cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+          <div><div class="card-title">הגדרות תעודה</div><div class="card-desc">התאם את התוכן ותנאי ההנפקה של התעודה</div></div>
+        </div>
+
+        <!-- Custom text -->
+        <div class="field-group">
+          <label class="field-label">טקסט מותאם</label>
+          <textarea class="field-input" placeholder="טקסט שיופיע מעל שם התלמיד...">הוענקה בהצלחה ל:</textarea>
+        </div>
+
+        <!-- Signature upload -->
+        <div class="field-group">
+          <label class="field-label">חתימת מרצה</label>
+          <div class="upload-zone" onclick="this.querySelector('input').click()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div class="upload-zone-text">גרור תמונת חתימה או <strong>לחץ להעלאה</strong></div>
+            <input type="file" accept="image/*" hidden>
+          </div>
+          <div style="margin-top:8px;">
+            <label class="field-label" style="font-size:12px;color:var(--text-sub);">או הקלד שם המרצה</label>
+            <input class="field-input" type="text" value="אלון גבאי — מרצה" style="margin-top:4px;">
+          </div>
+        </div>
+
+        <!-- Issuance conditions -->
+        <div class="field-group">
+          <label class="field-label">תנאי הנפקה</label>
+          <div class="checkbox-row" onclick="toggleCheck(this)">
+            <div class="custom-check checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="checkbox-label">השלמת כל הקורסים בתכנית</span>
+          </div>
+          <div class="checkbox-row" onclick="toggleCheck(this)">
+            <div class="custom-check checked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="checkbox-label">עבר/ה את כל המבחנים</span>
+          </div>
+          <div class="checkbox-row" onclick="toggleCheck(this)">
+            <div class="custom-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="checkbox-label">ביצוע כל הפגישות האישיות</span>
+          </div>
+        </div>
+
+        <!-- QR toggle -->
+        <div class="toggle-row">
+          <div class="toggle-row-text">
+            <div class="toggle-row-label">כלול QR לאימות</div>
+            <div class="toggle-row-desc">קוד QR ייתווסף לתעודה ויאפשר אימות מקוון של האותנטיות</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" checked>
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ACTION BAR -->
+  <div class="action-bar">
+    <button class="btn btn-primary" onclick="showToast('הגדרות התעודה נשמרו')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      שמור הגדרות תעודה
+    </button>
+    <button class="btn btn-ghost" onclick="showToast('פותח תצוגה מקדימה')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      תצוגה מקדימה מלאה
+    </button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── Theme Toggle ──
+  function toggleTheme(){
+    const html=document.documentElement;
+    html.dataset.theme=html.dataset.theme==='dark'?'light':'dark';
+  }
+
+  // ── Mode Switcher ──
+  function setMode(btn){
+    btn.parentElement.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // ── Tab Click ──
+  function tabClick(tab){
+    document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+  }
+
+  // ── Toast ──
+  function showToast(msg){
+    const t=document.getElementById('toast');
+    t.textContent=msg;
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2500);
+  }
+
+  // ── Checkbox Toggle ──
+  function toggleCheck(row){
+    const c=row.querySelector('.custom-check');
+    c.classList.toggle('checked');
+  }
+
+  // ── Certificate Templates ──
+  const templates={
+    classic:`
+      <div class="cert-classic">
+        <div class="cert-content">
+          <div class="cert-logo">WHITEBOARD</div>
+          <div class="cert-heading">תעודת סיום</div>
+          <div class="cert-program">תכנית הכשרה לעיצוב דיגיטלי</div>
+          <div class="cert-awarded">הוענקה בהצלחה ל:</div>
+          <div class="cert-student">[שם התלמיד]</div>
+          <div class="cert-desc">על סיום מוצלח של תכנית ההכשרה הכוללת 4 קורסים, 32 שיעורים ו-6 מבחנים</div>
+          <div class="cert-bottom">
+            <div class="cert-qr">QR</div>
+            <div class="cert-meta">
+              <div class="cert-date">[תאריך הנפקה]</div>
+              <div class="cert-serial">WB-2026-XXXXX</div>
+            </div>
+            <div class="cert-sig">
+              <div class="cert-sig-line"></div>
+              <div class="cert-sig-name">אלון גבאי — מרצה</div>
+            </div>
+          </div>
+          <div class="cert-footer">WHITEBOARD LEARNING PLATFORM</div>
+        </div>
+      </div>`,
+    modern:`
+      <div class="cert-modern">
+        <div class="cert-accent"></div>
+        <div class="cert-accent-circle"></div>
+        <div class="cert-content">
+          <div class="cert-logo">WHITEBOARD</div>
+          <div class="cert-heading">תעודת סיום</div>
+          <div class="cert-program">תכנית הכשרה לעיצוב דיגיטלי</div>
+          <div class="cert-awarded">הוענקה בהצלחה ל:</div>
+          <div class="cert-student">[שם התלמיד]</div>
+          <div class="cert-desc">על סיום מוצלח של תכנית ההכשרה הכוללת 4 קורסים, 32 שיעורים ו-6 מבחנים</div>
+          <div class="cert-bottom">
+            <div class="cert-qr">QR</div>
+            <div class="cert-meta">
+              <div class="cert-date">[תאריך הנפקה]</div>
+              <div class="cert-serial">WB-2026-XXXXX</div>
+            </div>
+            <div class="cert-sig">
+              <div class="cert-sig-line"></div>
+              <div class="cert-sig-name">אלון גבאי — מרצה</div>
+            </div>
+          </div>
+          <div class="cert-footer">WHITEBOARD LEARNING PLATFORM</div>
+        </div>
+      </div>`,
+    pro:`
+      <div class="cert-pro">
+        <div class="cert-content">
+          <div class="cert-logo">WHITEBOARD</div>
+          <div class="cert-heading">תעודת סיום</div>
+          <div class="cert-divider"></div>
+          <div class="cert-program">תכנית הכשרה לעיצוב דיגיטלי</div>
+          <div class="cert-awarded">הוענקה בהצלחה ל:</div>
+          <div class="cert-student">[שם התלמיד]</div>
+          <div class="cert-desc">על סיום מוצלח של תכנית ההכשרה הכוללת 4 קורסים, 32 שיעורים ו-6 מבחנים</div>
+          <div class="cert-bottom">
+            <div class="cert-qr">QR</div>
+            <div class="cert-meta">
+              <div class="cert-date">[תאריך הנפקה]</div>
+              <div class="cert-serial">WB-2026-XXXXX</div>
+            </div>
+            <div class="cert-sig">
+              <div class="cert-sig-line"></div>
+              <div class="cert-sig-name">אלון גבאי — מרצה</div>
+            </div>
+          </div>
+          <div class="cert-footer">WHITEBOARD LEARNING PLATFORM</div>
+        </div>
+      </div>`,
+    creative:`
+      <div class="cert-creative">
+        <div class="stripe1"></div>
+        <div class="stripe2"></div>
+        <div class="stripe3"></div>
+        <div class="cert-content">
+          <div class="cert-logo">WHITEBOARD</div>
+          <div class="cert-heading">תעודת סיום</div>
+          <div class="cert-program">תכנית הכשרה לעיצוב דיגיטלי</div>
+          <div class="cert-awarded">הוענקה בהצלחה ל:</div>
+          <div class="cert-student">[שם התלמיד]</div>
+          <div class="cert-desc">על סיום מוצלח של תכנית ההכשרה הכוללת 4 קורסים, 32 שיעורים ו-6 מבחנים</div>
+          <div class="cert-bottom">
+            <div class="cert-qr">QR</div>
+            <div class="cert-meta">
+              <div class="cert-date">[תאריך הנפקה]</div>
+              <div class="cert-serial">WB-2026-XXXXX</div>
+            </div>
+            <div class="cert-sig">
+              <div class="cert-sig-line"></div>
+              <div class="cert-sig-name">אלון גבאי — מרצה</div>
+            </div>
+          </div>
+          <div class="cert-footer">WHITEBOARD LEARNING PLATFORM</div>
+        </div>
+      </div>`
+  };
+
+  function selectTemplate(name,card){
+    // Update active card
+    document.querySelectorAll('.template-card').forEach(c=>c.classList.remove('active'));
+    card.classList.add('active');
+    // Update preview
+    const frame=document.getElementById('certFrame');
+    frame.style.opacity='0';
+    frame.style.transform='scale(0.97)';
+    setTimeout(()=>{
+      frame.innerHTML=templates[name];
+      frame.style.transition='opacity .3s, transform .3s';
+      frame.style.opacity='1';
+      frame.style.transform='scale(1)';
+    },150);
+  }
+
+  // Initialize with modern template
+  document.getElementById('certFrame').innerHTML=templates.modern;
+</script>
+</body>
+</html>

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light" data-mode="student">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תעודת סיום | תכנית הכשרה לעיצוב דיגיטלי | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --cyan-light:rgba(56,196,242,0.13);
+  --pink:#F05680; --green:#7DC57A; --yellow:#EAD654;
+  --font:'Heebo',sans-serif; --font-brand:'Fredoka',sans-serif;
+  --r-sm:10px; --r-md:16px;
+  --strip-w:52px;
+  --bg:#EBF3FB;
+  --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+  --border:rgba(37,62,122,0.1); --border-mid:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.52); --text-xs:rgba(37,62,122,0.35);
+  --sh-sm:0 2px 8px rgba(37,62,122,0.08); --sh-md:0 4px 20px rgba(37,62,122,0.12);
+}
+[data-theme="dark"] {
+  --navy-dark:#111e3a;
+  --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.07); --border-mid:rgba(255,255,255,0.12);
+  --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.48); --text-xs:rgba(221,229,245,0.28);
+  --sh-sm:0 2px 12px rgba(0,0,0,0.3); --sh-md:0 6px 24px rgba(0,0,0,0.4);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text-main);
+  height:100dvh;display:flex;flex-direction:column;overflow:hidden;
+  transition:background .25s,color .25s;}
+
+/* ══════════════════════════════════
+   TOPBAR
+══════════════════════════════════ */
+.topbar{
+  height:48px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+  flex-shrink:0;box-shadow:var(--sh-sm);z-index:30;transition:background .25s,border-color .25s;
+}
+.bc{display:flex;align-items:center;gap:5px;font-size:12.5px;flex-wrap:wrap;}
+.bc a{color:var(--text-sub);text-decoration:none;transition:color .15s;}
+.bc a:hover{color:var(--text-main);}
+.bc-sep{color:var(--text-xs);}
+.bc-cur{color:var(--text-main);font-weight:700;}
+
+.tb-right{display:flex;align-items:center;gap:7px;}
+.ib{width:32px;height:32px;border-radius:6px;border:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-sub);transition:all .18s;}
+.ib:hover{background:var(--cyan-light);color:var(--navy);border-color:var(--cyan);}
+.ib svg{width:14px;height:14px;}
+.icon-sun{display:none;}.icon-moon{display:block;}
+[data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+/* ══════════════════════════════════
+   BODY LAYOUT
+══════════════════════════════════ */
+.page-body{flex:1;display:flex;overflow:hidden;}
+
+/* ══════════════════════════════════
+   RIGHT NAVY STRIP
+══════════════════════════════════ */
+.right-strip{
+  width:var(--strip-w);flex-shrink:0;
+  background:#1a2e5e;
+  display:flex;flex-direction:column;align-items:center;
+  z-index:20;
+}
+.rs-logo{
+  width:100%;display:flex;align-items:center;justify-content:center;
+  padding:10px 0 8px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;
+}
+.rs-logo svg{width:28px;height:28px;opacity:.9;}
+.rs-icons{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  gap:3px;padding:8px 0;position:relative;
+}
+.rs-btn{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .18s;position:relative;flex-shrink:0;
+  background:transparent;border:none;color:rgba(255,255,255,0.5);padding:0;
+}
+.rs-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.rs-btn.rs-active{background:rgba(56,196,242,0.2);color:#38C4F2;}
+.rs-btn svg{width:17px;height:17px;}
+.rs-btn::after{
+  content:attr(data-tip);
+  position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,.8);color:#fff;font-family:var(--font);font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:6px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .15s;z-index:100;
+}
+.rs-btn:hover::after{opacity:1;}
+.rs-bottom{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0;
+}
+.rs-profile{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,#38C4F2,#253E7A);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;color:#fff;cursor:pointer;
+  border:2px solid rgba(255,255,255,0.2);transition:border-color .18s;flex-shrink:0;
+}
+.rs-profile:hover{border-color:rgba(255,255,255,0.5);}
+
+/* ══════════════════════════════════
+   MAIN CONTENT
+══════════════════════════════════ */
+.main-content{
+  flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
+  padding:40px 24px 60px;gap:32px;
+}
+
+/* ── BOARDi float animation ── */
+@keyframes boardiFloat{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-4px);}
+}
+
+/* ── Celebration Header ── */
+.celebration-header{
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  text-align:center;
+}
+.celebration-header .mascot{
+  width:120px;height:120px;
+  animation:boardiFloat 3s ease-in-out infinite;
+}
+.celebration-header .congrats-title{
+  font-family:var(--font-brand);font-size:28px;font-weight:700;color:var(--text-main);
+}
+.celebration-header .congrats-sub{
+  font-size:15px;color:var(--text-sub);
+}
+
+/* ══════════════════════════════════
+   CERTIFICATE CARD (always white paper)
+══════════════════════════════════ */
+.cert-wrapper{
+  width:100%;max-width:720px;
+  aspect-ratio:1.414;
+  position:relative;
+  border-radius:var(--r-md);
+  box-shadow:0 8px 40px rgba(37,62,122,0.14),0 2px 8px rgba(37,62,122,0.08);
+  transition:box-shadow .3s;
+  cursor:default;
+}
+.cert-wrapper:hover{
+  box-shadow:0 8px 40px rgba(56,196,242,0.18),0 2px 12px rgba(37,62,122,0.12);
+}
+.cert-card{
+  width:100%;height:100%;
+  background:#FFFFFF;
+  border-radius:var(--r-md);
+  overflow:hidden;
+  position:relative;
+  display:flex;
+  direction:rtl;
+}
+
+/* Left cyan accent */
+.cert-accent{
+  position:absolute;left:0;top:0;bottom:0;width:48px;
+  background:linear-gradient(180deg,#38C4F2 0%,#253E7A 100%);
+  border-radius:0 0 0 var(--r-md);
+}
+/* RTL: in RTL, "left" visually = right side of screen, so we use physical left */
+.cert-card{direction:ltr;}
+
+.cert-body{
+  flex:1;padding:40px 48px 32px 72px;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  direction:rtl;
+}
+
+/* Logo area */
+.cert-logo{
+  display:flex;align-items:center;gap:8px;margin-bottom:8px;
+}
+.cert-logo svg{width:32px;height:32px;}
+.cert-logo span{font-family:'Fredoka',sans-serif;font-size:16px;font-weight:700;color:#253E7A;}
+
+/* Certificate middle */
+.cert-middle{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;gap:10px;
+}
+.cert-middle .cert-title{
+  font-family:'Fredoka',sans-serif;font-size:24px;font-weight:700;color:#253E7A;
+  letter-spacing:0.5px;
+}
+.cert-middle .cert-program{
+  font-family:'Heebo',sans-serif;font-size:16px;color:#5a6d8a;
+}
+.cert-middle .cert-awarded{
+  font-family:'Heebo',sans-serif;font-size:13px;color:#8a95a8;margin-top:4px;
+}
+.cert-middle .cert-name{
+  font-family:'Fredoka',sans-serif;font-size:28px;font-weight:700;color:#253E7A;
+  margin:4px 0;
+}
+.cert-middle .cert-desc{
+  font-family:'Heebo',sans-serif;font-size:13px;color:#5a6d8a;line-height:1.7;
+  max-width:460px;
+}
+
+/* Certificate bottom */
+.cert-bottom{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:20px;padding-top:16px;border-top:1px solid #e8edf4;
+}
+.cert-bottom-right{display:flex;flex-direction:column;gap:4px;}
+.cert-date{font-family:'Heebo',sans-serif;font-size:12px;color:#8a95a8;}
+.cert-serial{font-family:'Fredoka',sans-serif;font-size:11px;color:#b0b8c8;letter-spacing:0.5px;}
+.cert-sig{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.cert-sig-line{width:120px;height:1px;background:#c8d0dc;}
+.cert-sig-name{font-family:'Heebo',sans-serif;font-size:11px;color:#8a95a8;}
+.cert-bottom-left{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.cert-qr{
+  width:48px;height:48px;border-radius:4px;
+  background:#f0f3f8;border:1px solid #e0e5ed;
+  display:flex;align-items:center;justify-content:center;
+}
+.cert-qr svg{width:28px;height:28px;color:#b0b8c8;}
+.cert-footer-text{
+  font-family:'Fredoka',sans-serif;font-size:10px;color:#b0b8c8;
+  text-align:center;letter-spacing:0.3px;
+}
+
+/* ══════════════════════════════════
+   ACTION BUTTONS
+══════════════════════════════════ */
+.action-buttons{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;
+}
+.btn-primary{
+  display:flex;align-items:center;gap:6px;
+  padding:10px 22px;border-radius:30px;border:none;
+  background:var(--navy);color:#fff;
+  font-family:var(--font);font-size:13.5px;font-weight:700;
+  cursor:pointer;transition:all .2s;min-height:44px;
+}
+.btn-primary:hover{background:var(--cyan);}
+.btn-primary svg{width:16px;height:16px;}
+.btn-ghost{
+  display:flex;align-items:center;gap:6px;
+  padding:10px 20px;border-radius:30px;
+  border:1.5px solid var(--border-mid);background:transparent;
+  font-family:var(--font);font-size:13px;font-weight:700;
+  color:var(--text-main);cursor:pointer;transition:all .2s;min-height:44px;
+}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-light);}
+.btn-ghost svg{width:16px;height:16px;}
+
+/* ══════════════════════════════════
+   STATS SUMMARY
+══════════════════════════════════ */
+.stats-card{
+  background:var(--surface);border-radius:var(--r-md);
+  border:1px solid var(--border);padding:18px 28px;
+  box-shadow:var(--sh-sm);max-width:620px;width:100%;
+  transition:background .25s,border-color .25s;
+}
+.stats-card .stats-title{
+  font-size:13px;font-weight:700;color:var(--text-sub);margin-bottom:12px;text-align:center;
+}
+.stats-row{
+  display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+  font-size:13.5px;color:var(--text-main);
+}
+.stats-row .stat{display:flex;align-items:center;gap:4px;font-weight:600;}
+.stats-row .stat-num{font-family:var(--font-brand);font-weight:700;color:var(--cyan);font-size:15px;}
+.stats-row .dot{color:var(--text-xs);font-size:10px;}
+
+/* ══════════════════════════════════
+   TOAST
+══════════════════════════════════ */
+.toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--navy);color:#fff;font-family:var(--font);font-size:13px;font-weight:600;
+  padding:10px 22px;border-radius:30px;box-shadow:0 8px 30px rgba(0,0,0,0.25);
+  z-index:9999;opacity:0;transition:all .3s ease;pointer-events:none;
+  white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ══════════════════════════════════
+   CONFETTI
+══════════════════════════════════ */
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1;}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="bc">
+    <a href="#">הקורסים שלי</a>
+    <span class="bc-sep">›</span>
+    <a href="#">תכנית הכשרה לעיצוב דיגיטלי</a>
+    <span class="bc-sep">›</span>
+    <span class="bc-cur">תעודת סיום</span>
+  </div>
+  <div class="tb-right">
+    <button class="ib" id="themeToggle" title="מצב כהה/בהיר">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ══ BODY ══ -->
+<div class="page-body">
+
+  <!-- ══ RIGHT NAVY STRIP ══ -->
+  <div class="right-strip">
+    <div class="rs-logo">
+      <svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="8" fill="#253E7A"/><text x="20" y="26" text-anchor="middle" fill="#fff" font-family="Fredoka" font-size="16" font-weight="700">W</text></svg>
+    </div>
+    <div class="rs-icons">
+      <button class="rs-btn" data-tip="דשבורד">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </button>
+      <button class="rs-btn rs-active" data-tip="הקורסים שלי">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </button>
+      <button class="rs-btn" data-tip="הפתקים שלי">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </button>
+      <button class="rs-btn" data-tip="המועדונים שלי">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </button>
+      <button class="rs-btn" data-tip="BOARDi">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </button>
+    </div>
+    <div class="rs-bottom">
+      <button class="rs-btn" data-tip="הגדרות">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <div class="rs-profile">א.ג</div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main-content">
+
+    <!-- ── Stage 1: Celebration Header ── -->
+    <div class="celebration-header">
+      <img class="mascot" src="../BOARDi/SVG/2.svg" alt="BOARDi">
+      <div class="congrats-title">כל הכבוד, אלון!</div>
+      <div class="congrats-sub">סיימת את תכנית ההכשרה לעיצוב דיגיטלי</div>
+    </div>
+
+    <!-- ── Stage 2: Certificate Preview ── -->
+    <div class="cert-wrapper">
+      <div class="cert-card">
+        <div class="cert-accent"></div>
+        <div class="cert-body">
+          <!-- Top: Logo -->
+          <div class="cert-logo">
+            <svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="8" fill="#253E7A"/><text x="20" y="26" text-anchor="middle" fill="#fff" font-family="Fredoka" font-size="16" font-weight="700">W</text></svg>
+            <span>WHITEBOARD</span>
+          </div>
+          <!-- Middle: Content -->
+          <div class="cert-middle">
+            <div class="cert-title">תעודת סיום</div>
+            <div class="cert-program">תכנית הכשרה לעיצוב דיגיטלי</div>
+            <div class="cert-awarded">הוענקה בהצלחה ל:</div>
+            <div class="cert-name">אלון גבאי</div>
+            <div class="cert-desc">על סיום מוצלח של תכנית ההכשרה הכוללת 4 קורסים, 32 שיעורים ו-6 מבחנים</div>
+          </div>
+          <!-- Bottom: Date, Sig, QR -->
+          <div class="cert-bottom">
+            <div class="cert-bottom-right">
+              <div class="cert-date">17 באפריל 2026</div>
+              <div class="cert-serial">WB-2026-04821</div>
+            </div>
+            <div class="cert-sig">
+              <div class="cert-sig-line"></div>
+              <div class="cert-sig-name">אלון גבאי — מרצה</div>
+            </div>
+            <div class="cert-bottom-left">
+              <div class="cert-qr">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="17"/><line x1="14" y1="21" x2="17" y2="21"/><line x1="21" y1="21" x2="21" y2="21"/></svg>
+              </div>
+              <div class="cert-footer-text">WHITEBOARD</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Stage 3: Action Buttons ── -->
+    <div class="action-buttons">
+      <button class="btn-primary" id="btnPdf">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        הורד PDF
+      </button>
+      <button class="btn-ghost" id="btnLinkedin">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM6.89 20.452H3.78V9H6.89v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        שתף ב-LinkedIn
+      </button>
+      <button class="btn-ghost" id="btnWhatsapp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        שתף ב-WhatsApp
+      </button>
+    </div>
+
+    <!-- ── Stage 4: Stats Summary ── -->
+    <div class="stats-card">
+      <div class="stats-title">סיכום התכנית שלך</div>
+      <div class="stats-row">
+        <span class="stat"><span class="stat-num">4</span> קורסים הושלמו</span>
+        <span class="dot">&bull;</span>
+        <span class="stat"><span class="stat-num">32</span> שיעורים</span>
+        <span class="dot">&bull;</span>
+        <span class="stat"><span class="stat-num">6</span> מבחנים עברו</span>
+        <span class="dot">&bull;</span>
+        <span class="stat"><span class="stat-num">12.5</span> שעות למידה</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── Theme Toggle ── */
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  const html=document.documentElement;
+  html.dataset.theme=html.dataset.theme==='dark'?'light':'dark';
+});
+
+/* ── Toast ── */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+/* ── Action Buttons ── */
+document.getElementById('btnPdf').addEventListener('click',()=>showToast('מוריד תעודה כ-PDF...'));
+document.getElementById('btnLinkedin').addEventListener('click',()=>showToast('פותח LinkedIn...'));
+document.getElementById('btnWhatsapp').addEventListener('click',()=>showToast('פותח WhatsApp...'));
+
+/* ── Confetti ── */
+function launchConfetti(){
+  const colors=['#38C4F2','#F05680','#7DC57A','#EAD654','#253E7A','#ffffff'];
+  const container=document.createElement('div');
+  container.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;';
+  document.body.appendChild(container);
+  for(let i=0;i<80;i++){
+    const p=document.createElement('div');
+    const c=colors[Math.floor(Math.random()*colors.length)];
+    const size=Math.random()*8+4;
+    const x=Math.random()*100;
+    const dur=Math.random()*2+1.5;
+    const delay=Math.random()*0.8;
+    const shape=Math.random()>0.5?'50%':'2px';
+    p.style.cssText=`position:absolute;top:-20px;left:${x}%;width:${size}px;height:${size*0.6}px;background:${c};border-radius:${shape};opacity:0.9;animation:confettiFall ${dur}s ease-in ${delay}s forwards;`;
+    container.appendChild(p);
+  }
+  setTimeout(()=>container.remove(),4000);
+}
+
+/* ── Init ── */
+setTimeout(launchConfetti,600);
+</script>
+</body>
+</html>
