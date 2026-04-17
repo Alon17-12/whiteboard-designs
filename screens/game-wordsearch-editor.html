@@ -663,7 +663,7 @@
         <img src="../BOARDi/SVG/4.svg" alt="BOARDi" class="boardi-title-img">
         <div>
           <h1 class="page-title">עריכת משחק תשחץ</h1>
-          <p class="page-subtitle">הגדר מילים, רמזים והגדרות משחק</p>
+          <p class="page-subtitle">הגדר מילים והגדרות משחק</p>
         </div>
       </div>
       <div class="header-actions">
@@ -731,14 +731,7 @@
         </div>
       </div>
 
-      <div class="settings-divider"></div>
-
-      <div class="setting-group">
-        <span class="setting-label">הצג רמזים:</span>
-        <div class="toggle-switch on" id="toggleHints">
-          <div class="toggle-knob"></div>
-        </div>
-      </div>
+      <!-- hints toggle removed — word search doesn't show hints -->
     </div>
 
     <!-- WORDS SECTION -->
@@ -821,7 +814,7 @@ function renderWords() {
     card.innerHTML = `
       <span class="word-card-num">${i + 1}</span>
       <input type="text" class="word-card-input" value="${w.word}" placeholder="מילה" data-idx="${i}" data-field="word">
-      <input type="text" class="word-card-hint" value="${w.hint}" placeholder="רמז" data-idx="${i}" data-field="hint">
+      <!-- hint removed for word search -->
       <button class="word-card-delete" title="מחק" data-idx="${i}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
       </button>

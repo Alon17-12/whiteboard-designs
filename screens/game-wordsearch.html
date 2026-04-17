@@ -175,7 +175,7 @@
   .avatar-mini:hover { transform: scale(1.08); }
 
   /* ── MAIN ────────────────────────────────────── */
-  .main { margin-right: 52px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+  .main { margin-right: 52px; flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
   /* ── TOP BAR ─────────────────────────────────── */
   .topbar {
@@ -215,18 +215,22 @@
 
   /* ── PAGE BODY ───────────────────────────────── */
   .page-body {
-    padding: 20px 28px 32px;
+    padding: 14px 20px 14px;
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
   }
 
   /* ── GAME LAYOUT ─────────────────────────────── */
   .game-wrapper {
     display: flex;
-    gap: 24px;
+    gap: 16px;
     flex: 1;
-    align-items: flex-start;
+    align-items: stretch;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .game-grid-col {
@@ -237,15 +241,21 @@
   .game-info-col {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .game-card {
     background: var(--surface);
     border-radius: var(--radius-md);
-    padding: 20px;
+    padding: 14px;
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border);
     transition: background 0.3s, border-color 0.3s;
+    display: flex; flex-direction: column;
+    min-height: 0; overflow: hidden;
   }
 
   /* Canvas wrapper */
@@ -266,7 +276,7 @@
   /* ── TIMER ───────────────────────────────────── */
   .timer-display {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   .timer-label {
     font-family: var(--font-he);
@@ -332,8 +342,10 @@
   .word-list {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-bottom: 16px;
+    gap: 4px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
   }
 
   .word-item {
@@ -854,7 +866,6 @@ function buildWordList() {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
       </span>
       <span class="word-text">${p.word}</span>
-      <span class="hint-tooltip">${p.hint}</span>
     `;
     container.appendChild(item);
   }
