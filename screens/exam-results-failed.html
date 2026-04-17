@@ -354,13 +354,13 @@ function toggleTheme(){
 /* ── Questions & Results Data ── */
 const questions=[
   {q:'איזה צבע נחשב צבע משלים לכחול?',studentAnswer:'כתום',correctAnswer:'כתום',correct:true},
-  {q:'מה ההבדל בין RGB ל-CMYK?',studentAnswer:'שניהם אותו דבר',correctAnswer:'RGB למסכים, CMYK לדפוס',correct:false},
+  {q:'מה ההבדל בין RGB ל-CMYK?',studentAnswer:'שניהם אותו דבר',correctAnswer:'RGB למסכים, CMYK לדפוס',correct:false,videoLesson:'שיעור 3: צבע ומשמעות',videoTime:'4:35'},
   {q:'כמה צבעים ראשוניים יש?',studentAnswer:'3',correctAnswer:'3',correct:true},
-  {q:'מהו צבע אנלוגי?',studentAnswer:'צבע מנוגד בגלגל הצבעים',correctAnswer:'צבע שכן בגלגל הצבעים',correct:false},
-  {q:'איזה צבע נוצר מערבוב אדום וכחול?',studentAnswer:'כתום',correctAnswer:'סגול',correct:false},
+  {q:'מהו צבע אנלוגי?',studentAnswer:'צבע מנוגד בגלגל הצבעים',correctAnswer:'צבע שכן בגלגל הצבעים',correct:false,videoLesson:'שיעור 3: צבע ומשמעות',videoTime:'8:12'},
+  {q:'איזה צבע נוצר מערבוב אדום וכחול?',studentAnswer:'כתום',correctAnswer:'סגול',correct:false,videoLesson:'שיעור 3: צבע ומשמעות',videoTime:'2:50'},
   {q:'מהו ניגודיות (Contrast)?',studentAnswer:'ההבדל הוויזואלי בין אלמנטים',correctAnswer:'ההבדל הוויזואלי בין אלמנטים',correct:true},
-  {q:'מהו Monochromatic?',studentAnswer:'שימוש בהרבה צבעים',correctAnswer:'שימוש בצבע אחד בגוונים שונים',correct:false},
-  {q:'איזה צבע מעורר תחושת חום?',studentAnswer:'סגול',correctAnswer:'אדום',correct:false}
+  {q:'מהו Monochromatic?',studentAnswer:'שימוש בהרבה צבעים',correctAnswer:'שימוש בצבע אחד בגוונים שונים',correct:false,videoLesson:'שיעור 4: פלטות צבע',videoTime:'6:20'},
+  {q:'איזה צבע מעורר תחושת חום?',studentAnswer:'סגול',correctAnswer:'אדום',correct:false,videoLesson:'שיעור 3: צבע ומשמעות',videoTime:'11:05'}
 ];
 
 /* ── Render Breakdown ── */
@@ -377,11 +377,36 @@ function renderBreakdown(){
 
     let wrongExtra='';
     if(!q.correct){
-      wrongExtra=`
+      if(q.videoLesson){
+        wrongExtra=`
+        <div style="margin-top:10px;padding:12px 14px;border-radius:10px;background:rgba(56,196,242,0.04);border:1.5px solid rgba(56,196,242,0.15);cursor:pointer;transition:all .2s;" onclick="this.querySelector('.vp-expand').style.display=this.querySelector('.vp-expand').style.display==='none'?'block':'none'">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;border-radius:9px;background:rgba(56,196,242,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#38C4F2;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:12.5px;font-weight:700;color:var(--text-main);">צפה בהסבר מהשיעור</div>
+              <div style="font-size:11.5px;color:var(--text-sub);">${q.videoLesson} • ${q.videoTime}</div>
+            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="vp-expand" style="display:none;margin-top:12px;">
+            <div style="width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0d1b3e,#253E7A);border-radius:8px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+              <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.4) 100%);"></div>
+              <div style="width:48px;height:48px;border-radius:50%;background:rgba(56,196,242,0.9);display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:0 3px 16px rgba(56,196,242,0.4);" onclick="event.stopPropagation();showToast('מנגן מ-${q.videoTime} ב${q.videoLesson}')">
+                <svg viewBox="0 0 24 24" fill="white" width="20" height="20"><polygon points="8,5 20,12 8,19"/></svg>
+              </div>
+              <div style="position:absolute;bottom:8px;right:10px;z-index:2;padding:3px 8px;border-radius:4px;background:rgba(0,0,0,0.6);font-size:11px;font-weight:700;color:white;font-family:var(--font-brand);direction:ltr;">${q.videoTime}</div>
+            </div>
+          </div>
+        </div>`;
+      } else {
+        wrongExtra=`
         <div class="qr-correct-label">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           תשובה נכונה: ${q.correctAnswer}
         </div>`;
+      }
     }
 
     div.innerHTML=`
