@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light" data-mode="student">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תוצאות מבחן — צבע וטיפוגרפיה | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --cyan-light:rgba(56,196,242,0.13);
+  --pink:#F05680; --green:#7DC57A; --amber:#F59E0B; --yellow:#EAD654;
+  --font:'Heebo',sans-serif; --font-brand:'Fredoka',sans-serif;
+  --r-xs:6px; --r-sm:10px; --r-md:16px; --r-lg:18px;
+  --strip-w:52px;
+  --bg:#EBF3FB;
+  --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+  --border:rgba(37,62,122,0.1); --border-mid:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.52); --text-xs:rgba(37,62,122,0.35);
+  --sh-sm:0 2px 8px rgba(37,62,122,0.08); --sh-md:0 4px 20px rgba(37,62,122,0.12);
+}
+[data-theme="dark"] {
+  --navy-dark:#111e3a;
+  --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.07); --border-mid:rgba(255,255,255,0.12);
+  --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.48); --text-xs:rgba(221,229,245,0.28);
+  --sh-sm:0 2px 12px rgba(0,0,0,0.3); --sh-md:0 6px 24px rgba(0,0,0,0.4);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text-main);
+  height:100dvh;display:flex;flex-direction:column;overflow:hidden;
+  transition:background .25s,color .25s;}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  height:48px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+  flex-shrink:0;box-shadow:var(--sh-sm);z-index:30;transition:background .25s,border-color .25s;
+}
+.bc{display:flex;align-items:center;gap:5px;font-size:12.5px;flex-wrap:wrap;}
+.bc a{color:var(--text-sub);text-decoration:none;transition:color .15s;}
+.bc a:hover{color:var(--text-main);}
+.bc-sep{color:var(--text-xs);}
+.bc-cur{color:var(--text-main);font-weight:700;}
+.tb-right{display:flex;align-items:center;gap:7px;}
+.ib{width:32px;height:32px;border-radius:var(--r-xs);border:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-sub);transition:all .18s;}
+.ib:hover{background:var(--cyan-light);color:var(--navy);border-color:var(--cyan);}
+.ib svg{width:14px;height:14px;}
+.icon-sun{display:none;}.icon-moon{display:block;}
+[data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+/* ══ BODY LAYOUT ══ */
+.app-body{flex:1;display:flex;overflow:hidden;}
+
+/* ══ RIGHT NAVY STRIP ══ */
+.right-strip{
+  width:var(--strip-w);flex-shrink:0;
+  background:#1a2e5e;
+  display:flex;flex-direction:column;align-items:center;
+  z-index:20;
+}
+.rs-logo{
+  width:100%;display:flex;align-items:center;justify-content:center;
+  padding:10px 0 8px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;
+}
+.rs-logo svg{width:28px;height:28px;opacity:.9;}
+.rs-icons{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  gap:3px;padding:8px 0;position:relative;
+}
+.rs-btn{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .18s;position:relative;flex-shrink:0;
+  background:transparent;border:none;color:rgba(255,255,255,0.5);padding:0;
+}
+.rs-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.rs-btn.rs-active{background:rgba(56,196,242,0.2);color:#38C4F2;}
+.rs-btn svg{width:17px;height:17px;}
+.rs-btn::after{
+  content:attr(data-tip);
+  position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,.8);color:#fff;font-family:var(--font);font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:6px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .15s;z-index:100;
+}
+.rs-btn:hover::after{opacity:1;}
+.rs-bottom{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0;
+}
+.rs-profile{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,#38C4F2,#253E7A);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;color:#fff;cursor:pointer;
+  border:2px solid rgba(255,255,255,0.2);transition:border-color .18s;flex-shrink:0;
+}
+.rs-profile:hover{border-color:rgba(255,255,255,0.5);}
+
+/* ══ MAIN CONTENT ══ */
+.main-content{
+  flex:1;overflow-y:auto;padding:32px 24px;
+}
+.results-wrap{max-width:680px;margin:0 auto;animation:fadeUp .4s ease;}
+
+/* ══ RESULTS HERO ══ */
+.results-hero{
+  text-align:center;padding:36px 24px 28px;
+  background:var(--surface);border-radius:var(--r-md);
+  box-shadow:var(--sh-md);border:1px solid var(--border);
+  margin-bottom:20px;
+}
+.ring-wrap{
+  width:120px;height:120px;margin:0 auto 18px;position:relative;
+}
+.ring-wrap svg{width:120px;height:120px;transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:8;}
+.ring-fill{
+  fill:none;stroke:var(--green);stroke-width:8;stroke-linecap:round;
+  stroke-dasharray:339.292;stroke-dashoffset:339.292;
+  transition:stroke-dashoffset 1.2s ease;
+}
+.ring-text{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-brand);font-size:28px;font-weight:700;color:var(--text-main);
+}
+.result-status{
+  font-family:var(--font-brand);font-size:24px;font-weight:700;
+  margin-bottom:6px;
+}
+.result-status.passed{color:#16a34a;}
+.result-status.failed{color:var(--pink);}
+[data-theme="dark"] .result-status.passed{color:#4ade80;}
+.result-score{font-size:15px;color:var(--text-sub);margin-bottom:4px;}
+.result-threshold{font-size:12.5px;color:var(--text-xs);}
+
+/* ══ BLOCKING BANNER ══ */
+.blocking-banner{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;border-radius:var(--r-sm);
+  margin-bottom:20px;font-size:13px;font-weight:700;
+}
+.blocking-banner.passed{
+  background:rgba(125,197,122,0.12);border:1.5px solid rgba(125,197,122,0.35);
+  color:#16a34a;
+}
+[data-theme="dark"] .blocking-banner.passed{color:#4ade80;background:rgba(125,197,122,0.08);border-color:rgba(125,197,122,0.25);}
+.blocking-banner svg{width:18px;height:18px;flex-shrink:0;}
+
+/* ══ QUESTION BREAKDOWN ══ */
+.breakdown-title{
+  font-size:16px;font-weight:800;color:var(--text-main);margin-bottom:14px;
+}
+.q-result{
+  background:var(--surface);border-radius:var(--r-sm);
+  padding:16px 18px;margin-bottom:10px;
+  border:1px solid var(--border);
+  box-shadow:var(--sh-sm);
+  transition:all .25s;
+}
+.q-result.correct{border-right:4px solid var(--green);}
+.q-result.wrong{border-right:4px solid var(--pink);}
+
+.qr-top{display:flex;align-items:flex-start;gap:10px;}
+.qr-icon{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.qr-icon svg{width:14px;height:14px;}
+.q-result.correct .qr-icon{background:rgba(125,197,122,0.15);color:#16a34a;}
+.q-result.wrong .qr-icon{background:rgba(240,86,128,0.12);color:var(--pink);}
+[data-theme="dark"] .q-result.correct .qr-icon{color:#4ade80;}
+
+.qr-body{flex:1;min-width:0;}
+.qr-num{font-size:11px;font-weight:800;color:var(--text-xs);margin-bottom:3px;}
+.qr-question{font-size:14px;font-weight:700;color:var(--text-main);line-height:1.5;margin-bottom:6px;}
+.qr-answer{font-size:13px;color:var(--text-sub);display:flex;align-items:center;gap:5px;}
+.qr-answer svg{width:12px;height:12px;flex-shrink:0;}
+.qr-correct-label{
+  font-size:12.5px;color:#16a34a;font-weight:600;margin-top:5px;
+  display:flex;align-items:center;gap:5px;
+}
+[data-theme="dark"] .qr-correct-label{color:#4ade80;}
+.qr-correct-label svg{width:12px;height:12px;}
+
+/* ══ ACTION BUTTONS ══ */
+.actions{
+  display:flex;align-items:center;gap:12px;
+  margin-top:24px;justify-content:center;
+}
+.btn-primary{
+  display:flex;align-items:center;gap:6px;
+  padding:11px 28px;border-radius:30px;border:none;
+  background:var(--navy);color:#fff;font-family:var(--font);
+  font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;
+}
+.btn-primary:hover{background:var(--cyan);transform:translateY(-1px);}
+.btn-ghost{
+  display:flex;align-items:center;gap:6px;
+  padding:11px 24px;border-radius:30px;
+  border:1.5px solid var(--border-mid);background:transparent;
+  font-family:var(--font);font-size:14px;font-weight:700;
+  color:var(--text-sub);cursor:pointer;transition:all .2s;
+}
+.btn-ghost:hover{border-color:var(--navy);color:var(--text-main);}
+.btn-primary svg,.btn-ghost svg{width:15px;height:15px;}
+
+/* ══ TOAST ══ */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--navy);color:#fff;padding:12px 24px;border-radius:30px;
+  font-size:13.5px;font-weight:700;box-shadow:var(--sh-md);
+  display:flex;align-items:center;gap:8px;z-index:9999;
+  opacity:0;transition:all .3s ease;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast svg{width:16px;height:16px;color:var(--green);}
+
+/* ══ ANIMATIONS ══ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ══ SCROLLBAR ══ */
+.main-content::-webkit-scrollbar{width:6px;}
+.main-content::-webkit-scrollbar-track{background:transparent;}
+.main-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+</style>
+</head>
+<body>
+
+<!-- ════ TOPBAR ════ -->
+<header class="topbar">
+  <nav class="bc">
+    <a href="#">הקורסים שלי</a>
+    <span class="bc-sep">›</span>
+    <a href="#">יסודות העיצוב</a>
+    <span class="bc-sep">›</span>
+    <a href="#">מבחן — צבע וטיפוגרפיה</a>
+    <span class="bc-sep">›</span>
+    <span class="bc-cur">תוצאות</span>
+  </nav>
+  <div class="tb-right">
+    <button class="ib" onclick="toggleTheme()">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ════ BODY ════ -->
+<div class="app-body">
+
+  <!-- ══ RIGHT NAVY STRIP ══ -->
+  <div class="right-strip">
+    <div class="rs-logo">
+      <svg viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="6" fill="#38C4F2" opacity=".15"/><text x="14" y="19" text-anchor="middle" font-family="Fredoka" font-size="13" font-weight="700" fill="#38C4F2">W</text></svg>
+    </div>
+    <div class="rs-icons">
+      <button class="rs-btn" data-tip="הקורסים שלי">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </button>
+      <button class="rs-btn" data-tip="המועדונים שלי">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </button>
+      <button class="rs-btn" data-tip="הסיכומים שלי">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </button>
+    </div>
+    <div class="rs-bottom">
+      <button class="rs-btn" data-tip="הגדרות">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <div class="rs-profile" title="הפרופיל שלי">א</div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main-content">
+    <div class="results-wrap">
+
+      <!-- HERO -->
+      <div class="results-hero">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 120 120">
+            <circle class="ring-bg" cx="60" cy="60" r="54"/>
+            <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="54"/>
+          </svg>
+          <div class="ring-text" id="ringText">0%</div>
+        </div>
+        <img src="../BOARDi/SVG/8.svg" alt="BOARDi" style="width:90px;filter:drop-shadow(0 6px 14px rgba(37,62,122,0.2));margin-bottom:8px;">
+        <div class="result-status" id="resultStatus" style="color:var(--pink);background:rgba(240,86,128,0.08);">לא עברת הפעם</div>
+        <div class="result-score">3/8 תשובות נכונות</div>
+        <div class="result-threshold">ציון עובר: 70% • הציון שלך: 37.5%</div>
+      </div>
+
+      <!-- FAIL BANNER -->
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:var(--r-md);background:rgba(240,86,128,0.06);border:1.5px solid rgba(240,86,128,0.2);margin-bottom:24px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;color:var(--pink);margin-bottom:2px;">לא הגעת לציון העובר</div>
+          <div style="font-size:12.5px;color:var(--text-sub);">חזור על החומר ונסה שוב. יש לך עוד 2 ניסיונות.</div>
+        </div>
+      </div>
+
+      <!-- ENCOURAGEMENT CARD -->
+      <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:var(--r-md);background:rgba(56,196,242,0.05);border:1px solid var(--border);margin-bottom:24px;">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(56,196,242,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--cyan);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:13.5px;font-weight:700;color:var(--text-main);margin-bottom:2px;">שיעורים שכדאי לחזור עליהם</div>
+          <div style="font-size:12.5px;color:var(--text-sub);line-height:1.6;">שיעור 3: צבע ומשמעות • שיעור 4: פלטות צבע מקצועיות</div>
+        </div>
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="breakdown-title">סקירת שאלות</div>
+      <div id="breakdownList"></div>
+
+      <!-- ACTIONS -->
+      <div class="actions">
+        <button class="btn-primary" onclick="showToast('חוזר לנסות שוב...')" style="background:linear-gradient(135deg,var(--pink),#c03a6a);box-shadow:0 3px 14px rgba(240,86,128,0.3);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          נסה שוב
+        </button>
+        <button style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:30px;border:1.5px solid var(--border);background:transparent;color:var(--text-sub);font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;" onclick="showToast('חוזר לחומר הלימוד...')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          חזור לחומר
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════ TOAST ════ -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastText"></span>
+</div>
+
+<script>
+/* ── Theme ── */
+function toggleTheme(){
+  const h=document.documentElement;
+  h.dataset.theme=h.dataset.theme==='dark'?'light':'dark';
+}
+
+/* ── Questions & Results Data ── */
+const questions=[
+  {q:'איזה צבע נחשב צבע משלים לכחול?',studentAnswer:'כתום',correctAnswer:'כתום',correct:true},
+  {q:'מה ההבדל בין RGB ל-CMYK?',studentAnswer:'שניהם אותו דבר',correctAnswer:'RGB למסכים, CMYK לדפוס',correct:false},
+  {q:'כמה צבעים ראשוניים יש?',studentAnswer:'3',correctAnswer:'3',correct:true},
+  {q:'מהו צבע אנלוגי?',studentAnswer:'צבע מנוגד בגלגל הצבעים',correctAnswer:'צבע שכן בגלגל הצבעים',correct:false},
+  {q:'איזה צבע נוצר מערבוב אדום וכחול?',studentAnswer:'כתום',correctAnswer:'סגול',correct:false},
+  {q:'מהו ניגודיות (Contrast)?',studentAnswer:'ההבדל הוויזואלי בין אלמנטים',correctAnswer:'ההבדל הוויזואלי בין אלמנטים',correct:true},
+  {q:'מהו Monochromatic?',studentAnswer:'שימוש בהרבה צבעים',correctAnswer:'שימוש בצבע אחד בגוונים שונים',correct:false},
+  {q:'איזה צבע מעורר תחושת חום?',studentAnswer:'סגול',correctAnswer:'אדום',correct:false}
+];
+
+/* ── Render Breakdown ── */
+function renderBreakdown(){
+  const list=document.getElementById('breakdownList');
+  questions.forEach((q,i)=>{
+    const div=document.createElement('div');
+    div.className='q-result '+(q.correct?'correct':'wrong');
+    div.style.animation=`fadeUp .3s ease ${i*0.06}s both`;
+
+    let iconSvg=q.correct
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+
+    let wrongExtra='';
+    if(!q.correct){
+      wrongExtra=`
+        <div class="qr-correct-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          תשובה נכונה: ${q.correctAnswer}
+        </div>`;
+    }
+
+    div.innerHTML=`
+      <div class="qr-top">
+        <div class="qr-icon">${iconSvg}</div>
+        <div class="qr-body">
+          <div class="qr-num">שאלה ${i+1}</div>
+          <div class="qr-question">${q.q}</div>
+          <div class="qr-answer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            התשובה שלך: ${q.studentAnswer}
+          </div>
+          ${wrongExtra}
+        </div>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+/* ── Animate Ring ── */
+function animateRing(){
+  const circle=document.getElementById('ringFill');
+  const textEl=document.getElementById('ringText');
+  const circumference=2*Math.PI*54; // ~339.292
+  const targetPercent=37;
+  const targetOffset=circumference*(1-targetPercent/100);
+  circle.style.stroke='var(--pink)';
+
+  // Animate after a small delay
+  setTimeout(()=>{
+    circle.style.strokeDashoffset=targetOffset;
+  },200);
+
+  // Animate number
+  let current=0;
+  const step=targetPercent/40;
+  const interval=setInterval(()=>{
+    current+=step;
+    if(current>=targetPercent){
+      current=targetPercent;
+      clearInterval(interval);
+    }
+    textEl.textContent=Math.round(current)+'%';
+  },25);
+}
+
+/* ── Toast ── */
+function showToast(text){
+  const t=document.getElementById('toast');
+  document.getElementById('toastText').textContent=text;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+/* ── Confetti ── */
+function launchConfetti(){
+  const colors=['#38C4F2','#F05680','#7DC57A','#EAD654','#253E7A','#ffffff'];
+  const container=document.createElement('div');
+  container.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;';
+  document.body.appendChild(container);
+  for(let i=0;i<80;i++){
+    const p=document.createElement('div');
+    const c=colors[Math.floor(Math.random()*colors.length)];
+    const size=Math.random()*8+4;
+    const x=Math.random()*100;
+    const dur=Math.random()*2+1.5;
+    const delay=Math.random()*0.8;
+    const rot=Math.random()*720-360;
+    const shape=Math.random()>0.5?'50%':'2px';
+    p.style.cssText=`position:absolute;top:-20px;left:${x}%;width:${size}px;height:${size*0.6}px;background:${c};border-radius:${shape};opacity:0.9;animation:confettiFall ${dur}s ease-in ${delay}s forwards;`;
+    container.appendChild(p);
+  }
+  setTimeout(()=>container.remove(),4000);
+}
+
+const confettiStyle=document.createElement('style');
+confettiStyle.textContent=`
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1;}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0;}
+}`;
+document.head.appendChild(confettiStyle);
+
+/* ── Init ── */
+renderBreakdown();
+animateRing();
+// No confetti on fail
+</script>
+</body>
+</html>
