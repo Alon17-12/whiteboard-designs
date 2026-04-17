@@ -779,28 +779,15 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
 });
 
-// ── HINTS TOGGLE ──────────────────────────────────
-document.getElementById('toggleHints').addEventListener('click', function() {
-  this.classList.toggle('on');
-});
+// hints toggle removed
 
 // ── SAMPLE WORDS ──────────────────────────────────
 const SAMPLE_WORDS = [
-  { word: 'עיצוב', hint: 'מה שאנחנו לומדים' },
-  { word: 'צבע', hint: 'אלמנט ויזואלי בסיסי' },
-  { word: 'פונט', hint: 'סוג אות' },
-  { word: 'לוגו', hint: 'סמל של מותג' },
-  { word: 'גריד', hint: 'רשת לסידור' },
-  { word: 'פיקסל', hint: 'נקודה במסך' },
-  { word: 'מרווח', hint: 'רווח לבן' },
-  { word: 'קו', hint: 'אלמנט בסיסי בגרפיקה' },
-  { word: 'צורה', hint: 'עיגול, ריבוע, משולש' },
-  { word: 'מותג', hint: 'זהות עסקית' },
-  { word: 'דף', hint: 'עמוד עיצוב' },
-  { word: 'סמל', hint: 'אייקון' },
-  { word: 'רקע', hint: 'מה שמאחורי התוכן' },
-  { word: 'גודל', hint: 'מידה של אלמנט' },
-  { word: 'שכבה', hint: 'Layer בפוטושופ' },
+  { word: 'עיצוב' },
+  { word: 'צבע' },
+  { word: 'פונט' },
+  { word: 'לוגו' },
+  { word: 'גריד' },
 ];
 
 let words = [...SAMPLE_WORDS];

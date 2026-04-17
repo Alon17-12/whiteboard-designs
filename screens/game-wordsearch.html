@@ -1216,7 +1216,12 @@ function startGame() {
 
 document.getElementById('resultBtn').addEventListener('click', startGame);
 
-// Init
+// Init — auto-start for design preview
+requestAnimationFrame(() => {
+  resetGame();
+  startOverlay.classList.add('hidden');
+  startTimer();
+});
 window.addEventListener('resize', () => { resizeCanvas(); render(); });
 
 // Observer for theme changes to re-render
