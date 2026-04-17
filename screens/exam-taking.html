@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light" data-mode="student">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מבחן — צבע וטיפוגרפיה | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --cyan-light:rgba(56,196,242,0.13);
+  --pink:#F05680; --green:#7DC57A; --amber:#F59E0B; --yellow:#EAD654;
+  --font:'Heebo',sans-serif; --font-brand:'Fredoka',sans-serif;
+  --r-xs:6px; --r-sm:10px; --r-md:16px; --r-lg:18px;
+  --strip-w:52px;
+  --bg:#EBF3FB;
+  --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+  --border:rgba(37,62,122,0.1); --border-mid:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.52); --text-xs:rgba(37,62,122,0.35);
+  --sh-sm:0 2px 8px rgba(37,62,122,0.08); --sh-md:0 4px 20px rgba(37,62,122,0.12);
+}
+[data-theme="dark"] {
+  --navy-dark:#111e3a;
+  --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.07); --border-mid:rgba(255,255,255,0.12);
+  --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.48); --text-xs:rgba(221,229,245,0.28);
+  --sh-sm:0 2px 12px rgba(0,0,0,0.3); --sh-md:0 6px 24px rgba(0,0,0,0.4);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text-main);
+  height:100dvh;display:flex;flex-direction:column;overflow:hidden;
+  transition:background .25s,color .25s;}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  height:48px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+  flex-shrink:0;box-shadow:var(--sh-sm);z-index:30;transition:background .25s,border-color .25s;
+}
+.bc{display:flex;align-items:center;gap:5px;font-size:12.5px;flex-wrap:wrap;}
+.bc a{color:var(--text-sub);text-decoration:none;transition:color .15s;}
+.bc a:hover{color:var(--text-main);}
+.bc-sep{color:var(--text-xs);}
+.bc-cur{color:var(--text-main);font-weight:700;}
+.tb-right{display:flex;align-items:center;gap:7px;}
+.ib{width:32px;height:32px;border-radius:var(--r-xs);border:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-sub);transition:all .18s;}
+.ib:hover{background:var(--cyan-light);color:var(--navy);border-color:var(--cyan);}
+.ib svg{width:14px;height:14px;}
+.icon-sun{display:none;}.icon-moon{display:block;}
+[data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+/* ══ BODY LAYOUT ══ */
+.app-body{flex:1;display:flex;overflow:hidden;}
+
+/* ══ RIGHT NAVY STRIP ══ */
+.right-strip{
+  width:var(--strip-w);flex-shrink:0;
+  background:#1a2e5e;
+  display:flex;flex-direction:column;align-items:center;
+  z-index:20;
+}
+.rs-logo{
+  width:100%;display:flex;align-items:center;justify-content:center;
+  padding:10px 0 8px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;
+}
+.rs-logo svg{width:28px;height:28px;opacity:.9;}
+.rs-icons{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  gap:3px;padding:8px 0;position:relative;
+}
+.rs-btn{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .18s;position:relative;flex-shrink:0;
+  background:transparent;border:none;color:rgba(255,255,255,0.5);padding:0;
+}
+.rs-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.rs-btn.rs-active{background:rgba(56,196,242,0.2);color:#38C4F2;}
+.rs-btn svg{width:17px;height:17px;}
+.rs-btn::after{
+  content:attr(data-tip);
+  position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,.8);color:#fff;font-family:var(--font);font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:6px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .15s;z-index:100;
+}
+.rs-btn:hover::after{opacity:1;}
+.rs-bottom{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0;
+}
+.rs-profile{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,#38C4F2,#253E7A);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;color:#fff;cursor:pointer;
+  border:2px solid rgba(255,255,255,0.2);transition:border-color .18s;flex-shrink:0;
+}
+.rs-profile:hover{border-color:rgba(255,255,255,0.5);}
+
+/* ══ MAIN CONTENT ══ */
+.main-content{
+  flex:1;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center;
+  padding:32px 24px;
+}
+
+/* ══ START SCREEN ══ */
+.start-screen{
+  max-width:460px;width:100%;text-align:center;
+  animation:fadeUp .3s ease;
+}
+.start-card{
+  background:var(--surface);border-radius:var(--r-md);padding:40px 36px;
+  box-shadow:var(--sh-md);border:1px solid var(--border);
+}
+.start-icon{
+  width:64px;height:64px;border-radius:50%;
+  background:rgba(240,86,128,0.12);
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-bottom:18px;
+}
+.start-icon svg{width:32px;height:32px;color:var(--pink);}
+.start-title{
+  font-family:var(--font-brand);font-size:22px;font-weight:700;
+  color:var(--text-main);margin-bottom:12px;
+}
+.start-stats{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  font-size:13.5px;color:var(--text-sub);margin-bottom:18px;flex-wrap:wrap;
+}
+.start-stats span{display:flex;align-items:center;gap:4px;}
+.start-stats .dot{width:4px;height:4px;border-radius:50%;background:var(--text-xs);}
+.blocking-warning{
+  background:rgba(245,158,11,0.1);border:1.5px solid rgba(245,158,11,0.35);
+  border-radius:var(--r-sm);padding:10px 14px;margin-bottom:20px;
+  display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;
+  color:#92700a;
+}
+[data-theme="dark"] .blocking-warning{color:#e6c94a;background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.25);}
+.blocking-warning svg{width:16px;height:16px;flex-shrink:0;color:var(--amber);}
+.btn-start{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 36px;border-radius:30px;border:none;
+  background:var(--navy);color:#fff;font-family:var(--font);
+  font-size:15px;font-weight:700;cursor:pointer;
+  transition:background .2s,transform .15s;
+}
+.btn-start:hover{background:var(--cyan);transform:translateY(-1px);}
+.btn-start:active{transform:translateY(0);}
+.btn-start svg{width:18px;height:18px;}
+
+/* ══ QUIZ INTERFACE ══ */
+.quiz-screen{display:none;max-width:680px;width:100%;animation:fadeUp .3s ease;}
+
+.quiz-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:24px;gap:12px;flex-wrap:wrap;
+}
+.q-counter{font-size:14px;font-weight:700;color:var(--text-main);}
+.q-timer{
+  display:flex;align-items:center;gap:5px;
+  font-size:13px;font-weight:700;color:var(--pink);
+  background:rgba(240,86,128,0.08);padding:5px 12px;border-radius:20px;
+}
+.q-timer svg{width:14px;height:14px;}
+.progress-dots{display:flex;gap:6px;align-items:center;}
+.p-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--border);transition:background .25s,transform .2s;
+  cursor:pointer;
+}
+.p-dot.answered{background:var(--green);}
+.p-dot.current{transform:scale(1.3);border:2px solid var(--cyan);background:var(--surface);}
+.p-dot.current.answered{background:var(--green);border-color:var(--green);}
+
+.question-card{
+  background:var(--surface);border-radius:var(--r-md);padding:28px 28px 24px;
+  box-shadow:var(--sh-md);border:1px solid var(--border);
+  animation:fadeIn .25s ease;
+}
+.q-pill{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(240,86,128,0.1);color:var(--pink);
+  font-family:var(--font-brand);font-size:14px;font-weight:700;
+  margin-bottom:12px;
+}
+.q-text{font-size:16px;font-weight:700;color:var(--text-main);margin-bottom:20px;line-height:1.6;}
+
+.options-list{display:flex;flex-direction:column;gap:10px;}
+.option-card{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;border-radius:var(--r-sm);
+  border:1.5px solid var(--border);background:var(--surface);
+  cursor:pointer;transition:all .2s;
+}
+.option-card:hover{border-color:var(--cyan);background:var(--cyan-light);}
+.option-card.selected{border-color:var(--cyan);background:rgba(56,196,242,0.1);box-shadow:0 0 0 3px rgba(56,196,242,0.12);}
+.option-radio{
+  width:20px;height:20px;border-radius:50%;border:2px solid var(--border-mid);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all .2s;
+}
+.option-card.selected .option-radio{border-color:var(--cyan);background:var(--cyan);}
+.option-card.selected .option-radio::after{
+  content:'';width:8px;height:8px;border-radius:50%;background:#fff;
+}
+.option-label{font-size:14px;font-weight:500;color:var(--text-main);flex:1;}
+
+/* Quiz navigation */
+.quiz-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:24px;gap:12px;
+}
+.btn-ghost{
+  display:flex;align-items:center;gap:6px;
+  padding:10px 20px;border-radius:30px;
+  border:1.5px solid var(--border-mid);background:transparent;
+  font-family:var(--font);font-size:13.5px;font-weight:700;
+  color:var(--text-sub);cursor:pointer;transition:all .2s;
+}
+.btn-ghost:hover{border-color:var(--navy);color:var(--text-main);}
+.btn-ghost:disabled{opacity:.35;cursor:not-allowed;}
+.btn-ghost svg,.btn-primary svg{width:14px;height:14px;}
+.btn-primary{
+  display:flex;align-items:center;gap:6px;
+  padding:10px 24px;border-radius:30px;border:none;
+  background:var(--navy);color:#fff;font-family:var(--font);
+  font-size:13.5px;font-weight:700;cursor:pointer;transition:all .2s;
+}
+.btn-primary:hover{background:var(--cyan);}
+.btn-submit{background:var(--pink);}
+.btn-submit:hover{background:#d94070;}
+
+/* ══ CONFIRMATION MODAL ══ */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(10,20,40,.45);backdrop-filter:blur(4px);
+  z-index:9000;display:none;align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex;animation:fadeIn .15s ease;}
+.modal-box{
+  background:var(--surface);border-radius:var(--r-md);padding:28px;
+  max-width:380px;width:calc(100% - 32px);box-shadow:var(--sh-md);
+  border:1px solid var(--border);animation:scaleIn .18s ease;
+  text-align:center;
+}
+.modal-icon{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(240,86,128,0.1);
+  display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;
+}
+.modal-icon svg{width:24px;height:24px;color:var(--pink);}
+.modal-title{font-size:17px;font-weight:800;color:var(--text-main);margin-bottom:8px;}
+.modal-body{font-size:13.5px;color:var(--text-sub);line-height:1.6;margin-bottom:22px;}
+.modal-actions{display:flex;gap:10px;justify-content:center;}
+
+/* ══ TOAST ══ */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--navy);color:#fff;padding:12px 24px;border-radius:30px;
+  font-size:13.5px;font-weight:700;box-shadow:var(--sh-md);
+  display:flex;align-items:center;gap:8px;z-index:9999;
+  opacity:0;transition:all .3s ease;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast svg{width:16px;height:16px;color:var(--green);}
+
+/* ══ ANIMATIONS ══ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+
+/* ══ SCROLLBAR ══ */
+.main-content::-webkit-scrollbar{width:6px;}
+.main-content::-webkit-scrollbar-track{background:transparent;}
+.main-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+</style>
+</head>
+<body>
+
+<!-- ════ TOPBAR ════ -->
+<header class="topbar">
+  <nav class="bc">
+    <a href="#">הקורסים שלי</a>
+    <span class="bc-sep">›</span>
+    <a href="#">יסודות העיצוב</a>
+    <span class="bc-sep">›</span>
+    <span class="bc-cur">מבחן — צבע וטיפוגרפיה</span>
+  </nav>
+  <div class="tb-right">
+    <button class="ib" onclick="toggleTheme()">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ════ BODY ════ -->
+<div class="app-body">
+
+  <!-- ══ RIGHT NAVY STRIP ══ -->
+  <div class="right-strip">
+    <div class="rs-logo">
+      <svg viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="6" fill="#38C4F2" opacity=".15"/><text x="14" y="19" text-anchor="middle" font-family="Fredoka" font-size="13" font-weight="700" fill="#38C4F2">W</text></svg>
+    </div>
+    <div class="rs-icons">
+      <!-- Home / Courses -->
+      <button class="rs-btn" data-tip="הקורסים שלי">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </button>
+      <!-- Clubs -->
+      <button class="rs-btn" data-tip="המועדונים שלי">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </button>
+      <!-- Notebook -->
+      <button class="rs-btn" data-tip="הסיכומים שלי">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </button>
+    </div>
+    <div class="rs-bottom">
+      <button class="rs-btn" data-tip="הגדרות">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <div class="rs-profile" title="הפרופיל שלי">א</div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main-content">
+
+    <!-- START SCREEN -->
+    <div class="start-screen" id="startScreen">
+      <div class="start-card">
+        <div class="start-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h1 class="start-title">מבחן — צבע וטיפוגרפיה</h1>
+        <div class="start-stats">
+          <span>8 שאלות</span>
+          <span class="dot"></span>
+          <span>ציון עובר: 70%</span>
+          <span class="dot"></span>
+          <span>ללא הגבלת זמן</span>
+        </div>
+        <div class="blocking-warning">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          מבחן חוסם — חובה לעבור כדי להתקדם
+        </div>
+        <button class="btn-start" onclick="startExam()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          התחל מבחן
+        </button>
+      </div>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div class="quiz-screen" id="quizScreen">
+      <div class="quiz-topbar">
+        <span class="q-counter" id="qCounter">שאלה 1 מתוך 8</span>
+        <div class="progress-dots" id="progressDots"></div>
+        <div class="q-timer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="timerDisplay">12:45</span>
+        </div>
+      </div>
+
+      <div class="question-card" id="questionCard">
+        <div class="q-pill" id="qPill">Q1</div>
+        <div class="q-text" id="qText"></div>
+        <div class="options-list" id="optionsList"></div>
+      </div>
+
+      <div class="quiz-nav">
+        <button class="btn-ghost" id="btnPrev" onclick="prevQuestion()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          הקודם
+        </button>
+        <button class="btn-primary" id="btnNext" onclick="nextQuestion()">
+          הבא
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════ CONFIRMATION MODAL ════ -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div class="modal-title">הגשת מבחן</div>
+    <div class="modal-body">אתה בטוח? לא ניתן לחזור אחרי הגשה</div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeModal()">חזור למבחן</button>
+      <button class="btn-primary btn-submit" onclick="submitExam()">הגש</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ TOAST ════ -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastText">המבחן הוגש!</span>
+</div>
+
+<script>
+/* ── Theme ── */
+function toggleTheme(){
+  const h=document.documentElement;
+  h.dataset.theme=h.dataset.theme==='dark'?'light':'dark';
+}
+
+/* ── Questions Data ── */
+const questions=[
+  {q:'איזה צבע נחשב צבע משלים לכחול?',opts:['כתום','ירוק','אדום','סגול'],correct:0},
+  {q:'מה ההבדל בין RGB ל-CMYK?',opts:['RGB לדפוס, CMYK למסכים','RGB למסכים, CMYK לדפוס','שניהם למסכים','אין הבדל'],correct:1},
+  {q:'כמה צבעים ראשוניים יש?',opts:['2','3','4','6'],correct:1},
+  {q:'מהו צבע אנלוגי?',opts:['צבע מנוגד בגלגל הצבעים','צבע שכן בגלגל הצבעים','צבע ניטרלי','צבע משני'],correct:1},
+  {q:'איזה צבע נוצר מערבוב אדום וכחול?',opts:['ירוק','סגול','כתום','צהוב'],correct:1},
+  {q:'מהו ניגודיות (Contrast)?',opts:['ההבדל בין שני גוונים סמוכים','ערבוב של צבעים ראשוניים','ההבדל הוויזואלי בין אלמנטים','שם לסוג פונט'],correct:2},
+  {q:'מהו Monochromatic?',opts:['שימוש בצבע אחד בגוונים שונים','שימוש בשני צבעים מנוגדים','שחור ולבן בלבד','ללא צבע כלל'],correct:0},
+  {q:'איזה צבע מעורר תחושת חום?',opts:['כחול','ירוק','אדום','סגול'],correct:2}
+];
+
+let currentQ=0;
+const answers=new Array(8).fill(-1);
+
+/* ── Init progress dots ── */
+function initDots(){
+  const c=document.getElementById('progressDots');
+  c.innerHTML='';
+  for(let i=0;i<8;i++){
+    const d=document.createElement('div');
+    d.className='p-dot'+(i===0?' current':'');
+    d.onclick=()=>goToQuestion(i);
+    c.appendChild(d);
+  }
+}
+
+/* ── Render question ── */
+function renderQuestion(){
+  const q=questions[currentQ];
+  document.getElementById('qCounter').textContent=`שאלה ${currentQ+1} מתוך 8`;
+  document.getElementById('qPill').textContent=`Q${currentQ+1}`;
+  document.getElementById('qText').textContent=q.q;
+
+  const ol=document.getElementById('optionsList');
+  ol.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const card=document.createElement('div');
+    card.className='option-card'+(answers[currentQ]===i?' selected':'');
+    card.onclick=()=>selectOption(i);
+    card.innerHTML=`<div class="option-radio"></div><div class="option-label">${opt}</div>`;
+    ol.appendChild(card);
+  });
+
+  // Update dots
+  document.querySelectorAll('.p-dot').forEach((d,i)=>{
+    d.className='p-dot';
+    if(answers[i]>=0) d.classList.add('answered');
+    if(i===currentQ) d.classList.add('current');
+  });
+
+  // Nav buttons
+  document.getElementById('btnPrev').disabled=currentQ===0;
+  const btnNext=document.getElementById('btnNext');
+  if(currentQ===7){
+    btnNext.innerHTML='הגש מבחן <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>';
+    btnNext.className='btn-primary btn-submit';
+    btnNext.onclick=()=>openModal();
+  } else {
+    btnNext.innerHTML='הבא <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>';
+    btnNext.className='btn-primary';
+    btnNext.onclick=()=>nextQuestion();
+  }
+
+  // Animate card
+  const card=document.getElementById('questionCard');
+  card.style.animation='none';
+  card.offsetHeight;
+  card.style.animation='fadeIn .25s ease';
+}
+
+function selectOption(i){
+  answers[currentQ]=i;
+  renderQuestion();
+}
+
+function nextQuestion(){
+  if(currentQ<7){currentQ++;renderQuestion();}
+}
+function prevQuestion(){
+  if(currentQ>0){currentQ--;renderQuestion();}
+}
+function goToQuestion(i){
+  currentQ=i;renderQuestion();
+}
+
+/* ── Start exam ── */
+function startExam(){
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
+  initDots();
+  renderQuestion();
+  startTimer();
+}
+
+/* ── Timer ── */
+let timerSec=12*60+45;
+let timerInterval;
+function startTimer(){
+  timerInterval=setInterval(()=>{
+    timerSec--;
+    if(timerSec<0){clearInterval(timerInterval);return;}
+    const m=Math.floor(timerSec/60);
+    const s=timerSec%60;
+    document.getElementById('timerDisplay').textContent=
+      String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  },1000);
+}
+
+/* ── Modal ── */
+function openModal(){document.getElementById('confirmModal').classList.add('open');}
+function closeModal(){document.getElementById('confirmModal').classList.remove('open');}
+
+/* ── Submit ── */
+function submitExam(){
+  closeModal();
+  clearInterval(timerInterval);
+  showToast('המבחן הוגש!');
+  setTimeout(()=>{
+    window.location.href='מבחן - תוצאות.html';
+  },1500);
+}
+
+/* ── Toast ── */
+function showToast(text){
+  const t=document.getElementById('toast');
+  document.getElementById('toastText').textContent=text;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+</script>
+</body>
+</html>
