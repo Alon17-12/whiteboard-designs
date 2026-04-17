@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light" data-mode="teacher">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תוצאות מבחן — צבע וטיפוגרפיה | יסודות העיצוב | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --cyan-light:rgba(56,196,242,0.13);
+  --pink:#F05680; --green:#7DC57A; --green-bright:#22c55e; --amber:#F59E0B; --yellow:#EAD654;
+  --font:'Heebo',sans-serif; --font-brand:'Fredoka',sans-serif;
+  --r-xs:6px; --r-sm:10px; --r-md:16px; --r-lg:18px;
+  --strip-w:52px;
+  --bg:#EBF3FB;
+  --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+  --border:rgba(37,62,122,0.1); --border-mid:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.52); --text-xs:rgba(37,62,122,0.35);
+  --sh-sm:0 2px 8px rgba(37,62,122,0.08); --sh-md:0 4px 20px rgba(37,62,122,0.12);
+  --eb-bg:#fffbeb; --eb-border:#fde68a;
+  --edit-tint:rgba(245,158,11,0.05);
+}
+[data-theme="dark"] {
+  --navy-dark:#111e3a;
+  --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.07); --border-mid:rgba(255,255,255,0.12);
+  --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.48); --text-xs:rgba(221,229,245,0.28);
+  --sh-sm:0 2px 12px rgba(0,0,0,0.3); --sh-md:0 6px 24px rgba(0,0,0,0.4);
+  --eb-bg:#1a1100; --eb-border:rgba(245,158,11,0.28);
+  --edit-tint:rgba(245,158,11,0.04);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text-main);
+  height:100dvh;display:flex;flex-direction:column;overflow:hidden;
+  transition:background .25s,color .25s;}
+
+/* ══════════════════════════════════
+   TOPBAR
+══════════════════════════════════ */
+.topbar{
+  height:48px;background:var(--surface);border-bottom:1px solid var(--border-mid);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+  flex-shrink:0;box-shadow:var(--sh-sm);z-index:30;transition:background .25s,border-color .25s;
+}
+.bc{display:flex;align-items:center;gap:5px;font-size:12.5px;flex-wrap:wrap;}
+.bc a{color:var(--text-sub);text-decoration:none;transition:color .15s;}
+.bc a:hover{color:var(--text-main);}
+.bc-sep{color:var(--text-xs);}
+.bc-cur{color:var(--text-main);font-weight:700;}
+.bc-results-tag{
+  display:inline-flex;align-items:center;gap:3px;padding:2px 8px;
+  border-radius:20px;background:var(--cyan);color:#fff;font-size:10px;font-weight:800;
+}
+.tb-right{display:flex;align-items:center;gap:7px;}
+.ib{width:32px;height:32px;border-radius:var(--r-xs);border:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-sub);transition:all .18s;}
+.ib:hover{background:var(--cyan-light);color:var(--navy);border-color:var(--cyan);}
+.ib svg{width:14px;height:14px;}
+.icon-sun{display:none;}.icon-moon{display:block;}
+[data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+/* ══════════════════════════════════
+   RESULTS BANNER
+══════════════════════════════════ */
+.edit-banner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:5px 18px;background:var(--surface);
+  border-bottom:2px solid var(--amber);
+  flex-shrink:0;gap:12px;
+  animation:slideDown .2s ease;
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.eb-l{display:flex;align-items:center;gap:10px;}
+.eb-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:var(--amber);}
+.eb-badge svg{width:11px;height:11px;}
+.eb-dot-wrap{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-xs);}
+.ls-status{
+  display:flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800;
+  border:1.5px solid;
+}
+.ls-status.published{background:rgba(34,197,94,0.1);color:#16a34a;border-color:rgba(34,197,94,0.3);}
+.ls-status svg{width:10px;height:10px;}
+[data-theme="dark"] .ls-status.published{color:#4ade80;}
+.eb-r{display:flex;align-items:center;gap:6px;}
+.eb-btn{display:flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;
+  border:1.5px solid var(--border);font-family:var(--font);font-size:11.5px;font-weight:700;
+  background:var(--surface);color:var(--text-main);cursor:pointer;transition:all .2s;}
+.eb-btn:hover{background:var(--cyan-light);border-color:var(--cyan);color:var(--navy);}
+.eb-btn svg{width:11px;height:11px;}
+
+/* ══════════════════════════════════
+   BODY LAYOUT
+══════════════════════════════════ */
+.exam-body{flex:1;display:flex;overflow:hidden;}
+
+/* ══════════════════════════════════
+   RIGHT NAVY STRIP
+══════════════════════════════════ */
+.right-strip{
+  width:var(--strip-w);flex-shrink:0;
+  background:#1a2e5e;
+  display:flex;flex-direction:column;align-items:center;
+  z-index:20;border-right:3px solid var(--amber);
+}
+.rs-logo{
+  width:100%;display:flex;align-items:center;justify-content:center;
+  padding:10px 0 8px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;
+}
+.rs-logo svg{width:28px;height:28px;}
+.rs-icons{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;}
+.rs-btn{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .18s;position:relative;flex-shrink:0;
+  background:transparent;border:none;color:rgba(255,255,255,0.5);padding:0;
+}
+.rs-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.rs-btn svg{width:17px;height:17px;}
+.rs-btn::after{
+  content:attr(data-tip);
+  position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,.8);color:#fff;font-family:var(--font);font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:6px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .15s;z-index:100;
+}
+.rs-btn:hover::after{opacity:1;}
+.rs-bottom{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0;
+}
+.rs-profile{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,#38C4F2,#253E7A);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;color:#fff;cursor:pointer;
+  border:2px solid rgba(255,255,255,0.2);transition:border-color .18s;flex-shrink:0;
+}
+.rs-profile:hover{border-color:rgba(255,255,255,0.5);}
+
+/* ══════════════════════════════════
+   MAIN SCROLLABLE AREA
+══════════════════════════════════ */
+.main-scroll{
+  flex:1;overflow-y:auto;padding:24px 32px 60px;
+  background:var(--bg);transition:background .25s;
+}
+.main-inner{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:20px;}
+
+/* ══════════════════════════════════
+   KPI STRIP
+══════════════════════════════════ */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.kpi-card{
+  background:var(--surface);border-radius:var(--r-md);padding:18px 20px;
+  box-shadow:var(--sh-sm);border:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;
+  transition:background .25s,border-color .25s,transform .2s,box-shadow .2s;
+}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--sh-md);}
+.kpi-icon{
+  width:48px;height:48px;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.kpi-icon svg{width:22px;height:22px;}
+.kpi-info{flex:1;display:flex;flex-direction:column;gap:2px;}
+.kpi-label{font-size:12px;font-weight:600;color:var(--text-sub);}
+.kpi-value{font-family:'Fredoka',sans-serif;font-size:26px;font-weight:700;line-height:1.1;}
+.kpi-sub{font-size:11px;color:var(--text-xs);font-weight:500;}
+
+.kpi-avg .kpi-icon{background:rgba(56,196,242,0.12);}
+.kpi-avg .kpi-icon svg{color:var(--cyan);}
+.kpi-avg .kpi-value{color:var(--cyan);}
+
+.kpi-pass .kpi-icon{background:rgba(125,197,122,0.12);}
+.kpi-pass .kpi-icon svg{color:var(--green);}
+.kpi-pass .kpi-value{color:var(--green);}
+
+.kpi-fail .kpi-icon{background:rgba(240,86,128,0.12);}
+.kpi-fail .kpi-icon svg{color:var(--pink);}
+.kpi-fail .kpi-value{color:var(--pink);}
+
+.kpi-top .kpi-icon{background:rgba(234,214,84,0.15);}
+.kpi-top .kpi-icon svg{color:var(--yellow);}
+.kpi-top .kpi-value{color:#b8a31e;}
+[data-theme="dark"] .kpi-top .kpi-value{color:var(--yellow);}
+
+/* ══════════════════════════════════
+   TWO COLUMNS
+══════════════════════════════════ */
+.two-cols{display:grid;grid-template-columns:60fr 40fr;gap:18px;align-items:start;}
+
+/* ══════════════════════════════════
+   STUDENTS TABLE
+══════════════════════════════════ */
+.table-card{
+  background:var(--surface);border-radius:var(--r-md);
+  box-shadow:var(--sh-sm);border:1px solid var(--border);
+  overflow:hidden;transition:background .25s,border-color .25s;
+}
+.table-card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px 12px;border-bottom:1px solid var(--border);
+}
+.table-card-title{font-family:'Fredoka',sans-serif;font-size:17px;font-weight:600;}
+.table-card-count{font-size:12px;color:var(--text-sub);font-weight:600;}
+
+.students-table{width:100%;border-collapse:collapse;font-size:13px;}
+.students-table thead{background:var(--surface-2);}
+.students-table th{
+  padding:10px 14px;text-align:right;font-size:11.5px;font-weight:700;
+  color:var(--text-sub);white-space:nowrap;cursor:pointer;
+  user-select:none;transition:color .15s;position:relative;
+}
+.students-table th:hover{color:var(--text-main);}
+.students-table th .sort-arrow{
+  display:inline-block;margin-right:3px;font-size:10px;opacity:0.3;transition:opacity .2s;
+}
+.students-table th.sorted .sort-arrow{opacity:1;color:var(--cyan);}
+.students-table td{
+  padding:10px 14px;border-bottom:1px solid var(--border);
+  vertical-align:middle;transition:background .15s;
+}
+.students-table tbody tr{transition:background .15s;cursor:default;}
+.students-table tbody tr:hover{background:var(--surface-2);}
+
+.student-cell{display:flex;align-items:center;gap:10px;}
+.student-avatar{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:#fff;flex-shrink:0;
+}
+.student-name{font-weight:600;white-space:nowrap;}
+
+.grade-passed{color:var(--green);font-weight:700;font-family:'Fredoka',sans-serif;font-size:14px;}
+.grade-failed{color:var(--pink);font-weight:700;font-family:'Fredoka',sans-serif;font-size:14px;}
+
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;
+}
+.badge-pass{background:rgba(125,197,122,0.12);color:var(--green);border:1px solid rgba(125,197,122,0.3);}
+.badge-fail{background:rgba(240,86,128,0.1);color:var(--pink);border:1px solid rgba(240,86,128,0.25);}
+
+.attempt-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:50%;
+  background:var(--surface-3);font-size:12px;font-weight:700;
+  color:var(--text-sub);
+}
+
+.view-btn{
+  width:32px;height:32px;border-radius:var(--r-xs);border:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-sub);transition:all .18s;
+}
+.view-btn:hover{background:var(--cyan-light);color:var(--navy);border-color:var(--cyan);}
+.view-btn svg{width:14px;height:14px;}
+
+.show-more-row{
+  padding:12px 20px;text-align:center;border-top:1px solid var(--border);
+}
+.show-more-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 20px;border-radius:20px;border:1.5px solid var(--border);
+  background:var(--surface);font-family:var(--font);font-size:12px;font-weight:700;
+  color:var(--text-sub);cursor:pointer;transition:all .2s;
+}
+.show-more-btn:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-light);}
+.show-more-btn svg{width:12px;height:12px;}
+
+.hidden-row{display:none;}
+.hidden-row.visible{display:table-row;animation:fadeInUp .3s ease;}
+
+/* ══════════════════════════════════
+   QUESTION ANALYTICS
+══════════════════════════════════ */
+.analytics-card{
+  background:var(--surface);border-radius:var(--r-md);
+  box-shadow:var(--sh-sm);border:1px solid var(--border);
+  overflow:hidden;transition:background .25s,border-color .25s;
+}
+.analytics-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px 12px;border-bottom:1px solid var(--border);
+}
+.analytics-title{font-family:'Fredoka',sans-serif;font-size:17px;font-weight:600;}
+.analytics-list{padding:14px 20px;display:flex;flex-direction:column;gap:14px;}
+
+.q-analytics-row{display:flex;align-items:center;gap:12px;}
+.q-num-badge{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fredoka',sans-serif;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.q-num-1{background:var(--pink);}
+.q-num-2{background:var(--navy);}
+.q-num-3{background:var(--cyan);}
+.q-num-4{background:var(--amber);}
+.q-num-5{background:var(--green);}
+.q-num-6{background:#8b5cf6;}
+.q-num-7{background:#ec4899;}
+.q-num-8{background:#14b8a6;}
+
+.q-analytics-info{flex:1;min-width:0;}
+.q-analytics-text{font-size:12px;font-weight:600;color:var(--text-main);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px;}
+.q-analytics-bar-wrap{display:flex;align-items:center;gap:8px;}
+.q-analytics-bar{
+  flex:1;height:8px;border-radius:4px;background:var(--surface-3);overflow:hidden;
+}
+.q-analytics-bar-fill{
+  height:100%;border-radius:4px;background:var(--green);
+  transition:width 1s cubic-bezier(0.4,0,0.2,1);width:0;
+}
+.q-analytics-bar-fill.problematic{background:var(--pink);}
+.q-analytics-bar-fill.warning{background:var(--amber);}
+.q-analytics-pct{
+  font-family:'Fredoka',sans-serif;font-size:13px;font-weight:700;
+  color:var(--text-main);min-width:38px;text-align:left;
+}
+.problematic-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:2px 7px;border-radius:10px;font-size:9.5px;font-weight:800;
+  background:rgba(240,86,128,0.1);color:var(--pink);border:1px solid rgba(240,86,128,0.25);
+  margin-right:6px;white-space:nowrap;
+}
+
+/* ══════════════════════════════════
+   EXPORT ROW
+══════════════════════════════════ */
+.export-row{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:8px 0;
+}
+.export-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 22px;border-radius:20px;border:1.5px solid var(--border);
+  background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;
+  color:var(--text-main);cursor:pointer;transition:all .2s;
+}
+.export-btn:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-light);}
+.export-btn svg{width:14px;height:14px;}
+
+/* ══════════════════════════════════
+   TOAST
+══════════════════════════════════ */
+.toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  padding:10px 22px;border-radius:var(--r-sm);
+  background:var(--surface);color:var(--text-main);
+  font-size:13px;font-weight:600;box-shadow:var(--sh-md);
+  border:1px solid var(--border);
+  opacity:0;pointer-events:none;transition:all .3s;z-index:100;
+  display:flex;align-items:center;gap:8px;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+.toast svg{width:16px;height:16px;flex-shrink:0;}
+.toast-success svg{color:var(--green-bright);}
+.toast-info svg{color:var(--cyan);}
+
+/* ══════════════════════════════════
+   SCROLLBAR
+══════════════════════════════════ */
+.main-scroll::-webkit-scrollbar{width:6px;}
+.main-scroll::-webkit-scrollbar-track{background:transparent;}
+.main-scroll::-webkit-scrollbar-thumb{background:rgba(37,62,122,.12);border-radius:3px;}
+[data-theme="dark"] .main-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);}
+
+/* ══════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════ */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes countUp{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+
+/* ══════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════ */
+@media(max-width:900px){
+  .two-cols{grid-template-columns:1fr;}
+  .kpi-strip{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:600px){
+  .main-scroll{padding:16px 12px 60px;}
+  .kpi-strip{grid-template-columns:1fr;}
+  .students-table{font-size:12px;}
+  .students-table th,.students-table td{padding:8px 10px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ════ TOPBAR ════ -->
+<header class="topbar">
+  <nav class="bc">
+    <a href="#">מרכזי הידע</a>
+    <span class="bc-sep">&#x203A;</span>
+    <a href="#">יסודות העיצוב</a>
+    <span class="bc-sep">&#x203A;</span>
+    <a href="#">מבחן — צבע וטיפוגרפיה</a>
+    <span class="bc-sep">&#x203A;</span>
+    <span class="bc-cur">תוצאות</span>
+    <span class="bc-results-tag">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      תוצאות
+    </span>
+  </nav>
+  <div class="tb-right">
+    <button class="ib" onclick="toggleTheme()" title="ערכת נושא">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ════ RESULTS BANNER ════ -->
+<div class="edit-banner">
+  <div class="eb-l">
+    <span class="eb-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      תוצאות מבחן
+    </span>
+    <span class="ls-status published">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      פורסם
+    </span>
+    <span class="eb-dot-wrap">24 תלמידים נבחנו</span>
+  </div>
+  <div class="eb-r">
+    <button class="eb-btn" onclick="showToast('חוזר לעריכת המבחן','info')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      עריכה
+    </button>
+  </div>
+</div>
+
+<!-- ════ BODY ════ -->
+<div class="exam-body">
+
+  <!-- ══ RIGHT NAVY STRIP ══ -->
+  <div class="right-strip">
+    <div class="rs-logo">
+      <svg viewBox="0 0 40 40" fill="none" width="28" height="28">
+        <rect x="4" y="4" width="32" height="32" rx="8" fill="#38C4F2" opacity=".2"/>
+        <text x="20" y="26" text-anchor="middle" fill="#fff" font-family="Fredoka" font-size="16" font-weight="700">W</text>
+      </svg>
+    </div>
+    <div class="rs-icons"></div>
+    <div class="rs-bottom">
+      <button class="rs-btn" data-tip="ערכת המותג">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10 1.1 0 2-.9 2-2 0-.54-.21-1.03-.54-1.4-.32-.36-.52-.85-.52-1.36 0-1.1.9-2 2-2h2.34C19.85 15.24 22 13.76 22 12c0-5.52-4.48-10-10-10z"/>
+          <circle cx="6.5" cy="11.5" r="1.5" fill="currentColor" stroke="none"/>
+          <circle cx="9.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/>
+          <circle cx="14.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"/>
+          <circle cx="17.5" cy="11.5" r="1.5" fill="currentColor" stroke="none"/>
+        </svg>
+      </button>
+      <button class="rs-btn" data-tip="הגדרות">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <div class="rs-profile" title="הפרופיל שלי">א</div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <div class="main-scroll">
+    <div class="main-inner">
+
+      <!-- ── KPI STRIP ── -->
+      <div class="kpi-strip">
+        <div class="kpi-card kpi-avg">
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="17" y="4" width="4" height="17" rx="1"/></svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-label">ממוצע ציון</span>
+            <span class="kpi-value" data-target="78">0%</span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-pass">
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-label">עברו</span>
+            <span class="kpi-value" data-target="18">0</span>
+            <span class="kpi-sub">מתוך 24 תלמידים</span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-fail">
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-label">נכשלו</span>
+            <span class="kpi-value" data-target="6">0</span>
+            <span class="kpi-sub">מתוך 24 תלמידים</span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-top">
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-label">ציון גבוה ביותר</span>
+            <span class="kpi-value" data-target="100">0%</span>
+            <span class="kpi-sub">יעל כהן</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TWO COLUMNS ── -->
+      <div class="two-cols">
+
+        <!-- LEFT: Students Table -->
+        <div class="table-card">
+          <div class="table-card-header">
+            <span class="table-card-title">תוצאות תלמידים</span>
+            <span class="table-card-count">24 תלמידים</span>
+          </div>
+          <table class="students-table">
+            <thead>
+              <tr>
+                <th class="sorted" data-col="num" onclick="toggleSort(this)">#<span class="sort-arrow">&#9660;</span></th>
+                <th data-col="name" onclick="toggleSort(this)">תלמיד <span class="sort-arrow">&#9660;</span></th>
+                <th data-col="grade" onclick="toggleSort(this)">ציון <span class="sort-arrow">&#9660;</span></th>
+                <th data-col="status" onclick="toggleSort(this)">סטטוס <span class="sort-arrow">&#9660;</span></th>
+                <th data-col="attempt" onclick="toggleSort(this)">ניסיון <span class="sort-arrow">&#9660;</span></th>
+                <th data-col="date" onclick="toggleSort(this)">תאריך <span class="sort-arrow">&#9660;</span></th>
+                <th>פעולות</th>
+              </tr>
+            </thead>
+            <tbody id="studentsBody">
+              <!-- Row 1 -->
+              <tr>
+                <td>1</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#F05680,#ec4899)">יכ</div><span class="student-name">יעל כהן</span></div></td>
+                <td><span class="grade-passed">100%</span></td>
+                <td><span class="badge badge-pass">עברה</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>16.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של יעל כהן','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <!-- Row 2 -->
+              <tr>
+                <td>2</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#253E7A,#38C4F2)">רב</div><span class="student-name">רון ברק</span></div></td>
+                <td><span class="grade-passed">87.5%</span></td>
+                <td><span class="badge badge-pass">עבר</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>16.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של רון ברק','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <!-- Row 3 -->
+              <tr>
+                <td>3</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#7DC57A,#14b8a6)">מל</div><span class="student-name">מאיה לוי</span></div></td>
+                <td><span class="grade-passed">87.5%</span></td>
+                <td><span class="badge badge-pass">עברה</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>15.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של מאיה לוי','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <!-- Row 4 -->
+              <tr>
+                <td>4</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#EAD654,#F59E0B)">דכ</div><span class="student-name">דנה כהן</span></div></td>
+                <td><span class="grade-passed">75%</span></td>
+                <td><span class="badge badge-pass">עברה</span></td>
+                <td><span class="attempt-num">2</span></td>
+                <td>15.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של דנה כהן','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <!-- Row 5 -->
+              <tr>
+                <td>5</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#38C4F2,#253E7A)">אי</div><span class="student-name">אבי ישראלי</span></div></td>
+                <td><span class="grade-passed">75%</span></td>
+                <td><span class="badge badge-pass">עבר</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>15.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של אבי ישראלי','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <!-- Row 6 -->
+              <tr>
+                <td>6</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">שמ</div><span class="student-name">שרה מזרחי</span></div></td>
+                <td><span class="grade-passed">75%</span></td>
+                <td><span class="badge badge-pass">עברה</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>14.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של שרה מזרחי','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <!-- Row 7 -->
+              <tr>
+                <td>7</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#F59E0B,#F05680)">נד</div><span class="student-name">נועם דוד</span></div></td>
+                <td><span class="grade-failed">62.5%</span></td>
+                <td><span class="badge badge-fail">נכשל</span></td>
+                <td><span class="attempt-num">2</span></td>
+                <td>14.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של נועם דוד','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <!-- Row 8 -->
+              <tr>
+                <td>8</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#14b8a6,#7DC57A)">תא</div><span class="student-name">תמר אברהם</span></div></td>
+                <td><span class="grade-failed">62.5%</span></td>
+                <td><span class="badge badge-fail">נכשלה</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>14.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של תמר אברהם','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <!-- Row 9 -->
+              <tr>
+                <td>9</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#253E7A,#8b5cf6)">עג</div><span class="student-name">עומר גל</span></div></td>
+                <td><span class="grade-failed">50%</span></td>
+                <td><span class="badge badge-fail">נכשל</span></td>
+                <td><span class="attempt-num">3</span></td>
+                <td>13.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של עומר גל','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <!-- Row 10 -->
+              <tr>
+                <td>10</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#ec4899,#F59E0B)">לש</div><span class="student-name">ליאור שמש</span></div></td>
+                <td><span class="grade-failed">50%</span></td>
+                <td><span class="badge badge-fail">נכשל</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>13.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של ליאור שמש','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <!-- Hidden rows 11-24 -->
+              <tr class="hidden-row">
+                <td>11</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#7DC57A,#38C4F2)">נח</div><span class="student-name">נועה חיים</span></div></td>
+                <td><span class="grade-passed">87.5%</span></td>
+                <td><span class="badge badge-pass">עברה</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>13.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של נועה חיים','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>12</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#253E7A,#14b8a6)">יר</div><span class="student-name">יוסי רביב</span></div></td>
+                <td><span class="grade-passed">75%</span></td>
+                <td><span class="badge badge-pass">עבר</span></td>
+                <td><span class="attempt-num">2</span></td>
+                <td>13.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של יוסי רביב','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>13</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#F05680,#8b5cf6)">מש</div><span class="student-name">מיכל שלום</span></div></td>
+                <td><span class="grade-passed">87.5%</span></td>
+                <td><span class="badge badge-pass">עברה</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>12.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של מיכל שלום','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>14</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#EAD654,#7DC57A)">אכ</div><span class="student-name">אלון כץ</span></div></td>
+                <td><span class="grade-passed">75%</span></td>
+                <td><span class="badge badge-pass">עבר</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>12.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של אלון כץ','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>15</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#38C4F2,#ec4899)">רג</div><span class="student-name">רחל גולן</span></div></td>
+                <td><span class="grade-passed">100%</span></td>
+                <td><span class="badge badge-pass">עברה</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>12.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של רחל גולן','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>16</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#8b5cf6,#253E7A)">דמ</div><span class="student-name">דוד מלכה</span></div></td>
+                <td><span class="grade-passed">75%</span></td>
+                <td><span class="badge badge-pass">עבר</span></td>
+                <td><span class="attempt-num">3</span></td>
+                <td>11.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של דוד מלכה','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>17</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#14b8a6,#EAD654)">עפ</div><span class="student-name">עדי פרץ</span></div></td>
+                <td><span class="grade-passed">87.5%</span></td>
+                <td><span class="badge badge-pass">עברה</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>11.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של עדי פרץ','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>18</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#F59E0B,#253E7A)">נב</div><span class="student-name">נתן בן דוד</span></div></td>
+                <td><span class="grade-passed">75%</span></td>
+                <td><span class="badge badge-pass">עבר</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>11.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של נתן בן דוד','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>19</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#ec4899,#38C4F2)">הל</div><span class="student-name">הילה לביא</span></div></td>
+                <td><span class="grade-failed">62.5%</span></td>
+                <td><span class="badge badge-fail">נכשלה</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>10.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של הילה לביא','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>20</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#7DC57A,#F59E0B)">אע</div><span class="student-name">אמיר עזר</span></div></td>
+                <td><span class="grade-passed">75%</span></td>
+                <td><span class="badge badge-pass">עבר</span></td>
+                <td><span class="attempt-num">2</span></td>
+                <td>10.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של אמיר עזר','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>21</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#253E7A,#F05680)">שא</div><span class="student-name">שני אבידן</span></div></td>
+                <td><span class="grade-passed">87.5%</span></td>
+                <td><span class="badge badge-pass">עברה</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>10.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של שני אבידן','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>22</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#14b8a6,#253E7A)">גצ</div><span class="student-name">גיל צור</span></div></td>
+                <td><span class="grade-failed">50%</span></td>
+                <td><span class="badge badge-fail">נכשל</span></td>
+                <td><span class="attempt-num">2</span></td>
+                <td>09.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של גיל צור','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>23</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#EAD654,#ec4899)">לפ</div><span class="student-name">לנה פישר</span></div></td>
+                <td><span class="grade-passed">75%</span></td>
+                <td><span class="badge badge-pass">עברה</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>09.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של לנה פישר','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+              <tr class="hidden-row">
+                <td>24</td>
+                <td><div class="student-cell"><div class="student-avatar" style="background:linear-gradient(135deg,#F05680,#F59E0B)">אר</div><span class="student-name">איתן רוזן</span></div></td>
+                <td><span class="grade-failed">37.5%</span></td>
+                <td><span class="badge badge-fail">נכשל</span></td>
+                <td><span class="attempt-num">1</span></td>
+                <td>09.04.26</td>
+                <td><button class="view-btn" onclick="showToast('פותח תוצאות של איתן רוזן','info')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="show-more-row" id="showMoreRow">
+            <button class="show-more-btn" onclick="showMoreStudents()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              הצג עוד 14 תלמידים
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Question Analytics -->
+        <div class="analytics-card">
+          <div class="analytics-header">
+            <span class="analytics-title">ניתוח שאלות</span>
+            <span style="font-size:11px;color:var(--text-xs);font-weight:600;">8 שאלות</span>
+          </div>
+          <div class="analytics-list">
+            <!-- Q1 -->
+            <div class="q-analytics-row">
+              <div class="q-num-badge q-num-1">Q1</div>
+              <div class="q-analytics-info">
+                <div class="q-analytics-text">איזה צבע נחשב צבע משלים לכחול?</div>
+                <div class="q-analytics-bar-wrap">
+                  <div class="q-analytics-bar"><div class="q-analytics-bar-fill" data-width="92"></div></div>
+                  <span class="q-analytics-pct">92%</span>
+                </div>
+              </div>
+            </div>
+            <!-- Q2 -->
+            <div class="q-analytics-row">
+              <div class="q-num-badge q-num-2">Q2</div>
+              <div class="q-analytics-info">
+                <div class="q-analytics-text">מה ההבדל בין RGB ל-CMYK?</div>
+                <div class="q-analytics-bar-wrap">
+                  <div class="q-analytics-bar"><div class="q-analytics-bar-fill" data-width="83"></div></div>
+                  <span class="q-analytics-pct">83%</span>
+                </div>
+              </div>
+            </div>
+            <!-- Q3 -->
+            <div class="q-analytics-row">
+              <div class="q-num-badge q-num-3">Q3</div>
+              <div class="q-analytics-info">
+                <div class="q-analytics-text">מהו Serif ומתי נשתמש בו?</div>
+                <div class="q-analytics-bar-wrap">
+                  <div class="q-analytics-bar"><div class="q-analytics-bar-fill" data-width="79"></div></div>
+                  <span class="q-analytics-pct">79%</span>
+                </div>
+              </div>
+            </div>
+            <!-- Q4 — problematic -->
+            <div class="q-analytics-row">
+              <div class="q-num-badge q-num-4">Q4</div>
+              <div class="q-analytics-info">
+                <div class="q-analytics-text">מהו ההבדל בין Leading ל-Kerning? <span class="problematic-badge">שאלה בעייתית</span></div>
+                <div class="q-analytics-bar-wrap">
+                  <div class="q-analytics-bar"><div class="q-analytics-bar-fill problematic" data-width="46"></div></div>
+                  <span class="q-analytics-pct" style="color:var(--pink)">46%</span>
+                </div>
+              </div>
+            </div>
+            <!-- Q5 -->
+            <div class="q-analytics-row">
+              <div class="q-num-badge q-num-5">Q5</div>
+              <div class="q-analytics-info">
+                <div class="q-analytics-text">מהם שלושת צבעי היסוד במודל RGB?</div>
+                <div class="q-analytics-bar-wrap">
+                  <div class="q-analytics-bar"><div class="q-analytics-bar-fill" data-width="88"></div></div>
+                  <span class="q-analytics-pct">88%</span>
+                </div>
+              </div>
+            </div>
+            <!-- Q6 -->
+            <div class="q-analytics-row">
+              <div class="q-num-badge q-num-6">Q6</div>
+              <div class="q-analytics-info">
+                <div class="q-analytics-text">מהו היררכיה טיפוגרפית?</div>
+                <div class="q-analytics-bar-wrap">
+                  <div class="q-analytics-bar"><div class="q-analytics-bar-fill" data-width="71"></div></div>
+                  <span class="q-analytics-pct">71%</span>
+                </div>
+              </div>
+            </div>
+            <!-- Q7 -->
+            <div class="q-analytics-row">
+              <div class="q-num-badge q-num-7">Q7</div>
+              <div class="q-analytics-info">
+                <div class="q-analytics-text">מהם צבעים אנלוגיים?</div>
+                <div class="q-analytics-bar-wrap">
+                  <div class="q-analytics-bar"><div class="q-analytics-bar-fill warning" data-width="67"></div></div>
+                  <span class="q-analytics-pct">67%</span>
+                </div>
+              </div>
+            </div>
+            <!-- Q8 -->
+            <div class="q-analytics-row">
+              <div class="q-num-badge q-num-8">Q8</div>
+              <div class="q-analytics-info">
+                <div class="q-analytics-text">מהו הכלל של 60-30-10 בצבע?</div>
+                <div class="q-analytics-bar-wrap">
+                  <div class="q-analytics-bar"><div class="q-analytics-bar-fill warning" data-width="54"></div></div>
+                  <span class="q-analytics-pct">54%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /two-cols -->
+
+      <!-- ── EXPORT ROW ── -->
+      <div class="export-row">
+        <button class="export-btn" onclick="showToast('מייצא תוצאות לקובץ CSV...','info')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          ייצוא תוצאות
+        </button>
+        <button class="export-btn" onclick="showToast('שולח תוצאות למייל של כל התלמידים...','info')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          שלח תוצאות למייל
+        </button>
+      </div>
+
+    </div><!-- /main-inner -->
+  </div><!-- /main-scroll -->
+
+</div><!-- /exam-body -->
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span id="toastText"></span>
+</div>
+
+<script>
+/* ── Theme toggle ── */
+function toggleTheme(){
+  const html=document.documentElement;
+  html.dataset.theme=html.dataset.theme==='dark'?'light':'dark';
+}
+
+/* ── Toast ── */
+let toastTimeout;
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  const txt=document.getElementById('toastText');
+  t.className='toast toast-'+type;
+  txt.textContent=msg;
+  if(type==='info'){
+    t.querySelector('svg').innerHTML='<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>';
+  } else {
+    t.querySelector('svg').innerHTML='<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>';
+  }
+  clearTimeout(toastTimeout);
+  requestAnimationFrame(()=>t.classList.add('show'));
+  toastTimeout=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+/* ── Show more students ── */
+function showMoreStudents(){
+  const rows=document.querySelectorAll('.hidden-row');
+  let delay=0;
+  rows.forEach(row=>{
+    setTimeout(()=>{
+      row.classList.add('visible');
+    },delay);
+    delay+=50;
+  });
+  document.getElementById('showMoreRow').style.display='none';
+}
+
+/* ── Sort toggle ── */
+function toggleSort(th){
+  document.querySelectorAll('.students-table th').forEach(h=>{
+    if(h!==th) h.classList.remove('sorted');
+  });
+  th.classList.toggle('sorted');
+  const arrow=th.querySelector('.sort-arrow');
+  if(arrow){
+    arrow.innerHTML=th.classList.contains('sorted')?'&#9650;':'&#9660;';
+  }
+  showToast('ממיין לפי '+th.textContent.trim().replace(/[▲▼]/g,''),'info');
+}
+
+/* ── KPI count-up animation ── */
+function animateKPIs(){
+  const kpis=document.querySelectorAll('.kpi-value[data-target]');
+  kpis.forEach(el=>{
+    const target=parseInt(el.dataset.target);
+    const isPercent=el.closest('.kpi-avg')||el.closest('.kpi-top');
+    const duration=1200;
+    const start=performance.now();
+    function step(now){
+      const elapsed=now-start;
+      const progress=Math.min(elapsed/duration,1);
+      const eased=1-Math.pow(1-progress,3);
+      const current=Math.round(target*eased);
+      el.textContent=isPercent?current+'%':current;
+      if(progress<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+/* ── Question bars animation ── */
+function animateBars(){
+  const bars=document.querySelectorAll('.q-analytics-bar-fill');
+  bars.forEach((bar,i)=>{
+    setTimeout(()=>{
+      bar.style.width=bar.dataset.width+'%';
+    },200+i*100);
+  });
+}
+
+/* ── Init ── */
+window.addEventListener('DOMContentLoaded',()=>{
+  animateKPIs();
+  animateBars();
+});
+</script>
+</body>
+</html>
