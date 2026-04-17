@@ -292,15 +292,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
           </svg>
           <div class="ring-text" id="ringText">0%</div>
         </div>
-        <div class="result-status passed" id="resultStatus">עברת!</div>
+        <img src="../BOARDi/SVG/2.svg" alt="BOARDi" style="width:90px;filter:drop-shadow(0 6px 14px rgba(37,62,122,0.2));margin-bottom:8px;">
+        <div class="result-status passed" id="resultStatus">כל הכבוד, עברת!</div>
         <div class="result-score">6/8 תשובות נכונות</div>
         <div class="result-threshold">ציון עובר: 70%</div>
       </div>
 
-      <!-- BLOCKING BANNER -->
+      <!-- SUCCESS BANNER -->
       <div class="blocking-banner passed">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        מבחן חוסם — עברת! השיעור הבא נפתח
+        השיעור הבא נפתח — המשך ללמוד!
       </div>
 
       <!-- BREAKDOWN -->
@@ -309,13 +310,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 
       <!-- ACTIONS -->
       <div class="actions">
-        <button class="btn-primary" onclick="window.location.href='#'">
+        <button class="btn-primary" onclick="showToast('עובר לשיעור הבא...')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-          חזור לקורס
-        </button>
-        <button class="btn-ghost" onclick="window.location.href='מבחן - מילוי.html'">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-          נסה שוב
+          לשיעור הבא
         </button>
       </div>
 
@@ -420,9 +417,39 @@ function showToast(text){
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
+/* ── Confetti ── */
+function launchConfetti(){
+  const colors=['#38C4F2','#F05680','#7DC57A','#EAD654','#253E7A','#ffffff'];
+  const container=document.createElement('div');
+  container.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;';
+  document.body.appendChild(container);
+  for(let i=0;i<80;i++){
+    const p=document.createElement('div');
+    const c=colors[Math.floor(Math.random()*colors.length)];
+    const size=Math.random()*8+4;
+    const x=Math.random()*100;
+    const dur=Math.random()*2+1.5;
+    const delay=Math.random()*0.8;
+    const rot=Math.random()*720-360;
+    const shape=Math.random()>0.5?'50%':'2px';
+    p.style.cssText=`position:absolute;top:-20px;left:${x}%;width:${size}px;height:${size*0.6}px;background:${c};border-radius:${shape};opacity:0.9;animation:confettiFall ${dur}s ease-in ${delay}s forwards;`;
+    container.appendChild(p);
+  }
+  setTimeout(()=>container.remove(),4000);
+}
+
+const confettiStyle=document.createElement('style');
+confettiStyle.textContent=`
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1;}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0;}
+}`;
+document.head.appendChild(confettiStyle);
+
 /* ── Init ── */
 renderBreakdown();
 animateRing();
+setTimeout(launchConfetti,800);
 </script>
 </body>
 </html>
