@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>עריכת תשחץ | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ── DESIGN TOKENS ───────────────────────────── */
+  :root {
+    --navy:        #253E7A;
+    --navy-dark:   #1a2f5e;
+    --navy-light:  #3a5499;
+    --cyan:        #38C4F2;
+    --cyan-light:  rgba(56,196,242,0.12);
+    --light-blue:  #E3F4FD;
+    --pink:        #F05680;
+    --pink-light:  rgba(240,86,128,0.12);
+    --yellow:      #EAD654;
+    --green:       #7DC57A;
+    --green-light: rgba(125,197,122,0.12);
+    --white:       #FFFFFF;
+    --font-he:     'Heebo', sans-serif;
+    --font-en:     'Fredoka', sans-serif;
+    --radius-sm:   10px;
+    --radius-md:   16px;
+    --radius-lg:   22px;
+
+    --bg:           #F0F6FF;
+    --surface:      #FFFFFF;
+    --surface-2:    #f5f8ff;
+    --border:       rgba(37,62,122,0.1);
+    --border-hover: rgba(56,196,242,0.4);
+    --text-main:    #1a2f5e;
+    --text-sub:     rgba(37,62,122,0.55);
+    --text-light:   rgba(37,62,122,0.38);
+    --shadow-sm:    0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:    0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:    0 16px 48px rgba(37,62,122,0.14);
+
+    --sidebar-bg:        var(--navy);
+    --sidebar-border:    rgba(255,255,255,0.1);
+    --sidebar-hover:     rgba(255,255,255,0.08);
+    --sidebar-active-bg: rgba(56,196,242,0.2);
+    --sidebar-active-cl: var(--cyan);
+    --sidebar-text:      rgba(255,255,255,0.65);
+  }
+
+  [data-theme="dark"] {
+    --bg:           #0c1424;
+    --surface:      #131e35;
+    --surface-2:    #1a2740;
+    --border:       rgba(255,255,255,0.07);
+    --border-hover: rgba(56,196,242,0.4);
+    --text-main:    #dde5f5;
+    --text-sub:     rgba(221,229,245,0.5);
+    --text-light:   rgba(221,229,245,0.3);
+    --shadow-sm:    0 2px 12px rgba(0,0,0,0.3);
+    --shadow-md:    0 6px 28px rgba(0,0,0,0.4);
+    --shadow-lg:    0 16px 48px rgba(0,0,0,0.55);
+
+    --sidebar-bg:        #0d1628;
+    --sidebar-border:    rgba(255,255,255,0.05);
+    --sidebar-hover:     rgba(255,255,255,0.06);
+    --sidebar-active-bg: rgba(56,196,242,0.15);
+    --sidebar-active-cl: var(--cyan);
+    --sidebar-text:      rgba(255,255,255,0.55);
+    --light-blue:        rgba(56,196,242,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── THEME TOGGLE ────────────────────────────── */
+  .icon-btn {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+    color: var(--text-sub); position: relative;
+  }
+  .icon-btn:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="dark"] .icon-sun  { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* ── SIDEBAR (220px teacher) ─────────────────── */
+  .sidebar {
+    width: 220px;
+    background: var(--sidebar-bg);
+    border-left: 1px solid var(--sidebar-border);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 0;
+    flex-shrink: 0;
+    position: fixed;
+    right: 0; top: 0; bottom: 0;
+    z-index: 50;
+    transition: background 0.3s;
+  }
+
+  .sidebar-logo {
+    padding: 16px 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sidebar-logo img { width: 150px; object-fit: contain; display: block; }
+
+  .sidebar-section { padding: 8px 12px; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: var(--sidebar-text);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .nav-item:hover { background: var(--sidebar-hover); color: white; }
+  .nav-item.active {
+    background: var(--sidebar-active-bg);
+    color: var(--sidebar-active-cl);
+    font-weight: 700;
+  }
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .mode-switcher { margin-bottom: 10px; padding: 10px 12px; }
+  .mode-switcher-label {
+    font-size: 10px; font-weight: 700;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    margin-bottom: 6px; padding-right: 2px;
+  }
+  .mode-toggle-row {
+    display: flex; background: rgba(0,0,0,0.25);
+    border-radius: 8px; padding: 3px; gap: 2px;
+  }
+  .mode-btn {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px;
+    padding: 6px 4px; border-radius: 6px; border: none;
+    font-family: var(--font-he); font-size: 12px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    color: rgba(255,255,255,0.45); background: transparent; white-space: nowrap;
+  }
+  .mode-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .mode-btn.active { background: rgba(56,196,242,0.25); color: var(--cyan); }
+  .mode-btn:hover:not(.active) { color: rgba(255,255,255,0.7); }
+
+  .profile-mini {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: background 0.2s;
+  }
+  .profile-mini:hover { background: rgba(255,255,255,0.08); }
+  .avatar-sm {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--navy-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+  .profile-mini-name { font-size: 13px; font-weight: 600; color: white; }
+  .profile-mini-role { font-size: 11px; color: rgba(255,255,255,0.45); }
+
+  /* ── MAIN ────────────────────────────────────── */
+  .main { margin-right: 220px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ── TOP BAR ─────────────────────────────────── */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 40;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .topbar-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .breadcrumb-link { color: var(--text-sub); cursor: pointer; transition: color 0.2s; text-decoration: none; }
+  .breadcrumb-link:hover { color: var(--navy); }
+  .breadcrumb-sep { color: var(--text-light); font-size: 14px; }
+  .breadcrumb-current { color: var(--text-main); font-weight: 700; }
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+  .lang-toggle {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer; font-size: 20px;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s, transform 0.15s; line-height: 1;
+  }
+  .lang-toggle:hover { border-color: var(--cyan); transform: scale(1.08); }
+
+  /* ── PAGE BODY ───────────────────────────────── */
+  .page-body { padding: 20px 32px 32px; flex: 1; }
+
+  .page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; gap: 16px;
+  }
+  .page-title-wrap { display: flex; align-items: center; gap: 12px; }
+  .boardi-title-img {
+    width: 56px; flex-shrink: 0;
+    filter: drop-shadow(0 4px 12px rgba(37,62,122,0.18));
+  }
+  .page-title { font-size: 22px; font-weight: 900; color: var(--text-main); line-height: 1.2; }
+  .page-subtitle { font-size: 13px; color: var(--text-sub); margin-top: 2px; }
+
+  .header-actions { display: flex; gap: 10px; }
+
+  /* ── BUTTONS ─────────────────────────────────── */
+  .btn-primary {
+    background: var(--navy);
+    color: white; border: none;
+    padding: 10px 24px; border-radius: 50px;
+    font-family: var(--font-he); font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 16px rgba(37,62,122,0.2);
+  }
+  .btn-primary:hover { background: var(--navy-light); transform: translateY(-1px); }
+  .btn-primary svg { width: 16px; height: 16px; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-main); border: 1.5px solid var(--border);
+    padding: 10px 24px; border-radius: 50px;
+    font-family: var(--font-he); font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+  .btn-ghost svg { width: 16px; height: 16px; }
+
+  /* ── SETTINGS BAR ────────────────────────────── */
+  .settings-bar {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 18px 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .setting-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .setting-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+  }
+
+  .setting-select {
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    min-width: 100px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23253E7A' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 10px center;
+    padding-left: 28px;
+  }
+  .setting-select:focus { outline: none; border-color: var(--cyan); }
+  [data-theme="dark"] .setting-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23dde5f5' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  }
+
+  /* Checkboxes */
+  .setting-checkboxes {
+    display: flex; gap: 12px;
+  }
+  .check-item {
+    display: flex; align-items: center; gap: 5px;
+    cursor: pointer; font-size: 13px; font-weight: 500;
+    color: var(--text-main);
+  }
+  .check-item input[type="checkbox"] { display: none; }
+  .check-box {
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .check-box svg { width: 12px; height: 12px; opacity: 0; color: white; transition: opacity 0.15s; }
+  .check-item input:checked + .check-box {
+    background: var(--cyan); border-color: var(--cyan);
+  }
+  .check-item input:checked + .check-box svg { opacity: 1; }
+
+  /* Toggle switch */
+  .toggle-switch {
+    position: relative;
+    width: 42px; height: 24px;
+    background: var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle-switch.on { background: var(--cyan); }
+  .toggle-knob {
+    position: absolute;
+    top: 3px; right: 3px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: white;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+  .toggle-switch.on .toggle-knob { transform: translateX(-18px); }
+
+  /* ── DIVIDER ─────────────────────────────────── */
+  .settings-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  /* ── WORD CARDS ──────────────────────────────── */
+  .words-section {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .words-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .words-title {
+    font-size: 16px; font-weight: 800;
+    color: var(--text-main);
+  }
+  .words-count {
+    font-size: 13px; font-weight: 600;
+    color: var(--text-sub);
+    background: var(--surface-2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .word-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .word-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    border: 1.5px solid var(--border);
+    transition: all 0.2s;
+  }
+  .word-card:hover { border-color: var(--border-hover); }
+
+  .word-card-num {
+    font-family: var(--font-en);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-light);
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .word-card-input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 600;
+    transition: border-color 0.2s;
+    min-width: 0;
+  }
+  .word-card-input:focus { outline: none; border-color: var(--cyan); }
+  .word-card-input::placeholder { color: var(--text-light); font-weight: 400; }
+
+  .word-card-hint {
+    flex: 1.5;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 500;
+    transition: border-color 0.2s;
+    min-width: 0;
+  }
+  .word-card-hint:focus { outline: none; border-color: var(--cyan); }
+  .word-card-hint::placeholder { color: var(--text-light); font-weight: 400; }
+
+  .word-card-delete {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .word-card-delete:hover { background: var(--pink-light); color: var(--pink); border-color: rgba(240,86,128,0.2); }
+  .word-card-delete svg { width: 16px; height: 16px; }
+
+  /* Add word button */
+  .add-word-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    border: 2px dashed var(--border);
+    background: transparent;
+    color: var(--text-sub);
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .add-word-btn:hover { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-light); }
+  .add-word-btn svg { width: 18px; height: 18px; }
+
+  /* ── PREVIEW MODAL ───────────────────────────── */
+  .preview-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 200;
+    background: rgba(0,0,0,0.5);
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .preview-overlay.show { display: flex; }
+
+  .preview-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-lg);
+    max-width: 520px;
+    width: 90%;
+    text-align: center;
+  }
+  .preview-title {
+    font-size: 18px; font-weight: 800;
+    margin-bottom: 16px; color: var(--text-main);
+  }
+  .preview-grid-wrap {
+    display: flex; justify-content: center;
+    margin-bottom: 16px;
+  }
+  #previewCanvas {
+    border-radius: 12px;
+    max-width: 100%;
+  }
+  .preview-words {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    justify-content: center; margin-bottom: 16px;
+  }
+  .preview-word-chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: var(--cyan-light);
+    border: 1px solid rgba(56,196,242,0.25);
+    font-size: 13px; font-weight: 600;
+    color: var(--text-main);
+  }
+  .preview-close {
+    padding: 10px 28px;
+    border-radius: 50px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .preview-close:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  /* ── SAVE TOAST ──────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--navy);
+    color: white;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-size: 14px; font-weight: 700;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 300;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast svg { width: 18px; height: 18px; color: var(--green); }
+
+  /* ── RESPONSIVE ──────────────────────────────── */
+  @media (max-width: 900px) {
+    .settings-bar { gap: 14px; }
+    .word-card { flex-wrap: wrap; }
+    .word-card-hint { flex-basis: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR (220px teacher) -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD">
+  </div>
+
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      לוח הבקרה
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>
+      בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      הגדרות
+    </a>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <div class="mode-switcher-label">מצב תצוגה</div>
+      <div class="mode-toggle-row">
+        <button class="mode-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+          תלמיד
+        </button>
+        <button class="mode-btn active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          מרצה
+        </button>
+      </div>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div>
+        <div class="profile-mini-name">אלון</div>
+        <div class="profile-mini-role">מרצה</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <a class="breadcrumb-link" href="#">מרכזי הידע</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <a class="breadcrumb-link" href="#">יסודות העיצוב</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <a class="breadcrumb-link" href="#">משחק: תשחץ</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <span class="breadcrumb-current">עריכה</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="lang-toggle" title="שפה">
+        <span>&#x1F1EE;&#x1F1F1;</span>
+      </div>
+      <div class="icon-btn" id="themeToggle" title="מצב כהה / בהיר">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="page-title-wrap">
+        <img src="../BOARDi/SVG/4.svg" alt="BOARDi" class="boardi-title-img">
+        <div>
+          <h1 class="page-title">עריכת משחק תשחץ</h1>
+          <p class="page-subtitle">הגדר מילים, רמזים והגדרות משחק</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-ghost" id="previewBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          תצוגה מקדימה
+        </button>
+        <button class="btn-primary" id="saveBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          שמור משחק
+        </button>
+      </div>
+    </div>
+
+    <!-- SETTINGS BAR -->
+    <div class="settings-bar">
+      <div class="setting-group">
+        <span class="setting-label">זמן למשחק:</span>
+        <select class="setting-select" id="settingTime">
+          <option value="30">30 שניות</option>
+          <option value="60" selected>60 שניות</option>
+          <option value="90">90 שניות</option>
+          <option value="120">120 שניות</option>
+        </select>
+      </div>
+
+      <div class="settings-divider"></div>
+
+      <div class="setting-group">
+        <span class="setting-label">גודל רשת:</span>
+        <select class="setting-select" id="settingGrid">
+          <option value="8">8&times;8</option>
+          <option value="10">10&times;10</option>
+          <option value="11" selected>11&times;11</option>
+          <option value="13">13&times;13</option>
+        </select>
+      </div>
+
+      <div class="settings-divider"></div>
+
+      <div class="setting-group">
+        <span class="setting-label">כיוונים:</span>
+        <div class="setting-checkboxes">
+          <label class="check-item">
+            <input type="checkbox" checked id="dirHoriz">
+            <span class="check-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            אופקי
+          </label>
+          <label class="check-item">
+            <input type="checkbox" checked id="dirVert">
+            <span class="check-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            אנכי
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="dirDiag">
+            <span class="check-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            אלכסוני
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-divider"></div>
+
+      <div class="setting-group">
+        <span class="setting-label">הצג רמזים:</span>
+        <div class="toggle-switch on" id="toggleHints">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORDS SECTION -->
+    <div class="words-section">
+      <div class="words-header">
+        <span class="words-title">רשימת מילים</span>
+        <span class="words-count" id="wordsCount">15 מילים</span>
+      </div>
+
+      <div class="word-cards" id="wordCards">
+        <!-- filled by JS -->
+      </div>
+
+      <button class="add-word-btn" id="addWordBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        הוסף מילה
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div class="preview-overlay" id="previewOverlay">
+  <div class="preview-card">
+    <div class="preview-title">תצוגה מקדימה</div>
+    <div class="preview-grid-wrap">
+      <canvas id="previewCanvas" width="330" height="330"></canvas>
+    </div>
+    <div class="preview-words" id="previewWords"></div>
+    <button class="preview-close" id="previewClose">סגור</button>
+  </div>
+</div>
+
+<!-- SAVE TOAST -->
+<div class="toast" id="saveToast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  המשחק נשמר בהצלחה!
+</div>
+
+<script>
+// ── THEME TOGGLE ──────────────────────────────────
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const html = document.documentElement;
+  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+});
+
+// ── HINTS TOGGLE ──────────────────────────────────
+document.getElementById('toggleHints').addEventListener('click', function() {
+  this.classList.toggle('on');
+});
+
+// ── SAMPLE WORDS ──────────────────────────────────
+const SAMPLE_WORDS = [
+  { word: 'עיצוב', hint: 'מה שאנחנו לומדים' },
+  { word: 'צבע', hint: 'אלמנט ויזואלי בסיסי' },
+  { word: 'פונט', hint: 'סוג אות' },
+  { word: 'לוגו', hint: 'סמל של מותג' },
+  { word: 'גריד', hint: 'רשת לסידור' },
+  { word: 'פיקסל', hint: 'נקודה במסך' },
+  { word: 'מרווח', hint: 'רווח לבן' },
+  { word: 'קו', hint: 'אלמנט בסיסי בגרפיקה' },
+  { word: 'צורה', hint: 'עיגול, ריבוע, משולש' },
+  { word: 'מותג', hint: 'זהות עסקית' },
+  { word: 'דף', hint: 'עמוד עיצוב' },
+  { word: 'סמל', hint: 'אייקון' },
+  { word: 'רקע', hint: 'מה שמאחורי התוכן' },
+  { word: 'גודל', hint: 'מידה של אלמנט' },
+  { word: 'שכבה', hint: 'Layer בפוטושופ' },
+];
+
+let words = [...SAMPLE_WORDS];
+
+function renderWords() {
+  const container = document.getElementById('wordCards');
+  container.innerHTML = '';
+  words.forEach((w, i) => {
+    const card = document.createElement('div');
+    card.className = 'word-card';
+    card.innerHTML = `
+      <span class="word-card-num">${i + 1}</span>
+      <input type="text" class="word-card-input" value="${w.word}" placeholder="מילה" data-idx="${i}" data-field="word">
+      <input type="text" class="word-card-hint" value="${w.hint}" placeholder="רמז" data-idx="${i}" data-field="hint">
+      <button class="word-card-delete" title="מחק" data-idx="${i}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </button>
+    `;
+    container.appendChild(card);
+  });
+  document.getElementById('wordsCount').textContent = words.length + ' מילים';
+
+  // Event listeners
+  container.querySelectorAll('.word-card-input, .word-card-hint').forEach(inp => {
+    inp.addEventListener('input', (e) => {
+      const idx = parseInt(e.target.dataset.idx);
+      const field = e.target.dataset.field;
+      words[idx][field] = e.target.value;
+    });
+  });
+  container.querySelectorAll('.word-card-delete').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const idx = parseInt(e.currentTarget.dataset.idx);
+      words.splice(idx, 1);
+      renderWords();
+    });
+  });
+}
+
+document.getElementById('addWordBtn').addEventListener('click', () => {
+  words.push({ word: '', hint: '' });
+  renderWords();
+  // Focus the new input
+  const inputs = document.querySelectorAll('.word-card-input');
+  if (inputs.length) inputs[inputs.length - 1].focus();
+});
+
+// ── PREVIEW ───────────────────────────────────────
+const ALEPH_BET = 'אבגדהוזחטיכלמנסעפצקרשת';
+
+function generatePreview() {
+  const gridSize = parseInt(document.getElementById('settingGrid').value);
+  const validWords = words.filter(w => w.word.trim().length > 0);
+
+  const dirs = [];
+  if (document.getElementById('dirHoriz').checked) {
+    dirs.push({ dr: 0, dc: -1 }, { dr: 0, dc: 1 });
+  }
+  if (document.getElementById('dirVert').checked) {
+    dirs.push({ dr: 1, dc: 0 }, { dr: -1, dc: 0 });
+  }
+  if (document.getElementById('dirDiag').checked) {
+    dirs.push({ dr: 1, dc: -1 }, { dr: 1, dc: 1 }, { dr: -1, dc: -1 }, { dr: -1, dc: 1 });
+  }
+  if (dirs.length === 0) dirs.push({ dr: 0, dc: -1 });
+
+  // Build grid
+  const grid = Array.from({ length: gridSize }, () =>
+    Array.from({ length: gridSize }, () => '')
+  );
+
+  const placed = [];
+  const sorted = [...validWords].sort((a, b) => b.word.length - a.word.length);
+
+  for (const { word } of sorted) {
+    let ok = false;
+    const shuffledDirs = [...dirs].sort(() => Math.random() - 0.5);
+    for (let attempt = 0; attempt < 400 && !ok; attempt++) {
+      const dir = shuffledDirs[attempt % shuffledDirs.length];
+      const r = Math.floor(Math.random() * gridSize);
+      const c = Math.floor(Math.random() * gridSize);
+      const endR = r + dir.dr * (word.length - 1);
+      const endC = c + dir.dc * (word.length - 1);
+      if (endR < 0 || endR >= gridSize || endC < 0 || endC >= gridSize) continue;
+      let conflict = false;
+      const cells = [];
+      for (let i = 0; i < word.length; i++) {
+        const cr = r + dir.dr * i, cc = c + dir.dc * i;
+        if (grid[cr][cc] && grid[cr][cc] !== word[i]) { conflict = true; break; }
+        cells.push({ r: cr, c: cc });
+      }
+      if (conflict) continue;
+      for (let i = 0; i < word.length; i++) {
+        grid[cells[i].r][cells[i].c] = word[i];
+      }
+      placed.push({ word, cells });
+      ok = true;
+    }
+  }
+
+  // Fill blanks
+  for (let r = 0; r < gridSize; r++)
+    for (let c = 0; c < gridSize; c++)
+      if (!grid[r][c])
+        grid[r][c] = ALEPH_BET[Math.floor(Math.random() * ALEPH_BET.length)];
+
+  // Draw preview
+  const canvas = document.getElementById('previewCanvas');
+  const ctx = canvas.getContext('2d');
+  const cellSize = Math.floor(330 / gridSize);
+  canvas.width = cellSize * gridSize;
+  canvas.height = cellSize * gridSize;
+
+  const dark = document.documentElement.dataset.theme === 'dark';
+
+  ctx.fillStyle = dark ? '#1a2740' : '#FFFFFF';
+  ctx.beginPath();
+  ctx.roundRect(0, 0, canvas.width, canvas.height, 10);
+  ctx.fill();
+
+  // Grid lines
+  ctx.strokeStyle = dark ? 'rgba(255,255,255,0.06)' : 'rgba(37,62,122,0.08)';
+  ctx.lineWidth = 1;
+  for (let i = 1; i < gridSize; i++) {
+    ctx.beginPath(); ctx.moveTo(i * cellSize, 0); ctx.lineTo(i * cellSize, canvas.height); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, i * cellSize); ctx.lineTo(canvas.width, i * cellSize); ctx.stroke();
+  }
+
+  // Highlight placed words
+  const colors = [
+    'rgba(56,196,242,0.3)',
+    'rgba(240,86,128,0.25)',
+    'rgba(125,197,122,0.3)',
+    'rgba(234,214,84,0.3)',
+    'rgba(37,62,122,0.15)',
+  ];
+  placed.forEach((p, idx) => {
+    ctx.fillStyle = colors[idx % colors.length];
+    for (const { r, c } of p.cells) {
+      ctx.beginPath();
+      ctx.roundRect(c * cellSize + 2, r * cellSize + 2, cellSize - 4, cellSize - 4, 4);
+      ctx.fill();
+    }
+  });
+
+  // Letters
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = `600 ${Math.round(cellSize * 0.45)}px Heebo, sans-serif`;
+  ctx.fillStyle = dark ? 'rgba(221,229,245,0.8)' : '#253E7A';
+  for (let r = 0; r < gridSize; r++) {
+    for (let c = 0; c < gridSize; c++) {
+      ctx.fillText(grid[r][c], c * cellSize + cellSize / 2, r * cellSize + cellSize / 2 + 1);
+    }
+  }
+
+  // Word chips
+  const wordsContainer = document.getElementById('previewWords');
+  wordsContainer.innerHTML = '';
+  placed.forEach(p => {
+    const chip = document.createElement('span');
+    chip.className = 'preview-word-chip';
+    chip.textContent = p.word;
+    wordsContainer.appendChild(chip);
+  });
+
+  // Show overlay
+  document.getElementById('previewOverlay').classList.add('show');
+}
+
+document.getElementById('previewBtn').addEventListener('click', generatePreview);
+document.getElementById('previewClose').addEventListener('click', () => {
+  document.getElementById('previewOverlay').classList.remove('show');
+});
+document.getElementById('previewOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) {
+    document.getElementById('previewOverlay').classList.remove('show');
+  }
+});
+
+// ── SAVE ──────────────────────────────────────────
+document.getElementById('saveBtn').addEventListener('click', () => {
+  const toast = document.getElementById('saveToast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+});
+
+// ── INIT ──────────────────────────────────────────
+renderWords();
+</script>
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light" data-mode="teacher">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>עריכת משחק: איש תלוי | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --cyan-light:rgba(56,196,242,0.13);
+  --pink:#F05680; --pink-light:rgba(240,86,128,0.12); --green:#7DC57A; --green-light:rgba(125,197,122,0.12);
+  --green-bright:#22c55e; --yellow:#EAD654; --amber:#F59E0B;
+  --font:'Heebo',sans-serif; --font-brand:'Fredoka',sans-serif;
+  --r-xs:6px; --r-sm:10px; --r-md:16px; --r-lg:22px;
+  --bg:#EBF3FB;
+  --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+  --border:rgba(37,62,122,0.1); --border-mid:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.52); --text-xs:rgba(37,62,122,0.35);
+  --sh-sm:0 2px 8px rgba(37,62,122,0.08); --sh-md:0 4px 20px rgba(37,62,122,0.12);
+}
+[data-theme="dark"] {
+  --navy-dark:#111e3a;
+  --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.07); --border-mid:rgba(255,255,255,0.12);
+  --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.48); --text-xs:rgba(221,229,245,0.28);
+  --sh-sm:0 2px 12px rgba(0,0,0,0.3); --sh-md:0 6px 24px rgba(0,0,0,0.4);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text-main);
+  height:100dvh;display:flex;flex-direction:column;overflow:hidden;
+  transition:background .25s,color .25s;}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  height:48px;background:var(--surface);border-bottom:1px solid var(--border-mid);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+  flex-shrink:0;box-shadow:var(--sh-sm);z-index:30;transition:background .25s,border-color .25s;
+}
+.bc{display:flex;align-items:center;gap:5px;font-size:12.5px;flex-wrap:wrap;}
+.bc a{color:var(--text-sub);text-decoration:none;transition:color .15s;}
+.bc a:hover{color:var(--text-main);}
+.bc-sep{color:var(--text-xs);}
+.bc-cur{color:var(--text-main);font-weight:700;}
+.bc-edit-tag{
+  display:inline-flex;align-items:center;gap:3px;padding:2px 8px;
+  border-radius:20px;background:var(--amber);color:#fff;font-size:10px;font-weight:800;
+}
+.tb-right{display:flex;align-items:center;gap:7px;}
+.ib{width:32px;height:32px;border-radius:var(--r-xs);border:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-sub);transition:all .18s;}
+.ib:hover{background:var(--cyan-light);color:var(--navy);border-color:var(--cyan);}
+.ib svg{width:14px;height:14px;}
+.icon-sun{display:none;}.icon-moon{display:block;}
+[data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+/* ══ EDIT BANNER ══ */
+.edit-banner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:5px 18px;background:var(--surface);
+  border-bottom:2px solid var(--amber);
+  flex-shrink:0;gap:12px;transition:background .25s;
+}
+.eb-l{display:flex;align-items:center;gap:10px;}
+.eb-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:var(--amber);}
+.eb-badge svg{width:11px;height:11px;}
+.ls-status{
+  display:flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800;
+  border:1.5px solid;
+}
+.ls-status.draft{background:rgba(234,214,84,0.13);color:#92700a;border-color:rgba(234,214,84,0.4);}
+[data-theme="dark"] .ls-status.draft{color:#e6c94a;}
+.ls-status.published{background:rgba(34,197,94,0.1);color:#16a34a;border-color:rgba(34,197,94,0.3);}
+.eb-r{display:flex;align-items:center;gap:6px;}
+.eb-pub{display:flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;
+  border:none;font-family:var(--font);font-size:11.5px;font-weight:700;
+  background:var(--navy);color:#fff;cursor:pointer;transition:all .2s;}
+.eb-pub:hover{background:var(--cyan);}
+
+/* ══ BODY LAYOUT ══ */
+.editor-body{flex:1;display:flex;overflow:hidden;}
+
+/* ══ SIDEBAR (teacher 220px) ══ */
+.sidebar{
+  width:220px;background:var(--navy-dark);border-left:1px solid rgba(255,255,255,0.08);
+  min-height:100%;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;
+  position:relative;z-index:20;transition:background .25s;
+}
+[data-theme="dark"] .sidebar{background:#0d1628;}
+.sidebar-logo{
+  padding:16px 16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);
+  margin-bottom:12px;display:flex;align-items:center;justify-content:center;
+}
+.sidebar-logo svg{width:150px;height:auto;}
+.sidebar-section{padding:8px 12px;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-sm);
+  cursor:pointer;transition:all .2s;text-decoration:none;
+  color:rgba(255,255,255,0.55);font-size:14px;font-weight:500;
+}
+.nav-item:hover{background:rgba(255,255,255,0.08);color:white;}
+.nav-item.active{background:rgba(56,196,242,0.2);color:var(--cyan);font-weight:700;}
+.nav-item svg{width:18px;height:18px;flex-shrink:0;}
+
+.sidebar-bottom{
+  margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);
+}
+.mode-switcher{margin-bottom:10px;padding:0 0 10px;}
+.mode-switcher-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:.8px;margin-bottom:6px;padding-right:2px;}
+.mode-toggle-row{display:flex;background:rgba(0,0,0,0.25);border-radius:8px;padding:3px;gap:2px;}
+.mode-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+  padding:6px 4px;border-radius:6px;border:none;font-family:var(--font);
+  font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;
+  color:rgba(255,255,255,0.45);background:transparent;white-space:nowrap;
+}
+.mode-btn svg{width:13px;height:13px;flex-shrink:0;}
+.mode-btn.active{background:rgba(56,196,242,0.25);color:var(--cyan);}
+.mode-btn:hover:not(.active){color:rgba(255,255,255,0.7);}
+
+.profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);cursor:pointer;transition:background .2s;}
+.profile-mini:hover{background:rgba(255,255,255,0.08);}
+.avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+.profile-mini-name{font-size:13px;font-weight:600;color:white;}
+.profile-mini-role{font-size:11px;color:rgba(255,255,255,0.45);}
+
+/* ══ MAIN SCROLL ══ */
+.main-scroll{
+  flex:1;overflow-y:auto;padding:24px 32px 100px;background:var(--bg);transition:background .25s;
+}
+.main-inner{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:18px;}
+
+/* ══ HEADER CARD ══ */
+.header-card{
+  background:var(--surface);border-radius:var(--r-md);padding:22px 24px;
+  box-shadow:var(--sh-sm);border:1px solid var(--border);
+  display:flex;align-items:center;gap:16px;transition:background .25s,border-color .25s;
+}
+.hc-icon{
+  width:52px;height:52px;border-radius:var(--r-sm);background:rgba(56,196,242,0.1);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.hc-icon img{width:40px;height:40px;object-fit:contain;}
+.hc-info{flex:1;}
+.hc-title{font-family:var(--font-brand);font-size:22px;font-weight:600;color:var(--text-main);}
+.hc-sub{font-size:13px;color:var(--text-sub);margin-top:2px;}
+
+/* ══ SETTINGS BAR ══ */
+.settings-bar{
+  background:var(--surface);border-radius:var(--r-md);padding:14px 20px;
+  box-shadow:var(--sh-sm);border:1px solid var(--border);
+  display:flex;align-items:center;flex-wrap:wrap;gap:18px;
+  transition:background .25s,border-color .25s;
+}
+.sb-item{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;white-space:nowrap;}
+.sb-label{color:var(--text-sub);font-weight:700;}
+.sb-sep{width:1px;height:24px;background:var(--border);flex-shrink:0;}
+.sb-select{
+  padding:4px 10px;border-radius:var(--r-xs);border:1.5px solid var(--border);
+  background:var(--surface);font-family:var(--font);font-size:12px;font-weight:600;
+  color:var(--text-main);cursor:pointer;transition:border-color .15s;outline:none;
+}
+.sb-select:focus{border-color:var(--cyan);}
+.toggle{
+  position:relative;width:36px;height:20px;border-radius:10px;
+  background:var(--surface-3);border:1.5px solid var(--border);
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.toggle.on{background:var(--green);border-color:var(--green);}
+.toggle::after{
+  content:'';position:absolute;top:2px;right:2px;width:14px;height:14px;
+  border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.15);
+  transition:transform .2s;
+}
+.toggle.on::after{transform:translateX(-16px);}
+
+/* ══ WORD ROW CARD ══ */
+.word-card{
+  background:var(--surface);border-radius:var(--r-md);
+  box-shadow:var(--sh-sm);border:1px solid var(--border);
+  padding:14px 18px;display:flex;align-items:center;gap:12px;
+  transition:all .25s;position:relative;
+}
+.word-card.valid{border-right:4px solid var(--green);}
+.word-card.fade-out{opacity:0;transform:translateY(-10px);max-height:0;margin:0;padding:0;overflow:hidden;}
+
+.wc-drag{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;cursor:grab;color:var(--text-xs);flex-shrink:0;transition:color .15s;
+}
+.wc-drag:hover{color:var(--text-sub);}
+.wc-drag:active{cursor:grabbing;}
+.wc-drag span{display:flex;gap:3px;}
+.wc-drag span i{width:4px;height:4px;border-radius:50%;background:currentColor;display:block;}
+
+.wc-num{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-brand);font-size:13px;font-weight:700;color:#fff;
+  flex-shrink:0;background:var(--navy);
+}
+
+.wc-fields{flex:1;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.wc-input{
+  flex:1;min-width:120px;padding:8px 12px;border-radius:var(--r-xs);
+  border:1.5px solid var(--border);background:var(--surface-2);
+  font-family:var(--font);font-size:13px;font-weight:600;color:var(--text-main);
+  outline:none;transition:border-color .15s;
+}
+.wc-input:focus{border-color:var(--cyan);}
+.wc-input::placeholder{color:var(--text-xs);font-weight:500;}
+
+.wc-status{
+  width:24px;height:24px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all .2s;
+}
+.wc-status.ok{background:var(--green-light);color:var(--green);}
+.wc-status.ok svg{display:block;}
+.wc-status.empty{background:var(--surface-3);color:var(--text-xs);}
+.wc-status svg{width:14px;height:14px;}
+
+.wc-del{
+  width:30px;height:30px;border-radius:var(--r-xs);
+  border:1.5px solid var(--border);background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-xs);transition:all .15s;flex-shrink:0;
+}
+.wc-del:hover{background:var(--pink-light);border-color:rgba(240,86,128,.4);color:var(--pink);}
+.wc-del svg{width:14px;height:14px;}
+
+/* ── Add word button ── */
+.add-word-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 20px;border-radius:var(--r-md);
+  border:2px dashed var(--border-mid);background:transparent;
+  font-family:var(--font);font-size:13.5px;font-weight:700;color:var(--text-sub);
+  cursor:pointer;transition:all .2s;
+}
+.add-word-btn:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-light);}
+.add-word-btn svg{width:18px;height:18px;}
+
+/* ── Bottom actions ── */
+.bottom-actions{
+  display:flex;align-items:center;justify-content:flex-end;gap:10px;
+  padding:16px 0;
+}
+.btn-secondary{
+  padding:10px 24px;border-radius:50px;
+  border:1.5px solid var(--border-mid);background:var(--surface);
+  font-family:var(--font-brand);font-size:13px;font-weight:600;
+  color:var(--text-main);cursor:pointer;transition:all .2s;
+}
+.btn-secondary:hover{border-color:var(--cyan);background:var(--cyan-light);}
+.btn-primary{
+  padding:10px 28px;border-radius:50px;border:none;
+  background:var(--navy);color:#fff;
+  font-family:var(--font-brand);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(37,62,122,0.2);
+}
+.btn-primary:hover{background:var(--cyan);box-shadow:0 6px 24px rgba(56,196,242,0.3);transform:scale(1.03);}
+
+/* ── Toast ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--navy);color:#fff;padding:12px 28px;border-radius:50px;
+  font-family:var(--font);font-size:13px;font-weight:700;
+  box-shadow:0 8px 32px rgba(37,62,122,0.3);z-index:200;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s;
+  opacity:0;pointer-events:none;display:flex;align-items:center;gap:8px;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast svg{width:16px;height:16px;color:var(--green);}
+
+/* ── Mobile ── */
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .main-scroll{padding:16px 12px 80px;}
+  .settings-bar{gap:12px;}
+  .wc-fields{flex-direction:column;gap:6px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="bc">
+    <a href="#">מרכזי הידע</a>
+    <span class="bc-sep">/</span>
+    <a href="#">יסודות העיצוב</a>
+    <span class="bc-sep">/</span>
+    <a href="#">משחק: איש תלוי</a>
+    <span class="bc-sep">/</span>
+    <span class="bc-cur">עריכה</span>
+    <span class="bc-edit-tag">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      עריכה
+    </span>
+  </div>
+  <div class="tb-right">
+    <button class="ib" title="שפה" style="font-size:16px;">&#x1f1ee;&#x1f1f1;</button>
+    <button class="ib" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ══ EDIT BANNER ══ -->
+<div class="edit-banner">
+  <div class="eb-l">
+    <div class="eb-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      מצב עריכה
+    </div>
+    <div class="ls-status draft" id="publish-status">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><circle cx="12" cy="12" r="6"/></svg>
+      טיוטה
+    </div>
+  </div>
+  <div class="eb-r">
+    <button class="eb-pub" id="publish-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>
+      פרסם
+    </button>
+  </div>
+</div>
+
+<!-- ══ BODY ══ -->
+<div class="editor-body">
+  <!-- Teacher sidebar (220px) -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <svg viewBox="0 0 150 36" fill="none"><rect width="150" height="36" rx="8" fill="transparent"/><text x="75" y="25" text-anchor="middle" fill="white" font-size="18" font-weight="800" font-family="Fredoka" letter-spacing="2">WHITEBOARD</text></svg>
+    </div>
+    <div class="sidebar-section">
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        לוח הבקרה
+      </a>
+      <a class="nav-item active" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        מרכזי הידע שלי
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        בורדי
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        הספריה שלי
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        הגדרות
+      </a>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="mode-switcher">
+        <div class="mode-switcher-label">מצב</div>
+        <div class="mode-toggle-row">
+          <button class="mode-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            תלמיד
+          </button>
+          <button class="mode-btn active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            מרצה
+          </button>
+        </div>
+      </div>
+      <div class="profile-mini">
+        <div class="avatar-sm">א</div>
+        <div>
+          <div class="profile-mini-name">אלון גבאי</div>
+          <div class="profile-mini-role">מרצה</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN SCROLL ══ -->
+  <div class="main-scroll">
+    <div class="main-inner">
+
+      <!-- Header -->
+      <div class="header-card">
+        <div class="hc-icon"><img src="../BOARDi/SVG/4.svg" alt="BOARDi"></div>
+        <div class="hc-info">
+          <div class="hc-title">עריכת משחק: איש תלוי</div>
+          <div class="hc-sub">הגדר מילים, רמזים והגדרות משחק</div>
+        </div>
+      </div>
+
+      <!-- Settings bar -->
+      <div class="settings-bar">
+        <div class="sb-item">
+          <span class="sb-label">זמן למשחק:</span>
+          <select class="sb-select" id="time-select">
+            <option value="30">30 שניות</option>
+            <option value="60" selected>60 שניות</option>
+            <option value="90">90 שניות</option>
+            <option value="120">120 שניות</option>
+          </select>
+        </div>
+        <div class="sb-sep"></div>
+        <div class="sb-item">
+          <span class="sb-label">מקסימום טעויות:</span>
+          <select class="sb-select" id="errors-select">
+            <option value="5">5</option>
+            <option value="7">7</option>
+            <option value="9" selected>9</option>
+          </select>
+        </div>
+        <div class="sb-sep"></div>
+        <div class="sb-item">
+          <span class="sb-label">הצג רמז:</span>
+          <div class="toggle on" id="hint-toggle"></div>
+        </div>
+      </div>
+
+      <!-- Words list -->
+      <div id="words-list"></div>
+
+      <!-- Add word button -->
+      <button class="add-word-btn" id="add-word-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        הוסף מילה
+      </button>
+
+      <!-- Bottom actions -->
+      <div class="bottom-actions">
+        <button class="btn-secondary" id="preview-btn">תצוגה מקדימה</button>
+        <button class="btn-primary" id="save-btn">שמור משחק</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-text">נשמר בהצלחה!</span>
+</div>
+
+<script>
+const INITIAL_WORDS = [
+  { word: 'טיפוגרפיה', hint: 'אומנות עיצוב האותיות' },
+  { word: 'קומפוזיציה', hint: 'סידור אלמנטים בעיצוב' },
+  { word: 'פלטה', hint: 'סט צבעים לעיצוב' },
+  { word: 'ניגודיות', hint: 'הבדל בין בהיר לכהה' },
+  { word: 'מרווח', hint: 'חלל לבן בין אלמנטים' },
+  { word: 'גרדיאנט', hint: 'מעבר הדרגתי בין צבעים' },
+  { word: 'וקטור', hint: 'גרפיקה שלא מאבדת איכות' },
+  { word: 'פיקסל', hint: 'הנקודה הקטנה ביותר במסך' },
+  { word: 'לוגו', hint: 'סמל שמייצג מותג' },
+  { word: 'גריד', hint: 'רשת שמסדרת אלמנטים' },
+];
+
+let words = [...INITIAL_WORDS];
+const numColors = ['#F05680','#253E7A','#38C4F2','#F59E0B','#7DC57A','#8b5cf6','#ec4899','#14b8a6','#ef4444','#06b6d4'];
+
+function renderWords() {
+  const list = document.getElementById('words-list');
+  list.innerHTML = '';
+  words.forEach((w, i) => {
+    const isValid = w.word.trim() && w.hint.trim();
+    const card = document.createElement('div');
+    card.className = 'word-card' + (isValid ? ' valid' : '');
+    card.innerHTML = `
+      <div class="wc-drag"><span><i></i><i></i></span><span><i></i><i></i></span><span><i></i><i></i></span></div>
+      <div class="wc-num" style="background:${numColors[i % numColors.length]}">${i + 1}</div>
+      <div class="wc-fields">
+        <input class="wc-input" type="text" placeholder="מילה..." value="${escHTML(w.word)}" data-idx="${i}" data-field="word">
+        <input class="wc-input" type="text" placeholder="רמז..." value="${escHTML(w.hint)}" data-idx="${i}" data-field="hint">
+      </div>
+      <div class="wc-status ${isValid ? 'ok' : 'empty'}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="${isValid ? '' : 'display:none'}"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <button class="wc-del" data-idx="${i}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+      </button>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function escHTML(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// Delegation for input changes
+document.getElementById('words-list').addEventListener('input', e => {
+  if (e.target.classList.contains('wc-input')) {
+    const idx = parseInt(e.target.dataset.idx);
+    const field = e.target.dataset.field;
+    words[idx][field] = e.target.value;
+    // Update valid state
+    const card = e.target.closest('.word-card');
+    const isValid = words[idx].word.trim() && words[idx].hint.trim();
+    card.classList.toggle('valid', isValid);
+    const statusEl = card.querySelector('.wc-status');
+    statusEl.className = 'wc-status ' + (isValid ? 'ok' : 'empty');
+    statusEl.querySelector('svg').style.display = isValid ? '' : 'none';
+  }
+});
+
+// Delete word
+document.getElementById('words-list').addEventListener('click', e => {
+  const delBtn = e.target.closest('.wc-del');
+  if (!delBtn) return;
+  const idx = parseInt(delBtn.dataset.idx);
+  const card = delBtn.closest('.word-card');
+  card.classList.add('fade-out');
+  setTimeout(() => {
+    words.splice(idx, 1);
+    renderWords();
+  }, 300);
+});
+
+// Add word
+document.getElementById('add-word-btn').addEventListener('click', () => {
+  words.push({ word: '', hint: '' });
+  renderWords();
+  // Focus new word input
+  const inputs = document.querySelectorAll('.wc-input[data-field="word"]');
+  if (inputs.length) inputs[inputs.length - 1].focus();
+});
+
+// Toggle
+document.getElementById('hint-toggle').addEventListener('click', function() {
+  this.classList.toggle('on');
+});
+
+// Toast
+function showToast(text) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-text').textContent = text;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// Save
+document.getElementById('save-btn').addEventListener('click', () => showToast('המשחק נשמר בהצלחה!'));
+
+// Preview
+document.getElementById('preview-btn').addEventListener('click', () => showToast('תצוגה מקדימה נפתחת...'));
+
+// Publish
+document.getElementById('publish-btn').addEventListener('click', () => {
+  const statusEl = document.getElementById('publish-status');
+  const isPublished = statusEl.classList.contains('published');
+  if (isPublished) {
+    statusEl.className = 'ls-status draft';
+    statusEl.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><circle cx="12" cy="12" r="6"/></svg> טיוטה';
+    showToast('המשחק הועבר לטיוטה');
+  } else {
+    statusEl.className = 'ls-status published';
+    statusEl.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><circle cx="12" cy="12" r="6"/></svg> פורסם';
+    showToast('המשחק פורסם בהצלחה!');
+  }
+});
+
+// Init
+renderWords();
+</script>
+</body>
+</html>

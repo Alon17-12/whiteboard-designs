@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>משחק: איש תלוי | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --cyan-light:rgba(56,196,242,0.13);
+  --pink:#F05680; --pink-light:rgba(240,86,128,0.12); --green:#7DC57A; --green-light:rgba(125,197,122,0.12);
+  --yellow:#EAD654; --amber:#F59E0B;
+  --font:'Heebo',sans-serif; --font-brand:'Fredoka',sans-serif;
+  --r-xs:6px; --r-sm:10px; --r-md:16px; --r-lg:22px;
+  --strip-w:52px;
+  --bg:#EBF3FB;
+  --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+  --border:rgba(37,62,122,0.1); --border-mid:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.52); --text-xs:rgba(37,62,122,0.35);
+  --sh-sm:0 2px 8px rgba(37,62,122,0.08); --sh-md:0 4px 20px rgba(37,62,122,0.12);
+}
+[data-theme="dark"] {
+  --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.07); --border-mid:rgba(255,255,255,0.12);
+  --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.48); --text-xs:rgba(221,229,245,0.28);
+  --sh-sm:0 2px 12px rgba(0,0,0,0.3); --sh-md:0 6px 24px rgba(0,0,0,0.4);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text-main);
+  height:100dvh;display:flex;flex-direction:column;overflow:hidden;
+  transition:background .25s,color .25s;user-select:none;}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  height:48px;background:var(--surface);border-bottom:1px solid var(--border-mid);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+  flex-shrink:0;box-shadow:var(--sh-sm);z-index:30;transition:background .25s,border-color .25s;
+}
+.bc{display:flex;align-items:center;gap:5px;font-size:12.5px;flex-wrap:wrap;}
+.bc a{color:var(--text-sub);text-decoration:none;transition:color .15s;}
+.bc a:hover{color:var(--text-main);}
+.bc-sep{color:var(--text-xs);}
+.bc-cur{color:var(--text-main);font-weight:700;}
+.tb-right{display:flex;align-items:center;gap:7px;}
+.ib{width:32px;height:32px;border-radius:var(--r-xs);border:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-sub);transition:all .18s;}
+.ib:hover{background:var(--cyan-light);color:var(--navy);border-color:var(--cyan);}
+.ib svg{width:14px;height:14px;}
+.icon-sun{display:none;}.icon-moon{display:block;}
+[data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+/* ══ BODY LAYOUT ══ */
+.game-body{flex:1;display:flex;overflow:hidden;}
+
+/* ══ RIGHT NAVY STRIP (student 52px) ══ */
+.right-strip{
+  width:var(--strip-w);flex-shrink:0;
+  background:var(--navy-dark);
+  display:flex;flex-direction:column;align-items:center;
+  z-index:20;
+}
+.rs-logo{
+  width:100%;display:flex;align-items:center;justify-content:center;
+  padding:10px 0 8px;border-bottom:1px solid rgba(255,255,255,0.1);flex-shrink:0;
+}
+.rs-logo svg{width:28px;height:28px;}
+.rs-icons{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;}
+.rs-btn{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .18s;position:relative;flex-shrink:0;
+  background:transparent;border:none;color:rgba(255,255,255,0.5);padding:0;
+}
+.rs-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.rs-btn.active{background:rgba(56,196,242,0.2);color:var(--cyan);}
+.rs-btn svg{width:17px;height:17px;}
+.rs-btn::after{
+  content:attr(data-tip);position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,.8);color:#fff;font-family:var(--font);font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:100;
+}
+.rs-btn:hover::after{opacity:1;}
+.rs-bottom{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);flex-shrink:0;
+}
+.rs-profile{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,#38C4F2,#253E7A);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;color:#fff;cursor:pointer;
+  border:2px solid rgba(255,255,255,0.2);transition:border-color .18s;flex-shrink:0;
+}
+.rs-profile:hover{border-color:rgba(255,255,255,0.5);}
+
+/* ══ MAIN GAME AREA ══ */
+.main-scroll{
+  flex:1;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center;
+  padding:20px 16px 40px;background:var(--bg);transition:background .25s;
+}
+.game-card{
+  background:var(--surface);border-radius:var(--r-md);padding:28px 32px 24px;
+  box-shadow:var(--sh-md);border:1px solid var(--border);
+  width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center;gap:10px;
+  transition:background .25s,border-color .25s;
+}
+
+/* ── Game Header ── */
+.game-header{display:flex;align-items:center;justify-content:space-between;width:100%;gap:12px;}
+.game-title{font-family:var(--font-brand);font-size:22px;font-weight:700;color:var(--navy);}
+[data-theme="dark"] .game-title{color:var(--cyan);}
+.game-meta{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--text-sub);font-weight:600;}
+.game-meta span{display:flex;align-items:center;gap:4px;}
+
+/* ── Timer ── */
+.timer-area{display:flex;align-items:center;gap:6px;margin:4px 0;}
+#timerDisplay{
+  font-family:var(--font-brand);font-size:3rem;line-height:1;min-width:74px;text-align:center;
+  color:var(--cyan);transition:color .25s;
+}
+@keyframes tick-bounce{0%{transform:scale(1)}28%{transform:scale(1.2)}60%{transform:scale(0.9)}100%{transform:scale(1)}}
+.tick{animation:tick-bounce .3s ease;}
+.timer-urgent #timerDisplay{color:var(--pink);animation:urgent-pulse .42s ease infinite alternate;}
+@keyframes urgent-pulse{from{transform:scale(1);filter:none}to{transform:scale(1.1);filter:drop-shadow(0 0 10px rgba(240,86,128,0.7))}}
+
+/* ── Hangman SVG ── */
+#hangman-svg{display:block;width:160px;height:185px;margin:4px auto 8px;}
+.g-base{stroke:var(--navy);stroke-width:3.5;stroke-linecap:round;fill:none;}
+[data-theme="dark"] .g-base{stroke:rgba(221,229,245,0.3);}
+.g-part{opacity:0;transition:opacity .3s ease;}
+.g-part.on{opacity:1;}
+.g-line{stroke:var(--navy);stroke-width:3;stroke-linecap:round;fill:none;}
+[data-theme="dark"] .g-line{stroke:var(--cyan);}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.shake{animation:shake .38s ease;}
+
+/* ── Word display ── */
+#word-display{
+  display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;
+  gap:6px;margin:8px 0 4px;min-height:50px;max-width:440px;
+}
+.letter-box{
+  width:32px;height:44px;border-bottom:3px solid var(--border-mid);
+  text-align:center;font-size:1.5rem;font-weight:900;color:var(--text-main);line-height:44px;
+  transition:border-color .2s;
+}
+.letter-box.revealed{border-color:var(--cyan);}
+.letter-box.space{width:16px;border-bottom:none;}
+.letter-box.pop{animation:pop .35s ease forwards;}
+@keyframes pop{0%{transform:scale(1.5) translateY(-4px);color:var(--cyan)}60%{transform:scale(0.9)}100%{transform:scale(1);color:var(--text-main)}}
+
+/* ── Hint ── */
+.hint-card{
+  display:flex;align-items:center;gap:8px;padding:8px 16px;
+  background:var(--surface-2);border-radius:var(--r-sm);border:1px solid var(--border);
+  font-size:13px;color:var(--text-sub);font-weight:600;transition:background .25s;
+}
+.hint-icon{width:20px;height:20px;flex-shrink:0;color:var(--yellow);}
+
+/* ── Keyboard ── */
+#keyboard{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:5px;max-width:400px;
+  margin:10px 0 4px;direction:rtl;
+}
+.key-btn{
+  background:var(--surface-2);border:1.5px solid var(--border);
+  color:var(--text-main);width:38px;height:44px;border-radius:22px;
+  font-size:1rem;font-family:var(--font);font-weight:700;cursor:pointer;
+  transition:all .15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+.key-btn:hover:not(:disabled){background:var(--cyan-light);border-color:var(--cyan);transform:scale(1.08);}
+.key-btn:active:not(:disabled){transform:scale(0.92);}
+.key-btn:disabled{opacity:.2;cursor:default;transform:none !important;}
+.key-btn.wrong{background:var(--pink-light);border-color:rgba(240,86,128,0.4);color:var(--pink);}
+.key-btn.correct{background:var(--green-light);border-color:rgba(125,197,122,0.5);color:#2a7a28;}
+[data-theme="dark"] .key-btn.correct{color:var(--green);}
+
+/* ── Bonus flash ── */
+#bonus-flash{
+  position:fixed;top:100px;left:50%;transform:translateX(-50%);
+  font-family:var(--font-brand);font-size:1.4rem;color:var(--green);
+  text-shadow:0 0 12px rgba(125,197,122,0.6);
+  opacity:0;transition:opacity .15s;pointer-events:none;z-index:200;
+}
+#bonus-flash.show{opacity:1;}
+
+/* ── Result overlay ── */
+#result{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;z-index:100;padding:28px 20px;overflow-y:auto;
+}
+#result.show{display:flex;}
+
+.result-card{
+  background:var(--surface);border-radius:var(--r-md);padding:32px 28px;
+  box-shadow:var(--sh-md);border:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  max-width:380px;width:100%;transition:background .25s;
+}
+#result-title{font-family:var(--font-brand);font-size:1.8rem;text-align:center;line-height:1.1;color:var(--text-main);}
+.result-mascot{width:100px;height:100px;}
+.result-mascot img{width:100%;height:100%;object-fit:contain;}
+#result-word{color:var(--text-sub);font-size:14px;text-align:center;font-weight:600;}
+#result-score{font-family:var(--font-brand);font-size:1.5rem;color:var(--cyan);text-align:center;}
+
+#result-stats{
+  display:none;width:100%;
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:14px 18px;
+}
+#result-stats.show{display:block;}
+.stat-line{font-size:13px;color:var(--text-main);line-height:2;display:flex;gap:6px;}
+.stat-line b{color:var(--cyan);margin-right:auto;}
+.stat-words{font-size:12px;color:var(--text-sub);line-height:1.7;margin-top:2px;word-break:break-word;}
+.stat-final{font-family:var(--font-brand);font-size:1.5rem;color:var(--cyan);text-align:center;margin-top:6px;}
+
+.btn-primary{
+  background:var(--navy);color:#fff;border:none;padding:12px 32px;
+  border-radius:50px;cursor:pointer;font-family:var(--font-brand);font-size:1.1rem;font-weight:600;
+  box-shadow:0 4px 16px rgba(37,62,122,0.25);transition:all .2s;
+}
+.btn-primary:hover{background:var(--cyan);box-shadow:0 6px 24px rgba(56,196,242,0.35);transform:scale(1.04);}
+
+/* ── Space overlay ── */
+#space-overlay{
+  position:fixed;inset:0;z-index:90;
+  background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;pointer-events:all;cursor:pointer;
+}
+#space-overlay.hidden{display:none;}
+#space-overlay .spc-mascot{width:120px;height:120px;}
+#space-overlay .spc-mascot img{width:100%;height:100%;object-fit:contain;}
+#space-overlay .spc-title{font-family:var(--font-brand);font-size:2rem;color:#fff;text-shadow:0 0 24px rgba(56,196,242,0.6);}
+#space-overlay .spc-hint{font-family:var(--font-brand);font-size:1.15rem;color:var(--cyan);animation:spc-blink 1.1s ease-in-out infinite;}
+@keyframes spc-blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ── Confetti ── */
+.confetti{position:fixed;top:-10px;width:8px;height:8px;border-radius:2px;z-index:150;pointer-events:none;animation:confetti-fall 2.5s ease-out forwards;}
+@keyframes confetti-fall{
+  0%{transform:translateY(0) rotate(0);opacity:1}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0}
+}
+
+/* ── Mobile ── */
+@media(max-width:640px){
+  .game-card{padding:20px 16px 18px;}
+  #timerDisplay{font-size:2.2rem;}
+  #hangman-svg{width:130px;height:auto;}
+  .letter-box{width:26px;height:36px;font-size:1.2rem;line-height:36px;}
+  .key-btn{width:34px;height:40px;font-size:.9rem;border-radius:20px;}
+  .game-title{font-size:18px;}
+}
+</style>
+</head>
+<body>
+
+<div id="bonus-flash"></div>
+
+<!-- ── TOPBAR ── -->
+<div class="topbar">
+  <div class="bc">
+    <a href="#">הקורסים שלי</a>
+    <span class="bc-sep">/</span>
+    <a href="#">יסודות העיצוב</a>
+    <span class="bc-sep">/</span>
+    <span class="bc-cur">משחק: איש תלוי</span>
+  </div>
+  <div class="tb-right">
+    <!-- Lang -->
+    <button class="ib" title="שפה" style="font-size:16px;border:1px solid var(--border);">&#x1f1ee;&#x1f1f1;</button>
+    <!-- Theme toggle -->
+    <button class="ib" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ── BODY ── -->
+<div class="game-body">
+  <!-- Student strip sidebar -->
+  <div class="right-strip">
+    <div class="rs-logo">
+      <svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#253E7A"/><text x="20" y="27" text-anchor="middle" fill="white" font-size="18" font-weight="900" font-family="Fredoka">W</text></svg>
+    </div>
+    <div class="rs-icons">
+      <button class="rs-btn active" data-tip="הקורסים שלי">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      </button>
+      <button class="rs-btn" data-tip="המועדונים שלי">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      </button>
+      <button class="rs-btn" data-tip="הסיכומים שלי">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </button>
+      <button class="rs-btn" data-tip="הגדרות">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      </button>
+    </div>
+    <div class="rs-bottom">
+      <div class="rs-profile">א</div>
+    </div>
+  </div>
+
+  <!-- ── Main game ── -->
+  <div class="main-scroll">
+    <div class="game-card">
+      <!-- Header -->
+      <div class="game-header">
+        <span class="game-title">איש תלוי</span>
+        <div class="game-meta">
+          <span id="round-counter">סיבוב: <b>1</b></span>
+          <span>ניקוד: <b id="scoreDisplay">0</b></span>
+        </div>
+      </div>
+
+      <!-- Timer -->
+      <div class="timer-area" id="timer-area">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-sub)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="timerDisplay">60</span>
+      </div>
+
+      <!-- Hangman SVG -->
+      <svg id="hangman-svg" viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- Gallows base -->
+        <line class="g-base" x1="10" y1="144" x2="95" y2="144"/>
+        <line class="g-base" x1="26" y1="144" x2="26" y2="6"/>
+        <line class="g-base" x1="26" y1="6" x2="76" y2="6"/>
+        <line class="g-base" x1="76" y1="6" x2="76" y2="22"/>
+        <!-- Hat -->
+        <g id="part-hat" class="g-part">
+          <rect x="66" y="18" width="20" height="6" rx="2" fill="var(--navy)" stroke="none"/>
+          <rect x="69" y="10" width="14" height="10" rx="3" fill="var(--navy)" stroke="none"/>
+          <circle cx="76" cy="10" r="3" fill="var(--cyan)"/>
+        </g>
+        <!-- Head -->
+        <g id="part-head" class="g-part">
+          <circle cx="76" cy="36" r="12" class="g-line" fill="none"/>
+          <!-- Eyes -->
+          <circle cx="72" cy="34" r="1.5" fill="var(--navy)"/>
+          <circle cx="80" cy="34" r="1.5" fill="var(--navy)"/>
+        </g>
+        <!-- Body -->
+        <g id="part-body" class="g-part"><line class="g-line" x1="76" y1="48" x2="76" y2="88"/></g>
+        <!-- Left arm -->
+        <g id="part-arm-l" class="g-part"><line class="g-line" x1="76" y1="58" x2="56" y2="74"/></g>
+        <!-- Right arm -->
+        <g id="part-arm-r" class="g-part"><line class="g-line" x1="76" y1="58" x2="96" y2="74"/></g>
+        <!-- Left leg -->
+        <g id="part-leg-l" class="g-part"><line class="g-line" x1="76" y1="88" x2="60" y2="110"/></g>
+        <!-- Right leg -->
+        <g id="part-leg-r" class="g-part"><line class="g-line" x1="76" y1="88" x2="92" y2="110"/></g>
+        <!-- Left foot -->
+        <g id="part-foot-l" class="g-part"><line class="g-line" x1="60" y1="110" x2="52" y2="110"/></g>
+        <!-- Right foot -->
+        <g id="part-foot-r" class="g-part"><line class="g-line" x1="92" y1="110" x2="100" y2="110"/></g>
+      </svg>
+
+      <!-- Word display -->
+      <div id="word-display"></div>
+
+      <!-- Hint -->
+      <div class="hint-card" id="hint-area" style="display:none;">
+        <svg class="hint-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zM9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1z"/></svg>
+        <span id="hint-text"></span>
+      </div>
+
+      <!-- Keyboard -->
+      <div id="keyboard"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Space overlay ── -->
+<div id="space-overlay">
+  <div class="spc-mascot"><img src="../BOARDi/SVG/4.svg" alt="BOARDi"></div>
+  <div class="spc-title">איש תלוי</div>
+  <div class="spc-hint">לחץ SPACE או לחץ כאן להתחלה</div>
+</div>
+
+<!-- ── Result overlay ── -->
+<div id="result">
+  <div class="result-card">
+    <div id="result-title"></div>
+    <div class="result-mascot"><img id="result-mascot-img" src="../BOARDi/SVG/4.svg" alt="BOARDi"></div>
+    <div id="result-word"></div>
+    <div id="result-score"></div>
+    <div id="result-stats"></div>
+    <button class="btn-primary" id="result-btn" style="display:none">משחק חדש</button>
+  </div>
+</div>
+
+<script>
+const isHebrew = ch => /[\u05D0-\u05EA]/.test(ch);
+
+const WORDS = [
+  { word: 'טיפוגרפיה', hint: 'אומנות עיצוב האותיות' },
+  { word: 'קומפוזיציה', hint: 'סידור אלמנטים בעיצוב' },
+  { word: 'פלטה', hint: 'סט צבעים לעיצוב' },
+  { word: 'ניגודיות', hint: 'הבדל בין בהיר לכהה' },
+  { word: 'מרווח', hint: 'חלל לבן בין אלמנטים' },
+  { word: 'גרדיאנט', hint: 'מעבר הדרגתי בין צבעים' },
+  { word: 'וקטור', hint: 'גרפיקה שלא מאבדת איכות' },
+  { word: 'פיקסל', hint: 'הנקודה הקטנה ביותר במסך' },
+  { word: 'לוגו', hint: 'סמל שמייצג מותג' },
+  { word: 'גריד', hint: 'רשת שמסדרת אלמנטים' },
+];
+
+const PARTS = ['part-hat','part-head','part-body','part-arm-l','part-arm-r','part-leg-l','part-leg-r','part-foot-l','part-foot-r'];
+const MAX_WRONG = 9;
+const ALEPH_BET = 'אבגדהוזחטיכלמנסעפצקרשת';
+const FINAL_TO_BASE = { '\u05DD':'\u05DE', '\u05DA':'\u05DB', '\u05DF':'\u05E0', '\u05E5':'\u05E6', '\u05E3':'\u05E4' };
+const ROUND_TIME = 60;
+const BONUS_TIME = 5;
+
+function normalizeLetter(ch) { return FINAL_TO_BASE[ch] || ch; }
+function normalizeWord(w) { return w.split('').map(normalizeLetter).join(''); }
+
+let state = { word:'', hint:'', guessed:new Set(), wrongCount:0, score:0, roundScore:0 };
+let usedWords = new Set();
+let timerInterval = null;
+let timeLeft = ROUND_TIME;
+let sessionActive = false;
+let roundNum = 0;
+
+let session = { correctCount:0, correctWords:[], roundStart:0, sessionStart:0 };
+
+// ── Timer
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimerDisplay(false);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay(true);
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval); timerInterval = null; timeLeft = 0;
+      if (sessionActive) { sessionActive = false;
+        document.getElementById('result').classList.remove('show');
+        setTimeout(showSessionEnd, 150);
+      }
+    }
+  }, 1000);
+}
+function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
+
+let _bonusTimer = null;
+function showBonusFlash(text) {
+  const el = document.getElementById('bonus-flash');
+  el.textContent = text; el.classList.add('show');
+  clearTimeout(_bonusTimer);
+  _bonusTimer = setTimeout(() => el.classList.remove('show'), 1400);
+}
+
+function updateTimerDisplay(tick) {
+  const el = document.getElementById('timerDisplay');
+  const area = document.getElementById('timer-area');
+  el.textContent = Math.max(0, timeLeft);
+  if (tick) { el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); }
+  if (timeLeft <= 10) area.classList.add('timer-urgent');
+  else area.classList.remove('timer-urgent');
+}
+
+// ── Words
+function pickWord() {
+  if (usedWords.size >= WORDS.length) usedWords.clear();
+  let w;
+  do { w = WORDS[Math.floor(Math.random() * WORDS.length)]; } while (usedWords.has(w.word));
+  usedWords.add(w.word);
+  return w;
+}
+
+// ── Session
+function startSession() {
+  stopTimer();
+  state.score = 0; roundNum = 0;
+  session = { correctCount:0, correctWords:[], roundStart:0, sessionStart:Date.now() };
+  sessionActive = true;
+  usedWords.clear();
+  timeLeft = ROUND_TIME;
+  document.getElementById('result').classList.remove('show');
+  startTimer();
+  startNewRound();
+}
+
+function startNewRound() {
+  if (!sessionActive) return;
+  roundNum++;
+  const { word, hint } = pickWord();
+  state.guessed = new Set();
+  state.wrongCount = 0;
+  state.roundScore = word.split('').filter(isHebrew).length * 15;
+  state.word = word;
+  state.hint = hint;
+  session.roundStart = Date.now();
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('result-btn').style.display = 'none';
+  document.getElementById('result-stats').classList.remove('show');
+  document.getElementById('round-counter').innerHTML = 'סיבוב: <b>' + roundNum + '</b>';
+  renderGallows();
+  renderAll();
+}
+
+// ── Render
+function renderAll() {
+  renderWord(); renderKeyboard();
+  const ha = document.getElementById('hint-area');
+  ha.style.display = 'flex';
+  document.getElementById('hint-text').textContent = state.hint;
+  document.getElementById('scoreDisplay').textContent = state.score;
+}
+
+function renderWord() {
+  const display = document.getElementById('word-display');
+  const prevBoxes = display.querySelectorAll('.letter-box');
+  const oldRevealed = new Set([...prevBoxes].map((el, i) => el.textContent.trim() ? i : null).filter(x => x !== null));
+  display.innerHTML = state.word.split('').map((ch, i) => {
+    const isH = isHebrew(ch);
+    const revealed = !isH || state.guessed.has(normalizeLetter(ch));
+    const isNew = revealed && isH && !oldRevealed.has(i);
+    const spaceClass = (!isH && ch !== '\u05f4') ? ' space' : '';
+    const revClass = (revealed && isH) ? ' revealed' : '';
+    return `<div class="letter-box${spaceClass}${revClass}${isNew ? ' pop' : ''}">${revealed ? ch : ''}</div>`;
+  }).join('');
+}
+
+function renderKeyboard() {
+  const kb = document.getElementById('keyboard');
+  const normWord = normalizeWord(state.word);
+  kb.innerHTML = ALEPH_BET.split('').map(ch => {
+    const norm = normalizeLetter(ch);
+    const isGuessed = state.guessed.has(norm);
+    const inWord = normWord.includes(norm);
+    let cls = 'key-btn';
+    if (isGuessed && !inWord) cls += ' wrong';
+    if (isGuessed && inWord) cls += ' correct';
+    return `<button class="${cls}" ${isGuessed ? 'disabled' : ''} data-letter="${ch}">${ch}</button>`;
+  }).join('');
+}
+
+function renderGallows() {
+  PARTS.forEach((id, i) => document.getElementById(id).classList.toggle('on', i < state.wrongCount));
+}
+
+// ── Results
+function showWordResult(won) {
+  const wordGuessed = state.word;
+  const mascotImg = document.getElementById('result-mascot-img');
+  if (won) {
+    const timeSec = Math.round((Date.now() - session.roundStart) / 1000);
+    const earned = state.roundScore + Math.round(timeLeft * 1.5);
+    state.score += earned;
+    timeLeft = Math.min(timeLeft + BONUS_TIME, 180);
+    updateTimerDisplay(false);
+    showBonusFlash('+' + BONUS_TIME + 's');
+    if (state.wrongCount > 0) { state.wrongCount--; renderGallows(); }
+    session.correctCount++;
+    session.correctWords.push({ word: wordGuessed, timeSec });
+    document.getElementById('scoreDisplay').textContent = state.score;
+    document.getElementById('result-title').textContent = 'כל הכבוד!';
+    mascotImg.src = '../BOARDi/SVG/2.svg';
+    document.getElementById('result-word').textContent = wordGuessed;
+    document.getElementById('result-score').textContent = '+' + earned + ' נקודות';
+    document.getElementById('result-stats').classList.remove('show');
+    document.getElementById('result-btn').style.display = 'none';
+    document.getElementById('result').classList.add('show');
+    spawnConfetti();
+    setTimeout(() => { document.getElementById('result').classList.remove('show'); startNewRound(); }, 1400);
+  } else {
+    document.getElementById('result-title').textContent = 'אוי לא...';
+    mascotImg.src = '../BOARDi/SVG/13.svg';
+    document.getElementById('result-word').textContent = 'המילה הייתה: ' + wordGuessed;
+    document.getElementById('result-score').textContent = '';
+    document.getElementById('result-stats').classList.remove('show');
+    document.getElementById('result-btn').style.display = 'none';
+    document.getElementById('result').classList.add('show');
+    setTimeout(() => { document.getElementById('result').classList.remove('show'); startNewRound(); }, 1800);
+  }
+}
+
+function showSessionEnd(reason) {
+  stopTimer();
+  const mascotImg = document.getElementById('result-mascot-img');
+  const totalSec = Math.round((Date.now() - session.sessionStart) / 1000);
+  const avgSec = session.correctCount > 0 ? Math.round(session.correctWords.reduce((s, w) => s + w.timeSec, 0) / session.correctCount) : 0;
+  const wordListHTML = session.correctWords.length
+    ? session.correctWords.map(w => w.word + ' (' + w.timeSec + 's)').join(' \u00b7 ')
+    : '\u2014';
+
+  const statsEl = document.getElementById('result-stats');
+  statsEl.innerHTML =
+    '<div class="stat-line">תשובות נכונות: <b>' + session.correctCount + '</b></div>' +
+    '<div class="stat-line">זמן ממוצע לתשובה: <b>' + avgSec + 's</b></div>' +
+    '<div class="stat-line">זמן כולל: <b>' + totalSec + 's</b></div>' +
+    '<div class="stat-words">' + wordListHTML + '</div>' +
+    '<div class="stat-final">' + state.score + ' נקודות</div>';
+
+  document.getElementById('result-title').textContent = reason === 'dead' ? 'נגמרו הניסיונות!' : 'נגמר הזמן!';
+  mascotImg.src = '../BOARDi/SVG/13.svg';
+  document.getElementById('result-word').textContent = '';
+  document.getElementById('result-score').textContent = '';
+  statsEl.classList.add('show');
+  document.getElementById('result-btn').style.display = 'inline-block';
+  document.getElementById('result').classList.add('show');
+}
+
+// ── Confetti
+function spawnConfetti() {
+  const colors = ['#38C4F2','#F05680','#EAD654','#7DC57A','#253E7A'];
+  for (let i = 0; i < 30; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+    c.style.animationDelay = (Math.random() * 0.5) + 's';
+    c.style.width = (6 + Math.random() * 6) + 'px';
+    c.style.height = (6 + Math.random() * 6) + 'px';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3500);
+  }
+}
+
+// ── Guess
+function guess(ch) {
+  const norm = normalizeLetter(ch);
+  if (state.guessed.has(norm)) return;
+  state.guessed.add(norm);
+  const normWord = normalizeWord(state.word);
+  if (!normWord.includes(norm)) {
+    state.wrongCount++;
+    state.roundScore = Math.max(0, state.roundScore - 15);
+    renderGallows();
+    const svg = document.getElementById('hangman-svg');
+    svg.classList.remove('shake'); void svg.offsetWidth; svg.classList.add('shake');
+  }
+  const hebrewChars = new Set(state.word.split('').filter(isHebrew).map(normalizeLetter));
+  const allGuessed = [...hebrewChars].every(c => state.guessed.has(c));
+  const dead = state.wrongCount >= MAX_WRONG;
+  renderAll();
+  if (allGuessed) setTimeout(() => showWordResult(true), 350);
+  else if (dead) { sessionActive = false; setTimeout(() => showSessionEnd('dead'), 500); }
+}
+
+// Keyboard click delegation
+document.getElementById('keyboard').addEventListener('click', e => {
+  const btn = e.target.closest('.key-btn');
+  if (btn && !btn.disabled) guess(btn.dataset.letter);
+});
+
+// Physical keyboard
+document.addEventListener('keydown', e => {
+  if (!sessionActive) return;
+  const ch = e.key;
+  if (isHebrew(ch)) guess(ch);
+});
+
+// ── Boot
+const _spaceOverlay = document.getElementById('space-overlay');
+function showSpaceOverlay(onStart) {
+  _spaceOverlay.classList.remove('hidden');
+  _spaceOverlay.setAttribute('tabindex', '0');
+  _spaceOverlay.focus();
+  function _go() {
+    _spaceOverlay.classList.add('hidden');
+    window.removeEventListener('keydown', _kHandler);
+    _spaceOverlay.removeEventListener('click', _go);
+    onStart();
+  }
+  function _kHandler(e) { if (e.code === 'Space') { e.preventDefault(); _go(); } }
+  window.addEventListener('keydown', _kHandler);
+  _spaceOverlay.addEventListener('click', _go, { once: true });
+}
+
+function launchSession() { showSpaceOverlay(startSession); }
+document.getElementById('result-btn').addEventListener('click', launchSession);
+launchSession();
+</script>
+</body>
+</html>

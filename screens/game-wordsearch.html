@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>משחק: תשחץ | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ── DESIGN TOKENS ───────────────────────────── */
+  :root {
+    --navy:        #253E7A;
+    --navy-dark:   #1a2f5e;
+    --navy-light:  #3a5499;
+    --cyan:        #38C4F2;
+    --cyan-light:  rgba(56,196,242,0.12);
+    --light-blue:  #E3F4FD;
+    --pink:        #F05680;
+    --pink-light:  rgba(240,86,128,0.12);
+    --yellow:      #EAD654;
+    --green:       #7DC57A;
+    --green-light: rgba(125,197,122,0.12);
+    --white:       #FFFFFF;
+    --font-he:     'Heebo', sans-serif;
+    --font-en:     'Fredoka', sans-serif;
+    --radius-sm:   10px;
+    --radius-md:   16px;
+    --radius-lg:   22px;
+
+    /* LIGHT MODE */
+    --bg:           #F0F6FF;
+    --surface:      #FFFFFF;
+    --surface-2:    #f5f8ff;
+    --border:       rgba(37,62,122,0.1);
+    --border-hover: rgba(56,196,242,0.4);
+    --text-main:    #1a2f5e;
+    --text-sub:     rgba(37,62,122,0.55);
+    --text-light:   rgba(37,62,122,0.38);
+    --shadow-sm:    0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:    0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:    0 16px 48px rgba(37,62,122,0.14);
+
+    --sidebar-bg:        var(--navy);
+    --sidebar-border:    rgba(255,255,255,0.1);
+    --sidebar-hover:     rgba(255,255,255,0.08);
+    --sidebar-active-bg: rgba(56,196,242,0.2);
+    --sidebar-active-cl: var(--cyan);
+    --sidebar-text:      rgba(255,255,255,0.65);
+  }
+
+  [data-theme="dark"] {
+    --bg:           #0c1424;
+    --surface:      #131e35;
+    --surface-2:    #1a2740;
+    --border:       rgba(255,255,255,0.07);
+    --border-hover: rgba(56,196,242,0.4);
+    --text-main:    #dde5f5;
+    --text-sub:     rgba(221,229,245,0.5);
+    --text-light:   rgba(221,229,245,0.3);
+    --shadow-sm:    0 2px 12px rgba(0,0,0,0.3);
+    --shadow-md:    0 6px 28px rgba(0,0,0,0.4);
+    --shadow-lg:    0 16px 48px rgba(0,0,0,0.55);
+
+    --sidebar-bg:        #0d1628;
+    --sidebar-border:    rgba(255,255,255,0.05);
+    --sidebar-hover:     rgba(255,255,255,0.06);
+    --sidebar-active-bg: rgba(56,196,242,0.15);
+    --sidebar-active-cl: var(--cyan);
+    --sidebar-text:      rgba(255,255,255,0.55);
+    --light-blue:        rgba(56,196,242,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    transition: background 0.3s, color 0.3s;
+    user-select: none;
+  }
+
+  /* ── THEME TOGGLE ────────────────────────────── */
+  .icon-btn {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+    color: var(--text-sub); position: relative;
+  }
+  .icon-btn:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="dark"] .icon-sun  { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* ── SIDEBAR (52px student collapsed) ────────── */
+  .sidebar {
+    width: 52px;
+    background: var(--sidebar-bg);
+    border-left: 1px solid var(--sidebar-border);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 0;
+    flex-shrink: 0;
+    position: fixed;
+    right: 0; top: 0; bottom: 0;
+    z-index: 50;
+    transition: background 0.3s;
+  }
+
+  .sidebar-logo-mini {
+    width: 32px; height: 32px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.1);
+  }
+  .sidebar-logo-mini svg { width: 20px; height: 20px; }
+
+  .nav-icon {
+    width: 44px; height: 44px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+    color: var(--sidebar-text);
+    margin-bottom: 4px;
+    position: relative;
+  }
+  .nav-icon:hover { background: var(--sidebar-hover); color: white; }
+  .nav-icon.active { background: var(--sidebar-active-bg); color: var(--sidebar-active-cl); }
+  .nav-icon svg { width: 20px; height: 20px; }
+  .nav-icon .tooltip {
+    position: absolute;
+    left: calc(100% + 8px);
+    top: 50%; transform: translateY(-50%);
+    background: var(--navy-dark);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 999;
+  }
+  .nav-icon:hover .tooltip { opacity: 1; }
+
+  .sidebar-bottom-mini {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .avatar-mini {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--navy-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: white;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .avatar-mini:hover { transform: scale(1.08); }
+
+  /* ── MAIN ────────────────────────────────────── */
+  .main { margin-right: 52px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ── TOP BAR ─────────────────────────────────── */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0; z-index: 40;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .topbar-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .breadcrumb-link { color: var(--text-sub); cursor: pointer; transition: color 0.2s; text-decoration: none; }
+  .breadcrumb-link:hover { color: var(--navy); }
+  .breadcrumb-sep { color: var(--text-light); font-size: 14px; }
+  .breadcrumb-current { color: var(--text-main); font-weight: 700; }
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+  /* ── LANG SWITCHER ───────────────────────────── */
+  .lang-toggle {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    font-size: 20px;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s, transform 0.15s;
+    line-height: 1;
+  }
+  .lang-toggle:hover { border-color: var(--cyan); transform: scale(1.08); }
+
+  /* ── PAGE BODY ───────────────────────────────── */
+  .page-body {
+    padding: 20px 28px 32px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── GAME LAYOUT ─────────────────────────────── */
+  .game-wrapper {
+    display: flex;
+    gap: 24px;
+    flex: 1;
+    align-items: flex-start;
+  }
+
+  .game-grid-col {
+    flex: 0 0 60%;
+    max-width: 60%;
+  }
+
+  .game-info-col {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .game-card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  /* Canvas wrapper */
+  .canvas-wrap {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #gridCanvas {
+    display: block;
+    border-radius: 12px;
+    touch-action: none;
+    max-width: 100%;
+  }
+
+  /* ── TIMER ───────────────────────────────────── */
+  .timer-display {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .timer-label {
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .timer-value {
+    font-family: var(--font-en);
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--cyan);
+    line-height: 1;
+    transition: color 0.3s;
+  }
+  .timer-value.urgent {
+    color: var(--pink);
+    animation: timer-pulse 0.5s ease infinite alternate;
+  }
+  @keyframes timer-pulse {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); filter: drop-shadow(0 0 8px rgba(240,86,128,0.5)); }
+  }
+  @keyframes tick-bounce {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.15); }
+    60%  { transform: scale(0.92); }
+    100% { transform: scale(1); }
+  }
+  .tick { animation: tick-bounce 0.3s ease; }
+
+  /* ── SCORE ───────────────────────────────────── */
+  .score-display {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .score-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin-bottom: 2px;
+  }
+  .score-value {
+    font-family: var(--font-en);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  /* ── WORD LIST ───────────────────────────────── */
+  .word-list-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 10px;
+  }
+
+  .word-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .word-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    transition: all 0.25s;
+    cursor: default;
+    position: relative;
+  }
+
+  .word-item .word-text {
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    transition: all 0.25s;
+  }
+
+  .word-item .word-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .word-item .word-check svg { width: 12px; height: 12px; opacity: 0; transition: opacity 0.2s; }
+
+  .word-item.found {
+    background: var(--green-light);
+    border-color: rgba(125,197,122,0.3);
+  }
+  .word-item.found .word-text {
+    text-decoration: line-through;
+    color: var(--text-sub);
+  }
+  .word-item.found .word-check {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .word-item.found .word-check svg { opacity: 1; color: white; }
+
+  /* Hint tooltip */
+  .word-item .hint-tooltip {
+    position: absolute;
+    left: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--navy-dark);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 10;
+  }
+  .word-item:hover .hint-tooltip { opacity: 1; }
+
+  /* ── BOARDi CORNER ───────────────────────────── */
+  .boardi-corner {
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+    padding-top: 12px;
+  }
+  .boardi-corner img {
+    width: 48px;
+    height: 48px;
+    filter: drop-shadow(0 2px 6px rgba(37,62,122,0.15));
+    transition: transform 0.3s;
+  }
+  .boardi-corner img:hover { transform: scale(1.1) rotate(-5deg); }
+
+  /* ── URGENT OVERLAY ──────────────────────────── */
+  #urgentOverlay {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 30;
+    display: none;
+    animation: overlay-flash 0.5s ease infinite alternate;
+  }
+  #urgentOverlay.show { display: block; }
+  @keyframes overlay-flash {
+    from { background: transparent; }
+    to   { background: rgba(240,86,128,0.04); }
+  }
+
+  /* ── START OVERLAY ───────────────────────────── */
+  .start-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0,0,0,0.5);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 20px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+  .start-overlay.hidden { display: none; }
+  .start-overlay-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 40px 48px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    display: flex; flex-direction: column;
+    align-items: center; gap: 16px;
+  }
+  .start-overlay-card img { width: 80px; }
+  .start-overlay-title {
+    font-family: var(--font-en);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  [data-theme="dark"] .start-overlay-title { color: var(--cyan); }
+  .start-overlay-hint {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-sub);
+    animation: blink-hint 1.2s ease-in-out infinite;
+  }
+  @keyframes blink-hint {
+    0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+  }
+
+  /* ── RESULT OVERLAY ──────────────────────────── */
+  .result-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 100;
+    background: rgba(0,0,0,0.55);
+    flex-direction: column;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(6px);
+  }
+  .result-overlay.show { display: flex; }
+
+  .result-card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 36px 44px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    max-width: 400px;
+    width: 90%;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 14px;
+  }
+
+  .result-card img { width: 90px; }
+
+  .result-title {
+    font-family: var(--font-en);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  .result-stats {
+    width: 100%;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    padding: 14px 18px;
+    text-align: right;
+  }
+  .result-stat-line {
+    font-size: 14px;
+    color: var(--text-main);
+    line-height: 2;
+  }
+  .result-stat-line b { color: var(--cyan); }
+  .result-missed {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 4px;
+  }
+  .result-score {
+    font-family: var(--font-en);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--cyan);
+    text-align: center;
+    margin-top: 6px;
+  }
+
+  .btn-primary {
+    background: var(--navy);
+    color: white;
+    border: none;
+    padding: 12px 36px;
+    border-radius: 50px;
+    font-family: var(--font-en);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(37,62,122,0.25);
+  }
+  .btn-primary:hover { background: var(--navy-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,62,122,0.3); }
+
+  /* ── CONFETTI ────────────────────────────────── */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    z-index: 200;
+    pointer-events: none;
+    animation: confetti-fall linear forwards;
+  }
+  @keyframes confetti-fall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── SHAKE ───────────────────────────────────── */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(3px); }
+  }
+  .shake { animation: shake 0.35s ease; }
+
+  /* ── PULSE found ─────────────────────────────── */
+  @keyframes found-pulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+  .found-pulse { animation: found-pulse 0.4s ease; }
+
+  /* ── RESPONSIVE ──────────────────────────────── */
+  @media (max-width: 900px) {
+    .game-wrapper { flex-direction: column; }
+    .game-grid-col { flex: none; max-width: 100%; width: 100%; }
+    .game-info-col { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div id="urgentOverlay"></div>
+
+<!-- START OVERLAY -->
+<div class="start-overlay" id="startOverlay">
+  <div class="start-overlay-card">
+    <img src="../BOARDi/SVG/4.svg" alt="BOARDi">
+    <div class="start-overlay-title">תשחץ</div>
+    <div class="start-overlay-hint">לחצו SPACE או הקישו כאן להתחלה</div>
+  </div>
+</div>
+
+<!-- SIDEBAR (52px student collapsed) -->
+<nav class="sidebar">
+  <div class="sidebar-logo-mini">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="14" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
+  </div>
+
+  <a class="nav-icon" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    <span class="tooltip">הקורסים שלי</span>
+  </a>
+  <a class="nav-icon" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span class="tooltip">המועדונים שלי</span>
+  </a>
+  <a class="nav-icon" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    <span class="tooltip">הסיכומים שלי</span>
+  </a>
+  <a class="nav-icon" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span class="tooltip">הגדרות</span>
+  </a>
+
+  <div class="sidebar-bottom-mini">
+    <div class="avatar-mini">מ</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <a class="breadcrumb-link" href="#">הקורסים שלי</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <a class="breadcrumb-link" href="#">יסודות העיצוב</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <span class="breadcrumb-current">משחק: תשחץ</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="lang-toggle" title="שפה">
+        <span>&#x1F1EE;&#x1F1F1;</span>
+      </div>
+      <div class="icon-btn" id="themeToggle" title="מצב כהה / בהיר">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+    <div class="game-wrapper">
+
+      <!-- LEFT: GRID (60%) -->
+      <div class="game-grid-col">
+        <div class="game-card">
+          <div class="canvas-wrap">
+            <canvas id="gridCanvas"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: INFO (40%) -->
+      <div class="game-info-col">
+        <div class="game-card">
+          <!-- Timer -->
+          <div class="timer-display">
+            <div class="timer-label">זמן נותר</div>
+            <div class="timer-value" id="timerDisplay">60</div>
+          </div>
+
+          <!-- Score -->
+          <div class="score-display">
+            <div class="score-label">נמצאו</div>
+            <div class="score-value"><span id="foundCount">0</span> / <span id="totalCount">0</span></div>
+          </div>
+
+          <!-- Word List -->
+          <div class="word-list-title">מילים לחיפוש</div>
+          <div class="word-list" id="wordList"></div>
+
+          <!-- BOARDi -->
+          <div class="boardi-corner">
+            <img src="../BOARDi/SVG/4.svg" alt="BOARDi" id="boarDiImg">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- RESULT OVERLAY -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-card">
+    <img src="../BOARDi/SVG/2.svg" alt="BOARDi" id="resultBoardi">
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-stats" id="resultStats"></div>
+    <button class="btn-primary" id="resultBtn">שחק שוב</button>
+  </div>
+</div>
+
+<script>
+// ── THEME TOGGLE ──────────────────────────────────
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const html = document.documentElement;
+  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+});
+
+// ── GAME CONFIG ───────────────────────────────────
+const GAME_DURATION = 60;
+const GRID_SIZE     = 11;
+const DIRECTIONS    = [
+  { dr: 0,  dc: -1 },  // RTL
+  { dr: 0,  dc: 1  },  // LTR
+  { dr: 1,  dc: 0  },  // down
+  { dr: -1, dc: 0  },  // up
+  { dr: 1,  dc: -1 },  // diagonal
+  { dr: 1,  dc: 1  },  // diagonal
+  { dr: -1, dc: -1 }, // diagonal
+  { dr: -1, dc: 1  }, // diagonal
+];
+const ALEPH_BET = 'אבגדהוזחטיכלמנסעפצקרשת';
+
+const FOUND_COLORS_LIGHT = [
+  'rgba(56,196,242,0.35)',   // cyan
+  'rgba(240,86,128,0.3)',    // pink
+  'rgba(125,197,122,0.35)',  // green
+  'rgba(234,214,84,0.35)',   // yellow
+  'rgba(37,62,122,0.18)',    // navy-light
+];
+const FOUND_COLORS_DARK = [
+  'rgba(56,196,242,0.4)',
+  'rgba(240,86,128,0.35)',
+  'rgba(125,197,122,0.4)',
+  'rgba(234,214,84,0.35)',
+  'rgba(58,84,153,0.4)',
+];
+
+const WORD_BANK = [
+  { word: 'עיצוב', hint: 'מה שאנחנו לומדים' },
+  { word: 'צבע', hint: 'אלמנט ויזואלי בסיסי' },
+  { word: 'פונט', hint: 'סוג אות' },
+  { word: 'לוגו', hint: 'סמל של מותג' },
+  { word: 'גריד', hint: 'רשת לסידור' },
+  { word: 'פיקסל', hint: 'נקודה במסך' },
+  { word: 'מרווח', hint: 'רווח לבן' },
+  { word: 'קו', hint: 'אלמנט בסיסי בגרפיקה' },
+  { word: 'צורה', hint: 'עיגול, ריבוע, משולש' },
+  { word: 'מותג', hint: 'זהות עסקית' },
+  { word: 'דף', hint: 'עמוד עיצוב' },
+  { word: 'סמל', hint: 'אייקון' },
+  { word: 'רקע', hint: 'מה שמאחורי התוכן' },
+  { word: 'גודל', hint: 'מידה של אלמנט' },
+  { word: 'שכבה', hint: 'Layer בפוטושופ' },
+];
+
+// ── STATE ─────────────────────────────────────────
+let gameWords   = [];
+let grid        = [];
+let placements  = [];
+let score       = 0;
+let timeLeft    = GAME_DURATION;
+let timerInterval = null;
+let gameOver    = false;
+
+let selecting   = false;
+let selStart    = null;
+let selDir      = null;
+let selCells    = [];
+
+// ── CANVAS ────────────────────────────────────────
+const canvas = document.getElementById('gridCanvas');
+const ctx    = canvas.getContext('2d');
+let CELL;
+
+function isDark() {
+  return document.documentElement.dataset.theme === 'dark';
+}
+
+function resizeCanvas() {
+  const wrap = canvas.parentElement;
+  const maxW = wrap.clientWidth - 8;
+  CELL = Math.floor(maxW / GRID_SIZE);
+  canvas.width  = CELL * GRID_SIZE;
+  canvas.height = CELL * GRID_SIZE;
+}
+
+function pickWords() {
+  const shuffled = [...WORD_BANK].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 10);
+}
+
+// ── GRID BUILD ────────────────────────────────────
+function buildGrid() {
+  grid = Array.from({ length: GRID_SIZE }, () =>
+    Array.from({ length: GRID_SIZE }, () => ({ letter: '', placements: [] }))
+  );
+  placements = [];
+
+  const sorted = [...gameWords].sort((a, b) => b.word.length - a.word.length);
+
+  for (const { word, hint } of sorted) {
+    let placed = false;
+    const dirs = [...DIRECTIONS].sort(() => Math.random() - 0.5);
+    outer:
+    for (let attempt = 0; attempt < 400 && !placed; attempt++) {
+      const dir = dirs[attempt % dirs.length];
+      const r   = Math.floor(Math.random() * GRID_SIZE);
+      const c   = Math.floor(Math.random() * GRID_SIZE);
+      const endR = r + dir.dr * (word.length - 1);
+      const endC = c + dir.dc * (word.length - 1);
+      if (endR < 0 || endR >= GRID_SIZE || endC < 0 || endC >= GRID_SIZE) continue;
+      const cells = [];
+      for (let i = 0; i < word.length; i++) {
+        const cr = r + dir.dr * i, cc = c + dir.dc * i;
+        const ex = grid[cr][cc].letter;
+        if (ex && ex !== word[i]) continue outer;
+        cells.push({ r: cr, c: cc });
+      }
+      const pid = placements.length;
+      for (let i = 0; i < word.length; i++) {
+        grid[cells[i].r][cells[i].c].letter = word[i];
+        grid[cells[i].r][cells[i].c].placements.push(pid);
+      }
+      placements.push({ word, hint, cells, found: false, colorIdx: pid % FOUND_COLORS_LIGHT.length });
+      placed = true;
+    }
+  }
+
+  // Fill blanks
+  for (let r = 0; r < GRID_SIZE; r++)
+    for (let c = 0; c < GRID_SIZE; c++)
+      if (!grid[r][c].letter)
+        grid[r][c].letter = ALEPH_BET[Math.floor(Math.random() * ALEPH_BET.length)];
+}
+
+// ── WORD LIST UI ──────────────────────────────────
+function buildWordList() {
+  const container = document.getElementById('wordList');
+  container.innerHTML = '';
+  document.getElementById('totalCount').textContent = placements.length;
+  document.getElementById('foundCount').textContent = '0';
+
+  for (const p of placements) {
+    const item = document.createElement('div');
+    item.className = 'word-item';
+    item.id = `word-${p.word}`;
+    item.innerHTML = `
+      <span class="word-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <span class="word-text">${p.word}</span>
+      <span class="hint-tooltip">${p.hint}</span>
+    `;
+    container.appendChild(item);
+  }
+}
+
+function markWordFound(word) {
+  const el = document.getElementById(`word-${word}`);
+  if (el) {
+    el.classList.add('found');
+    el.classList.add('found-pulse');
+    setTimeout(() => el.classList.remove('found-pulse'), 400);
+  }
+  const found = placements.filter(p => p.found).length;
+  document.getElementById('foundCount').textContent = found;
+}
+
+// ── SELECTION ─────────────────────────────────────
+function getCellFromEvent(e) {
+  const rect  = canvas.getBoundingClientRect();
+  const touch = e.touches?.[0] ?? e.changedTouches?.[0];
+  const clientX = touch ? touch.clientX : e.clientX;
+  const clientY = touch ? touch.clientY : e.clientY;
+  return {
+    r: Math.floor((clientY - rect.top)  / CELL),
+    c: Math.floor((clientX - rect.left) / CELL),
+  };
+}
+
+function buildSelCells(start, dir, end) {
+  const cells = [];
+  let { r, c } = start;
+  for (let step = 0; step <= GRID_SIZE; step++) {
+    cells.push({ r, c });
+    if (r === end.r && c === end.c) break;
+    r += dir.dr; c += dir.dc;
+    if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE) break;
+  }
+  return cells;
+}
+
+function checkSelection() {
+  if (selCells.length < 2) { selCells = []; render(); return; }
+
+  const selKey  = selCells.map(sc => `${sc.r},${sc.c}`).join('|');
+  const selKeyR = [...selCells].reverse().map(sc => `${sc.r},${sc.c}`).join('|');
+
+  let matched = false;
+  for (const p of placements) {
+    if (p.found) continue;
+    const placKey = p.cells.map(c => `${c.r},${c.c}`).join('|');
+    if (selKey === placKey || selKeyR === placKey) {
+      p.found = true;
+      matched = true;
+      const pts = Math.round(p.word.length * 15 * (1 + timeLeft / GAME_DURATION));
+      score += pts;
+      timeLeft = Math.min(timeLeft + 5, 120);
+      updateTimerDisplay(false);
+      markWordFound(p.word);
+
+      if (placements.every(pl => pl.found)) {
+        clearInterval(timerInterval);
+        setTimeout(endGame, 400);
+      }
+      break;
+    }
+  }
+
+  if (!matched) {
+    canvas.classList.add('shake');
+    setTimeout(() => canvas.classList.remove('shake'), 350);
+  }
+
+  selCells = [];
+  selDir   = null;
+  render();
+}
+
+// ── CANVAS EVENTS ─────────────────────────────────
+canvas.addEventListener('pointerdown', e => {
+  e.preventDefault();
+  if (gameOver) return;
+  const { r, c } = getCellFromEvent(e);
+  if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE) return;
+  selecting = true;
+  selStart  = { r, c };
+  selDir    = null;
+  selCells  = [{ r, c }];
+  canvas.setPointerCapture(e.pointerId);
+  render();
+});
+
+canvas.addEventListener('pointermove', e => {
+  if (!selecting) return;
+  const { r, c } = getCellFromEvent(e);
+  if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE) return;
+  if (!selDir) {
+    const dr = r - selStart.r, dc = c - selStart.c;
+    if (Math.abs(dr) + Math.abs(dc) > 0) {
+      if (Math.abs(dr) === 0) selDir = { dr: 0, dc: Math.sign(dc) };
+      else if (Math.abs(dc) === 0) selDir = { dr: Math.sign(dr), dc: 0 };
+      else selDir = { dr: Math.sign(dr), dc: Math.sign(dc) };
+    }
+  }
+  if (selDir) {
+    selCells = buildSelCells(selStart, selDir, { r, c });
+    render();
+  }
+});
+
+canvas.addEventListener('pointerup', () => {
+  if (!selecting) return;
+  selecting = false;
+  checkSelection();
+});
+
+canvas.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
+
+// ── RENDER ────────────────────────────────────────
+function render() {
+  const dark = isDark();
+  const foundColors = dark ? FOUND_COLORS_DARK : FOUND_COLORS_LIGHT;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Board background
+  ctx.fillStyle = dark ? '#1a2740' : '#FFFFFF';
+  ctx.beginPath();
+  ctx.roundRect(0, 0, canvas.width, canvas.height, 12);
+  ctx.fill();
+
+  // Grid lines
+  ctx.strokeStyle = dark ? 'rgba(255,255,255,0.06)' : 'rgba(37,62,122,0.08)';
+  ctx.lineWidth = 1;
+  for (let i = 1; i < GRID_SIZE; i++) {
+    ctx.beginPath(); ctx.moveTo(i * CELL, 0); ctx.lineTo(i * CELL, canvas.height); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, i * CELL); ctx.lineTo(canvas.width, i * CELL); ctx.stroke();
+  }
+
+  // Found word highlights
+  for (const p of placements) {
+    if (!p.found) continue;
+    ctx.save();
+    ctx.fillStyle = foundColors[p.colorIdx];
+    for (const { r, c } of p.cells) {
+      ctx.beginPath();
+      ctx.roundRect(c * CELL + 2, r * CELL + 2, CELL - 4, CELL - 4, 6);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // Current selection highlight
+  if (selCells.length > 0) {
+    ctx.save();
+    ctx.fillStyle = dark ? 'rgba(56,196,242,0.25)' : 'rgba(56,196,242,0.2)';
+    for (const { r, c } of selCells) {
+      ctx.beginPath();
+      ctx.roundRect(c * CELL + 2, r * CELL + 2, CELL - 4, CELL - 4, 6);
+      ctx.fill();
+    }
+    ctx.strokeStyle = dark ? 'rgba(56,196,242,0.6)' : 'rgba(56,196,242,0.5)';
+    ctx.lineWidth = 2;
+    for (const { r, c } of selCells) {
+      ctx.beginPath();
+      ctx.roundRect(c * CELL + 2, r * CELL + 2, CELL - 4, CELL - 4, 6);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // Letters
+  ctx.textAlign    = 'center';
+  ctx.textBaseline = 'middle';
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      const { letter } = grid[r][c];
+      if (!letter) continue;
+      const cx = c * CELL + CELL / 2;
+      const cy = r * CELL + CELL / 2;
+
+      const inFound = grid[r][c].placements.some(pid => placements[pid]?.found);
+      const inSel = selCells.some(s => s.r === r && s.c === c);
+
+      ctx.font = `600 ${Math.round(CELL * 0.48)}px Heebo, sans-serif`;
+
+      if (inFound) {
+        ctx.fillStyle = dark ? '#fff' : '#253E7A';
+        ctx.shadowColor = dark ? 'rgba(255,255,255,0.3)' : 'rgba(37,62,122,0.2)';
+        ctx.shadowBlur = 4;
+      } else if (inSel) {
+        ctx.fillStyle = dark ? '#38C4F2' : '#253E7A';
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+      } else {
+        ctx.fillStyle = dark ? 'rgba(221,229,245,0.7)' : '#253E7A';
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+      }
+
+      ctx.fillText(letter, cx, cy + 1);
+      ctx.shadowBlur = 0;
+    }
+  }
+}
+
+// ── TIMER ─────────────────────────────────────────
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay(true);
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timeLeft = 0;
+      endGame();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay(tick) {
+  const el  = document.getElementById('timerDisplay');
+  const urg = document.getElementById('urgentOverlay');
+  el.textContent = Math.max(0, timeLeft);
+
+  if (tick) {
+    el.classList.remove('tick');
+    void el.offsetWidth;
+    el.classList.add('tick');
+  }
+
+  if (timeLeft <= 10) {
+    el.classList.add('urgent');
+    urg.classList.add('show');
+  } else {
+    el.classList.remove('urgent');
+    urg.classList.remove('show');
+  }
+}
+
+// ── CONFETTI ──────────────────────────────────────
+function spawnConfetti() {
+  const colors = ['#38C4F2', '#F05680', '#7DC57A', '#EAD654', '#253E7A'];
+  for (let i = 0; i < 60; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + 'vw';
+    piece.style.top  = '-10px';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.width  = (6 + Math.random() * 8) + 'px';
+    piece.style.height = (6 + Math.random() * 8) + 'px';
+    piece.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+    piece.style.animationDelay    = (Math.random() * 0.6) + 's';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 4000);
+  }
+}
+
+// ── END GAME ──────────────────────────────────────
+function endGame() {
+  gameOver = true;
+  clearInterval(timerInterval);
+  document.getElementById('urgentOverlay').classList.remove('show');
+
+  const foundList = placements.filter(p => p.found);
+  const total     = placements.length;
+  const allFound  = foundList.length === total;
+  const missed    = placements.filter(p => !p.found).map(p => p.word);
+
+  if (allFound) score *= 2;
+
+  const resultBoardi = document.getElementById('resultBoardi');
+  const resultTitle  = document.getElementById('resultTitle');
+  const resultStats  = document.getElementById('resultStats');
+
+  resultBoardi.src = allFound ? '../BOARDi/SVG/2.svg' : '../BOARDi/SVG/13.svg';
+
+  if (allFound) {
+    resultTitle.textContent = 'כל הכבוד!';
+    spawnConfetti();
+    document.getElementById('boarDiImg').src = '../BOARDi/SVG/2.svg';
+  } else if (foundList.length >= total * 0.7) {
+    resultTitle.textContent = 'יפה מאוד!';
+  } else if (foundList.length >= total * 0.4) {
+    resultTitle.textContent = 'לא רע!';
+  } else {
+    resultTitle.textContent = timeLeft <= 0 ? 'נגמר הזמן!' : 'אפשר יותר טוב';
+  }
+
+  let statsHTML = `
+    <div class="result-stat-line">נמצאו: <b>${foundList.length} מתוך ${total}</b> מילים</div>
+    ${timeLeft <= 0 ? '<div class="result-stat-line">נגמר הזמן!</div>' : `<div class="result-stat-line">זמן שנותר: <b>${timeLeft}</b> שניות</div>`}
+  `;
+  if (missed.length) {
+    statsHTML += `<div class="result-missed">לא נמצאו: ${missed.join(' , ')}</div>`;
+  }
+  if (allFound) {
+    statsHTML += `<div class="result-stat-line">בונוס x2!</div>`;
+  }
+  statsHTML += `<div class="result-score">${score} נקודות</div>`;
+  resultStats.innerHTML = statsHTML;
+
+  document.getElementById('resultOverlay').classList.add('show');
+}
+
+// ── GAME START ────────────────────────────────────
+function resetGame() {
+  clearInterval(timerInterval);
+  gameOver  = false;
+  score     = 0;
+  timeLeft  = GAME_DURATION;
+  selecting = false;
+  selCells  = [];
+  selDir    = null;
+  document.getElementById('resultOverlay').classList.remove('show');
+  document.getElementById('urgentOverlay').classList.remove('show');
+  document.getElementById('boarDiImg').src = '../BOARDi/SVG/4.svg';
+
+  gameWords = pickWords();
+  buildGrid();
+  resizeCanvas();
+  buildWordList();
+  updateTimerDisplay(false);
+  render();
+}
+
+const startOverlay = document.getElementById('startOverlay');
+
+function startGame() {
+  resetGame();
+  startOverlay.classList.remove('hidden');
+
+  let started = false;
+  function go() {
+    if (started) return;
+    started = true;
+    startOverlay.classList.add('hidden');
+    window.removeEventListener('keydown', handler);
+    startOverlay.removeEventListener('click', go);
+    startTimer();
+  }
+  function handler(e) {
+    if (e.code === 'Space') { e.preventDefault(); go(); }
+  }
+  window.addEventListener('keydown', handler);
+  startOverlay.addEventListener('click', go);
+}
+
+document.getElementById('resultBtn').addEventListener('click', startGame);
+
+// Init
+window.addEventListener('resize', () => { resizeCanvas(); render(); });
+
+// Observer for theme changes to re-render
+new MutationObserver(() => render()).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+startGame();
+</script>
+</body>
+</html>
