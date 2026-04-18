@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>עורך וידאו | WHITEBOARD Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+  --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+  --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+  --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+  --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+  --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+  --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+  --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+  --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+  --timeline-bg:#1a2740;--timeline-border:rgba(255,255,255,0.08);
+}
+[data-theme="dark"] {
+  --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+  --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+  --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+  --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+  --light-blue:rgba(56,196,242,0.08);
+  --timeline-bg:#0d1628;--timeline-border:rgba(255,255,255,0.05);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);display:flex;flex-direction:column;transition:background .3s,color .3s;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:48px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50;box-shadow:var(--shadow-sm);transition:background .3s;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.back-btn{display:flex;align-items:center;gap:6px;font-family:var(--font-he);font-size:13px;font-weight:600;color:var(--text-sub);background:none;border:none;cursor:pointer;padding:6px 10px;border-radius:var(--radius-sm);transition:all .2s;}
+.back-btn:hover{background:var(--light-blue);color:var(--navy);}
+.back-btn svg{width:18px;height:18px;transform:scaleX(-1);}
+.topbar-center{display:flex;align-items:center;gap:12px;position:absolute;left:50%;transform:translateX(50%);}
+.lesson-name{font-size:14px;font-weight:700;color:var(--text-main);background:none;border:1px solid transparent;padding:4px 10px;border-radius:8px;font-family:var(--font-he);text-align:center;min-width:200px;transition:all .2s;cursor:text;}
+.lesson-name:hover{border-color:var(--border);}
+.lesson-name:focus{outline:none;border-color:var(--cyan);background:var(--surface-2);}
+.autosave{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-sub);}
+.autosave-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.autosave-dot.saved{background:var(--green);}
+.autosave-dot.unsaved{background:var(--yellow);}
+.topbar-left{display:flex;align-items:center;gap:8px;}
+.btn-outline{font-family:var(--font-he);font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);cursor:pointer;transition:all .2s;}
+.btn-outline:hover{border-color:var(--cyan);color:var(--navy);background:var(--light-blue);}
+.btn-pink{font-family:var(--font-he);font-size:12px;font-weight:700;padding:6px 16px;border-radius:8px;border:none;background:var(--pink);color:white;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(240,86,128,0.3);}
+.btn-pink:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.icon-btn-sm{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+.icon-btn-sm:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+.icon-sun{display:none;}.icon-moon{display:block;}
+[data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+/* ── MAIN PANELS ── */
+.main-area{flex:1;display:flex;overflow:hidden;min-height:0;}
+.panel-preview{flex:0 0 55%;display:flex;flex-direction:column;padding:12px 6px 12px 12px;gap:8px;}
+.panel-tools{flex:0 0 45%;display:flex;flex-direction:column;padding:12px 12px 12px 6px;min-width:0;}
+
+/* ── VIDEO PREVIEW ── */
+.video-container{flex:1;background:#0d1628;border-radius:var(--radius-md);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;min-height:0;}
+.video-canvas{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;}
+.video-placeholder{color:rgba(255,255,255,0.2);font-size:72px;font-family:var(--font-en);font-weight:700;user-select:none;letter-spacing:4px;}
+.video-logo-overlay{position:absolute;top:16px;right:16px;opacity:0.4;display:flex;align-items:center;gap:6px;color:white;font-family:var(--font-en);font-size:14px;font-weight:600;}
+.video-logo-overlay svg{width:20px;height:20px;}
+.video-controls{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.7));padding:12px 16px 10px;display:flex;align-items:center;gap:10px;}
+.video-ctrl-btn{width:36px;height:36px;border-radius:50%;border:none;background:rgba(255,255,255,0.15);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.video-ctrl-btn:hover{background:rgba(255,255,255,0.3);}
+.video-ctrl-btn.play-btn{width:40px;height:40px;background:var(--cyan);color:#0d1628;}
+.video-ctrl-btn.play-btn:hover{background:#4dd4ff;transform:scale(1.05);}
+.video-ctrl-btn svg{width:18px;height:18px;}
+.video-time{font-size:12px;color:rgba(255,255,255,0.7);font-family:var(--font-en);font-weight:500;margin-right:auto;direction:ltr;text-align:left;}
+.speed-btn{font-family:var(--font-en);font-size:11px;font-weight:600;color:rgba(255,255,255,0.6);background:rgba(255,255,255,0.1);border:none;padding:4px 8px;border-radius:6px;cursor:pointer;transition:all .2s;}
+.speed-btn:hover{background:rgba(255,255,255,0.2);color:white;}
+
+/* ── TOOLS PANEL ── */
+.tools-card{flex:1;background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;overflow:hidden;transition:background .3s;min-height:0;}
+.tools-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.tools-tabs::-webkit-scrollbar{display:none;}
+.tool-tab{padding:10px 12px;font-size:12px;font-weight:600;color:var(--text-sub);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;flex-shrink:0;}
+.tool-tab:hover{color:var(--text-main);background:var(--light-blue);}
+.tool-tab.active{color:var(--cyan);border-bottom-color:var(--cyan);font-weight:700;}
+.tool-content{flex:1;overflow-y:auto;padding:16px;min-height:0;}
+.tool-content::-webkit-scrollbar{width:5px;}
+.tool-content::-webkit-scrollbar-track{background:transparent;}
+.tool-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* ── TOOL SHARED ── */
+.tool-section{margin-bottom:20px;}
+.tool-section-title{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text-main);}
+.tool-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.tool-label{font-size:12px;color:var(--text-sub);min-width:60px;flex-shrink:0;}
+.tool-value{font-size:12px;font-weight:600;color:var(--text-main);font-family:var(--font-en);}
+.btn-tool{font-family:var(--font-he);font-size:12px;font-weight:600;padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-tool:hover{border-color:var(--cyan);background:var(--light-blue);}
+.btn-tool.active{border-color:var(--cyan);background:var(--cyan-light);color:var(--navy);}
+.btn-tool.danger{border-color:var(--pink);color:var(--pink);}
+.btn-tool.danger:hover{background:rgba(240,86,128,0.08);}
+.btn-tool svg{width:16px;height:16px;}
+.btn-tool-primary{font-family:var(--font-he);font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;border:none;background:var(--cyan);color:white;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-tool-primary:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.btn-tool-primary svg{width:16px;height:16px;}
+
+/* Slider */
+.slider-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.slider-label{font-size:11px;color:var(--text-sub);min-width:55px;}
+.slider-track{flex:1;height:6px;background:var(--border);border-radius:3px;position:relative;cursor:pointer;}
+.slider-fill{height:100%;background:var(--cyan);border-radius:3px;transition:width .1s;}
+.slider-thumb{width:16px;height:16px;border-radius:50%;background:white;border:2px solid var(--cyan);position:absolute;top:50%;transform:translate(50%,-50%);cursor:grab;box-shadow:0 1px 4px rgba(0,0,0,0.15);}
+.slider-value{font-size:11px;font-weight:600;color:var(--text-main);font-family:var(--font-en);min-width:35px;text-align:center;}
+
+/* Cuts List */
+.cut-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface-2);border-radius:8px;margin-bottom:6px;font-size:12px;transition:background .2s;}
+.cut-item:hover{background:var(--light-blue);}
+.cut-icon{width:28px;height:28px;border-radius:6px;background:rgba(240,86,128,0.1);color:var(--pink);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cut-icon svg{width:14px;height:14px;}
+.cut-info{flex:1;}
+.cut-time{font-family:var(--font-en);font-weight:600;font-size:11px;color:var(--text-main);}
+.cut-label{font-size:11px;color:var(--text-sub);}
+.cut-undo{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text-sub);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
+.cut-undo:hover{border-color:var(--pink);color:var(--pink);background:rgba(240,86,128,0.06);}
+.cut-undo svg{width:12px;height:12px;}
+
+/* Position Grid */
+.pos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:120px;margin-bottom:12px;}
+.pos-cell{width:36px;height:28px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface-2);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.pos-cell:hover{border-color:var(--cyan);}
+.pos-cell.active{border-color:var(--cyan);background:var(--cyan-light);}
+.pos-cell.active::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--cyan);}
+
+/* Upload Zone */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius-md);padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface-2);}
+.upload-zone:hover{border-color:var(--cyan);background:var(--cyan-light);}
+.upload-zone svg{width:32px;height:32px;color:var(--text-light);margin-bottom:8px;}
+.upload-zone-text{font-size:12px;color:var(--text-sub);}
+.upload-zone-hint{font-size:11px;color:var(--text-light);margin-top:4px;}
+
+/* Template Grid */
+.template-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
+.template-thumb{aspect-ratio:16/9;border-radius:10px;border:2px solid var(--border);overflow:hidden;cursor:pointer;transition:all .2s;position:relative;display:flex;align-items:center;justify-content:center;}
+.template-thumb:hover{border-color:var(--cyan);transform:translateY(-1px);}
+.template-thumb.active{border-color:var(--cyan);box-shadow:0 0 0 2px var(--cyan-light);}
+.template-thumb-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:white;}
+.template-thumb .check{position:absolute;top:4px;left:4px;width:18px;height:18px;border-radius:50%;background:var(--cyan);color:white;display:none;align-items:center;justify-content:center;}
+.template-thumb.active .check{display:flex;}
+.template-thumb .check svg{width:11px;height:11px;}
+
+/* Duration Selector */
+.duration-selector{display:flex;gap:6px;}
+.dur-btn{padding:6px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-he);font-size:12px;font-weight:600;color:var(--text-sub);cursor:pointer;transition:all .2s;}
+.dur-btn:hover{border-color:var(--cyan);}
+.dur-btn.active{border-color:var(--cyan);background:var(--cyan-light);color:var(--navy);}
+
+/* Transition Grid */
+.transition-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.transition-item{padding:14px 8px;border-radius:10px;border:2px solid var(--border);background:var(--surface-2);text-align:center;cursor:pointer;transition:all .2s;}
+.transition-item:hover{border-color:var(--cyan);transform:translateY(-1px);}
+.transition-item.active{border-color:var(--cyan);background:var(--cyan-light);}
+.transition-item svg{width:28px;height:28px;color:var(--text-sub);margin-bottom:4px;}
+.transition-item.active svg{color:var(--cyan);}
+.transition-item-name{font-size:11px;font-weight:600;color:var(--text-main);}
+
+/* Info Box */
+.info-box{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:rgba(234,214,84,0.1);border:1px solid rgba(234,214,84,0.25);border-radius:10px;font-size:11px;color:var(--text-sub);line-height:1.5;}
+.info-box svg{width:16px;height:16px;color:var(--yellow);flex-shrink:0;margin-top:1px;}
+
+/* Subtitle Status */
+.subtitle-status{display:flex;align-items:center;gap:8px;padding:12px;background:var(--surface-2);border-radius:10px;margin-bottom:12px;font-size:13px;color:var(--text-sub);}
+.subtitle-status svg{width:20px;height:20px;color:var(--text-light);}
+
+/* ── TIMELINE ── */
+.timeline-panel{flex-shrink:0;height:200px;background:var(--timeline-bg);border-top:1px solid var(--timeline-border);display:flex;flex-direction:column;position:relative;}
+.timeline-toolbar{display:flex;align-items:center;justify-content:space-between;padding:4px 12px;border-bottom:1px solid var(--timeline-border);flex-shrink:0;}
+.timeline-toolbar-right{display:flex;align-items:center;gap:6px;}
+.timeline-info{font-size:11px;color:rgba(255,255,255,0.4);font-weight:500;}
+.zoom-controls{display:flex;align-items:center;gap:6px;}
+.zoom-btn{width:26px;height:26px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
+.zoom-btn:hover{background:rgba(255,255,255,0.08);color:white;}
+.zoom-btn svg{width:14px;height:14px;}
+.zoom-slider-mini{width:60px;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;position:relative;}
+.zoom-slider-mini-fill{height:100%;background:var(--cyan);border-radius:2px;width:50%;}
+
+.timeline-body{flex:1;overflow-x:auto;overflow-y:hidden;position:relative;min-height:0;}
+.timeline-body::-webkit-scrollbar{height:6px;}
+.timeline-body::-webkit-scrollbar-track{background:rgba(255,255,255,0.03);}
+.timeline-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:3px;}
+
+.timeline-content{position:relative;min-width:100%;width:1400px;height:100%;display:flex;flex-direction:column;}
+
+/* Time Ruler */
+.time-ruler{height:22px;position:relative;flex-shrink:0;border-bottom:1px solid var(--timeline-border);}
+.time-mark{position:absolute;top:0;height:100%;display:flex;flex-direction:column;align-items:center;}
+.time-mark-line{width:1px;height:8px;background:rgba(255,255,255,0.15);}
+.time-mark-label{font-size:9px;font-family:var(--font-en);color:rgba(255,255,255,0.35);margin-top:1px;}
+
+/* Tracks */
+.track{position:relative;height:42px;display:flex;align-items:center;margin:0 0 2px;padding:0 40px 0 0;}
+.track-label{position:absolute;right:0;top:0;bottom:0;width:40px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:.5px;writing-mode:horizontal-tb;z-index:2;}
+.track-content{position:relative;flex:1;height:100%;margin-right:0;}
+
+/* Video Segments */
+.segment{position:absolute;height:34px;top:4px;border-radius:6px;cursor:pointer;transition:all .15s;display:flex;align-items:center;padding:0 10px;font-size:10px;font-weight:600;color:white;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.segment:hover{filter:brightness(1.15);transform:scaleY(1.04);}
+.segment.selected{box-shadow:0 0 0 2px var(--cyan),0 0 12px rgba(56,196,242,0.3);}
+.segment.seg-cyan{background:linear-gradient(135deg,#2a7a9e,#38C4F2);}
+.segment.seg-navy{background:linear-gradient(135deg,#253E7A,#3a5499);}
+.segment.seg-teal{background:linear-gradient(135deg,#1a6b6b,#2abfb3);}
+
+/* Cut Points */
+.cut-point{position:absolute;top:0;bottom:0;width:2px;z-index:3;cursor:col-resize;}
+.cut-point-line{width:2px;height:100%;border-right:1px dashed rgba(240,86,128,0.6);border-left:1px dashed rgba(240,86,128,0.6);}
+.transition-diamond{position:absolute;top:50%;transform:translate(50%,-50%);width:12px;height:12px;background:var(--yellow);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);z-index:4;cursor:pointer;}
+.transition-diamond:hover{filter:brightness(1.2);transform:translate(50%,-50%) scale(1.15);}
+
+/* Audio Waveform */
+.waveform{display:flex;align-items:center;gap:1px;height:100%;padding:6px 0;}
+.waveform-bar{width:3px;border-radius:2px;background:var(--green);opacity:0.45;transition:opacity .15s;}
+.track:hover .waveform-bar{opacity:0.65;}
+
+/* Subtitle Blocks */
+.sub-block{position:absolute;height:18px;top:12px;border-radius:4px;background:rgba(234,214,84,0.4);border:1px solid rgba(234,214,84,0.5);cursor:pointer;transition:all .15s;}
+.sub-block:hover{background:rgba(234,214,84,0.55);}
+
+/* Playhead */
+.playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--cyan);z-index:10;pointer-events:none;transition:left 0.05s linear;}
+.playhead-handle{position:absolute;top:-2px;left:50%;transform:translateX(-50%);width:14px;height:10px;background:var(--cyan);clip-path:polygon(0 0,100% 0,50% 100%);pointer-events:auto;cursor:grab;z-index:11;}
+.playhead-handle:active{cursor:grabbing;}
+.playhead-time{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:9px;font-family:var(--font-en);color:var(--cyan);white-space:nowrap;font-weight:600;}
+
+/* ── EXPORT MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-card{background:var(--surface);border-radius:var(--radius-lg);padding:32px;width:420px;max-width:90vw;box-shadow:var(--shadow-md);text-align:center;}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:6px;}
+.modal-subtitle{font-size:13px;color:var(--text-sub);margin-bottom:24px;}
+.progress-bar-outer{height:10px;background:var(--surface-2);border-radius:5px;overflow:hidden;margin-bottom:8px;}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:5px;transition:width .4s ease;}
+.progress-pct{font-size:13px;font-weight:700;font-family:var(--font-en);color:var(--cyan);margin-bottom:4px;}
+.progress-eta{font-size:11px;color:var(--text-sub);margin-bottom:20px;}
+.progress-steps{display:flex;flex-direction:column;gap:6px;text-align:right;margin-bottom:20px;}
+.step{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-light);transition:color .3s;}
+.step.active{color:var(--cyan);font-weight:600;}
+.step.done{color:var(--green);}
+.step svg{width:16px;height:16px;flex-shrink:0;}
+.modal-mascot{width:80px;height:80px;margin:0 auto;opacity:0.8;}
+.modal-mascot img{width:100%;height:100%;object-fit:contain;}
+.modal-cancel{font-family:var(--font-he);font-size:12px;color:var(--text-sub);background:none;border:none;cursor:pointer;margin-top:10px;padding:6px 12px;border-radius:6px;transition:all .2s;}
+.modal-cancel:hover{color:var(--pink);background:rgba(240,86,128,0.06);}
+
+/* ── CONTEXT MENU ── */
+.context-menu{position:fixed;z-index:60;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);padding:4px;min-width:160px;display:none;}
+.context-menu.show{display:block;}
+.ctx-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--text-main);cursor:pointer;transition:all .15s;}
+.ctx-item:hover{background:var(--light-blue);}
+.ctx-item.danger{color:var(--pink);}
+.ctx-item.danger:hover{background:rgba(240,86,128,0.06);}
+.ctx-item svg{width:15px;height:15px;}
+.ctx-divider{height:1px;background:var(--border);margin:4px 8px;}
+
+/* ── KEYBOARD HINTS ── */
+.kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:18px;padding:0 5px;border-radius:4px;background:var(--surface-2);border:1px solid var(--border);font-size:10px;font-family:var(--font-en);font-weight:600;color:var(--text-sub);}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="topbar-right">
+    <button class="back-btn" onclick="history.back()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      חזרה לסקירה
+    </button>
+    <div class="autosave">
+      <span class="autosave-dot saved"></span>
+      <span class="autosave-text">נשמר אוטומטית</span>
+    </div>
+  </div>
+
+  <div class="topbar-center">
+    <input class="lesson-name" value="שיעור 3: צבע ומשמעות" onfocus="this.select()">
+  </div>
+
+  <div class="topbar-left">
+    <button class="btn-outline" id="saveDraftBtn">שמור טיוטה</button>
+    <button class="btn-pink" id="exportBtn">ייצוא ופרסום</button>
+    <button class="icon-btn-sm" onclick="toggleTheme()" title="מצב כהה/בהיר">
+      <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ══ MAIN AREA ══ -->
+<div class="main-area">
+
+  <!-- ── VIDEO PREVIEW ── -->
+  <div class="panel-preview">
+    <div class="video-container" id="videoContainer">
+      <div class="video-canvas">
+        <div class="video-placeholder">WHITEBOARD</div>
+        <div class="video-logo-overlay">
+          <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 12h6" stroke="#0d1628" stroke-width="1.5" fill="none"/></svg>
+          WHITEBOARD
+        </div>
+      </div>
+      <div class="video-controls">
+        <button class="video-ctrl-btn" title="פריים קודם"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 20L9 12l10-8v16z"/><line x1="5" y1="4" x2="5" y2="20"/></svg></button>
+        <button class="video-ctrl-btn play-btn" id="playPauseBtn" title="נגן / עצור (Space)">
+          <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21"/></svg>
+          <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="3" width="5" height="18"/><rect x="14" y="3" width="5" height="18"/></svg>
+        </button>
+        <button class="video-ctrl-btn" title="פריים הבא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4l10 8-10 8V4z"/><line x1="19" y1="4" x2="19" y2="20"/></svg></button>
+        <span class="video-time" id="videoTime">01:23 / 04:52</span>
+        <button class="speed-btn" id="speedBtn">1.0x</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOOLS PANEL ── -->
+  <div class="panel-tools">
+    <div class="tools-card">
+      <div class="tools-tabs" id="toolsTabs">
+        <div class="tool-tab active" data-tab="cut">חיתוך</div>
+        <div class="tool-tab" data-tab="logo">לוגו</div>
+        <div class="tool-tab" data-tab="intros">פתיח / סגיר</div>
+        <div class="tool-tab" data-tab="transitions">מעברים</div>
+        <div class="tool-tab" data-tab="subtitles">כתוביות</div>
+      </div>
+
+      <!-- TAB 1: CUT -->
+      <div class="tool-content" id="tabCut">
+        <div class="tool-section">
+          <div class="tool-section-title">נקודות חיתוך</div>
+          <div class="tool-row">
+            <span class="tool-label">נק' התחלה</span>
+            <span class="tool-value" id="inPoint">00:42.12</span>
+            <button class="btn-tool" onclick="setInPoint()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4v16"/><path d="M7 12h14"/><path d="M11 8l-4 4 4 4"/></svg>
+              Set In <span class="kbd">I</span>
+            </button>
+          </div>
+          <div class="tool-row">
+            <span class="tool-label">נק' סיום</span>
+            <span class="tool-value" id="outPoint">01:18.05</span>
+            <button class="btn-tool" onclick="setOutPoint()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 4v16"/><path d="M3 12h14"/><path d="M13 8l4 4-4 4"/></svg>
+              Set Out <span class="kbd">O</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="tool-section">
+          <div class="tool-section-title">פעולות</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn-tool danger" onclick="cutSelection()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+              חיתוך בחירה <span class="kbd">Del</span>
+            </button>
+            <button class="btn-tool" onclick="splitAtPlayhead()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/><polyline points="8 6 12 2 16 6"/><polyline points="8 18 12 22 16 18"/></svg>
+              פיצול בנקודה <span class="kbd">S</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="tool-section">
+          <div class="tool-section-title">חיתוכים שבוצעו</div>
+          <div id="cutsList">
+            <div class="cut-item">
+              <div class="cut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/></svg></div>
+              <div class="cut-info">
+                <div class="cut-time">00:12.00 — 00:18.30</div>
+                <div class="cut-label">הוסר — 6.3 שניות</div>
+              </div>
+              <button class="cut-undo" title="בטל חיתוך"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 7"/></svg></button>
+            </div>
+            <div class="cut-item">
+              <div class="cut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/></svg></div>
+              <div class="cut-info">
+                <div class="cut-time">02:44.10</div>
+                <div class="cut-label">פיצול</div>
+              </div>
+              <button class="cut-undo" title="בטל פיצול"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 7"/></svg></button>
+            </div>
+            <div class="cut-item">
+              <div class="cut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/></svg></div>
+              <div class="cut-info">
+                <div class="cut-time">03:50.00 — 04:02.15</div>
+                <div class="cut-label">הוסר — 12.15 שניות</div>
+              </div>
+              <button class="cut-undo" title="בטל חיתוך"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 7"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: LOGO -->
+      <div class="tool-content" id="tabLogo" style="display:none;">
+        <div class="tool-section">
+          <div class="tool-section-title">העלאת לוגו</div>
+          <div class="upload-zone" id="logoUpload">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div class="upload-zone-text">גרור לוגו לכאן או לחץ לבחירה</div>
+            <div class="upload-zone-hint">PNG / SVG, עד 2MB</div>
+          </div>
+        </div>
+
+        <div class="tool-section">
+          <div class="tool-section-title">מיקום</div>
+          <div class="pos-grid" id="posGrid">
+            <div class="pos-cell active" data-pos="top-right"></div>
+            <div class="pos-cell" data-pos="top-center"></div>
+            <div class="pos-cell" data-pos="top-left"></div>
+            <div class="pos-cell" data-pos="mid-right"></div>
+            <div class="pos-cell" data-pos="mid-center"></div>
+            <div class="pos-cell" data-pos="mid-left"></div>
+            <div class="pos-cell" data-pos="bot-right"></div>
+            <div class="pos-cell" data-pos="bot-center"></div>
+            <div class="pos-cell" data-pos="bot-left"></div>
+          </div>
+        </div>
+
+        <div class="tool-section">
+          <div class="tool-section-title">גודל</div>
+          <div class="slider-row">
+            <span class="slider-label">10%</span>
+            <div class="slider-track" id="sizeSlider">
+              <div class="slider-fill" style="width:30%"></div>
+              <div class="slider-thumb" style="right:30%"></div>
+            </div>
+            <span class="slider-value" id="sizeValue">19%</span>
+            <span class="slider-label" style="min-width:auto;">40%</span>
+          </div>
+        </div>
+
+        <div class="tool-section">
+          <div class="tool-section-title">שקיפות</div>
+          <div class="slider-row">
+            <span class="slider-label">20%</span>
+            <div class="slider-track" id="opacitySlider">
+              <div class="slider-fill" style="width:50%"></div>
+              <div class="slider-thumb" style="right:50%"></div>
+            </div>
+            <span class="slider-value" id="opacityValue">60%</span>
+            <span class="slider-label" style="min-width:auto;">100%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: INTRO/OUTRO -->
+      <div class="tool-content" id="tabIntros" style="display:none;">
+        <div class="tool-section">
+          <div class="tool-section-title">פתיח (Intro)</div>
+          <div class="template-grid">
+            <div class="template-thumb active" onclick="selectTemplate(this)">
+              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#253E7A,#38C4F2);">קלאסי</div>
+              <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+            <div class="template-thumb" onclick="selectTemplate(this)">
+              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#F05680,#EAD654);">דינמי</div>
+              <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+            <div class="template-thumb" onclick="selectTemplate(this)">
+              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#7DC57A,#38C4F2);">מינימלי</div>
+              <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+            <div class="template-thumb" onclick="selectTemplate(this)">
+              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#1a2f5e,#0d1628);">כהה</div>
+              <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+            <button class="btn-tool">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              העלה קליפ מותאם
+            </button>
+            <button class="btn-tool">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              תצוגה מקדימה
+            </button>
+          </div>
+          <div class="tool-row">
+            <span class="tool-label">משך:</span>
+            <div class="duration-selector">
+              <button class="dur-btn active">5 שניות</button>
+              <button class="dur-btn">10 שניות</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-section" style="border-top:1px solid var(--border);padding-top:16px;">
+          <div class="tool-section-title">סגיר (Outro)</div>
+          <div class="template-grid">
+            <div class="template-thumb" onclick="selectTemplate(this)">
+              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#253E7A,#38C4F2);">קלאסי</div>
+              <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+            <div class="template-thumb" onclick="selectTemplate(this)">
+              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#F05680,#EAD654);">CTA</div>
+              <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+            <div class="template-thumb" onclick="selectTemplate(this)">
+              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#7DC57A,#38C4F2);">סיכום</div>
+              <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+            <div class="template-thumb" onclick="selectTemplate(this)">
+              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#1a2f5e,#0d1628);">כהה</div>
+              <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+            <button class="btn-tool">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              העלה קליפ מותאם
+            </button>
+            <button class="btn-tool">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              תצוגה מקדימה
+            </button>
+          </div>
+          <div class="tool-row">
+            <span class="tool-label">משך:</span>
+            <div class="duration-selector">
+              <button class="dur-btn">5 שניות</button>
+              <button class="dur-btn active">10 שניות</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: TRANSITIONS -->
+      <div class="tool-content" id="tabTransitions" style="display:none;">
+        <div class="tool-section">
+          <div class="tool-section-title">סוג מעבר</div>
+          <div class="transition-grid">
+            <div class="transition-item active" onclick="selectTransition(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1" opacity=".4"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+              <div class="transition-item-name">Fade</div>
+            </div>
+            <div class="transition-item" onclick="selectTransition(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" opacity=".3"/><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+              <div class="transition-item-name">Dissolve</div>
+            </div>
+            <div class="transition-item" onclick="selectTransition(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 8l-6 4 6 4"/></svg>
+              <div class="transition-item-name">Slide Left</div>
+            </div>
+            <div class="transition-item" onclick="selectTransition(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 8l6 4-6 4"/></svg>
+              <div class="transition-item-name">Slide Right</div>
+            </div>
+            <div class="transition-item" onclick="selectTransition(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7" opacity=".3"/><circle cx="12" cy="12" r="9" opacity=".15"/></svg>
+              <div class="transition-item-name">Zoom</div>
+            </div>
+            <div class="transition-item" onclick="selectTransition(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <div class="transition-item-name">ללא</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-section">
+          <div class="tool-section-title">משך מעבר</div>
+          <div class="slider-row">
+            <span class="slider-label">0.3s</span>
+            <div class="slider-track" id="transitionSlider">
+              <div class="slider-fill" style="width:40%"></div>
+              <div class="slider-thumb" style="right:40%"></div>
+            </div>
+            <span class="slider-value" id="transitionValue">0.8s</span>
+            <span class="slider-label" style="min-width:auto;">1.5s</span>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span>מעברים מעובדים בשרת — ייתכן עיכוב ביצוא</span>
+        </div>
+      </div>
+
+      <!-- TAB 5: SUBTITLES -->
+      <div class="tool-content" id="tabSubtitles" style="display:none;">
+        <div class="tool-section">
+          <div class="tool-section-title">כתוביות</div>
+          <div class="subtitle-status">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="15" x2="14" y2="15"/></svg>
+            <span>24 כתוביות — עברית</span>
+          </div>
+        </div>
+
+        <div class="tool-section">
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <button class="btn-tool-primary" style="justify-content:center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="15" x2="14" y2="15"/></svg>
+              פתח עורך כתוביות
+            </button>
+            <button class="btn-tool" style="justify-content:center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 6v6l4 2"/></svg>
+              יצירה אוטומטית
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ TIMELINE ══ -->
+<div class="timeline-panel">
+  <div class="timeline-toolbar">
+    <div class="timeline-toolbar-right">
+      <span class="timeline-info">Space=נגן | I=התחלה | O=סיום | S=פיצול | Del=מחק</span>
+    </div>
+    <div class="zoom-controls">
+      <button class="zoom-btn" onclick="zoomTimeline(-1)" title="הקטן"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      <div class="zoom-slider-mini"><div class="zoom-slider-mini-fill" id="zoomFill"></div></div>
+      <button class="zoom-btn" onclick="zoomTimeline(1)" title="הגדל"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+    </div>
+  </div>
+
+  <div class="timeline-body" id="timelineBody">
+    <div class="timeline-content" id="timelineContent">
+      <!-- Time Ruler -->
+      <div class="time-ruler" id="timeRuler"></div>
+
+      <!-- Video Track -->
+      <div class="track">
+        <div class="track-label">וידאו</div>
+        <div class="track-content" id="videoTrack">
+          <div class="segment seg-cyan selected" style="right:0%;width:22%;" data-label="טייק 1" oncontextmenu="showCtxMenu(event)">טייק 1</div>
+          <div class="segment seg-navy" style="right:23%;width:18%;" data-label="טייק 2" oncontextmenu="showCtxMenu(event)">טייק 2</div>
+          <div class="segment seg-teal" style="right:42%;width:26%;" data-label="טייק 3" oncontextmenu="showCtxMenu(event)">טייק 3</div>
+          <div class="segment seg-cyan" style="right:69%;width:14%;" data-label="טייק 4" oncontextmenu="showCtxMenu(event)">טייק 4</div>
+          <div class="segment seg-navy" style="right:84%;width:13%;" data-label="טייק 5" oncontextmenu="showCtxMenu(event)">טייק 5</div>
+
+          <!-- Cut points -->
+          <div class="cut-point" style="right:22%;"><div class="cut-point-line"></div><div class="transition-diamond"></div></div>
+          <div class="cut-point" style="right:41%;"><div class="cut-point-line"></div><div class="transition-diamond"></div></div>
+          <div class="cut-point" style="right:68%;"><div class="cut-point-line"></div><div class="transition-diamond"></div></div>
+          <div class="cut-point" style="right:83%;"><div class="cut-point-line"></div></div>
+        </div>
+      </div>
+
+      <!-- Audio Track -->
+      <div class="track">
+        <div class="track-label">אודיו</div>
+        <div class="track-content" id="audioTrack"></div>
+      </div>
+
+      <!-- Subtitle Track -->
+      <div class="track" style="height:34px;">
+        <div class="track-label">כתוביות</div>
+        <div class="track-content" id="subtitleTrack">
+          <div class="sub-block" style="right:2%;width:6%;"></div>
+          <div class="sub-block" style="right:9%;width:5%;"></div>
+          <div class="sub-block" style="right:15%;width:7%;"></div>
+          <div class="sub-block" style="right:24%;width:4%;"></div>
+          <div class="sub-block" style="right:30%;width:8%;"></div>
+          <div class="sub-block" style="right:40%;width:5%;"></div>
+          <div class="sub-block" style="right:47%;width:6%;"></div>
+          <div class="sub-block" style="right:55%;width:4%;"></div>
+          <div class="sub-block" style="right:61%;width:7%;"></div>
+          <div class="sub-block" style="right:70%;width:5%;"></div>
+          <div class="sub-block" style="right:77%;width:6%;"></div>
+          <div class="sub-block" style="right:85%;width:4%;"></div>
+          <div class="sub-block" style="right:91%;width:5%;"></div>
+        </div>
+      </div>
+
+      <!-- Playhead -->
+      <div class="playhead" id="playhead" style="right:28%;">
+        <div class="playhead-time">01:23</div>
+        <div class="playhead-handle" id="playheadHandle"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONTEXT MENU ══ -->
+<div class="context-menu" id="ctxMenu">
+  <div class="ctx-item" onclick="splitAtPlayhead();hideCtxMenu();">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/></svg>
+    פיצול כאן
+  </div>
+  <div class="ctx-item" onclick="hideCtxMenu();">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    הוסף מעבר
+  </div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item danger" onclick="hideCtxMenu();">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    מחק סגמנט
+  </div>
+</div>
+
+<!-- ══ EXPORT MODAL ══ -->
+<div class="modal-overlay" id="exportModal">
+  <div class="modal-card">
+    <div class="modal-mascot"><img src="../../BOARDi/SVG/7.svg" alt="BOARDi" onerror="this.parentElement.style.display='none'"></div>
+    <div class="modal-title">מעבד את הסרטון...</div>
+    <div class="modal-subtitle">אנא המתן, אנחנו מכינים את הסרטון שלך</div>
+    <div class="progress-pct" id="progressPct">0%</div>
+    <div class="progress-bar-outer"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-eta" id="progressEta">זמן משוער: ~2 דקות</div>
+    <div class="progress-steps" id="progressSteps">
+      <div class="step active" data-step="1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        מעבד חיתוכים...
+      </div>
+      <div class="step" data-step="2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        מוסיף לוגו...
+      </div>
+      <div class="step" data-step="3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        מוסיף מעברים...
+      </div>
+      <div class="step" data-step="4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        מייצא...
+      </div>
+    </div>
+    <button class="modal-cancel" onclick="closeExportModal()">ביטול</button>
+  </div>
+</div>
+
+<script>
+// ── Theme Toggle ──
+function toggleTheme(){
+  const html=document.documentElement;
+  html.dataset.theme=html.dataset.theme==='dark'?'light':'dark';
+}
+
+// ── Tabs ──
+document.querySelectorAll('.tool-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tool-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const panels={cut:'tabCut',logo:'tabLogo',intros:'tabIntros',transitions:'tabTransitions',subtitles:'tabSubtitles'};
+    Object.values(panels).forEach(id=>{document.getElementById(id).style.display='none';});
+    document.getElementById(panels[tab.dataset.tab]).style.display='';
+  });
+});
+
+// ── Play/Pause ──
+let isPlaying=false;
+let playInterval=null;
+const playBtn=document.getElementById('playPauseBtn');
+playBtn.addEventListener('click',togglePlay);
+
+function togglePlay(){
+  isPlaying=!isPlaying;
+  playBtn.querySelector('.play-icon').style.display=isPlaying?'none':'';
+  playBtn.querySelector('.pause-icon').style.display=isPlaying?'':'none';
+  if(isPlaying){
+    playInterval=setInterval(()=>{
+      const ph=document.getElementById('playhead');
+      let r=parseFloat(ph.style.right)||0;
+      r+=0.15;
+      if(r>97)r=0;
+      ph.style.right=r+'%';
+      updateTimeDisplay(r);
+    },50);
+  } else {
+    clearInterval(playInterval);
+  }
+}
+
+// ── Speed ──
+const speeds=[0.5,0.75,1.0,1.25,1.5,2.0];
+let speedIdx=2;
+document.getElementById('speedBtn').addEventListener('click',()=>{
+  speedIdx=(speedIdx+1)%speeds.length;
+  document.getElementById('speedBtn').textContent=speeds[speedIdx]+'x';
+});
+
+// ── Time Display ──
+function updateTimeDisplay(pct){
+  const total=292; // 4:52 in seconds
+  const cur=Math.floor(total*pct/100);
+  const cm=String(Math.floor(cur/60)).padStart(2,'0');
+  const cs=String(cur%60).padStart(2,'0');
+  document.getElementById('videoTime').textContent=cm+':'+cs+' / 04:52';
+  document.getElementById('playhead').querySelector('.playhead-time').textContent=cm+':'+cs;
+}
+
+// ── Timeline Click ──
+document.getElementById('timelineBody').addEventListener('click',(e)=>{
+  if(e.target.closest('.segment')||e.target.closest('.transition-diamond'))return;
+  const rect=document.getElementById('timelineContent').getBoundingClientRect();
+  const x=e.clientX-rect.left;
+  const pct=100-((x/rect.width)*100);
+  const clamped=Math.max(0,Math.min(97,pct));
+  document.getElementById('playhead').style.right=clamped+'%';
+  updateTimeDisplay(clamped);
+});
+
+// ── Playhead Drag ──
+let dragging=false;
+document.getElementById('playheadHandle').addEventListener('mousedown',(e)=>{
+  dragging=true;e.preventDefault();
+});
+document.addEventListener('mousemove',(e)=>{
+  if(!dragging)return;
+  const rect=document.getElementById('timelineContent').getBoundingClientRect();
+  const x=e.clientX-rect.left;
+  const pct=100-((x/rect.width)*100);
+  const clamped=Math.max(0,Math.min(97,pct));
+  document.getElementById('playhead').style.right=clamped+'%';
+  updateTimeDisplay(clamped);
+});
+document.addEventListener('mouseup',()=>{dragging=false;});
+
+// ── Segment Selection ──
+document.querySelectorAll('.segment').forEach(seg=>{
+  seg.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    document.querySelectorAll('.segment').forEach(s=>s.classList.remove('selected'));
+    seg.classList.add('selected');
+  });
+});
+
+// ── Context Menu ──
+function showCtxMenu(e){
+  e.preventDefault();
+  const menu=document.getElementById('ctxMenu');
+  menu.style.left=e.clientX+'px';
+  menu.style.top=e.clientY+'px';
+  menu.classList.add('show');
+}
+function hideCtxMenu(){document.getElementById('ctxMenu').classList.remove('show');}
+document.addEventListener('click',(e)=>{
+  if(!e.target.closest('.context-menu'))hideCtxMenu();
+});
+
+// ── In/Out Points ──
+function setInPoint(){
+  const ph=parseFloat(document.getElementById('playhead').style.right)||0;
+  const total=292;
+  const cur=Math.floor(total*ph/100);
+  const m=String(Math.floor(cur/60)).padStart(2,'0');
+  const s=String(cur%60).padStart(2,'0');
+  document.getElementById('inPoint').textContent=m+':'+s+'.00';
+}
+function setOutPoint(){
+  const ph=parseFloat(document.getElementById('playhead').style.right)||0;
+  const total=292;
+  const cur=Math.floor(total*ph/100);
+  const m=String(Math.floor(cur/60)).padStart(2,'0');
+  const s=String(cur%60).padStart(2,'0');
+  document.getElementById('outPoint').textContent=m+':'+s+'.00';
+}
+
+// ── Cut/Split ──
+function cutSelection(){
+  const inT=document.getElementById('inPoint').textContent;
+  const outT=document.getElementById('outPoint').textContent;
+  const item=document.createElement('div');
+  item.className='cut-item';
+  item.innerHTML=`
+    <div class="cut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/></svg></div>
+    <div class="cut-info"><div class="cut-time">${inT} — ${outT}</div><div class="cut-label">הוסר</div></div>
+    <button class="cut-undo" title="בטל חיתוך" onclick="this.closest('.cut-item').remove()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 7"/></svg></button>`;
+  document.getElementById('cutsList').appendChild(item);
+  markUnsaved();
+}
+function splitAtPlayhead(){
+  const ph=parseFloat(document.getElementById('playhead').style.right)||0;
+  const total=292;
+  const cur=Math.floor(total*ph/100);
+  const m=String(Math.floor(cur/60)).padStart(2,'0');
+  const s=String(cur%60).padStart(2,'0');
+  const item=document.createElement('div');
+  item.className='cut-item';
+  item.innerHTML=`
+    <div class="cut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/></svg></div>
+    <div class="cut-info"><div class="cut-time">${m}:${s}.00</div><div class="cut-label">פיצול</div></div>
+    <button class="cut-undo" title="בטל פיצול" onclick="this.closest('.cut-item').remove()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 7"/></svg></button>`;
+  document.getElementById('cutsList').appendChild(item);
+  markUnsaved();
+}
+
+// ── Auto-save indicator ──
+function markUnsaved(){
+  document.querySelector('.autosave-dot').classList.remove('saved');
+  document.querySelector('.autosave-dot').classList.add('unsaved');
+  document.querySelector('.autosave-text').textContent='שינויים לא שמורים';
+  setTimeout(()=>{
+    document.querySelector('.autosave-dot').classList.remove('unsaved');
+    document.querySelector('.autosave-dot').classList.add('saved');
+    document.querySelector('.autosave-text').textContent='נשמר אוטומטית';
+  },2000);
+}
+
+// ── Position Grid ──
+document.querySelectorAll('.pos-cell').forEach(cell=>{
+  cell.addEventListener('click',()=>{
+    document.querySelectorAll('.pos-cell').forEach(c=>c.classList.remove('active'));
+    cell.classList.add('active');
+    // Update logo overlay position on video
+    const logo=document.querySelector('.video-logo-overlay');
+    const pos=cell.dataset.pos;
+    logo.style.top=pos.includes('top')?'16px':pos.includes('mid')?'50%':'auto';
+    logo.style.bottom=pos.includes('bot')?'50px':'auto';
+    logo.style.right=pos.includes('right')?'16px':'auto';
+    logo.style.left=pos.includes('left')?'16px':'auto';
+    if(pos.includes('center')&&!pos.includes('mid')){logo.style.left='50%';logo.style.transform='translateX(-50%)';}
+    else if(pos.includes('mid')&&pos.includes('center')){logo.style.left='50%';logo.style.top='50%';logo.style.transform='translate(-50%,-50%)';}
+    else{logo.style.transform='none';}
+  });
+});
+
+// ── Template Selection ──
+function selectTemplate(el){
+  const grid=el.closest('.template-grid');
+  grid.querySelectorAll('.template-thumb').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── Transition Selection ──
+function selectTransition(el){
+  document.querySelectorAll('.transition-item').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── Duration Selectors ──
+document.querySelectorAll('.duration-selector').forEach(ds=>{
+  ds.querySelectorAll('.dur-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      ds.querySelectorAll('.dur-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+});
+
+// ── Zoom ──
+let zoomLevel=50;
+function zoomTimeline(dir){
+  zoomLevel=Math.max(20,Math.min(100,zoomLevel+dir*15));
+  document.getElementById('zoomFill').style.width=zoomLevel+'%';
+  const w=800+(zoomLevel/100)*1200;
+  document.getElementById('timelineContent').style.width=w+'px';
+}
+
+// ── Generate Waveform ──
+function generateWaveform(){
+  const track=document.getElementById('audioTrack');
+  const count=280;
+  let html='<div class="waveform">';
+  for(let i=0;i<count;i++){
+    const h=8+Math.random()*22;
+    html+=`<div class="waveform-bar" style="height:${h}px;"></div>`;
+  }
+  html+='</div>';
+  track.innerHTML=html;
+}
+generateWaveform();
+
+// ── Generate Time Ruler ──
+function generateRuler(){
+  const ruler=document.getElementById('timeRuler');
+  const totalSec=292;
+  const marks=20;
+  let html='';
+  for(let i=0;i<=marks;i++){
+    const pct=(i/marks)*100;
+    const sec=Math.floor((i/marks)*totalSec);
+    const m=String(Math.floor(sec/60)).padStart(2,'0');
+    const s=String(sec%60).padStart(2,'0');
+    html+=`<div class="time-mark" style="right:${pct}%;"><div class="time-mark-line"></div><div class="time-mark-label">${m}:${s}</div></div>`;
+  }
+  ruler.innerHTML=html;
+}
+generateRuler();
+
+// ── Export Modal ──
+document.getElementById('exportBtn').addEventListener('click',()=>{
+  document.getElementById('exportModal').classList.add('show');
+  simulateExport();
+});
+function closeExportModal(){
+  document.getElementById('exportModal').classList.remove('show');
+}
+
+function simulateExport(){
+  let progress=0;
+  const steps=[25,50,75,100];
+  const stepEls=document.querySelectorAll('#progressSteps .step');
+  const fill=document.getElementById('progressFill');
+  const pct=document.getElementById('progressPct');
+  const eta=document.getElementById('progressEta');
+
+  const interval=setInterval(()=>{
+    progress+=1;
+    fill.style.width=progress+'%';
+    pct.textContent=progress+'%';
+
+    const remaining=Math.ceil((100-progress)*0.02*60);
+    eta.textContent='זמן משוער: ~'+Math.max(0,Math.ceil(remaining/60))+' דקות';
+
+    stepEls.forEach((s,i)=>{
+      if(progress>=steps[i]){s.classList.remove('active');s.classList.add('done');}
+      else if(i===0||(i>0&&progress>=steps[i-1])){s.classList.add('active');s.classList.remove('done');}
+      else{s.classList.remove('active','done');}
+    });
+
+    if(progress>=100){
+      clearInterval(interval);
+      pct.textContent='100% — הושלם!';
+      eta.textContent='';
+    }
+  },80);
+}
+
+// ── Keyboard Shortcuts ──
+document.addEventListener('keydown',(e)=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  switch(e.key){
+    case ' ':e.preventDefault();togglePlay();break;
+    case 'i':case 'I':setInPoint();break;
+    case 'o':case 'O':setOutPoint();break;
+    case 's':case 'S':if(!e.ctrlKey&&!e.metaKey)splitAtPlayhead();break;
+    case 'Delete':case 'Backspace':cutSelection();break;
+  }
+});
+
+// ── Slider Interactions ──
+document.querySelectorAll('.slider-track').forEach(track=>{
+  track.addEventListener('click',(e)=>{
+    const rect=track.getBoundingClientRect();
+    const x=rect.right-e.clientX; // RTL
+    const pct=Math.max(0,Math.min(100,(x/rect.width)*100));
+    track.querySelector('.slider-fill').style.width=pct+'%';
+    track.querySelector('.slider-thumb').style.right=pct+'%';
+    // Update value display
+    const valueEl=track.parentElement.querySelector('.slider-value');
+    if(valueEl){
+      if(track.id==='sizeSlider')valueEl.textContent=Math.round(10+pct*0.3)+'%';
+      else if(track.id==='opacitySlider')valueEl.textContent=Math.round(20+pct*0.8)+'%';
+      else if(track.id==='transitionSlider')valueEl.textContent=(0.3+pct*0.012).toFixed(1)+'s';
+    }
+  });
+});
+
+// ── Save Draft ──
+document.getElementById('saveDraftBtn').addEventListener('click',()=>{
+  document.querySelector('.autosave-dot').classList.remove('unsaved');
+  document.querySelector('.autosave-dot').classList.add('saved');
+  document.querySelector('.autosave-text').textContent='נשמר אוטומטית';
+});
+</script>
+</body>
+</html>

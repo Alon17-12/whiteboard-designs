@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>העלאת הקלטה | WHITEBOARD Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+    --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+    --pink:#F05680;--pink-light:rgba(240,86,128,0.1);
+    --yellow:#EAD654;--green:#7DC57A;--red:#e53e3e;
+    --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+    --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+    --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+    --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+    --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:0 12px 40px rgba(37,62,122,0.12);
+    --sidebar-bg:var(--navy);--sidebar-text:rgba(255,255,255,0.65);
+    --sidebar-hover:rgba(255,255,255,0.08);--sidebar-active-bg:rgba(56,196,242,0.2);
+    --sidebar-active-cl:var(--cyan);--sidebar-border:rgba(255,255,255,0.1);
+  }
+  [data-theme="dark"] {
+    --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+    --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+    --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+    --shadow-lg:0 12px 40px rgba(0,0,0,0.5);
+    --light-blue:rgba(56,196,242,0.08);--pink-light:rgba(240,86,128,0.08);
+    --sidebar-bg:#0d1628;--sidebar-text:rgba(255,255,255,0.55);
+    --sidebar-hover:rgba(255,255,255,0.06);--sidebar-active-bg:rgba(56,196,242,0.15);
+    --sidebar-border:rgba(255,255,255,0.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;transition:background .3s,color .3s;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{width:220px;background:var(--sidebar-bg);border-left:1px solid var(--sidebar-border);min-height:100vh;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;position:fixed;right:0;top:0;bottom:0;z-index:50;transition:background .3s;}
+  .sidebar-logo{padding:16px 16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
+  .sidebar-logo img{width:150px;object-fit:contain;}
+  .sidebar-section{padding:8px 12px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--sidebar-text);font-size:14px;font-weight:500;}
+  .nav-item:hover{background:var(--sidebar-hover);color:white;}
+  .nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-cl);font-weight:700;}
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;}
+  .sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);}
+  .mode-switcher{margin-bottom:10px;}
+  .mode-switcher-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;padding-right:2px;}
+  .mode-toggle-row{display:flex;background:rgba(0,0,0,0.25);border-radius:8px;padding:3px;gap:2px;}
+  .mode-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 4px;border-radius:6px;border:none;font-family:var(--font-he);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;color:rgba(255,255,255,0.45);background:transparent;white-space:nowrap;}
+  .mode-btn svg{width:13px;height:13px;}
+  .mode-btn.active{background:rgba(56,196,242,0.25);color:var(--cyan);}
+  .profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;}
+  .profile-mini:hover{background:rgba(255,255,255,0.08);}
+  .avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+  .profile-mini-name{font-size:13px;font-weight:600;color:white;}
+  .profile-mini-role{font-size:11px;color:rgba(255,255,255,0.45);}
+  .profile-edit-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;color:rgba(255,255,255,0.4);flex-shrink:0;margin-right:auto;}
+  .profile-edit-btn:hover{background:rgba(255,255,255,0.1);color:white;}
+  .profile-edit-btn svg{width:13px;height:13px;}
+
+  /* ── MAIN ── */
+  .main{margin-right:220px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+  /* ── TOPBAR ── */
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;box-shadow:var(--shadow-sm);transition:background .3s;}
+  .topbar-breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .breadcrumb-link{color:var(--text-sub);cursor:pointer;transition:color .2s;text-decoration:none;}
+  .breadcrumb-link:hover{color:var(--text-main);}
+  .breadcrumb-sep{color:var(--text-light);}
+  .breadcrumb-current{color:var(--text-main);font-weight:700;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;}
+  .icon-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+  .icon-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .icon-btn svg{width:18px;height:18px;}
+  .icon-sun{display:none;}.icon-moon{display:block;}
+  [data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+  .lang-btn{width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .2s;}
+  .lang-btn:hover{background:var(--light-blue);border-color:var(--cyan);}
+  .lang-btn.hidden{display:none;}
+
+  /* ── UPLOAD CONTENT AREA ── */
+  .upload-area{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px;}
+
+  /* ── UPLOAD CARD ── */
+  .upload-card{width:100%;max-width:640px;background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:40px 36px;transition:all .4s;position:relative;overflow:hidden;}
+  .upload-card.error-state{border:2px solid var(--red);}
+  .upload-card-title{font-family:var(--font-en);font-size:22px;font-weight:600;text-align:center;margin-bottom:4px;transition:all .3s;}
+  .upload-card-subtitle{font-size:14px;color:var(--text-sub);text-align:center;margin-bottom:28px;}
+
+  /* ── CIRCULAR PROGRESS ── */
+  .circle-progress-wrap{display:flex;justify-content:center;margin-bottom:24px;}
+  .circle-progress{width:140px;height:140px;position:relative;}
+  .circle-progress svg{width:140px;height:140px;transform:rotate(-90deg);}
+  .circle-bg{fill:none;stroke:var(--border);stroke-width:8;}
+  .circle-fill{fill:none;stroke:var(--cyan);stroke-width:8;stroke-linecap:round;stroke-dasharray:408;stroke-dashoffset:408;transition:stroke-dashoffset .15s ease;}
+  .circle-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-en);font-size:32px;font-weight:600;color:var(--cyan);}
+  /* spinning state */
+  .circle-progress.spinning svg{animation:spinRing 1.5s linear infinite;transform:rotate(0);}
+  .circle-progress.spinning .circle-fill{stroke-dashoffset:306;stroke:var(--cyan);opacity:.7;}
+  .circle-progress.spinning .circle-bg{stroke-dasharray:10 20;}
+  @keyframes spinRing{to{transform:rotate(360deg);}}
+  /* complete state */
+  .circle-progress.complete .circle-fill{stroke:var(--green);stroke-dashoffset:0;}
+  .circle-progress.complete .circle-text{color:var(--green);}
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap{height:6px;border-radius:6px;background:var(--border);margin-bottom:20px;overflow:hidden;position:relative;}
+  .progress-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--cyan),#1db0d8);width:0%;transition:width .15s ease;position:relative;}
+  .progress-bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 1.8s infinite;}
+  .progress-bar-fill.paused::after{animation:none;}
+  @keyframes shimmer{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
+
+  /* ── STATS ROW ── */
+  .stats-row{display:flex;justify-content:center;gap:24px;margin-bottom:12px;flex-wrap:wrap;}
+  .stat-item{font-size:12px;color:var(--text-sub);display:flex;align-items:center;gap:4px;}
+  .stat-item strong{color:var(--text-main);font-weight:700;}
+
+  /* ── FILE INFO ── */
+  .file-info{text-align:center;font-size:13px;color:var(--text-light);margin-bottom:24px;}
+
+  /* ── NETWORK STATUS ── */
+  .network-status{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--text-sub);margin-bottom:20px;}
+  .net-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .net-dot.stable{background:var(--green);box-shadow:0 0 6px rgba(125,197,122,0.5);}
+  .net-dot.slow{background:var(--yellow);box-shadow:0 0 6px rgba(234,214,84,0.5);}
+  .net-dot.error{background:var(--red);box-shadow:0 0 6px rgba(229,62,62,0.5);}
+
+  /* ── ACTION BUTTONS ── */
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 22px;border-radius:30px;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:none;white-space:nowrap;min-height:44px;min-width:44px;justify-content:center;}
+  .btn svg{width:16px;height:16px;}
+  .btn-primary{background:linear-gradient(135deg,var(--pink),#d63e68);color:white;box-shadow:0 3px 14px rgba(240,86,128,0.3);}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(240,86,128,0.4);}
+  .btn-cyan{background:linear-gradient(135deg,var(--cyan),#1db0d8);color:white;box-shadow:0 3px 14px rgba(56,196,242,0.3);}
+  .btn-cyan:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(56,196,242,0.4);}
+  .btn-outline{background:transparent;color:var(--cyan);border:1.5px solid var(--cyan);}
+  .btn-outline:hover{background:var(--cyan-light);}
+  .btn-ghost{background:transparent;color:var(--text-sub);border:1.5px solid var(--border);}
+  .btn-ghost:hover{background:var(--light-blue);color:var(--text-main);border-color:var(--cyan);}
+  .btn-text-danger{background:transparent;border:none;color:var(--red);font-size:12px;padding:8px 14px;}
+  .btn-text-danger:hover{background:rgba(229,62,62,0.08);}
+  .btn-text-link{background:transparent;border:none;color:var(--text-sub);font-size:13px;text-decoration:underline;cursor:pointer;padding:8px 12px;}
+  .btn-text-link:hover{color:var(--text-main);}
+
+  .action-row{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+
+  /* ── PAUSED BANNER ── */
+  .paused-banner{background:rgba(234,214,84,0.13);border:1px solid rgba(234,214,84,0.35);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;font-size:13px;font-weight:600;color:#7a6200;margin-bottom:16px;display:none;animation:fadeIn .3s ease;}
+  [data-theme="dark"] .paused-banner{color:#d4bc2e;background:rgba(234,214,84,0.08);}
+
+  /* ── CHECKLIST (Stage 2) ── */
+  .checklist{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;max-width:340px;margin-left:auto;margin-right:auto;}
+  .checklist-item{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:var(--text-light);transition:all .3s;}
+  .checklist-item.done{color:var(--green);}
+  .checklist-item.active{color:var(--text-main);}
+  .check-icon{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid var(--border);transition:all .3s;}
+  .checklist-item.done .check-icon{background:var(--green);border-color:var(--green);color:white;}
+  .checklist-item.active .check-icon{border-color:var(--cyan);animation:pulse 1.2s ease infinite;}
+  .check-icon svg{width:12px;height:12px;}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(56,196,242,0.4);}50%{box-shadow:0 0 0 6px rgba(56,196,242,0);}}
+  .spinner-sm{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin .6s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .processing-note{text-align:center;font-size:13px;color:var(--text-sub);margin-bottom:20px;line-height:1.6;}
+
+  /* ── MASCOT ── */
+  .mascot-wrap{display:flex;align-items:flex-end;justify-content:center;gap:0;margin-bottom:16px;position:relative;}
+  .mascot-img{width:100px;height:100px;object-fit:contain;}
+  .speech-bubble{background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:10px 16px;font-size:13px;font-weight:700;color:var(--text-main);position:relative;margin-bottom:20px;max-width:200px;}
+  .speech-bubble::after{content:'';position:absolute;bottom:-8px;right:30px;width:16px;height:16px;background:var(--surface-2);border-right:1.5px solid var(--border);border-bottom:1.5px solid var(--border);transform:rotate(45deg);}
+
+  /* ── SUCCESS STATE ── */
+  .success-check{width:80px;height:80px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:linear-gradient(135deg,var(--green),#5ab356);animation:scaleIn .5s cubic-bezier(.34,1.56,.64,1);color:white;}
+  .success-check svg{width:40px;height:40px;}
+  @keyframes scaleIn{0%{transform:scale(0);opacity:0;}100%{transform:scale(1);opacity:1;}}
+
+  .video-thumb{width:100%;max-width:320px;aspect-ratio:16/9;border-radius:var(--radius-md);background:linear-gradient(135deg,#0d1b3e 0%,#253E7A 60%,#38C4F2 100%);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .video-thumb svg{width:40px;height:40px;color:rgba(255,255,255,0.6);}
+  .video-thumb-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;}
+  .video-stats{text-align:center;font-size:13px;color:var(--text-sub);margin-bottom:24px;}
+
+  /* ── ERROR STATE ── */
+  .error-content{text-align:center;padding:10px 0;}
+  .error-icon{width:64px;height:64px;border-radius:50%;background:rgba(229,62,62,0.1);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;color:var(--red);}
+  .error-icon svg{width:32px;height:32px;}
+  .error-title{font-family:var(--font-en);font-size:20px;font-weight:600;color:var(--red);margin-bottom:8px;}
+  .error-desc{font-size:14px;color:var(--text-sub);margin-bottom:20px;line-height:1.6;}
+
+  /* ── CONFETTI ── */
+  .confetti-container{position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden;}
+  @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+
+  /* ── CONFIRM DIALOG ── */
+  .dialog-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all .25s;}
+  .dialog-overlay.visible{opacity:1;visibility:visible;}
+  .dialog-box{background:var(--surface);border-radius:var(--radius-lg);padding:32px;max-width:400px;width:90%;box-shadow:var(--shadow-lg);text-align:center;transform:scale(.92);transition:transform .25s;}
+  .dialog-overlay.visible .dialog-box{transform:scale(1);}
+  .dialog-title{font-family:var(--font-en);font-size:18px;font-weight:600;margin-bottom:8px;}
+  .dialog-desc{font-size:14px;color:var(--text-sub);margin-bottom:24px;line-height:1.6;}
+  .dialog-actions{display:flex;gap:10px;justify-content:center;}
+
+  /* ── DEMO CONTROLS ── */
+  .demo-bar{position:fixed;bottom:0;left:0;right:220px;background:var(--surface);border-top:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:center;gap:12px;z-index:60;flex-wrap:wrap;}
+  .demo-btn{padding:8px 16px;border-radius:20px;font-family:var(--font-he);font-size:12px;font-weight:700;border:1.5px solid var(--border);background:var(--surface);color:var(--text-sub);cursor:pointer;transition:all .2s;min-height:36px;}
+  .demo-btn:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-light);}
+  .demo-btn.active{background:var(--cyan);color:white;border-color:var(--cyan);}
+
+  /* ── STAGE VISIBILITY ── */
+  .stage{display:none;animation:fadeIn .4s ease;}
+  .stage.visible{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  /* Responsive */
+  @media(max-width:900px){
+    .sidebar{display:none;}
+    .main{margin-right:0;}
+    .demo-bar{right:0;}
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo"><img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD"></div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>לוח הבקרה
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <div class="mode-switcher-label">מצב תצוגה</div>
+      <div class="mode-toggle-row">
+        <button class="mode-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>תלמיד</button>
+        <button class="mode-btn active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>מרצה</button>
+      </div>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div><div class="profile-mini-name">אלון</div><div class="profile-mini-role">מרצה</div></div>
+      <button class="profile-edit-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">מרכזי הידע שלי</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-link">עיצוב למתחילים</span>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">העלאת הקלטה</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="lang-btn" title="עברית" onclick="toggleLang(this)">🇮🇱</button>
+      <button class="lang-btn hidden" title="English" onclick="toggleLang(this)">🇺🇸</button>
+      <button class="icon-btn" onclick="toggleTheme()" title="מצב תצוגה">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- UPLOAD AREA -->
+  <div class="upload-area">
+    <div class="upload-card" id="uploadCard">
+
+      <!-- ═══ STAGE 1: UPLOADING ═══ -->
+      <div class="stage visible" id="stage1">
+        <div class="upload-card-title" id="title1">מעלה את ההקלטה</div>
+        <div class="upload-card-subtitle">שיעור 3: צבע ומשמעות</div>
+
+        <div class="circle-progress-wrap">
+          <div class="circle-progress" id="circleProgress">
+            <svg viewBox="0 0 140 140">
+              <circle class="circle-bg" cx="70" cy="70" r="65"/>
+              <circle class="circle-fill" id="circleFill" cx="70" cy="70" r="65"/>
+            </svg>
+            <div class="circle-text" id="circleText">0%</div>
+          </div>
+        </div>
+
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+
+        <div class="stats-row" id="statsRow">
+          <div class="stat-item">הועלו: <strong id="statUploaded">0 MB</strong> מתוך <strong>310 MB</strong></div>
+          <div class="stat-item">מהירות: <strong id="statSpeed">12.4 MB/s</strong></div>
+          <div class="stat-item">זמן משוער: <strong id="statTime">~25 שניות</strong></div>
+        </div>
+
+        <div class="file-info">1080p HD · 04:52 · 4 טייקים</div>
+
+        <div class="network-status">
+          <span class="net-dot stable" id="netDot"></span>
+          <span id="netText">חיבור יציב</span>
+        </div>
+
+        <div class="paused-banner" id="pausedBanner">ההעלאה מושהית — ניתן להמשיך בכל עת</div>
+
+        <div class="action-row">
+          <button class="btn btn-ghost" id="pauseBtn" onclick="togglePause()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+            השהה העלאה
+          </button>
+          <button class="btn btn-text-danger" onclick="showCancelDialog()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            בטל העלאה
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══ STAGE 2: PROCESSING ═══ -->
+      <div class="stage" id="stage2">
+        <div class="upload-card-title">מעבד את הסרטון</div>
+        <div class="upload-card-subtitle">שיעור 3: צבע ומשמעות</div>
+
+        <div class="circle-progress-wrap">
+          <div class="circle-progress spinning" id="circleSpinner">
+            <svg viewBox="0 0 140 140">
+              <circle class="circle-bg" cx="70" cy="70" r="65"/>
+              <circle class="circle-fill" cx="70" cy="70" r="65"/>
+            </svg>
+            <div class="circle-text" style="font-size:22px;">
+              <div class="spinner-sm" style="width:28px;height:28px;border-width:3px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="checklist" id="checklist">
+          <div class="checklist-item" id="check0">
+            <div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>העלאה הושלמה</span>
+          </div>
+          <div class="checklist-item" id="check1">
+            <div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>המרה ל-HLS...</span>
+          </div>
+          <div class="checklist-item" id="check2">
+            <div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>יצירת תמונה ממוזערת</span>
+          </div>
+          <div class="checklist-item" id="check3">
+            <div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>בדיקת איכות</span>
+          </div>
+        </div>
+
+        <div class="processing-note">Bunny Stream מעבד את הסרטון — זה יכול לקחת כמה דקות</div>
+
+        <div class="mascot-wrap">
+          <div>
+            <div class="speech-bubble">עוד רגע מוכן!</div>
+            <img class="mascot-img" src="../../BOARDi/SVG/7.svg" alt="BOARDi" onerror="this.style.display='none';this.previousElementSibling.style.display='none'">
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ STAGE 3: COMPLETE ═══ -->
+      <div class="stage" id="stage3">
+        <div class="success-check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="upload-card-title" style="color:var(--green);">ההקלטה הועלתה בהצלחה!</div>
+        <div class="upload-card-subtitle">שיעור 3: צבע ומשמעות</div>
+
+        <div class="mascot-wrap" style="margin-bottom:20px;">
+          <img class="mascot-img" src="../../BOARDi/SVG/2.svg" alt="BOARDi" onerror="this.style.display='none'">
+        </div>
+
+        <div class="video-thumb">
+          <div class="video-thumb-overlay">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3" fill="rgba(255,255,255,0.5)"/></svg>
+          </div>
+        </div>
+        <div class="video-stats">04:52 · 1080p HD · 310 MB</div>
+
+        <div class="action-row" style="margin-bottom:12px;">
+          <button class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            פרסם לשיעור
+          </button>
+          <button class="btn btn-outline">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            פתח בעורך
+          </button>
+        </div>
+        <div style="text-align:center;">
+          <button class="btn-text-link">חזרה ללייאאוט</button>
+        </div>
+      </div>
+
+      <!-- ═══ ERROR STATE ═══ -->
+      <div class="stage" id="stageError">
+        <div class="error-content">
+          <div class="error-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="error-title">שגיאה בהעלאה</div>
+          <div class="error-desc">נכשל בחיבור לשרת. בדוק את החיבור לאינטרנט</div>
+
+          <div class="mascot-wrap" style="margin-bottom:20px;">
+            <img class="mascot-img" src="../../BOARDi/SVG/13.svg" alt="BOARDi" onerror="this.style.display='none'">
+          </div>
+
+          <div class="action-row">
+            <button class="btn btn-primary" onclick="resetToStage1()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              נסה שוב
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- CANCEL DIALOG -->
+<div class="dialog-overlay" id="cancelDialog">
+  <div class="dialog-box">
+    <div class="dialog-title">בטל העלאה?</div>
+    <div class="dialog-desc">ההעלאה תיעצר ותצטרך להתחיל מחדש. האם אתה בטוח?</div>
+    <div class="dialog-actions">
+      <button class="btn btn-primary" style="background:var(--red);box-shadow:0 3px 14px rgba(229,62,62,0.3);" onclick="confirmCancel()">כן, בטל</button>
+      <button class="btn btn-ghost" onclick="closeCancelDialog()">חזרה</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEMO CONTROLS -->
+<div class="demo-bar">
+  <span style="font-size:11px;color:var(--text-light);font-weight:700;">DEMO:</span>
+  <button class="demo-btn active" onclick="goToStage('stage1')">שלב 1 — העלאה</button>
+  <button class="demo-btn" onclick="goToStage('stage2')">שלב 2 — עיבוד</button>
+  <button class="demo-btn" onclick="goToStage('stage3')">שלב 3 — הושלם</button>
+  <button class="demo-btn" onclick="goToStage('stageError')">שגיאה</button>
+  <button class="demo-btn" onclick="startAutoDemo()">הפעל הדגמה אוטומטית</button>
+</div>
+
+<script>
+/* ── STATE ── */
+let isPaused = false;
+let currentStage = 'stage1';
+let uploadProgress = 0;
+let uploadInterval = null;
+let autoDemo = false;
+const TOTAL_MB = 310;
+
+/* ── THEME ── */
+function toggleTheme() {
+  const html = document.documentElement;
+  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+}
+
+/* ── LANG ── */
+function toggleLang(el) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('hidden'));
+}
+
+/* ── STAGES ── */
+function showStage(id) {
+  document.querySelectorAll('.stage').forEach(s => s.classList.remove('visible'));
+  document.getElementById(id).classList.add('visible');
+  currentStage = id;
+
+  const card = document.getElementById('uploadCard');
+  card.classList.toggle('error-state', id === 'stageError');
+
+  // Update demo buttons
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+  const stageMap = { stage1: 0, stage2: 1, stage3: 2, stageError: 3 };
+  const idx = stageMap[id];
+  if (idx !== undefined) document.querySelectorAll('.demo-btn')[idx].classList.add('active');
+}
+
+function goToStage(id) {
+  stopUpload();
+  autoDemo = false;
+  if (id === 'stage1') {
+    resetUploadUI();
+    showStage(id);
+    startUpload();
+  } else if (id === 'stage2') {
+    showStage(id);
+    resetChecklist();
+    animateChecklist();
+  } else if (id === 'stage3') {
+    showStage(id);
+    launchConfetti();
+  } else {
+    showStage(id);
+  }
+}
+
+/* ── UPLOAD SIMULATION ── */
+function startUpload() {
+  stopUpload();
+  uploadInterval = setInterval(() => {
+    if (isPaused) return;
+    uploadProgress += 2; // 2% every 100ms = 5 seconds
+    if (uploadProgress >= 100) {
+      uploadProgress = 100;
+      updateProgressUI();
+      stopUpload();
+      if (autoDemo) {
+        setTimeout(() => {
+          showStage('stage2');
+          resetChecklist();
+          animateChecklist();
+        }, 400);
+      }
+      return;
+    }
+    updateProgressUI();
+  }, 100);
+}
+
+function stopUpload() {
+  if (uploadInterval) {
+    clearInterval(uploadInterval);
+    uploadInterval = null;
+  }
+}
+
+function updateProgressUI() {
+  const pct = Math.round(uploadProgress);
+  const uploaded = Math.round((pct / 100) * TOTAL_MB);
+  const remaining = TOTAL_MB - uploaded;
+  const speed = 12.4;
+  const timeLeft = remaining > 0 ? Math.ceil(remaining / speed) : 0;
+
+  document.getElementById('circleText').textContent = pct + '%';
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('statUploaded').textContent = uploaded + ' MB';
+  document.getElementById('statTime').textContent = timeLeft > 0 ? '~' + timeLeft + ' שניות' : 'מסיים...';
+
+  // Circle SVG
+  const circumference = 2 * Math.PI * 65; // ~408.4
+  const offset = circumference - (pct / 100) * circumference;
+  document.getElementById('circleFill').style.strokeDashoffset = offset;
+}
+
+function resetUploadUI() {
+  uploadProgress = 0;
+  isPaused = false;
+  document.getElementById('pausedBanner').style.display = 'none';
+  document.getElementById('progressBar').classList.remove('paused');
+  updatePauseBtn();
+  updateProgressUI();
+}
+
+/* ── PAUSE / RESUME ── */
+function togglePause() {
+  isPaused = !isPaused;
+  document.getElementById('pausedBanner').style.display = isPaused ? 'block' : 'none';
+  document.getElementById('progressBar').classList.toggle('paused', isPaused);
+  updatePauseBtn();
+
+  // network dot
+  const dot = document.getElementById('netDot');
+  const txt = document.getElementById('netText');
+  if (isPaused) {
+    dot.className = 'net-dot slow';
+    txt.textContent = 'מושהה';
+  } else {
+    dot.className = 'net-dot stable';
+    txt.textContent = 'חיבור יציב';
+  }
+}
+
+function updatePauseBtn() {
+  const btn = document.getElementById('pauseBtn');
+  if (isPaused) {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>המשך העלאה`;
+  } else {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>השהה העלאה`;
+  }
+}
+
+/* ── CANCEL ── */
+function showCancelDialog() {
+  document.getElementById('cancelDialog').classList.add('visible');
+}
+function closeCancelDialog() {
+  document.getElementById('cancelDialog').classList.remove('visible');
+}
+function confirmCancel() {
+  closeCancelDialog();
+  stopUpload();
+  autoDemo = false;
+  showStage('stageError');
+}
+
+/* ── CHECKLIST ANIMATION ── */
+let checklistTimeout = [];
+function resetChecklist() {
+  checklistTimeout.forEach(t => clearTimeout(t));
+  checklistTimeout = [];
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById('check' + i);
+    el.className = 'checklist-item';
+  }
+}
+
+function animateChecklist() {
+  const items = [0, 1, 2, 3];
+  // First item done immediately (upload was complete)
+  document.getElementById('check0').className = 'checklist-item done';
+  document.getElementById('check1').className = 'checklist-item active';
+
+  // item 1 done at 1s
+  checklistTimeout.push(setTimeout(() => {
+    document.getElementById('check1').className = 'checklist-item done';
+    document.getElementById('check2').className = 'checklist-item active';
+  }, 1000));
+
+  // item 2 done at 2s
+  checklistTimeout.push(setTimeout(() => {
+    document.getElementById('check2').className = 'checklist-item done';
+    document.getElementById('check3').className = 'checklist-item active';
+  }, 2000));
+
+  // item 3 done at 3s
+  checklistTimeout.push(setTimeout(() => {
+    document.getElementById('check3').className = 'checklist-item done';
+    if (autoDemo) {
+      setTimeout(() => {
+        showStage('stage3');
+        launchConfetti();
+      }, 500);
+    }
+  }, 3000));
+}
+
+/* ── CONFETTI ── */
+function launchConfetti() {
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+
+  const colors = ['#38C4F2', '#F05680', '#7DC57A', '#EAD654', '#253E7A', '#fff'];
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    const c = colors[Math.floor(Math.random() * colors.length)];
+    const size = Math.random() * 8 + 4;
+    const x = Math.random() * 100;
+    const dur = Math.random() * 2 + 1.5;
+    const delay = Math.random() * 0.8;
+    const shape = Math.random() > 0.5 ? '50%' : '2px';
+    p.style.cssText = `position:absolute;top:-20px;left:${x}%;width:${size}px;height:${size*0.6}px;background:${c};border-radius:${shape};opacity:0.9;animation:confettiFall ${dur}s ease-in ${delay}s forwards;`;
+    container.appendChild(p);
+  }
+  setTimeout(() => container.remove(), 4000);
+}
+
+/* ── RESET TO STAGE 1 ── */
+function resetToStage1() {
+  resetUploadUI();
+  showStage('stage1');
+  startUpload();
+}
+
+/* ── AUTO DEMO ── */
+function startAutoDemo() {
+  autoDemo = true;
+  resetUploadUI();
+  showStage('stage1');
+  startUpload();
+}
+
+/* ── INIT ── */
+startUpload();
+</script>
+</body>
+</html>

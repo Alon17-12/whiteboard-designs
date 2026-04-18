@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הקלט שיעור חדש | WHITEBOARD Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+    --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+    --pink:#F05680;--pink-light:rgba(240,86,128,0.1);--yellow:#EAD654;--green:#7DC57A;
+    --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+    --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+    --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+    --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+    --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:0 12px 40px rgba(37,62,122,0.14);
+    --sidebar-bg:var(--navy);--sidebar-text:rgba(255,255,255,0.65);
+    --sidebar-hover:rgba(255,255,255,0.08);--sidebar-active-bg:rgba(56,196,242,0.2);
+    --sidebar-active-cl:var(--cyan);--sidebar-border:rgba(255,255,255,0.1);
+    --preview-bg:#0a0e1a;
+  }
+  [data-theme="dark"] {
+    --bg:#0c1422;--surface:#131e35;--surface-2:#192740;
+    --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+    --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+    --shadow-lg:0 12px 40px rgba(0,0,0,0.5);
+    --light-blue:rgba(56,196,242,0.08);--pink-light:rgba(240,86,128,0.15);
+    --sidebar-bg:#0d1628;--sidebar-text:rgba(255,255,255,0.55);
+    --sidebar-hover:rgba(255,255,255,0.06);--sidebar-active-bg:rgba(56,196,242,0.15);
+    --sidebar-border:rgba(255,255,255,0.05);
+    --preview-bg:#060a14;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);height:100dvh;display:flex;overflow:hidden;transition:background .3s,color .3s;}
+
+  /* ── SIDEBAR ── */
+  .sidebar{width:220px;background:var(--sidebar-bg);border-left:1px solid var(--sidebar-border);height:100dvh;display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;position:fixed;right:0;top:0;bottom:0;z-index:50;transition:background .3s;}
+  .sidebar-logo{padding:16px 16px 20px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
+  .sidebar-logo svg{width:150px;height:auto;}
+  .sidebar-section{padding:8px 12px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--sidebar-text);font-size:14px;font-weight:500;min-height:44px;}
+  .nav-item:hover{background:var(--sidebar-hover);color:white;}
+  .nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-cl);font-weight:700;}
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;}
+  .nav-item .studio-badge{position:relative;}
+  .nav-item .studio-badge .rec-dot{position:absolute;top:-2px;left:-2px;width:7px;height:7px;background:#F05680;border-radius:50%;animation:pulse-dot 2s infinite;}
+  @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.6;transform:scale(1.3);}}
+  .sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,0.1);}
+  .profile-mini{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;min-height:44px;}
+  .profile-mini:hover{background:rgba(255,255,255,0.08);}
+  .avatar-sm{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0;}
+  .profile-mini-info{flex:1;min-width:0;}
+  .profile-mini-name{font-size:13px;font-weight:600;color:white;}
+  .profile-mini-role{font-size:11px;color:rgba(255,255,255,0.45);}
+
+  /* ── MAIN ── */
+  .main{margin-right:220px;flex:1;display:flex;flex-direction:column;height:100dvh;}
+
+  /* ── TOPBAR ── */
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:40;box-shadow:var(--shadow-sm);transition:background .3s;}
+  .topbar-breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .breadcrumb-link{color:var(--text-sub);cursor:pointer;transition:color .2s;text-decoration:none;}
+  .breadcrumb-link:hover{color:var(--text-main);}
+  .breadcrumb-sep{color:var(--text-light);}
+  .breadcrumb-current{color:var(--text-main);font-weight:700;}
+  .topbar-actions{display:flex;align-items:center;gap:10px;}
+  .icon-btn{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);min-width:44px;min-height:44px;}
+  .icon-btn:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+  .icon-btn svg{width:18px;height:18px;}
+  .icon-sun{display:none;}.icon-moon{display:block;}
+  [data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+  /* ── CONTENT AREA ── */
+  .content-area{flex:1;display:flex;gap:24px;padding:24px 32px;overflow:hidden;min-height:0;}
+
+  /* ── LEFT COLUMN — Camera Preview ── */
+  .col-left{flex:0 0 60%;display:flex;flex-direction:column;gap:16px;min-height:0;}
+  .camera-preview{position:relative;width:100%;aspect-ratio:16/9;background:var(--preview-bg);border-radius:var(--radius-md);overflow:hidden;flex-shrink:0;box-shadow:var(--shadow-lg);}
+  .camera-preview::after{content:'';position:absolute;inset:0;border-radius:var(--radius-md);box-shadow:inset 0 0 80px 20px rgba(0,0,0,0.3);pointer-events:none;z-index:2;}
+  .camera-no-feed{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:1;}
+  .camera-no-feed img{width:140px;height:140px;object-fit:contain;opacity:.85;}
+  .camera-no-feed .no-feed-text{font-size:15px;font-weight:600;color:rgba(255,255,255,0.5);}
+  .camera-active-view{position:absolute;inset:0;display:none;z-index:1;}
+  .camera-active-view.visible{display:block;}
+  .camera-active-view .sim-gradient{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(56,80,140,0.15) 0%,rgba(10,14,26,0.6) 100%);}
+  .camera-active-view .sim-person{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60%;height:80%;background:radial-gradient(ellipse at 50% 40%,rgba(100,140,200,0.2) 0%,transparent 70%);}
+  .camera-active-view .preview-label{position:absolute;bottom:0;left:0;right:0;height:48px;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent);display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;z-index:3;}
+  .camera-active-view .preview-label span{font-size:12px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:.5px;}
+
+  /* ── Controls ── */
+  .controls-row{display:flex;align-items:center;justify-content:center;gap:16px;}
+  .ctrl-btn{width:52px;height:52px;border-radius:50%;border:2px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);position:relative;}
+  .ctrl-btn:hover{border-color:var(--cyan);color:var(--cyan);transform:scale(1.05);}
+  .ctrl-btn:active{transform:scale(0.95);}
+  .ctrl-btn.on{background:var(--cyan);border-color:var(--cyan);color:white;}
+  .ctrl-btn.on:hover{background:#2ab5e0;border-color:#2ab5e0;}
+  .ctrl-btn svg{width:22px;height:22px;}
+  .ctrl-btn .off-line{position:absolute;width:32px;height:2px;background:var(--pink);transform:rotate(-45deg);border-radius:2px;display:none;}
+  .ctrl-btn.off .off-line{display:block;}
+
+  /* ── Device selectors ── */
+  .device-selectors{display:flex;gap:12px;}
+  .device-select-wrap{flex:1;position:relative;}
+  .device-select-wrap svg.select-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-light);pointer-events:none;}
+  .device-select{width:100%;font-family:var(--font-he);font-size:13px;padding:10px 36px 10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);outline:none;appearance:none;cursor:pointer;transition:border-color .2s;min-height:44px;}
+  .device-select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
+
+  /* ── RIGHT COLUMN — Setup Card ── */
+  .col-right{flex:0 0 calc(40% - 24px);display:flex;flex-direction:column;min-height:0;}
+  .setup-card{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-md);padding:24px;display:flex;flex-direction:column;gap:20px;flex:1;overflow-y:auto;transition:background .3s,box-shadow .3s;}
+  .setup-card::-webkit-scrollbar{width:5px;}
+  .setup-card::-webkit-scrollbar-track{background:transparent;}
+  .setup-card::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+  .setup-title{font-family:var(--font-en);font-size:18px;font-weight:600;color:var(--navy);}
+  [data-theme="dark"] .setup-title{color:var(--cyan);}
+
+  /* ── Recording Mode Cards ── */
+  .mode-section-label{font-size:13px;font-weight:700;color:var(--text-sub);margin-bottom:8px;}
+  .mode-cards{display:flex;flex-direction:column;gap:8px;}
+  .mode-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface-2);cursor:pointer;transition:all .2s;min-height:44px;}
+  .mode-card:hover{border-color:rgba(56,196,242,0.4);background:var(--light-blue);}
+  .mode-card.selected{border-color:var(--cyan);background:rgba(56,196,242,0.08);box-shadow:0 0 0 3px rgba(56,196,242,0.08);}
+  .mode-card-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(37,62,122,0.06);color:var(--navy);transition:all .2s;}
+  [data-theme="dark"] .mode-card-icon{background:rgba(56,196,242,0.1);color:var(--cyan);}
+  .mode-card.selected .mode-card-icon{background:rgba(56,196,242,0.15);color:var(--cyan);}
+  .mode-card-icon svg{width:20px;height:20px;}
+  .mode-card-text{flex:1;min-width:0;}
+  .mode-card-label{font-size:13px;font-weight:700;color:var(--text-main);}
+  .mode-card-desc{font-size:11px;color:var(--text-sub);margin-top:2px;}
+  .mode-card-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+  .mode-card.selected .mode-card-radio{border-color:var(--cyan);}
+  .mode-card.selected .mode-card-radio::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--cyan);}
+
+  /* ── Form fields ── */
+  .field-group{display:flex;flex-direction:column;gap:6px;}
+  .field-label{font-size:13px;font-weight:700;color:var(--text-sub);}
+  .field-input{width:100%;font-family:var(--font-he);font-size:14px;padding:10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);outline:none;transition:border-color .2s,box-shadow .2s;min-height:44px;}
+  .field-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
+  select.field-input{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23253E7A' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;}
+  [data-theme="dark"] select.field-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23dde5f5' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");}
+
+  /* ── CTA Button ── */
+  .cta-record{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 24px;border-radius:30px;border:none;font-family:var(--font-he);font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;background:linear-gradient(135deg,var(--pink),#d63d6a);color:white;box-shadow:0 4px 20px rgba(240,86,128,0.35);min-height:52px;margin-top:auto;}
+  .cta-record:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(240,86,128,0.45);}
+  .cta-record:active{transform:translateY(0);box-shadow:0 2px 12px rgba(240,86,128,0.3);}
+  .cta-record svg{width:20px;height:20px;}
+  .cta-record .rec-circle{width:12px;height:12px;border-radius:50%;background:white;flex-shrink:0;animation:pulse-rec 1.5s infinite;}
+  @keyframes pulse-rec{0%,100%{opacity:1;}50%{opacity:.5;}}
+
+  /* ── Bottom Status Bar ── */
+  .status-bar{height:40px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 32px;flex-shrink:0;transition:background .3s;}
+  .status-bar-tip{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-sub);}
+  .status-bar-tip svg{width:16px;height:16px;color:var(--yellow);flex-shrink:0;}
+  .status-bar-storage{font-size:12px;color:var(--text-light);display:flex;align-items:center;gap:6px;}
+  .status-bar-storage svg{width:14px;height:14px;}
+
+  /* ── TOAST SYSTEM ── */
+  .toast-container{position:fixed;bottom:60px;left:32px;z-index:1000;display:flex;flex-direction:column-reverse;gap:8px;}
+  .toast{display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:white;box-shadow:0 8px 30px rgba(0,0,0,0.2);transform:translateX(-120%);opacity:0;transition:all .3s cubic-bezier(0.4,0,0.2,1);pointer-events:auto;max-width:340px;}
+  .toast.show{transform:translateX(0);opacity:1;}
+  .toast svg{width:18px;height:18px;flex-shrink:0;}
+  .toast-success{background:#2a8a3a;}
+  .toast-info{background:#1a8fc7;}
+  .toast-warning{background:#c49a1a;}
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .fade-in{animation:fadeIn .4s ease both;}
+
+  /* ── Recording overlay ── */
+  .rec-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:none;align-items:center;justify-content:center;}
+  .rec-overlay.visible{display:flex;}
+  .rec-overlay-content{text-align:center;color:white;}
+  .rec-overlay-content .rec-countdown{font-family:var(--font-en);font-size:80px;font-weight:700;animation:fadeIn .3s ease;}
+  .rec-overlay-content .rec-text{font-size:18px;font-weight:600;margin-top:8px;opacity:.7;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <svg viewBox="0 0 180 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="4" width="28" height="28" rx="6" fill="#38C4F2"/>
+      <rect x="4" y="10" width="20" height="3" rx="1.5" fill="white"/>
+      <rect x="4" y="16" width="14" height="3" rx="1.5" fill="white" opacity=".7"/>
+      <rect x="4" y="22" width="18" height="3" rx="1.5" fill="white" opacity=".5"/>
+      <text x="36" y="25" font-family="Fredoka,sans-serif" font-weight="600" font-size="17" fill="white" letter-spacing="1">WHITEBOARD</text>
+    </svg>
+  </div>
+  <div class="sidebar-section">
+    <a class="nav-item" onclick="showToast('info','מעבר לדף הבית...')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      דף הבית
+    </a>
+    <a class="nav-item" onclick="showToast('info','מעבר לקורסים...')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      הקורסים שלי
+    </a>
+    <a class="nav-item active">
+      <span class="studio-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        <span class="rec-dot"></span>
+      </span>
+      STUDIO
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <a class="nav-item" onclick="showToast('info','פתיחת הגדרות...')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      הגדרות
+    </a>
+    <div class="profile-mini" onclick="showToast('info','פתיחת פרופיל...')">
+      <div class="avatar-sm">א</div>
+      <div class="profile-mini-info">
+        <div class="profile-mini-name">אלון</div>
+        <div class="profile-mini-role">מורה</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- ── TOPBAR ── -->
+  <header class="topbar">
+    <nav class="topbar-breadcrumb">
+      <a class="breadcrumb-link" onclick="showToast('info','מעבר לקורסים...')">הקורסים שלי</a>
+      <span class="breadcrumb-sep">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>
+      </span>
+      <a class="breadcrumb-link" onclick="showToast('info','מעבר לקורס...')">יסודות העיצוב</a>
+      <span class="breadcrumb-sep">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>
+      </span>
+      <span class="breadcrumb-current">הקלט שיעור חדש</span>
+    </nav>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleTheme()" title="מצב כהה/בהיר">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="icon-btn" onclick="showToast('info','מרכז העזרה נפתח')" title="עזרה">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── CONTENT ── -->
+  <div class="content-area">
+
+    <!-- LEFT COLUMN — Camera Preview -->
+    <div class="col-left fade-in">
+      <div class="camera-preview" id="cameraPreview">
+        <!-- No Camera State -->
+        <div class="camera-no-feed" id="noFeed">
+          <img src="../../BOARDi/SVG/12.svg" alt="BOARDi">
+          <div class="no-feed-text">הפעל את המצלמה כדי להתחיל</div>
+        </div>
+        <!-- Active Camera State -->
+        <div class="camera-active-view" id="activeFeed">
+          <div class="sim-gradient"></div>
+          <div class="sim-person"></div>
+          <div class="preview-label"><span>תצוגה מקדימה</span></div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls-row">
+        <button class="ctrl-btn off" id="btnCamera" onclick="toggleControl('camera')" title="מצלמה">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          <span class="off-line"></span>
+        </button>
+        <button class="ctrl-btn off" id="btnMic" onclick="toggleControl('mic')" title="מיקרופון">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          <span class="off-line"></span>
+        </button>
+        <button class="ctrl-btn" id="btnScreen" onclick="toggleControl('screen')" title="שיתוף מסך">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <span class="off-line"></span>
+        </button>
+      </div>
+
+      <!-- Device Selectors -->
+      <div class="device-selectors">
+        <div class="device-select-wrap">
+          <svg class="select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          <select class="device-select" id="cameraSelect">
+            <option>FaceTime HD Camera</option>
+            <option>Logitech C920</option>
+            <option>OBS Virtual Camera</option>
+          </select>
+        </div>
+        <div class="device-select-wrap">
+          <svg class="select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+          <select class="device-select" id="micSelect">
+            <option>MacBook Pro Microphone</option>
+            <option>AirPods Pro</option>
+            <option>Blue Yeti</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN — Recording Setup -->
+    <div class="col-right fade-in" style="animation-delay:.1s;">
+      <div class="setup-card">
+        <div class="setup-title">הגדרות הקלטה</div>
+
+        <!-- Recording Mode -->
+        <div>
+          <div class="mode-section-label">מצב הקלטה</div>
+          <div class="mode-cards">
+            <div class="mode-card selected" onclick="selectMode(this)" data-mode="camera">
+              <div class="mode-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+              </div>
+              <div class="mode-card-text">
+                <div class="mode-card-label">מצלמה בלבד</div>
+                <div class="mode-card-desc">הקלטה ישירה מהמצלמה</div>
+              </div>
+              <div class="mode-card-radio"></div>
+            </div>
+            <div class="mode-card" onclick="selectMode(this)" data-mode="screen-camera">
+              <div class="mode-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><rect x="14" y="10" width="7" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+              </div>
+              <div class="mode-card-text">
+                <div class="mode-card-label">מסך + מצלמה</div>
+                <div class="mode-card-desc">שיתוף מסך עם חלון מצלמה קטן</div>
+              </div>
+              <div class="mode-card-radio"></div>
+            </div>
+            <div class="mode-card" onclick="selectMode(this)" data-mode="screen">
+              <div class="mode-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div class="mode-card-text">
+                <div class="mode-card-label">מסך בלבד</div>
+                <div class="mode-card-desc">הקלטת מסך ללא מצלמה</div>
+              </div>
+              <div class="mode-card-radio"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quality -->
+        <div class="field-group">
+          <label class="field-label">איכות הקלטה</label>
+          <select class="field-input" id="qualitySelect">
+            <option value="1080">1080p HD</option>
+            <option value="720">720p</option>
+            <option value="480">480p</option>
+          </select>
+        </div>
+
+        <!-- Lesson Name -->
+        <div class="field-group">
+          <label class="field-label">שם השיעור</label>
+          <input class="field-input" type="text" id="lessonName" value="שיעור חדש" placeholder="הכנס שם לשיעור...">
+        </div>
+
+        <!-- Chapter -->
+        <div class="field-group">
+          <label class="field-label">פרק</label>
+          <select class="field-input" id="chapterSelect">
+            <option>פרק ראשון — מבוא</option>
+            <option>פרק שני — עקרונות בסיסיים</option>
+            <option>פרק שלישי — תרגול מעשי</option>
+          </select>
+        </div>
+
+        <!-- CTA -->
+        <button class="cta-record" onclick="startRecording()">
+          <span class="rec-circle"></span>
+          התחל הקלטה
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BOTTOM STATUS BAR ── -->
+  <div class="status-bar">
+    <div class="status-bar-tip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/></svg>
+      <span>טיפ: לחץ על רווח כדי להשהות ולהמשיך הקלטה</span>
+    </div>
+    <div class="status-bar-storage">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      <span>נפח אחסון זמין: 4.2 GB</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RECORDING OVERLAY ═══ -->
+<div class="rec-overlay" id="recOverlay">
+  <div class="rec-overlay-content">
+    <div class="rec-countdown" id="recCountdown">3</div>
+    <div class="rec-text">מתחילים להקליט...</div>
+  </div>
+</div>
+
+<!-- ═══ TOAST CONTAINER ═══ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  // ── Theme Toggle ──
+  function toggleTheme() {
+    const html = document.documentElement;
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    showToast('info', next === 'dark' ? 'מצב כהה הופעל' : 'מצב בהיר הופעל');
+  }
+
+  // ── Toast System ──
+  function showToast(type, message) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-' + type;
+    const icons = {
+      success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+      info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+      warning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+    };
+    toast.innerHTML = (icons[type] || icons.info) + '<span>' + message + '</span>';
+    container.appendChild(toast);
+    requestAnimationFrame(() => { requestAnimationFrame(() => { toast.classList.add('show'); }); });
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  // ── Control Toggles ──
+  const controlState = { camera: false, mic: false, screen: false };
+
+  function toggleControl(type) {
+    controlState[type] = !controlState[type];
+    const btnMap = { camera: 'btnCamera', mic: 'btnMic', screen: 'btnScreen' };
+    const btn = document.getElementById(btnMap[type]);
+
+    if (controlState[type]) {
+      btn.classList.add('on');
+      btn.classList.remove('off');
+    } else {
+      btn.classList.remove('on');
+      btn.classList.add('off');
+    }
+
+    // Camera preview logic
+    if (type === 'camera') {
+      const noFeed = document.getElementById('noFeed');
+      const activeFeed = document.getElementById('activeFeed');
+      if (controlState.camera) {
+        noFeed.style.display = 'none';
+        activeFeed.classList.add('visible');
+        showToast('success', 'המצלמה הופעלה');
+      } else {
+        noFeed.style.display = 'flex';
+        activeFeed.classList.remove('visible');
+        showToast('info', 'המצלמה כובתה');
+      }
+    } else if (type === 'mic') {
+      showToast(controlState.mic ? 'success' : 'info', controlState.mic ? 'המיקרופון הופעל' : 'המיקרופון כובה');
+    } else if (type === 'screen') {
+      showToast(controlState.screen ? 'success' : 'info', controlState.screen ? 'שיתוף מסך הופעל' : 'שיתוף מסך כובה');
+    }
+  }
+
+  // ── Recording Mode Selection ──
+  function selectMode(card) {
+    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    const mode = card.dataset.mode;
+    const labels = { 'camera': 'מצלמה בלבד', 'screen-camera': 'מסך + מצלמה', 'screen': 'מסך בלבד' };
+    showToast('info', 'מצב הקלטה: ' + labels[mode]);
+  }
+
+  // ── Start Recording ──
+  function startRecording() {
+    showToast('info', 'מתחיל הקלטה...');
+    const overlay = document.getElementById('recOverlay');
+    const countdown = document.getElementById('recCountdown');
+    overlay.classList.add('visible');
+
+    let count = 3;
+    countdown.textContent = count;
+
+    const interval = setInterval(() => {
+      count--;
+      if (count > 0) {
+        countdown.textContent = count;
+      } else {
+        clearInterval(interval);
+        countdown.textContent = '';
+        countdown.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="60" height="60"><circle cx="12" cy="12" r="8" fill="#F05680" stroke="none"/></svg>';
+        setTimeout(() => {
+          overlay.classList.remove('visible');
+          showToast('success', 'ההקלטה התחילה בהצלחה!');
+        }, 800);
+      }
+    }, 1000);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>עורך כתוביות | WHITEBOARD Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+  --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--cyan-glow:rgba(56,196,242,0.25);
+  --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+  --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+  --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+  --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;--surface-3:#e8edf8;
+  --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+  --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+  --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+  --shadow-lg:0 12px 40px rgba(37,62,122,0.14);
+  --video-bg:#0c1424;
+}
+[data-theme="dark"] {
+  --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;--surface-3:#223050;
+  --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+  --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+  --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.5);
+  --cyan-light:rgba(56,196,242,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);min-height:100vh;display:flex;flex-direction:column;transition:background .3s,color .3s;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(37,62,122,0.15);border-radius:3px;}
+[data-theme="dark"] ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);}
+
+/* ── TOPBAR ── */
+.topbar{height:48px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);transition:background .3s;flex-shrink:0;}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+.topbar-center{position:absolute;left:50%;transform:translateX(-50%);font-family:var(--font-he);font-size:14px;font-weight:600;color:var(--text-main);white-space:nowrap;}
+.topbar-left{display:flex;align-items:center;gap:8px;}
+.btn-back{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;border:none;background:transparent;color:var(--text-sub);font-family:var(--font-he);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;min-height:44px;}
+.btn-back:hover{background:var(--cyan-light);color:var(--navy);}
+.btn-back svg{width:18px;height:18px;}
+.btn-outline{padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text-main);font-family:var(--font-he);font-size:12.5px;font-weight:500;cursor:pointer;transition:all .2s;min-height:36px;display:flex;align-items:center;gap:5px;}
+.btn-outline:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-light);}
+.btn-outline svg{width:15px;height:15px;}
+.btn-save{padding:6px 20px;border-radius:8px;border:none;background:var(--cyan);color:white;font-family:var(--font-he);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;min-height:36px;display:flex;align-items:center;gap:6px;}
+.btn-save:hover{background:#2bb5e2;box-shadow:0 4px 14px rgba(56,196,242,0.35);}
+.btn-save svg{width:15px;height:15px;}
+.theme-toggle{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);margin-right:4px;}
+.theme-toggle:hover{background:var(--cyan-light);color:var(--navy);border-color:var(--cyan);}
+.icon-sun{display:none;}.icon-moon{display:block;}
+[data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+/* ── MAIN LAYOUT ── */
+.main-layout{display:flex;flex:1;overflow:hidden;}
+.left-panel{width:45%;min-width:380px;display:flex;flex-direction:column;border-left:1px solid var(--border);background:var(--surface-2);transition:background .3s;}
+.right-panel{width:55%;display:flex;flex-direction:column;background:var(--bg);transition:background .3s;}
+
+/* ── VIDEO PLAYER ── */
+.video-container{position:relative;background:var(--video-bg);margin:12px;border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-md);}
+.video-aspect{width:100%;padding-top:56.25%;position:relative;}
+.video-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.video-placeholder{color:rgba(255,255,255,0.2);display:flex;flex-direction:column;align-items:center;gap:8px;}
+.video-placeholder svg{width:48px;height:48px;}
+.video-placeholder span{font-size:13px;font-weight:500;}
+.play-big-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;}
+.play-big-btn .circle{width:60px;height:60px;border-radius:50%;background:rgba(56,196,242,0.85);display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 20px rgba(56,196,242,0.4);}
+.play-big-btn:hover .circle{transform:scale(1.1);box-shadow:0 6px 30px rgba(56,196,242,0.5);}
+.play-big-btn svg{width:24px;height:24px;color:white;margin-right:-2px;}
+.subtitle-overlay{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);padding:6px 18px;border-radius:8px;font-size:16px;font-weight:500;color:white;text-align:center;max-width:90%;line-height:1.5;z-index:6;backdrop-filter:blur(6px);transition:opacity .3s;}
+.subtitle-overlay.hidden{opacity:0;}
+
+/* ── PLAYBACK CONTROLS ── */
+.playback-controls{display:flex;align-items:center;gap:10px;padding:10px 16px;}
+.ctrl-btn{width:36px;height:36px;border-radius:8px;border:none;background:transparent;color:var(--text-sub);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;min-width:44px;min-height:44px;}
+.ctrl-btn:hover{background:var(--cyan-light);color:var(--cyan);}
+.ctrl-btn.active{color:var(--cyan);}
+.ctrl-btn svg{width:18px;height:18px;}
+.ctrl-btn.play-btn{width:40px;height:40px;background:var(--cyan);color:white;border-radius:50%;}
+.ctrl-btn.play-btn:hover{background:#2bb5e2;box-shadow:0 4px 14px rgba(56,196,242,0.35);}
+.time-display{font-size:12px;color:var(--text-sub);font-variant-numeric:tabular-nums;font-family:var(--font-en);letter-spacing:0.3px;direction:ltr;min-width:90px;text-align:center;}
+.progress-bar-wrap{flex:1;height:36px;display:flex;align-items:center;cursor:pointer;padding:0 4px;}
+.progress-bar{width:100%;height:4px;background:var(--surface-3);border-radius:2px;position:relative;overflow:visible;}
+.progress-fill{height:100%;background:var(--cyan);border-radius:2px;width:35%;position:relative;}
+.progress-handle{position:absolute;left:0;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;background:var(--cyan);border:2px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.2);opacity:0;transition:opacity .15s;}
+.progress-bar-wrap:hover .progress-handle{opacity:1;}
+.speed-btn{font-family:var(--font-en);font-size:12px;font-weight:600;color:var(--text-sub);padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;cursor:pointer;min-width:44px;min-height:36px;transition:all .15s;}
+.speed-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+
+/* ── WAVEFORM ── */
+.waveform-wrap{height:44px;margin:0 12px 12px;background:var(--surface);border-radius:var(--radius-sm);overflow:hidden;position:relative;border:1px solid var(--border);cursor:pointer;}
+.waveform-canvas{width:100%;height:100%;}
+.waveform-playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--cyan);left:35%;z-index:3;pointer-events:none;box-shadow:0 0 6px rgba(56,196,242,0.5);}
+.waveform-cue{position:absolute;top:0;bottom:0;background:rgba(56,196,242,0.15);border:1px solid rgba(56,196,242,0.25);border-radius:2px;z-index:1;}
+.waveform-cue.active{background:rgba(56,196,242,0.3);border-color:var(--cyan);}
+
+/* ── RIGHT PANEL ── */
+.panel-header{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.panel-title{font-family:var(--font-en);font-size:16px;font-weight:600;color:var(--text-main);display:flex;align-items:center;gap:8px;}
+.panel-title .count{font-family:var(--font-he);font-size:12px;font-weight:500;color:var(--text-sub);background:var(--surface);padding:2px 10px;border-radius:20px;border:1px solid var(--border);}
+.lang-select{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-main);font-family:var(--font-he);font-size:13px;cursor:pointer;min-height:36px;}
+.search-input{flex:1;min-width:120px;max-width:200px;padding:6px 12px 6px 32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-main);font-family:var(--font-he);font-size:13px;position:relative;transition:border-color .2s;min-height:36px;}
+.search-input:focus{outline:none;border-color:var(--cyan);}
+.search-wrap{position:relative;flex:1;min-width:120px;max-width:200px;}
+.search-wrap svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--text-light);pointer-events:none;}
+.search-wrap input{width:100%;padding:6px 32px 6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-main);font-family:var(--font-he);font-size:13px;transition:border-color .2s;min-height:36px;}
+.search-wrap input:focus{outline:none;border-color:var(--cyan);}
+.btn-auto-gen{padding:7px 16px;border-radius:var(--radius-sm);border:none;background:linear-gradient(135deg,var(--cyan),#2a9fd6);color:white;font-family:var(--font-he);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;min-height:36px;transition:all .2s;box-shadow:0 2px 10px rgba(56,196,242,0.25);}
+.btn-auto-gen:hover{box-shadow:0 4px 18px rgba(56,196,242,0.4);transform:translateY(-1px);}
+.btn-auto-gen svg{width:16px;height:16px;}
+
+/* ── EMPTY STATE ── */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;flex:1;}
+.empty-state .mascot{width:120px;height:120px;margin-bottom:20px;opacity:0.9;}
+.empty-state h3{font-family:var(--font-en);font-size:20px;font-weight:600;color:var(--text-main);margin-bottom:8px;}
+.empty-state p{font-size:14px;color:var(--text-sub);margin-bottom:24px;max-width:320px;line-height:1.6;}
+.btn-gen-big{padding:12px 32px;border-radius:var(--radius-md);border:none;background:linear-gradient(135deg,var(--cyan),#2a9fd6);color:white;font-family:var(--font-he);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:48px;transition:all .2s;box-shadow:0 4px 16px rgba(56,196,242,0.3);}
+.btn-gen-big:hover{box-shadow:0 6px 24px rgba(56,196,242,0.45);transform:translateY(-2px);}
+.btn-gen-big svg{width:20px;height:20px;}
+.empty-state .link{font-size:13px;color:var(--text-sub);cursor:pointer;margin-top:14px;transition:color .2s;text-decoration:underline;}
+.empty-state .link:hover{color:var(--cyan);}
+.progress-section{display:none;flex-direction:column;align-items:center;gap:12px;margin-top:20px;width:100%;max-width:300px;}
+.progress-section.active{display:flex;}
+.progress-track{width:100%;height:8px;background:var(--surface-3);border-radius:4px;overflow:hidden;}
+.progress-track-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:4px;width:0%;transition:width .3s;}
+.progress-step{font-size:13px;color:var(--text-sub);font-weight:500;}
+
+/* ── CUE LIST ── */
+.cue-list{flex:1;overflow-y:auto;padding:8px 12px;}
+.cue-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:4px;transition:all .2s;cursor:pointer;position:relative;border-right:3px solid transparent;}
+.cue-card:hover{box-shadow:var(--shadow-sm);border-color:rgba(56,196,242,0.2);border-right-color:rgba(56,196,242,0.3);}
+.cue-card.active{background:var(--cyan-light);border-right-color:var(--cyan);border-color:rgba(56,196,242,0.2);}
+.cue-card.selected{background:rgba(240,86,128,0.06);border-right-color:var(--pink);}
+.cue-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.cue-num{font-family:var(--font-en);font-size:11px;font-weight:600;color:var(--text-light);background:var(--surface-2);width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cue-card.active .cue-num{background:rgba(56,196,242,0.2);color:var(--cyan);}
+.cue-checkbox{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;appearance:none;-webkit-appearance:none;}
+.cue-checkbox:checked{background:var(--pink);border-color:var(--pink);}
+.cue-checkbox:checked::after{content:'';display:block;width:6px;height:10px;border:solid white;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px);}
+.cue-times{display:flex;align-items:center;gap:4px;direction:ltr;flex:1;}
+.cue-time-input{font-family:var(--font-en);font-size:12px;color:var(--text-sub);background:var(--surface-2);border:1px solid transparent;border-radius:6px;padding:3px 8px;width:100px;text-align:center;transition:all .15s;font-variant-numeric:tabular-nums;}
+.cue-time-input:focus{outline:none;border-color:var(--cyan);background:var(--surface);}
+.cue-time-sep{color:var(--text-light);font-size:12px;}
+.cue-duration{font-family:var(--font-en);font-size:11px;color:var(--text-sub);background:var(--green);color:white;padding:2px 8px;border-radius:20px;font-weight:600;flex-shrink:0;margin-right:auto;}
+.cue-textarea{width:100%;border:1px solid transparent;border-radius:8px;padding:8px 10px;font-family:var(--font-he);font-size:14px;color:var(--text-main);background:var(--surface-2);resize:none;line-height:1.5;transition:all .15s;min-height:44px;}
+.cue-textarea:focus{outline:none;border-color:var(--cyan);background:var(--surface);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
+.cue-actions{display:flex;align-items:center;gap:4px;margin-top:6px;}
+.cue-action{width:32px;height:32px;border-radius:6px;border:none;background:transparent;color:var(--text-light);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;min-width:44px;min-height:44px;}
+.cue-action:hover{background:var(--surface-3);color:var(--text-main);}
+.cue-action.delete:hover{background:rgba(240,86,128,0.1);color:var(--pink);}
+.cue-action svg{width:15px;height:15px;}
+.add-cue-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;border:1.5px dashed var(--border);background:transparent;color:var(--text-light);cursor:pointer;margin:4px auto;transition:all .15s;font-size:16px;min-width:44px;min-height:44px;}
+.add-cue-btn:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-light);}
+
+/* ── BULK ACTIONS ── */
+.bulk-bar{display:none;align-items:center;gap:12px;padding:10px 20px;background:var(--surface);border-top:1px solid var(--border);box-shadow:0 -2px 10px rgba(0,0,0,0.05);transition:background .3s;}
+.bulk-bar.visible{display:flex;}
+.bulk-count{font-size:13px;font-weight:600;color:var(--text-main);}
+.bulk-btn{padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;font-family:var(--font-he);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s;color:var(--text-sub);min-height:36px;}
+.bulk-btn:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-light);}
+.bulk-btn.danger{color:var(--pink);}
+.bulk-btn.danger:hover{border-color:var(--pink);background:rgba(240,86,128,0.08);}
+.bulk-btn svg{width:14px;height:14px;}
+
+/* ── SUBTITLE STYLING ── */
+.style-section{padding:14px 20px;border-top:1px solid var(--border);background:var(--surface);transition:background .3s;}
+.style-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;cursor:pointer;}
+.style-header h4{font-size:13px;font-weight:600;color:var(--text-main);display:flex;align-items:center;gap:6px;}
+.style-header svg{width:14px;height:14px;color:var(--text-light);transition:transform .2s;}
+.style-header.open svg{transform:rotate(180deg);}
+.style-options{display:none;gap:16px;flex-wrap:wrap;}
+.style-options.open{display:flex;}
+.style-group{display:flex;flex-direction:column;gap:6px;min-width:140px;}
+.style-label{font-size:11px;font-weight:600;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.5px;}
+.style-slider{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--surface-3);outline:none;width:100%;}
+.style-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--cyan);cursor:pointer;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.15);}
+.style-toggle-group{display:flex;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
+.style-toggle{padding:6px 14px;border:none;background:var(--surface);font-family:var(--font-he);font-size:12px;cursor:pointer;color:var(--text-sub);transition:all .15s;min-height:34px;}
+.style-toggle.active{background:var(--cyan);color:white;}
+.style-toggle:not(:last-child){border-left:1px solid var(--border);}
+
+/* ── BOTTOM TIMELINE ── */
+.timeline-strip{height:60px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 16px;position:relative;flex-shrink:0;transition:background .3s;}
+.timeline-inner{flex:1;height:32px;background:var(--surface-2);border-radius:6px;position:relative;overflow:hidden;cursor:pointer;}
+.timeline-block{position:absolute;top:4px;bottom:4px;background:rgba(56,196,242,0.25);border:1px solid rgba(56,196,242,0.35);border-radius:4px;transition:background .15s;cursor:pointer;}
+.timeline-block:hover{background:rgba(56,196,242,0.4);}
+.timeline-block.active{background:rgba(56,196,242,0.5);border-color:var(--cyan);}
+.timeline-playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--cyan);left:35%;z-index:5;pointer-events:none;box-shadow:0 0 6px rgba(56,196,242,0.5);}
+.timeline-playhead::before{content:'';position:absolute;top:-4px;left:-4px;width:10px;height:10px;background:var(--cyan);border-radius:50%;box-shadow:0 2px 6px rgba(56,196,242,0.4);}
+.timeline-time-labels{display:flex;justify-content:space-between;padding:0 4px;margin-top:2px;}
+.timeline-time-labels span{font-family:var(--font-en);font-size:9px;color:var(--text-light);}
+
+/* ── BURN-IN BAR ── */
+.burnin-bar{display:flex;align-items:center;gap:14px;padding:10px 20px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;transition:background .3s;}
+.burnin-label{font-size:13px;font-weight:600;color:var(--text-main);display:flex;align-items:center;gap:6px;}
+.burnin-label svg{width:16px;height:16px;color:var(--yellow);}
+.burnin-toggle{position:relative;width:44px;height:24px;cursor:pointer;flex-shrink:0;}
+.burnin-toggle input{opacity:0;width:0;height:0;}
+.burnin-toggle .slider{position:absolute;inset:0;background:var(--surface-3);border-radius:12px;transition:background .2s;}
+.burnin-toggle .slider::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:white;top:3px;right:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.burnin-toggle input:checked+.slider{background:var(--cyan);}
+.burnin-toggle input:checked+.slider::before{transform:translateX(-20px);}
+.burnin-desc{font-size:12px;color:var(--text-sub);flex:1;line-height:1.4;}
+.burnin-desc.warning{color:var(--pink);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:white;padding:12px 24px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;box-shadow:var(--shadow-lg);z-index:1000;display:flex;align-items:center;gap:8px;transition:transform .3s cubic-bezier(0.34,1.56,0.64,1),opacity .3s;opacity:0;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:auto;}
+.toast svg{width:18px;height:18px;color:var(--green);flex-shrink:0;}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:32px;max-width:440px;width:90%;box-shadow:var(--shadow-lg);text-align:center;transition:background .3s;}
+.modal h3{font-family:var(--font-en);font-size:18px;font-weight:600;margin-bottom:8px;}
+.modal p{font-size:14px;color:var(--text-sub);margin-bottom:20px;line-height:1.6;}
+.modal-progress{width:100%;margin-bottom:16px;}
+.modal-steps{font-size:13px;color:var(--text-sub);font-weight:500;min-height:20px;}
+.modal-close{position:absolute;top:12px;left:12px;width:32px;height:32px;border:none;background:transparent;color:var(--text-light);cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.modal-close:hover{background:var(--surface-3);color:var(--text-main);}
+
+/* ── IMPORT MODAL ── */
+.import-modal .drop-zone{border:2px dashed var(--border);border-radius:var(--radius-md);padding:40px 24px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:16px;}
+.import-modal .drop-zone:hover{border-color:var(--cyan);background:var(--cyan-light);}
+.import-modal .drop-zone svg{width:40px;height:40px;color:var(--text-light);margin-bottom:12px;}
+.import-modal .drop-zone h4{font-size:15px;font-weight:600;margin-bottom:4px;}
+.import-modal .drop-zone p{font-size:13px;color:var(--text-sub);}
+
+/* ── KEYBOARD HINT ── */
+.kbd-hints{display:flex;align-items:center;gap:12px;padding:6px 20px;border-top:1px solid var(--border);background:var(--surface-2);transition:background .3s;}
+.kbd-hint{font-size:11px;color:var(--text-light);display:flex;align-items:center;gap:4px;}
+.kbd{font-family:var(--font-en);font-size:10px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-weight:600;color:var(--text-sub);}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-right">
+    <button class="btn-back" onclick="history.back()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      חזרה לעורך
+    </button>
+  </div>
+  <div class="topbar-center">עורך כתוביות — שיעור 3: צבע ומשמעות</div>
+  <div class="topbar-left">
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <button class="btn-outline" id="importBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      ייבוא SRT
+    </button>
+    <button class="btn-outline" id="exportBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      ייצוא SRT
+    </button>
+    <button class="btn-save" id="saveBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      שמור
+    </button>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- LEFT PANEL — Video -->
+  <div class="left-panel">
+    <!-- Video Player -->
+    <div class="video-container">
+      <div class="video-aspect">
+        <div class="video-inner">
+          <div class="video-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="4"/><path d="M15 12l-5-3v6z"/></svg>
+            <span>שיעור 3: צבע ומשמעות</span>
+          </div>
+        </div>
+        <div class="play-big-btn" id="playBigBtn">
+          <div class="circle">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="subtitle-overlay" id="subtitleOverlay">בשיעור הזה נלמד על צבעים חמים וקרים</div>
+      </div>
+    </div>
+
+    <!-- Playback Controls -->
+    <div class="playback-controls">
+      <button class="ctrl-btn" title="אחורה 5 שניות">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="8" font-weight="bold" font-family="Fredoka">5</text></svg>
+      </button>
+      <button class="ctrl-btn play-btn" id="playPauseBtn" title="נגן/השהה">
+        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      </button>
+      <button class="ctrl-btn" title="קדימה 5 שניות">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="8" font-weight="bold" font-family="Fredoka">5</text></svg>
+      </button>
+      <div class="time-display" id="timeDisplay">01:12 / 03:27</div>
+      <div class="progress-bar-wrap" id="progressWrap">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill">
+            <div class="progress-handle"></div>
+          </div>
+        </div>
+      </div>
+      <button class="speed-btn" id="speedBtn">1.0x</button>
+      <button class="ctrl-btn" id="loopBtn" title="לולאה">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      </button>
+    </div>
+
+    <!-- Waveform -->
+    <div class="waveform-wrap" id="waveformWrap">
+      <canvas class="waveform-canvas" id="waveformCanvas"></canvas>
+      <div class="waveform-playhead" id="waveformPlayhead"></div>
+      <!-- Cue blocks are generated by JS -->
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL — Subtitle Cues -->
+  <div class="right-panel">
+    <!-- Header -->
+    <div class="panel-header">
+      <div class="panel-title">
+        כתוביות
+        <span class="count" id="cueCount">24 כתוביות</span>
+      </div>
+      <select class="lang-select">
+        <option>עברית</option>
+        <option>English</option>
+        <option>العربية</option>
+      </select>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="חפש בכתוביות..." id="searchInput">
+      </div>
+      <button class="btn-auto-gen" id="autoGenBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.09 6.26L20.18 9l-5 4.09L16.18 20 12 16.54 7.82 20l1-6.91-5-4.09 6.09-.74z"/></svg>
+        יצירה אוטומטית
+      </button>
+    </div>
+
+    <!-- Empty State (hidden by default — shown when no cues) -->
+    <div class="empty-state" id="emptyState" style="display:none">
+      <img class="mascot" src="../../BOARDi/SVG/5.svg" alt="BOARDi">
+      <h3>יצירת כתוביות אוטומטית</h3>
+      <p>שלח את האודיו ל-AI וקבל כתוביות תוך דקה. התוצאות כוללות סנכרון זמנים מדויק.</p>
+      <button class="btn-gen-big" id="autoGenBigBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.09 6.26L20.18 9l-5 4.09L16.18 20 12 16.54 7.82 20l1-6.91-5-4.09 6.09-.74z"/></svg>
+        יצירה אוטומטית
+      </button>
+      <span class="link" id="importLink">או ייבוא קובץ SRT</span>
+      <div class="progress-section" id="genProgress">
+        <div class="progress-track"><div class="progress-track-fill" id="genProgressFill"></div></div>
+        <div class="progress-step" id="genStepText">מחלץ אודיו...</div>
+      </div>
+    </div>
+
+    <!-- Cue List -->
+    <div class="cue-list" id="cueList"></div>
+
+    <!-- Bulk Actions -->
+    <div class="bulk-bar" id="bulkBar">
+      <span class="bulk-count" id="bulkCount">נבחרו 0 כתוביות</span>
+      <div style="flex:1"></div>
+      <button class="bulk-btn danger" id="bulkDelete">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        מחק נבחרות
+      </button>
+      <button class="bulk-btn" id="bulkMerge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        מזג נבחרות
+      </button>
+      <button class="bulk-btn" id="bulkShift">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        הזז זמנים (+/-)
+      </button>
+    </div>
+
+    <!-- Subtitle Styling Options -->
+    <div class="style-section">
+      <div class="style-header" id="styleToggle">
+        <h4>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          עיצוב כתוביות
+        </h4>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="style-options" id="styleOptions">
+        <div class="style-group">
+          <span class="style-label">גודל גופן</span>
+          <input type="range" class="style-slider" id="fontSizeSlider" min="0" max="2" value="1">
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-light);"><span>קטן</span><span>בינוני</span><span>גדול</span></div>
+        </div>
+        <div class="style-group">
+          <span class="style-label">מיקום</span>
+          <div class="style-toggle-group">
+            <button class="style-toggle" onclick="setSubPos('top',this)">למעלה</button>
+            <button class="style-toggle active" onclick="setSubPos('bottom',this)">למטה</button>
+          </div>
+        </div>
+        <div class="style-group">
+          <span class="style-label">רקע</span>
+          <div class="style-toggle-group">
+            <button class="style-toggle" onclick="setSubBg('transparent',this)">שקוף</button>
+            <button class="style-toggle active" onclick="setSubBg('semi',this)">חצי שקוף</button>
+            <button class="style-toggle" onclick="setSubBg('solid',this)">מלא</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Keyboard Hints -->
+    <div class="kbd-hints">
+      <div class="kbd-hint"><span class="kbd">Enter</span> שמור ולכתובית הבאה</div>
+      <div class="kbd-hint"><span class="kbd">Tab</span> הבא</div>
+      <div class="kbd-hint"><span class="kbd">Shift+Tab</span> הקודם</div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM TIMELINE -->
+<div class="timeline-strip" id="timelineStrip">
+  <div style="font-size:11px;color:var(--text-light);margin-left:12px;font-family:var(--font-en);width:40px;">0:00</div>
+  <div class="timeline-inner" id="timelineInner">
+    <div class="timeline-playhead" id="timelinePlayhead"></div>
+    <!-- Blocks generated by JS -->
+  </div>
+  <div style="font-size:11px;color:var(--text-light);margin-right:12px;font-family:var(--font-en);width:40px;text-align:left;">3:27</div>
+</div>
+
+<!-- BURN-IN BAR -->
+<div class="burnin-bar">
+  <div class="burnin-label">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+    צריבת כתוביות לוידאו
+  </div>
+  <label class="burnin-toggle">
+    <input type="checkbox" id="burninToggle">
+    <span class="slider"></span>
+  </label>
+  <span class="burnin-desc" id="burninDesc">הכתוביות יוצגו כשכבה נפרדת — ניתן לכבות/להפעיל</span>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span id="toastText"></span>
+</div>
+
+<!-- IMPORT MODAL -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal import-modal" style="position:relative;">
+    <button class="modal-close" onclick="closeModal('importModal')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h3>ייבוא קובץ SRT</h3>
+    <div class="drop-zone" id="dropZone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <h4>גרור קובץ SRT לכאן</h4>
+      <p>או לחץ לבחירת קובץ</p>
+    </div>
+    <button class="btn-gen-big" style="margin:0 auto;" onclick="simulateImport()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      ייבוא
+    </button>
+  </div>
+</div>
+
+<!-- AUTO-GENERATE MODAL -->
+<div class="modal-overlay" id="genModal">
+  <div class="modal" style="position:relative;">
+    <h3>יצירת כתוביות אוטומטית</h3>
+    <p>שולח אודיו ל-Whisper AI...</p>
+    <div class="modal-progress">
+      <div class="progress-track"><div class="progress-track-fill" id="modalProgressFill"></div></div>
+    </div>
+    <div class="modal-steps" id="modalStepText">מחלץ אודיו...</div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const subtitleData = [
+  { id:1, start:'00:00:01,200', end:'00:00:04,400', text:'בשיעור הזה נלמד על צבעים חמים וקרים' },
+  { id:2, start:'00:00:04,800', end:'00:00:07,600', text:'צבעים חמים כוללים אדום, כתום וצהוב' },
+  { id:3, start:'00:00:08,100', end:'00:00:11,300', text:'הם יוצרים תחושה של אנרגיה וחום' },
+  { id:4, start:'00:00:12,000', end:'00:00:15,200', text:'צבעים קרים כוללים כחול, ירוק וסגול' },
+  { id:5, start:'00:00:15,800', end:'00:00:18,500', text:'הם יוצרים תחושה של רוגע ושלווה' },
+  { id:6, start:'00:00:19,200', end:'00:00:22,800', text:'בעיצוב, חשוב לדעת מתי להשתמש בכל סוג' },
+  { id:7, start:'00:00:23,400', end:'00:00:26,100', text:'צבעים חמים מושכים תשומת לב' },
+  { id:8, start:'00:00:26,800', end:'00:00:30,000', text:'צבעים קרים יוצרים רקע נעים' },
+  { id:9, start:'00:00:30,500', end:'00:00:34,200', text:'השילוב ביניהם יוצר קונטרסט מעניין' },
+  { id:10, start:'00:00:34,800', end:'00:00:38,000', text:'בואו נראה כמה דוגמאות מעשיות' },
+  { id:11, start:'00:00:38,500', end:'00:00:42,200', text:'כאן אנחנו רואים לוגו עם צבעים חמים' },
+  { id:12, start:'00:00:42,800', end:'00:00:46,000', text:'שימו לב איך זה מרגיש אנרגטי ומזמין' },
+  { id:13, start:'00:00:46,500', end:'00:00:50,200', text:'ועכשיו אותו לוגו בצבעים קרים' },
+  { id:14, start:'00:00:50,800', end:'00:00:54,000', text:'ההרגשה שונה לחלוטין, נכון?' },
+  { id:15, start:'00:00:54,500', end:'00:00:58,200', text:'זה הכוח של צבע בעיצוב' },
+  { id:16, start:'00:00:58,800', end:'00:01:02,000', text:'עכשיו בואו נתרגל' },
+  { id:17, start:'00:01:02,500', end:'00:01:06,200', text:'קחו את הפלטה שבחרתם בשיעור הקודם' },
+  { id:18, start:'00:01:06,800', end:'00:01:10,000', text:'ונסו להחליף בין צבעים חמים לקרים' },
+  { id:19, start:'00:01:10,500', end:'00:01:14,200', text:'שימו לב לשינוי בתחושה הכללית' },
+  { id:20, start:'00:01:14,800', end:'00:01:18,000', text:'אפשר גם לשלב — חם בכותרות, קר ברקע' },
+  { id:21, start:'00:01:18,500', end:'00:01:22,200', text:'זה אחד הטריקים הכי נפוצים בעיצוב' },
+  { id:22, start:'00:01:22,800', end:'00:01:26,000', text:'בשיעור הבא נדבר על טיפוגרפיה' },
+  { id:23, start:'00:01:26,500', end:'00:01:30,200', text:'ואיך לבחור גופנים שעובדים יחד' },
+  { id:24, start:'00:01:30,800', end:'00:01:34,000', text:'תודה רבה, נתראה בשיעור הבא!' },
+];
+
+let cues = [];
+let activeCueIndex = 0;
+let selectedCues = new Set();
+let isPlaying = false;
+let playInterval = null;
+let currentTime = 72; // 1:12 in seconds
+const totalDuration = 207; // 3:27
+
+// ── HELPERS ──
+function timeToSec(t) {
+  const [h,m,rest] = t.split(':');
+  const [s,ms] = rest.split(',');
+  return parseInt(h)*3600 + parseInt(m)*60 + parseInt(s) + parseInt(ms)/1000;
+}
+function secToTime(sec) {
+  const h = Math.floor(sec/3600);
+  const m = Math.floor((sec%3600)/60);
+  const s = Math.floor(sec%60);
+  const ms = Math.round((sec%1)*1000);
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')},${String(ms).padStart(3,'0')}`;
+}
+function secToDisplay(sec) {
+  const m = Math.floor(sec/60);
+  const s = Math.floor(sec%60);
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+// ── THEME ──
+function toggleTheme() {
+  const html = document.documentElement;
+  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastText').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── MODAL ──
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+// ── RENDER CUES ──
+function renderCues() {
+  const list = document.getElementById('cueList');
+  const search = document.getElementById('searchInput').value.trim();
+  list.innerHTML = '';
+
+  const filtered = cues.filter(c => !search || c.text.includes(search));
+
+  filtered.forEach((cue, idx) => {
+    const isActive = idx === activeCueIndex && !search;
+    const isSelected = selectedCues.has(cue.id);
+    const startSec = timeToSec(cue.start);
+    const endSec = timeToSec(cue.end);
+    const dur = (endSec - startSec).toFixed(1);
+
+    const card = document.createElement('div');
+    card.className = `cue-card${isActive ? ' active' : ''}${isSelected ? ' selected' : ''}`;
+    card.dataset.id = cue.id;
+    card.innerHTML = `
+      <div class="cue-top">
+        <input type="checkbox" class="cue-checkbox" ${isSelected ? 'checked' : ''} onclick="event.stopPropagation();toggleSelect(${cue.id})">
+        <span class="cue-num">${cue.id}</span>
+        <div class="cue-times">
+          <input class="cue-time-input" value="${cue.start}" onchange="updateCueTime(${cue.id},'start',this.value)" onclick="event.stopPropagation()">
+          <span class="cue-time-sep">→</span>
+          <input class="cue-time-input" value="${cue.end}" onchange="updateCueTime(${cue.id},'end',this.value)" onclick="event.stopPropagation()">
+        </div>
+        <span class="cue-duration">${dur}s</span>
+      </div>
+      <textarea class="cue-textarea" rows="2" onclick="event.stopPropagation()" oninput="updateCueText(${cue.id},this.value)" onkeydown="handleCueKey(event,${idx})">${cue.text}</textarea>
+      <div class="cue-actions">
+        <button class="cue-action" title="נגן מכאן" onclick="event.stopPropagation();jumpToCue(${idx})">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button class="cue-action" title="פצל כתובית" onclick="event.stopPropagation();splitCue(${cue.id})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.59" y2="15.42"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.59" y1="8.58" x2="20" y2="20"/></svg>
+        </button>
+        <button class="cue-action" title="מזג עם הבא" onclick="event.stopPropagation();mergeCue(${cue.id})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </button>
+        <button class="cue-action delete" title="מחק" onclick="event.stopPropagation();deleteCue(${cue.id})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+      </div>
+    `;
+    card.addEventListener('click', () => jumpToCue(idx));
+    list.appendChild(card);
+
+    // Add cue insert button between cues
+    if (idx < filtered.length - 1) {
+      const addBtn = document.createElement('button');
+      addBtn.className = 'add-cue-btn';
+      addBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+      addBtn.title = 'הוסף כתובית';
+      addBtn.onclick = () => addCueBetween(idx);
+      list.appendChild(addBtn);
+    }
+  });
+
+  document.getElementById('cueCount').textContent = `${cues.length} כתוביות`;
+  updateBulkBar();
+  renderTimeline();
+  renderWaveformCues();
+  updateSubtitleOverlay();
+}
+
+// ── CUE OPERATIONS ──
+function jumpToCue(idx) {
+  activeCueIndex = idx;
+  const cue = cues[idx];
+  if (cue) {
+    currentTime = timeToSec(cue.start);
+    updatePlayhead();
+  }
+  renderCues();
+  scrollToActive();
+}
+
+function scrollToActive() {
+  const active = document.querySelector('.cue-card.active');
+  if (active) active.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+function updateCueText(id, text) {
+  const c = cues.find(c => c.id === id);
+  if (c) { c.text = text; updateSubtitleOverlay(); }
+}
+
+function updateCueTime(id, which, val) {
+  const c = cues.find(c => c.id === id);
+  if (c) { c[which] = val; renderTimeline(); renderWaveformCues(); }
+}
+
+function splitCue(id) {
+  const idx = cues.findIndex(c => c.id === id);
+  if (idx < 0) return;
+  const cue = cues[idx];
+  const startSec = timeToSec(cue.start);
+  const endSec = timeToSec(cue.end);
+  const midSec = (startSec + endSec) / 2;
+  const midTime = secToTime(midSec);
+  const words = cue.text.split(' ');
+  const half = Math.ceil(words.length / 2);
+
+  const newId = Math.max(...cues.map(c=>c.id)) + 1;
+  const newCue = { id: newId, start: midTime, end: cue.end, text: words.slice(half).join(' ') };
+  cue.end = midTime;
+  cue.text = words.slice(0, half).join(' ');
+  cues.splice(idx + 1, 0, newCue);
+  renumberCues();
+  renderCues();
+  showToast('הכתובית פוצלה בהצלחה');
+}
+
+function mergeCue(id) {
+  const idx = cues.findIndex(c => c.id === id);
+  if (idx < 0 || idx >= cues.length - 1) return;
+  cues[idx].end = cues[idx + 1].end;
+  cues[idx].text += ' ' + cues[idx + 1].text;
+  cues.splice(idx + 1, 1);
+  renumberCues();
+  renderCues();
+  showToast('הכתוביות מוזגו');
+}
+
+function deleteCue(id) {
+  cues = cues.filter(c => c.id !== id);
+  selectedCues.delete(id);
+  renumberCues();
+  if (activeCueIndex >= cues.length) activeCueIndex = Math.max(0, cues.length - 1);
+  renderCues();
+  showToast('הכתובית נמחקה');
+}
+
+function addCueBetween(afterIdx) {
+  const prev = cues[afterIdx];
+  const next = cues[afterIdx + 1];
+  if (!prev || !next) return;
+  const startSec = timeToSec(prev.end);
+  const endSec = timeToSec(next.start);
+  const newId = Math.max(...cues.map(c=>c.id)) + 1;
+  cues.splice(afterIdx + 1, 0, { id: newId, start: secToTime(startSec), end: secToTime(endSec > startSec ? endSec : startSec + 2), text: 'כתובית חדשה' });
+  renumberCues();
+  renderCues();
+}
+
+function renumberCues() {
+  cues.forEach((c, i) => c.id = i + 1);
+}
+
+// ── SELECTION ──
+function toggleSelect(id) {
+  if (selectedCues.has(id)) selectedCues.delete(id);
+  else selectedCues.add(id);
+  renderCues();
+}
+
+function updateBulkBar() {
+  const bar = document.getElementById('bulkBar');
+  if (selectedCues.size > 0) {
+    bar.classList.add('visible');
+    document.getElementById('bulkCount').textContent = `נבחרו ${selectedCues.size} כתוביות`;
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+// ── BULK ACTIONS ──
+document.getElementById('bulkDelete').addEventListener('click', () => {
+  cues = cues.filter(c => !selectedCues.has(c.id));
+  selectedCues.clear();
+  renumberCues();
+  if (activeCueIndex >= cues.length) activeCueIndex = Math.max(0, cues.length - 1);
+  renderCues();
+  showToast('הכתוביות נמחקו');
+});
+
+document.getElementById('bulkMerge').addEventListener('click', () => {
+  const ids = [...selectedCues].sort((a,b) => a - b);
+  if (ids.length < 2) return;
+  const first = cues.find(c => c.id === ids[0]);
+  const last = cues.find(c => c.id === ids[ids.length - 1]);
+  first.end = last.end;
+  first.text = ids.map(id => cues.find(c=>c.id===id).text).join(' ');
+  cues = cues.filter(c => c.id === ids[0] || !selectedCues.has(c.id));
+  selectedCues.clear();
+  renumberCues();
+  renderCues();
+  showToast('הכתוביות מוזגו');
+});
+
+// ── PLAYBACK SIM ──
+function updatePlayhead() {
+  const pct = (currentTime / totalDuration) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('waveformPlayhead').style.left = pct + '%';
+  document.getElementById('timelinePlayhead').style.left = pct + '%';
+  document.getElementById('timeDisplay').textContent = secToDisplay(currentTime) + ' / ' + secToDisplay(totalDuration);
+
+  // Find active cue
+  for (let i = 0; i < cues.length; i++) {
+    const s = timeToSec(cues[i].start);
+    const e = timeToSec(cues[i].end);
+    if (currentTime >= s && currentTime <= e) {
+      if (activeCueIndex !== i) {
+        activeCueIndex = i;
+        renderCues();
+        scrollToActive();
+      }
+      return;
+    }
+  }
+}
+
+function updateSubtitleOverlay() {
+  const overlay = document.getElementById('subtitleOverlay');
+  if (cues.length > 0 && cues[activeCueIndex]) {
+    overlay.textContent = cues[activeCueIndex].text;
+    overlay.classList.remove('hidden');
+  } else {
+    overlay.classList.add('hidden');
+  }
+}
+
+function togglePlay() {
+  isPlaying = !isPlaying;
+  const playIcon = document.querySelector('.icon-play');
+  const pauseIcon = document.querySelector('.icon-pause');
+  if (isPlaying) {
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = 'block';
+    playInterval = setInterval(() => {
+      currentTime += 0.1;
+      if (currentTime >= totalDuration) { currentTime = 0; }
+      updatePlayhead();
+    }, 100);
+  } else {
+    playIcon.style.display = 'block';
+    pauseIcon.style.display = 'none';
+    clearInterval(playInterval);
+  }
+}
+
+document.getElementById('playPauseBtn').addEventListener('click', togglePlay);
+document.getElementById('playBigBtn').addEventListener('click', togglePlay);
+
+document.getElementById('progressWrap').addEventListener('click', (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  currentTime = pct * totalDuration;
+  updatePlayhead();
+});
+
+// Speed button
+const speeds = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
+let speedIdx = 2;
+document.getElementById('speedBtn').addEventListener('click', () => {
+  speedIdx = (speedIdx + 1) % speeds.length;
+  document.getElementById('speedBtn').textContent = speeds[speedIdx] + 'x';
+});
+
+// ── WAVEFORM ──
+function drawWaveform() {
+  const canvas = document.getElementById('waveformCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth * 2;
+  canvas.height = canvas.offsetHeight * 2;
+  ctx.scale(2, 2);
+  const w = canvas.offsetWidth;
+  const h = canvas.offsetHeight;
+
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  ctx.fillStyle = isDark ? '#1a2740' : '#f5f8ff';
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.strokeStyle = isDark ? 'rgba(56,196,242,0.3)' : 'rgba(37,62,122,0.15)';
+  ctx.lineWidth = 1;
+  const mid = h / 2;
+
+  // Generate fake waveform
+  for (let x = 0; x < w; x++) {
+    const amp = (Math.sin(x * 0.05) * 0.3 + Math.sin(x * 0.13) * 0.2 + Math.sin(x * 0.31) * 0.15 + Math.random() * 0.15) * mid * 0.8;
+    ctx.beginPath();
+    ctx.moveTo(x, mid - amp);
+    ctx.lineTo(x, mid + amp);
+    ctx.stroke();
+  }
+}
+
+function renderWaveformCues() {
+  // Remove old cue blocks
+  document.querySelectorAll('.waveform-cue').forEach(el => el.remove());
+  const wrap = document.getElementById('waveformWrap');
+
+  cues.forEach((cue, idx) => {
+    const startPct = (timeToSec(cue.start) / totalDuration) * 100;
+    const endPct = (timeToSec(cue.end) / totalDuration) * 100;
+    const div = document.createElement('div');
+    div.className = `waveform-cue${idx === activeCueIndex ? ' active' : ''}`;
+    div.style.left = startPct + '%';
+    div.style.width = (endPct - startPct) + '%';
+    wrap.appendChild(div);
+  });
+}
+
+// ── TIMELINE ──
+function renderTimeline() {
+  const inner = document.getElementById('timelineInner');
+  inner.querySelectorAll('.timeline-block').forEach(el => el.remove());
+
+  cues.forEach((cue, idx) => {
+    const startPct = (timeToSec(cue.start) / totalDuration) * 100;
+    const endPct = (timeToSec(cue.end) / totalDuration) * 100;
+    const div = document.createElement('div');
+    div.className = `timeline-block${idx === activeCueIndex ? ' active' : ''}`;
+    div.style.left = startPct + '%';
+    div.style.width = (endPct - startPct) + '%';
+    div.title = `#${cue.id}: ${cue.text.substring(0,30)}...`;
+    div.addEventListener('click', (e) => { e.stopPropagation(); jumpToCue(idx); });
+    inner.appendChild(div);
+  });
+}
+
+document.getElementById('timelineInner').addEventListener('click', (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  currentTime = pct * totalDuration;
+  updatePlayhead();
+});
+
+// ── STYLE SECTION ──
+document.getElementById('styleToggle').addEventListener('click', () => {
+  const opts = document.getElementById('styleOptions');
+  const hdr = document.getElementById('styleToggle');
+  opts.classList.toggle('open');
+  hdr.classList.toggle('open');
+});
+
+function setSubPos(pos, btn) {
+  const overlay = document.getElementById('subtitleOverlay');
+  overlay.style.bottom = pos === 'bottom' ? '16px' : 'auto';
+  overlay.style.top = pos === 'top' ? '16px' : 'auto';
+  btn.parentElement.querySelectorAll('.style-toggle').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setSubBg(bg, btn) {
+  const overlay = document.getElementById('subtitleOverlay');
+  if (bg === 'transparent') overlay.style.background = 'transparent';
+  else if (bg === 'semi') overlay.style.background = 'rgba(0,0,0,0.7)';
+  else overlay.style.background = 'rgba(0,0,0,0.95)';
+  btn.parentElement.querySelectorAll('.style-toggle').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+document.getElementById('fontSizeSlider').addEventListener('input', (e) => {
+  const sizes = [14, 16, 20];
+  document.getElementById('subtitleOverlay').style.fontSize = sizes[e.target.value] + 'px';
+});
+
+// ── BURN-IN ──
+document.getElementById('burninToggle').addEventListener('change', (e) => {
+  const desc = document.getElementById('burninDesc');
+  if (e.target.checked) {
+    desc.textContent = 'הכתוביות יצרבו לתוך הסרטון בייצוא — לא ניתן יהיה להסירן';
+    desc.classList.add('warning');
+  } else {
+    desc.textContent = 'הכתוביות יוצגו כשכבה נפרדת — ניתן לכבות/להפעיל';
+    desc.classList.remove('warning');
+  }
+});
+
+// ── AUTO-GENERATE ──
+function startAutoGenerate() {
+  const modal = document.getElementById('genModal');
+  const fill = document.getElementById('modalProgressFill');
+  const step = document.getElementById('modalStepText');
+  modal.classList.add('show');
+  fill.style.width = '0%';
+
+  const steps = [
+    { pct: 25, text: 'מחלץ אודיו...' },
+    { pct: 55, text: 'מתמלל...' },
+    { pct: 85, text: 'מסנכרן זמנים...' },
+    { pct: 100, text: 'מסיים...' }
+  ];
+
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i < steps.length) {
+      fill.style.width = steps[i].pct + '%';
+      step.textContent = steps[i].text;
+      i++;
+    } else {
+      clearInterval(interval);
+      modal.classList.remove('show');
+      // Load cues
+      cues = JSON.parse(JSON.stringify(subtitleData));
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('cueList').style.display = '';
+      renderCues();
+      showToast('נוצרו 24 כתוביות!');
+    }
+  }, 750);
+}
+
+document.getElementById('autoGenBtn').addEventListener('click', startAutoGenerate);
+document.getElementById('autoGenBigBtn')?.addEventListener('click', startAutoGenerate);
+
+// ── IMPORT ──
+document.getElementById('importBtn').addEventListener('click', () => {
+  document.getElementById('importModal').classList.add('show');
+});
+document.getElementById('importLink')?.addEventListener('click', () => {
+  document.getElementById('importModal').classList.add('show');
+});
+
+function simulateImport() {
+  closeModal('importModal');
+  cues = JSON.parse(JSON.stringify(subtitleData));
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('cueList').style.display = '';
+  renderCues();
+  showToast('יובאו 24 כתוביות מקובץ SRT');
+}
+
+// ── EXPORT ──
+document.getElementById('exportBtn').addEventListener('click', () => {
+  if (cues.length === 0) { showToast('אין כתוביות לייצוא'); return; }
+  // Build SRT content
+  let srt = '';
+  cues.forEach((c, i) => {
+    srt += `${i+1}\n${c.start} --> ${c.end}\n${c.text}\n\n`;
+  });
+  const blob = new Blob([srt], { type:'text/srt' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'subtitles.srt';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('קובץ SRT הורד בהצלחה');
+});
+
+// ── SAVE ──
+document.getElementById('saveBtn').addEventListener('click', () => {
+  showToast('הכתוביות נשמרו בהצלחה');
+});
+
+// ── SEARCH ──
+document.getElementById('searchInput').addEventListener('input', () => renderCues());
+
+// ── KEYBOARD SHORTCUTS ──
+function handleCueKey(e, idx) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    if (idx < cues.length - 1) jumpToCue(idx + 1);
+  } else if (e.key === 'Tab' && !e.shiftKey) {
+    e.preventDefault();
+    if (idx < cues.length - 1) jumpToCue(idx + 1);
+  } else if (e.key === 'Tab' && e.shiftKey) {
+    e.preventDefault();
+    if (idx > 0) jumpToCue(idx - 1);
+  }
+}
+
+// ── INIT ──
+function init() {
+  // Start with cues loaded (demo state)
+  cues = JSON.parse(JSON.stringify(subtitleData));
+  document.getElementById('emptyState').style.display = 'none';
+  drawWaveform();
+  renderCues();
+  updatePlayhead();
+
+  // Redraw waveform on resize
+  window.addEventListener('resize', () => { drawWaveform(); renderWaveformCues(); });
+
+  // Click outside modal to close
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('show'); });
+  });
+}
+
+init();
+</script>
+</body>
+</html>
