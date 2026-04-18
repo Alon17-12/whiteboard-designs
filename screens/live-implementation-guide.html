@@ -615,7 +615,7 @@ hr {
 
   <!-- ── CTO Rules ── -->
   <div class="info-box cto-rules" style="margin-bottom: 48px;">
-    כל הפיתוח של WHITEBOARD Live חייב לעמוד ב-4 כללי הטכנולוגיה של ה-CTO. אין חריגות.
+    כל הפיתוח של WHITEBOARD Live חייב לעמוד ב-5 כללי הטכנולוגיה של ה-CTO. אין חריגות.
     <div class="rule-grid">
       <div class="rule-item">
         <strong>1. React + Next.js</strong>
@@ -632,6 +632,10 @@ hr {
       <div class="rule-item">
         <strong>4. Trigger.dev</strong>
         <span>כל background jobs — אימיילים, עיבוד וידאו, דוחות, תזכורות — לא cron, לא setTimeout</span>
+      </div>
+      <div class="rule-item" style="grid-column:1/-1;border-right-color:#EAD654;">
+        <strong>5. התראות מעוצבות בלבד — לעולם לא alert()</strong>
+        <span>כל התראה, אישור או שגיאה = Toast / Modal מעוצב בערכת המותג. אסור להשתמש ב-<code>window.alert()</code>, <code>confirm()</code> או <code>prompt()</code></span>
       </div>
     </div>
   </div>
