@@ -315,127 +315,25 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 .att-name{font-size:12.5px;font-weight:600;color:var(--text-main);}
 .att-size{font-size:10px;color:var(--text-xs);}
 
-/* ══════════════════════════════════
-   NOTEBOOK SECTION (inline in sidebar)
-══════════════════════════════════ */
-.nb-section{
-  border-top:2px solid var(--cyan);
-  background:linear-gradient(180deg,rgba(56,196,242,0.06) 0%,transparent 40%);
-  padding:0;flex-shrink:0;
-}
-.nb-section-header{
-  display:flex;align-items:center;gap:8px;padding:12px 14px 8px;
-  cursor:pointer;user-select:none;
-}
-.nb-section-header:hover .nb-section-title{color:var(--cyan);}
-.nb-mascot{width:26px;height:26px;border-radius:50%;overflow:hidden;flex-shrink:0;
-  border:2px solid rgba(56,196,242,0.2);}
-.nb-mascot img{width:100%;height:100%;object-fit:cover;}
-.nb-section-title{
-  flex:1;font-family:var(--font-brand);font-size:13px;font-weight:700;color:var(--navy);
-  transition:color .15s;
-}
-[data-theme="dark"] .nb-section-title{color:var(--text-main);}
-.nb-section-badge{
-  font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;
-  background:rgba(56,196,242,0.15);color:var(--cyan);flex-shrink:0;
-}
-.nb-questions{
-  display:flex;flex-direction:column;gap:10px;
-  padding:0 10px 14px;
-}
+/* Sidebar panels (replace chapter list) */
+.sb-panel{display:none;flex-direction:column;flex:1;overflow:hidden;}
+.sb-panel.active{display:flex;}
 
-/* Question cards */
-.q-card{
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);
-  padding:12px;
-}
-.q-badge{
-  display:inline-flex;align-items:center;gap:4px;
-  font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;
-  margin-bottom:8px;
-}
-.q-badge.free{background:rgba(56,196,242,0.12);color:var(--cyan);}
-.q-badge.mc{background:rgba(234,214,84,0.15);color:#92700a;}
-[data-theme="dark"] .q-badge.mc{color:#d4bc2e;}
-.q-badge.tf{background:rgba(240,86,128,0.1);color:var(--pink);}
-.q-badge.upload{background:rgba(125,197,122,0.15);color:#16a34a;}
-[data-theme="dark"] .q-badge.upload{color:#4ade80;}
-.q-badge svg{width:9px;height:9px;}
-
-.q-text{font-size:12.5px;font-weight:700;color:var(--text-main);line-height:1.5;margin-bottom:10px;}
-
-/* Free text */
-.q-textarea{
-  width:100%;min-height:60px;padding:8px 10px;border-radius:var(--r-xs);
-  border:1.5px solid var(--border);background:var(--surface-2);
-  font-family:var(--font);font-size:12px;color:var(--text-main);
-  resize:vertical;outline:none;direction:rtl;
-  transition:border-color .15s;line-height:1.5;
-}
-.q-textarea:focus{border-color:var(--cyan);}
-.q-textarea::placeholder{color:var(--text-xs);}
-
-/* Submit button */
-.q-submit{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:7px 14px;border-radius:30px;border:none;
-  background:var(--navy);color:#fff;
-  font-family:var(--font);font-size:11px;font-weight:700;
-  cursor:pointer;transition:all .2s;margin-top:6px;
-}
-.q-submit:hover{background:var(--cyan);transform:translateY(-1px);box-shadow:0 3px 12px rgba(56,196,242,0.3);}
-.q-submit svg{width:10px;height:10px;}
-
-/* Multiple choice */
-.mc-options{display:flex;flex-direction:column;gap:4px;}
-.mc-option{
+/* Panel header */
+.sbp-head{
   display:flex;align-items:center;gap:8px;
-  padding:8px 10px;border-radius:var(--r-xs);
-  border:1.5px solid var(--border);background:var(--surface-2);
-  cursor:pointer;transition:all .18s;min-height:36px;
+  padding:12px 14px;border-bottom:1px solid var(--border);flex-shrink:0;
 }
-.mc-option:hover{border-color:var(--cyan);background:rgba(56,196,242,0.04);}
-.mc-option.selected{border-color:var(--cyan);background:rgba(56,196,242,0.08);}
-.mc-radio{
-  width:16px;height:16px;border-radius:50%;
-  border:2px solid var(--border-mid);flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .18s;
+.sbp-back{
+  display:flex;align-items:center;gap:4px;padding:5px 10px;
+  border-radius:var(--r-xs);border:1px solid var(--border);
+  background:var(--surface);font-family:var(--font);font-size:11px;font-weight:700;
+  color:var(--text-sub);cursor:pointer;transition:all .15s;
 }
-.mc-option.selected .mc-radio{border-color:var(--cyan);}
-.mc-radio-inner{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--cyan);transform:scale(0);transition:transform .15s;
-}
-.mc-option.selected .mc-radio-inner{transform:scale(1);}
-.mc-label{font-size:12px;font-weight:600;color:var(--text-main);}
-
-/* True/False */
-.tf-options{display:flex;gap:6px;}
-.tf-btn{
-  flex:1;padding:8px;border-radius:var(--r-xs);
-  border:1.5px solid var(--border);background:var(--surface-2);
-  font-family:var(--font);font-size:12px;font-weight:700;
-  color:var(--text-sub);cursor:pointer;transition:all .2s;
-  display:flex;align-items:center;justify-content:center;gap:6px;
-  min-height:36px;
-}
-.tf-btn:hover{border-color:var(--cyan);color:var(--text-main);}
-.tf-btn.selected-true{border-color:var(--green-bright);background:rgba(34,197,94,0.08);color:var(--green-bright);}
-.tf-btn.selected-false{border-color:var(--pink);background:rgba(240,86,128,0.08);color:var(--pink);}
-.tf-btn svg{width:14px;height:14px;}
-
-/* File upload */
-.upload-zone{
-  border:2px dashed var(--border-mid);border-radius:var(--r-sm);
-  padding:16px 10px;text-align:center;cursor:pointer;
-  transition:all .2s;background:var(--surface-2);
-}
-.upload-zone:hover{border-color:var(--cyan);background:rgba(56,196,242,0.04);}
-.upload-zone svg{width:24px;height:24px;color:var(--text-xs);margin-bottom:6px;}
-.upload-text{font-size:12px;font-weight:600;color:var(--text-sub);}
-.upload-hint{font-size:10px;color:var(--text-xs);margin-top:3px;}
+.sbp-back:hover{border-color:var(--cyan);color:var(--cyan);}
+.sbp-back svg{width:11px;height:11px;}
+.sbp-title{flex:1;font-family:var(--font-brand);font-size:14px;font-weight:700;color:var(--navy);}
+[data-theme="dark"] .sbp-title{color:var(--text-main);}
 
 /* ══════════════════════════════════
    BOTTOM BAR
@@ -537,7 +435,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 
     <div class="rs-bottom">
       <!-- Notebook -->
-      <button class="rs-btn" data-tip="מחברת הקורס" onclick="scrollToNotebook()">
+      <button class="rs-btn" id="rsNotebookBtn" data-tip="מחברת הקורס" onclick="togglePanel('notebook')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
@@ -660,92 +558,114 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 
     </div>
 
-    <!-- ══ NOTEBOOK SECTION (inline) ══ -->
-    <div class="nb-section" id="nbSection">
-      <div class="nb-section-header">
-        <div class="nb-mascot">
-          <img src="../BOARDi/SVG/4.svg" alt="BOARDi">
-        </div>
-        <span class="nb-section-title">מחברת הקורס</span>
-        <span class="nb-section-badge">4 שאלות</span>
+    <!-- ══ NOTEBOOK PANEL ══ -->
+    <div class="sb-panel" id="sbNotebookPanel">
+      <div class="sbp-head">
+        <button class="sbp-back" onclick="closePanel()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="9 18 15 12 9 6"/></svg>
+          חזרה
+        </button>
+        <span class="sbp-title">מחברת הקורס</span>
+        <button onclick="openNbSummary()" title="צפה בכל התשובות" style="width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .15s;flex-shrink:0;" onmouseenter="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-sub)'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
       </div>
-      <div class="nb-questions">
+
+      <!-- Question counter + nav -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface-2);">
+        <button onclick="nbNav(-1)" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-sub)'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:13px;font-weight:800;color:var(--text-main);">שאלה <span id="nbCurrentNum" style="font-family:var(--font-brand);color:var(--cyan);">1</span> מתוך <span id="nbTotalNum" style="font-family:var(--font-brand);">4</span></span>
+          <div id="nbDots" style="display:flex;gap:4px;"></div>
+        </div>
+        <button onclick="nbNav(1)" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text-sub)'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+
+      <!-- Single question display area -->
+      <div id="nbQuestionArea" style="padding:14px;overflow-y:auto;flex:1;">
 
         <!-- Q1: Free text -->
-        <div class="q-card">
-          <div class="q-badge free">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            שאלה פתוחה
+        <div class="nb-slide" data-q="1" style="display:block;">
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              <span style="width:26px;height:26px;border-radius:8px;background:rgba(56,196,242,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--cyan);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              </span>
+              <span style="font-size:11px;font-weight:700;color:var(--text-sub);">שאלה פתוחה</span>
+            </div>
+            <p style="font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:14px;">מה ההבדל בין צבעים חמים לקרים? תן 3 דוגמאות</p>
+            <textarea placeholder="כתוב את תשובתך כאן..." style="width:100%;min-height:100px;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);font-family:var(--font);font-size:13px;color:var(--text-main);resize:vertical;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+            <button onclick="nbSaveAnswer(this)" style="margin-top:10px;padding:9px 18px;border-radius:20px;border:none;background:var(--cyan);color:white;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;width:100%;">שמור תשובה</button>
           </div>
-          <div class="q-text">מה ההבדל בין צבעים חמים לקרים? תן 3 דוגמאות</div>
-          <textarea class="q-textarea" placeholder="כתוב את תשובתך כאן..."></textarea>
-          <button class="q-submit" onclick="saveAnswer(this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            שמור תשובה
-          </button>
         </div>
 
         <!-- Q2: Multiple choice -->
-        <div class="q-card">
-          <div class="q-badge mc">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
-            שאלה אמריקאית
+        <div class="nb-slide" data-q="2" style="display:none;">
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              <span style="width:26px;height:26px;border-radius:8px;background:rgba(240,86,128,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--pink);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </span>
+              <span style="font-size:11px;font-weight:700;color:var(--text-sub);">שאלה אמריקאית</span>
+            </div>
+            <p style="font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:14px;">איזה צבע נחשב צבע משלים לכחול?</p>
+            <div style="display:flex;flex-direction:column;gap:6px;" id="mcqOptions">
+              <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
+                <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)"><span style="font-size:13px;color:var(--text-main);font-weight:500;">כתום</span>
+              </label>
+              <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
+                <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)"><span style="font-size:13px;color:var(--text-main);font-weight:500;">ירוק</span>
+              </label>
+              <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
+                <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)"><span style="font-size:13px;color:var(--text-main);font-weight:500;">אדום</span>
+              </label>
+              <label class="nb-opt" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);cursor:pointer;transition:all .15s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'">
+                <input type="radio" name="mcq1" style="accent-color:var(--cyan);width:16px;height:16px;" onchange="highlightMcq(this)"><span style="font-size:13px;color:var(--text-main);font-weight:500;">סגול</span>
+              </label>
+            </div>
           </div>
-          <div class="q-text">איזה צבע נחשב צבע משלים לכחול?</div>
-          <div class="mc-options">
-            <div class="mc-option" onclick="selectMC(this)">
-              <div class="mc-radio"><div class="mc-radio-inner"></div></div>
-              <span class="mc-label">כתום</span>
-            </div>
-            <div class="mc-option" onclick="selectMC(this)">
-              <div class="mc-radio"><div class="mc-radio-inner"></div></div>
-              <span class="mc-label">ירוק</span>
-            </div>
-            <div class="mc-option" onclick="selectMC(this)">
-              <div class="mc-radio"><div class="mc-radio-inner"></div></div>
-              <span class="mc-label">אדום</span>
-            </div>
-            <div class="mc-option" onclick="selectMC(this)">
-              <div class="mc-radio"><div class="mc-radio-inner"></div></div>
-              <span class="mc-label">סגול</span>
-            </div>
-          </div>
-          <button class="q-submit" onclick="saveAnswer(this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            שלח תשובה
-          </button>
         </div>
 
         <!-- Q3: True/False -->
-        <div class="q-card">
-          <div class="q-badge tf">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            נכון / לא נכון
-          </div>
-          <div class="q-text">צבע לבן הוא שילוב של כל הצבעים בספקטרום</div>
-          <div class="tf-options">
-            <button class="tf-btn" onclick="selectTF(this, true)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              נכון
-            </button>
-            <button class="tf-btn" onclick="selectTF(this, false)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              לא נכון
-            </button>
+        <div class="nb-slide" data-q="3" style="display:none;">
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              <span style="width:26px;height:26px;border-radius:8px;background:rgba(125,197,122,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span style="font-size:11px;font-weight:700;color:var(--text-sub);">נכון / לא נכון</span>
+            </div>
+            <p style="font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:14px;">צבע לבן הוא שילוב של כל הצבעים בספקטרום</p>
+            <div style="display:flex;gap:8px;">
+              <button class="tf-btn2" onclick="selectTF2(this,'true')" style="flex:1;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>נכון
+              </button>
+              <button class="tf-btn2" onclick="selectTF2(this,'false')" style="flex:1;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;color:var(--text-sub);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>לא נכון
+              </button>
+            </div>
           </div>
         </div>
 
         <!-- Q4: File upload -->
-        <div class="q-card">
-          <div class="q-badge upload">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            העלאת קובץ
-          </div>
-          <div class="q-text">העלו את התרגיל — קולאז׳ צבעים חמים וקרים</div>
-          <div class="upload-zone" onclick="simulateUpload()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            <div class="upload-text">גרור קובץ לכאן או לחץ לבחירה</div>
-            <div class="upload-hint">PDF, JPG, PNG עד 25MB</div>
+        <div class="nb-slide" data-q="4" style="display:none;">
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              <span style="width:26px;height:26px;border-radius:8px;background:rgba(234,214,84,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#b89c00;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </span>
+              <span style="font-size:11px;font-weight:700;color:var(--text-sub);">העלאת קובץ</span>
+            </div>
+            <p style="font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:14px;">העלו את התרגיל — קולאז׳ צבעים חמים וקרים</p>
+            <div style="border:2px dashed var(--border);border-radius:13px;padding:28px;text-align:center;cursor:pointer;background:var(--surface);transition:all .2s;" onmouseenter="this.style.borderColor='var(--cyan)'" onmouseleave="this.style.borderColor='var(--border)'">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" width="32" height="32" style="margin-bottom:10px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <div style="font-size:13.5px;font-weight:700;color:var(--text-main);">גרור קובץ לכאן או לחץ</div>
+              <div style="font-size:11.5px;color:var(--text-xs);margin-top:4px;">PDF, JPG, PNG עד 25MB</div>
+            </div>
           </div>
         </div>
 
@@ -843,6 +763,112 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 </div>
 
 
+<!-- ═══ NOTEBOOK SUMMARY POPUP ═══ -->
+<div id="nbSummaryOverlay" onclick="closeNbSummary()" style="display:none;position:fixed;inset:0;background:rgba(20,30,50,0.55);backdrop-filter:blur(4px);z-index:900;"></div>
+<div id="nbSummaryModal" style="display:none;position:fixed;top:2vh;left:50%;transform:translateX(-50%) scale(.97);opacity:0;width:720px;height:96vh;z-index:910;overflow:hidden;transition:transform .3s cubic-bezier(.4,.8,.3,1),opacity .3s;flex-direction:column;border-radius:8px;box-shadow:0 8px 60px rgba(0,0,0,0.3);">
+  <!-- Toolbar -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e0e0e0;flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" width="18" height="18"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <div>
+        <div style="font-size:14px;font-weight:800;color:#1a1a1a;">מחברת הקורס — יסודות העיצוב</div>
+        <div style="font-size:10.5px;color:#6B7280;">אלון גבאי &bull; עודכן: היום, 14:32</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button onclick="closeNbSummary()" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:4px;border:1px solid #e0e0e0;background:#fff;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;color:#6B7280;transition:all .15s;" onmouseenter="this.style.borderColor='#38C4F2';this.style.color='#38C4F2'" onmouseleave="this.style.borderColor='#e0e0e0';this.style.color='#6B7280'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        ייצוא PDF
+      </button>
+      <button onclick="closeNbSummary()" style="width:30px;height:30px;border-radius:4px;border:1px solid #e0e0e0;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#6B7280;transition:color .15s;" onmouseenter="this.style.color='#F05680'" onmouseleave="this.style.color='#6B7280'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- Document scroll area -->
+  <div style="flex:1;overflow-y:auto;padding:28px 24px;background:#EAECF0;">
+    <div style="max-width:640px;margin:0 auto;background:#FDFBF7;border:1px solid #E0E0E0;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,0.06);padding:52px 48px;font-family:var(--font);line-height:1.7;">
+      <!-- Doc Header -->
+      <div style="text-align:center;margin-bottom:40px;padding-bottom:22px;border-bottom:2px solid #38C4F2;">
+        <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-04.png" alt="WHITEBOARD" style="height:48px;object-fit:contain;margin-bottom:14px;opacity:.85;">
+        <div style="font-family:var(--font-brand);font-size:22px;font-weight:900;color:#1a1a1a;margin-bottom:3px;">מחברת הקורס</div>
+        <div style="font-size:14px;color:#4A4A4A;font-weight:500;">יסודות העיצוב — תכנית הכשרה לעיצוב דיגיטלי</div>
+        <div style="font-size:11.5px;color:#9CA3AF;margin-top:8px;">תלמיד: אלון גבאי &bull; 7 שאלות &bull; 3 פרקים</div>
+      </div>
+      <!-- פרק 1 -->
+      <div style="margin-bottom:36px;">
+        <div style="display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1.5px solid #E0E0E0;margin-bottom:20px;">
+          <span style="width:26px;height:26px;border-radius:6px;background:rgba(56,196,242,0.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-weight:800;font-size:12px;color:#38C4F2;">1</span>
+          <span style="font-size:16px;font-weight:800;color:#1a1a1a;">מבוא לעיצוב</span>
+        </div>
+        <div style="margin-right:14px;margin-bottom:22px;">
+          <div style="font-size:12px;font-weight:700;color:#6B7280;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" width="11" height="11"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            שיעור 1: מבוא ויעדי הקורס
+          </div>
+          <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #38C4F2;">
+            <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q1 &bull; שאלה פתוחה</div>
+            <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">מה הדבר הראשון שצריך לחשוב עליו לפני שמתחילים לעצב?</div>
+            <div style="padding:12px 14px;background:#fff;border:1px solid #E0E0E0;border-radius:3px;font-size:13.5px;color:#374151;line-height:1.7;">הקהל — צריך להבין למי מעצבים, מה הצרכים, ומה המטרה של המוצר. תמיד הקהל קודם לכל שיקול עיצובי.</div>
+            <div style="font-size:10px;color:#9CA3AF;margin-top:7px;direction:ltr;text-align:left;font-family:var(--font-brand);">14:32 &bull; 15.04.2026</div>
+          </div>
+          <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #F05680;">
+            <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q2 &bull; שאלה אמריקאית</div>
+            <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">מהם שלושת העקרונות המרכזיים של עיצוב טוב?</div>
+            <div style="padding:12px 14px;background:#fff;border:1px solid #E0E0E0;border-radius:3px;font-size:13.5px;color:#374151;">
+              <span style="display:inline-block;padding:4px 12px;border-radius:3px;background:rgba(56,196,242,0.08);color:#38C4F2;font-size:12.5px;font-weight:700;border:1px solid rgba(56,196,242,0.2);">פשטות, עקביות, נגישות</span>
+            </div>
+            <div style="font-size:10px;color:#9CA3AF;margin-top:7px;direction:ltr;text-align:left;font-family:var(--font-brand);">14:50 &bull; 15.04.2026</div>
+          </div>
+        </div>
+      </div>
+      <!-- פרק 2 (current) -->
+      <div style="margin-bottom:36px;">
+        <div style="display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1.5px solid #E0E0E0;margin-bottom:20px;">
+          <span style="width:26px;height:26px;border-radius:6px;background:rgba(240,86,128,0.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-weight:800;font-size:12px;color:#F05680;">2</span>
+          <span style="font-size:16px;font-weight:800;color:#1a1a1a;">צבע וטיפוגרפיה</span>
+        </div>
+        <div style="margin-right:14px;margin-bottom:22px;">
+          <div style="font-size:12px;font-weight:700;color:#6B7280;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#F05680" stroke-width="2" width="11" height="11"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            שיעור 3: צבע ומשמעות
+            <span style="padding:2px 7px;border-radius:3px;background:rgba(56,196,242,0.08);color:#38C4F2;font-size:9.5px;font-weight:800;border:1px solid rgba(56,196,242,0.2);">נוכחי</span>
+          </div>
+          <div style="margin-right:10px;margin-bottom:10px;padding:14px 16px;border-right:3px solid #38C4F2;">
+            <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;letter-spacing:0.3px;margin-bottom:7px;">Q4 &bull; שאלה פתוחה</div>
+            <div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;">מה ההבדל בין צבעים חמים לקרים? תן 3 דוגמאות</div>
+            <div style="padding:12px 14px;border:1.5px dashed #D1D5DB;border-radius:3px;font-size:12.5px;color:#9CA3AF;font-style:italic;">טרם נענתה</div>
+          </div>
+          <div style="margin-right:10px;margin-top:14px;padding:16px;border:1.5px dashed #D1D5DB;border-radius:4px;text-align:center;color:#9CA3AF;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24" style="opacity:.4;margin-bottom:6px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div style="font-size:12.5px;font-weight:600;margin-bottom:2px;">עוד 3 שאלות בשיעור הזה</div>
+            <div style="font-size:11px;">יתגלו תוך כדי צפייה בשיעור</div>
+          </div>
+        </div>
+      </div>
+      <!-- פרק 3 (נעול) -->
+      <div style="margin-bottom:20px;opacity:0.55;">
+        <div style="display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1.5px solid #E0E0E0;margin-bottom:16px;">
+          <span style="width:26px;height:26px;border-radius:6px;background:rgba(234,214,84,0.15);display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-weight:800;font-size:12px;color:#b89c00;">3</span>
+          <span style="font-size:16px;font-weight:800;color:#1a1a1a;">קומפוזיציה</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:3px;border:1px solid #E0E0E0;font-size:10.5px;font-weight:600;color:#9CA3AF;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            נעול
+          </span>
+        </div>
+        <div style="text-align:center;padding:24px 16px;color:#9CA3AF;font-size:12.5px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28" style="opacity:.4;margin-bottom:6px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><br>
+          סיים את פרק 2 כדי לפתוח את השאלות
+        </div>
+      </div>
+      <!-- Footer -->
+      <div style="margin-top:32px;padding-top:14px;border-top:1px solid #E0E0E0;text-align:center;font-size:10.5px;color:#9CA3AF;">
+        נוצר ב-WHITEBOARD &bull; תכנית הכשרה לעיצוב דיגיטלי
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ── Theme toggle ── */
 function toggleTheme(){
@@ -865,11 +891,9 @@ function selectLesson(el){
   document.querySelectorAll('.ls-item.active').forEach(i=>i.classList.remove('active'));
   el.classList.add('active');
   const name=el.dataset.lesson;
-  const dur=el.dataset.dur||'';
   document.getElementById('videoTitle').textContent=name;
   document.getElementById('videoLabel').textContent=name;
   document.getElementById('bcLesson').textContent=name;
-  // Reset video progress
   document.getElementById('videoProgressFill').style.width='0%';
 }
 
@@ -888,10 +912,49 @@ function toggleSidebar(){
   }
 }
 
-/* ── Scroll to notebook section ── */
-function scrollToNotebook(){
-  const nb=document.getElementById('nbSection');
-  if(nb) nb.scrollIntoView({behavior:'smooth',block:'start'});
+/* ── Panel toggle (notebook in sidebar) ── */
+const PANELS = {
+  notebook: { panel: 'sbNotebookPanel', btn: 'rsNotebookBtn' },
+};
+
+function togglePanel(which){
+  const chList = document.getElementById('chList');
+  const sHeader = document.querySelector('.s-header');
+  const sProgress = document.querySelector('.s-progress');
+  const target = PANELS[which];
+  const targetPanel = document.getElementById(target.panel);
+  const alreadyOpen = targetPanel.classList.contains('active');
+
+  // Reset all
+  chList.style.display = '';
+  if(sHeader) sHeader.style.display = '';
+  if(sProgress) sProgress.style.display = '';
+  Object.values(PANELS).forEach(p => {
+    document.getElementById(p.panel).classList.remove('active');
+    const btnEl = document.getElementById(p.btn);
+    if(btnEl) btnEl.classList.remove('rs-active');
+  });
+
+  if(!alreadyOpen){
+    chList.style.display = 'none';
+    if(sHeader) sHeader.style.display = 'none';
+    if(sProgress) sProgress.style.display = 'none';
+    targetPanel.classList.add('active');
+    document.getElementById(target.btn).classList.add('rs-active');
+  }
+}
+
+function closePanel(){
+  document.getElementById('chList').style.display = '';
+  const sHeader = document.querySelector('.s-header');
+  const sProgress = document.querySelector('.s-progress');
+  if(sHeader) sHeader.style.display = '';
+  if(sProgress) sProgress.style.display = '';
+  Object.values(PANELS).forEach(p => {
+    document.getElementById(p.panel).classList.remove('active');
+    const btnEl = document.getElementById(p.btn);
+    if(btnEl) btnEl.classList.remove('rs-active');
+  });
 }
 
 /* ── Click video progress bar ── */
@@ -909,41 +972,87 @@ function simulatePlay(){
   setTimeout(()=>overlay.style.display='none',300);
 }
 
-/* ── Multiple choice ── */
-function selectMC(option){
-  const parent=option.closest('.mc-options');
-  parent.querySelectorAll('.mc-option').forEach(o=>o.classList.remove('selected'));
-  option.classList.add('selected');
+/* ── Notebook question navigation ── */
+let nbCurrent = 1;
+const nbTotal = 4;
+
+function nbNav(dir) {
+  let next = nbCurrent + dir;
+  if (next < 1) next = nbTotal;
+  if (next > nbTotal) next = 1;
+  const cur = document.querySelector('.nb-slide[data-q="'+nbCurrent+'"]');
+  cur.style.opacity = '0';
+  cur.style.transition = 'opacity .15s';
+  setTimeout(() => {
+    cur.style.display = 'none';
+    nbCurrent = next;
+    const nxt = document.querySelector('.nb-slide[data-q="'+nbCurrent+'"]');
+    nxt.style.display = 'block';
+    nxt.style.opacity = '0';
+    requestAnimationFrame(() => { nxt.style.transition = 'opacity .2s'; nxt.style.opacity = '1'; });
+    document.getElementById('nbCurrentNum').textContent = nbCurrent;
+    updateNbDots();
+  }, 150);
 }
 
-/* ── True/False ── */
-function selectTF(btn, val){
-  const parent=btn.closest('.tf-options');
-  parent.querySelectorAll('.tf-btn').forEach(b=>{
-    b.classList.remove('selected-true','selected-false');
+function updateNbDots() {
+  const container = document.getElementById('nbDots');
+  container.innerHTML = '';
+  for (let i = 1; i <= nbTotal; i++) {
+    const dot = document.createElement('div');
+    dot.style.cssText = 'width:7px;height:7px;border-radius:50%;transition:all .2s;cursor:pointer;';
+    dot.style.background = i === nbCurrent ? 'var(--cyan)' : 'var(--border)';
+    dot.onclick = () => { if (i !== nbCurrent) { const d = i > nbCurrent ? 1 : -1; while(nbCurrent !== i) nbNav(d); } };
+    container.appendChild(dot);
+  }
+}
+updateNbDots();
+
+function nbSaveAnswer(btn) {
+  btn.textContent = 'נשמר!';
+  btn.style.background = 'var(--green, #22c55e)';
+  setTimeout(() => { btn.textContent = 'שמור תשובה'; btn.style.background = ''; }, 1500);
+}
+
+function highlightMcq(radio) {
+  radio.closest('#mcqOptions').querySelectorAll('.nb-opt').forEach(l => {
+    l.style.borderColor = 'var(--border)';
+    l.style.background = 'var(--surface)';
   });
-  btn.classList.add(val?'selected-true':'selected-false');
+  const label = radio.closest('.nb-opt');
+  label.style.borderColor = 'var(--cyan)';
+  label.style.background = 'rgba(56,196,242,0.06)';
 }
 
-/* ── Save answer (demo) ── */
-function saveAnswer(btn){
-  const orig=btn.innerHTML;
-  btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg> נשמר!';
-  btn.style.background='var(--green-bright)';
-  setTimeout(()=>{
-    btn.innerHTML=orig;
-    btn.style.background='';
-  },1500);
+function selectTF2(btn, val) {
+  btn.parentElement.querySelectorAll('.tf-btn2').forEach(b => {
+    b.style.borderColor = 'var(--border)';
+    b.style.background = 'var(--surface)';
+    b.style.color = 'var(--text-sub)';
+  });
+  if (val === 'true') {
+    btn.style.borderColor = '#7DC57A';
+    btn.style.background = 'rgba(125,197,122,0.12)';
+    btn.style.color = '#7DC57A';
+  } else {
+    btn.style.borderColor = '#F05680';
+    btn.style.background = 'rgba(240,86,128,0.1)';
+    btn.style.color = '#F05680';
+  }
 }
 
-/* ── Upload (demo) ── */
-function simulateUpload(){
-  const zone=document.querySelector('.upload-zone');
-  zone.innerHTML=`
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32" style="color:var(--green-bright)"><polyline points="20 6 9 17 4 12"/></svg>
-    <div class="upload-text" style="color:var(--green-bright)">הקובץ הועלה בהצלחה!</div>
-    <div class="upload-hint">color-collage-final.jpg (2.1 MB)</div>
-  `;
+/* ── Summary popup ── */
+function openNbSummary() {
+  document.getElementById('nbSummaryOverlay').style.display = 'block';
+  const modal = document.getElementById('nbSummaryModal');
+  modal.style.display = 'flex';
+  requestAnimationFrame(() => { modal.style.opacity = '1'; modal.style.transform = 'translateX(-50%) scale(1)'; });
+}
+function closeNbSummary() {
+  const modal = document.getElementById('nbSummaryModal');
+  modal.style.opacity = '0';
+  modal.style.transform = 'translateX(-50%) scale(.97)';
+  setTimeout(() => { modal.style.display = 'none'; document.getElementById('nbSummaryOverlay').style.display = 'none'; }, 300);
 }
 
 /* ── Nav lesson ── */
@@ -966,12 +1075,18 @@ function completeLesson(){
   }
   const btn=document.getElementById('btnComplete');
   btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg> הושלם!';
-  btn.style.background='var(--green-bright)';
+  btn.style.background='var(--green, #22c55e)';
   setTimeout(()=>{
     btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg> סיימתי שיעור';
     btn.style.background='';
   },1500);
 }
+
+/* ── Keyboard shortcut ── */
+document.addEventListener('keydown', e => {
+  if(e.target.matches('input,textarea,[contenteditable]')) return;
+  if(e.key === 'm' || e.key === 'M') togglePanel('notebook');
+});
 </script>
 </body>
 </html>
