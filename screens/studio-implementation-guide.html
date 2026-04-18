@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHITEBOARD Studio — מדריך יישום מלא</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #253E7A;
+  --cyan: #38C4F2;
+  --pink: #F05680;
+  --dark-bg: #1a2740;
+  --code-text: #e2e8f0;
+  --light-gray: #f7f8fc;
+  --border: #e2e6ef;
+  --text: #2d3748;
+  --text-light: #64748b;
+  --sidebar-w: 280px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Heebo', sans-serif;
+  color: var(--text);
+  background: #fff;
+  line-height: 1.75;
+  font-size: 15px;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--navy);
+  color: #fff;
+  overflow-y: auto;
+  z-index: 100;
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logo {
+  padding: 0 28px 28px;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  margin-bottom: 16px;
+}
+
+.sidebar-logo h1 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.sidebar-logo .subtitle {
+  font-size: 12px;
+  color: rgba(255,255,255,.55);
+  font-weight: 300;
+}
+
+.sidebar nav {
+  flex: 1;
+  padding: 0 16px;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: rgba(255,255,255,.72);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 400;
+  transition: all .2s;
+  margin-bottom: 2px;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+  background: rgba(56,196,242,.15);
+  color: #fff;
+}
+
+.sidebar nav a .num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(56,196,242,.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cyan);
+  flex-shrink: 0;
+}
+
+.sidebar nav a:hover .num,
+.sidebar nav a.active .num {
+  background: var(--cyan);
+  color: var(--navy);
+}
+
+.sidebar-footer {
+  padding: 20px 28px 0;
+  border-top: 1px solid rgba(255,255,255,.12);
+  margin-top: 12px;
+  font-size: 11px;
+  color: rgba(255,255,255,.35);
+  line-height: 1.6;
+}
+
+/* ── Main Content ── */
+.main {
+  margin-right: var(--sidebar-w);
+  padding: 48px 64px 120px;
+  max-width: 960px;
+}
+
+/* ── Header ── */
+.page-header {
+  margin-bottom: 56px;
+  padding-bottom: 40px;
+  border-bottom: 2px solid var(--border);
+}
+
+.page-header h1 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+
+.page-header .tagline {
+  font-size: 17px;
+  color: var(--text-light);
+  max-width: 640px;
+}
+
+.page-header .meta {
+  margin-top: 20px;
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.page-header .meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Sections ── */
+.section {
+  margin-bottom: 64px;
+  scroll-margin-top: 32px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.section-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan), #2ab4e0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(56,196,242,.3);
+}
+
+.section-header h2 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.section h3 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--navy);
+  margin: 28px 0 12px;
+}
+
+.section h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+  margin: 20px 0 8px;
+}
+
+.section p {
+  margin-bottom: 14px;
+  line-height: 1.8;
+}
+
+.section ul, .section ol {
+  padding-right: 24px;
+  margin-bottom: 16px;
+}
+
+.section li {
+  margin-bottom: 6px;
+}
+
+/* ── Info Boxes ── */
+.info-box {
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin: 20px 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.info-box.cto-rules {
+  background: rgba(56,196,242,.06);
+  border: 2px solid var(--cyan);
+  border-right: 6px solid var(--cyan);
+  padding: 24px 28px;
+  font-size: 14.5px;
+}
+
+.info-box.cto-rules::before {
+  content: "CTO TECHNOLOGY RULES";
+  display: block;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: .5px;
+  margin-bottom: 12px;
+}
+
+.info-box.cto-rules .rule-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.info-box.cto-rules .rule-item {
+  background: rgba(255,255,255,.7);
+  border-radius: 8px;
+  padding: 12px 16px;
+  border: 1px solid rgba(56,196,242,.2);
+}
+
+.info-box.cto-rules .rule-item strong {
+  color: var(--navy);
+  font-size: 14px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.info-box.cto-rules .rule-item span {
+  font-size: 12.5px;
+  color: var(--text-light);
+}
+
+.info-box.tip {
+  background: rgba(56,196,242,.08);
+  border-right: 4px solid var(--cyan);
+}
+
+.info-box.warning {
+  background: rgba(240,86,128,.07);
+  border-right: 4px solid var(--pink);
+}
+
+.info-box.tip::before {
+  content: "TIP";
+  display: inline-block;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cyan);
+  letter-spacing: .5px;
+  margin-bottom: 4px;
+}
+
+.info-box.warning::before {
+  content: "WARNING";
+  display: inline-block;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pink);
+  letter-spacing: .5px;
+  margin-bottom: 4px;
+}
+
+/* ── Code Blocks ── */
+pre {
+  background: var(--dark-bg);
+  color: var(--code-text);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 16px 0 20px;
+  overflow-x: auto;
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  direction: ltr;
+  text-align: left;
+}
+
+pre .comment { color: #64748b; }
+pre .keyword { color: #c084fc; }
+pre .string { color: #34d399; }
+pre .fn { color: #38C4F2; }
+pre .type { color: #fbbf24; }
+pre .number { color: #f97316; }
+
+code {
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 13px;
+  background: rgba(56,196,242,.08);
+  color: var(--navy);
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+
+/* ── Tables ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 24px;
+  font-size: 14px;
+}
+
+thead th {
+  background: var(--navy);
+  color: #fff;
+  font-weight: 500;
+  text-align: right;
+  padding: 12px 16px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+}
+
+thead th:first-child { border-radius: 0 10px 0 0; }
+thead th:last-child { border-radius: 10px 0 0 0; }
+
+tbody td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--light-gray);
+}
+
+tbody tr:hover {
+  background: rgba(56,196,242,.05);
+}
+
+/* ── Architecture Diagram ── */
+.arch-diagram {
+  background: var(--light-gray);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 32px;
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.arch-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.arch-box {
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 160px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all .2s;
+}
+
+.arch-box.primary {
+  border-color: var(--cyan);
+  background: rgba(56,196,242,.06);
+}
+
+.arch-box.secondary {
+  border-color: var(--navy);
+  background: rgba(37,62,122,.04);
+}
+
+.arch-box.accent {
+  border-color: var(--pink);
+  background: rgba(240,86,128,.04);
+}
+
+.arch-box .label {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+
+.arch-box .sub {
+  font-size: 11px;
+  color: var(--text-light);
+}
+
+.arch-arrow {
+  font-size: 20px;
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+.arch-arrow.down {
+  transform: rotate(90deg);
+}
+
+/* ── Screen Cards ── */
+.screen-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.screen-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all .2s;
+}
+
+.screen-card:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 4px 16px rgba(56,196,242,.1);
+}
+
+.screen-card .card-title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.screen-card .card-desc {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.screen-card .card-backend {
+  font-size: 12px;
+  color: var(--navy);
+  background: var(--light-gray);
+  border-radius: 8px;
+  padding: 10px 14px;
+  line-height: 1.6;
+}
+
+.screen-card .card-backend strong {
+  color: var(--pink);
+  font-weight: 600;
+}
+
+/* ── Protocol Group ── */
+.protocol-group {
+  margin: 20px 0;
+}
+
+.protocol-group h4 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--navy);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 8px 8px 0 0;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.protocol-group pre {
+  margin-top: 0;
+  border-radius: 0 12px 12px 12px;
+}
+
+/* ── Phase Badge ── */
+.phase-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.phase-badge.p0 { background: rgba(240,86,128,.12); color: var(--pink); }
+.phase-badge.p1 { background: rgba(56,196,242,.12); color: #1a97c7; }
+.phase-badge.p2 { background: rgba(37,62,122,.1); color: var(--navy); }
+.phase-badge.p3 { background: rgba(234,214,84,.15); color: #a89520; }
+.phase-badge.p4 { background: rgba(52,211,153,.12); color: #0d9669; }
+
+/* ── Separator ── */
+hr {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 48px 0;
+}
+
+/* ── Step List ── */
+.step-list {
+  counter-reset: step;
+  list-style: none;
+  padding-right: 0;
+}
+
+.step-list li {
+  counter-increment: step;
+  padding: 12px 0 12px 0;
+  padding-right: 48px;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+
+.step-list li:last-child { border-bottom: none; }
+
+.step-list li::before {
+  content: counter(step);
+  position: absolute;
+  right: 0;
+  top: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--cyan);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ── Component Tree ── */
+.component-tree {
+  background: var(--dark-bg);
+  color: var(--code-text);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 16px 0 20px;
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.9;
+  direction: ltr;
+  text-align: left;
+}
+
+.component-tree .folder { color: #fbbf24; }
+.component-tree .file { color: #38C4F2; }
+.component-tree .desc { color: #64748b; }
+
+/* ── Print ── */
+@media print {
+  .sidebar { display: none; }
+  .main { margin-right: 0; padding: 24px; }
+  pre { font-size: 11px; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { margin-right: 0; padding: 24px; }
+  .screen-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>WHITEBOARD Studio</h1>
+    <div class="subtitle">Implementation Guide v1.0</div>
+  </div>
+  <nav>
+    <a href="#overview"><span class="num">1</span>סקירה כללית</a>
+    <a href="#architecture"><span class="num">2</span>ארכיטקטורה</a>
+    <a href="#recording-flow"><span class="num">3</span>תהליך ההקלטה</a>
+    <a href="#editor"><span class="num">4</span>עורך הווידאו</a>
+    <a href="#subtitles"><span class="num">5</span>כתוביות</a>
+    <a href="#schema"><span class="num">6</span>מודל נתונים</a>
+    <a href="#trigger-jobs"><span class="num">7</span>Trigger.dev Jobs</a>
+    <a href="#bunny"><span class="num">8</span>Bunny Stream</a>
+    <a href="#roadmap"><span class="num">9</span>מפת דרכים</a>
+    <a href="#components"><span class="num">10</span>רכיבי ממשק</a>
+    <a href="#tech-summary"><span class="num">11</span>סיכום טכנולוגיות</a>
+  </nav>
+  <div class="sidebar-footer">
+    WHITEBOARD LMS &copy; 2026<br>
+    מסמך פנימי — לא להפצה
+  </div>
+</aside>
+
+<!-- ── Main Content ── -->
+<div class="main">
+
+  <!-- Header -->
+  <header class="page-header">
+    <h1>WHITEBOARD Studio — מדריך יישום מלא</h1>
+    <p class="tagline">
+      מדריך CTO-level ליישום מערכת הקלטת וידאו ועריכה בסיסית בתוך פלטפורמת WHITEBOARD LMS.
+      מסמך זה מכיל את כל מה שמפתח צריך לדעת כדי לבנות את המערכת מאפס — מהקלטה בדפדפן ועד פרסום שיעור ערוך עם כתוביות.
+    </p>
+    <div class="meta">
+      <span>גרסה 1.0</span>
+      <span>תאריך: אפריל 2026</span>
+      <span>11 פרקים</span>
+    </div>
+  </header>
+
+  <!-- ── CTO Rules ── -->
+  <div class="info-box cto-rules" style="margin-bottom: 48px;">
+    כל הפיתוח של WHITEBOARD Studio חייב לעמוד ב-5 כללי הטכנולוגיה של ה-CTO. אין חריגות.
+    <div class="rule-grid">
+      <div class="rule-item">
+        <strong>1. React + Next.js</strong>
+        <span>App Router, Server Components כברירת מחדל, Client Components רק לאינטראקטיביות</span>
+      </div>
+      <div class="rule-item">
+        <strong>2. TypeScript</strong>
+        <span>Strict mode, ללא <code>any</code>, כל ה-interfaces מוגדרים</span>
+      </div>
+      <div class="rule-item">
+        <strong>3. Bunny</strong>
+        <span>CDN + Bunny Stream לכל וידאו/מדיה — לא S3 ישירות</span>
+      </div>
+      <div class="rule-item">
+        <strong>4. Trigger.dev</strong>
+        <span>כל background jobs — עיבוד וידאו, כתוביות, רינדור — לא cron, לא setTimeout</span>
+      </div>
+      <div class="rule-item" style="grid-column:1/-1;border-right-color:#EAD654;">
+        <strong>5. התראות מעוצבות בלבד — לעולם לא alert()</strong>
+        <span>כל התראה, אישור או שגיאה = Toast / Modal מעוצב בערכת המותג. אסור להשתמש ב-<code>window.alert()</code>, <code>confirm()</code> או <code>prompt()</code></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 1: Overview -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="overview">
+    <div class="section-header">
+      <span class="section-num">1</span>
+      <h2>סקירה כללית</h2>
+    </div>
+
+    <h3>מהו WHITEBOARD Studio?</h3>
+    <p>
+      WHITEBOARD Studio הוא מודול הקלטת וידאו ועריכה בסיסית המוטמע ישירות בתוך פלטפורמת ה-LMS של WHITEBOARD.
+      במקום שמרצים יעלו סרטונים מוקלטים מראש מכלי חיצוני, הם יכולים להקליט ישירות מתוך הממשק —
+      לצפות בהקלטה, לערוך אותה (חיתוך, לוגו, אינטרו/אאוטרו, כתוביות) ולפרסם אותה כשיעור בקורס.
+    </p>
+
+    <h3>קונספט ליבה</h3>
+    <p>
+      <strong>Record &rarr; Review &rarr; Edit &rarr; Publish</strong> — הכל בלי לעזוב את WHITEBOARD.
+    </p>
+    <ul>
+      <li><strong>הקלטה בדפדפן</strong> — מצלמה, מיקרופון ושיתוף מסך באמצעות MediaRecorder API</li>
+      <li><strong>מערכת טייקים</strong> — כל הקלטה מחולקת לטייקים (takes), אפשר למחוק ולהקליט מחדש חלקים</li>
+      <li><strong>עריכה בסיסית</strong> — חיתוך, סידור מחדש, לוגו, מעברים, אינטרו/אאוטרו</li>
+      <li><strong>כתוביות אוטומטיות</strong> — יצירת SRT באמצעות OpenAI Whisper, עריכה ידנית, צריבה על הווידאו</li>
+      <li><strong>פרסום ישיר</strong> — העלאה ל-Bunny Stream ושיוך לשיעור בקורס</li>
+    </ul>
+
+    <h3>נקודות כניסה</h3>
+    <p>
+      ההקלטה מופעלת ממסך הלייאאוט של הקורס (Course Layout) או מתוך תצוגת השיעור עצמה.
+      כפתור <strong>"הקלט שיעור"</strong> פותח את ה-Recording Lobby.
+    </p>
+
+    <div class="info-box tip">
+      <strong>למה להקליט בתוך הפלטפורמה?</strong><br>
+      <strong>חוויה אחידה</strong> — המרצה לא צריך לעבור בין כלים<br>
+      <strong>ניהול מדיה מרכזי</strong> — כל ההקלטות נשמרות ב-Bunny Stream עם מטא-דאטה מסודר<br>
+      <strong>עריכה מיידית</strong> — לא צריך תוכנת עריכה חיצונית לפעולות בסיסיות<br>
+      <strong>כתוביות אוטומטיות</strong> — תמלול AI מובנה, כולל עברית<br>
+      <strong>פרסום ב-click אחד</strong> — מההקלטה ישירות לשיעור בקורס
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 2: Architecture -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="architecture">
+    <div class="section-header">
+      <span class="section-num">2</span>
+      <h2>ארכיטקטורה</h2>
+    </div>
+
+    <h3>תרשים מערכת</h3>
+    <div class="arch-diagram">
+      <div class="arch-row">
+        <div class="arch-box primary">
+          <div class="label">Next.js Frontend</div>
+          <div class="sub">MediaRecorder API + FFmpeg.wasm + react-video-editor</div>
+        </div>
+      </div>
+      <div class="arch-arrow down">&#x2195;</div>
+      <div style="font-size:12px; color:var(--text-light); text-align:center;">Uppy TUS Upload / API Calls</div>
+      <div class="arch-row">
+        <div class="arch-box secondary">
+          <div class="label">Next.js API Routes</div>
+          <div class="sub">Bunny API proxy, Whisper API, signature generation</div>
+        </div>
+        <div class="arch-arrow">&larr;</div>
+        <div class="arch-box accent">
+          <div class="label">Trigger.dev Workers</div>
+          <div class="sub">FFmpeg render, subtitle burn, video processing</div>
+        </div>
+      </div>
+      <div class="arch-arrow down">&#x2195;</div>
+      <div class="arch-row">
+        <div class="arch-box primary">
+          <div class="label">Bunny Stream</div>
+          <div class="sub">TUS upload, transcoding, CDN delivery, HLS playback</div>
+        </div>
+        <div class="arch-box secondary">
+          <div class="label">PostgreSQL + Prisma</div>
+          <div class="sub">Recording, Take, EditProject, Subtitle</div>
+        </div>
+        <div class="arch-box accent">
+          <div class="label">OpenAI Whisper API</div>
+          <div class="sub">Auto-transcription &rarr; SRT</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Recording Stack</h3>
+    <ul>
+      <li><strong>MediaRecorder API</strong> — הקלטה בדפדפן (מצלמה + מסך + אודיו)</li>
+      <li><strong>Codec Strategy</strong> — <code>video/webm;codecs=vp8,opus</code> לתאימות cross-browser, Safari fallback ל-MP4/H.264</li>
+      <li><strong>מערכת טייקים</strong> — כל טייק = Blob נפרד, נשמר ב-IndexedDB עד להעלאה</li>
+      <li><strong>Pause/Resume</strong> — באמצעות <code>MediaRecorder.pause()</code> / <code>resume()</code></li>
+      <li><strong>timeslice</strong> — פרמטר 1000ms ל-flush של chunks, מניעת גלישת זיכרון</li>
+    </ul>
+
+    <div class="info-box warning">
+      <strong>Safari Compatibility:</strong> Safari לא תומך ב-WebM. יש לזהות את הדפדפן ולהשתמש ב-<code>video/mp4;codecs=avc1</code> כ-fallback. בדיקה באמצעות <code>MediaRecorder.isTypeSupported()</code>.
+    </div>
+
+    <h3>Upload Stack</h3>
+    <ul>
+      <li><strong>Uppy.js + @uppy/tus</strong> — העלאה resumable ישירות מהדפדפן ל-Bunny Stream</li>
+      <li><strong>תהליך:</strong> השרת יוצר video ב-Bunny API &rarr; מייצר SHA256 signature &rarr; הלקוח מעלה ב-TUS ל-<code>https://video.bunnycdn.com/tusupload</code></li>
+      <li><strong>Webhook:</strong> <code>video.encoding.success</code> מפעיל Trigger.dev job לעדכון השיעור</li>
+    </ul>
+
+    <h3>Editing Stack</h3>
+    <ul>
+      <li><strong>Client-side:</strong> FFmpeg.wasm לפעולות קלות (trim, cut, preview)</li>
+      <li><strong>Server-side:</strong> FFmpeg דרך Trigger.dev לפעולות כבדות (transitions, logo burn, subtitle burn, intro/outro concatenation)</li>
+      <li><strong>UI:</strong> <code>@designcombo/react-video-editor</code> (MIT) כבסיס לעורך Timeline</li>
+      <li><strong>Templates:</strong> Remotion ליצירת אינטרו/אאוטרו פרוגרמטית</li>
+    </ul>
+
+    <h3>Subtitle Stack</h3>
+    <ul>
+      <li><strong>subtitle.js</strong> — פירוק SRT בדפדפן</li>
+      <li><strong>srt-webvtt</strong> — המרת SRT ל-VTT ל-HTML5 playback</li>
+      <li><strong>OpenAI Whisper API</strong> — <code>/v1/audio/transcriptions</code> עם <code>response_format=srt</code> ליצירה אוטומטית</li>
+      <li><strong>עריכה</strong> — ממשק עריכת כתוביות עם התאמת timestamps</li>
+      <li><strong>עתידי:</strong> מחולל כתוביות פנימי (Whisper self-hosted)</li>
+    </ul>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 3: Recording Flow -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="recording-flow">
+    <div class="section-header">
+      <span class="section-num">3</span>
+      <h2>תהליך ההקלטה</h2>
+    </div>
+
+    <h3>שלבי ההקלטה</h3>
+    <ol class="step-list">
+      <li>
+        <strong>הפעלת הקלטה</strong> — המרצה לוחץ "הקלט שיעור" ממסך הלייאאוט או מתצוגת השיעור
+      </li>
+      <li>
+        <strong>בקשת הרשאות</strong> — מצלמה + מיקרופון (+ שיתוף מסך אופציונלי)
+      </li>
+      <li>
+        <strong>Pre-Recording Lobby</strong> — תצוגה מקדימה של המצלמה, בחירת מיקרופון/מצלמה, בחירת מצב הקלטה (מצלמה בלבד / מסך+מצלמה / מסך בלבד)
+      </li>
+      <li>
+        <strong>תחילת הקלטה</strong> — טיימר ויזואלי מתחיל לרוץ
+      </li>
+      <li>
+        <strong>במהלך ההקלטה</strong> — כפתור Pause/Resume, כפתור Take marker (יוצר גבול סגמנט חדש)
+      </li>
+      <li>
+        <strong>מחיקת טייק אחרון</strong> — מסיר את הסגמנט האחרון, ממשיך מנקודת הסיום הקודמת
+      </li>
+      <li>
+        <strong>סיום הקלטה</strong> — לחיצה על Stop &rarr; מעבר למסך Review
+      </li>
+      <li>
+        <strong>Review</strong> — צפייה בכל הטייקים, אפשרות להקליט מחדש טייקים ספציפיים
+      </li>
+      <li>
+        <strong>Upload</strong> — העלאה ל-Bunny Stream ב-TUS עם progress bar (דרך Uppy)
+      </li>
+      <li>
+        <strong>לאחר העלאה</strong> — אפשרות "פרסם כמו שזה" או "פתח בעורך"
+      </li>
+    </ol>
+
+    <h3>קוד: אתחול MediaRecorder</h3>
+    <pre><span class="keyword">const</span> <span class="fn">startRecording</span> = <span class="keyword">async</span> (mode: <span class="type">RecordingMode</span>) =&gt; {
+  <span class="keyword">const</span> streams: <span class="type">MediaStream</span>[] = [];
+
+  <span class="comment">// Camera + Mic</span>
+  <span class="keyword">if</span> (mode !== <span class="string">'screen-only'</span>) {
+    <span class="keyword">const</span> cam = <span class="keyword">await</span> navigator.mediaDevices.<span class="fn">getUserMedia</span>({
+      video: { deviceId: selectedCamera, width: <span class="number">1920</span>, height: <span class="number">1080</span> },
+      audio: { deviceId: selectedMic, echoCancellation: <span class="keyword">true</span> },
+    });
+    streams.<span class="fn">push</span>(cam);
+  }
+
+  <span class="comment">// Screen Share</span>
+  <span class="keyword">if</span> (mode !== <span class="string">'camera-only'</span>) {
+    <span class="keyword">const</span> screen = <span class="keyword">await</span> navigator.mediaDevices.<span class="fn">getDisplayMedia</span>({
+      video: { width: <span class="number">1920</span>, height: <span class="number">1080</span> },
+      audio: <span class="keyword">true</span>,
+    });
+    streams.<span class="fn">push</span>(screen);
+  }
+
+  <span class="comment">// Merge streams</span>
+  <span class="keyword">const</span> combined = <span class="fn">mergeStreams</span>(streams);
+
+  <span class="comment">// Codec selection</span>
+  <span class="keyword">const</span> mimeType = MediaRecorder.<span class="fn">isTypeSupported</span>(<span class="string">'video/webm;codecs=vp8,opus'</span>)
+    ? <span class="string">'video/webm;codecs=vp8,opus'</span>
+    : <span class="string">'video/mp4'</span>;
+
+  <span class="keyword">const</span> recorder = <span class="keyword">new</span> <span class="type">MediaRecorder</span>(combined, {
+    mimeType,
+    videoBitsPerSecond: <span class="number">2_500_000</span>,
+  });
+
+  <span class="comment">// Flush chunks every 1s to avoid memory issues</span>
+  recorder.<span class="fn">start</span>(<span class="number">1000</span>);
+
+  recorder.<span class="fn">ondataavailable</span> = (e) =&gt; {
+    <span class="keyword">if</span> (e.data.size &gt; <span class="number">0</span>) {
+      currentChunks.<span class="fn">push</span>(e.data);
+    }
+  };
+
+  <span class="keyword">return</span> recorder;
+};</pre>
+
+    <h3>קוד: ניהול טייקים ב-IndexedDB</h3>
+    <pre><span class="keyword">import</span> { openDB } <span class="keyword">from</span> <span class="string">'idb'</span>;
+
+<span class="keyword">const</span> db = <span class="keyword">await</span> <span class="fn">openDB</span>(<span class="string">'whiteboard-studio'</span>, <span class="number">1</span>, {
+  <span class="fn">upgrade</span>(db) {
+    db.<span class="fn">createObjectStore</span>(<span class="string">'takes'</span>, { keyPath: <span class="string">'id'</span> });
+  },
+});
+
+<span class="keyword">const</span> <span class="fn">saveTake</span> = <span class="keyword">async</span> (
+  recordingId: <span class="type">string</span>,
+  orderIndex: <span class="type">number</span>,
+  blob: <span class="type">Blob</span>
+) =&gt; {
+  <span class="keyword">const</span> id = <span class="fn">crypto</span>.randomUUID();
+  <span class="keyword">await</span> db.<span class="fn">put</span>(<span class="string">'takes'</span>, {
+    id,
+    recordingId,
+    orderIndex,
+    blob,
+    createdAt: <span class="keyword">new</span> <span class="type">Date</span>(),
+  });
+  <span class="keyword">return</span> id;
+};
+
+<span class="keyword">const</span> <span class="fn">deleteLastTake</span> = <span class="keyword">async</span> (recordingId: <span class="type">string</span>) =&gt; {
+  <span class="keyword">const</span> all = <span class="keyword">await</span> db.<span class="fn">getAllFromIndex</span>(<span class="string">'takes'</span>, <span class="string">'recordingId'</span>, recordingId);
+  <span class="keyword">if</span> (all.length === <span class="number">0</span>) <span class="keyword">return</span>;
+  <span class="keyword">const</span> last = all.<span class="fn">sort</span>((a, b) =&gt; b.orderIndex - a.orderIndex)[<span class="number">0</span>];
+  <span class="keyword">await</span> db.<span class="fn">delete</span>(<span class="string">'takes'</span>, last.id);
+};</pre>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 4: Video Editor -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="editor">
+    <div class="section-header">
+      <span class="section-num">4</span>
+      <h2>עורך הווידאו</h2>
+    </div>
+
+    <h3>פיצ'רים</h3>
+    <div class="screen-grid">
+      <div class="screen-card">
+        <div class="card-title">Timeline</div>
+        <div class="card-desc">ציר זמן ויזואלי עם סגמנטים של טייקים. גרור לסידור מחדש.</div>
+        <div class="card-backend"><strong>UI:</strong> react-video-editor Timeline component</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Cut / Trim</div>
+        <div class="card-desc">הגדרת נקודות in/out לכל סגמנט, הסרת חלקים לא רצויים.</div>
+        <div class="card-backend"><strong>Client:</strong> FFmpeg.wasm preview<br><strong>Server:</strong> Final render via Trigger.dev</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Logo Overlay</div>
+        <div class="card-desc">העלאת PNG/SVG, מיקום (corner picker), גודל (slider), שקיפות.</div>
+        <div class="card-backend"><strong>Client:</strong> CSS overlay preview<br><strong>Server:</strong> FFmpeg burn-in at render</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Intro / Outro</div>
+        <div class="card-desc">בחירה מתבניות או העלאת קליפים מותאמים (מקסימום 10 שניות כל אחד).</div>
+        <div class="card-backend"><strong>Templates:</strong> Remotion render<br><strong>Concat:</strong> FFmpeg server-side</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Transitions</div>
+        <div class="card-desc">Fade, dissolve, slide — בין סגמנטים. נוצרים בצד השרת.</div>
+        <div class="card-backend"><strong>Server:</strong> FFmpeg xfade filter via Trigger.dev</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Subtitles</div>
+        <div class="card-desc">ייבוא SRT, יצירה אוטומטית ב-Whisper, עריכה inline, toggle burn-in.</div>
+        <div class="card-backend"><strong>Preview:</strong> VTT overlay client-side<br><strong>Burn:</strong> libass server-side</div>
+      </div>
+    </div>
+
+    <h3>חלוקת עיבוד: Client vs Server</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>פעולה</th>
+          <th>Client (FFmpeg.wasm)</th>
+          <th>Server (Trigger.dev)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Trim/Cut preview</td><td>&#10003;</td><td></td></tr>
+        <tr><td>Logo overlay preview</td><td>&#10003;</td><td></td></tr>
+        <tr><td>Final render with transitions</td><td></td><td>&#10003;</td></tr>
+        <tr><td>Intro/Outro concat</td><td></td><td>&#10003;</td></tr>
+        <tr><td>Subtitle burn-in</td><td></td><td>&#10003;</td></tr>
+        <tr><td>Thumbnail generation</td><td>&#10003;</td><td></td></tr>
+        <tr><td>Full export to Bunny</td><td></td><td>&#10003;</td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-box tip">
+      <strong>חשוב:</strong> FFmpeg.wasm משמש רק לתצוגה מקדימה מהירה בצד הלקוח. כל רינדור סופי עובר דרך Trigger.dev job שמריץ FFmpeg native בצד השרת — ביצועים מהירים פי 10-50 מ-WASM.
+    </div>
+
+    <h3>קוד: אתחול FFmpeg.wasm</h3>
+    <pre><span class="keyword">import</span> { FFmpeg } <span class="keyword">from</span> <span class="string">'@ffmpeg/ffmpeg'</span>;
+<span class="keyword">import</span> { fetchFile } <span class="keyword">from</span> <span class="string">'@ffmpeg/util'</span>;
+
+<span class="keyword">const</span> ffmpeg = <span class="keyword">new</span> <span class="type">FFmpeg</span>();
+<span class="keyword">await</span> ffmpeg.<span class="fn">load</span>({
+  coreURL: <span class="string">'/ffmpeg/ffmpeg-core.js'</span>,
+  wasmURL: <span class="string">'/ffmpeg/ffmpeg-core.wasm'</span>,
+});
+
+<span class="comment">// Trim preview: extract segment from startTime to endTime</span>
+<span class="keyword">const</span> <span class="fn">trimPreview</span> = <span class="keyword">async</span> (
+  file: <span class="type">File</span>,
+  startTime: <span class="type">number</span>,
+  endTime: <span class="type">number</span>
+): <span class="type">Promise</span>&lt;<span class="type">Blob</span>&gt; =&gt; {
+  ffmpeg.<span class="fn">writeFile</span>(<span class="string">'input.webm'</span>, <span class="keyword">await</span> <span class="fn">fetchFile</span>(file));
+  <span class="keyword">await</span> ffmpeg.<span class="fn">exec</span>([
+    <span class="string">'-i'</span>, <span class="string">'input.webm'</span>,
+    <span class="string">'-ss'</span>, String(startTime),
+    <span class="string">'-to'</span>, String(endTime),
+    <span class="string">'-c'</span>, <span class="string">'copy'</span>,
+    <span class="string">'output.webm'</span>,
+  ]);
+  <span class="keyword">const</span> data = <span class="keyword">await</span> ffmpeg.<span class="fn">readFile</span>(<span class="string">'output.webm'</span>);
+  <span class="keyword">return new</span> <span class="type">Blob</span>([data], { type: <span class="string">'video/webm'</span> });
+};</pre>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 5: Subtitles -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="subtitles">
+    <div class="section-header">
+      <span class="section-num">5</span>
+      <h2>כתוביות</h2>
+    </div>
+
+    <h3>תהליכי כתוביות</h3>
+    <ul>
+      <li><strong>יצירה אוטומטית</strong> — שליחת track אודיו ל-Whisper API &rarr; קבלת SRT</li>
+      <li><strong>ייבוא ידני</strong> — גרירת קובץ SRT לתוך העורך</li>
+      <li><strong>ממשק עריכה</strong> — רשימת cues עם timestamps (start/end) + טקסט, לחיצה קופצת ל-timecode</li>
+      <li><strong>עריכה</strong> — שינוי טקסט, התאמת תזמון בגרירה או הקלדה</li>
+      <li><strong>תצוגה מקדימה</strong> — VTT overlay על נגן הווידאו בזמן אמת</li>
+      <li><strong>ייצוא</strong> — הורדת SRT ערוך, או צריבה לתוך הווידאו</li>
+    </ul>
+
+    <h3>קוד: יצירת כתוביות אוטומטיות</h3>
+    <pre><span class="comment">// API Route: POST /api/studio/subtitles/generate</span>
+<span class="keyword">import</span> { OpenAI } <span class="keyword">from</span> <span class="string">'openai'</span>;
+
+<span class="keyword">const</span> openai = <span class="keyword">new</span> <span class="type">OpenAI</span>();
+
+<span class="keyword">export async function</span> <span class="fn">POST</span>(req: <span class="type">Request</span>) {
+  <span class="keyword">const</span> { recordingId } = <span class="keyword">await</span> req.<span class="fn">json</span>();
+
+  <span class="comment">// Trigger background job</span>
+  <span class="keyword">await</span> client.<span class="fn">sendEvent</span>({
+    name: <span class="string">'studio.generate-subtitles'</span>,
+    payload: { recordingId },
+  });
+
+  <span class="keyword">return</span> <span class="type">Response</span>.<span class="fn">json</span>({ status: <span class="string">'processing'</span> });
+}</pre>
+
+    <h3>קוד: המרת SRT ל-VTT לתצוגה מקדימה</h3>
+    <pre><span class="keyword">import</span> srtToVtt <span class="keyword">from</span> <span class="string">'srt-webvtt'</span>;
+
+<span class="keyword">const</span> <span class="fn">loadSubtitles</span> = <span class="keyword">async</span> (srtContent: <span class="type">string</span>) =&gt; {
+  <span class="keyword">const</span> srtBlob = <span class="keyword">new</span> <span class="type">Blob</span>([srtContent], { type: <span class="string">'text/plain'</span> });
+  <span class="keyword">const</span> vttUrl = <span class="keyword">await</span> <span class="fn">srtToVtt</span>(srtBlob);
+
+  <span class="comment">// Add to video element as track</span>
+  <span class="keyword">const</span> track = document.<span class="fn">createElement</span>(<span class="string">'track'</span>);
+  track.kind = <span class="string">'subtitles'</span>;
+  track.src = vttUrl;
+  track.srclang = <span class="string">'he'</span>;
+  track.label = <span class="string">'עברית'</span>;
+  track.default = <span class="keyword">true</span>;
+  videoElement.<span class="fn">appendChild</span>(track);
+};</pre>
+
+    <h3>קוד: פירוק SRT עם subtitle.js</h3>
+    <pre><span class="keyword">import</span> { parse } <span class="keyword">from</span> <span class="string">'subtitle'</span>;
+
+<span class="keyword">const</span> cues = <span class="fn">parse</span>(srtContent);
+
+<span class="comment">// cues = [{ start: 0, end: 2500, text: 'שלום לכולם' }, ...]</span>
+<span class="comment">// Each cue can be edited in the SubtitleEditor UI</span>
+<span class="comment">// After editing, stringify back to SRT format</span>
+
+<span class="keyword">import</span> { stringify } <span class="keyword">from</span> <span class="string">'subtitle'</span>;
+<span class="keyword">const</span> editedSrt = <span class="fn">stringify</span>(editedCues, { format: <span class="string">'SRT'</span> });</pre>
+
+    <div class="info-box tip">
+      <strong>Whisper API — שפות:</strong> Whisper תומך ב-99 שפות כולל עברית. יש לשלוח <code>language: "he"</code> בבקשה לשיפור דיוק. עבור תוכן מעורב (עברית + אנגלית), אפשר להשמיט את פרמטר השפה ו-Whisper יזהה אוטומטית.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 6: Database Schema -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="schema">
+    <div class="section-header">
+      <span class="section-num">6</span>
+      <h2>מודל נתונים</h2>
+    </div>
+
+    <h3>Prisma Schema (PostgreSQL)</h3>
+    <pre><span class="keyword">model</span> <span class="type">Recording</span> {
+  id            <span class="type">String</span>   @id @default(<span class="fn">cuid</span>())
+  lessonId      <span class="type">String</span>
+  lesson        <span class="type">Lesson</span>   @relation(fields: [lessonId], references: [id])
+  teacherId     <span class="type">String</span>
+  status        <span class="type">RecordingStatus</span> @default(<span class="string">DRAFT</span>)
+  bunnyVideoId  <span class="type">String</span>?
+  bunnyStreamUrl <span class="type">String</span>?
+  duration      <span class="type">Int</span>?     <span class="comment">// seconds</span>
+  fileSize      <span class="type">BigInt</span>?  <span class="comment">// bytes</span>
+  codec         <span class="type">String</span>?
+  resolution    <span class="type">String</span>?
+  thumbnailUrl  <span class="type">String</span>?
+  createdAt     <span class="type">DateTime</span> @default(<span class="fn">now</span>())
+  updatedAt     <span class="type">DateTime</span> @updatedAt
+
+  takes         <span class="type">Take</span>[]
+  editProject   <span class="type">EditProject</span>?
+  subtitles     <span class="type">Subtitle</span>[]
+}
+
+<span class="keyword">enum</span> <span class="type">RecordingStatus</span> {
+  <span class="string">RECORDING</span>
+  <span class="string">UPLOADED</span>
+  <span class="string">PROCESSING</span>
+  <span class="string">READY</span>
+  <span class="string">FAILED</span>
+  <span class="string">DRAFT</span>
+}
+
+<span class="keyword">model</span> <span class="type">Take</span> {
+  id          <span class="type">String</span>   @id @default(<span class="fn">cuid</span>())
+  recordingId <span class="type">String</span>
+  recording   <span class="type">Recording</span> @relation(fields: [recordingId], references: [id])
+  orderIndex  <span class="type">Int</span>
+  startTime   <span class="type">Float</span>    <span class="comment">// seconds from recording start</span>
+  endTime     <span class="type">Float</span>?
+  blobKey     <span class="type">String</span>?  <span class="comment">// IndexedDB key or temp storage</span>
+  bunnyVideoId <span class="type">String</span>? <span class="comment">// if uploaded separately</span>
+  isDeleted   <span class="type">Boolean</span>  @default(<span class="keyword">false</span>)
+  createdAt   <span class="type">DateTime</span> @default(<span class="fn">now</span>())
+}
+
+<span class="keyword">model</span> <span class="type">EditProject</span> {
+  id          <span class="type">String</span>   @id @default(<span class="fn">cuid</span>())
+  recordingId <span class="type">String</span>   @unique
+  recording   <span class="type">Recording</span> @relation(fields: [recordingId], references: [id])
+  timeline    <span class="type">Json</span>     <span class="comment">// segments, cuts, transitions</span>
+  logoConfig  <span class="type">Json</span>?    <span class="comment">// position, size, opacity, url</span>
+  introClipUrl <span class="type">String</span>?
+  outroClipUrl <span class="type">String</span>?
+  transitions <span class="type">Json</span>?    <span class="comment">// type per cut point</span>
+  status      <span class="type">EditStatus</span> @default(<span class="string">DRAFT</span>)
+  outputBunnyId <span class="type">String</span>?
+  createdAt   <span class="type">DateTime</span> @default(<span class="fn">now</span>())
+  updatedAt   <span class="type">DateTime</span> @updatedAt
+}
+
+<span class="keyword">enum</span> <span class="type">EditStatus</span> {
+  <span class="string">DRAFT</span>
+  <span class="string">RENDERING</span>
+  <span class="string">COMPLETE</span>
+  <span class="string">FAILED</span>
+}
+
+<span class="keyword">model</span> <span class="type">Subtitle</span> {
+  id          <span class="type">String</span>   @id @default(<span class="fn">cuid</span>())
+  recordingId <span class="type">String</span>
+  recording   <span class="type">Recording</span> @relation(fields: [recordingId], references: [id])
+  language    <span class="type">String</span>   @default(<span class="string">"he"</span>)
+  source      <span class="type">SubtitleSource</span>
+  srtContent  <span class="type">String</span>   <span class="comment">// raw SRT text</span>
+  isDefault   <span class="type">Boolean</span>  @default(<span class="keyword">false</span>)
+  createdAt   <span class="type">DateTime</span> @default(<span class="fn">now</span>())
+  updatedAt   <span class="type">DateTime</span> @updatedAt
+}
+
+<span class="keyword">enum</span> <span class="type">SubtitleSource</span> {
+  <span class="string">AUTO_WHISPER</span>
+  <span class="string">MANUAL_UPLOAD</span>
+  <span class="string">MANUAL_EDIT</span>
+}</pre>
+
+    <div class="info-box tip">
+      <strong>יחסים:</strong> כל <code>Recording</code> שייך ל-<code>Lesson</code>. לכל הקלטה יכולים להיות מספר <code>Take</code>-ים, פרויקט עריכה אחד (<code>EditProject</code>), ומספר קבצי כתוביות (<code>Subtitle</code>) בשפות שונות.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 7: Trigger.dev Jobs -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="trigger-jobs">
+    <div class="section-header">
+      <span class="section-num">7</span>
+      <h2>Trigger.dev Jobs</h2>
+    </div>
+
+    <h3>רשימת Jobs</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Job</th>
+          <th>Trigger</th>
+          <th>תיאור</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>process-recording-upload</code></td>
+          <td>Bunny webhook</td>
+          <td>עדכון סטטוס, יצירת thumbnail, התראה למרצה</td>
+        </tr>
+        <tr>
+          <td><code>generate-subtitles</code></td>
+          <td>לחיצה על "כתוביות אוטומטיות"</td>
+          <td>חילוץ אודיו &rarr; Whisper API &rarr; שמירת SRT ב-DB</td>
+        </tr>
+        <tr>
+          <td><code>render-edit-project</code></td>
+          <td>לחיצה על "רינדור סופי"</td>
+          <td>הורדת סגמנטים מ-Bunny &rarr; FFmpeg (transitions, logo, intro/outro, subtitles) &rarr; העלאה ל-Bunny</td>
+        </tr>
+        <tr>
+          <td><code>burn-subtitles</code></td>
+          <td>לחיצה על "צריבת כתוביות"</td>
+          <td>FFmpeg + libass subtitle burn &rarr; העלאה מחדש ל-Bunny</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>process-recording-upload</h3>
+    <div class="protocol-group">
+      <h4>trigger/process-recording-upload.ts</h4>
+      <pre><span class="keyword">import</span> { task } <span class="keyword">from</span> <span class="string">'@trigger.dev/sdk/v3'</span>;
+<span class="keyword">import</span> { prisma } <span class="keyword">from</span> <span class="string">'@/lib/prisma'</span>;
+
+<span class="keyword">export const</span> processRecordingUpload = <span class="fn">task</span>({
+  id: <span class="string">'process-recording-upload'</span>,
+  <span class="keyword">async</span> <span class="fn">run</span>(payload: {
+    recordingId: <span class="type">string</span>;
+    bunnyVideoId: <span class="type">string</span>;
+    duration: <span class="type">number</span>;
+  }) {
+    <span class="comment">// 1. Update recording status</span>
+    <span class="keyword">await</span> prisma.recording.<span class="fn">update</span>({
+      where: { id: payload.recordingId },
+      data: {
+        status: <span class="string">'READY'</span>,
+        bunnyVideoId: payload.bunnyVideoId,
+        duration: payload.duration,
+        bunnyStreamUrl: <span class="string">`https://iframe.mediadelivery.net/embed/</span><span class="number">\${LIBRARY_ID}</span><span class="string">/</span><span class="number">\${payload.bunnyVideoId}</span><span class="string">`</span>,
+      },
+    });
+
+    <span class="comment">// 2. Generate thumbnail from Bunny</span>
+    <span class="keyword">const</span> thumbnailUrl = <span class="string">`https://vz-</span><span class="number">\${LIBRARY_ID}</span><span class="string">.b-cdn.net/</span><span class="number">\${payload.bunnyVideoId}</span><span class="string">/thumbnail.jpg`</span>;
+    <span class="keyword">await</span> prisma.recording.<span class="fn">update</span>({
+      where: { id: payload.recordingId },
+      data: { thumbnailUrl },
+    });
+
+    <span class="comment">// 3. Notify teacher</span>
+    <span class="keyword">await</span> <span class="fn">sendNotification</span>({
+      userId: recording.teacherId,
+      title: <span class="string">'ההקלטה מוכנה!'</span>,
+      body: <span class="string">'ההקלטה עובדה בהצלחה ומוכנה לצפייה או עריכה.'</span>,
+    });
+  },
+});</pre>
+    </div>
+
+    <h3>generate-subtitles</h3>
+    <div class="protocol-group">
+      <h4>trigger/generate-subtitles.ts</h4>
+      <pre><span class="keyword">import</span> { task } <span class="keyword">from</span> <span class="string">'@trigger.dev/sdk/v3'</span>;
+<span class="keyword">import</span> { OpenAI } <span class="keyword">from</span> <span class="string">'openai'</span>;
+
+<span class="keyword">const</span> openai = <span class="keyword">new</span> <span class="type">OpenAI</span>();
+
+<span class="keyword">export const</span> generateSubtitles = <span class="fn">task</span>({
+  id: <span class="string">'generate-subtitles'</span>,
+  <span class="keyword">async</span> <span class="fn">run</span>(payload: { recordingId: <span class="type">string</span> }) {
+    <span class="keyword">const</span> recording = <span class="keyword">await</span> prisma.recording.<span class="fn">findUniqueOrThrow</span>({
+      where: { id: payload.recordingId },
+    });
+
+    <span class="comment">// 1. Download video from Bunny</span>
+    <span class="keyword">const</span> videoUrl = <span class="string">`https://vz-</span><span class="number">\${LIBRARY_ID}</span><span class="string">.b-cdn.net/</span><span class="number">\${recording.bunnyVideoId}</span><span class="string">/original`</span>;
+    <span class="keyword">const</span> videoBuffer = <span class="keyword">await</span> <span class="fn">fetch</span>(videoUrl).<span class="fn">then</span>(r =&gt; r.<span class="fn">arrayBuffer</span>());
+
+    <span class="comment">// 2. Extract audio with FFmpeg</span>
+    <span class="keyword">const</span> audioBuffer = <span class="keyword">await</span> <span class="fn">extractAudio</span>(videoBuffer);
+
+    <span class="comment">// 3. Send to Whisper API</span>
+    <span class="keyword">const</span> transcription = <span class="keyword">await</span> openai.audio.transcriptions.<span class="fn">create</span>({
+      model: <span class="string">'whisper-1'</span>,
+      file: <span class="keyword">new</span> <span class="type">File</span>([audioBuffer], <span class="string">'audio.mp3'</span>, { type: <span class="string">'audio/mp3'</span> }),
+      language: <span class="string">'he'</span>,
+      response_format: <span class="string">'srt'</span>,
+    });
+
+    <span class="comment">// 4. Save SRT to database</span>
+    <span class="keyword">await</span> prisma.subtitle.<span class="fn">create</span>({
+      data: {
+        recordingId: payload.recordingId,
+        language: <span class="string">'he'</span>,
+        source: <span class="string">'AUTO_WHISPER'</span>,
+        srtContent: transcription,
+        isDefault: <span class="keyword">true</span>,
+      },
+    });
+  },
+});</pre>
+    </div>
+
+    <h3>render-edit-project</h3>
+    <div class="protocol-group">
+      <h4>trigger/render-edit-project.ts</h4>
+      <pre><span class="keyword">import</span> { task } <span class="keyword">from</span> <span class="string">'@trigger.dev/sdk/v3'</span>;
+<span class="keyword">import</span> { execSync } <span class="keyword">from</span> <span class="string">'child_process'</span>;
+
+<span class="keyword">export const</span> renderEditProject = <span class="fn">task</span>({
+  id: <span class="string">'render-edit-project'</span>,
+  <span class="comment">// Heavy job — may take minutes for long videos</span>
+  machine: { preset: <span class="string">'large-2x'</span> },
+  maxDuration: <span class="number">600</span>, <span class="comment">// 10 minutes max</span>
+  <span class="keyword">async</span> <span class="fn">run</span>(payload: { editProjectId: <span class="type">string</span> }) {
+    <span class="keyword">const</span> project = <span class="keyword">await</span> prisma.editProject.<span class="fn">findUniqueOrThrow</span>({
+      where: { id: payload.editProjectId },
+      include: { recording: { include: { takes: <span class="keyword">true</span>, subtitles: <span class="keyword">true</span> } } },
+    });
+
+    <span class="keyword">await</span> prisma.editProject.<span class="fn">update</span>({
+      where: { id: payload.editProjectId },
+      data: { status: <span class="string">'RENDERING'</span> },
+    });
+
+    <span class="keyword">try</span> {
+      <span class="comment">// 1. Download all segments from Bunny</span>
+      <span class="keyword">const</span> segments = <span class="keyword">await</span> <span class="fn">downloadSegments</span>(project.timeline);
+
+      <span class="comment">// 2. Build FFmpeg filter complex</span>
+      <span class="keyword">const</span> filterComplex = <span class="fn">buildFilterComplex</span>({
+        segments,
+        transitions: project.transitions,
+        logoConfig: project.logoConfig,
+        introClipUrl: project.introClipUrl,
+        outroClipUrl: project.outroClipUrl,
+      });
+
+      <span class="comment">// 3. Execute FFmpeg</span>
+      <span class="fn">execSync</span>(<span class="string">`ffmpeg </span><span class="number">\${filterComplex}</span><span class="string"> -y output.mp4`</span>, {
+        timeout: <span class="number">480_000</span>,
+      });
+
+      <span class="comment">// 4. Upload final video to Bunny Stream</span>
+      <span class="keyword">const</span> bunnyVideoId = <span class="keyword">await</span> <span class="fn">uploadToBunny</span>(<span class="string">'output.mp4'</span>);
+
+      <span class="comment">// 5. Update project</span>
+      <span class="keyword">await</span> prisma.editProject.<span class="fn">update</span>({
+        where: { id: payload.editProjectId },
+        data: { status: <span class="string">'COMPLETE'</span>, outputBunnyId: bunnyVideoId },
+      });
+    } <span class="keyword">catch</span> (error) {
+      <span class="keyword">await</span> prisma.editProject.<span class="fn">update</span>({
+        where: { id: payload.editProjectId },
+        data: { status: <span class="string">'FAILED'</span> },
+      });
+      <span class="keyword">throw</span> error;
+    }
+  },
+});</pre>
+    </div>
+
+    <h3>burn-subtitles</h3>
+    <div class="protocol-group">
+      <h4>trigger/burn-subtitles.ts</h4>
+      <pre><span class="keyword">import</span> { task } <span class="keyword">from</span> <span class="string">'@trigger.dev/sdk/v3'</span>;
+
+<span class="keyword">export const</span> burnSubtitles = <span class="fn">task</span>({
+  id: <span class="string">'burn-subtitles'</span>,
+  <span class="keyword">async</span> <span class="fn">run</span>(payload: {
+    recordingId: <span class="type">string</span>;
+    subtitleId: <span class="type">string</span>;
+  }) {
+    <span class="keyword">const</span> subtitle = <span class="keyword">await</span> prisma.subtitle.<span class="fn">findUniqueOrThrow</span>({
+      where: { id: payload.subtitleId },
+      include: { recording: <span class="keyword">true</span> },
+    });
+
+    <span class="comment">// 1. Download video from Bunny</span>
+    <span class="keyword">const</span> videoPath = <span class="keyword">await</span> <span class="fn">downloadFromBunny</span>(subtitle.recording.bunnyVideoId);
+
+    <span class="comment">// 2. Write SRT file</span>
+    <span class="keyword">await</span> fs.<span class="fn">writeFile</span>(<span class="string">'subtitles.srt'</span>, subtitle.srtContent);
+
+    <span class="comment">// 3. Burn subtitles with FFmpeg + libass</span>
+    <span class="fn">execSync</span>(<span class="string">`ffmpeg -i </span><span class="number">\${videoPath}</span><span class="string"> -vf "subtitles=subtitles.srt:force_style='FontName=Heebo,FontSize=24,PrimaryColour=&HFFFFFF&,OutlineColour=&H000000&,Outline=2'" -c:a copy output.mp4`</span>);
+
+    <span class="comment">// 4. Upload result to Bunny</span>
+    <span class="keyword">const</span> newBunnyId = <span class="keyword">await</span> <span class="fn">uploadToBunny</span>(<span class="string">'output.mp4'</span>);
+
+    <span class="comment">// 5. Update recording with burned version</span>
+    <span class="keyword">await</span> prisma.recording.<span class="fn">update</span>({
+      where: { id: payload.recordingId },
+      data: { bunnyVideoId: newBunnyId },
+    });
+  },
+});</pre>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 8: Bunny Stream -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="bunny">
+    <div class="section-header">
+      <span class="section-num">8</span>
+      <h2>Bunny Stream Integration</h2>
+    </div>
+
+    <h3>API Endpoints</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Endpoint</th>
+          <th>Method</th>
+          <th>תיאור</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>/library/{libraryId}/videos</code></td>
+          <td>POST</td>
+          <td>יצירת video חדש (pre-upload)</td>
+        </tr>
+        <tr>
+          <td><code>/library/{libraryId}/videos/{videoId}</code></td>
+          <td>GET</td>
+          <td>קבלת פרטי video (סטטוס, duration, thumbnail)</td>
+        </tr>
+        <tr>
+          <td><code>/library/{libraryId}/videos/{videoId}</code></td>
+          <td>DELETE</td>
+          <td>מחיקת video</td>
+        </tr>
+        <tr>
+          <td><code>https://video.bunnycdn.com/tusupload</code></td>
+          <td>TUS</td>
+          <td>העלאה resumable</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>קוד: TUS Upload עם Uppy</h3>
+    <pre><span class="keyword">import</span> Uppy <span class="keyword">from</span> <span class="string">'@uppy/core'</span>;
+<span class="keyword">import</span> Tus <span class="keyword">from</span> <span class="string">'@uppy/tus'</span>;
+
+<span class="comment">// Step 1: Create video on server &amp; get signature</span>
+<span class="keyword">const</span> { videoId, signature, expirationTime, libraryId } =
+  <span class="keyword">await</span> <span class="fn">fetch</span>(<span class="string">'/api/studio/create-upload'</span>, {
+    method: <span class="string">'POST'</span>,
+    body: <span class="type">JSON</span>.<span class="fn">stringify</span>({ lessonId, title }),
+  }).<span class="fn">then</span>(r =&gt; r.<span class="fn">json</span>());
+
+<span class="comment">// Step 2: Configure Uppy with TUS</span>
+<span class="keyword">const</span> uppy = <span class="keyword">new</span> <span class="type">Uppy</span>()
+  .<span class="fn">use</span>(Tus, {
+    endpoint: <span class="string">'https://video.bunnycdn.com/tusupload'</span>,
+    retryDelays: [<span class="number">0</span>, <span class="number">1000</span>, <span class="number">3000</span>, <span class="number">5000</span>],
+    chunkSize: <span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>, <span class="comment">// 5MB chunks</span>
+    headers: {
+      AuthorizationSignature: signature,
+      AuthorizationExpire: expirationTime,
+      VideoId: videoId,
+      LibraryId: libraryId,
+    },
+    onBeforeRequest: (req) =&gt; {
+      <span class="comment">// TUS metadata</span>
+      req.<span class="fn">setHeader</span>(<span class="string">'Upload-Metadata'</span>,
+        <span class="string">`filetype </span><span class="number">\${btoa('video/webm')}</span><span class="string">,title </span><span class="number">\${btoa(title)}</span><span class="string">`</span>
+      );
+    },
+  });
+
+<span class="comment">// Step 3: Add file &amp; upload</span>
+uppy.<span class="fn">addFile</span>({ name: <span class="string">'recording.webm'</span>, type: <span class="string">'video/webm'</span>, data: blob });
+uppy.<span class="fn">upload</span>();
+
+<span class="comment">// Track progress</span>
+uppy.<span class="fn">on</span>(<span class="string">'progress'</span>, (progress) =&gt; {
+  <span class="fn">setUploadProgress</span>(progress); <span class="comment">// 0-100</span>
+});
+
+uppy.<span class="fn">on</span>(<span class="string">'complete'</span>, () =&gt; {
+  <span class="fn">toast</span>({ title: <span class="string">'ההעלאה הושלמה!'</span> });
+});</pre>
+
+    <h3>קוד: Server-side — יצירת video ו-signature</h3>
+    <pre><span class="comment">// API Route: POST /api/studio/create-upload</span>
+<span class="keyword">import</span> crypto <span class="keyword">from</span> <span class="string">'crypto'</span>;
+
+<span class="keyword">export async function</span> <span class="fn">POST</span>(req: <span class="type">Request</span>) {
+  <span class="keyword">const</span> { lessonId, title } = <span class="keyword">await</span> req.<span class="fn">json</span>();
+
+  <span class="comment">// 1. Create video in Bunny Stream</span>
+  <span class="keyword">const</span> bunnyRes = <span class="keyword">await</span> <span class="fn">fetch</span>(
+    <span class="string">`https://video.bunnycdn.com/library/</span><span class="number">\${LIBRARY_ID}</span><span class="string">/videos`</span>,
+    {
+      method: <span class="string">'POST'</span>,
+      headers: {
+        AccessKey: process.env.<span class="type">BUNNY_API_KEY</span>!,
+        <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span>,
+      },
+      body: <span class="type">JSON</span>.<span class="fn">stringify</span>({ title }),
+    }
+  );
+  <span class="keyword">const</span> { guid: videoId } = <span class="keyword">await</span> bunnyRes.<span class="fn">json</span>();
+
+  <span class="comment">// 2. Generate SHA256 signature</span>
+  <span class="keyword">const</span> expirationTime = Math.<span class="fn">floor</span>(Date.<span class="fn">now</span>() / <span class="number">1000</span>) + <span class="number">3600</span>;
+  <span class="keyword">const</span> signature = crypto
+    .<span class="fn">createHash</span>(<span class="string">'sha256'</span>)
+    .<span class="fn">update</span>(<span class="string">`</span><span class="number">\${LIBRARY_ID}\${process.env.BUNNY_API_KEY}\${expirationTime}\${videoId}</span><span class="string">`</span>)
+    .<span class="fn">digest</span>(<span class="string">'hex'</span>);
+
+  <span class="comment">// 3. Save recording to DB</span>
+  <span class="keyword">await</span> prisma.recording.<span class="fn">create</span>({
+    data: {
+      lessonId,
+      teacherId: session.user.id,
+      bunnyVideoId: videoId,
+      status: <span class="string">'RECORDING'</span>,
+    },
+  });
+
+  <span class="keyword">return</span> <span class="type">Response</span>.<span class="fn">json</span>({
+    videoId,
+    signature,
+    expirationTime: String(expirationTime),
+    libraryId: LIBRARY_ID,
+  });
+}</pre>
+
+    <h3>Webhook Handler</h3>
+    <pre><span class="comment">// API Route: POST /api/webhooks/bunny</span>
+<span class="keyword">export async function</span> <span class="fn">POST</span>(req: <span class="type">Request</span>) {
+  <span class="keyword">const</span> payload = <span class="keyword">await</span> req.<span class="fn">json</span>();
+
+  <span class="keyword">if</span> (payload.EventType === <span class="string">'video.encoding.success'</span>) {
+    <span class="keyword">const</span> recording = <span class="keyword">await</span> prisma.recording.<span class="fn">findFirst</span>({
+      where: { bunnyVideoId: payload.VideoGuid },
+    });
+
+    <span class="keyword">if</span> (recording) {
+      <span class="comment">// Trigger background job</span>
+      <span class="keyword">await</span> tasks.<span class="fn">trigger</span>(<span class="string">'process-recording-upload'</span>, {
+        recordingId: recording.id,
+        bunnyVideoId: payload.VideoGuid,
+        duration: payload.VideoLength,
+      });
+    }
+  }
+
+  <span class="keyword">return new</span> <span class="type">Response</span>(<span class="string">'OK'</span>, { status: <span class="number">200</span> });
+}</pre>
+
+    <h3>Video Player Embed</h3>
+    <pre><span class="comment">// Option 1: Bunny iframe embed</span>
+<span class="keyword">const</span> <span class="fn">BunnyPlayer</span> = ({ videoId }: { videoId: <span class="type">string</span> }) =&gt; (
+  &lt;<span class="type">iframe</span>
+    src={<span class="string">`https://iframe.mediadelivery.net/embed/</span><span class="number">\${LIBRARY_ID}</span><span class="string">/</span><span class="number">\${videoId}</span><span class="string">?autoplay=false&amp;preload=true`</span>}
+    style={{ width: <span class="string">'100%'</span>, aspectRatio: <span class="string">'16/9'</span>, border: <span class="string">'none'</span> }}
+    allow=<span class="string">"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"</span>
+    allowFullScreen
+  /&gt;
+);
+
+<span class="comment">// Option 2: HLS.js for custom player (subtitle track support)</span>
+<span class="keyword">import</span> Hls <span class="keyword">from</span> <span class="string">'hls.js'</span>;
+
+<span class="keyword">const</span> hlsUrl = <span class="string">`https://vz-</span><span class="number">\${LIBRARY_ID}</span><span class="string">.b-cdn.net/</span><span class="number">\${videoId}</span><span class="string">/playlist.m3u8`</span>;
+<span class="keyword">const</span> hls = <span class="keyword">new</span> <span class="type">Hls</span>();
+hls.<span class="fn">loadSource</span>(hlsUrl);
+hls.<span class="fn">attachMedia</span>(videoElement);</pre>
+
+    <div class="info-box tip">
+      <strong>Bunny Stream Pricing:</strong> Storage = $0.005/GB/month. Encoding = Free. Bandwidth = $0.01/GB (first 500TB). לסרטוני קורס ממוצעים (10 דקות, 720p), עלות אחסון כ-$0.002 לסרטון/חודש.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 9: Roadmap -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="roadmap">
+    <div class="section-header">
+      <span class="section-num">9</span>
+      <h2>מפת דרכים</h2>
+    </div>
+
+    <h3><span class="phase-badge p0">Phase 1</span> הקלטה בסיסית — 2 שבועות</h3>
+    <ul>
+      <li>אינטגרציית MediaRecorder</li>
+      <li>ממשק בחירת מצלמה/מיקרופון</li>
+      <li>Record / Pause / Resume / Stop</li>
+      <li>Take markers — סימון גבולות סגמנטים</li>
+      <li>Delete last take — מחיקת טייק אחרון</li>
+      <li>העלאה ל-Bunny דרך TUS (Uppy)</li>
+      <li>מסך Review בסיסי</li>
+    </ul>
+
+    <h3><span class="phase-badge p1">Phase 2</span> עורך בסיסי — 3 שבועות</h3>
+    <ul>
+      <li>ממשק Timeline עם סגמנטים</li>
+      <li>פקדי Cut/Trim</li>
+      <li>Logo overlay (תצוגה מקדימה בצד הלקוח)</li>
+      <li>בחירת תבנית Intro/Outro</li>
+      <li>Server-side render דרך Trigger.dev</li>
+      <li>זרימת פרסום לשיעור</li>
+    </ul>
+
+    <h3><span class="phase-badge p2">Phase 3</span> כתוביות — 2 שבועות</h3>
+    <ul>
+      <li>אינטגרציית Whisper API</li>
+      <li>ייבוא/ייצוא SRT</li>
+      <li>עורך כתוביות inline</li>
+      <li>VTT preview overlay</li>
+      <li>צריבה דרך FFmpeg בצד השרת</li>
+    </ul>
+
+    <h3><span class="phase-badge p3">Phase 4</span> מעברים ושיפורים — 2 שבועות</h3>
+    <ul>
+      <li>אפקטי מעבר בין סגמנטים (fade, dissolve, slide)</li>
+      <li>מיקום לוגו מתקדם</li>
+      <li>העלאת intro/outro מותאם אישית</li>
+      <li>Recording templates — פריסטים לסוגי שיעורים שונים</li>
+      <li>אנליטיקס: סטטיסטיקות משך הקלטה, שימוש בעורך</li>
+    </ul>
+
+    <h3><span class="phase-badge p4">Phase 5</span> מחולל כתוביות פנימי — עתידי</h3>
+    <ul>
+      <li>מודל Whisper self-hosted</li>
+      <li>תמלול בזמן אמת במהלך ההקלטה</li>
+      <li>תמיכה רב-שפתית</li>
+      <li>Speaker diarization — זיהוי דוברים</li>
+    </ul>
+
+    <div class="info-box warning">
+      <strong>הערכת זמנים:</strong> סך הכל Phase 1-4 = כ-9 שבועות עבודה. Phase 5 הוא עתידי ותלוי בהיקף השימוש ובעלויות Whisper API. אם העלויות גבוהות — עוברים ל-self-hosted.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 10: UI Components -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="components">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2>רכיבי ממשק</h2>
+    </div>
+
+    <h3>מבנה קבצים</h3>
+    <div class="component-tree">
+<span class="folder">src/</span>
+  <span class="folder">components/</span>
+    <span class="folder">studio/</span>
+      <span class="file">RecordingLobby.tsx</span>      <span class="desc">— Pre-record setup: camera preview, device selection</span>
+      <span class="file">RecordingView.tsx</span>        <span class="desc">— Active recording with controls overlay</span>
+      <span class="file">RecordingControls.tsx</span>    <span class="desc">— Record/Pause/Resume/Stop/Take buttons</span>
+      <span class="file">TakeManager.tsx</span>          <span class="desc">— Take list with delete option</span>
+      <span class="file">RecordingReview.tsx</span>      <span class="desc">— Playback and review all takes</span>
+      <span class="file">UploadProgress.tsx</span>       <span class="desc">— Uppy TUS upload with progress bar</span>
+
+    <span class="folder">editor/</span>
+      <span class="file">VideoEditor.tsx</span>          <span class="desc">— Main editor container</span>
+      <span class="file">Timeline.tsx</span>             <span class="desc">— Visual timeline with draggable segments</span>
+      <span class="file">TrimControls.tsx</span>         <span class="desc">— In/Out point markers</span>
+      <span class="file">LogoOverlay.tsx</span>          <span class="desc">— Logo position/size/opacity controls</span>
+      <span class="file">IntroOutroSelector.tsx</span>   <span class="desc">— Template picker for intro/outro</span>
+      <span class="file">TransitionPicker.tsx</span>     <span class="desc">— Transition type selector between cuts</span>
+      <span class="file">SubtitleEditor.tsx</span>       <span class="desc">— Cue list editor with timestamps</span>
+      <span class="file">SubtitlePreview.tsx</span>      <span class="desc">— VTT overlay on video player</span>
+      <span class="file">RenderProgress.tsx</span>       <span class="desc">— Server render status indicator</span>
+      <span class="file">ExportOptions.tsx</span>        <span class="desc">— Publish to lesson / Download</span>
+
+    <span class="folder">shared/</span>
+      <span class="file">VideoPreview.tsx</span>         <span class="desc">— Camera preview component</span>
+      <span class="file">DeviceSelector.tsx</span>       <span class="desc">— Mic/Camera picker dropdown</span>
+      <span class="file">RecordingTimer.tsx</span>       <span class="desc">— Visual timer display (HH:MM:SS)</span>
+    </div>
+
+    <h3>רכיבים מרכזיים</h3>
+    <div class="screen-grid">
+      <div class="screen-card">
+        <div class="card-title">RecordingLobby</div>
+        <div class="card-desc">מסך הכנה לפני הקלטה — תצוגת מצלמה, בחירת מכשירים, בחירת מצב הקלטה.</div>
+        <div class="card-backend">
+          <strong>Hooks:</strong> useMediaDevices, useUserMedia<br>
+          <strong>State:</strong> selectedCamera, selectedMic, recordingMode
+        </div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">RecordingView</div>
+        <div class="card-desc">מסך ההקלטה הפעיל — וידאו live, טיימר, controls overlay.</div>
+        <div class="card-backend">
+          <strong>Hooks:</strong> useMediaRecorder, useTakeManager<br>
+          <strong>State:</strong> isRecording, isPaused, currentTake, chunks
+        </div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">VideoEditor</div>
+        <div class="card-desc">מכיל ראשי של העורך — Timeline, Preview, Controls panel.</div>
+        <div class="card-backend">
+          <strong>Base:</strong> @designcombo/react-video-editor<br>
+          <strong>State:</strong> Zustand store for timeline, cuts, transitions
+        </div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">SubtitleEditor</div>
+        <div class="card-desc">עורך כתוביות — רשימת cues, עריכת טקסט ותזמון, סנכרון עם הנגן.</div>
+        <div class="card-backend">
+          <strong>Lib:</strong> subtitle.js + srt-webvtt<br>
+          <strong>Actions:</strong> generate (Whisper), import SRT, edit, burn
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 11: Tech Summary -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="tech-summary">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2>סיכום טכנולוגיות</h2>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>שכבה</th>
+          <th>טכנולוגיה</th>
+          <th>תפקיד</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>הקלטה</td>
+          <td><strong>MediaRecorder API</strong></td>
+          <td>צילום וידאו בדפדפן (camera + screen + audio)</td>
+        </tr>
+        <tr>
+          <td>העלאה</td>
+          <td><strong>Uppy.js + TUS</strong></td>
+          <td>העלאה resumable ישירות ל-Bunny Stream</td>
+        </tr>
+        <tr>
+          <td>אחסון</td>
+          <td><strong>Bunny Stream</strong></td>
+          <td>אירוח וידאו + CDN + transcoding + HLS delivery</td>
+        </tr>
+        <tr>
+          <td>עריכה (Client)</td>
+          <td><strong>FFmpeg.wasm</strong></td>
+          <td>תצוגה מקדימה קלה: trim, cut, thumbnail</td>
+        </tr>
+        <tr>
+          <td>עריכה (Server)</td>
+          <td><strong>FFmpeg + Trigger.dev</strong></td>
+          <td>רינדור כבד: transitions, logo burn, subtitle burn-in</td>
+        </tr>
+        <tr>
+          <td>ממשק עורך</td>
+          <td><strong>react-video-editor</strong></td>
+          <td>ממשק עריכה מבוסס Timeline (MIT)</td>
+        </tr>
+        <tr>
+          <td>תבניות</td>
+          <td><strong>Remotion</strong></td>
+          <td>יצירת אינטרו/אאוטרו פרוגרמטית ב-React</td>
+        </tr>
+        <tr>
+          <td>כתוביות</td>
+          <td><strong>Whisper API + subtitle.js</strong></td>
+          <td>יצירה אוטומטית + פירוק/עריכת SRT</td>
+        </tr>
+        <tr>
+          <td>נגן</td>
+          <td><strong>HLS.js / Bunny Player</strong></td>
+          <td>נגן וידאו עם תמיכה ב-VTT subtitles</td>
+        </tr>
+        <tr>
+          <td>בסיס נתונים</td>
+          <td><strong>Prisma + PostgreSQL</strong></td>
+          <td>שמירת נתונים: Recording, Take, EditProject, Subtitle</td>
+        </tr>
+        <tr>
+          <td>עיבוד רקע</td>
+          <td><strong>Trigger.dev</strong></td>
+          <td>כל עיבוד אסינכרוני: render, subtitles, upload processing</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="info-box tip">
+      <strong>עקרון מנחה:</strong> הכל רץ בתוך WHITEBOARD — אין קישורים חיצוניים, אין redirect, אין pop-ups. המרצה מקליט, עורך, מוסיף כתוביות ומפרסם — בלי לעזוב את הפלטפורמה.
+    </div>
+  </section>
+
+</div>
+
+<!-- ── Sidebar Active State Script ── -->
+<script>
+const sections = document.querySelectorAll('.section');
+const navLinks = document.querySelectorAll('.sidebar nav a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => link.classList.remove('active'));
+      const id = entry.target.id;
+      const activeLink = document.querySelector(`.sidebar nav a[href="#${id}"]`);
+      if (activeLink) activeLink.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(section => observer.observe(section));
+</script>
+
+</body>
+</html>
