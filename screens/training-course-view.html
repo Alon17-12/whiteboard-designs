@@ -15,7 +15,7 @@
   --r-xs:6px; --r-sm:10px; --r-md:16px; --r-lg:18px;
   --strip-w:52px;
   --sidebar-w:264px;
-  --notebook-w:380px;
+  --notebook-w:380px; /* kept for reference */
   --bg:#EBF3FB;
   --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
   --border:rgba(37,62,122,0.1); --border-mid:rgba(37,62,122,0.16);
@@ -103,32 +103,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 }
 .rs-btn:hover::after{opacity:1;}
 
-/* Notebook indicator dot */
-.rs-btn .nb-dot{
-  position:absolute;top:5px;left:5px;width:8px;height:8px;
-  border-radius:50%;background:var(--cyan);
-  opacity:0;transition:opacity .2s;
-}
-.rs-btn .nb-dot.active{
-  opacity:1;
-  animation:pulseDot 1.5s ease-in-out infinite;
-}
-@keyframes pulseDot{
-  0%,100%{box-shadow:0 0 0 0 rgba(56,196,242,0.5);}
-  50%{box-shadow:0 0 0 5px rgba(56,196,242,0);}
-}
-
-/* Shake animation for notebook icon */
-@keyframes shakeIcon{
-  0%,100%{transform:rotate(0);}
-  15%{transform:rotate(-8deg);}
-  30%{transform:rotate(8deg);}
-  45%{transform:rotate(-6deg);}
-  60%{transform:rotate(6deg);}
-  75%{transform:rotate(-3deg);}
-  90%{transform:rotate(3deg);}
-}
-.rs-btn.shake{animation:shakeIcon .6s ease;}
 
 .rs-bottom{
   display:flex;flex-direction:column;align-items:center;gap:4px;
@@ -313,17 +287,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 .video-title{font-size:16px;font-weight:700;color:var(--text-main);}
 .video-dur{font-size:12px;color:var(--text-sub);font-weight:600;}
 
-/* Trigger demo button */
-.trigger-demo{
-  max-width:860px;margin:12px auto 0;
-  display:flex;align-items:center;gap:8px;
-  padding:10px 18px;border-radius:30px;
-  border:2px dashed var(--pink);background:rgba(240,86,128,0.06);
-  font-family:var(--font);font-size:13px;font-weight:700;color:var(--pink);
-  cursor:pointer;transition:all .2s;
-}
-.trigger-demo:hover{background:rgba(240,86,128,0.12);transform:translateY(-1px);}
-.trigger-demo svg{width:16px;height:16px;flex-shrink:0;}
 
 /* Lesson description */
 .lesson-info{
@@ -353,84 +316,44 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 .att-size{font-size:10px;color:var(--text-xs);}
 
 /* ══════════════════════════════════
-   NOTEBOOK PANEL (מחברת הקורס)
+   NOTEBOOK SECTION (inline in sidebar)
 ══════════════════════════════════ */
-.notebook-overlay{
-  position:fixed;inset:0;background:rgba(10,20,40,0.25);
-  z-index:40;opacity:0;pointer-events:none;
-  transition:opacity .3s ease;
+.nb-section{
+  border-top:2px solid var(--cyan);
+  background:linear-gradient(180deg,rgba(56,196,242,0.06) 0%,transparent 40%);
+  padding:0;flex-shrink:0;
 }
-.notebook-overlay.open{opacity:1;pointer-events:auto;}
-
-.notebook-panel{
-  position:fixed;top:0;bottom:0;right:52px;
-  width:var(--notebook-w);
-  background:var(--surface);
-  border-left:1px solid var(--border);
-  box-shadow:-4px 0 24px rgba(37,62,122,0.15);
-  z-index:50;
-  display:flex;flex-direction:column;
-  transform:translateX(100%);
-  transition:transform .3s ease-out;
+.nb-section-header{
+  display:flex;align-items:center;gap:8px;padding:12px 14px 8px;
+  cursor:pointer;user-select:none;
 }
-.notebook-panel.open{transform:translateX(0);}
-[data-theme="dark"] .notebook-panel{box-shadow:-4px 0 30px rgba(0,0,0,0.4);}
-
-.nb-header{
-  display:flex;align-items:center;gap:10px;
-  padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0;
-}
-.nb-mascot{width:32px;height:32px;border-radius:50%;overflow:hidden;flex-shrink:0;
+.nb-section-header:hover .nb-section-title{color:var(--cyan);}
+.nb-mascot{width:26px;height:26px;border-radius:50%;overflow:hidden;flex-shrink:0;
   border:2px solid rgba(56,196,242,0.2);}
 .nb-mascot img{width:100%;height:100%;object-fit:cover;}
-.nb-header-text{flex:1;}
-.nb-header-title{font-family:var(--font-brand);font-size:15px;font-weight:700;color:var(--navy);}
-[data-theme="dark"] .nb-header-title{color:var(--text-main);}
-.nb-header-lesson{font-size:10.5px;color:var(--text-sub);margin-top:1px;}
-.nb-close{
-  width:32px;height:32px;border-radius:var(--r-xs);border:1px solid var(--border);
-  background:var(--surface);display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:var(--text-sub);transition:all .18s;flex-shrink:0;
+.nb-section-title{
+  flex:1;font-family:var(--font-brand);font-size:13px;font-weight:700;color:var(--navy);
+  transition:color .15s;
 }
-.nb-close:hover{background:rgba(240,86,128,0.08);color:var(--pink);border-color:rgba(240,86,128,0.3);}
-.nb-close svg{width:14px;height:14px;}
-
-/* Notebook tabs */
-.nb-tabs{
-  display:flex;border-bottom:1px solid var(--border);flex-shrink:0;
-  padding:0 16px;gap:0;
+[data-theme="dark"] .nb-section-title{color:var(--text-main);}
+.nb-section-badge{
+  font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;
+  background:rgba(56,196,242,0.15);color:var(--cyan);flex-shrink:0;
 }
-.nb-tab{
-  flex:1;padding:10px 8px;border:none;background:transparent;
-  font-family:var(--font);font-size:12px;font-weight:700;color:var(--text-sub);
-  cursor:pointer;transition:all .2s;position:relative;text-align:center;
+.nb-questions{
+  display:flex;flex-direction:column;gap:10px;
+  padding:0 10px 14px;
 }
-.nb-tab.active{color:var(--navy);}
-[data-theme="dark"] .nb-tab.active{color:var(--cyan);}
-.nb-tab::after{
-  content:'';position:absolute;bottom:-1px;left:0;right:0;height:2.5px;
-  background:var(--cyan);border-radius:2px 2px 0 0;
-  transform:scaleX(0);transition:transform .2s ease;
-}
-.nb-tab.active::after{transform:scaleX(1);}
-.nb-tab:hover:not(.active){color:var(--text-main);}
-
-/* Notebook body */
-.nb-body{flex:1;overflow-y:auto;padding:16px;scrollbar-width:thin;}
-.nb-panel{display:none;flex-direction:column;gap:16px;}
-.nb-panel.active{display:flex;}
 
 /* Question cards */
 .q-card{
-  background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);
-  padding:16px;opacity:0;transform:translateY(10px);
-  transition:opacity .3s ease,transform .3s ease;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:12px;
 }
-.q-card.visible{opacity:1;transform:translateY(0);}
 .q-badge{
   display:inline-flex;align-items:center;gap:4px;
-  font-size:10px;font-weight:800;padding:3px 8px;border-radius:20px;
-  margin-bottom:10px;
+  font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;
+  margin-bottom:8px;
 }
 .q-badge.free{background:rgba(56,196,242,0.12);color:var(--cyan);}
 .q-badge.mc{background:rgba(234,214,84,0.15);color:#92700a;}
@@ -438,102 +361,81 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 .q-badge.tf{background:rgba(240,86,128,0.1);color:var(--pink);}
 .q-badge.upload{background:rgba(125,197,122,0.15);color:#16a34a;}
 [data-theme="dark"] .q-badge.upload{color:#4ade80;}
-.q-badge svg{width:10px;height:10px;}
+.q-badge svg{width:9px;height:9px;}
 
-.q-text{font-size:14px;font-weight:700;color:var(--text-main);line-height:1.6;margin-bottom:12px;}
+.q-text{font-size:12.5px;font-weight:700;color:var(--text-main);line-height:1.5;margin-bottom:10px;}
 
 /* Free text */
 .q-textarea{
-  width:100%;min-height:80px;padding:10px 12px;border-radius:var(--r-sm);
-  border:1.5px solid var(--border);background:var(--surface);
-  font-family:var(--font);font-size:13px;color:var(--text-main);
+  width:100%;min-height:60px;padding:8px 10px;border-radius:var(--r-xs);
+  border:1.5px solid var(--border);background:var(--surface-2);
+  font-family:var(--font);font-size:12px;color:var(--text-main);
   resize:vertical;outline:none;direction:rtl;
-  transition:border-color .15s;line-height:1.6;
+  transition:border-color .15s;line-height:1.5;
 }
 .q-textarea:focus{border-color:var(--cyan);}
 .q-textarea::placeholder{color:var(--text-xs);}
 
 /* Submit button */
 .q-submit{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:9px 20px;border-radius:30px;border:none;
+  display:inline-flex;align-items:center;gap:5px;
+  padding:7px 14px;border-radius:30px;border:none;
   background:var(--navy);color:#fff;
-  font-family:var(--font);font-size:12.5px;font-weight:700;
-  cursor:pointer;transition:all .2s;margin-top:8px;
+  font-family:var(--font);font-size:11px;font-weight:700;
+  cursor:pointer;transition:all .2s;margin-top:6px;
 }
 .q-submit:hover{background:var(--cyan);transform:translateY(-1px);box-shadow:0 3px 12px rgba(56,196,242,0.3);}
-.q-submit svg{width:12px;height:12px;}
+.q-submit svg{width:10px;height:10px;}
 
 /* Multiple choice */
-.mc-options{display:flex;flex-direction:column;gap:6px;}
+.mc-options{display:flex;flex-direction:column;gap:4px;}
 .mc-option{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;border-radius:var(--r-sm);
-  border:1.5px solid var(--border);background:var(--surface);
-  cursor:pointer;transition:all .18s;min-height:44px;
+  display:flex;align-items:center;gap:8px;
+  padding:8px 10px;border-radius:var(--r-xs);
+  border:1.5px solid var(--border);background:var(--surface-2);
+  cursor:pointer;transition:all .18s;min-height:36px;
 }
 .mc-option:hover{border-color:var(--cyan);background:rgba(56,196,242,0.04);}
 .mc-option.selected{border-color:var(--cyan);background:rgba(56,196,242,0.08);}
 .mc-radio{
-  width:18px;height:18px;border-radius:50%;
+  width:16px;height:16px;border-radius:50%;
   border:2px solid var(--border-mid);flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
   transition:all .18s;
 }
 .mc-option.selected .mc-radio{border-color:var(--cyan);}
 .mc-radio-inner{
-  width:8px;height:8px;border-radius:50%;
+  width:7px;height:7px;border-radius:50%;
   background:var(--cyan);transform:scale(0);transition:transform .15s;
 }
 .mc-option.selected .mc-radio-inner{transform:scale(1);}
-.mc-label{font-size:13px;font-weight:600;color:var(--text-main);}
+.mc-label{font-size:12px;font-weight:600;color:var(--text-main);}
 
 /* True/False */
-.tf-options{display:flex;gap:10px;}
+.tf-options{display:flex;gap:6px;}
 .tf-btn{
-  flex:1;padding:12px;border-radius:var(--r-sm);
-  border:1.5px solid var(--border);background:var(--surface);
-  font-family:var(--font);font-size:14px;font-weight:700;
+  flex:1;padding:8px;border-radius:var(--r-xs);
+  border:1.5px solid var(--border);background:var(--surface-2);
+  font-family:var(--font);font-size:12px;font-weight:700;
   color:var(--text-sub);cursor:pointer;transition:all .2s;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  min-height:48px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  min-height:36px;
 }
 .tf-btn:hover{border-color:var(--cyan);color:var(--text-main);}
 .tf-btn.selected-true{border-color:var(--green-bright);background:rgba(34,197,94,0.08);color:var(--green-bright);}
 .tf-btn.selected-false{border-color:var(--pink);background:rgba(240,86,128,0.08);color:var(--pink);}
-.tf-btn svg{width:16px;height:16px;}
+.tf-btn svg{width:14px;height:14px;}
 
 /* File upload */
 .upload-zone{
-  border:2px dashed var(--border-mid);border-radius:var(--r-md);
-  padding:24px 16px;text-align:center;cursor:pointer;
-  transition:all .2s;background:var(--surface);
+  border:2px dashed var(--border-mid);border-radius:var(--r-sm);
+  padding:16px 10px;text-align:center;cursor:pointer;
+  transition:all .2s;background:var(--surface-2);
 }
 .upload-zone:hover{border-color:var(--cyan);background:rgba(56,196,242,0.04);}
-.upload-zone svg{width:32px;height:32px;color:var(--text-xs);margin-bottom:8px;}
-.upload-text{font-size:13px;font-weight:600;color:var(--text-sub);}
-.upload-hint{font-size:10.5px;color:var(--text-xs);margin-top:4px;}
-
-/* All answers tab */
-.answers-group{margin-bottom:16px;}
-.answers-group-title{
-  font-size:11px;font-weight:800;color:var(--text-xs);
-  text-transform:uppercase;letter-spacing:.5px;
-  margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);
-}
-.answer-item{
-  padding:10px 12px;background:var(--surface-2);border:1px solid var(--border);
-  border-radius:var(--r-sm);margin-bottom:6px;
-}
-.answer-q{font-size:12px;font-weight:700;color:var(--text-main);margin-bottom:4px;}
-.answer-a{font-size:12px;color:var(--text-sub);line-height:1.5;}
-.answer-time{font-size:10px;color:var(--text-xs);margin-top:4px;}
-
-.empty-state{
-  text-align:center;padding:30px 16px;
-}
-.empty-state svg{width:40px;height:40px;color:var(--text-xs);opacity:.4;margin-bottom:10px;}
-.empty-state p{font-size:13px;color:var(--text-sub);}
+.upload-zone svg{width:24px;height:24px;color:var(--text-xs);margin-bottom:6px;}
+.upload-text{font-size:12px;font-weight:600;color:var(--text-sub);}
+.upload-hint{font-size:10px;color:var(--text-xs);margin-top:3px;}
 
 /* ══════════════════════════════════
    BOTTOM BAR
@@ -589,11 +491,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
 }
 [data-theme="dark"] .ch-lock-badge{background:rgba(255,255,255,0.05);}
 
-/* Stagger animation */
-.q-card:nth-child(1){transition-delay:0s;}
-.q-card:nth-child(2){transition-delay:.1s;}
-.q-card:nth-child(3){transition-delay:.2s;}
-.q-card:nth-child(4){transition-delay:.3s;}
 </style>
 </head>
 <body>
@@ -639,9 +536,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
     </div>
 
     <div class="rs-bottom">
-      <!-- Notebook (NEW) -->
-      <button class="rs-btn" id="rsNotebookBtn" aria-label="מחברת הקורס" data-tip="מחברת הקורס" onclick="toggleNotebook()">
-        <span class="nb-dot" id="nbDot"></span>
+      <!-- Notebook -->
+      <button class="rs-btn" data-tip="מחברת הקורס" onclick="scrollToNotebook()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
@@ -763,6 +659,99 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
       </div>
 
     </div>
+
+    <!-- ══ NOTEBOOK SECTION (inline) ══ -->
+    <div class="nb-section" id="nbSection">
+      <div class="nb-section-header">
+        <div class="nb-mascot">
+          <img src="../BOARDi/SVG/4.svg" alt="BOARDi">
+        </div>
+        <span class="nb-section-title">מחברת הקורס</span>
+        <span class="nb-section-badge">4 שאלות</span>
+      </div>
+      <div class="nb-questions">
+
+        <!-- Q1: Free text -->
+        <div class="q-card">
+          <div class="q-badge free">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            שאלה פתוחה
+          </div>
+          <div class="q-text">מה ההבדל בין צבעים חמים לקרים? תן 3 דוגמאות</div>
+          <textarea class="q-textarea" placeholder="כתוב את תשובתך כאן..."></textarea>
+          <button class="q-submit" onclick="saveAnswer(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            שמור תשובה
+          </button>
+        </div>
+
+        <!-- Q2: Multiple choice -->
+        <div class="q-card">
+          <div class="q-badge mc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
+            שאלה אמריקאית
+          </div>
+          <div class="q-text">איזה צבע נחשב צבע משלים לכחול?</div>
+          <div class="mc-options">
+            <div class="mc-option" onclick="selectMC(this)">
+              <div class="mc-radio"><div class="mc-radio-inner"></div></div>
+              <span class="mc-label">כתום</span>
+            </div>
+            <div class="mc-option" onclick="selectMC(this)">
+              <div class="mc-radio"><div class="mc-radio-inner"></div></div>
+              <span class="mc-label">ירוק</span>
+            </div>
+            <div class="mc-option" onclick="selectMC(this)">
+              <div class="mc-radio"><div class="mc-radio-inner"></div></div>
+              <span class="mc-label">אדום</span>
+            </div>
+            <div class="mc-option" onclick="selectMC(this)">
+              <div class="mc-radio"><div class="mc-radio-inner"></div></div>
+              <span class="mc-label">סגול</span>
+            </div>
+          </div>
+          <button class="q-submit" onclick="saveAnswer(this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            שלח תשובה
+          </button>
+        </div>
+
+        <!-- Q3: True/False -->
+        <div class="q-card">
+          <div class="q-badge tf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            נכון / לא נכון
+          </div>
+          <div class="q-text">צבע לבן הוא שילוב של כל הצבעים בספקטרום</div>
+          <div class="tf-options">
+            <button class="tf-btn" onclick="selectTF(this, true)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              נכון
+            </button>
+            <button class="tf-btn" onclick="selectTF(this, false)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              לא נכון
+            </button>
+          </div>
+        </div>
+
+        <!-- Q4: File upload -->
+        <div class="q-card">
+          <div class="q-badge upload">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            העלאת קובץ
+          </div>
+          <div class="q-text">העלו את התרגיל — קולאז׳ צבעים חמים וקרים</div>
+          <div class="upload-zone" onclick="simulateUpload()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div class="upload-text">גרור קובץ לכאן או לחץ לבחירה</div>
+            <div class="upload-hint">PDF, JPG, PNG עד 25MB</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </aside>
 
   <!-- Sidebar collapse toggle -->
@@ -795,11 +784,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
         </div>
       </div>
 
-      <!-- Trigger demo button -->
-      <button class="trigger-demo" onclick="triggerNotebook()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        הדמיית הגעה ל-75% מהסרטון — לחצו לפתיחת מחברת הקורס
-      </button>
     </div>
 
     <!-- Lesson info -->
@@ -858,152 +842,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-main);
   </button>
 </div>
 
-<!-- ════ NOTEBOOK PANEL ════ -->
-<div class="notebook-overlay" id="nbOverlay" onclick="closeNotebook()"></div>
-<div class="notebook-panel" id="nbPanel">
-  <div class="nb-header">
-    <div class="nb-mascot">
-      <img src="../BOARDi/SVG/4.svg" alt="BOARDi">
-    </div>
-    <div class="nb-header-text">
-      <div class="nb-header-title">מחברת הקורס</div>
-      <div class="nb-header-lesson">שיעור 3: צבע ומשמעות</div>
-    </div>
-    <button class="nb-close" onclick="closeNotebook()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>
-
-  <!-- Tabs -->
-  <div class="nb-tabs">
-    <button class="nb-tab active" data-tab="current" onclick="switchNbTab(this)">שאלה נוכחית</button>
-    <button class="nb-tab" data-tab="answers" onclick="switchNbTab(this)">כל התשובות שלי</button>
-  </div>
-
-  <!-- Tab bodies -->
-  <div class="nb-body">
-
-    <!-- Current questions -->
-    <div class="nb-panel active" id="nbCurrent">
-
-      <!-- Q1: Free text -->
-      <div class="q-card" id="qCard1">
-        <div class="q-badge free">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          שאלה פתוחה
-        </div>
-        <div class="q-text">מה ההבדל בין צבעים חמים לקרים? תן 3 דוגמאות</div>
-        <textarea class="q-textarea" placeholder="כתוב את תשובתך כאן..."></textarea>
-        <button class="q-submit" onclick="saveAnswer(this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          שמור תשובה
-        </button>
-      </div>
-
-      <!-- Q2: Multiple choice -->
-      <div class="q-card" id="qCard2">
-        <div class="q-badge mc">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
-          שאלה אמריקאית
-        </div>
-        <div class="q-text">איזה צבע נחשב צבע משלים לכחול?</div>
-        <div class="mc-options">
-          <div class="mc-option" onclick="selectMC(this)">
-            <div class="mc-radio"><div class="mc-radio-inner"></div></div>
-            <span class="mc-label">כתום</span>
-          </div>
-          <div class="mc-option" onclick="selectMC(this)">
-            <div class="mc-radio"><div class="mc-radio-inner"></div></div>
-            <span class="mc-label">ירוק</span>
-          </div>
-          <div class="mc-option" onclick="selectMC(this)">
-            <div class="mc-radio"><div class="mc-radio-inner"></div></div>
-            <span class="mc-label">אדום</span>
-          </div>
-          <div class="mc-option" onclick="selectMC(this)">
-            <div class="mc-radio"><div class="mc-radio-inner"></div></div>
-            <span class="mc-label">סגול</span>
-          </div>
-        </div>
-        <button class="q-submit" onclick="saveAnswer(this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          שלח תשובה
-        </button>
-      </div>
-
-      <!-- Q3: True/False -->
-      <div class="q-card" id="qCard3">
-        <div class="q-badge tf">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          נכון / לא נכון
-        </div>
-        <div class="q-text">צבע לבן הוא שילוב של כל הצבעים בספקטרום</div>
-        <div class="tf-options">
-          <button class="tf-btn" onclick="selectTF(this, true)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            נכון
-          </button>
-          <button class="tf-btn" onclick="selectTF(this, false)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            לא נכון
-          </button>
-        </div>
-      </div>
-
-      <!-- Q4: File upload -->
-      <div class="q-card" id="qCard4">
-        <div class="q-badge upload">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          העלאת קובץ
-        </div>
-        <div class="q-text">העלה את התרגיל שהכנת — קולאז׳ צבעים חמים וקרים</div>
-        <div class="upload-zone" onclick="simulateUpload()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          <div class="upload-text">גרור קובץ לכאן או לחץ לבחירה</div>
-          <div class="upload-hint">PDF, JPG, PNG עד 25MB</div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- All answers -->
-    <div class="nb-panel" id="nbAnswers">
-
-      <div class="answers-group">
-        <div class="answers-group-title">שיעור 1: תורת הצבע</div>
-        <div class="answer-item">
-          <div class="answer-q">מהם שלושת צבעי היסוד?</div>
-          <div class="answer-a">אדום, כחול, צהוב — אלו הצבעים שלא ניתן ליצור משילוב של צבעים אחרים.</div>
-          <div class="answer-time">14 באפריל 2026, 10:32</div>
-        </div>
-        <div class="answer-item">
-          <div class="answer-q">מהו גלגל הצבעים ולמה הוא שימושי?</div>
-          <div class="answer-a">גלגל הצבעים הוא כלי ויזואלי שמסדר צבעים לפי הגוון שלהם במעגל, ומאפשר לזהות בקלות צבעים משלימים, אנלוגיים ומשולשים.</div>
-          <div class="answer-time">14 באפריל 2026, 10:45</div>
-        </div>
-      </div>
-
-      <div class="answers-group">
-        <div class="answers-group-title">שיעור 2: פסיכולוגיה של צבע</div>
-        <div class="answer-item">
-          <div class="answer-q">איזה צבע מעורר תחושת אמון?</div>
-          <div class="answer-a">כחול — נחשב לצבע שמקנה תחושת אמון ויציבות.</div>
-          <div class="answer-time">14 באפריל 2026, 14:20</div>
-        </div>
-      </div>
-
-      <div class="answers-group">
-        <div class="answers-group-title">שיעור 3: צבע ומשמעות</div>
-        <div class="empty-state">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          <p>עדיין לא ענית על שאלות בשיעור הזה</p>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-</div>
 
 <script>
 /* ── Theme toggle ── */
@@ -1050,57 +888,18 @@ function toggleSidebar(){
   }
 }
 
-/* ── Notebook open/close ── */
-let nbOpen=false;
-function openNotebook(){
-  if(nbOpen)return;
-  nbOpen=true;
-  document.getElementById('nbPanel').classList.add('open');
-  document.getElementById('nbOverlay').classList.add('open');
-  document.getElementById('rsNotebookBtn').classList.add('rs-active');
-  // Stagger question cards
-  setTimeout(()=>{
-    document.querySelectorAll('#nbCurrent .q-card').forEach((c,i)=>{
-      setTimeout(()=>c.classList.add('visible'),i*100);
-    });
-  },150);
-}
-function closeNotebook(){
-  nbOpen=false;
-  document.getElementById('nbPanel').classList.remove('open');
-  document.getElementById('nbOverlay').classList.remove('open');
-  document.getElementById('rsNotebookBtn').classList.remove('rs-active');
-  // Reset visibility for next open
-  document.querySelectorAll('#nbCurrent .q-card').forEach(c=>c.classList.remove('visible'));
-}
-function toggleNotebook(){
-  if(nbOpen) closeNotebook(); else openNotebook();
-}
-
-/* ── Trigger 75% demo ── */
-function triggerNotebook(){
-  // Animate progress to 75%
-  document.getElementById('videoProgressFill').style.width='75%';
-  // Shake icon
-  const btn=document.getElementById('rsNotebookBtn');
-  btn.classList.add('shake');
-  setTimeout(()=>btn.classList.remove('shake'),600);
-  // Show pulsing dot
-  document.getElementById('nbDot').classList.add('active');
-  // Open notebook after brief delay
-  setTimeout(()=>openNotebook(),400);
+/* ── Scroll to notebook section ── */
+function scrollToNotebook(){
+  const nb=document.getElementById('nbSection');
+  if(nb) nb.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 /* ── Click video progress bar ── */
 function clickProgress(e){
   const bar=e.currentTarget;
   const rect=bar.getBoundingClientRect();
-  // RTL: progress goes right-to-left
   const pct=((rect.right-e.clientX)/rect.width)*100;
   document.getElementById('videoProgressFill').style.width=Math.min(100,Math.max(0,pct))+'%';
-  if(pct>=75){
-    document.getElementById('nbDot').classList.add('active');
-  }
 }
 
 /* ── Simulate play ── */
@@ -1108,22 +907,6 @@ function simulatePlay(){
   const overlay=document.getElementById('videoOverlay');
   overlay.style.opacity='0';
   setTimeout(()=>overlay.style.display='none',300);
-}
-
-/* ── Notebook tab switching ── */
-function switchNbTab(tab){
-  document.querySelectorAll('.nb-tab').forEach(t=>t.classList.remove('active'));
-  tab.classList.add('active');
-  const target=tab.dataset.tab;
-  document.querySelectorAll('.nb-panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById(target==='current'?'nbCurrent':'nbAnswers').classList.add('active');
-  // Re-trigger stagger if switching to current
-  if(target==='current'){
-    document.querySelectorAll('#nbCurrent .q-card').forEach((c,i)=>{
-      c.classList.remove('visible');
-      setTimeout(()=>c.classList.add('visible'),i*100);
-    });
-  }
 }
 
 /* ── Multiple choice ── */
