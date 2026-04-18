@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>חדרי דיון | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:        #253E7A;
+    --navy-dark:   #1a2f5e;
+    --navy-light:  #3a5499;
+    --cyan:        #38C4F2;
+    --cyan-dark:   #1db0d8;
+    --cyan-light:  rgba(56,196,242,0.12);
+    --light-blue:  #E3F4FD;
+    --pink:        #F05680;
+    --pink-light:  rgba(240,86,128,0.12);
+    --yellow:      #EAD654;
+    --yellow-light:rgba(234,214,84,0.18);
+    --green:       #7DC57A;
+    --green-light: rgba(125,197,122,0.14);
+    --white:       #FFFFFF;
+    --bg:          #F0F6FF;
+    --surface:     #FFFFFF;
+    --surface-2:   #f5f8ff;
+    --border:      rgba(37,62,122,0.1);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #1a2f5e;
+    --text-sub:    rgba(37,62,122,0.55);
+    --text-light:  rgba(37,62,122,0.38);
+    --font-he:     'Heebo', sans-serif;
+    --font-en:     'Fredoka', sans-serif;
+    --radius-sm:   10px;
+    --radius-md:   16px;
+    --radius-lg:   22px;
+    --radius-xl:   28px;
+    --shadow-sm:   0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:   0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:   0 16px 48px rgba(37,62,122,0.14);
+  }
+
+  [data-theme="dark"] {
+    --cyan-light:  rgba(56,196,242,0.14);
+    --light-blue:  rgba(56,196,242,0.1);
+    --pink-light:  rgba(240,86,128,0.18);
+    --yellow-light:rgba(234,214,84,0.18);
+    --green-light: rgba(125,197,122,0.18);
+    --bg:          #0c1424;
+    --surface:     #131e35;
+    --surface-2:   #1a2740;
+    --border:      rgba(255,255,255,0.07);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #dde5f5;
+    --text-sub:    rgba(221,229,245,0.55);
+    --text-light:  rgba(221,229,245,0.32);
+    --shadow-sm:   0 2px 12px rgba(0,0,0,0.3);
+    --shadow-md:   0 6px 28px rgba(0,0,0,0.4);
+    --shadow-lg:   0 16px 48px rgba(0,0,0,0.55);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: #0d1117;
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .3s, color .3s;
+  }
+
+  /* ── SIMULATED LIVE ROOM BACKGROUND ─────── */
+  .live-bg {
+    position: fixed;
+    inset: 0;
+    background: #0d1117;
+    z-index: 0;
+  }
+
+  /* Realistic toolbar at top */
+  .live-topbar-sim {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
+    background: rgba(13,17,23,0.95);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
+  .live-topbar-sim .sim-title {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .live-topbar-sim .sim-title .live-dot-top {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #e53e3e;
+    animation: pulse 2s infinite;
+  }
+  .live-topbar-sim .sim-controls {
+    display: flex; gap: 10px;
+  }
+  .live-topbar-sim .sim-ctrl-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.4);
+  }
+  .live-topbar-sim .sim-ctrl-btn svg { width: 16px; height: 16px; }
+
+  /* Realistic video grid behind overlay */
+  .live-grid-sim {
+    position: fixed;
+    top: 52px;
+    left: 0; right: 0; bottom: 60px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 6px;
+    padding: 12px;
+    z-index: 1;
+  }
+  .vid-tile {
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .vid-tile:nth-child(1) { background: linear-gradient(135deg, #1a2744 0%, #253E7A 100%); }
+  .vid-tile:nth-child(2) { background: linear-gradient(135deg, #2a1a3a 0%, #4a2a5a 100%); }
+  .vid-tile:nth-child(3) { background: linear-gradient(135deg, #1a3a2a 0%, #2a5a3a 100%); }
+  .vid-tile:nth-child(4) { background: linear-gradient(135deg, #3a2a1a 0%, #5a4a2a 100%); }
+  .vid-tile:nth-child(5) { background: linear-gradient(135deg, #1a2a3a 0%, #2a4a5a 100%); }
+  .vid-tile:nth-child(6) { background: linear-gradient(135deg, #2a1a2a 0%, #4a2a4a 100%); }
+
+  .vid-tile .initials {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6);
+    font-size: 18px; font-weight: 700;
+    border: 2px solid rgba(255,255,255,0.12);
+  }
+  .vid-tile .vid-name {
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+  .vid-tile .vid-mic-indicator {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.5);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.4);
+  }
+  .vid-tile .vid-mic-indicator svg { width: 12px; height: 12px; }
+  .vid-tile .vid-mic-indicator.muted { color: #e53e3e; }
+
+  /* Simulated bottom bar */
+  .live-bottombar-sim {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: rgba(13,17,23,0.95);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .live-bottombar-sim .sim-ctrl-btn {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.4);
+  }
+  .live-bottombar-sim .sim-ctrl-btn svg { width: 18px; height: 18px; }
+  .live-bottombar-sim .sim-ctrl-btn.end-btn {
+    background: #e53e3e;
+    border-color: #e53e3e;
+    color: white;
+    padding: 0 20px;
+    width: auto;
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 700;
+    gap: 6px;
+  }
+
+  /* ── OVERLAY DIMMER ─────────────────────── */
+  .overlay-dim {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 10;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  /* ── MODAL ──────────────────────────────── */
+  .modal-card {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 1200px;
+    height: 85vh;
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.1);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalIn 0.35s ease forwards;
+  }
+  [data-theme="dark"] .modal-card {
+    background: rgba(19,30,53,0.82);
+    border-color: rgba(255,255,255,0.08);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translate(-50%, -48%); }
+    to   { opacity: 1; transform: translate(-50%, -50%); }
+  }
+
+  /* ── MODAL HEADER ──────────────────────── */
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px;
+    border-bottom: 1px solid rgba(37,62,122,0.08);
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.4);
+  }
+  [data-theme="dark"] .modal-header { background: rgba(19,30,53,0.4); border-color: rgba(255,255,255,0.06); }
+  .modal-header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .modal-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-main);
+  }
+  .participant-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    background: var(--cyan-light);
+    color: var(--cyan-dark);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  [data-theme="dark"] .participant-badge { color: var(--cyan); }
+  .participant-badge svg { width: 14px; height: 14px; }
+
+  .close-btn {
+    width: 44px; height: 44px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-sub);
+  }
+  .close-btn:hover { background: var(--pink-light); color: var(--pink); border-color: var(--pink); }
+  .close-btn svg { width: 20px; height: 20px; }
+
+  /* Live indicator in modal header */
+  .live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 14px;
+    background: rgba(229,62,62,0.1);
+    border: 1px solid rgba(229,62,62,0.2);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #e53e3e;
+  }
+  [data-theme="dark"] .live-indicator { background: rgba(229,62,62,0.15); border-color: rgba(229,62,62,0.25); }
+  .live-indicator .live-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #e53e3e;
+    animation: pulse 2s infinite;
+  }
+  .live-indicator .live-timer-text {
+    font-family: var(--font-en);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #e53e3e;
+  }
+
+  /* ── SETTINGS BAR ──────────────────────── */
+  .settings-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 28px;
+    background: rgba(245,248,255,0.6);
+    border-bottom: 1px solid rgba(37,62,122,0.08);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+  [data-theme="dark"] .settings-bar { background: rgba(26,39,64,0.5); border-color: rgba(255,255,255,0.06); }
+  .setting-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+  }
+  .setting-group label {
+    white-space: nowrap;
+  }
+  .setting-input {
+    width: 60px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .setting-input:focus { outline: none; border-color: var(--cyan); }
+
+  .setting-select {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .setting-select:focus { outline: none; border-color: var(--cyan); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 18px; border-radius: 30px;
+    font-family: var(--font-he); font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; border: none; white-space: nowrap;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--cyan), var(--cyan-dark));
+    color: white;
+    box-shadow: 0 4px 16px rgba(56,196,242,0.35);
+  }
+  [data-theme="dark"] .btn-primary { color: #0b1424; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(56,196,242,0.45); }
+
+  .btn-green {
+    background: linear-gradient(135deg, var(--green), #5cb85c);
+    color: white;
+    box-shadow: 0 4px 16px rgba(125,197,122,0.35);
+    font-size: 15px;
+    padding: 12px 32px;
+  }
+  [data-theme="dark"] .btn-green { color: #0b1424; }
+  .btn-green:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(125,197,122,0.45); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-sub);
+    border: 1.5px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  [data-theme="dark"] .btn-ghost:hover { color: var(--cyan); }
+
+  .btn svg { width: 16px; height: 16px; }
+
+  .settings-spacer { flex: 1; }
+
+  /* ── ROOMS GRID ────────────────────────── */
+  .rooms-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+  }
+  .rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .room-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    transition: all 0.25s;
+    position: relative;
+  }
+  .room-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-md); }
+  .room-card.active-room { border-color: var(--green); }
+  .room-card.active-room .room-status { color: var(--green); }
+
+  .room-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .room-name-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .room-number {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--cyan-light);
+    color: var(--cyan);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    font-family: var(--font-en);
+  }
+  .room-name-input {
+    border: none;
+    background: transparent;
+    font-family: var(--font-he);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main);
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    width: 200px;
+  }
+  .room-name-input:hover { background: var(--surface-2); }
+  .room-name-input:focus { outline: none; background: var(--surface-2); box-shadow: 0 0 0 2px var(--cyan-light); }
+
+  .room-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .room-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--text-light);
+  }
+  .active-room .status-dot { background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .room-join-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--cyan);
+    background: transparent;
+    color: var(--cyan);
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .room-join-btn:hover { background: var(--cyan); color: white; }
+  [data-theme="dark"] .room-join-btn:hover { color: #0b1424; }
+  .room-join-btn svg { width: 14px; height: 14px; }
+
+  .room-participants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 40px;
+    padding: 10px;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    border: 2px dashed transparent;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .room-participants.drag-over {
+    border-color: var(--cyan);
+    background: var(--cyan-light);
+  }
+
+  .participant-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: grab;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .participant-chip:active { cursor: grabbing; transform: scale(0.95); }
+  .participant-chip:hover { border-color: var(--cyan); box-shadow: var(--shadow-sm); }
+
+  .participant-chip .p-avatar {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: white;
+    flex-shrink: 0;
+  }
+
+  .room-count {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  /* ── UNASSIGNED ────────────────────────── */
+  .unassigned-area {
+    background: var(--surface);
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
+  }
+  .unassigned-area.drag-over {
+    border-color: var(--pink);
+    background: var(--pink-light);
+  }
+  .unassigned-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-sub);
+  }
+  .unassigned-header svg { width: 18px; height: 18px; }
+  .unassigned-count {
+    background: var(--pink-light);
+    color: var(--pink);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .unassigned-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 36px;
+  }
+
+  /* ── ACTION BAR ────────────────────────── */
+  .action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 28px;
+    border-top: 1px solid rgba(37,62,122,0.08);
+    background: rgba(255,255,255,0.5);
+    flex-shrink: 0;
+  }
+  [data-theme="dark"] .action-bar { background: rgba(19,30,53,0.5); border-color: rgba(255,255,255,0.06); }
+  .action-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .action-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .timer-display {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+    color: white;
+    border-radius: var(--radius-md);
+    font-family: var(--font-en);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  .timer-display.active { display: flex; }
+  .timer-display svg { width: 20px; height: 20px; color: var(--cyan); }
+  .timer-label {
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    margin-left: 8px;
+  }
+
+  /* ── THEME TOGGLE (floating) ───────────── */
+  .theme-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: all 0.2s;
+    color: var(--text-sub);
+  }
+  .theme-float:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  [data-theme="dark"] .theme-float:hover { color: var(--cyan); }
+  .theme-float svg { width: 18px; height: 18px; }
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="dark"] .icon-sun  { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* ── TOAST ──────────────────────────────── */
+  .toast-container {
+    position: fixed;
+    bottom: 24px; left: 24px;
+    display: flex; flex-direction: column; gap: 10px;
+    z-index: 200;
+    pointer-events: none;
+  }
+  .toast {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    min-width: 260px; max-width: 400px;
+    pointer-events: auto;
+    transform: translateX(-20px); opacity: 0;
+    animation: toastIn .35s ease forwards, toastOut .35s ease forwards 3.5s;
+  }
+  @keyframes toastIn { to { opacity: 1; transform: translateX(0); } }
+  @keyframes toastOut { to { opacity: 0; transform: translateX(-20px); } }
+  .toast-icon {
+    width: 34px; height: 34px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .toast-icon svg { width: 16px; height: 16px; }
+  .toast.success .toast-icon { background: var(--green-light); color: var(--green); }
+  .toast.info    .toast-icon { background: var(--cyan-light); color: var(--cyan); }
+  .toast-body { flex: 1; }
+  .toast-title { font-size: 13.5px; font-weight: 700; color: var(--text-main); }
+  .toast-msg { font-size: 12px; color: var(--text-sub); margin-top: 1px; }
+
+  /* ── SCROLLBAR ──────────────────────────── */
+  .rooms-area::-webkit-scrollbar { width: 6px; }
+  .rooms-area::-webkit-scrollbar-track { background: transparent; }
+  .rooms-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Avatar colors */
+  .av-1 { background: linear-gradient(135deg, #38C4F2, #253E7A); }
+  .av-2 { background: linear-gradient(135deg, #F05680, #c93b5f); }
+  .av-3 { background: linear-gradient(135deg, #7DC57A, #4a9e47); }
+  .av-4 { background: linear-gradient(135deg, #EAD654, #c9b630); }
+  .av-5 { background: linear-gradient(135deg, #253E7A, #38C4F2); }
+  .av-6 { background: linear-gradient(135deg, #c93b5f, #F05680); }
+  .av-7 { background: linear-gradient(135deg, #38C4F2, #7DC57A); }
+</style>
+</head>
+<body>
+
+<!-- SIMULATED LIVE ROOM BG -->
+<div class="live-bg"></div>
+
+<!-- Simulated top toolbar -->
+<div class="live-topbar-sim">
+  <div class="sim-title">
+    <div class="live-dot-top"></div>
+    שיעור חי: צבע ומשמעות
+  </div>
+  <div class="sim-controls">
+    <div class="sim-ctrl-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+    <div class="sim-ctrl-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+    <div class="sim-ctrl-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+  </div>
+</div>
+
+<!-- Realistic 6-tile video grid -->
+<div class="live-grid-sim">
+  <div class="vid-tile">
+    <div class="initials">אל</div>
+    <div class="vid-name">אלון (מרצה)</div>
+    <div class="vid-mic-indicator"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
+  </div>
+  <div class="vid-tile">
+    <div class="initials">דר</div>
+    <div class="vid-name">דנה רוזנברג</div>
+    <div class="vid-mic-indicator muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2c0 .76-.13 1.48-.35 2.17"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
+  </div>
+  <div class="vid-tile">
+    <div class="initials">שר</div>
+    <div class="vid-name">שרון כהן</div>
+    <div class="vid-mic-indicator muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2c0 .76-.13 1.48-.35 2.17"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
+  </div>
+  <div class="vid-tile">
+    <div class="initials">מי</div>
+    <div class="vid-name">מיכל אברהם</div>
+    <div class="vid-mic-indicator"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
+  </div>
+  <div class="vid-tile">
+    <div class="initials">יו</div>
+    <div class="vid-name">יוסי פרץ</div>
+    <div class="vid-mic-indicator muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2c0 .76-.13 1.48-.35 2.17"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
+  </div>
+  <div class="vid-tile">
+    <div class="initials">נע</div>
+    <div class="vid-name">נעמה לוי</div>
+    <div class="vid-mic-indicator"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
+  </div>
+</div>
+
+<!-- Simulated bottom control bar -->
+<div class="live-bottombar-sim">
+  <div class="sim-ctrl-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
+  <div class="sim-ctrl-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+  <div class="sim-ctrl-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+  <div class="sim-ctrl-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+  <div class="sim-ctrl-btn end-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"/></svg></div>
+</div>
+
+<!-- OVERLAY DIM -->
+<div class="overlay-dim"></div>
+
+<!-- MODAL -->
+<div class="modal-card">
+
+  <!-- HEADER -->
+  <div class="modal-header">
+    <div class="modal-header-right">
+      <h1 class="modal-title">חדרי דיון</h1>
+      <div class="participant-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span id="totalCount">28 משתתפים</span>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div class="live-indicator">
+        <div class="live-dot"></div>
+        <span>LIVE</span>
+        <span class="live-timer-text" id="headerTimer">32:15</span>
+      </div>
+      <button class="close-btn" title="סגור">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- SETTINGS BAR -->
+  <div class="settings-bar">
+    <div class="setting-group">
+      <label>מספר חדרים:</label>
+      <input type="number" class="setting-input" id="roomCount" value="4" min="2" max="8">
+    </div>
+    <button class="btn btn-primary" id="autoAssign">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M21 3l-7 7"/><path d="M8 21H3v-5"/><path d="M3 21l7-7"/></svg>
+      חלק אוטומטית
+    </button>
+    <button class="btn btn-ghost" id="manualAssign">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      חלק ידנית
+    </button>
+    <div class="setting-group">
+      <label>זמן לדיון:</label>
+      <select class="setting-select" id="timeSelect">
+        <option value="5">5 דקות</option>
+        <option value="10" selected>10 דקות</option>
+        <option value="15">15 דקות</option>
+        <option value="20">20 דקות</option>
+        <option value="30">30 דקות</option>
+      </select>
+    </div>
+    <div class="settings-spacer"></div>
+    <button class="btn btn-ghost" id="broadcastBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      שלח הודעה לכל החדרים
+    </button>
+  </div>
+
+  <!-- ROOMS AREA -->
+  <div class="rooms-area">
+    <div class="rooms-grid" id="roomsGrid">
+      <!-- Room 1 -->
+      <div class="room-card active-room" data-room="1">
+        <div class="room-header">
+          <div class="room-name-wrap">
+            <div class="room-number">1</div>
+            <input type="text" class="room-name-input" value="חדר 1: צבעים חמים">
+          </div>
+          <div class="room-actions">
+            <div class="room-status"><div class="status-dot"></div>פעיל</div>
+            <button class="room-join-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              הצטרף
+            </button>
+          </div>
+        </div>
+        <div class="room-participants" data-room="1">
+          <div class="participant-chip" draggable="true" data-id="1"><div class="p-avatar av-1">דר</div>דנה רוזנברג</div>
+          <div class="participant-chip" draggable="true" data-id="2"><div class="p-avatar av-2">מי</div>מיכל אברהם</div>
+          <div class="participant-chip" draggable="true" data-id="3"><div class="p-avatar av-3">שר</div>שרון כהן</div>
+          <div class="participant-chip" draggable="true" data-id="4"><div class="p-avatar av-4">נע</div>נעמה לוי</div>
+          <div class="participant-chip" draggable="true" data-id="5"><div class="p-avatar av-5">יו</div>יוסי פרץ</div>
+          <div class="participant-chip" draggable="true" data-id="6"><div class="p-avatar av-6">רו</div>רות גולדשטיין</div>
+          <div class="participant-chip" draggable="true" data-id="7"><div class="p-avatar av-7">תמ</div>תמר שפירא</div>
+        </div>
+        <div class="room-count">7 משתתפים</div>
+      </div>
+
+      <!-- Room 2 -->
+      <div class="room-card" data-room="2">
+        <div class="room-header">
+          <div class="room-name-wrap">
+            <div class="room-number">2</div>
+            <input type="text" class="room-name-input" value="חדר 2: צבעים קרים">
+          </div>
+          <div class="room-actions">
+            <div class="room-status"><div class="status-dot"></div>ממתין</div>
+            <button class="room-join-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              הצטרף
+            </button>
+          </div>
+        </div>
+        <div class="room-participants" data-room="2">
+          <div class="participant-chip" draggable="true" data-id="8"><div class="p-avatar av-2">עד</div>עדי ברוך</div>
+          <div class="participant-chip" draggable="true" data-id="9"><div class="p-avatar av-3">לי</div>ליאור מזרחי</div>
+          <div class="participant-chip" draggable="true" data-id="10"><div class="p-avatar av-1">הד</div>הדר סגל</div>
+          <div class="participant-chip" draggable="true" data-id="11"><div class="p-avatar av-5">גל</div>גלעד נחמני</div>
+          <div class="participant-chip" draggable="true" data-id="12"><div class="p-avatar av-4">אס</div>אסתר ויסמן</div>
+          <div class="participant-chip" draggable="true" data-id="13"><div class="p-avatar av-7">נו</div>נועם דהן</div>
+          <div class="participant-chip" draggable="true" data-id="14"><div class="p-avatar av-6">שי</div>שירה בנימין</div>
+        </div>
+        <div class="room-count">7 משתתפים</div>
+      </div>
+
+      <!-- Room 3 -->
+      <div class="room-card" data-room="3">
+        <div class="room-header">
+          <div class="room-name-wrap">
+            <div class="room-number">3</div>
+            <input type="text" class="room-name-input" value="חדר 3: ניגודיות וטון">
+          </div>
+          <div class="room-actions">
+            <div class="room-status"><div class="status-dot"></div>ממתין</div>
+            <button class="room-join-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              הצטרף
+            </button>
+          </div>
+        </div>
+        <div class="room-participants" data-room="3">
+          <div class="participant-chip" draggable="true" data-id="15"><div class="p-avatar av-1">אי</div>איילת שמש</div>
+          <div class="participant-chip" draggable="true" data-id="16"><div class="p-avatar av-3">רן</div>רן אלוני</div>
+          <div class="participant-chip" draggable="true" data-id="17"><div class="p-avatar av-5">סב</div>סבינה קסטרו</div>
+          <div class="participant-chip" draggable="true" data-id="18"><div class="p-avatar av-2">עמ</div>עמית חן</div>
+          <div class="participant-chip" draggable="true" data-id="19"><div class="p-avatar av-7">מא</div>מאיה פלד</div>
+          <div class="participant-chip" draggable="true" data-id="20"><div class="p-avatar av-4">דב</div>דביר אוחנה</div>
+        </div>
+        <div class="room-count">6 משתתפים</div>
+      </div>
+
+      <!-- Room 4 -->
+      <div class="room-card" data-room="4">
+        <div class="room-header">
+          <div class="room-name-wrap">
+            <div class="room-number">4</div>
+            <input type="text" class="room-name-input" value="חדר 4: פסיכולוגיית צבע">
+          </div>
+          <div class="room-actions">
+            <div class="room-status"><div class="status-dot"></div>ממתין</div>
+            <button class="room-join-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              הצטרף
+            </button>
+          </div>
+        </div>
+        <div class="room-participants" data-room="4">
+          <div class="participant-chip" draggable="true" data-id="21"><div class="p-avatar av-6">טל</div>טליה זהבי</div>
+          <div class="participant-chip" draggable="true" data-id="22"><div class="p-avatar av-1">בן</div>בן צבי הלל</div>
+          <div class="participant-chip" draggable="true" data-id="23"><div class="p-avatar av-4">ני</div>ניצן אורן</div>
+          <div class="participant-chip" draggable="true" data-id="24"><div class="p-avatar av-2">ים</div>ים סופר</div>
+          <div class="participant-chip" draggable="true" data-id="25"><div class="p-avatar av-3">עי</div>עינב ביטון</div>
+        </div>
+        <div class="room-count">5 משתתפים</div>
+      </div>
+    </div>
+
+    <!-- UNASSIGNED -->
+    <div class="unassigned-area" id="unassignedArea">
+      <div class="unassigned-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="13" x2="17" y2="13"/></svg>
+        ללא שיבוץ
+        <span class="unassigned-count" id="unassignedCount">3</span>
+      </div>
+      <div class="unassigned-list" id="unassignedList" data-room="unassigned">
+        <div class="participant-chip" draggable="true" data-id="26"><div class="p-avatar av-5">אר</div>אריאל חזן</div>
+        <div class="participant-chip" draggable="true" data-id="27"><div class="p-avatar av-7">של</div>שלומית ברק</div>
+        <div class="participant-chip" draggable="true" data-id="28"><div class="p-avatar av-3">מת</div>מתן יעקובי</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTION BAR -->
+  <div class="action-bar">
+    <div class="action-bar-right">
+      <button class="btn btn-green" id="openRoomsBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        פתח חדרי דיון
+      </button>
+      <button class="btn btn-ghost" id="returnBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        חזור לחדר ראשי
+      </button>
+    </div>
+    <div class="action-bar-left">
+      <div class="timer-display" id="timerDisplay">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span class="timer-label">נותרו</span>
+        <span id="timerValue">10:00</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- THEME FLOAT -->
+<div class="theme-float" id="themeToggle" title="מצב כהה / בהיר">
+  <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  // ═══════════════════════════════════════
+  // THEME
+  // ═══════════════════════════════════════
+  const html = document.documentElement;
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  // ═══════════════════════════════════════
+  // TOAST
+  // ═══════════════════════════════════════
+  const toastContainer = document.getElementById('toastContainer');
+  const TOAST_ICONS = {
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>',
+    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+  };
+  function toast(type, title, msg = '') {
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.innerHTML = `<div class="toast-icon">${TOAST_ICONS[type] || TOAST_ICONS.info}</div>
+      <div class="toast-body"><div class="toast-title">${title}</div>${msg ? `<div class="toast-msg">${msg}</div>` : ''}</div>`;
+    toastContainer.appendChild(el);
+    setTimeout(() => el.remove(), 4100);
+  }
+
+  // ═══════════════════════════════════════
+  // DRAG & DROP
+  // ═══════════════════════════════════════
+  let draggedChip = null;
+
+  document.addEventListener('dragstart', e => {
+    if (e.target.classList.contains('participant-chip')) {
+      draggedChip = e.target;
+      e.target.style.opacity = '0.4';
+      e.dataTransfer.effectAllowed = 'move';
+    }
+  });
+  document.addEventListener('dragend', e => {
+    if (e.target.classList.contains('participant-chip')) {
+      e.target.style.opacity = '1';
+      draggedChip = null;
+      document.querySelectorAll('.drag-over').forEach(z => z.classList.remove('drag-over'));
+    }
+  });
+
+  function setupDropZone(zone) {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      zone.classList.add('drag-over');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      if (draggedChip && zone !== draggedChip.parentElement) {
+        zone.appendChild(draggedChip);
+        updateCounts();
+        toast('info', 'משתתף הועבר', 'ניתן לגרור משתתפים בין חדרים');
+      }
+    });
+  }
+
+  document.querySelectorAll('.room-participants, .unassigned-list').forEach(setupDropZone);
+
+  function updateCounts() {
+    document.querySelectorAll('.room-card').forEach(card => {
+      const count = card.querySelector('.room-participants').children.length;
+      card.querySelector('.room-count').textContent = count + ' משתתפים';
+    });
+    const unCount = document.getElementById('unassignedList').children.length;
+    document.getElementById('unassignedCount').textContent = unCount;
+  }
+
+  // ═══════════════════════════════════════
+  // AUTO ASSIGN
+  // ═══════════════════════════════════════
+  document.getElementById('autoAssign').addEventListener('click', () => {
+    const allChips = [...document.querySelectorAll('.participant-chip')];
+    const rooms = [...document.querySelectorAll('.room-participants')];
+    // Shuffle
+    for (let i = allChips.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [allChips[i], allChips[j]] = [allChips[j], allChips[i]];
+    }
+    // Clear unassigned
+    document.getElementById('unassignedList').innerHTML = '';
+    // Distribute
+    allChips.forEach((chip, i) => {
+      const targetRoom = rooms[i % rooms.length];
+      chip.style.transition = 'all 0.3s ease';
+      chip.style.opacity = '0';
+      setTimeout(() => {
+        targetRoom.appendChild(chip);
+        chip.style.opacity = '1';
+      }, i * 50);
+    });
+    setTimeout(updateCounts, allChips.length * 50 + 100);
+    toast('success', 'חולק אוטומטית!', `${allChips.length} משתתפים חולקו ל-${rooms.length} חדרים`);
+  });
+
+  // ═══════════════════════════════════════
+  // ROOM COUNT CHANGE
+  // ═══════════════════════════════════════
+  const roomNames = ['צבעים חמים', 'צבעים קרים', 'ניגודיות וטון', 'פסיכולוגיית צבע', 'הרמוניה', 'טמפרטורה', 'רוויה', 'בהירות'];
+
+  document.getElementById('roomCount').addEventListener('change', function() {
+    const n = Math.max(2, Math.min(8, parseInt(this.value) || 4));
+    this.value = n;
+    const grid = document.getElementById('roomsGrid');
+    // Collect all current participants
+    const allChips = [...document.querySelectorAll('.room-participants .participant-chip, .unassigned-list .participant-chip')];
+    grid.innerHTML = '';
+
+    for (let i = 0; i < n; i++) {
+      const card = document.createElement('div');
+      card.className = 'room-card';
+      card.dataset.room = i + 1;
+      card.innerHTML = `
+        <div class="room-header">
+          <div class="room-name-wrap">
+            <div class="room-number">${i + 1}</div>
+            <input type="text" class="room-name-input" value="חדר ${i + 1}: ${roomNames[i] || 'דיון ' + (i+1)}">
+          </div>
+          <div class="room-actions">
+            <div class="room-status"><div class="status-dot"></div>ממתין</div>
+            <button class="room-join-btn" onclick="toast('info','מצטרף לחדר ${i+1}','פותח את חדר הדיון...')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              הצטרף
+            </button>
+          </div>
+        </div>
+        <div class="room-participants" data-room="${i+1}"></div>
+        <div class="room-count">0 משתתפים</div>`;
+      grid.appendChild(card);
+      setupDropZone(card.querySelector('.room-participants'));
+    }
+
+    // Move all chips to unassigned
+    const unList = document.getElementById('unassignedList');
+    allChips.forEach(c => unList.appendChild(c));
+    updateCounts();
+    toast('info', `עודכן ל-${n} חדרים`, 'גרור משתתפים או לחץ "חלק אוטומטית"');
+  });
+
+  // ═══════════════════════════════════════
+  // OPEN ROOMS + TIMER
+  // ═══════════════════════════════════════
+  let timerInterval = null;
+
+  document.getElementById('openRoomsBtn').addEventListener('click', function() {
+    const minutes = parseInt(document.getElementById('timeSelect').value);
+    let totalSec = minutes * 60;
+
+    document.querySelectorAll('.room-card').forEach(c => c.classList.add('active-room'));
+    document.querySelectorAll('.room-status').forEach(s => {
+      s.innerHTML = '<div class="status-dot"></div>פעיל';
+    });
+
+    const timerEl = document.getElementById('timerDisplay');
+    const timerVal = document.getElementById('timerValue');
+    timerEl.classList.add('active');
+    this.textContent = 'חדרים פתוחים';
+    this.disabled = true;
+    this.style.opacity = '0.6';
+
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      totalSec--;
+      if (totalSec <= 0) {
+        clearInterval(timerInterval);
+        timerVal.textContent = '00:00';
+        toast('success', 'הזמן נגמר!', 'חדרי הדיון נסגרים...');
+        return;
+      }
+      const m = Math.floor(totalSec / 60);
+      const s = totalSec % 60;
+      timerVal.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    }, 1000);
+
+    toast('success', 'חדרי הדיון נפתחו!', `${document.querySelectorAll('.room-card').length} חדרים פעילים למשך ${minutes} דקות`);
+  });
+
+  // ═══════════════════════════════════════
+  // JOIN ROOM BUTTONS
+  // ═══════════════════════════════════════
+  document.querySelectorAll('.room-join-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const room = btn.closest('.room-card').dataset.room;
+      toast('info', `מצטרף לחדר ${room}`, 'פותח את חדר הדיון...');
+    });
+  });
+
+  // ═══════════════════════════════════════
+  // CLOSE / RETURN
+  // ═══════════════════════════════════════
+  document.querySelector('.close-btn').addEventListener('click', () => {
+    toast('info', 'סוגר חדרי דיון', 'חוזר לחדר הראשי...');
+  });
+  document.getElementById('returnBtn').addEventListener('click', () => {
+    toast('info', 'חוזר לחדר הראשי', 'סוגר את חלון חדרי הדיון...');
+  });
+
+  // ═══════════════════════════════════════
+  // BROADCAST
+  // ═══════════════════════════════════════
+  document.getElementById('broadcastBtn').addEventListener('click', () => {
+    toast('success', 'ההודעה נשלחה!', 'כל המשתתפים בחדרי הדיון יקבלו את ההודעה');
+  });
+
+  // MANUAL ASSIGN
+  document.getElementById('manualAssign').addEventListener('click', () => {
+    toast('info', 'מצב ידני פעיל', 'גרור משתתפים לחדרים הרצויים');
+  });
+</script>
+</body>
+</html>

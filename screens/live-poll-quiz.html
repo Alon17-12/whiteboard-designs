@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>לייב: סקר ושאלה חיה | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#253E7A;--navy-dark:#1a2f5e;--cyan:#38C4F2;--cyan-dark:#1db0d8;
+  --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.12);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.28);
+  --font:'Heebo',sans-serif;--font-brand:'Fredoka',sans-serif;
+  --r-sm:10px;--r-md:16px;--r-lg:22px;
+  --sh-sm:0 2px 12px rgba(0,0,0,0.3);--sh-md:0 6px 24px rgba(0,0,0,0.4);
+  --glass:rgba(12,20,34,0.7);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text-main);
+  height:100dvh;overflow:hidden;user-select:none;}
+
+/* ══ DIMMED LIVE ROOM BACKGROUND ══ */
+.bg-simulation{
+  position:fixed;inset:0;z-index:0;
+  background:linear-gradient(135deg,#0c1422 0%,#131e35 40%,#192740 70%,#0c1422 100%);
+}
+.bg-simulation::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+/* Fake video placeholders in BG */
+.bg-video-ghost{
+  position:absolute;border-radius:var(--r-md);
+  background:linear-gradient(135deg,#1a2f5e,#253E7A);opacity:0.25;
+}
+.bg-v1{width:55%;height:60%;top:12%;right:22%;}
+.bg-v2{width:12%;height:18%;top:8%;right:5%;}
+
+/* ══ SPLIT LAYOUT ══ */
+.split-wrap{
+  position:relative;z-index:10;height:100dvh;
+  display:flex;overflow:hidden;
+}
+.half{
+  flex:1;display:flex;align-items:center;justify-content:center;padding:20px;
+  position:relative;
+}
+.half:first-child{border-left:1px solid rgba(255,255,255,0.06);}
+
+/* ══ SECTION LABEL ══ */
+.section-label{
+  position:absolute;top:16px;right:50%;transform:translateX(50%);
+  font-family:var(--font-brand);font-size:12px;font-weight:600;
+  color:var(--text-xs);letter-spacing:1px;text-transform:uppercase;
+}
+
+/* ══ CARD SHARED STYLES ══ */
+.overlay-card{
+  width:100%;max-width:400px;
+  background:var(--surface);border:1px solid var(--border-mid);
+  border-radius:var(--r-md);padding:28px 24px;
+  box-shadow:0 16px 48px rgba(0,0,0,0.5);
+}
+
+/* ── POLL CARD ── */
+.poll-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.poll-icon{
+  width:40px;height:40px;border-radius:var(--r-sm);
+  background:rgba(56,196,242,0.12);
+  display:flex;align-items:center;justify-content:center;
+}
+.poll-icon svg{width:20px;height:20px;color:var(--cyan);}
+.poll-title{font-family:var(--font-brand);font-size:18px;font-weight:700;color:var(--cyan);}
+.poll-question{font-size:15px;font-weight:600;margin-bottom:16px;line-height:1.5;}
+
+.poll-option{margin-bottom:10px;}
+.poll-option-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.poll-option-label{font-size:13px;font-weight:600;}
+.poll-option-stats{font-size:12px;color:var(--text-sub);font-family:var(--font-brand);}
+.poll-bar-track{
+  height:32px;border-radius:8px;background:var(--surface-2);
+  overflow:hidden;position:relative;
+}
+.poll-bar-fill{
+  height:100%;border-radius:8px;display:flex;align-items:center;padding-right:12px;
+  font-size:13px;font-weight:700;color:#fff;
+  width:0;transition:width 1.2s cubic-bezier(0.22,1,0.36,1);
+}
+.poll-bar-fill.cyan{background:linear-gradient(90deg,var(--cyan),var(--cyan-dark));}
+.poll-bar-fill.pink{background:linear-gradient(90deg,var(--pink),#d84a6e);}
+.poll-bar-fill.green{background:linear-gradient(90deg,var(--green),#5cb85c);}
+.poll-bar-fill.yellow{background:linear-gradient(90deg,var(--yellow),#d4c02e);}
+
+.poll-footer{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:16px;padding-top:12px;border-top:1px solid var(--border-mid);
+  font-size:12px;color:var(--text-sub);
+}
+.poll-footer .poll-timer{
+  font-family:var(--font-brand);color:var(--pink);font-weight:600;font-size:14px;
+}
+
+/* ── QUIZ CARD ── */
+.quiz-header{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.quiz-icon{
+  width:40px;height:40px;border-radius:var(--r-sm);
+  background:rgba(240,86,128,0.12);
+  display:flex;align-items:center;justify-content:center;
+}
+.quiz-icon svg{width:20px;height:20px;color:var(--pink);}
+.quiz-title{font-family:var(--font-brand);font-size:18px;font-weight:700;color:var(--pink);}
+.quiz-timer-badge{
+  margin-right:auto;font-family:var(--font-brand);font-size:14px;font-weight:600;
+  color:var(--pink);background:rgba(240,86,128,0.12);
+  padding:4px 12px;border-radius:20px;
+}
+
+.quiz-question{font-size:15px;font-weight:600;margin:14px 0 18px;line-height:1.5;}
+
+.quiz-option{
+  width:100%;padding:14px 16px;border-radius:var(--r-sm);
+  border:2px solid var(--border-mid);background:var(--surface-2);
+  font-size:14px;font-weight:600;color:var(--text-main);
+  cursor:pointer;transition:all 0.2s;margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--font);text-align:right;
+}
+.quiz-option:hover{border-color:rgba(56,196,242,0.4);background:rgba(56,196,242,0.06);}
+.quiz-option.selected{border-color:var(--cyan);background:rgba(56,196,242,0.1);color:var(--cyan);}
+.quiz-option.correct{border-color:var(--green);background:rgba(125,197,122,0.12);color:var(--green);}
+.quiz-option.wrong{border-color:var(--pink);background:rgba(240,86,128,0.08);color:var(--pink);opacity:0.6;}
+.quiz-option .letter{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-brand);font-size:13px;font-weight:700;
+  background:rgba(255,255,255,0.06);
+}
+.quiz-option.selected .letter{background:var(--cyan);color:#fff;}
+.quiz-option.correct .letter{background:var(--green);color:#fff;}
+.quiz-option .check-icon{margin-right:auto;display:none;}
+.quiz-option.correct .check-icon{display:block;color:var(--green);}
+
+/* Leaderboard mini */
+.leaderboard-mini{
+  margin-top:16px;padding-top:14px;border-top:1px solid var(--border-mid);
+}
+.leaderboard-mini h4{font-family:var(--font-brand);font-size:13px;color:var(--text-sub);margin-bottom:10px;}
+.lb-row{
+  display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;font-weight:600;
+}
+.lb-medal{font-size:18px;width:24px;text-align:center;}
+.lb-name{flex:1;}
+.lb-score{font-family:var(--font-brand);color:var(--cyan);font-size:12px;}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:800px){
+  .split-wrap{flex-direction:column;}
+  .half:first-child{border-left:none;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .overlay-card{max-width:360px;}
+}
+</style>
+</head>
+<body>
+
+<!-- Dimmed background simulation -->
+<div class="bg-simulation">
+  <div class="bg-video-ghost bg-v1"></div>
+  <div class="bg-video-ghost bg-v2"></div>
+</div>
+
+<div class="split-wrap">
+
+  <!-- ══ LEFT HALF: POLL ══ -->
+  <div class="half">
+    <span class="section-label">סקר מהיר</span>
+    <div class="overlay-card" id="pollCard">
+      <div class="poll-header">
+        <div class="poll-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h2v5H7z M11 8h2v9h-2z M15 10h2v7h-2z"/></svg>
+        </div>
+        <span class="poll-title">סקר מהיר</span>
+      </div>
+      <div class="poll-question">איזה סגנון עיצוב אתם הכי אוהבים?</div>
+
+      <div class="poll-option">
+        <div class="poll-option-header">
+          <span class="poll-option-label">מינימליסטי</span>
+          <span class="poll-option-stats">45% (12 הצבעות)</span>
+        </div>
+        <div class="poll-bar-track">
+          <div class="poll-bar-fill cyan" data-width="45%">45%</div>
+        </div>
+      </div>
+
+      <div class="poll-option">
+        <div class="poll-option-header">
+          <span class="poll-option-label">מודרני</span>
+          <span class="poll-option-stats">28% (7 הצבעות)</span>
+        </div>
+        <div class="poll-bar-track">
+          <div class="poll-bar-fill pink" data-width="28%">28%</div>
+        </div>
+      </div>
+
+      <div class="poll-option">
+        <div class="poll-option-header">
+          <span class="poll-option-label">קלאסי</span>
+          <span class="poll-option-stats">18% (5 הצבעות)</span>
+        </div>
+        <div class="poll-bar-track">
+          <div class="poll-bar-fill green" data-width="18%">18%</div>
+        </div>
+      </div>
+
+      <div class="poll-option">
+        <div class="poll-option-header">
+          <span class="poll-option-label">יצירתי</span>
+          <span class="poll-option-stats">9% (2 הצבעות)</span>
+        </div>
+        <div class="poll-bar-track">
+          <div class="poll-bar-fill yellow" data-width="9%">9%</div>
+        </div>
+      </div>
+
+      <div class="poll-footer">
+        <span>26 הצביעו</span>
+        <span class="poll-timer" id="pollTimer">00:18</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT HALF: QUIZ ══ -->
+  <div class="half">
+    <span class="section-label">שאלה חיה</span>
+    <div class="overlay-card" id="quizCard">
+      <div class="quiz-header">
+        <div class="quiz-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <span class="quiz-title">שאלה חיה</span>
+        <span class="quiz-timer-badge" id="quizTimer">00:12</span>
+      </div>
+      <div class="quiz-question">מהו צבע משלים לכחול?</div>
+
+      <button class="quiz-option selected" data-idx="0" id="optA">
+        <span class="letter">A</span>
+        כתום
+        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+      <button class="quiz-option" data-idx="1" id="optB">
+        <span class="letter">B</span>
+        ירוק
+        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+      <button class="quiz-option" data-idx="2" id="optC">
+        <span class="letter">C</span>
+        אדום
+        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+      <button class="quiz-option" data-idx="3" id="optD">
+        <span class="letter">D</span>
+        סגול
+        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+
+      <div class="leaderboard-mini" id="leaderboard" style="display:none">
+        <h4>לוח מובילים</h4>
+        <div class="lb-row"><span class="lb-medal">&#129351;</span><span class="lb-name">יעל כהן</span><span class="lb-score">850 נק'</span></div>
+        <div class="lb-row"><span class="lb-medal">&#129352;</span><span class="lb-name">רון ברק</span><span class="lb-score">720 נק'</span></div>
+        <div class="lb-row"><span class="lb-medal">&#129353;</span><span class="lb-name">אלון גבאי</span><span class="lb-score">680 נק'</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Animate poll bars on load ──
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.querySelectorAll('.poll-bar-fill').forEach(bar=>{
+      bar.style.width = bar.dataset.width;
+    });
+  },300);
+});
+
+// ── Poll timer ──
+let pollSec = 18;
+const pollTimerEl = document.getElementById('pollTimer');
+const pollInterval = setInterval(()=>{
+  pollSec--;
+  if(pollSec<0){clearInterval(pollInterval);return;}
+  pollTimerEl.textContent = '00:'+String(pollSec).padStart(2,'0');
+},1000);
+
+// ── Quiz timer ──
+let quizSec = 12;
+const quizTimerEl = document.getElementById('quizTimer');
+const quizInterval = setInterval(()=>{
+  quizSec--;
+  if(quizSec<0){clearInterval(quizInterval);return;}
+  quizTimerEl.textContent = '00:'+String(quizSec).padStart(2,'0');
+},1000);
+
+// ── Quiz interaction ──
+let answered = false;
+document.querySelectorAll('.quiz-option').forEach(opt=>{
+  opt.addEventListener('click',()=>{
+    if(answered) return;
+    // Clear selected
+    document.querySelectorAll('.quiz-option').forEach(o=>o.classList.remove('selected'));
+    opt.classList.add('selected');
+  });
+});
+
+// Show correct answer after 4s
+setTimeout(()=>{
+  answered = true;
+  const opts = document.querySelectorAll('.quiz-option');
+  opts.forEach(o=>{
+    o.classList.remove('selected');
+    if(o.dataset.idx !== '0') o.classList.add('wrong');
+  });
+  opts[0].classList.add('correct');
+  document.getElementById('leaderboard').style.display='block';
+},4000);
+</script>
+</body>
+</html>

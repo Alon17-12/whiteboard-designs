@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>שיעור חי: חדר תלמיד | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#253E7A;--navy-dark:#1a2f5e;--cyan:#38C4F2;--cyan-dark:#1db0d8;
+  --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.12);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.28);
+  --font:'Heebo',sans-serif;--font-brand:'Fredoka',sans-serif;
+  --r-sm:10px;--r-md:16px;--r-lg:22px;
+  --sh-sm:0 2px 12px rgba(0,0,0,0.3);--sh-md:0 6px 24px rgba(0,0,0,0.4);
+  --glass:rgba(12,20,34,0.7);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text-main);
+  height:100dvh;display:flex;flex-direction:column;overflow:hidden;user-select:none;}
+
+/* ══ TOP BAR ══ */
+.topbar{
+  height:48px;background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border-mid);
+  display:flex;align-items:center;justify-content:space-between;padding:0 20px;
+  flex-shrink:0;z-index:50;
+}
+.tb-right{display:flex;align-items:center;gap:14px;}
+.session-name{font-family:var(--font-brand);font-size:15px;font-weight:600;color:var(--cyan);}
+.tb-left{display:flex;align-items:center;gap:18px;font-size:13px;color:var(--text-sub);font-weight:500;}
+.tb-left .timer{font-family:var(--font-brand);color:var(--pink);font-weight:600;font-size:14px;}
+.tb-left .participants{display:flex;align-items:center;gap:5px;}
+.tb-left .participants svg{width:14px;height:14px;opacity:0.6;}
+
+/* ══ MAIN LAYOUT ══ */
+.main-wrap{flex:1;display:flex;overflow:hidden;position:relative;}
+
+/* ── Video Stage ── */
+.video-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;position:relative;}
+.presenter-video{
+  width:100%;max-width:960px;aspect-ratio:16/9;border-radius:var(--r-md);overflow:hidden;
+  background:linear-gradient(135deg,#1a2f5e 0%,#253E7A 40%,#192740 100%);
+  position:relative;box-shadow:0 8px 40px rgba(0,0,0,0.5);
+}
+.presenter-gradient{position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 40%,rgba(56,196,242,0.08) 0%,transparent 70%);}
+.presenter-avatar{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--cyan),var(--navy));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-brand);font-size:28px;font-weight:700;color:#fff;
+  box-shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+.presenter-label{
+  position:absolute;bottom:12px;right:16px;
+  background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;
+  display:flex;align-items:center;gap:8px;
+}
+.presenter-label .live-dot{width:8px;height:8px;border-radius:50%;background:var(--pink);animation:pulse-dot 1.5s infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.4}}
+.pip-teacher{
+  position:absolute;top:12px;left:12px;width:160px;aspect-ratio:16/9;
+  border-radius:var(--r-sm);overflow:hidden;
+  background:linear-gradient(135deg,#253E7A,#1a2f5e);
+  border:2px solid rgba(255,255,255,0.15);box-shadow:0 4px 16px rgba(0,0,0,0.4);
+  display:none;align-items:center;justify-content:center;
+}
+.pip-teacher .pip-avatar{width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--cyan),var(--navy));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-brand);font-size:14px;font-weight:700;color:#fff;}
+.pip-label{position:absolute;bottom:4px;right:6px;font-size:10px;font-weight:600;
+  background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px;}
+.screenshare-active .presenter-avatar{display:none;}
+.screenshare-active .presenter-gradient{
+  background:linear-gradient(135deg,#131e35,#1e2e48);
+}
+.screenshare-active .screen-content{display:flex;}
+.screenshare-active .pip-teacher{display:flex;}
+.screen-content{
+  display:none;position:absolute;inset:0;
+  align-items:center;justify-content:center;padding:24px;
+}
+.screen-placeholder{
+  width:100%;height:100%;border-radius:var(--r-sm);
+  background:var(--surface);border:1px solid var(--border-mid);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  color:var(--text-sub);font-size:14px;
+}
+.screen-placeholder svg{width:48px;height:48px;opacity:0.3;}
+
+/* ── CHAT SIDEBAR ── */
+.chat-sidebar{
+  width:280px;flex-shrink:0;background:var(--surface);
+  border-right:1px solid var(--border-mid);
+  display:flex;flex-direction:column;
+  transition:width 0.25s ease,opacity 0.25s ease;overflow:hidden;z-index:20;
+}
+.chat-sidebar.collapsed{width:0;opacity:0;pointer-events:none;}
+
+.sidebar-tabs{
+  display:flex;height:44px;border-bottom:1px solid var(--border-mid);flex-shrink:0;
+}
+.sidebar-tab{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+  font-size:13px;font-weight:600;color:var(--text-sub);cursor:pointer;
+  border-bottom:2px solid transparent;transition:all 0.2s;
+  background:none;border-top:none;border-right:none;border-left:none;
+}
+.sidebar-tab:hover{color:var(--text-main);}
+.sidebar-tab.active{color:var(--cyan);border-bottom-color:var(--cyan);}
+.sidebar-tab svg{width:14px;height:14px;}
+
+/* Chat */
+.tab-content{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.tab-content.active{display:flex;}
+
+.chat-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;}
+.chat-messages::-webkit-scrollbar{width:4px;}
+.chat-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px;}
+.chat-msg{display:flex;flex-direction:column;gap:2px;}
+.chat-msg-header{display:flex;align-items:center;gap:6px;font-size:11px;}
+.chat-msg-name{font-weight:700;color:var(--text-main);}
+.chat-msg-time{color:var(--text-xs);font-size:10px;}
+.chat-msg-badge{
+  font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;
+  background:rgba(56,196,242,0.15);color:var(--cyan);
+}
+.chat-msg-body{font-size:13px;color:var(--text-sub);line-height:1.5;padding-right:2px;}
+
+.chat-input-bar{
+  display:flex;align-items:center;gap:8px;padding:10px 12px;
+  border-top:1px solid var(--border-mid);flex-shrink:0;
+}
+.chat-input{
+  flex:1;height:36px;border-radius:18px;border:1px solid var(--border-mid);
+  background:var(--surface-2);color:var(--text-main);font-family:var(--font);font-size:13px;
+  padding:0 14px;outline:none;transition:border-color 0.2s;
+}
+.chat-input::placeholder{color:var(--text-xs);}
+.chat-input:focus{border-color:var(--cyan);}
+.chat-send{
+  width:36px;height:36px;border-radius:50%;background:var(--cyan);border:none;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:all 0.2s;flex-shrink:0;
+}
+.chat-send:hover{background:var(--cyan-dark);transform:scale(1.05);}
+.chat-send svg{width:16px;height:16px;color:#fff;transform:rotate(180deg);}
+.emoji-btn{
+  width:36px;height:36px;border-radius:50%;background:transparent;border:1px solid var(--border-mid);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  color:var(--text-sub);transition:all 0.2s;flex-shrink:0;
+}
+.emoji-btn:hover{background:var(--surface-2);color:var(--yellow);}
+.emoji-btn svg{width:16px;height:16px;}
+
+/* Participants */
+.participants-list{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:4px;}
+.participant{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r-sm);
+  transition:background 0.15s;
+}
+.participant:hover{background:var(--surface-2);}
+.participant-avatar{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;
+}
+.participant-info{flex:1;min-width:0;}
+.participant-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.participant-role{font-size:10px;color:var(--text-xs);}
+.participant-icons{display:flex;gap:6px;}
+.participant-icons svg{width:14px;height:14px;color:var(--text-xs);}
+.participant-icons svg.active{color:var(--green);}
+.participant-icons svg.muted{color:var(--pink);opacity:0.6;}
+.teacher-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;
+  background:rgba(234,214,84,0.15);color:var(--yellow);margin-right:4px;
+}
+.teacher-badge svg{width:10px;height:10px;}
+
+/* ══ BOTTOM CONTROL BAR ══ */
+.control-bar{
+  height:56px;background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:1px solid var(--border-mid);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  flex-shrink:0;z-index:50;padding:0 16px;
+}
+.ctrl-btn{
+  height:44px;min-width:44px;border-radius:var(--r-sm);border:1px solid var(--border-mid);
+  background:var(--surface-2);color:var(--text-main);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  cursor:pointer;transition:all 0.2s;font-family:var(--font);font-size:13px;font-weight:600;
+  padding:0 14px;
+}
+.ctrl-btn svg{width:18px;height:18px;flex-shrink:0;}
+.ctrl-btn:hover{background:var(--surface-3);border-color:rgba(255,255,255,0.2);}
+.ctrl-btn.active{background:rgba(56,196,242,0.15);border-color:var(--cyan);color:var(--cyan);}
+.ctrl-btn.muted{background:rgba(240,86,128,0.12);border-color:rgba(240,86,128,0.3);color:var(--pink);}
+.ctrl-btn.hand-active{background:rgba(234,214,84,0.15);border-color:var(--yellow);color:var(--yellow);}
+.ctrl-btn.leave{
+  background:rgba(240,86,128,0.12);border-color:rgba(240,86,128,0.3);color:var(--pink);
+  padding:0 18px;
+}
+.ctrl-btn.leave:hover{background:rgba(240,86,128,0.25);}
+
+/* ══ REACTIONS OVERLAY ══ */
+.reactions-panel{
+  position:absolute;bottom:70px;left:50%;transform:translateX(-50%);
+  background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--border-mid);border-radius:var(--r-md);
+  padding:8px 12px;display:none;gap:6px;z-index:60;
+}
+.reactions-panel.show{display:flex;}
+.reaction-btn{
+  width:44px;height:44px;border-radius:var(--r-sm);background:transparent;border:none;
+  font-size:22px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;
+}
+.reaction-btn:hover{background:rgba(255,255,255,0.1);transform:scale(1.15);}
+
+.floating-reaction{
+  position:fixed;font-size:28px;pointer-events:none;z-index:100;
+  animation:float-up 2s ease-out forwards;
+}
+@keyframes float-up{
+  0%{opacity:1;transform:translateY(0) scale(1);}
+  100%{opacity:0;transform:translateY(-200px) scale(0.5);}
+}
+
+/* ══ LEAVE MODAL ══ */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;z-index:200;
+}
+.modal-overlay.show{display:flex;}
+.modal-card{
+  background:var(--surface);border:1px solid var(--border-mid);border-radius:var(--r-md);
+  padding:28px;max-width:340px;width:90%;text-align:center;
+  box-shadow:0 16px 48px rgba(0,0,0,0.5);
+}
+.modal-card h3{font-family:var(--font-brand);font-size:18px;margin-bottom:8px;}
+.modal-card p{font-size:14px;color:var(--text-sub);margin-bottom:20px;}
+.modal-actions{display:flex;gap:10px;justify-content:center;}
+.modal-btn{
+  padding:10px 24px;border-radius:50px;font-family:var(--font-brand);font-size:14px;font-weight:600;
+  cursor:pointer;border:none;transition:all 0.2s;
+}
+.modal-btn.cancel{background:var(--surface-2);color:var(--text-main);border:1px solid var(--border-mid);}
+.modal-btn.cancel:hover{background:var(--surface-3);}
+.modal-btn.confirm{background:var(--pink);color:#fff;}
+.modal-btn.confirm:hover{background:#d84a6e;transform:scale(1.03);}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:768px){
+  .chat-sidebar{width:100%;position:absolute;top:0;bottom:0;left:0;z-index:40;}
+  .chat-sidebar.collapsed{width:0;}
+  .pip-teacher{width:100px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOP BAR ══ -->
+<div class="topbar">
+  <div class="tb-right">
+    <span class="session-name">שיעור חי: צבע ומשמעות</span>
+  </div>
+  <div class="tb-left">
+    <span class="timer" id="timer">32:15</span>
+    <span class="participants">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      28 משתתפים
+    </span>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main-wrap">
+
+  <!-- Video Stage -->
+  <div class="video-stage">
+    <div class="presenter-video" id="presenterVideo">
+      <div class="presenter-gradient"></div>
+      <div class="presenter-avatar">א.ג</div>
+      <div class="presenter-label">
+        <span class="live-dot"></span>
+        אלון גבאי (מרצה)
+      </div>
+
+      <!-- Screen share content (hidden by default) -->
+      <div class="screen-content">
+        <div class="screen-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <span>שיתוף מסך פעיל</span>
+        </div>
+      </div>
+      <div class="pip-teacher">
+        <div class="pip-avatar">א.ג</div>
+        <span class="pip-label">מרצה</span>
+      </div>
+    </div>
+
+    <!-- Reactions panel -->
+    <div class="reactions-panel" id="reactionsPanel">
+      <button class="reaction-btn" onclick="fireReaction('👍')">👍</button>
+      <button class="reaction-btn" onclick="fireReaction('❤️')">❤️</button>
+      <button class="reaction-btn" onclick="fireReaction('🔥')">🔥</button>
+      <button class="reaction-btn" onclick="fireReaction('😂')">😂</button>
+      <button class="reaction-btn" onclick="fireReaction('👏')">👏</button>
+      <button class="reaction-btn" onclick="fireReaction('🎉')">🎉</button>
+    </div>
+  </div>
+
+  <!-- Chat Sidebar -->
+  <div class="chat-sidebar" id="chatSidebar">
+    <div class="sidebar-tabs">
+      <button class="sidebar-tab active" data-tab="chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        צ'אט
+      </button>
+      <button class="sidebar-tab" data-tab="participants">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        משתתפים
+      </button>
+    </div>
+
+    <!-- Chat Tab -->
+    <div class="tab-content active" id="tabChat">
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-msg">
+          <div class="chat-msg-header">
+            <span class="chat-msg-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:8px;height:8px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> מרצה</span>
+            <span class="chat-msg-name">אלון גבאי</span>
+            <span class="chat-msg-time">32:10</span>
+          </div>
+          <div class="chat-msg-body">שלום לכולם! היום נדבר על צבע ומשמעות בעיצוב</div>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-msg-header">
+            <span class="chat-msg-name">יעל כהן</span>
+            <span class="chat-msg-time">31:45</span>
+          </div>
+          <div class="chat-msg-body">מחכה לשיעור הזה!</div>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-msg-header">
+            <span class="chat-msg-name">רון ברק</span>
+            <span class="chat-msg-time">31:20</span>
+          </div>
+          <div class="chat-msg-body">האם נדבר גם על פסיכולוגיה של צבעים?</div>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-msg-header">
+            <span class="chat-msg-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:8px;height:8px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> מרצה</span>
+            <span class="chat-msg-name">אלון גבאי</span>
+            <span class="chat-msg-time">30:55</span>
+          </div>
+          <div class="chat-msg-body">בהחלט! זה חלק מרכזי בשיעור היום</div>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-msg-header">
+            <span class="chat-msg-name">מיכל לוי</span>
+            <span class="chat-msg-time">30:30</span>
+          </div>
+          <div class="chat-msg-body">אני עובדת על פרויקט עיצוב לוגו, זה יעזור מאוד</div>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-msg-header">
+            <span class="chat-msg-name">דניאל שמש</span>
+            <span class="chat-msg-time">29:50</span>
+          </div>
+          <div class="chat-msg-body">מעולה, תודה רבה!</div>
+        </div>
+      </div>
+      <div class="chat-input-bar">
+        <button class="emoji-btn" title="אימוג'י">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </button>
+        <input class="chat-input" placeholder="כתוב הודעה..." id="chatInput">
+        <button class="chat-send" id="chatSend">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Participants Tab -->
+    <div class="tab-content" id="tabParticipants">
+      <div class="participants-list" id="participantsList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOTTOM CONTROL BAR ══ -->
+<div class="control-bar">
+  <button class="ctrl-btn muted" id="btnMic" title="מיקרופון">
+    <svg class="mic-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2c0 .76-.12 1.5-.34 2.18"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    <svg class="mic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+  </button>
+
+  <button class="ctrl-btn muted" id="btnCamera" title="מצלמה">
+    <svg class="cam-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M21 21H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3l2-3h6l2 3h3a2 2 0 0 1 2 2v9.34"/><path d="M14.12 14.12A3 3 0 1 1 9.88 9.88"/></svg>
+    <svg class="cam-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+  </button>
+
+  <button class="ctrl-btn" id="btnHand" title="הרמת יד">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8V6a2 2 0 0 0-4 0v1M14 7V4a2 2 0 0 0-4 0v4m0 0V3a2 2 0 0 0-4 0v7"/><path d="M6 12V8a2 2 0 0 0-4 0v7a8 8 0 0 0 16 0v-5a2 2 0 0 0-4 0v2"/></svg>
+  </button>
+
+  <button class="ctrl-btn active" id="btnChat" title="צ'אט">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </button>
+
+  <button class="ctrl-btn" id="btnReactions" title="תגובות">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+  </button>
+
+  <button class="ctrl-btn leave" id="btnLeave">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    יציאה
+  </button>
+</div>
+
+<!-- Leave Modal -->
+<div class="modal-overlay" id="leaveModal">
+  <div class="modal-card">
+    <h3>לצאת מהשיעור?</h3>
+    <p>האם את/ה בטוח/ה שברצונך לצאת מהשיעור החי?</p>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="document.getElementById('leaveModal').classList.remove('show')">ביטול</button>
+      <button class="modal-btn confirm" onclick="alert('יצאת מהשיעור')">יציאה</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Timer
+let totalSec = 32*60+15;
+const timerEl = document.getElementById('timer');
+setInterval(()=>{
+  totalSec++;
+  const m = String(Math.floor(totalSec/60)).padStart(2,'0');
+  const s = String(totalSec%60).padStart(2,'0');
+  timerEl.textContent = m+':'+s;
+},1000);
+
+// Sidebar tabs
+document.querySelectorAll('.sidebar-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.sidebar-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab==='chat'?'tabChat':'tabParticipants').classList.add('active');
+  });
+});
+
+// Participants list
+const pNames = [
+  {name:'אלון גבאי',role:'מרצה',teacher:true,mic:true,cam:true},
+  {name:'יעל כהן',mic:true,cam:false},
+  {name:'רון ברק',mic:false,cam:true},
+  {name:'מיכל לוי',mic:false,cam:false},
+  {name:'דניאל שמש',mic:true,cam:false},
+  {name:'נועה אברהם',mic:false,cam:false},
+  {name:'עידו פרץ',mic:false,cam:true},
+  {name:'שירה גולן',mic:false,cam:false},
+  {name:'אורי דוד',mic:true,cam:false},
+  {name:'תמר רוזן',mic:false,cam:false},
+  {name:'יונתן מזרחי',mic:false,cam:false},
+];
+const colors = ['#38C4F2','#F05680','#7DC57A','#EAD654','#253E7A','#9B59B6','#E67E22','#1ABC9C','#E74C3C','#2ECC71','#3498DB'];
+const pList = document.getElementById('participantsList');
+pNames.forEach((p,i)=>{
+  const initials = p.name.split(' ').map(w=>w[0]).join('');
+  pList.innerHTML += `
+    <div class="participant">
+      <div class="participant-avatar" style="background:${colors[i%colors.length]}">${initials}</div>
+      <div class="participant-info">
+        <div class="participant-name">
+          ${p.teacher?'<span class="teacher-badge"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>מרצה</span>':''}
+          ${p.name}
+        </div>
+        ${p.role?`<div class="participant-role">${p.role}</div>`:''}
+      </div>
+      <div class="participant-icons">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="${p.mic?'active':'muted'}"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="${p.cam?'active':'muted'}"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      </div>
+    </div>`;
+});
+
+// Mic toggle
+const btnMic = document.getElementById('btnMic');
+btnMic.addEventListener('click',()=>{
+  const muted = btnMic.classList.toggle('muted');
+  btnMic.querySelector('.mic-off').style.display = muted?'block':'none';
+  btnMic.querySelector('.mic-on').style.display = muted?'none':'block';
+});
+
+// Camera toggle
+const btnCam = document.getElementById('btnCamera');
+btnCam.addEventListener('click',()=>{
+  const muted = btnCam.classList.toggle('muted');
+  btnCam.querySelector('.cam-off').style.display = muted?'block':'none';
+  btnCam.querySelector('.cam-on').style.display = muted?'none':'block';
+});
+
+// Hand raise
+const btnHand = document.getElementById('btnHand');
+btnHand.addEventListener('click',()=>{btnHand.classList.toggle('hand-active');});
+
+// Chat toggle
+const btnChat = document.getElementById('btnChat');
+const chatSidebar = document.getElementById('chatSidebar');
+btnChat.addEventListener('click',()=>{
+  btnChat.classList.toggle('active');
+  chatSidebar.classList.toggle('collapsed');
+});
+
+// Reactions panel
+const btnReact = document.getElementById('btnReactions');
+const reactPanel = document.getElementById('reactionsPanel');
+btnReact.addEventListener('click',()=>{reactPanel.classList.toggle('show');});
+
+function fireReaction(emoji){
+  const el = document.createElement('div');
+  el.className='floating-reaction';
+  el.textContent=emoji;
+  el.style.left = (40+Math.random()*20)+'%';
+  el.style.bottom = '80px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2000);
+}
+
+// Send chat
+const chatInput = document.getElementById('chatInput');
+const chatSend = document.getElementById('chatSend');
+const chatMsgs = document.getElementById('chatMessages');
+function sendMsg(){
+  const txt = chatInput.value.trim();
+  if(!txt) return;
+  const now = timerEl.textContent;
+  chatMsgs.innerHTML += `
+    <div class="chat-msg">
+      <div class="chat-msg-header">
+        <span class="chat-msg-name">את/ה</span>
+        <span class="chat-msg-time">${now}</span>
+      </div>
+      <div class="chat-msg-body">${txt}</div>
+    </div>`;
+  chatInput.value='';
+  chatMsgs.scrollTop=chatMsgs.scrollHeight;
+}
+chatSend.addEventListener('click',sendMsg);
+chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg();});
+
+// Leave
+document.getElementById('btnLeave').addEventListener('click',()=>{
+  document.getElementById('leaveModal').classList.add('show');
+});
+document.getElementById('leaveModal').addEventListener('click',e=>{
+  if(e.target===e.currentTarget) e.currentTarget.classList.remove('show');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>לובי שיעור חי | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:        #253E7A;
+    --navy-dark:   #1a2f5e;
+    --navy-light:  #3a5499;
+    --cyan:        #38C4F2;
+    --cyan-dark:   #1db0d8;
+    --cyan-light:  rgba(56,196,242,0.12);
+    --light-blue:  #E3F4FD;
+    --pink:        #F05680;
+    --pink-light:  rgba(240,86,128,0.12);
+    --yellow:      #EAD654;
+    --yellow-light:rgba(234,214,84,0.18);
+    --green:       #7DC57A;
+    --green-light: rgba(125,197,122,0.14);
+    --white:       #FFFFFF;
+    --bg:          #F0F6FF;
+    --surface:     #FFFFFF;
+    --surface-2:   #f5f8ff;
+    --border:      rgba(37,62,122,0.1);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #1a2f5e;
+    --text-sub:    rgba(37,62,122,0.55);
+    --text-light:  rgba(37,62,122,0.38);
+    --font-he:     'Heebo', sans-serif;
+    --font-en:     'Fredoka', sans-serif;
+    --radius-sm:   10px;
+    --radius-md:   16px;
+    --radius-lg:   22px;
+    --radius-xl:   28px;
+    --shadow-sm:   0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:   0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:   0 16px 48px rgba(37,62,122,0.14);
+  }
+
+  [data-theme="dark"] {
+    --cyan-light:  rgba(56,196,242,0.14);
+    --light-blue:  rgba(56,196,242,0.1);
+    --pink-light:  rgba(240,86,128,0.18);
+    --yellow-light:rgba(234,214,84,0.18);
+    --green-light: rgba(125,197,122,0.18);
+    --bg:          #0c1424;
+    --surface:     #131e35;
+    --surface-2:   #1a2740;
+    --border:      rgba(255,255,255,0.07);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #dde5f5;
+    --text-sub:    rgba(221,229,245,0.55);
+    --text-light:  rgba(221,229,245,0.32);
+    --shadow-sm:   0 2px 12px rgba(0,0,0,0.3);
+    --shadow-md:   0 6px 28px rgba(0,0,0,0.4);
+    --shadow-lg:   0 16px 48px rgba(0,0,0,0.55);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: var(--bg);
+    color: var(--text-main);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background .3s, color .3s;
+    overflow: hidden;
+  }
+
+  /* ── TOPBAR ───────────────────────────────── */
+  .topbar {
+    height: 48px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    flex-shrink: 0;
+    transition: background .3s, border .3s;
+  }
+
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .topbar-logo svg { width: 28px; height: 28px; }
+  .topbar-logo span {
+    font-family: var(--font-en);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--navy);
+    letter-spacing: -0.5px;
+  }
+  [data-theme="dark"] .topbar-logo span { color: var(--cyan); }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-sub);
+    text-decoration: none;
+    transition: color .2s;
+    cursor: pointer;
+  }
+  .back-link:hover { color: var(--cyan); }
+  .back-link svg { width: 16px; height: 16px; }
+
+  .theme-toggle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .2s;
+  }
+  .theme-toggle:hover { border-color: var(--cyan); background: var(--cyan-light); }
+  .theme-toggle svg { width: 18px; height: 18px; color: var(--text-sub); }
+
+  /* ── MAIN CONTENT ─────────────────────────── */
+  .main-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .lobby-card {
+    width: 100%;
+    max-width: 540px;
+    max-height: calc(100vh - 80px);
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    transition: background .3s, box-shadow .3s;
+  }
+
+  /* ── VIDEO PREVIEW ────────────────────────── */
+  .video-preview {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/8;
+    background: linear-gradient(135deg, #0c1422 0%, #1a2740 50%, #253E7A 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .video-preview-text {
+    font-family: var(--font-en);
+    font-size: 14px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .video-preview.camera-off .preview-avatar {
+    display: flex;
+  }
+  .video-preview.camera-off .video-preview-text {
+    display: none;
+  }
+
+  .preview-avatar {
+    display: none;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--navy);
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-he);
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .video-controls {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .video-ctrl-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .2s;
+  }
+  .video-ctrl-btn:hover { background: rgba(0,0,0,0.7); }
+  .video-ctrl-btn.off { background: var(--pink); }
+  .video-ctrl-btn.off:hover { background: #d44870; }
+  .video-ctrl-btn svg { width: 20px; height: 20px; }
+
+  .audio-level {
+    position: absolute;
+    bottom: 16px;
+    right: 12px;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 24px;
+  }
+  .audio-bar {
+    width: 4px;
+    border-radius: 2px;
+    background: var(--green);
+    transition: height .15s;
+  }
+  .audio-bar:nth-child(1) { height: 8px; animation: audioLevel 0.8s ease-in-out infinite; }
+  .audio-bar:nth-child(2) { height: 16px; animation: audioLevel 0.8s ease-in-out infinite 0.15s; }
+  .audio-bar:nth-child(3) { height: 10px; animation: audioLevel 0.8s ease-in-out infinite 0.3s; }
+
+  @keyframes audioLevel {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.6); }
+  }
+
+  .audio-level.muted .audio-bar {
+    background: rgba(255,255,255,0.2);
+    animation: none;
+  }
+
+  /* ── SETTINGS ─────────────────────────────── */
+  .settings-section {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .device-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .device-row:last-child { margin-bottom: 0; }
+
+  .device-icon {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--cyan-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .device-icon svg { width: 16px; height: 16px; color: var(--cyan); }
+
+  .device-select {
+    flex: 1;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 13px;
+    padding: 0 12px;
+    cursor: pointer;
+    transition: border .2s;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23253E7A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 12px center;
+  }
+  .device-select:focus {
+    outline: none;
+    border-color: var(--cyan);
+  }
+
+  .test-speaker-btn {
+    height: 40px;
+    padding: 0 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .test-speaker-btn:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+  .test-speaker-btn svg { width: 14px; height: 14px; }
+
+  /* ── JOIN AREA ────────────────────────────── */
+  .join-section {
+    padding: 14px 20px;
+  }
+
+  .name-input {
+    width: 100%;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 14px;
+    padding: 0 14px;
+    margin-bottom: 10px;
+    transition: border .2s;
+  }
+  .name-input:focus {
+    outline: none;
+    border-color: var(--cyan);
+  }
+
+  .session-info {
+    background: var(--surface-2);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+  }
+  .session-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .session-title .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--pink);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .session-title .live-badge .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: white;
+    animation: pulse 1.5s infinite;
+  }
+  .session-meta {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.8;
+  }
+  .session-meta svg { width: 14px; height: 14px; vertical-align: -2px; margin-left: 4px; }
+
+  .join-btn {
+    width: 100%;
+    height: 52px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: linear-gradient(135deg, var(--cyan) 0%, #2ba8d8 100%);
+    color: white;
+    font-family: var(--font-he);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all .2s;
+    box-shadow: 0 4px 16px rgba(56,196,242,0.3);
+  }
+  .join-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(56,196,242,0.4);
+  }
+  .join-btn:active { transform: translateY(0); }
+  .join-btn svg { width: 20px; height: 20px; }
+
+  .join-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 8px;
+    padding-bottom: 4px;
+    line-height: 1.4;
+  }
+
+  /* ── TOAST ────────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--navy);
+    color: white;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    z-index: 999;
+    transition: transform .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast svg { width: 18px; height: 18px; color: var(--green); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── RESPONSIVE ───────────────────────────── */
+  @media (max-width: 640px) {
+    .main-content { padding: 16px; }
+    .settings-section { padding: 16px; }
+    .join-section { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <svg viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="8" fill="#253E7A"/>
+      <path d="M8 10h16M8 16h12M8 22h14" stroke="#38C4F2" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    <span>WHITEBOARD</span>
+  </div>
+  <div class="topbar-actions">
+    <a class="back-link" href="#">
+      <span>חזרה לקורס</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+    <button class="theme-toggle" onclick="toggleTheme()" title="החלף ערכת נושא">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+  <div class="lobby-card">
+
+    <!-- VIDEO PREVIEW -->
+    <div class="video-preview" id="videoPreview">
+      <span class="video-preview-text">CAMERA PREVIEW</span>
+      <div class="preview-avatar">א.ג</div>
+
+      <div class="video-controls">
+        <button class="video-ctrl-btn" id="camToggle" title="מצלמה" onclick="toggleCamera()">
+          <svg class="icon-cam-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          <svg class="icon-cam-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M16.5 7.5L23 7v10l-4.5-3.12"/><rect x="1" y="5" width="15" height="14" rx="2"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+        <button class="video-ctrl-btn" id="micToggle" title="מיקרופון" onclick="toggleMic()">
+          <svg class="icon-mic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          <svg class="icon-mic-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/><path d="M17 16.95A7 7 0 015 12v-2m14 0v2c0 .67-.1 1.32-.27 1.93"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+      </div>
+
+      <div class="audio-level" id="audioLevel">
+        <div class="audio-bar"></div>
+        <div class="audio-bar"></div>
+        <div class="audio-bar"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="settings-section">
+      <div class="device-row">
+        <div class="device-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        </div>
+        <select class="device-select">
+          <option>FaceTime HD Camera</option>
+          <option>USB Camera</option>
+        </select>
+      </div>
+      <div class="device-row">
+        <div class="device-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </div>
+        <select class="device-select">
+          <option>מיקרופון מובנה</option>
+          <option>מיקרופון USB</option>
+        </select>
+      </div>
+      <div class="device-row">
+        <div class="device-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+        </div>
+        <select class="device-select">
+          <option>רמקולים מובנים</option>
+          <option>אוזניות Bluetooth</option>
+        </select>
+        <button class="test-speaker-btn" onclick="testSpeaker()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+          בדוק רמקולים
+        </button>
+      </div>
+    </div>
+
+    <!-- JOIN AREA -->
+    <div class="join-section">
+      <input class="name-input" type="text" value="אלון גבאי" placeholder="הזן את שמך">
+
+      <div class="session-info">
+        <div class="session-title">
+          <span class="live-badge"><span class="dot"></span>LIVE</span>
+          שיעור חי: צבע ומשמעות
+        </div>
+        <div class="session-meta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          מרצה: אלון גבאי
+          <br>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          32 משתתפים ממתינים
+        </div>
+      </div>
+
+      <button class="join-btn" onclick="joinSession()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        הצטרף לשיעור
+      </button>
+      <div class="join-note">המצלמה והמיקרופון שלך יהיו כבויים בכניסה</div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span id="toastText">מצטרף...</span>
+</div>
+
+<script>
+  // Theme toggle
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.querySelector('.icon-sun').style.display = isDark ? 'block' : 'none';
+    document.querySelector('.icon-moon').style.display = isDark ? 'none' : 'block';
+  }
+
+  // Camera toggle
+  let cameraOn = true;
+  function toggleCamera() {
+    cameraOn = !cameraOn;
+    const btn = document.getElementById('camToggle');
+    const preview = document.getElementById('videoPreview');
+    btn.classList.toggle('off', !cameraOn);
+    btn.querySelector('.icon-cam-on').style.display = cameraOn ? 'block' : 'none';
+    btn.querySelector('.icon-cam-off').style.display = cameraOn ? 'none' : 'block';
+    preview.classList.toggle('camera-off', !cameraOn);
+  }
+
+  // Mic toggle
+  let micOn = true;
+  function toggleMic() {
+    micOn = !micOn;
+    const btn = document.getElementById('micToggle');
+    const level = document.getElementById('audioLevel');
+    btn.classList.toggle('off', !micOn);
+    btn.querySelector('.icon-mic-on').style.display = micOn ? 'block' : 'none';
+    btn.querySelector('.icon-mic-off').style.display = micOn ? 'none' : 'block';
+    level.classList.toggle('muted', !micOn);
+  }
+
+  // Test speaker
+  function testSpeaker() {
+    showToast('משמיע צליל בדיקה...');
+  }
+
+  // Join session
+  function joinSession() {
+    showToast('מצטרף...');
+  }
+
+  // Toast
+  function showToast(text) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastText').textContent = text;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+</script>
+</body>
+</html>

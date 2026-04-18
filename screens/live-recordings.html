@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הקלטות | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:        #253E7A;
+    --navy-dark:   #1a2f5e;
+    --navy-light:  #3a5499;
+    --cyan:        #38C4F2;
+    --cyan-dark:   #1db0d8;
+    --cyan-light:  rgba(56,196,242,0.12);
+    --light-blue:  #E3F4FD;
+    --pink:        #F05680;
+    --pink-light:  rgba(240,86,128,0.12);
+    --yellow:      #EAD654;
+    --yellow-light:rgba(234,214,84,0.18);
+    --green:       #7DC57A;
+    --green-light: rgba(125,197,122,0.14);
+    --white:       #FFFFFF;
+    --bg:          #F0F6FF;
+    --surface:     #FFFFFF;
+    --surface-2:   #f5f8ff;
+    --border:      rgba(37,62,122,0.1);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #1a2f5e;
+    --text-sub:    rgba(37,62,122,0.55);
+    --text-light:  rgba(37,62,122,0.38);
+    --font-he:     'Heebo', sans-serif;
+    --font-en:     'Fredoka', sans-serif;
+    --radius-sm:   10px;
+    --radius-md:   16px;
+    --radius-lg:   22px;
+    --radius-xl:   28px;
+    --shadow-sm:   0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:   0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:   0 16px 48px rgba(37,62,122,0.14);
+    --sidebar-bg:  var(--navy);
+  }
+
+  [data-theme="dark"] {
+    --cyan-light:  rgba(56,196,242,0.14);
+    --light-blue:  rgba(56,196,242,0.1);
+    --pink-light:  rgba(240,86,128,0.18);
+    --yellow-light:rgba(234,214,84,0.18);
+    --green-light: rgba(125,197,122,0.18);
+    --bg:          #0c1424;
+    --surface:     #131e35;
+    --surface-2:   #1a2740;
+    --border:      rgba(255,255,255,0.07);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #dde5f5;
+    --text-sub:    rgba(221,229,245,0.55);
+    --text-light:  rgba(221,229,245,0.32);
+    --shadow-sm:   0 2px 12px rgba(0,0,0,0.3);
+    --shadow-md:   0 6px 28px rgba(0,0,0,0.4);
+    --shadow-lg:   0 16px 48px rgba(0,0,0,0.55);
+    --sidebar-bg:  #0d1628;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    transition: background .3s, color .3s;
+  }
+
+  /* ── SIDEBAR ───────────────────────────── */
+  .sidebar {
+    width: 220px;
+    background: var(--sidebar-bg);
+    border-left: 1px solid rgba(255,255,255,0.05);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 0;
+    flex-shrink: 0;
+    position: fixed;
+    right: 0; top: 0; bottom: 0;
+    z-index: 50;
+    transition: background .3s;
+  }
+  .sidebar-logo {
+    padding: 16px 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sidebar-logo img { width: 150px; object-fit: contain; display: block; }
+
+  .sidebar-section { padding: 8px 12px; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: all 0.2s;
+    text-decoration: none;
+    color: rgba(255,255,255,0.65);
+    font-size: 14px; font-weight: 500;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+  .nav-item.active { background: rgba(56,196,242,0.2); color: var(--cyan); font-weight: 700; }
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  .sidebar-bottom {
+    margin-top: auto; padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .mode-switcher {
+    display: flex; background: rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm); padding: 3px; margin-bottom: 12px;
+  }
+  .mode-btn {
+    flex: 1; padding: 7px 8px; border: none; background: transparent;
+    color: rgba(255,255,255,0.55); font-family: var(--font-he);
+    font-size: 12px; font-weight: 600; border-radius: 7px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .mode-btn.active { background: var(--cyan); color: var(--navy-dark); }
+
+  .profile-mini {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: background 0.2s;
+  }
+  .profile-mini:hover { background: rgba(255,255,255,0.08); }
+  .avatar-sm {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--navy-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+  .profile-mini-name { font-size: 13px; font-weight: 600; color: white; }
+  .profile-mini-role { font-size: 11px; color: rgba(255,255,255,0.45); }
+
+  /* ── MAIN ──────────────────────────────── */
+  .main { margin-right: 220px; flex: 1; display: flex; flex-direction: column; }
+
+  /* ── TOPBAR ────────────────────────────── */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 40;
+    box-shadow: var(--shadow-sm);
+    transition: background .3s;
+  }
+  .topbar-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+  .breadcrumb-link { color: var(--text-sub); cursor: pointer; transition: color 0.2s; }
+  .breadcrumb-link:hover { color: var(--text-main); }
+  .breadcrumb-sep { color: var(--text-light); font-size: 16px; }
+  .breadcrumb-current { color: var(--text-main); font-weight: 700; }
+  .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+  .lang-toggle {
+    display: flex; background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px;
+  }
+  .lang-btn {
+    padding: 5px 10px; background: transparent; border: none;
+    cursor: pointer; font-size: 14px; border-radius: 7px; transition: background .2s;
+  }
+  .lang-btn.active { background: var(--cyan); }
+
+  .icon-btn {
+    width: 40px; height: 40px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; color: var(--text-sub);
+  }
+  .icon-btn:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  [data-theme="dark"] .icon-btn:hover { color: var(--cyan); border-color: var(--border-hover); }
+
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="dark"] .icon-sun  { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* ── PAGE BODY ─────────────────────────── */
+  .page-body { padding: 32px; flex: 1; }
+
+  /* ── PAGE HEADER ───────────────────────── */
+  .page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 28px; gap: 20px; flex-wrap: wrap;
+  }
+  .page-header-right {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .page-title { font-size: 28px; font-weight: 900; color: var(--text-main); }
+  .recordings-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px; background: var(--pink-light);
+    color: var(--pink); border-radius: 20px;
+    font-size: 13px; font-weight: 600;
+  }
+  .recordings-badge svg { width: 14px; height: 14px; }
+
+  .search-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    width: 300px; max-width: 100%;
+    transition: border-color 0.2s;
+  }
+  .search-bar:focus-within { border-color: var(--cyan); }
+  .search-bar svg { width: 18px; height: 18px; color: var(--text-light); flex-shrink: 0; }
+  .search-bar input {
+    flex: 1; border: none; background: transparent;
+    font-family: var(--font-he); font-size: 14px;
+    color: var(--text-main); outline: none;
+  }
+  .search-bar input::placeholder { color: var(--text-light); }
+
+  /* ── SPLIT LAYOUT ──────────────────────── */
+  .content-split {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+  .recordings-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+  }
+  .player-panel {
+    width: 42%;
+    max-width: 520px;
+    position: sticky;
+    top: 96px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    display: none;
+    animation: panelIn 0.3s ease forwards;
+  }
+  .player-panel.active { display: block; }
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── RECORDING CARD ────────────────────── */
+  .rec-card {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .rec-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .rec-card.selected { border-color: var(--cyan); box-shadow: 0 0 0 2px var(--cyan-light), var(--shadow-md); }
+
+  .rec-thumb {
+    width: 180px;
+    height: 100px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, #1a2740, #253E7A);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .rec-thumb::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 40%, rgba(56,196,242,0.15), transparent 60%);
+  }
+  .play-overlay {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    z-index: 1;
+  }
+  .rec-card:hover .play-overlay { background: rgba(56,196,242,0.5); transform: scale(1.1); }
+  .play-overlay svg { width: 20px; height: 20px; color: white; }
+
+  .rec-thumb .duration-badge {
+    position: absolute;
+    bottom: 6px; left: 6px;
+    background: rgba(0,0,0,0.65);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-en);
+    z-index: 1;
+  }
+
+  .rec-info { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 6px; min-width: 0; }
+  .rec-title { font-size: 15px; font-weight: 700; color: var(--text-main); }
+  .rec-meta {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13px; color: var(--text-sub); flex-wrap: wrap;
+  }
+  .rec-meta-item {
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .rec-meta-item svg { width: 14px; height: 14px; }
+
+  .rec-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  .rec-action-btn {
+    width: 38px; height: 38px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+    color: var(--text-sub);
+  }
+  .rec-action-btn:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  [data-theme="dark"] .rec-action-btn:hover { color: var(--cyan); }
+  .rec-action-btn.delete:hover { background: var(--pink-light); color: var(--pink); border-color: var(--pink); }
+  .rec-action-btn svg { width: 16px; height: 16px; }
+
+  /* ── PLAYER PANEL ──────────────────────── */
+  .player-video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: linear-gradient(135deg, #0d1424, #1a2f5e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .player-video::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 40% 45%, rgba(56,196,242,0.12), transparent 60%);
+  }
+  .big-play-btn {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 1;
+    border: none;
+  }
+  .big-play-btn:hover { background: var(--cyan); transform: scale(1.1); }
+  .big-play-btn svg { width: 28px; height: 28px; color: white; }
+
+  .player-body { padding: 20px; }
+  .player-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 6px; }
+  .player-date { font-size: 13px; color: var(--text-sub); margin-bottom: 16px; }
+
+  .player-chapters {
+    margin-bottom: 16px;
+  }
+  .chapter-title {
+    font-size: 13px; font-weight: 700; color: var(--text-sub);
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .chapter-title svg { width: 14px; height: 14px; }
+  .chapter-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 13px;
+    color: var(--text-main);
+  }
+  .chapter-item:hover { background: var(--surface-2); }
+  .chapter-time {
+    font-family: var(--font-en);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--cyan);
+    min-width: 40px;
+  }
+
+  .player-actions {
+    display: flex; gap: 10px; margin-bottom: 16px;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px; border-radius: 30px;
+    font-family: var(--font-he); font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; border: none; white-space: nowrap;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--cyan), var(--cyan-dark));
+    color: white; box-shadow: 0 4px 16px rgba(56,196,242,0.35);
+  }
+  [data-theme="dark"] .btn-primary { color: #0b1424; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(56,196,242,0.45); }
+  .btn-secondary {
+    background: var(--surface); color: var(--navy);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--light-blue); border-color: var(--cyan); }
+  [data-theme="dark"] .btn-secondary { background: var(--surface-2); color: var(--text-main); }
+  [data-theme="dark"] .btn-secondary:hover { border-color: var(--border-hover); color: var(--cyan); }
+  .btn svg { width: 16px; height: 16px; }
+
+  .transcript-section {
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .transcript-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px; cursor: pointer;
+  }
+  .transcript-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 700; color: var(--text-main);
+  }
+  .transcript-label svg { width: 16px; height: 16px; color: var(--cyan); }
+  .transcript-toggle {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--surface-2);
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+    color: var(--text-sub);
+  }
+  .transcript-toggle:hover { background: var(--cyan-light); color: var(--cyan); }
+  .transcript-toggle svg { width: 14px; height: 14px; transition: transform 0.2s; }
+  .transcript-toggle.open svg { transform: rotate(180deg); }
+
+  .transcript-text {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.8;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .transcript-text.open { max-height: 300px; }
+
+  /* ── TOAST ──────────────────────────────── */
+  .toast-container {
+    position: fixed; bottom: 24px; left: 24px;
+    display: flex; flex-direction: column; gap: 10px;
+    z-index: 200; pointer-events: none;
+  }
+  .toast {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    min-width: 260px; max-width: 400px;
+    pointer-events: auto;
+    transform: translateX(-20px); opacity: 0;
+    animation: toastIn .35s ease forwards, toastOut .35s ease forwards 3.5s;
+  }
+  @keyframes toastIn { to { opacity: 1; transform: translateX(0); } }
+  @keyframes toastOut { to { opacity: 0; transform: translateX(-20px); } }
+  .toast-icon {
+    width: 34px; height: 34px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .toast-icon svg { width: 16px; height: 16px; }
+  .toast.success .toast-icon { background: var(--green-light); color: var(--green); }
+  .toast.info    .toast-icon { background: var(--cyan-light); color: var(--cyan); }
+  .toast.error   .toast-icon { background: var(--pink-light); color: var(--pink); }
+  .toast-body { flex: 1; }
+  .toast-title { font-size: 13.5px; font-weight: 700; color: var(--text-main); }
+  .toast-msg { font-size: 12px; color: var(--text-sub); margin-top: 1px; }
+
+  /* ── SCROLLBAR ──────────────────────────── */
+  .page-body::-webkit-scrollbar { width: 6px; }
+  .page-body::-webkit-scrollbar-track { background: transparent; }
+  .page-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD">
+  </div>
+
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      לוח הבקרה
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>
+      בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      הגדרות
+    </a>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <button class="mode-btn">תלמיד</button>
+      <button class="mode-btn active">מרצה</button>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div>
+        <div class="profile-mini-name">אלון</div>
+        <div class="profile-mini-role">מרצה</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">מרכזי הידע</span>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-link">יסודות העיצוב</span>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">הקלטות</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active">🇮🇱</button>
+        <button class="lang-btn">🇺🇸</button>
+      </div>
+      <div class="icon-btn" id="themeToggle" title="מצב כהה / בהיר">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+      <div class="icon-btn" title="הגדרות">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="page-header-right">
+        <h1 class="page-title">הקלטות שיעורים חיים</h1>
+        <div class="recordings-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          12 הקלטות
+        </div>
+      </div>
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="חפש הקלטה..." id="searchInput">
+      </div>
+    </div>
+
+    <!-- CONTENT SPLIT -->
+    <div class="content-split">
+
+      <!-- RECORDINGS LIST -->
+      <div class="recordings-list" id="recordingsList">
+
+        <div class="rec-card" data-idx="0">
+          <div class="rec-thumb">
+            <div class="play-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            <span class="duration-badge">45:32</span>
+          </div>
+          <div class="rec-info">
+            <div class="rec-title">שיעור חי: צבע ומשמעות</div>
+            <div class="rec-meta">
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>15 אפריל 2026</span>
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>28 משתתפים</span>
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>64 צפיות</span>
+            </div>
+          </div>
+          <div class="rec-actions">
+            <button class="rec-action-btn play-btn" title="נגן"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <button class="rec-action-btn" title="הורד"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+            <button class="rec-action-btn" title="שתף"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+            <button class="rec-action-btn delete" title="מחק"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+        </div>
+
+        <div class="rec-card" data-idx="1">
+          <div class="rec-thumb">
+            <div class="play-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            <span class="duration-badge">38:15</span>
+          </div>
+          <div class="rec-info">
+            <div class="rec-title">שיעור חי: טיפוגרפיה בסיסית</div>
+            <div class="rec-meta">
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>10 אפריל 2026</span>
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>25 משתתפים</span>
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>51 צפיות</span>
+            </div>
+          </div>
+          <div class="rec-actions">
+            <button class="rec-action-btn play-btn" title="נגן"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <button class="rec-action-btn" title="הורד"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+            <button class="rec-action-btn" title="שתף"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+            <button class="rec-action-btn delete" title="מחק"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+        </div>
+
+        <div class="rec-card" data-idx="2">
+          <div class="rec-thumb">
+            <div class="play-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            <span class="duration-badge">52:08</span>
+          </div>
+          <div class="rec-info">
+            <div class="rec-title">שיעור חי: עקרונות קומפוזיציה</div>
+            <div class="rec-meta">
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>3 אפריל 2026</span>
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>30 משתתפים</span>
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>78 צפיות</span>
+            </div>
+          </div>
+          <div class="rec-actions">
+            <button class="rec-action-btn play-btn" title="נגן"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <button class="rec-action-btn" title="הורד"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+            <button class="rec-action-btn" title="שתף"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+            <button class="rec-action-btn delete" title="מחק"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+        </div>
+
+        <div class="rec-card" data-idx="3">
+          <div class="rec-thumb">
+            <div class="play-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            <span class="duration-badge">41:22</span>
+          </div>
+          <div class="rec-info">
+            <div class="rec-title">שיעור חי: רשת וגריד בעיצוב</div>
+            <div class="rec-meta">
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>27 מרץ 2026</span>
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>22 משתתפים</span>
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>43 צפיות</span>
+            </div>
+          </div>
+          <div class="rec-actions">
+            <button class="rec-action-btn play-btn" title="נגן"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <button class="rec-action-btn" title="הורד"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+            <button class="rec-action-btn" title="שתף"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+            <button class="rec-action-btn delete" title="מחק"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+        </div>
+
+        <div class="rec-card" data-idx="4">
+          <div class="rec-thumb">
+            <div class="play-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            <span class="duration-badge">33:47</span>
+          </div>
+          <div class="rec-info">
+            <div class="rec-title">שיעור חי: מבוא לעיצוב UI</div>
+            <div class="rec-meta">
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>20 מרץ 2026</span>
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>26 משתתפים</span>
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>55 צפיות</span>
+            </div>
+          </div>
+          <div class="rec-actions">
+            <button class="rec-action-btn play-btn" title="נגן"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <button class="rec-action-btn" title="הורד"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+            <button class="rec-action-btn" title="שתף"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+            <button class="rec-action-btn delete" title="מחק"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+        </div>
+
+        <div class="rec-card" data-idx="5">
+          <div class="rec-thumb">
+            <div class="play-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            <span class="duration-badge">57:03</span>
+          </div>
+          <div class="rec-info">
+            <div class="rec-title">שיעור חי: אנימציה ותנועה</div>
+            <div class="rec-meta">
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>13 מרץ 2026</span>
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>31 משתתפים</span>
+              <span class="rec-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>89 צפיות</span>
+            </div>
+          </div>
+          <div class="rec-actions">
+            <button class="rec-action-btn play-btn" title="נגן"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <button class="rec-action-btn" title="הורד"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+            <button class="rec-action-btn" title="שתף"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+            <button class="rec-action-btn delete" title="מחק"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PLAYER PANEL -->
+      <div class="player-panel" id="playerPanel">
+        <div class="player-video">
+          <button class="big-play-btn" id="bigPlayBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </button>
+        </div>
+        <div class="player-body">
+          <div class="player-title" id="playerTitle">שיעור חי: צבע ומשמעות</div>
+          <div class="player-date" id="playerDate">15 אפריל 2026 • 45:32 • 28 משתתפים</div>
+
+          <div class="player-chapters">
+            <div class="chapter-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              פרקים
+            </div>
+            <div class="chapter-item"><span class="chapter-time">00:00</span>פתיחה וברכות</div>
+            <div class="chapter-item"><span class="chapter-time">03:20</span>מבוא לתורת הצבע</div>
+            <div class="chapter-item"><span class="chapter-time">15:45</span>גלגל הצבעים</div>
+            <div class="chapter-item"><span class="chapter-time">28:10</span>צבע ורגש</div>
+            <div class="chapter-item"><span class="chapter-time">38:00</span>שאלות ותשובות</div>
+          </div>
+
+          <div class="player-actions">
+            <button class="btn btn-primary" id="downloadBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              הורד הקלטה
+            </button>
+            <button class="btn btn-secondary" id="shareBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              שתף קישור
+            </button>
+          </div>
+
+          <div class="transcript-section">
+            <div class="transcript-header" id="transcriptToggle">
+              <div class="transcript-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                תמליל BOARDi
+              </div>
+              <button class="transcript-toggle" id="transcriptArrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+            <div class="transcript-text" id="transcriptText">
+              שלום לכולם, ברוכים הבאים לשיעור על צבע ומשמעות. היום נדבר על איך צבעים משפיעים על תפיסה ורגש בעיצוב. נתחיל עם גלגל הצבעים הבסיסי ונבין את ההבדלים בין צבעים ראשוניים, משניים ושלישוניים. לאחר מכן נעבור לדון בפסיכולוגיה של צבעים ואיך ניתן להשתמש בהם כדי ליצור תחושות ספציפיות בעיצוב...
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  // ═══════════════════════════════════════
+  // THEME
+  // ═══════════════════════════════════════
+  const html = document.documentElement;
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  // LANG
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.lang-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+    });
+  });
+
+  // MODE
+  document.querySelectorAll('.mode-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      const isStudent = b.textContent.trim() === 'תלמיד';
+      document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      if (isStudent) toast('info', 'מעבר למצב תלמיד', 'פותח את הקורסים שלי...');
+    });
+  });
+
+  // ═══════════════════════════════════════
+  // TOAST
+  // ═══════════════════════════════════════
+  const toastContainer = document.getElementById('toastContainer');
+  const TOAST_ICONS = {
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>',
+    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    error:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+  };
+  function toast(type, title, msg = '') {
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.innerHTML = `<div class="toast-icon">${TOAST_ICONS[type] || TOAST_ICONS.info}</div>
+      <div class="toast-body"><div class="toast-title">${title}</div>${msg ? `<div class="toast-msg">${msg}</div>` : ''}</div>`;
+    toastContainer.appendChild(el);
+    setTimeout(() => el.remove(), 4100);
+  }
+
+  // ═══════════════════════════════════════
+  // RECORDINGS DATA
+  // ═══════════════════════════════════════
+  const recordings = [
+    { title: 'שיעור חי: צבע ומשמעות', date: '15 אפריל 2026', duration: '45:32', participants: 28, views: 64 },
+    { title: 'שיעור חי: טיפוגרפיה בסיסית', date: '10 אפריל 2026', duration: '38:15', participants: 25, views: 51 },
+    { title: 'שיעור חי: עקרונות קומפוזיציה', date: '3 אפריל 2026', duration: '52:08', participants: 30, views: 78 },
+    { title: 'שיעור חי: רשת וגריד בעיצוב', date: '27 מרץ 2026', duration: '41:22', participants: 22, views: 43 },
+    { title: 'שיעור חי: מבוא לעיצוב UI', date: '20 מרץ 2026', duration: '33:47', participants: 26, views: 55 },
+    { title: 'שיעור חי: אנימציה ותנועה', date: '13 מרץ 2026', duration: '57:03', participants: 31, views: 89 }
+  ];
+
+  // ═══════════════════════════════════════
+  // SELECT RECORDING → PLAYER
+  // ═══════════════════════════════════════
+  document.querySelectorAll('.rec-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const idx = parseInt(card.dataset.idx);
+      const rec = recordings[idx];
+      document.querySelectorAll('.rec-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+
+      const panel = document.getElementById('playerPanel');
+      panel.classList.add('active');
+      document.getElementById('playerTitle').textContent = rec.title;
+      document.getElementById('playerDate').textContent = `${rec.date} • ${rec.duration} • ${rec.participants} משתתפים`;
+    });
+  });
+
+  // ═══════════════════════════════════════
+  // PLAYER ACTIONS
+  // ═══════════════════════════════════════
+  document.getElementById('bigPlayBtn').addEventListener('click', () => {
+    toast('info', 'מנגן הקלטה...', 'פותח את הנגן המלא');
+  });
+  document.getElementById('downloadBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    toast('success', 'ההורדה החלה!', 'הקובץ יישמר בתיקיית ההורדות');
+  });
+  document.getElementById('shareBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    toast('success', 'הקישור הועתק!', 'ניתן לשתף עם התלמידים');
+  });
+
+  // Action buttons on cards
+  document.querySelectorAll('.rec-action-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const title = btn.getAttribute('title');
+      if (title === 'הורד') toast('success', 'ההורדה החלה!', 'הקובץ יישמר בתיקיית ההורדות');
+      else if (title === 'שתף') toast('success', 'הקישור הועתק!', 'ניתן לשתף עם התלמידים');
+      else if (title === 'מחק') toast('error', 'ההקלטה נמחקה', 'ניתן לשחזר תוך 30 יום');
+      else if (title === 'נגן') toast('info', 'מנגן הקלטה...', '');
+    });
+  });
+
+  // ═══════════════════════════════════════
+  // TRANSCRIPT TOGGLE
+  // ═══════════════════════════════════════
+  document.getElementById('transcriptToggle').addEventListener('click', () => {
+    const text = document.getElementById('transcriptText');
+    const arrow = document.getElementById('transcriptArrow');
+    text.classList.toggle('open');
+    arrow.classList.toggle('open');
+  });
+
+  // ═══════════════════════════════════════
+  // SEARCH
+  // ═══════════════════════════════════════
+  document.getElementById('searchInput').addEventListener('input', function() {
+    const q = this.value.trim();
+    document.querySelectorAll('.rec-card').forEach((card, i) => {
+      const visible = !q || recordings[i].title.includes(q);
+      card.style.display = visible ? 'flex' : 'none';
+    });
+  });
+
+  // NAV
+  document.querySelectorAll('.sidebar .nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

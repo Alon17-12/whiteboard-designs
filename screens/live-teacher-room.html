@@ -1,0 +1,2991 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שיעור חי - חדר מרצה | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:        #253E7A;
+    --navy-dark:   #1a2f5e;
+    --navy-light:  #3a5499;
+    --cyan:        #38C4F2;
+    --cyan-dark:   #1db0d8;
+    --cyan-light:  rgba(56,196,242,0.14);
+    --pink:        #F05680;
+    --pink-light:  rgba(240,86,128,0.18);
+    --yellow:      #EAD654;
+    --yellow-light:rgba(234,214,84,0.18);
+    --green:       #7DC57A;
+    --green-light: rgba(125,197,122,0.18);
+    --white:       #FFFFFF;
+    --bg:          #0c1422;
+    --surface:     #131e35;
+    --surface-2:   #1a2740;
+    --surface-3:   #213050;
+    --border:      rgba(255,255,255,0.07);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #dde5f5;
+    --text-sub:    rgba(221,229,245,0.55);
+    --text-light:  rgba(221,229,245,0.32);
+    --font-he:     'Heebo', sans-serif;
+    --font-en:     'Fredoka', sans-serif;
+    --radius-sm:   10px;
+    --radius-md:   16px;
+    --radius-lg:   22px;
+    --radius-xl:   28px;
+    --shadow-sm:   0 2px 12px rgba(0,0,0,0.3);
+    --shadow-md:   0 6px 28px rgba(0,0,0,0.4);
+    --shadow-lg:   0 16px 48px rgba(0,0,0,0.55);
+    --danger:      #ef4444;
+    --danger-hover:#dc2626;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: var(--bg);
+    color: var(--text-main);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* ── TOP BAR ──────────────────────────────── */
+  .top-bar {
+    height: 56px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 16px;
+    flex-shrink: 0;
+    z-index: 20;
+  }
+
+  .session-name {
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 240px;
+  }
+
+  .top-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+  }
+
+  .timer {
+    font-family: var(--font-en);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--cyan);
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .timer svg { width: 16px; height: 16px; color: var(--cyan); }
+
+  .participant-count {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-sub);
+  }
+  .participant-count svg { width: 16px; height: 16px; }
+
+  .rec-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--danger);
+    letter-spacing: 1px;
+    font-family: var(--font-en);
+  }
+  .rec-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--danger);
+    animation: recPulse 1.2s infinite;
+  }
+  @keyframes recPulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+    50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+  }
+
+  .top-spacer { flex: 1; }
+
+  .end-session-btn {
+    height: 36px;
+    padding: 0 16px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: var(--danger);
+    color: white;
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .2s;
+  }
+  .end-session-btn:hover { background: var(--danger-hover); }
+  .end-session-btn svg { width: 16px; height: 16px; }
+
+  /* ── MAIN LAYOUT ──────────────────────────── */
+  .main-layout {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* ── VIDEO STAGE ──────────────────────────── */
+  .video-stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .main-video {
+    flex: 1;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, #0c1422 0%, #1a2740 40%, #253E7A 100%);
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .presenter-label {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .presenter-badge {
+    background: var(--cyan);
+    color: var(--navy-dark);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  .screen-share-indicator {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--green);
+    color: #0c1422;
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    display: none;
+    align-items: center;
+    gap: 6px;
+  }
+  .screen-share-indicator.active { display: flex; }
+  .screen-share-indicator svg { width: 14px; height: 14px; }
+
+  /* PIP (picture in picture for screen share) */
+  .pip-video {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    width: 180px;
+    aspect-ratio: 16/9;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, #1a2740 0%, #253E7A 100%);
+    border: 2px solid rgba(255,255,255,0.15);
+    display: none;
+    overflow: hidden;
+  }
+  .pip-video .pip-label {
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* ── PARTICIPANT GALLERY ──────────────────── */
+  .participant-gallery {
+    height: 80px;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    flex-shrink: 0;
+    padding-bottom: 4px;
+  }
+  .participant-gallery::-webkit-scrollbar { height: 4px; }
+  .participant-gallery::-webkit-scrollbar-track { background: transparent; }
+  .participant-gallery::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .gallery-tile {
+    width: 108px;
+    height: 72px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, #1a2740 0%, #253E7A 100%);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border .2s;
+  }
+  .gallery-tile:hover { border-color: var(--cyan); }
+
+  .tile-name {
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.8);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  }
+  .tile-mic {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tile-mic svg { width: 10px; height: 10px; color: var(--danger); }
+  .tile-mic.on svg { color: var(--green); }
+
+  /* ── RIGHT SIDEBAR ────────────────────────── */
+  .right-sidebar {
+    width: 340px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    transition: width .3s, opacity .3s;
+    overflow: hidden;
+  }
+  .right-sidebar.collapsed {
+    width: 0;
+    opacity: 0;
+    border: none;
+  }
+
+  /* Tab bar */
+  .tab-bar {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-sub);
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text-main); }
+  .tab-btn.active {
+    color: var(--cyan);
+    border-bottom-color: var(--cyan);
+    font-weight: 700;
+  }
+
+  .tab-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .tab-panel {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .tab-panel.active {
+    display: flex;
+  }
+
+  /* ── PARTICIPANTS TAB ─────────────────────── */
+  .participants-search {
+    padding: 12px;
+  }
+  .search-input {
+    width: 100%;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 13px;
+    padding: 0 12px 0 32px;
+    transition: border .2s;
+  }
+  .search-input:focus { outline: none; border-color: var(--cyan); }
+  .search-wrapper {
+    position: relative;
+  }
+  .search-wrapper svg {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 14px;
+    color: var(--text-light);
+  }
+
+  .participants-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 8px 12px;
+  }
+  .participants-list::-webkit-scrollbar { width: 4px; }
+  .participants-list::-webkit-scrollbar-track { background: transparent; }
+  .participants-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .participant-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background .2s;
+    position: relative;
+  }
+  .participant-item:hover { background: var(--surface-2); }
+
+  .p-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--navy-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+  .p-avatar.teacher { background: var(--cyan); color: var(--navy-dark); }
+
+  .p-info { flex: 1; min-width: 0; }
+  .p-name {
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .p-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--cyan);
+    color: var(--navy-dark);
+  }
+  .p-hand {
+    color: var(--yellow);
+    font-size: 14px;
+    animation: handWave 1s ease-in-out infinite;
+  }
+  @keyframes handWave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    75% { transform: rotate(-15deg); }
+  }
+
+  .p-status {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .p-status svg { width: 14px; height: 14px; }
+  .p-status .on { color: var(--green); }
+  .p-status .off { color: var(--text-light); }
+
+  /* Context menu */
+  .context-menu {
+    position: fixed;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+    z-index: 100;
+    min-width: 160px;
+    padding: 6px 0;
+    display: none;
+  }
+  .context-menu.show { display: block; }
+  .context-menu-item {
+    padding: 8px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background .15s;
+    color: var(--text-main);
+  }
+  .context-menu-item:hover { background: var(--surface-3); }
+  .context-menu-item.danger { color: var(--danger); }
+  .context-menu-item svg { width: 14px; height: 14px; }
+
+  /* ── CHAT TAB ─────────────────────────────── */
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-track { background: transparent; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .chat-msg {
+    display: flex;
+    gap: 8px;
+  }
+  .chat-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--navy-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+  .chat-avatar.teacher { background: var(--cyan); color: var(--navy-dark); }
+
+  .chat-bubble {
+    flex: 1; min-width: 0;
+  }
+  .chat-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+  .chat-name {
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .chat-time {
+    font-size: 10px;
+    color: var(--text-light);
+    font-family: var(--font-en);
+  }
+  .chat-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-sub);
+  }
+
+  .chat-input-bar {
+    padding: 10px 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+  }
+  .chat-input {
+    flex: 1;
+    height: 38px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 13px;
+    padding: 0 12px;
+    transition: border .2s;
+  }
+  .chat-input:focus { outline: none; border-color: var(--cyan); }
+  .chat-input::placeholder { color: var(--text-light); }
+
+  .chat-send-btn, .chat-emoji-btn {
+    width: 38px; height: 38px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: var(--surface-2);
+    color: var(--text-sub);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+  .chat-send-btn:hover { background: var(--cyan); color: white; }
+  .chat-emoji-btn:hover { background: var(--surface-3); }
+  .chat-send-btn svg, .chat-emoji-btn svg { width: 16px; height: 16px; }
+
+  /* ── INTERACTIVE TOOLS TAB ────────────────── */
+  .tools-grid {
+    padding: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    overflow-y: auto;
+  }
+
+  .tool-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .tool-card:hover {
+    border-color: var(--cyan);
+    background: var(--surface-3);
+    transform: translateY(-2px);
+  }
+  .tool-icon {
+    width: 44px; height: 44px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tool-icon svg { width: 22px; height: 22px; }
+  .tool-icon.poll { background: var(--cyan-light); color: var(--cyan); }
+  .tool-icon.quiz { background: var(--pink-light); color: var(--pink); }
+  .tool-icon.game { background: var(--yellow-light); color: var(--yellow); }
+  .tool-icon.whiteboard { background: var(--green-light); color: var(--green); }
+  .tool-icon.timer { background: rgba(255,255,255,0.08); color: var(--text-main); }
+  .tool-icon.breakout { background: rgba(139,92,246,0.15); color: #a78bfa; }
+
+  .tool-label {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* ── BOTTOM BAR ───────────────────────────── */
+  .bottom-bar {
+    height: 64px;
+    background: rgba(19,30,53,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 16px;
+    flex-shrink: 0;
+    z-index: 20;
+  }
+
+  .bar-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: var(--surface-2);
+    color: var(--text-main);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .2s;
+    position: relative;
+  }
+  .bar-btn:hover { background: var(--surface-3); }
+  .bar-btn.active { background: var(--cyan); color: var(--navy-dark); }
+  .bar-btn.off { background: var(--danger); color: white; }
+  .bar-btn.off:hover { background: var(--danger-hover); }
+  .bar-btn svg { width: 20px; height: 20px; }
+
+  .bar-btn .tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    color: white;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .bar-btn:hover .tooltip { opacity: 1; }
+
+  .bar-divider {
+    width: 1px;
+    height: 28px;
+    background: var(--border);
+    margin: 0 4px;
+  }
+
+  .bar-end-btn {
+    height: 40px;
+    padding: 0 20px;
+    border-radius: 20px;
+    border: none;
+    background: var(--danger);
+    color: white;
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .2s;
+    margin-right: 8px;
+  }
+  .bar-end-btn:hover { background: var(--danger-hover); }
+  .bar-end-btn svg { width: 16px; height: 16px; }
+
+  /* ── CONFIRMATION MODAL ───────────────────── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: rgba(239,68,68,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .modal-icon svg { width: 28px; height: 28px; color: var(--danger); }
+  .modal h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .modal p {
+    font-size: 14px;
+    color: var(--text-sub);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .modal-btn {
+    height: 42px;
+    padding: 0 24px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .modal-btn.cancel {
+    background: transparent;
+    color: var(--text-main);
+  }
+  .modal-btn.cancel:hover { background: var(--surface-2); }
+  .modal-btn.danger {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: white;
+  }
+  .modal-btn.danger:hover { background: var(--danger-hover); }
+
+  /* ── TOAST ────────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    z-index: 150;
+    transition: transform .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── TOOL PANELS (inside interactions tab) ── */
+  .tool-panel {
+    display: none;
+    flex-direction: column;
+    padding: 0;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .tool-panel.active {
+    display: flex;
+  }
+  .tool-panel::-webkit-scrollbar { width: 4px; }
+  .tool-panel::-webkit-scrollbar-track { background: transparent; }
+  .tool-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .panel-back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 16px 8px;
+    background: none;
+    border: none;
+    color: var(--text-sub);
+    font-family: var(--font-he);
+    font-size: 13px;
+    cursor: pointer;
+    transition: color .2s;
+    width: fit-content;
+  }
+  .panel-back:hover { color: var(--cyan); }
+  .panel-back svg { width: 14px; height: 14px; }
+
+  .panel-title {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 4px 16px 12px;
+    color: var(--text-main);
+  }
+
+  .panel-body {
+    padding: 0 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .panel-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+  }
+
+  .panel-input {
+    width: 100%;
+    height: 38px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 13px;
+    padding: 0 12px;
+    transition: border .2s;
+  }
+  .panel-input:focus { outline: none; border-color: var(--cyan); }
+  .panel-input::placeholder { color: var(--text-light); }
+
+  .panel-select {
+    width: 100%;
+    height: 38px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 13px;
+    padding: 0 12px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 10px center;
+    cursor: pointer;
+  }
+  .panel-select:focus { outline: none; border-color: var(--cyan); }
+
+  .panel-btn-primary {
+    width: 100%;
+    height: 42px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: var(--cyan);
+    color: var(--navy-dark);
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, transform .1s;
+  }
+  .panel-btn-primary:hover { background: var(--cyan-dark); }
+  .panel-btn-primary:active { transform: scale(0.98); }
+
+  .panel-btn-ghost {
+    height: 38px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    padding: 0 16px;
+  }
+  .panel-btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  .panel-add-btn {
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-sub);
+    font-family: var(--font-he);
+    font-size: 12px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+  }
+  .panel-add-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  .option-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .option-row .panel-input { flex: 1; }
+
+  .option-radio {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .option-radio.correct {
+    border-color: var(--green);
+    background: var(--green);
+  }
+  .option-radio.correct::after {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: white;
+  }
+  .option-radio:hover { border-color: var(--green); }
+
+  .input-row {
+    display: flex;
+    gap: 8px;
+  }
+  .input-row > * { flex: 1; }
+
+  /* Timer display */
+  .timer-display {
+    font-family: var(--font-en);
+    font-size: 56px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-main);
+    padding: 16px 0;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .timer-display input {
+    width: 70px;
+    font-family: var(--font-en);
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--text-main);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--border);
+    text-align: center;
+    outline: none;
+    padding: 0;
+  }
+  .timer-display input:focus { border-bottom-color: var(--cyan); }
+
+  .preset-btns {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .preset-btn {
+    height: 34px;
+    padding: 0 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .preset-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  .timer-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .timer-actions button { flex: 1; }
+
+  /* Toggle switch */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+  }
+  .toggle-label {
+    font-size: 13px;
+    color: var(--text-main);
+  }
+  .toggle-switch {
+    width: 42px; height: 24px;
+    border-radius: 12px;
+    background: var(--surface-3);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition: background .2s;
+    flex-shrink: 0;
+  }
+  .toggle-switch::after {
+    content: '';
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: white;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    transition: transform .2s;
+  }
+  .toggle-switch.on {
+    background: var(--cyan);
+  }
+  .toggle-switch.on::after {
+    transform: translateX(-18px);
+  }
+
+  /* Live poll results */
+  .poll-results {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .poll-result-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .poll-result-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-sub);
+  }
+  .poll-result-bar {
+    height: 24px;
+    border-radius: 6px;
+    background: var(--surface-3);
+    overflow: hidden;
+    position: relative;
+  }
+  .poll-result-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: var(--cyan);
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 0;
+  }
+
+  /* Leaderboard */
+  .leaderboard {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .lb-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+  }
+  .lb-rank {
+    font-family: var(--font-en);
+    font-weight: 700;
+    color: var(--yellow);
+    width: 20px;
+    text-align: center;
+  }
+  .lb-name { flex: 1; }
+  .lb-score {
+    font-family: var(--font-en);
+    font-weight: 700;
+    color: var(--cyan);
+  }
+
+  .answers-counter {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-sub);
+    padding: 8px 0;
+  }
+  .answers-counter strong {
+    color: var(--cyan);
+    font-family: var(--font-en);
+  }
+
+  .word-clue-row {
+    display: flex;
+    gap: 6px;
+  }
+  .word-clue-row .panel-input:first-child { width: 40%; flex: none; }
+  .word-clue-row .panel-input:last-child { flex: 1; }
+
+  .panel-separator {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-light);
+    padding: 4px 0;
+  }
+
+  .panel-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* ── STUDENT PREVIEW OVERLAY ─────────────── */
+  #student-preview {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    gap: 12px;
+    padding: 24px;
+  }
+  #student-preview.active { display: flex; }
+
+  .sp-badge {
+    background: var(--cyan);
+    color: var(--navy-dark);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 18px;
+    border-radius: 50px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sp-badge svg { width: 14px; height: 14px; }
+
+  .sp-close {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s;
+    z-index: 2;
+  }
+  .sp-close:hover { background: rgba(0,0,0,0.8); }
+
+  .sp-card {
+    background: #ffffff;
+    color: #1a1a2e;
+    border-radius: 16px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    max-width: 420px;
+    width: 100%;
+    padding: 28px 24px;
+    text-align: center;
+    font-family: var(--font-he);
+    position: relative;
+    overflow: hidden;
+    animation: spSlideUp .35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .sp-card.wide { max-width: 580px; }
+
+  @keyframes spSlideUp {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .sp-tool-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 50px;
+    margin-bottom: 12px;
+  }
+  .sp-tool-badge.poll { background: rgba(56,196,242,0.15); color: #1a8ab5; }
+  .sp-tool-badge.quiz { background: rgba(240,86,128,0.15); color: #c0365e; }
+  .sp-tool-badge.game { background: rgba(234,214,84,0.18); color: #a69520; }
+  .sp-tool-badge.timer { background: rgba(56,196,242,0.12); color: #1a8ab5; }
+  .sp-tool-badge.whiteboard { background: rgba(125,197,122,0.15); color: #3d8b3a; }
+  .sp-tool-badge.breakout { background: rgba(139,92,246,0.12); color: #7c3aed; }
+
+  .sp-question {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #1a1a2e;
+    line-height: 1.5;
+  }
+
+  .sp-timer-inline {
+    font-family: var(--font-en);
+    font-size: 13px;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 12px;
+  }
+
+  .sp-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .sp-option-btn {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 2px solid #e8e8ee;
+    background: #f8f8fc;
+    color: #1a1a2e;
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sp-option-btn:hover { border-color: var(--cyan); background: rgba(56,196,242,0.06); }
+  .sp-option-btn.selected { border-color: var(--cyan); background: rgba(56,196,242,0.1); }
+  .sp-option-btn.correct { border-color: #22c55e; background: rgba(34,197,94,0.1); }
+  .sp-option-btn.wrong { border-color: #ef4444; background: rgba(239,68,68,0.06); opacity: 0.6; }
+
+  .sp-option-letter {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: #e8e8ee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-en);
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .sp-option-btn.correct .sp-option-letter { background: #22c55e; color: white; }
+
+  /* Poll result bars (student preview) */
+  .sp-result-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .sp-result-label { font-size: 12px; color: #666; width: 70px; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sp-result-bar-bg {
+    flex: 1; height: 22px; border-radius: 6px; background: #eee; overflow: hidden;
+  }
+  .sp-result-bar-fill {
+    height: 100%; border-radius: 6px; transition: width 1s ease;
+  }
+  .sp-result-pct { font-family: var(--font-en); font-size: 12px; font-weight: 700; color: #333; width: 36px; }
+
+  /* Points animation */
+  .sp-points-anim {
+    font-family: var(--font-en);
+    font-size: 28px;
+    font-weight: 700;
+    color: #22c55e;
+    animation: spPointsPop .6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-top: 8px;
+  }
+  @keyframes spPointsPop {
+    0% { opacity: 0; transform: scale(0.5) translateY(10px); }
+    60% { opacity: 1; transform: scale(1.2) translateY(-4px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* Mini leaderboard in preview */
+  .sp-leaderboard {
+    margin-top: 12px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+  }
+  .sp-lb-title { font-size: 12px; font-weight: 700; color: #888; margin-bottom: 6px; }
+  .sp-lb-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+  .sp-lb-row:nth-child(2) { background: rgba(234,214,84,0.12); }
+  .sp-lb-rank { font-family: var(--font-en); font-weight: 700; color: #a69520; width: 18px; }
+  .sp-lb-name { flex: 1; color: #333; }
+  .sp-lb-score { font-family: var(--font-en); font-weight: 700; color: #1a8ab5; }
+
+  /* Memory game grid */
+  .sp-memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 12px auto;
+    max-width: 320px;
+  }
+  .sp-mem-card {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    cursor: pointer;
+    perspective: 600px;
+    position: relative;
+  }
+  .sp-mem-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+  }
+  .sp-mem-card.flipped .sp-mem-card-inner {
+    transform: rotateY(180deg);
+  }
+  .sp-mem-card-front, .sp-mem-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sp-mem-card-front {
+    background: linear-gradient(135deg, #253E7A 0%, #38C4F2 100%);
+    box-shadow: 0 2px 8px rgba(37,62,122,0.3);
+  }
+  .sp-mem-card-front img {
+    width: 55%;
+    height: 55%;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.5;
+  }
+  .sp-mem-card-back {
+    background: white;
+    border: 2px solid #e8e8ee;
+    transform: rotateY(180deg);
+    font-size: 22px;
+  }
+
+  /* Timer ring */
+  .sp-timer-ring-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .sp-timer-ring {
+    position: relative;
+    width: 160px;
+    height: 160px;
+  }
+  .sp-timer-ring svg {
+    width: 160px;
+    height: 160px;
+    transform: rotate(-90deg);
+  }
+  .sp-timer-ring-bg { stroke: #e8e8ee; }
+  .sp-timer-ring-fg {
+    stroke: var(--cyan);
+    transition: stroke-dashoffset 1s linear;
+  }
+  .sp-timer-time {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-en);
+    font-size: 36px;
+    font-weight: 700;
+    color: #1a8ab5;
+  }
+  .sp-timer-subtitle {
+    font-size: 13px;
+    color: #888;
+    font-weight: 500;
+  }
+
+  /* Whiteboard preview */
+  .sp-wb-canvas {
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    position: relative;
+    overflow: hidden;
+  }
+  .sp-wb-marks {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Breakout preview */
+  .sp-breakout-rooms {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .sp-room-card {
+    background: #f0f0f8;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+  }
+  .sp-room-name { font-size: 13px; font-weight: 700; color: #333; }
+  .sp-room-count { font-size: 11px; color: #888; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="session-name">שיעור חי: צבע ומשמעות</div>
+  <div class="top-divider"></div>
+  <div class="timer">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <span id="timerDisplay">32:15</span>
+  </div>
+  <div class="top-divider"></div>
+  <div class="participant-count">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    <span>28</span>
+  </div>
+  <div class="top-divider"></div>
+  <div class="rec-indicator" id="recIndicator">
+    <span class="rec-dot"></span>
+    REC
+  </div>
+  <div class="top-spacer"></div>
+  <button class="end-session-btn" onclick="showEndModal()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    סיים שיעור
+  </button>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- VIDEO STAGE -->
+  <div class="video-stage">
+    <div class="main-video">
+      <!-- STUDENT PREVIEW OVERLAY -->
+      <div id="student-preview">
+        <button class="sp-close" onclick="hideStudentPreview()" title="סגור תצוגה מקדימה">&times;</button>
+        <div class="sp-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          תצוגת תלמיד
+        </div>
+        <div class="sp-card" id="sp-card-content">
+          <!-- Filled dynamically by JS -->
+        </div>
+      </div>
+
+      <div class="presenter-label">
+        אלון גבאי
+        <span class="presenter-badge">מרצה</span>
+      </div>
+      <div class="screen-share-indicator" id="screenShareBadge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        שיתוף מסך פעיל
+      </div>
+      <div class="pip-video" id="pipVideo">
+        <span class="pip-label">אלון גבאי</span>
+      </div>
+    </div>
+
+    <!-- PARTICIPANT GALLERY -->
+    <div class="participant-gallery">
+      <div class="gallery-tile">
+        <span class="tile-name">דנה כהן</span>
+        <div class="tile-mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12"/></svg></div>
+      </div>
+      <div class="gallery-tile">
+        <span class="tile-name">יוסי לוי</span>
+        <div class="tile-mic on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/></svg></div>
+      </div>
+      <div class="gallery-tile">
+        <span class="tile-name">מיכל אברהם</span>
+        <div class="tile-mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12"/></svg></div>
+      </div>
+      <div class="gallery-tile">
+        <span class="tile-name">עומר חדד</span>
+        <div class="tile-mic on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/></svg></div>
+      </div>
+      <div class="gallery-tile">
+        <span class="tile-name">נועה פרידמן</span>
+        <div class="tile-mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12"/></svg></div>
+      </div>
+      <div class="gallery-tile">
+        <span class="tile-name">אריאל בן דוד</span>
+        <div class="tile-mic on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/></svg></div>
+      </div>
+      <div class="gallery-tile">
+        <span class="tile-name">שירה מזרחי</span>
+        <div class="tile-mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12"/></svg></div>
+      </div>
+      <div class="gallery-tile">
+        <span class="tile-name">רון גולדשטיין</span>
+        <div class="tile-mic on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/></svg></div>
+      </div>
+      <div class="gallery-tile">
+        <span class="tile-name">תמר שלום</span>
+        <div class="tile-mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12"/></svg></div>
+      </div>
+      <div class="gallery-tile">
+        <span class="tile-name">איתי רוזנברג</span>
+        <div class="tile-mic on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="right-sidebar" id="rightSidebar">
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="participants" onclick="switchTab('participants')">משתתפים (28)</button>
+      <button class="tab-btn" data-tab="chat" onclick="switchTab('chat')">צ'אט</button>
+      <button class="tab-btn" data-tab="tools" onclick="switchTab('tools')">אינטראקציות</button>
+    </div>
+    <div class="tab-content">
+
+      <!-- PARTICIPANTS TAB -->
+      <div class="tab-panel active" id="tab-participants">
+        <div class="participants-search">
+          <div class="search-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-input" type="text" placeholder="חיפוש משתתף...">
+          </div>
+        </div>
+        <div class="participants-list">
+          <!-- Teacher -->
+          <div class="participant-item" onclick="showContextMenu(event, this)">
+            <div class="p-avatar teacher">א.ג</div>
+            <div class="p-info">
+              <div class="p-name">אלון גבאי <span class="p-badge">מרצה</span></div>
+            </div>
+            <div class="p-status">
+              <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg>
+              <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            </div>
+          </div>
+          <!-- Student with hand raised -->
+          <div class="participant-item" onclick="showContextMenu(event, this)">
+            <div class="p-avatar">ד.כ</div>
+            <div class="p-info">
+              <div class="p-name">דנה כהן <span class="p-hand">&#9995;</span></div>
+            </div>
+            <div class="p-status">
+              <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/></svg>
+              <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            </div>
+          </div>
+          <!-- Regular students -->
+          <div class="participant-item" onclick="showContextMenu(event, this)">
+            <div class="p-avatar">י.ל</div>
+            <div class="p-info">
+              <div class="p-name">יוסי לוי</div>
+            </div>
+            <div class="p-status">
+              <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg>
+              <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            </div>
+          </div>
+          <div class="participant-item" onclick="showContextMenu(event, this)">
+            <div class="p-avatar">מ.א</div>
+            <div class="p-info">
+              <div class="p-name">מיכל אברהם</div>
+            </div>
+            <div class="p-status">
+              <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/></svg>
+              <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16.5 7.5L23 7v10l-4.5-3.12"/><rect x="1" y="5" width="15" height="14" rx="2"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </div>
+          </div>
+          <!-- Student with hand raised -->
+          <div class="participant-item" onclick="showContextMenu(event, this)">
+            <div class="p-avatar">ע.ח</div>
+            <div class="p-info">
+              <div class="p-name">עומר חדד <span class="p-hand">&#9995;</span></div>
+            </div>
+            <div class="p-status">
+              <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg>
+              <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            </div>
+          </div>
+          <div class="participant-item" onclick="showContextMenu(event, this)">
+            <div class="p-avatar">נ.פ</div>
+            <div class="p-info">
+              <div class="p-name">נועה פרידמן</div>
+            </div>
+            <div class="p-status">
+              <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/></svg>
+              <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            </div>
+          </div>
+          <div class="participant-item" onclick="showContextMenu(event, this)">
+            <div class="p-avatar">א.ב</div>
+            <div class="p-info">
+              <div class="p-name">אריאל בן דוד</div>
+            </div>
+            <div class="p-status">
+              <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg>
+              <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            </div>
+          </div>
+          <div class="participant-item" onclick="showContextMenu(event, this)">
+            <div class="p-avatar">ש.מ</div>
+            <div class="p-info">
+              <div class="p-name">שירה מזרחי</div>
+            </div>
+            <div class="p-status">
+              <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/></svg>
+              <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16.5 7.5L23 7v10l-4.5-3.12"/><rect x="1" y="5" width="15" height="14" rx="2"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAT TAB -->
+      <div class="tab-panel" id="tab-chat">
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-msg">
+            <div class="chat-avatar teacher">א.ג</div>
+            <div class="chat-bubble">
+              <div class="chat-header"><span class="chat-name">אלון גבאי</span><span class="chat-time">10:02</span></div>
+              <div class="chat-text">שלום לכולם! ברוכים הבאים לשיעור על צבע ומשמעות. נתחיל בעוד רגע.</div>
+            </div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar">ד.כ</div>
+            <div class="chat-bubble">
+              <div class="chat-header"><span class="chat-name">דנה כהן</span><span class="chat-time">10:03</span></div>
+              <div class="chat-text">היי! מחכה כבר מזמן לשיעור הזה</div>
+            </div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar">י.ל</div>
+            <div class="chat-bubble">
+              <div class="chat-header"><span class="chat-name">יוסי לוי</span><span class="chat-time">10:05</span></div>
+              <div class="chat-text">אלון, אפשר לשתף את המצגת אחרי השיעור?</div>
+            </div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar teacher">א.ג</div>
+            <div class="chat-bubble">
+              <div class="chat-header"><span class="chat-name">אלון גבאי</span><span class="chat-time">10:06</span></div>
+              <div class="chat-text">בטח! אעלה את המצגת לאזור הקבצים בסוף השיעור.</div>
+            </div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-avatar">ע.ח</div>
+            <div class="chat-bubble">
+              <div class="chat-header"><span class="chat-name">עומר חדד</span><span class="chat-time">10:08</span></div>
+              <div class="chat-text">השקף על גלגל הצבעים ממש מעניין, תודה!</div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-bar">
+          <button class="chat-emoji-btn" title="אימוג'י">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          </button>
+          <input class="chat-input" type="text" placeholder="כתוב הודעה..." id="chatInput" onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="chat-send-btn" onclick="sendChat()" title="שלח">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE TOOLS TAB -->
+      <div class="tab-panel" id="tab-tools">
+        <div class="tools-grid">
+          <div class="tool-card" onclick="openToolPanel('poll')">
+            <div class="tool-icon poll">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>
+            </div>
+            <span class="tool-label">סקר מהיר</span>
+          </div>
+          <div class="tool-card" onclick="openToolPanel('quiz')">
+            <div class="tool-icon quiz">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <span class="tool-label">שאלה חיה</span>
+          </div>
+          <div class="tool-card" onclick="openToolPanel('game')">
+            <div class="tool-icon game">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="3"/><line x1="6" y1="10" x2="6" y2="14"/><line x1="4" y1="12" x2="8" y2="12"/><circle cx="16" cy="10" r="0.5" fill="currentColor"/><circle cx="19" cy="12" r="0.5" fill="currentColor"/><circle cx="16" cy="14" r="0.5" fill="currentColor"/></svg>
+            </div>
+            <span class="tool-label">משחק</span>
+          </div>
+          <div class="tool-card" onclick="openToolPanel('whiteboard')">
+            <div class="tool-icon whiteboard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+            </div>
+            <span class="tool-label">לוח ציור</span>
+          </div>
+          <div class="tool-card" onclick="openToolPanel('timer')">
+            <div class="tool-icon timer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <span class="tool-label">טיימר</span>
+          </div>
+          <div class="tool-card" onclick="openToolPanel('breakout')">
+            <div class="tool-icon breakout">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            </div>
+            <span class="tool-label">חדרי דיון</span>
+          </div>
+        </div>
+
+        <!-- ═══ POLL PANEL ═══ -->
+        <div class="tool-panel" id="panel-poll">
+          <button class="panel-back" onclick="closeToolPanel()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            חזרה לכלים
+          </button>
+          <div class="panel-title">סקר מהיר</div>
+          <div class="panel-body" id="pollConfig">
+            <div class="panel-field">
+              <label class="panel-label">שאלת הסקר</label>
+              <input class="panel-input" type="text" placeholder="למשל: מה הצבע האהוב עליכם?">
+            </div>
+            <div class="panel-field">
+              <label class="panel-label">אפשרויות</label>
+              <div id="pollOptions">
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <input class="panel-input" type="text" placeholder="אפשרות 1">
+                  <input class="panel-input" type="text" placeholder="אפשרות 2">
+                  <input class="panel-input" type="text" placeholder="אפשרות 3">
+                  <input class="panel-input" type="text" placeholder="אפשרות 4">
+                </div>
+              </div>
+              <button class="panel-add-btn" onclick="addPollOption()">+ הוסף אפשרות</button>
+            </div>
+            <div class="panel-field">
+              <label class="panel-label">משך זמן</label>
+              <select class="panel-select">
+                <option value="15">15 שניות</option>
+                <option value="30" selected>30 שניות</option>
+                <option value="60">60 שניות</option>
+              </select>
+            </div>
+            <button class="panel-btn-primary" onclick="sendPoll()">שלח סקר</button>
+          </div>
+          <!-- Live results (shown after sending) -->
+          <div class="panel-body" id="pollResults" style="display:none">
+            <div class="answers-counter">תשובות: <strong id="pollResponseCount">0</strong> / 28</div>
+            <div class="poll-results" id="pollResultBars"></div>
+            <button class="panel-btn-ghost" onclick="closePollResults()" style="width:100%;margin-top:8px">סגור סקר</button>
+          </div>
+        </div>
+
+        <!-- ═══ QUIZ PANEL ═══ -->
+        <div class="tool-panel" id="panel-quiz">
+          <button class="panel-back" onclick="closeToolPanel()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            חזרה לכלים
+          </button>
+          <div class="panel-title">שאלה חיה</div>
+          <div class="panel-body" id="quizConfig">
+            <div class="panel-field">
+              <label class="panel-label">השאלה</label>
+              <input class="panel-input" type="text" placeholder="מה הצבע המשלים לאדום?">
+            </div>
+            <div class="panel-field">
+              <label class="panel-label">תשובות (לחצו על העיגול לסימון התשובה הנכונה)</label>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div class="option-row">
+                  <button class="option-radio" onclick="markCorrect(this)"></button>
+                  <input class="panel-input" type="text" placeholder="תשובה 1">
+                </div>
+                <div class="option-row">
+                  <button class="option-radio" onclick="markCorrect(this)"></button>
+                  <input class="panel-input" type="text" placeholder="תשובה 2">
+                </div>
+                <div class="option-row">
+                  <button class="option-radio correct" onclick="markCorrect(this)"></button>
+                  <input class="panel-input" type="text" placeholder="תשובה 3 (נכונה)">
+                </div>
+                <div class="option-row">
+                  <button class="option-radio" onclick="markCorrect(this)"></button>
+                  <input class="panel-input" type="text" placeholder="תשובה 4">
+                </div>
+              </div>
+            </div>
+            <div class="input-row">
+              <div class="panel-field">
+                <label class="panel-label">טיימר</label>
+                <select class="panel-select">
+                  <option value="10">10 שניות</option>
+                  <option value="15" selected>15 שניות</option>
+                  <option value="20">20 שניות</option>
+                  <option value="30">30 שניות</option>
+                </select>
+              </div>
+              <div class="panel-field">
+                <label class="panel-label">נקודות</label>
+                <input class="panel-input" type="number" value="100" min="10" max="1000" step="10">
+              </div>
+            </div>
+            <button class="panel-btn-primary" onclick="sendQuiz()">שלח שאלה</button>
+          </div>
+          <!-- Live answers (shown after sending) -->
+          <div class="panel-body" id="quizResults" style="display:none">
+            <div class="answers-counter">ענו: <strong id="quizResponseCount">0</strong> / 28</div>
+            <div class="poll-results" id="quizResultBars"></div>
+            <div class="panel-field" style="margin-top:8px">
+              <label class="panel-label">טבלת מובילים</label>
+              <div class="leaderboard" id="quizLeaderboard"></div>
+            </div>
+            <button class="panel-btn-ghost" onclick="closeQuizResults()" style="width:100%;margin-top:8px">סגור שאלה</button>
+          </div>
+        </div>
+
+        <!-- ═══ GAME PANEL ═══ -->
+        <div class="tool-panel" id="panel-game">
+          <button class="panel-back" onclick="closeToolPanel()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            חזרה לכלים
+          </button>
+          <div class="panel-title">משחק</div>
+          <div class="panel-body">
+            <div class="panel-field">
+              <label class="panel-label">סוג משחק</label>
+              <select class="panel-select" id="gameTypeSelect">
+                <option value="memory">זיכרון</option>
+                <option value="hangman">איש תלוי</option>
+                <option value="crossword">תשחץ</option>
+              </select>
+            </div>
+            <div class="panel-field">
+              <label class="panel-label">בחר משחק מוכן</label>
+              <select class="panel-select">
+                <option value="">-- בחר --</option>
+                <option value="colors">צבעים ומשמעויות</option>
+                <option value="artists">אמנים מפורסמים</option>
+                <option value="terms">מושגים באמנות</option>
+              </select>
+            </div>
+            <div class="panel-separator">או</div>
+            <div class="panel-field">
+              <label class="panel-label">צור משחק מהיר</label>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div class="word-clue-row">
+                  <input class="panel-input" type="text" placeholder="מילה">
+                  <input class="panel-input" type="text" placeholder="רמז">
+                </div>
+                <div class="word-clue-row">
+                  <input class="panel-input" type="text" placeholder="מילה">
+                  <input class="panel-input" type="text" placeholder="רמז">
+                </div>
+                <div class="word-clue-row">
+                  <input class="panel-input" type="text" placeholder="מילה">
+                  <input class="panel-input" type="text" placeholder="רמז">
+                </div>
+                <div class="word-clue-row">
+                  <input class="panel-input" type="text" placeholder="מילה">
+                  <input class="panel-input" type="text" placeholder="רמז">
+                </div>
+                <div class="word-clue-row">
+                  <input class="panel-input" type="text" placeholder="מילה">
+                  <input class="panel-input" type="text" placeholder="רמז">
+                </div>
+              </div>
+            </div>
+            <div class="panel-field">
+              <label class="panel-label">משך זמן</label>
+              <select class="panel-select">
+                <option value="60">1 דקה</option>
+                <option value="120" selected>2 דקות</option>
+                <option value="180">3 דקות</option>
+                <option value="300">5 דקות</option>
+              </select>
+            </div>
+            <button class="panel-btn-primary" onclick="showToast('המשחק הופעל! התלמידים רואים את המשחק'); showStudentPreview('game')">הפעל משחק</button>
+          </div>
+        </div>
+
+        <!-- ═══ TIMER PANEL ═══ -->
+        <div class="tool-panel" id="panel-timer">
+          <button class="panel-back" onclick="closeToolPanel()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            חזרה לכלים
+          </button>
+          <div class="panel-title">טיימר</div>
+          <div class="panel-body">
+            <div class="timer-display">
+              <input type="text" id="timerMin" value="05" maxlength="2" onclick="this.select()">
+              <span>:</span>
+              <input type="text" id="timerSec" value="00" maxlength="2" onclick="this.select()">
+            </div>
+            <div class="preset-btns">
+              <button class="preset-btn" onclick="setToolTimer(1)">1 דק'</button>
+              <button class="preset-btn" onclick="setToolTimer(3)">3 דק'</button>
+              <button class="preset-btn" onclick="setToolTimer(5)">5 דק'</button>
+              <button class="preset-btn" onclick="setToolTimer(10)">10 דק'</button>
+            </div>
+            <div class="timer-actions" id="timerActions">
+              <button class="panel-btn-primary" id="timerStartBtn" onclick="startToolTimer()">הפעל</button>
+            </div>
+            <div class="timer-actions" id="timerRunningActions" style="display:none">
+              <button class="panel-btn-ghost" onclick="stopToolTimer()" style="flex:1">עצור</button>
+              <button class="panel-btn-ghost" onclick="resetToolTimer()" style="flex:1">אפס</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ WHITEBOARD PANEL ═══ -->
+        <style>
+          .wb-toolbar {
+            display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+            padding: 8px 0; border-bottom: 1px solid var(--border);
+          }
+          .wb-tool-btn {
+            width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border);
+            background: var(--card); color: var(--text); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 15px;
+            transition: all .15s;
+          }
+          .wb-tool-btn:hover { border-color: var(--cyan); }
+          .wb-tool-btn.active { background: var(--cyan); color: #fff; border-color: var(--cyan); }
+          .wb-sep { width: 1px; height: 20px; background: var(--border); margin: 0 2px; }
+          .wb-color-swatch {
+            width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent;
+            cursor: pointer; transition: border-color .15s;
+          }
+          .wb-color-swatch.active { border-color: var(--cyan); box-shadow: 0 0 0 2px rgba(56,196,242,.35); }
+          .wb-width-btn {
+            width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+            background: var(--card); cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all .15s;
+          }
+          .wb-width-btn:hover { border-color: var(--cyan); }
+          .wb-width-btn.active { background: var(--cyan); border-color: var(--cyan); }
+          .wb-width-dot { border-radius: 50%; background: var(--text); }
+          .wb-width-btn.active .wb-width-dot { background: #fff; }
+          .wb-canvas-wrap {
+            flex: 1; min-height: 0; display: flex; flex-direction: column;
+            border-radius: 8px; overflow: hidden; margin: 8px 0;
+            border: 1px solid var(--border);
+          }
+          #whiteboardCanvas { background: #fff; width: 100%; flex: 1; display: block; cursor: crosshair; border-radius: 8px; }
+          .wb-upload-zone {
+            border: 2px dashed var(--border); border-radius: 8px; padding: 10px;
+            text-align: center; color: var(--text-dim); font-size: 13px; cursor: pointer;
+            transition: border-color .15s;
+          }
+          .wb-upload-zone:hover { border-color: var(--cyan); color: var(--cyan); }
+          .wb-toggles { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        </style>
+
+        <div class="tool-panel" id="panel-whiteboard">
+          <button class="panel-back" onclick="closeToolPanel()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            ← חזרה לכלים
+          </button>
+          <div class="panel-title">לוח לבן</div>
+
+          <!-- Drawing Toolbar -->
+          <div class="wb-toolbar">
+            <!-- Pen -->
+            <button class="wb-tool-btn active" id="wbPen" onclick="wbSetTool('pen')" title="עט">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+            </button>
+            <!-- Eraser -->
+            <button class="wb-tool-btn" id="wbEraser" onclick="wbSetTool('eraser')" title="מחק">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 20H7L3 16l9-9 8 8-4 4z"/><path d="M6 11l8 8"/></svg>
+            </button>
+
+            <div class="wb-sep"></div>
+
+            <!-- Color Swatches -->
+            <div class="wb-color-swatch active" style="background:#253E7A;" onclick="wbSetColor('#253E7A', this)" title="כחול כהה"></div>
+            <div class="wb-color-swatch" style="background:#38C4F2;" onclick="wbSetColor('#38C4F2', this)" title="תכלת"></div>
+            <div class="wb-color-swatch" style="background:#F05680;" onclick="wbSetColor('#F05680', this)" title="ורוד"></div>
+            <div class="wb-color-swatch" style="background:#1a1a1a;" onclick="wbSetColor('#1a1a1a', this)" title="שחור"></div>
+
+            <div class="wb-sep"></div>
+
+            <!-- Line Width -->
+            <button class="wb-width-btn active" onclick="wbSetWidth(2, this)" title="דק">
+              <div class="wb-width-dot" style="width:4px;height:4px;"></div>
+            </button>
+            <button class="wb-width-btn" onclick="wbSetWidth(4, this)" title="בינוני">
+              <div class="wb-width-dot" style="width:7px;height:7px;"></div>
+            </button>
+            <button class="wb-width-btn" onclick="wbSetWidth(8, this)" title="עבה">
+              <div class="wb-width-dot" style="width:10px;height:10px;"></div>
+            </button>
+
+            <div class="wb-sep"></div>
+
+            <!-- Clear -->
+            <button class="wb-tool-btn" onclick="wbClearCanvas()" title="נקה הכל" style="color:#F05680;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            </button>
+          </div>
+
+          <!-- Canvas -->
+          <div class="wb-canvas-wrap">
+            <canvas id="whiteboardCanvas"></canvas>
+          </div>
+
+          <!-- Upload Image -->
+          <div class="wb-upload-zone" onclick="document.getElementById('wbFileInput').click()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:middle;margin-left:4px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            העלה תמונה
+            <input type="file" id="wbFileInput" accept="image/*" style="display:none" onchange="wbUploadImage(event)">
+          </div>
+
+          <!-- Toggles -->
+          <div class="wb-toggles">
+            <div class="toggle-row">
+              <span class="toggle-label">שתף עם התלמידים</span>
+              <button class="toggle-switch on" onclick="this.classList.toggle('on')"></button>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">אפשר לתלמידים לצייר</span>
+              <button class="toggle-switch" onclick="this.classList.toggle('on')"></button>
+            </div>
+          </div>
+
+          <!-- Close Button -->
+          <button class="panel-btn-ghost" onclick="closeToolPanel()" style="width:100%; margin-top:10px;">סגור לוח</button>
+        </div>
+
+        <!-- Whiteboard Drawing Script -->
+        <script>
+        (function() {
+          const canvas = document.getElementById('whiteboardCanvas');
+          const ctx = canvas.getContext('2d');
+          let drawing = false;
+          let currentColor = '#253E7A';
+          let currentWidth = 2;
+          let currentTool = 'pen';
+
+          function resizeCanvas() {
+            const wrap = canvas.parentElement;
+            const rect = wrap.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = rect.height + 'px';
+            ctx.scale(dpr, dpr);
+            ctx.putImageData(imgData, 0, 0);
+          }
+
+          // Observe panel becoming active to resize canvas
+          const observer = new MutationObserver(function() {
+            const panel = document.getElementById('panel-whiteboard');
+            if (panel && panel.classList.contains('active')) {
+              setTimeout(resizeCanvas, 50);
+            }
+          });
+          observer.observe(document.getElementById('panel-whiteboard'), { attributes: true, attributeFilter: ['class'] });
+          window.addEventListener('resize', resizeCanvas);
+
+          function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+          }
+
+          function startDraw(e) {
+            e.preventDefault();
+            drawing = true;
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+          }
+
+          function draw(e) {
+            if (!drawing) return;
+            e.preventDefault();
+            const pos = getPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.strokeStyle = currentTool === 'eraser' ? '#ffffff' : currentColor;
+            ctx.lineWidth = currentTool === 'eraser' ? currentWidth * 4 : currentWidth;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+          }
+
+          function stopDraw(e) {
+            if (drawing) {
+              drawing = false;
+              ctx.closePath();
+            }
+          }
+
+          canvas.addEventListener('mousedown', startDraw);
+          canvas.addEventListener('mousemove', draw);
+          canvas.addEventListener('mouseup', stopDraw);
+          canvas.addEventListener('mouseleave', stopDraw);
+          canvas.addEventListener('touchstart', startDraw, { passive: false });
+          canvas.addEventListener('touchmove', draw, { passive: false });
+          canvas.addEventListener('touchend', stopDraw);
+
+          // Expose globals for toolbar buttons
+          window.wbSetTool = function(tool) {
+            currentTool = tool;
+            document.getElementById('wbPen').classList.toggle('active', tool === 'pen');
+            document.getElementById('wbEraser').classList.toggle('active', tool === 'eraser');
+            canvas.style.cursor = tool === 'eraser' ? 'cell' : 'crosshair';
+          };
+
+          window.wbSetColor = function(color, el) {
+            currentColor = color;
+            currentTool = 'pen';
+            document.getElementById('wbPen').classList.add('active');
+            document.getElementById('wbEraser').classList.remove('active');
+            canvas.style.cursor = 'crosshair';
+            document.querySelectorAll('.wb-color-swatch').forEach(s => s.classList.remove('active'));
+            el.classList.add('active');
+          };
+
+          window.wbSetWidth = function(w, el) {
+            currentWidth = w;
+            document.querySelectorAll('.wb-width-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+          };
+
+          window.wbClearCanvas = function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+          };
+
+          window.wbUploadImage = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const img = new Image();
+            img.onload = function() {
+              const cw = canvas.width / (window.devicePixelRatio || 1);
+              const ch = canvas.height / (window.devicePixelRatio || 1);
+              const scale = Math.min(cw / img.width, ch / img.height, 1);
+              const w = img.width * scale;
+              const h = img.height * scale;
+              const x = (cw - w) / 2;
+              const y = (ch - h) / 2;
+              ctx.drawImage(img, x, y, w, h);
+            };
+            img.src = URL.createObjectURL(file);
+            e.target.value = '';
+          };
+        })();
+        </script>
+
+        <!-- ═══ BREAKOUT ROOMS PANEL ═══ -->
+        <div class="tool-panel" id="panel-breakout">
+          <button class="panel-back" onclick="closeToolPanel()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            חזרה לכלים
+          </button>
+          <div class="panel-title">חדרי דיון</div>
+          <div class="panel-body">
+            <div class="panel-field">
+              <label class="panel-label">מספר חדרים</label>
+              <input class="panel-input" type="number" value="4" min="2" max="8">
+            </div>
+            <div class="panel-field">
+              <label class="panel-label">זמן לכל חדר</label>
+              <select class="panel-select">
+                <option value="5">5 דקות</option>
+                <option value="10" selected>10 דקות</option>
+                <option value="15">15 דקות</option>
+                <option value="20">20 דקות</option>
+              </select>
+            </div>
+            <button class="panel-btn-ghost" onclick="showToast('המשתתפים חולקו אוטומטית ל-4 חדרים')" style="width:100%">חלק אוטומטית</button>
+            <button class="panel-btn-primary" onclick="launchBreakout()">פתח חדרי דיון</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <button class="bar-btn" id="btnMic" onclick="toggleBtn('btnMic')">
+    <span class="tooltip">מיקרופון</span>
+    <svg class="ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    <svg class="ico-off" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/><path d="M17 16.95A7 7 0 015 12v-2m14 0v2c0 .67-.1 1.32-.27 1.93"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+  </button>
+  <button class="bar-btn" id="btnCam" onclick="toggleBtn('btnCam')">
+    <span class="tooltip">מצלמה</span>
+    <svg class="ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+    <svg class="ico-off" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16.5 7.5L23 7v10l-4.5-3.12"/><rect x="1" y="5" width="15" height="14" rx="2"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+  </button>
+  <button class="bar-btn" id="btnScreen" onclick="toggleScreenShare()">
+    <span class="tooltip">שיתוף מסך</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+  </button>
+
+  <div class="bar-divider"></div>
+
+  <button class="bar-btn" id="btnChat" onclick="toggleSidebarTab('chat')">
+    <span class="tooltip">צ'אט</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+  </button>
+  <button class="bar-btn active" id="btnParticipants" onclick="toggleSidebarTab('participants')">
+    <span class="tooltip">משתתפים</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+  </button>
+  <button class="bar-btn" id="btnReactions" onclick="showToast('&#128079;')">
+    <span class="tooltip">תגובות</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+  </button>
+  <button class="bar-btn" id="btnTools" onclick="toggleSidebarTab('tools')">
+    <span class="tooltip">כלים אינטראקטיביים</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+  </button>
+
+  <div class="bar-divider"></div>
+
+  <button class="bar-btn active" id="btnRec" onclick="toggleRecording()">
+    <span class="tooltip">הקלטה</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>
+  </button>
+
+  <div class="bar-divider"></div>
+
+  <button class="bar-end-btn" onclick="showEndModal()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/></svg>
+    סיים
+  </button>
+</div>
+
+<!-- CONTEXT MENU -->
+<div class="context-menu" id="contextMenu">
+  <div class="context-menu-item" onclick="hideContextMenu(); showToast('המשתתף הושתק')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/></svg>
+    השתק
+  </div>
+  <div class="context-menu-item" onclick="hideContextMenu(); showToast('הוגדר כמציג')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    הפוך למציג
+  </div>
+  <div class="context-menu-item danger" onclick="hideContextMenu(); showToast('המשתתף הוסר')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
+    הסר מהשיעור
+  </div>
+</div>
+
+<!-- END SESSION MODAL -->
+<div class="modal-overlay" id="endModal">
+  <div class="modal">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <h3>לסיים את השיעור?</h3>
+    <p>כל המשתתפים ינותקו מהשיעור. ההקלטה תישמר אוטומטית.</p>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="hideEndModal()">ביטול</button>
+      <button class="modal-btn danger" onclick="hideEndModal(); showToast('השיעור הסתיים')">סיים שיעור</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toastText"></span>
+</div>
+
+<script>
+  // Toggle bar buttons on/off
+  function toggleBtn(id) {
+    const btn = document.getElementById(id);
+    const isOff = btn.classList.toggle('off');
+    const onIcon = btn.querySelector('.ico-on');
+    const offIcon = btn.querySelector('.ico-off');
+    if (onIcon && offIcon) {
+      onIcon.style.display = isOff ? 'none' : 'block';
+      offIcon.style.display = isOff ? 'block' : 'none';
+    }
+  }
+
+  // Screen share toggle
+  let screenSharing = false;
+  function toggleScreenShare() {
+    screenSharing = !screenSharing;
+    const btn = document.getElementById('btnScreen');
+    const badge = document.getElementById('screenShareBadge');
+    const pip = document.getElementById('pipVideo');
+    btn.classList.toggle('active', screenSharing);
+    badge.classList.toggle('active', screenSharing);
+    pip.style.display = screenSharing ? 'block' : 'none';
+    showToast(screenSharing ? 'שיתוף מסך הופעל' : 'שיתוף מסך הופסק');
+  }
+
+  // Recording toggle
+  let recording = true;
+  function toggleRecording() {
+    recording = !recording;
+    const btn = document.getElementById('btnRec');
+    const indicator = document.getElementById('recIndicator');
+    btn.classList.toggle('active', recording);
+    indicator.style.display = recording ? 'flex' : 'none';
+    showToast(recording ? 'ההקלטה חודשה' : 'ההקלטה הופסקה');
+  }
+
+  // Sidebar tab management
+  let currentTab = 'participants';
+  let sidebarOpen = true;
+
+  function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
+    updateBarBtnStates();
+  }
+
+  function toggleSidebarTab(tab) {
+    const sidebar = document.getElementById('rightSidebar');
+    if (currentTab === tab && sidebarOpen) {
+      sidebar.classList.add('collapsed');
+      sidebarOpen = false;
+    } else {
+      sidebar.classList.remove('collapsed');
+      sidebarOpen = true;
+      switchTab(tab);
+    }
+    updateBarBtnStates();
+  }
+
+  function updateBarBtnStates() {
+    ['btnChat', 'btnParticipants', 'btnTools'].forEach(id => {
+      document.getElementById(id).classList.remove('active');
+    });
+    if (sidebarOpen) {
+      const map = { chat: 'btnChat', participants: 'btnParticipants', tools: 'btnTools' };
+      if (map[currentTab]) document.getElementById(map[currentTab]).classList.add('active');
+    }
+  }
+
+  // Context menu
+  function showContextMenu(e, el) {
+    e.stopPropagation();
+    const menu = document.getElementById('contextMenu');
+    menu.classList.add('show');
+    const rect = el.getBoundingClientRect();
+    menu.style.top = rect.bottom + 'px';
+    menu.style.right = (window.innerWidth - rect.right) + 'px';
+    menu.style.left = 'auto';
+  }
+
+  function hideContextMenu() {
+    document.getElementById('contextMenu').classList.remove('show');
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.context-menu')) hideContextMenu();
+  });
+
+  // End modal
+  function showEndModal() {
+    document.getElementById('endModal').classList.add('show');
+  }
+  function hideEndModal() {
+    document.getElementById('endModal').classList.remove('show');
+  }
+
+  // Chat send
+  function sendChat() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    const container = document.getElementById('chatMessages');
+    const now = new Date();
+    const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+    const msg = document.createElement('div');
+    msg.className = 'chat-msg';
+    msg.innerHTML = `
+      <div class="chat-avatar teacher">א.ג</div>
+      <div class="chat-bubble">
+        <div class="chat-header"><span class="chat-name">אלון גבאי</span><span class="chat-time">${time}</span></div>
+        <div class="chat-text">${text}</div>
+      </div>`;
+    container.appendChild(msg);
+    input.value = '';
+    container.scrollTop = container.scrollHeight;
+  }
+
+  // Toast
+  function showToast(text) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastText').textContent = text;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  // Timer simulation
+  let seconds = 32 * 60 + 15;
+  setInterval(() => {
+    seconds++;
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    document.getElementById('timerDisplay').textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }, 1000);
+
+  // ── TOOL PANEL NAVIGATION ──────────────────
+  function openToolPanel(panelId) {
+    document.querySelector('.tools-grid').style.display = 'none';
+    document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById('panel-' + panelId);
+    if (panel) panel.classList.add('active');
+
+    // Show whiteboard preview when opening whiteboard panel
+    if (panelId === 'whiteboard') {
+      showStudentPreview('whiteboard');
+    }
+  }
+
+  function closeToolPanel() {
+    document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('.tools-grid').style.display = 'grid';
+    hideStudentPreview();
+  }
+
+  // ── POLL ────────────────────────────────────
+  let pollOptionCount = 4;
+  function addPollOption() {
+    pollOptionCount++;
+    const container = document.querySelector('#pollOptions > div');
+    const input = document.createElement('input');
+    input.className = 'panel-input';
+    input.type = 'text';
+    input.placeholder = 'אפשרות ' + pollOptionCount;
+    container.appendChild(input);
+  }
+
+  function sendPoll() {
+    const inputs = document.querySelectorAll('#pollOptions .panel-input');
+    const options = [];
+    inputs.forEach((inp, i) => {
+      options.push(inp.value || 'אפשרות ' + (i + 1));
+    });
+
+    document.getElementById('pollConfig').style.display = 'none';
+    document.getElementById('pollResults').style.display = 'flex';
+
+    const barsContainer = document.getElementById('pollResultBars');
+    barsContainer.innerHTML = '';
+    options.forEach(opt => {
+      const row = document.createElement('div');
+      row.className = 'poll-result-row';
+      row.innerHTML = `
+        <div class="poll-result-label"><span>${opt}</span><span class="pct">0%</span></div>
+        <div class="poll-result-bar"><div class="poll-result-fill" style="width:0%"></div></div>`;
+      barsContainer.appendChild(row);
+    });
+
+    // Simulate live results
+    let responses = 0;
+    const interval = setInterval(() => {
+      responses += Math.floor(Math.random() * 4) + 1;
+      if (responses > 28) responses = 28;
+      document.getElementById('pollResponseCount').textContent = responses;
+
+      const fills = barsContainer.querySelectorAll('.poll-result-fill');
+      const pcts = barsContainer.querySelectorAll('.pct');
+      const values = Array.from(fills).map(() => Math.random());
+      const total = values.reduce((a, b) => a + b, 0);
+      values.forEach((v, i) => {
+        const pct = Math.round((v / total) * 100);
+        fills[i].style.width = pct + '%';
+        pcts[i].textContent = pct + '%';
+      });
+
+      if (responses >= 28) clearInterval(interval);
+    }, 800);
+
+    showToast('הסקר נשלח ל-28 משתתפים');
+
+    // Show student preview on video stage
+    const questionInput = document.querySelector('#pollConfig .panel-input');
+    const pollQuestion = questionInput ? questionInput.value || 'מה הצבע האהוב עליכם?' : 'מה הצבע האהוב עליכם?';
+    const durationSelect = document.querySelector('#pollConfig .panel-select');
+    const pollDuration = durationSelect ? parseInt(durationSelect.value) : 30;
+    showStudentPreview('poll', { question: pollQuestion, options: options, duration: pollDuration });
+  }
+
+  function closePollResults() {
+    document.getElementById('pollResults').style.display = 'none';
+    document.getElementById('pollConfig').style.display = 'flex';
+    closeToolPanel();
+  }
+
+  // ── QUIZ ────────────────────────────────────
+  function markCorrect(btn) {
+    document.querySelectorAll('#panel-quiz .option-radio').forEach(r => r.classList.remove('correct'));
+    btn.classList.add('correct');
+  }
+
+  function sendQuiz() {
+    const inputs = document.querySelectorAll('#quizConfig .option-row .panel-input');
+    const answers = [];
+    inputs.forEach((inp, i) => answers.push(inp.value || 'תשובה ' + (i + 1)));
+
+    document.getElementById('quizConfig').style.display = 'none';
+    document.getElementById('quizResults').style.display = 'flex';
+
+    const barsContainer = document.getElementById('quizResultBars');
+    barsContainer.innerHTML = '';
+    answers.forEach(ans => {
+      const row = document.createElement('div');
+      row.className = 'poll-result-row';
+      row.innerHTML = `
+        <div class="poll-result-label"><span>${ans}</span><span class="pct">0%</span></div>
+        <div class="poll-result-bar"><div class="poll-result-fill" style="width:0%"></div></div>`;
+      barsContainer.appendChild(row);
+    });
+
+    const leaderboard = document.getElementById('quizLeaderboard');
+    leaderboard.innerHTML = '';
+    const students = ['דנה כהן','יוסי לוי','עומר חדד','נועה פרידמן','שירה מזרחי'];
+
+    let responses = 0;
+    const interval = setInterval(() => {
+      responses += Math.floor(Math.random() * 5) + 1;
+      if (responses > 28) responses = 28;
+      document.getElementById('quizResponseCount').textContent = responses;
+
+      const fills = barsContainer.querySelectorAll('.poll-result-fill');
+      const pcts = barsContainer.querySelectorAll('.pct');
+      const values = Array.from(fills).map(() => Math.random());
+      const total = values.reduce((a, b) => a + b, 0);
+      values.forEach((v, i) => {
+        const pct = Math.round((v / total) * 100);
+        fills[i].style.width = pct + '%';
+        pcts[i].textContent = pct + '%';
+      });
+
+      // Update leaderboard
+      const scores = students.map(s => ({ name: s, score: Math.floor(Math.random() * 500) + 500 }));
+      scores.sort((a, b) => b.score - a.score);
+      leaderboard.innerHTML = scores.map((s, i) => `
+        <div class="lb-row">
+          <span class="lb-rank">${i + 1}</span>
+          <span class="lb-name">${s.name}</span>
+          <span class="lb-score">${s.score}</span>
+        </div>`).join('');
+
+      if (responses >= 28) clearInterval(interval);
+    }, 900);
+
+    showToast('השאלה נשלחה ל-28 משתתפים');
+
+    // Show student preview on video stage
+    const quizQuestionInput = document.querySelector('#quizConfig .panel-field .panel-input');
+    const quizQuestion = quizQuestionInput ? quizQuestionInput.value || 'מה הצבע המשלים לאדום?' : 'מה הצבע המשלים לאדום?';
+    const correctBtns = document.querySelectorAll('#panel-quiz .option-radio');
+    let correctIndex = 2;
+    correctBtns.forEach((b, i) => { if (b.classList.contains('correct')) correctIndex = i; });
+    const timerSelect = document.querySelector('#quizConfig .panel-select');
+    const quizTimer = timerSelect ? parseInt(timerSelect.value) : 15;
+    showStudentPreview('quiz', { question: quizQuestion, answers: answers, correctIndex: correctIndex, timer: quizTimer });
+  }
+
+  function closeQuizResults() {
+    document.getElementById('quizResults').style.display = 'none';
+    document.getElementById('quizConfig').style.display = 'flex';
+    closeToolPanel();
+  }
+
+  // ── TOOL TIMER ──────────────────────────────
+  let toolTimerInterval = null;
+  let toolTimerSeconds = 300;
+
+  function setToolTimer(minutes) {
+    toolTimerSeconds = minutes * 60;
+    document.getElementById('timerMin').value = String(minutes).padStart(2, '0');
+    document.getElementById('timerSec').value = '00';
+  }
+
+  function readToolTimer() {
+    const m = parseInt(document.getElementById('timerMin').value) || 0;
+    const s = parseInt(document.getElementById('timerSec').value) || 0;
+    toolTimerSeconds = m * 60 + s;
+  }
+
+  function updateToolTimerDisplay() {
+    const m = Math.floor(toolTimerSeconds / 60);
+    const s = toolTimerSeconds % 60;
+    document.getElementById('timerMin').value = String(m).padStart(2, '0');
+    document.getElementById('timerSec').value = String(s).padStart(2, '0');
+  }
+
+  function startToolTimer() {
+    readToolTimer();
+    if (toolTimerSeconds <= 0) return;
+    document.getElementById('timerMin').readOnly = true;
+    document.getElementById('timerSec').readOnly = true;
+    document.getElementById('timerActions').style.display = 'none';
+    document.getElementById('timerRunningActions').style.display = 'flex';
+
+    toolTimerInterval = setInterval(() => {
+      toolTimerSeconds--;
+      updateToolTimerDisplay();
+      if (toolTimerSeconds <= 0) {
+        clearInterval(toolTimerInterval);
+        toolTimerInterval = null;
+        showToast('הזמן נגמר!');
+        resetToolTimer();
+      }
+    }, 1000);
+
+    showToast('הטיימר הופעל');
+    showStudentPreview('timer', { totalSeconds: toolTimerSeconds });
+  }
+
+  function stopToolTimer() {
+    if (toolTimerInterval) {
+      clearInterval(toolTimerInterval);
+      toolTimerInterval = null;
+    }
+    document.getElementById('timerMin').readOnly = false;
+    document.getElementById('timerSec').readOnly = false;
+    document.getElementById('timerActions').style.display = 'flex';
+    document.getElementById('timerRunningActions').style.display = 'none';
+  }
+
+  function resetToolTimer() {
+    stopToolTimer();
+    toolTimerSeconds = 300;
+    updateToolTimerDisplay();
+  }
+
+  // ── BREAKOUT LAUNCH ──────────────────────────
+  function launchBreakout() {
+    const roomsInput = document.querySelector('#panel-breakout .panel-input[type="number"]');
+    const durationSelect = document.querySelector('#panel-breakout .panel-select:last-of-type');
+    const rooms = roomsInput ? parseInt(roomsInput.value) || 4 : 4;
+    const duration = durationSelect ? parseInt(durationSelect.value) || 10 : 10;
+    showToast('חדרי דיון נפתחו! המשתתפים מועברים לחדרים');
+    showStudentPreview('breakout', { rooms: rooms, duration: duration });
+  }
+
+  // ══════════════════════════════════════════════
+  // ── STUDENT PREVIEW OVERLAY ───────────────────
+  // ══════════════════════════════════════════════
+  let previewTimerInterval = null;
+
+  function showStudentPreview(type, data) {
+    const overlay = document.getElementById('student-preview');
+    const card = document.getElementById('sp-card-content');
+    card.className = 'sp-card';
+
+    if (previewTimerInterval) { clearInterval(previewTimerInterval); previewTimerInterval = null; }
+
+    switch (type) {
+      case 'poll':
+        card.innerHTML = buildPollPreview(data);
+        break;
+      case 'quiz':
+        card.innerHTML = buildQuizPreview(data);
+        break;
+      case 'game':
+        card.classList.add('wide');
+        card.innerHTML = buildGamePreview();
+        break;
+      case 'timer':
+        card.innerHTML = buildTimerPreview(data);
+        startTimerPreviewAnimation(data);
+        break;
+      case 'whiteboard':
+        card.innerHTML = buildWhiteboardPreview();
+        break;
+      case 'breakout':
+        card.innerHTML = buildBreakoutPreview(data);
+        break;
+    }
+
+    overlay.classList.add('active');
+    // Hide gallery strip and bottom bar to give full space to preview
+    const gallery = document.querySelector('.participant-gallery');
+    if (gallery) gallery.style.display = 'none';
+  }
+
+  function hideStudentPreview() {
+    const overlay = document.getElementById('student-preview');
+    overlay.classList.remove('active');
+    if (previewTimerInterval) { clearInterval(previewTimerInterval); previewTimerInterval = null; }
+    // Restore gallery strip
+    const gallery = document.querySelector('.participant-gallery');
+    if (gallery) gallery.style.display = '';
+  }
+
+  // ── POLL PREVIEW ──────────────────────────
+  function buildPollPreview(data) {
+    const q = data.question || 'מה הצבע האהוב עליכם?';
+    const opts = data.options || ['אפשרות 1','אפשרות 2','אפשרות 3','אפשרות 4'];
+    const dur = data.duration || 30;
+
+    let optionsHtml = opts.map((o, i) =>
+      `<button class="sp-option-btn" onclick="spSelectPollOption(this, ${opts.length})">${o}</button>`
+    ).join('');
+
+    return `
+      <div class="sp-tool-badge poll">סקר מהיר</div>
+      <div class="sp-timer-inline" id="sp-poll-timer">${dur} שניות</div>
+      <div class="sp-question">${q}</div>
+      <div class="sp-options" id="sp-poll-options">${optionsHtml}</div>
+      <div id="sp-poll-results" style="display:none"></div>
+    `;
+  }
+
+  function spSelectPollOption(btn, count) {
+    // Mark selected
+    btn.closest('.sp-options').querySelectorAll('.sp-option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+
+    // After 1.5s show simulated results
+    setTimeout(() => {
+      const optBtns = document.querySelectorAll('#sp-poll-options .sp-option-btn');
+      const resultsDiv = document.getElementById('sp-poll-results');
+      const colors = ['#38C4F2','#F05680','#EAD654','#7DC57A','#a78bfa','#ff8c42'];
+      let html = '';
+      optBtns.forEach((b, i) => {
+        const pct = Math.floor(Math.random() * 40) + 10;
+        html += `<div class="sp-result-row">
+          <span class="sp-result-label">${b.textContent}</span>
+          <div class="sp-result-bar-bg"><div class="sp-result-bar-fill" style="width:${pct}%;background:${colors[i % colors.length]}"></div></div>
+          <span class="sp-result-pct">${pct}%</span>
+        </div>`;
+      });
+      document.getElementById('sp-poll-options').style.display = 'none';
+      resultsDiv.style.display = 'block';
+      resultsDiv.innerHTML = html;
+    }, 1500);
+  }
+
+  // ── QUIZ PREVIEW ──────────────────────────
+  function buildQuizPreview(data) {
+    const q = data.question || 'מה הצבע המשלים לאדום?';
+    const answers = data.answers || ['תשובה 1','תשובה 2','תשובה 3','תשובה 4'];
+    const correctIdx = data.correctIndex !== undefined ? data.correctIndex : 2;
+    const dur = data.timer || 15;
+    const letters = ['A','B','C','D','E','F'];
+    const students = ['דנה כהן','יוסי לוי','עומר חדד','נועה פרידמן','שירה מזרחי'];
+
+    let optionsHtml = answers.map((a, i) =>
+      `<button class="sp-option-btn" data-idx="${i}" data-correct="${i === correctIdx}" onclick="spSelectQuizOption(this, ${correctIdx})">
+        <span class="sp-option-letter">${letters[i]}</span>
+        ${a}
+      </button>`
+    ).join('');
+
+    let lbHtml = students.map((s, i) => {
+      const score = Math.floor(Math.random() * 300) + 700;
+      return `<div class="sp-lb-row"><span class="sp-lb-rank">${i+1}</span><span class="sp-lb-name">${s}</span><span class="sp-lb-score">${score}</span></div>`;
+    }).join('');
+
+    return `
+      <div class="sp-tool-badge quiz">שאלה חיה</div>
+      <div class="sp-timer-inline">${dur} שניות</div>
+      <div class="sp-question">${q}</div>
+      <div class="sp-options" id="sp-quiz-options">${optionsHtml}</div>
+      <div id="sp-quiz-feedback" style="display:none"></div>
+      <div class="sp-leaderboard" id="sp-quiz-lb" style="display:none">
+        <div class="sp-lb-title">טבלת מובילים</div>
+        ${lbHtml}
+      </div>
+    `;
+  }
+
+  function spSelectQuizOption(btn, correctIdx) {
+    const allBtns = btn.closest('.sp-options').querySelectorAll('.sp-option-btn');
+    allBtns.forEach(b => {
+      b.style.pointerEvents = 'none';
+      const idx = parseInt(b.dataset.idx);
+      if (idx === correctIdx) {
+        b.classList.add('correct');
+      } else if (b === btn && idx !== correctIdx) {
+        b.classList.add('wrong');
+      }
+    });
+
+    // Show points animation and leaderboard
+    setTimeout(() => {
+      const feedback = document.getElementById('sp-quiz-feedback');
+      const isCorrect = parseInt(btn.dataset.idx) === correctIdx;
+      feedback.style.display = 'block';
+      feedback.innerHTML = isCorrect
+        ? '<div class="sp-points-anim">+100 נקודות!</div>'
+        : '<div style="color:#ef4444;font-weight:700;font-size:15px;margin-top:8px">לא נכון...</div>';
+      document.getElementById('sp-quiz-lb').style.display = 'block';
+    }, 800);
+  }
+
+  // ── GAME PREVIEW ──────────────────────────
+  function buildGamePreview() {
+    const emojis = ['🎨','🖌️','🌈','🎭','🖼️','✏️','🎨','🖌️','🌈','🎭','🖼️','✏️'];
+    // Shuffle
+    for (let i = emojis.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [emojis[i], emojis[j]] = [emojis[j], emojis[i]];
+    }
+
+    const logoPath = '../LOGO/LOGO PNG/WHITEBOARD 2.0-10.png';
+    let cards = emojis.map((e, i) => `
+      <div class="sp-mem-card" onclick="spFlipCard(this)" data-emoji="${e}" data-idx="${i}">
+        <div class="sp-mem-card-inner">
+          <div class="sp-mem-card-front"><img src="${logoPath}" alt="W" onerror="this.style.display='none';this.parentElement.innerHTML+='<span style=\\'color:white;font-size:20px;font-weight:700\\'>W</span>'"></div>
+          <div class="sp-mem-card-back">${e}</div>
+        </div>
+      </div>
+    `).join('');
+
+    const students = ['דנה כהן','יוסי לוי','עומר חדד','נועה פרידמן','שירה מזרחי'];
+    let lbHtml = students.map((s, i) => {
+      const score = Math.floor(Math.random() * 6) + 1;
+      return `<div class="sp-lb-row"><span class="sp-lb-rank">${i+1}</span><span class="sp-lb-name">${s}</span><span class="sp-lb-score">${score} זוגות</span></div>`;
+    }).join('');
+
+    return `
+      <div class="sp-tool-badge game">משחק חי: זיכרון</div>
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-top:8px;text-align:right">
+        <div style="flex:1">
+          <div class="sp-memory-grid">${cards}</div>
+        </div>
+        <div style="width:140px;flex-shrink:0">
+          <div class="sp-leaderboard" style="border:none;padding:0;margin:0">
+            <div class="sp-lb-title">דירוג</div>
+            ${lbHtml}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  let spFlippedCards = [];
+  function spFlipCard(card) {
+    if (card.classList.contains('flipped') || spFlippedCards.length >= 2) return;
+    card.classList.add('flipped');
+    spFlippedCards.push(card);
+
+    if (spFlippedCards.length === 2) {
+      const [a, b] = spFlippedCards;
+      if (a.dataset.emoji === b.dataset.emoji) {
+        // Match
+        spFlippedCards = [];
+      } else {
+        // No match — flip back
+        setTimeout(() => {
+          a.classList.remove('flipped');
+          b.classList.remove('flipped');
+          spFlippedCards = [];
+        }, 900);
+      }
+    }
+  }
+
+  // ── TIMER PREVIEW ─────────────────────────
+  function buildTimerPreview(data) {
+    const totalSec = data.totalSeconds || 300;
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
+    const circumference = 2 * Math.PI * 68;
+
+    return `
+      <div class="sp-tool-badge timer">טיימר</div>
+      <div class="sp-timer-ring-wrap">
+        <div class="sp-timer-ring">
+          <svg viewBox="0 0 160 160">
+            <circle class="sp-timer-ring-bg" cx="80" cy="80" r="68" fill="none" stroke-width="8"/>
+            <circle class="sp-timer-ring-fg" id="sp-timer-arc" cx="80" cy="80" r="68" fill="none" stroke-width="8"
+              stroke-dasharray="${circumference}" stroke-dashoffset="0" stroke-linecap="round"/>
+          </svg>
+          <div class="sp-timer-time" id="sp-timer-time">${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</div>
+        </div>
+        <div class="sp-timer-subtitle">המרצה הפעיל טיימר</div>
+      </div>
+    `;
+  }
+
+  function startTimerPreviewAnimation(data) {
+    let remaining = data.totalSeconds || 300;
+    const total = remaining;
+    const circumference = 2 * Math.PI * 68;
+
+    previewTimerInterval = setInterval(() => {
+      remaining--;
+      if (remaining < 0) { clearInterval(previewTimerInterval); previewTimerInterval = null; return; }
+      const m = Math.floor(remaining / 60);
+      const s = remaining % 60;
+      const timeEl = document.getElementById('sp-timer-time');
+      const arcEl = document.getElementById('sp-timer-arc');
+      if (timeEl) timeEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+      if (arcEl) arcEl.setAttribute('stroke-dashoffset', circumference * (1 - remaining / total));
+    }, 1000);
+  }
+
+  // ── WHITEBOARD PREVIEW ────────────────────
+  function buildWhiteboardPreview() {
+    return `
+      <div class="sp-tool-badge whiteboard">לוח לבן — תצוגת תלמיד</div>
+      <div class="sp-wb-canvas">
+        <svg class="sp-wb-marks" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+          <path d="M60 80 Q120 30 180 90 T300 70" stroke="#253E7A" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M80 140 Q150 120 200 160 T340 130" stroke="#38C4F2" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="140" cy="100" r="28" stroke="#F05680" stroke-width="2" fill="none"/>
+          <rect x="220" y="80" width="60" height="40" rx="4" stroke="#7DC57A" stroke-width="2" fill="none"/>
+          <text x="200" y="210" font-family="Heebo" font-size="14" fill="#666" text-anchor="middle">רישום חופשי</text>
+        </svg>
+      </div>
+      <div style="font-size:13px;color:#888;margin-top:8px">המרצה משתף לוח לבן</div>
+    `;
+  }
+
+  // ── BREAKOUT PREVIEW ──────────────────────
+  function buildBreakoutPreview(data) {
+    const rooms = data.rooms || 4;
+    const duration = data.duration || 10;
+    let roomsHtml = '';
+    const studentsPerRoom = Math.ceil(28 / rooms);
+    for (let i = 1; i <= rooms; i++) {
+      const count = i === rooms ? 28 - studentsPerRoom * (rooms - 1) : studentsPerRoom;
+      roomsHtml += `
+        <div class="sp-room-card">
+          <div class="sp-room-name">חדר ${i}</div>
+          <div class="sp-room-count">${count > 0 ? count : studentsPerRoom} משתתפים</div>
+        </div>`;
+    }
+
+    return `
+      <div class="sp-tool-badge breakout">חדרי דיון</div>
+      <div class="sp-question" style="font-size:15px;margin-bottom:8px">התלמידים הועברו לחדרי דיון</div>
+      <div class="sp-timer-inline">זמן לכל חדר: ${duration} דקות</div>
+      <div class="sp-breakout-rooms">${roomsHtml}</div>
+    `;
+  }
+</script>
+</body>
+</html>

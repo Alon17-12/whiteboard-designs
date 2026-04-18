@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHITEBOARD Live — מדריך יישום מלא</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #253E7A;
+  --cyan: #38C4F2;
+  --pink: #F05680;
+  --dark-bg: #1a2740;
+  --code-text: #e2e8f0;
+  --light-gray: #f7f8fc;
+  --border: #e2e6ef;
+  --text: #2d3748;
+  --text-light: #64748b;
+  --sidebar-w: 280px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Heebo', sans-serif;
+  color: var(--text);
+  background: #fff;
+  line-height: 1.75;
+  font-size: 15px;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--navy);
+  color: #fff;
+  overflow-y: auto;
+  z-index: 100;
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logo {
+  padding: 0 28px 28px;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  margin-bottom: 16px;
+}
+
+.sidebar-logo h1 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.sidebar-logo .subtitle {
+  font-size: 12px;
+  color: rgba(255,255,255,.55);
+  font-weight: 300;
+}
+
+.sidebar nav {
+  flex: 1;
+  padding: 0 16px;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: rgba(255,255,255,.72);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 400;
+  transition: all .2s;
+  margin-bottom: 2px;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+  background: rgba(56,196,242,.15);
+  color: #fff;
+}
+
+.sidebar nav a .num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(56,196,242,.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cyan);
+  flex-shrink: 0;
+}
+
+.sidebar nav a:hover .num,
+.sidebar nav a.active .num {
+  background: var(--cyan);
+  color: var(--navy);
+}
+
+.sidebar-footer {
+  padding: 20px 28px 0;
+  border-top: 1px solid rgba(255,255,255,.12);
+  margin-top: 12px;
+  font-size: 11px;
+  color: rgba(255,255,255,.35);
+  line-height: 1.6;
+}
+
+/* ── Main Content ── */
+.main {
+  margin-right: var(--sidebar-w);
+  padding: 48px 64px 120px;
+  max-width: 960px;
+}
+
+/* ── Header ── */
+.page-header {
+  margin-bottom: 56px;
+  padding-bottom: 40px;
+  border-bottom: 2px solid var(--border);
+}
+
+.page-header h1 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+
+.page-header .tagline {
+  font-size: 17px;
+  color: var(--text-light);
+  max-width: 640px;
+}
+
+.page-header .meta {
+  margin-top: 20px;
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.page-header .meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Sections ── */
+.section {
+  margin-bottom: 64px;
+  scroll-margin-top: 32px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.section-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan), #2ab4e0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(56,196,242,.3);
+}
+
+.section-header h2 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.section h3 {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--navy);
+  margin: 28px 0 12px;
+}
+
+.section h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+  margin: 20px 0 8px;
+}
+
+.section p {
+  margin-bottom: 14px;
+  line-height: 1.8;
+}
+
+.section ul, .section ol {
+  padding-right: 24px;
+  margin-bottom: 16px;
+}
+
+.section li {
+  margin-bottom: 6px;
+}
+
+/* ── Info Boxes ── */
+.info-box {
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin: 20px 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.info-box.tip {
+  background: rgba(56,196,242,.08);
+  border-right: 4px solid var(--cyan);
+}
+
+.info-box.warning {
+  background: rgba(240,86,128,.07);
+  border-right: 4px solid var(--pink);
+}
+
+.info-box.tip::before {
+  content: "TIP";
+  display: inline-block;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cyan);
+  letter-spacing: .5px;
+  margin-bottom: 4px;
+}
+
+.info-box.warning::before {
+  content: "WARNING";
+  display: inline-block;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pink);
+  letter-spacing: .5px;
+  margin-bottom: 4px;
+}
+
+/* ── Code Blocks ── */
+pre {
+  background: var(--dark-bg);
+  color: var(--code-text);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 16px 0 20px;
+  overflow-x: auto;
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  direction: ltr;
+  text-align: left;
+}
+
+pre .comment { color: #64748b; }
+pre .keyword { color: #c084fc; }
+pre .string { color: #34d399; }
+pre .fn { color: #38C4F2; }
+pre .type { color: #fbbf24; }
+pre .number { color: #f97316; }
+
+code {
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 13px;
+  background: rgba(56,196,242,.08);
+  color: var(--navy);
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+
+/* ── Tables ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 24px;
+  font-size: 14px;
+}
+
+thead th {
+  background: var(--navy);
+  color: #fff;
+  font-weight: 500;
+  text-align: right;
+  padding: 12px 16px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+}
+
+thead th:first-child { border-radius: 0 10px 0 0; }
+thead th:last-child { border-radius: 10px 0 0 0; }
+
+tbody td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--light-gray);
+}
+
+tbody tr:hover {
+  background: rgba(56,196,242,.05);
+}
+
+/* ── Architecture Diagram ── */
+.arch-diagram {
+  background: var(--light-gray);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 32px;
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.arch-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.arch-box {
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 160px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all .2s;
+}
+
+.arch-box.primary {
+  border-color: var(--cyan);
+  background: rgba(56,196,242,.06);
+}
+
+.arch-box.secondary {
+  border-color: var(--navy);
+  background: rgba(37,62,122,.04);
+}
+
+.arch-box.accent {
+  border-color: var(--pink);
+  background: rgba(240,86,128,.04);
+}
+
+.arch-box .label {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+
+.arch-box .sub {
+  font-size: 11px;
+  color: var(--text-light);
+}
+
+.arch-arrow {
+  font-size: 20px;
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+.arch-arrow.down {
+  transform: rotate(90deg);
+}
+
+/* ── Screen Cards ── */
+.screen-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.screen-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all .2s;
+}
+
+.screen-card:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 4px 16px rgba(56,196,242,.1);
+}
+
+.screen-card .card-title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.screen-card .card-desc {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.screen-card .card-backend {
+  font-size: 12px;
+  color: var(--navy);
+  background: var(--light-gray);
+  border-radius: 8px;
+  padding: 10px 14px;
+  line-height: 1.6;
+}
+
+.screen-card .card-backend strong {
+  color: var(--pink);
+  font-weight: 600;
+}
+
+.screen-card a {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--cyan);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.screen-card a:hover { text-decoration: underline; }
+
+/* ── JSON Protocol Block ── */
+.protocol-group {
+  margin: 20px 0;
+}
+
+.protocol-group h4 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--navy);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 8px 8px 0 0;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.protocol-group pre {
+  margin-top: 0;
+  border-radius: 0 12px 12px 12px;
+}
+
+/* ── Phase Badge ── */
+.phase-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.phase-badge.p0 { background: rgba(240,86,128,.12); color: var(--pink); }
+.phase-badge.p1 { background: rgba(56,196,242,.12); color: #1a97c7; }
+.phase-badge.p2 { background: rgba(37,62,122,.1); color: var(--navy); }
+
+/* ── Separator ── */
+hr {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 48px 0;
+}
+
+/* ── Print ── */
+@media print {
+  .sidebar { display: none; }
+  .main { margin-right: 0; padding: 24px; }
+  pre { font-size: 11px; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { margin-right: 0; padding: 24px; }
+  .screen-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>WHITEBOARD Live</h1>
+    <div class="subtitle">Implementation Guide v1.0</div>
+  </div>
+  <nav>
+    <a href="#overview"><span class="num">1</span>סקירה כללית</a>
+    <a href="#architecture"><span class="num">2</span>ארכיטקטורה</a>
+    <a href="#infrastructure"><span class="num">3</span>תשתית נדרשת</a>
+    <a href="#screens"><span class="num">4</span>מסכי המערכת</a>
+    <a href="#livekit"><span class="num">5</span>LiveKit Integration</a>
+    <a href="#protocol"><span class="num">6</span>פרוטוקול אינטראקציות</a>
+    <a href="#recording"><span class="num">7</span>הקלטה ושידור</a>
+    <a href="#presets"><span class="num">8</span>פריסטים ותזמון</a>
+    <a href="#ai"><span class="num">9</span>BOARDi AI</a>
+    <a href="#roadmap"><span class="num">10</span>מפת דרכים</a>
+  </nav>
+  <div class="sidebar-footer">
+    WHITEBOARD LMS &copy; 2026<br>
+    מסמך פנימי — לא להפצה
+  </div>
+</aside>
+
+<!-- ── Main Content ── -->
+<div class="main">
+
+  <!-- Header -->
+  <header class="page-header">
+    <h1>WHITEBOARD Live — מדריך יישום מלא</h1>
+    <p class="tagline">
+      מדריך CTO-level ליישום מערכת וידאו חי עם כלים אינטראקטיביים בתוך פלטפורמת WHITEBOARD LMS.
+      מסמך זה מכיל את כל מה שמפתח צריך לדעת כדי לבנות את המערכת מאפס.
+    </p>
+    <div class="meta">
+      <span>גרסה 1.0</span>
+      <span>תאריך: אפריל 2026</span>
+      <span>10 פרקים</span>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 1: Overview -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="overview">
+    <div class="section-header">
+      <span class="section-num">1</span>
+      <h2>סקירה כללית</h2>
+    </div>
+
+    <h3>מהו WHITEBOARD Live?</h3>
+    <p>
+      WHITEBOARD Live הוא מודול וידאו-שיעור חי המוטמע ישירות בתוך פלטפורמת ה-LMS של WHITEBOARD.
+      בניגוד לפתרונות חיצוניים כמו Zoom או Google Meet, השיעור החי מתקיים בתוך הממשק עצמו —
+      כולל כלים אינטראקטיביים כמו סקרים, חידונים, משחקים וטיימרים שפועלים ישירות על הווידאו.
+    </p>
+
+    <h3>קונספט ליבה</h3>
+    <p>
+      חוויית Zoom-like עם וידאו חי, שיתוף מסך וצ'אט — אך עם שכבה אינטראקטיבית מלאה:
+    </p>
+    <ul>
+      <li><strong>סקרים בזמן אמת</strong> — המרצה מפעיל סקר, התלמידים מצביעים, התוצאות מופיעות בשידור חי</li>
+      <li><strong>חידונים עם ניקוד</strong> — שאלות עם טיימר, ניקוד מצטבר, לוח תוצאות</li>
+      <li><strong>משחקים</strong> — זיכרון, טריוויה ועוד — משולבים בתוך השיעור</li>
+      <li><strong>לוח לבן משותף</strong> — ציור וכתיבה בזמן אמת</li>
+      <li><strong>חדרי דיון (Breakout Rooms)</strong> — חלוקה לקבוצות קטנות</li>
+      <li><strong>הקלטה אוטומטית</strong> — כולל תמלול AI ותקציר</li>
+    </ul>
+
+    <h3>בחירת טכנולוגיה: LiveKit</h3>
+    <p>
+      לאחר בחינת חלופות (Twilio, Agora, Daily.co, Vonage) הבחירה נפלה על <strong>LiveKit</strong> — פלטפורמת WebRTC קוד פתוח.
+    </p>
+
+    <div class="info-box tip">
+      <strong>למה LiveKit?</strong><br>
+      <strong>קוד פתוח</strong> — אין vendor lock-in, אפשר לארח עצמאית<br>
+      <strong>ללא עלות לפי דקה</strong> — חיסכון משמעותי לעומת Twilio/Agora<br>
+      <strong>SFU מובנה</strong> — ארכיטקטורת Selective Forwarding Unit לביצועים מעולים<br>
+      <strong>Data Channels</strong> — תמיכה מובנית בערוצי נתונים לאינטראקציות<br>
+      <strong>Egress/Ingress</strong> — הקלטה ושידור מובנים<br>
+      <strong>AI Agent Framework</strong> — תשתית מוכנה לשילוב בינה מלאכותית<br>
+      <strong>SDKs</strong> — תמיכה ב-JavaScript, React, Swift, Kotlin, Flutter ועוד
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 2: Architecture -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="architecture">
+    <div class="section-header">
+      <span class="section-num">2</span>
+      <h2>ארכיטקטורה</h2>
+    </div>
+
+    <h3>תרשים מערכת</h3>
+    <div class="arch-diagram">
+      <!-- Row 1: Clients -->
+      <div class="arch-row">
+        <div class="arch-box primary">
+          <div class="label">WHITEBOARD Frontend</div>
+          <div class="sub">React + livekit-client SDK</div>
+        </div>
+      </div>
+      <div class="arch-arrow down">&#x2195;</div>
+      <div style="font-size:12px; color:var(--text-light); text-align:center;">WebRTC (video/audio/data)</div>
+
+      <!-- Row 2: LiveKit SFU -->
+      <div class="arch-row">
+        <div class="arch-box secondary">
+          <div class="label">LiveKit SFU Server</div>
+          <div class="sub">WebRTC Media Routing</div>
+        </div>
+      </div>
+      <div class="arch-arrow down">&#x2195;</div>
+
+      <!-- Row 3: Services -->
+      <div class="arch-row">
+        <div class="arch-box accent">
+          <div class="label">TURN / ICE</div>
+          <div class="sub">NAT Traversal</div>
+        </div>
+        <div class="arch-box accent">
+          <div class="label">Egress Service</div>
+          <div class="sub">Recording &rarr; S3</div>
+        </div>
+        <div class="arch-box accent">
+          <div class="label">Ingress Service</div>
+          <div class="sub">RTMP / HLS Input</div>
+        </div>
+      </div>
+      <div class="arch-arrow down">&#x2195;</div>
+
+      <!-- Row 4: Backend -->
+      <div class="arch-row">
+        <div class="arch-box secondary">
+          <div class="label">WHITEBOARD Backend API</div>
+          <div class="sub">Node.js + livekit-server-sdk</div>
+        </div>
+        <div class="arch-box secondary">
+          <div class="label">PostgreSQL</div>
+          <div class="sub">Sessions, Participants, Interactions</div>
+        </div>
+        <div class="arch-box secondary">
+          <div class="label">S3 / GCS</div>
+          <div class="sub">Recordings Storage</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>רכיבי המערכת</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>רכיב</th>
+          <th>טכנולוגיה</th>
+          <th>תפקיד</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Video UI</strong></td>
+          <td>React + livekit-client</td>
+          <td>ממשק וידאו, גלריה, שיתוף מסך</td>
+        </tr>
+        <tr>
+          <td><strong>Chat</strong></td>
+          <td>LiveKit Data Channels</td>
+          <td>צ'אט בזמן אמת דרך ערוצי נתונים (לא WebSocket נפרד)</td>
+        </tr>
+        <tr>
+          <td><strong>Interactive Layer</strong></td>
+          <td>LiveKit Data Channels</td>
+          <td>סקרים, חידונים, משחקים, טיימר, לוח לבן — הכל דרך data channels</td>
+        </tr>
+        <tr>
+          <td><strong>Room Management</strong></td>
+          <td>Node.js + livekit-server-sdk</td>
+          <td>יצירת חדרים, ניהול tokens, הרשאות</td>
+        </tr>
+        <tr>
+          <td><strong>Recording</strong></td>
+          <td>LiveKit Egress</td>
+          <td>הקלטת composite או per-track לאחסון S3</td>
+        </tr>
+        <tr>
+          <td><strong>AI Integration</strong></td>
+          <td>LiveKit Agents</td>
+          <td>תמלול, סיכום, Q&A bot</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Client SDK</h3>
+    <pre><span class="comment">// התקנה</span>
+npm install <span class="string">livekit-client</span>
+
+<span class="comment">// ייבוא מרכזי</span>
+<span class="keyword">import</span> {
+  Room,
+  RoomEvent,
+  Track,
+  VideoPresets,
+  DataPacket_Kind,
+  LocalParticipant,
+  RemoteParticipant,
+  RemoteTrackPublication,
+} <span class="keyword">from</span> <span class="string">'livekit-client'</span>;</pre>
+
+    <h3>Server SDK</h3>
+    <pre><span class="comment">// התקנה</span>
+npm install <span class="string">livekit-server-sdk</span>
+
+<span class="comment">// ייבוא מרכזי</span>
+<span class="keyword">import</span> {
+  AccessToken,
+  RoomServiceClient,
+  EgressClient,
+  IngressClient,
+  WebhookReceiver,
+} <span class="keyword">from</span> <span class="string">'livekit-server-sdk'</span>;</pre>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 3: Infrastructure -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="infrastructure">
+    <div class="section-header">
+      <span class="section-num">3</span>
+      <h2>תשתית נדרשת</h2>
+    </div>
+
+    <h3>LiveKit Server</h3>
+    <p>שרת ה-SFU שמנתב את כל הווידאו/אודיו. אפשר להריץ כ-Docker container או ב-Kubernetes.</p>
+
+    <h4>דרישות מינימום</h4>
+    <table>
+      <thead>
+        <tr><th>משאב</th><th>מינימום</th><th>מומלץ (50+ משתתפים)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CPU</td><td>4 vCPU</td><td>8 vCPU</td></tr>
+        <tr><td>RAM</td><td>8 GB</td><td>16 GB</td></tr>
+        <tr><td>Network</td><td>1 Gbps</td><td>5 Gbps</td></tr>
+        <tr><td>Storage</td><td>20 GB SSD</td><td>50 GB SSD</td></tr>
+      </tbody>
+    </table>
+
+    <h4>קובץ תצורה — livekit.yaml</h4>
+    <pre><span class="comment"># livekit.yaml</span>
+<span class="type">port</span>: <span class="number">7880</span>
+<span class="type">rtc</span>:
+  <span class="type">port_range_start</span>: <span class="number">50000</span>
+  <span class="type">port_range_end</span>: <span class="number">60000</span>
+  <span class="type">use_external_ip</span>: <span class="keyword">true</span>
+
+<span class="type">keys</span>:
+  <span class="type">WHITEBOARD_API_KEY</span>: <span class="string">&lt;your-api-secret&gt;</span>
+
+<span class="type">turn</span>:
+  <span class="type">enabled</span>: <span class="keyword">true</span>
+  <span class="type">domain</span>: <span class="string">turn.whiteboard.co.il</span>
+  <span class="type">tls_port</span>: <span class="number">5349</span>
+  <span class="type">udp_port</span>: <span class="number">3478</span>
+
+<span class="type">logging</span>:
+  <span class="type">level</span>: <span class="string">info</span></pre>
+
+    <h4>הפעלה ב-Docker</h4>
+    <pre>docker run -d \
+  --name livekit \
+  -p <span class="number">7880</span>:<span class="number">7880</span> \
+  -p <span class="number">7881</span>:<span class="number">7881</span> \
+  -p <span class="number">50000</span>-<span class="number">60000</span>:<span class="number">50000</span>-<span class="number">60000</span>/udp \
+  -v /path/to/livekit.yaml:/livekit.yaml \
+  livekit/livekit-server \
+  --config /livekit.yaml</pre>
+
+    <h3>TURN Server</h3>
+    <p>
+      נדרש כדי לעקוף NAT ו-firewalls. LiveKit כולל TURN מובנה (מומלץ),
+      או אפשר להשתמש ב-coturn חיצוני.
+    </p>
+
+    <div class="info-box tip">
+      ה-TURN המובנה של LiveKit מספיק ברוב המקרים. coturn חיצוני נדרש רק בסביבות עם firewalls קשיחים במיוחד.
+    </div>
+
+    <h3>אחסון — S3 / GCS</h3>
+    <p>
+      הקלטות נשמרות ב-S3 (AWS) או Google Cloud Storage. יש להגדיר bucket ייעודי עם signed URLs לגישה מאובטחת.
+    </p>
+    <pre><span class="comment">// S3 configuration for Egress</span>
+{
+  <span class="string">"s3"</span>: {
+    <span class="string">"access_key"</span>: <span class="string">"AKIA..."</span>,
+    <span class="string">"secret"</span>: <span class="string">"..."</span>,
+    <span class="string">"region"</span>: <span class="string">"eu-west-1"</span>,
+    <span class="string">"bucket"</span>: <span class="string">"whiteboard-recordings"</span>
+  }
+}</pre>
+
+    <h3>Backend API — Node.js</h3>
+    <p>שרת Node.js שמנהל את הלוגיקה העסקית: יצירת חדרים, הנפקת tokens, ניהול הקלטות ואינטראקציות.</p>
+
+    <h3>מסד נתונים — PostgreSQL</h3>
+    <p>5 טבלאות עיקריות נדרשות:</p>
+
+    <pre><span class="comment">-- 1. סשנים חיים</span>
+<span class="keyword">CREATE TABLE</span> <span class="type">live_sessions</span> (
+  <span class="type">id</span>            UUID <span class="keyword">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  <span class="type">course_id</span>     UUID <span class="keyword">REFERENCES</span> courses(id),
+  <span class="type">title</span>         VARCHAR(<span class="number">255</span>) <span class="keyword">NOT NULL</span>,
+  <span class="type">scheduled_at</span>  TIMESTAMPTZ,
+  <span class="type">started_at</span>    TIMESTAMPTZ,
+  <span class="type">ended_at</span>      TIMESTAMPTZ,
+  <span class="type">duration</span>      INTEGER,          <span class="comment">-- planned duration in minutes</span>
+  <span class="type">status</span>        VARCHAR(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="string">'scheduled'</span>,  <span class="comment">-- scheduled/live/ended/cancelled</span>
+  <span class="type">preset_id</span>     UUID <span class="keyword">REFERENCES</span> live_presets(id),
+  <span class="type">recording_url</span> TEXT,
+  <span class="type">livekit_room</span>  VARCHAR(<span class="number">100</span>),
+  <span class="type">created_at</span>    TIMESTAMPTZ <span class="keyword">DEFAULT</span> now(),
+  <span class="type">updated_at</span>    TIMESTAMPTZ <span class="keyword">DEFAULT</span> now()
+);
+
+<span class="comment">-- 2. משתתפים</span>
+<span class="keyword">CREATE TABLE</span> <span class="type">live_participants</span> (
+  <span class="type">id</span>           UUID <span class="keyword">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  <span class="type">session_id</span>   UUID <span class="keyword">REFERENCES</span> live_sessions(id),
+  <span class="type">user_id</span>      UUID <span class="keyword">REFERENCES</span> users(id),
+  <span class="type">role</span>         VARCHAR(<span class="number">20</span>) <span class="keyword">NOT NULL</span>,   <span class="comment">-- teacher/student/assistant</span>
+  <span class="type">joined_at</span>    TIMESTAMPTZ,
+  <span class="type">left_at</span>      TIMESTAMPTZ,
+  <span class="type">duration_sec</span> INTEGER
+);
+
+<span class="comment">-- 3. אינטראקציות</span>
+<span class="keyword">CREATE TABLE</span> <span class="type">live_interactions</span> (
+  <span class="type">id</span>          UUID <span class="keyword">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  <span class="type">session_id</span>  UUID <span class="keyword">REFERENCES</span> live_sessions(id),
+  <span class="type">type</span>        VARCHAR(<span class="number">30</span>) <span class="keyword">NOT NULL</span>,   <span class="comment">-- poll/quiz/game/timer/whiteboard/breakout</span>
+  <span class="type">data_json</span>   JSONB <span class="keyword">NOT NULL</span>,
+  <span class="type">created_at</span>  TIMESTAMPTZ <span class="keyword">DEFAULT</span> now()
+);
+
+<span class="comment">-- 4. פריסטים</span>
+<span class="keyword">CREATE TABLE</span> <span class="type">live_presets</span> (
+  <span class="type">id</span>          UUID <span class="keyword">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  <span class="type">user_id</span>     UUID <span class="keyword">REFERENCES</span> users(id),
+  <span class="type">name</span>        VARCHAR(<span class="number">100</span>) <span class="keyword">NOT NULL</span>,
+  <span class="type">description</span> TEXT,
+  <span class="type">items_json</span>  JSONB <span class="keyword">NOT NULL</span>,     <span class="comment">-- ordered array of interaction configs</span>
+  <span class="type">is_template</span> BOOLEAN <span class="keyword">DEFAULT</span> <span class="keyword">false</span>,
+  <span class="type">created_at</span>  TIMESTAMPTZ <span class="keyword">DEFAULT</span> now(),
+  <span class="type">updated_at</span>  TIMESTAMPTZ <span class="keyword">DEFAULT</span> now()
+);
+
+<span class="comment">-- 5. הקלטות</span>
+<span class="keyword">CREATE TABLE</span> <span class="type">live_recordings</span> (
+  <span class="type">id</span>          UUID <span class="keyword">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  <span class="type">session_id</span>  UUID <span class="keyword">REFERENCES</span> live_sessions(id),
+  <span class="type">url</span>         TEXT <span class="keyword">NOT NULL</span>,
+  <span class="type">duration</span>    INTEGER,             <span class="comment">-- seconds</span>
+  <span class="type">size_bytes</span>  BIGINT,
+  <span class="type">format</span>      VARCHAR(<span class="number">10</span>) <span class="keyword">DEFAULT</span> <span class="string">'mp4'</span>,
+  <span class="type">transcript</span>  TEXT,                <span class="comment">-- AI-generated transcript</span>
+  <span class="type">summary</span>     TEXT,                <span class="comment">-- AI-generated summary</span>
+  <span class="type">created_at</span>  TIMESTAMPTZ <span class="keyword">DEFAULT</span> now()
+);</pre>
+
+    <h3>אומדן עלויות חודשי</h3>
+    <table>
+      <thead>
+        <tr><th>רכיב</th><th>מינימום</th><th>Scale</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>LiveKit Server (EC2/GCE)</td><td>$80/mo</td><td>$250/mo</td></tr>
+        <tr><td>S3 Storage (recordings)</td><td>$20/mo</td><td>$80/mo</td></tr>
+        <tr><td>Bandwidth (data transfer)</td><td>$50/mo</td><td>$150/mo</td></tr>
+        <tr><td>TURN Server</td><td>$30/mo</td><td>$80/mo</td></tr>
+        <tr><td>Backend API (Node.js)</td><td>$20/mo</td><td>$50/mo</td></tr>
+        <tr><td>AI Services (Deepgram/Whisper)</td><td>$20/mo</td><td>$40/mo</td></tr>
+        <tr><td><strong>סה"כ</strong></td><td><strong>$220/mo</strong></td><td><strong>$650/mo</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-box tip">
+      אומדן העלויות מבוסס על כ-100 סשנים בחודש, עד 50 משתתפים בכל סשן. לעומת Zoom SDK או Twilio שיעלו $2,000-5,000+ לחודש לאותו נפח.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 4: Screens -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="screens">
+    <div class="section-header">
+      <span class="section-num">4</span>
+      <h2>מסכי המערכת (UI Screens)</h2>
+    </div>
+
+    <p>
+      להלן כל המסכים שעוצבו עבור מערכת ה-Live, כולל תיאור הפונקציונליות והדרישות מצד ה-Backend עבור כל מסך.
+    </p>
+
+    <div class="screen-grid">
+      <!-- Screen 1: Lobby -->
+      <div class="screen-card">
+        <div class="card-title">לובי (Pre-Join)</div>
+        <div class="card-desc">
+          מסך הכנה לפני כניסה לשיעור — בדיקת מצלמה ומיקרופון, בחירת מכשירים, תצוגה מקדימה של הווידאו, שם המשתמש.
+        </div>
+        <div class="card-backend">
+          <strong>Backend:</strong> endpoint לאימות token, בדיקת הרשאות (האם הסשן פעיל, האם המשתמש רשום), החזרת room token מ-LiveKit.
+        </div>
+        <a href="לייב - לובי.html">פתח מסך עיצוב &larr;</a>
+      </div>
+
+      <!-- Screen 2: Teacher Room -->
+      <div class="screen-card">
+        <div class="card-title">חדר מרצה</div>
+        <div class="card-desc">
+          המסך המרכזי של המרצה — במה עם וידאו, גלריית משתתפים, סרגל כלים תחתון (מיקרופון, מצלמה, שיתוף מסך, הקלטה), סיידבר עם 3 טאבים (משתתפים / צ'אט / כלים).
+        </div>
+        <div class="card-backend">
+          <strong>Backend:</strong> room management API, mute/kick participants, start/stop recording, publish data channel messages (interactions), webhook לעדכון סטטוס.
+        </div>
+        <a href="לייב - חדר מרצה.html">פתח מסך עיצוב &larr;</a>
+      </div>
+
+      <!-- Screen 3: Student Room -->
+      <div class="screen-card">
+        <div class="card-title">חדר תלמיד</div>
+        <div class="card-desc">
+          מסך מפושט עם תצוגת מרצה מוגדלת, צ'אט, הרמת יד, ריאקציות. המרצה בוידאו גדול, סרגל כלים מצומצם.
+        </div>
+        <div class="card-backend">
+          <strong>Backend:</strong> token עם הרשאות מוגבלות (canPublish: false כברירת מחדל), API להרמת יד, listen ל-data channel עבור אינטראקציות.
+        </div>
+        <a href="לייב - חדר תלמיד.html">פתח מסך עיצוב &larr;</a>
+      </div>
+
+      <!-- Screen 4: Interactions -->
+      <div class="screen-card">
+        <div class="card-title">אינטראקציות על הלייב</div>
+        <div class="card-desc">
+          overlay של סקר, חידון, משחק, טיימר, לוח לבן — מופעלים מטאב הכלים בחדר המרצה. מוצגים כ-overlay על גבי הווידאו אצל כל המשתתפים.
+        </div>
+        <div class="card-backend">
+          <strong>Backend:</strong> שמירת תוצאות אינטראקציות ב-DB, ניהול state של אינטראקציה פעילה, אגרגציית תשובות.
+        </div>
+        <a href="לייב - סקר ושאלה.html">סקר ושאלה</a> &nbsp;|&nbsp;
+        <a href="לייב - משחק.html">משחק</a> &nbsp;|&nbsp;
+        <a href="לייב - אינטראקציות תלמיד.html">תצוגת תלמיד</a>
+      </div>
+
+      <!-- Screen 5: Breakout Rooms -->
+      <div class="screen-card">
+        <div class="card-title">חדרי דיון (Breakout Rooms)</div>
+        <div class="card-desc">
+          overlay עם glassmorphism לחלוקת תלמידים לחדרים קטנים. המרצה יכול לקבוע חלוקה ידנית או אקראית, להגדיר זמן, ולעבור בין חדרים.
+        </div>
+        <div class="card-backend">
+          <strong>Backend:</strong> יצירת חדרי LiveKit נפרדים (sub-rooms), העברת participants בין rooms, טיימר לסגירה אוטומטית, broadcast הודעות לכל החדרים.
+        </div>
+        <a href="לייב - חדרי דיון.html">פתח מסך עיצוב &larr;</a>
+      </div>
+
+      <!-- Screen 6: Recordings -->
+      <div class="screen-card">
+        <div class="card-title">הקלטות</div>
+        <div class="card-desc">
+          רשימת הקלטות עם נגן מובנה, תמלול BOARDi AI, אפשרות הורדה ושיתוף. חיפוש בתוך התמלול, פרקים אוטומטיים.
+        </div>
+        <div class="card-backend">
+          <strong>Backend:</strong> API לרשימת הקלטות, signed URL generation, שמירת תמלול, webhook מ-Egress בסיום הקלטה.
+        </div>
+        <a href="לייב - הקלטות.html">פתח מסך עיצוב &larr;</a>
+      </div>
+
+      <!-- Screen 7: Scheduling -->
+      <div class="screen-card">
+        <div class="card-title">תזמון שיעור חי</div>
+        <div class="card-desc">
+          טופס 2 עמודות: פרטי שיעור (שם, תאריך, שעה, משך) + בחירת פריסט, הזמנת תלמידים, popup סיכום לפני שליחה.
+        </div>
+        <div class="card-backend">
+          <strong>Backend:</strong> CRUD ל-live_sessions, שליחת הזמנות (email/notification), יצירת calendar event, cron job לתזכורות (15 דקות לפני).
+        </div>
+        <a href="לייב - תזמון.html">פתח מסך עיצוב &larr;</a>
+      </div>
+
+      <!-- Screen 8: Presets Library -->
+      <div class="screen-card">
+        <div class="card-title">ספריית פריסטים</div>
+        <div class="card-desc">
+          ספרייה של תבניות מוכנות לשיעורים חיים — כל פריסט הוא רשימה מסודרת של אינטראקציות. תבניות מערכת + תבניות אישיות.
+        </div>
+        <div class="card-backend">
+          <strong>Backend:</strong> CRUD ל-live_presets, seed data לתבניות מערכת (is_template: true), שכפול preset.
+        </div>
+        <a href="לייב - ספריית פריסטים.html">פתח מסך עיצוב &larr;</a>
+      </div>
+
+      <!-- Screen 9: Preset Editor -->
+      <div class="screen-card">
+        <div class="card-title">עורך פריסט</div>
+        <div class="card-desc">
+          Drag & Drop builder — גרירת אינטראקציות לרשימה, עריכת כל אינטראקציה (שאלה, תשובות, זמן), שינוי סדר, תצוגה מקדימה.
+        </div>
+        <div class="card-backend">
+          <strong>Backend:</strong> שמירת items_json כ-JSONB, validation של מבנה, auto-save.
+        </div>
+        <a href="לייב - עורך פריסט.html">פתח מסך עיצוב &larr;</a>
+      </div>
+
+      <!-- Screen 10: Settings -->
+      <div class="screen-card">
+        <div class="card-title">הגדרות לייב</div>
+        <div class="card-desc">
+          סקשן בתוך הגדרות הקורס/הכשרה — הפעלת מודול Live, ברירות מחדל (הקלטה אוטומטית, צ'אט, הרשאות תלמידים), מגבלת משתתפים.
+        </div>
+        <div class="card-backend">
+          <strong>Backend:</strong> עמודות נוספות בטבלת course_settings, API לעדכון, migration.
+        </div>
+        <a href="הגדרות קורס.html">פתח הגדרות קורס &larr;</a> &nbsp;|&nbsp;
+        <a href="תכנית הכשרה - הגדרות.html">הגדרות הכשרה &larr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 5: LiveKit Integration -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="livekit">
+    <div class="section-header">
+      <span class="section-num">5</span>
+      <h2>LiveKit Integration — שלב אחר שלב</h2>
+    </div>
+
+    <p>שלבי היישום המרכזיים, עם קוד לדוגמה עבור כל שלב.</p>
+
+    <h3>שלב 1 — התקנה</h3>
+    <pre>npm install <span class="string">livekit-client</span> <span class="string">livekit-server-sdk</span></pre>
+
+    <h3>שלב 2 — Server: הנפקת Token</h3>
+    <p>ה-Token מגדיר את זהות המשתמש והרשאותיו בחדר. המרצה מקבל canPublish: true, תלמיד מקבל false כברירת מחדל.</p>
+    <pre><span class="keyword">import</span> { AccessToken } <span class="keyword">from</span> <span class="string">'livekit-server-sdk'</span>;
+
+<span class="keyword">async function</span> <span class="fn">generateToken</span>(userId, userName, roomName, role) {
+  <span class="keyword">const</span> token = <span class="keyword">new</span> <span class="type">AccessToken</span>(
+    process.env.<span class="type">LIVEKIT_API_KEY</span>,
+    process.env.<span class="type">LIVEKIT_API_SECRET</span>,
+    {
+      identity: userId,
+      name: userName,
+      metadata: JSON.stringify({ role }),
+    }
+  );
+
+  token.<span class="fn">addGrant</span>({
+    roomJoin: <span class="keyword">true</span>,
+    room: roomName,
+    canPublish: role === <span class="string">'teacher'</span> || role === <span class="string">'assistant'</span>,
+    canSubscribe: <span class="keyword">true</span>,
+    canPublishData: <span class="keyword">true</span>,  <span class="comment">// needed for chat & interactions</span>
+  });
+
+  <span class="keyword">return</span> <span class="keyword">await</span> token.<span class="fn">toJwt</span>();
+}</pre>
+
+    <h3>שלב 3 — Client: חיבור לחדר</h3>
+    <pre><span class="keyword">import</span> { Room, RoomEvent, VideoPresets } <span class="keyword">from</span> <span class="string">'livekit-client'</span>;
+
+<span class="keyword">const</span> room = <span class="keyword">new</span> <span class="type">Room</span>({
+  adaptiveStream: <span class="keyword">true</span>,
+  dynacast: <span class="keyword">true</span>,
+  videoCaptureDefaults: {
+    resolution: VideoPresets.h720.resolution,
+  },
+});
+
+<span class="comment">// Connect</span>
+<span class="keyword">await</span> room.<span class="fn">connect</span>(
+  process.env.<span class="type">LIVEKIT_URL</span>,  <span class="comment">// e.g. wss://live.whiteboard.co.il</span>
+  token                      <span class="comment">// JWT from server</span>
+);
+
+console.log(<span class="string">'Connected to room:'</span>, room.name);</pre>
+
+    <h3>שלב 4 — פרסום מצלמה ומיקרופון</h3>
+    <pre><span class="comment">// Enable camera & mic</span>
+<span class="keyword">await</span> room.localParticipant.<span class="fn">setCameraEnabled</span>(<span class="keyword">true</span>);
+<span class="keyword">await</span> room.localParticipant.<span class="fn">setMicrophoneEnabled</span>(<span class="keyword">true</span>);
+
+<span class="comment">// Screen share (teacher only)</span>
+<span class="keyword">await</span> room.localParticipant.<span class="fn">setScreenShareEnabled</span>(<span class="keyword">true</span>);
+
+<span class="comment">// Mute/unmute</span>
+<span class="keyword">await</span> room.localParticipant.<span class="fn">setMicrophoneEnabled</span>(<span class="keyword">false</span>); <span class="comment">// mute</span></pre>
+
+    <h3>שלב 5 — Subscribe לטראקים של אחרים</h3>
+    <pre>room.<span class="fn">on</span>(RoomEvent.TrackSubscribed, (track, publication, participant) => {
+  <span class="keyword">const</span> element = track.<span class="fn">attach</span>();
+
+  <span class="keyword">if</span> (track.kind === <span class="string">'video'</span>) {
+    element.style.width = <span class="string">'100%'</span>;
+    document.getElementById(<span class="string">'video-grid'</span>).<span class="fn">appendChild</span>(element);
+  } <span class="keyword">else if</span> (track.kind === <span class="string">'audio'</span>) {
+    document.body.<span class="fn">appendChild</span>(element); <span class="comment">// audio elements are hidden</span>
+  }
+});
+
+room.<span class="fn">on</span>(RoomEvent.TrackUnsubscribed, (track) => {
+  track.<span class="fn">detach</span>().<span class="fn">forEach</span>(el => el.<span class="fn">remove</span>());
+});
+
+room.<span class="fn">on</span>(RoomEvent.ParticipantDisconnected, (participant) => {
+  console.log(<span class="string">'Participant left:'</span>, participant.identity);
+});</pre>
+
+    <h3>שלב 6 — Data Channels לאינטראקציות</h3>
+    <pre><span class="keyword">import</span> { DataPacket_Kind } <span class="keyword">from</span> <span class="string">'livekit-client'</span>;
+
+<span class="comment">// Send interaction (teacher)</span>
+<span class="keyword">const</span> encoder = <span class="keyword">new</span> TextEncoder();
+<span class="keyword">const</span> data = encoder.<span class="fn">encode</span>(JSON.<span class="fn">stringify</span>({
+  type: <span class="string">'poll_start'</span>,
+  id: <span class="string">'poll_abc123'</span>,
+  question: <span class="string">'מה השפה הראשונה שלמדתם?'</span>,
+  options: [<span class="string">'JavaScript'</span>, <span class="string">'Python'</span>, <span class="string">'Java'</span>, <span class="string">'C++'</span>],
+  duration: <span class="number">30</span>,
+}));
+
+<span class="keyword">await</span> room.localParticipant.<span class="fn">publishData</span>(
+  data,
+  DataPacket_Kind.RELIABLE  <span class="comment">// use RELIABLE for interactions</span>
+);
+
+<span class="comment">// Receive interaction (all participants)</span>
+room.<span class="fn">on</span>(RoomEvent.DataReceived, (payload, participant) => {
+  <span class="keyword">const</span> decoder = <span class="keyword">new</span> TextDecoder();
+  <span class="keyword">const</span> message = JSON.<span class="fn">parse</span>(decoder.<span class="fn">decode</span>(payload));
+
+  <span class="keyword">switch</span> (message.type) {
+    <span class="keyword">case</span> <span class="string">'poll_start'</span>:
+      <span class="fn">showPollOverlay</span>(message);
+      <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="string">'quiz_start'</span>:
+      <span class="fn">showQuizOverlay</span>(message);
+      <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="string">'chat_message'</span>:
+      <span class="fn">appendChatMessage</span>(message);
+      <span class="keyword">break</span>;
+    <span class="comment">// ... more types</span>
+  }
+});</pre>
+
+    <h3>שלב 7 — הקלטה (Egress)</h3>
+    <pre><span class="keyword">import</span> { EgressClient } <span class="keyword">from</span> <span class="string">'livekit-server-sdk'</span>;
+
+<span class="keyword">const</span> egressClient = <span class="keyword">new</span> <span class="type">EgressClient</span>(
+  process.env.<span class="type">LIVEKIT_URL</span>,
+  process.env.<span class="type">LIVEKIT_API_KEY</span>,
+  process.env.<span class="type">LIVEKIT_API_SECRET</span>
+);
+
+<span class="comment">// Start composite recording (one video with all participants)</span>
+<span class="keyword">const</span> egress = <span class="keyword">await</span> egressClient.<span class="fn">startRoomCompositeEgress</span>(
+  roomName,
+  {
+    file: {
+      filepath: <span class="string">`s3://whiteboard-recordings/\${sessionId}/recording.mp4`</span>,
+      output: {
+        s3: {
+          accessKey: process.env.<span class="type">AWS_ACCESS_KEY</span>,
+          secret: process.env.<span class="type">AWS_SECRET_KEY</span>,
+          region: <span class="string">'eu-west-1'</span>,
+          bucket: <span class="string">'whiteboard-recordings'</span>,
+        }
+      }
+    }
+  }
+);
+
+<span class="comment">// Store egress ID for later stop</span>
+<span class="keyword">const</span> egressId = egress.egressId;
+
+<span class="comment">// Stop recording</span>
+<span class="keyword">await</span> egressClient.<span class="fn">stopEgress</span>(egressId);</pre>
+
+    <h3>שלב 8 — ניהול חדר מצד השרת</h3>
+    <pre><span class="keyword">import</span> { RoomServiceClient } <span class="keyword">from</span> <span class="string">'livekit-server-sdk'</span>;
+
+<span class="keyword">const</span> roomService = <span class="keyword">new</span> <span class="type">RoomServiceClient</span>(
+  process.env.<span class="type">LIVEKIT_URL</span>,
+  process.env.<span class="type">LIVEKIT_API_KEY</span>,
+  process.env.<span class="type">LIVEKIT_API_SECRET</span>
+);
+
+<span class="comment">// Create room</span>
+<span class="keyword">await</span> roomService.<span class="fn">createRoom</span>({
+  name: <span class="string">`session_\${sessionId}`</span>,
+  emptyTimeout: <span class="number">300</span>,       <span class="comment">// close room after 5 min empty</span>
+  maxParticipants: <span class="number">100</span>,
+});
+
+<span class="comment">// List participants</span>
+<span class="keyword">const</span> participants = <span class="keyword">await</span> roomService.<span class="fn">listParticipants</span>(roomName);
+
+<span class="comment">// Mute a participant</span>
+<span class="keyword">await</span> roomService.<span class="fn">mutePublishedTrack</span>(roomName, participantId, trackSid, <span class="keyword">true</span>);
+
+<span class="comment">// Remove (kick) a participant</span>
+<span class="keyword">await</span> roomService.<span class="fn">removeParticipant</span>(roomName, participantId);
+
+<span class="comment">// Delete room (end session)</span>
+<span class="keyword">await</span> roomService.<span class="fn">deleteRoom</span>(roomName);</pre>
+
+    <div class="info-box warning">
+      כל קריאות ה-Server SDK חייבות לרוץ בצד השרת בלבד. לעולם אל תחשפו את ה-API_KEY וה-API_SECRET בצד הלקוח.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 6: Interactions Protocol -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="protocol">
+    <div class="section-header">
+      <span class="section-num">6</span>
+      <h2>פרוטוקול אינטראקציות — Data Channel Protocol</h2>
+    </div>
+
+    <p>
+      כל האינטראקציות (סקרים, חידונים, משחקים וכו') מתקשרות דרך LiveKit Data Channels.
+      הפרוטוקול מבוסס על JSON עם שדה <code>type</code> שמגדיר את סוג ההודעה.
+      כל ההודעות נשלחות כ-<code>DataPacket_Kind.RELIABLE</code> (TCP-like).
+    </p>
+
+    <div class="info-box tip">
+      שימו לב: ריאקציות (emoji) נשלחות כ-<code>LOSSY</code> (UDP-like) כי הן לא קריטיות ויש להן volume גבוה.
+    </div>
+
+    <!-- Poll -->
+    <div class="protocol-group">
+      <h4>Poll — סקר</h4>
+      <pre><span class="comment">// מרצה מפעיל סקר</span>
+{
+  <span class="string">"type"</span>: <span class="string">"poll_start"</span>,
+  <span class="string">"id"</span>: <span class="string">"poll_abc123"</span>,
+  <span class="string">"question"</span>: <span class="string">"איזה framework אתם מעדיפים?"</span>,
+  <span class="string">"options"</span>: [<span class="string">"React"</span>, <span class="string">"Vue"</span>, <span class="string">"Angular"</span>, <span class="string">"Svelte"</span>],
+  <span class="string">"duration"</span>: <span class="number">30</span>,
+  <span class="string">"allowMultiple"</span>: <span class="keyword">false</span>
+}
+
+<span class="comment">// תלמיד מצביע</span>
+{
+  <span class="string">"type"</span>: <span class="string">"poll_vote"</span>,
+  <span class="string">"id"</span>: <span class="string">"poll_abc123"</span>,
+  <span class="string">"option"</span>: <span class="number">0</span>,
+  <span class="string">"userId"</span>: <span class="string">"user_456"</span>
+}
+
+<span class="comment">// מרצה סוגר סקר + תוצאות</span>
+{
+  <span class="string">"type"</span>: <span class="string">"poll_end"</span>,
+  <span class="string">"id"</span>: <span class="string">"poll_abc123"</span>,
+  <span class="string">"results"</span>: [<span class="number">12</span>, <span class="number">8</span>, <span class="number">5</span>, <span class="number">3</span>],
+  <span class="string">"totalVotes"</span>: <span class="number">28</span>
+}</pre>
+    </div>
+
+    <!-- Quiz -->
+    <div class="protocol-group">
+      <h4>Quiz — חידון</h4>
+      <pre><span class="comment">// מרצה מפעיל שאלה</span>
+{
+  <span class="string">"type"</span>: <span class="string">"quiz_start"</span>,
+  <span class="string">"id"</span>: <span class="string">"q_789"</span>,
+  <span class="string">"question"</span>: <span class="string">"מה זה SFU?"</span>,
+  <span class="string">"answers"</span>: [
+    <span class="string">"Selective Forwarding Unit"</span>,
+    <span class="string">"Simple File Upload"</span>,
+    <span class="string">"Server Frontend Utility"</span>,
+    <span class="string">"Secure Frame Update"</span>
+  ],
+  <span class="string">"correctIndex"</span>: <span class="number">0</span>,
+  <span class="string">"timer"</span>: <span class="number">15</span>,
+  <span class="string">"points"</span>: <span class="number">100</span>
+}
+
+<span class="comment">// תלמיד עונה</span>
+{
+  <span class="string">"type"</span>: <span class="string">"quiz_answer"</span>,
+  <span class="string">"id"</span>: <span class="string">"q_789"</span>,
+  <span class="string">"answerIndex"</span>: <span class="number">2</span>,
+  <span class="string">"userId"</span>: <span class="string">"user_456"</span>,
+  <span class="string">"timeMs"</span>: <span class="number">4200</span>
+}
+
+<span class="comment">// תוצאות שאלה</span>
+{
+  <span class="string">"type"</span>: <span class="string">"quiz_result"</span>,
+  <span class="string">"id"</span>: <span class="string">"q_789"</span>,
+  <span class="string">"correctIndex"</span>: <span class="number">0</span>,
+  <span class="string">"distribution"</span>: [<span class="number">18</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">3</span>],
+  <span class="string">"leaderboard"</span>: [
+    { <span class="string">"userId"</span>: <span class="string">"user_123"</span>, <span class="string">"name"</span>: <span class="string">"דנה"</span>, <span class="string">"score"</span>: <span class="number">350</span> },
+    { <span class="string">"userId"</span>: <span class="string">"user_456"</span>, <span class="string">"name"</span>: <span class="string">"אלון"</span>, <span class="string">"score"</span>: <span class="number">280</span> }
+  ]
+}</pre>
+    </div>
+
+    <!-- Game -->
+    <div class="protocol-group">
+      <h4>Game — משחק</h4>
+      <pre><span class="comment">// התחלת משחק</span>
+{
+  <span class="string">"type"</span>: <span class="string">"game_start"</span>,
+  <span class="string">"gameType"</span>: <span class="string">"memory"</span>,
+  <span class="string">"config"</span>: {
+    <span class="string">"pairs"</span>: <span class="number">8</span>,
+    <span class="string">"theme"</span>: <span class="string">"programming"</span>,
+    <span class="string">"cards"</span>: [<span class="string">"React"</span>, <span class="string">"Vue"</span>, <span class="string">"Angular"</span>, ...]
+  },
+  <span class="string">"duration"</span>: <span class="number">120</span>
+}
+
+<span class="comment">// פעולת שחקן</span>
+{
+  <span class="string">"type"</span>: <span class="string">"game_action"</span>,
+  <span class="string">"action"</span>: <span class="string">"flip"</span>,
+  <span class="string">"cardIndex"</span>: <span class="number">3</span>,
+  <span class="string">"userId"</span>: <span class="string">"user_456"</span>
+}
+
+<span class="comment">// עדכון ניקוד</span>
+{
+  <span class="string">"type"</span>: <span class="string">"game_score"</span>,
+  <span class="string">"userId"</span>: <span class="string">"user_456"</span>,
+  <span class="string">"score"</span>: <span class="number">150</span>,
+  <span class="string">"action"</span>: <span class="string">"match_found"</span>
+}</pre>
+    </div>
+
+    <!-- Timer -->
+    <div class="protocol-group">
+      <h4>Timer — טיימר</h4>
+      <pre>{
+  <span class="string">"type"</span>: <span class="string">"timer_start"</span>,
+  <span class="string">"duration"</span>: <span class="number">180</span>,
+  <span class="string">"label"</span>: <span class="string">"זמן לתרגיל"</span>
+}
+
+{
+  <span class="string">"type"</span>: <span class="string">"timer_stop"</span>
+}
+
+{
+  <span class="string">"type"</span>: <span class="string">"timer_complete"</span>
+}</pre>
+    </div>
+
+    <!-- Whiteboard -->
+    <div class="protocol-group">
+      <h4>Whiteboard — לוח לבן</h4>
+      <pre><span class="comment">// ציור</span>
+{
+  <span class="string">"type"</span>: <span class="string">"wb_draw"</span>,
+  <span class="string">"points"</span>: [[<span class="number">120</span>,<span class="number">45</span>], [<span class="number">125</span>,<span class="number">48</span>], [<span class="number">130</span>,<span class="number">52</span>]],
+  <span class="string">"color"</span>: <span class="string">"#38C4F2"</span>,
+  <span class="string">"width"</span>: <span class="number">3</span>,
+  <span class="string">"tool"</span>: <span class="string">"pen"</span>
+}
+
+<span class="comment">// ניקוי</span>
+{ <span class="string">"type"</span>: <span class="string">"wb_clear"</span> }
+
+<span class="comment">// הוספת תמונה</span>
+{
+  <span class="string">"type"</span>: <span class="string">"wb_image"</span>,
+  <span class="string">"url"</span>: <span class="string">"https://..."</span>,
+  <span class="string">"x"</span>: <span class="number">100</span>,
+  <span class="string">"y"</span>: <span class="number">200</span>,
+  <span class="string">"width"</span>: <span class="number">400</span>
+}
+
+<span class="comment">// טקסט</span>
+{
+  <span class="string">"type"</span>: <span class="string">"wb_text"</span>,
+  <span class="string">"text"</span>: <span class="string">"הסבר חשוב"</span>,
+  <span class="string">"x"</span>: <span class="number">150</span>,
+  <span class="string">"y"</span>: <span class="number">80</span>,
+  <span class="string">"fontSize"</span>: <span class="number">24</span>,
+  <span class="string">"color"</span>: <span class="string">"#253E7A"</span>
+}</pre>
+    </div>
+
+    <!-- Breakout -->
+    <div class="protocol-group">
+      <h4>Breakout Rooms — חדרי דיון</h4>
+      <pre><span class="comment">// פתיחת חדרי דיון</span>
+{
+  <span class="string">"type"</span>: <span class="string">"breakout_start"</span>,
+  <span class="string">"rooms"</span>: [
+    {
+      <span class="string">"name"</span>: <span class="string">"קבוצה 1 - React"</span>,
+      <span class="string">"participants"</span>: [<span class="string">"user_1"</span>, <span class="string">"user_2"</span>, <span class="string">"user_3"</span>]
+    },
+    {
+      <span class="string">"name"</span>: <span class="string">"קבוצה 2 - Vue"</span>,
+      <span class="string">"participants"</span>: [<span class="string">"user_4"</span>, <span class="string">"user_5"</span>, <span class="string">"user_6"</span>]
+    }
+  ],
+  <span class="string">"duration"</span>: <span class="number">600</span>,
+  <span class="string">"allowReturn"</span>: <span class="keyword">false</span>
+}
+
+<span class="comment">// הודעה מהמרצה לכל החדרים</span>
+{
+  <span class="string">"type"</span>: <span class="string">"breakout_broadcast"</span>,
+  <span class="string">"message"</span>: <span class="string">"נשארו 2 דקות!"</span>
+}
+
+<span class="comment">// סגירת חדרי דיון</span>
+{
+  <span class="string">"type"</span>: <span class="string">"breakout_end"</span>
+}</pre>
+    </div>
+
+    <!-- Reactions & Hand Raise -->
+    <div class="protocol-group">
+      <h4>Reactions & Hand Raise</h4>
+      <pre><span class="comment">// ריאקציה (LOSSY — לא קריטי)</span>
+{
+  <span class="string">"type"</span>: <span class="string">"reaction"</span>,
+  <span class="string">"emoji"</span>: <span class="string">"\ud83d\udc4d"</span>,
+  <span class="string">"userId"</span>: <span class="string">"user_456"</span>
+}
+
+<span class="comment">// הרמת יד (RELIABLE — קריטי)</span>
+{
+  <span class="string">"type"</span>: <span class="string">"hand_raise"</span>,
+  <span class="string">"userId"</span>: <span class="string">"user_456"</span>,
+  <span class="string">"raised"</span>: <span class="keyword">true</span>
+}
+
+<span class="comment">// צ'אט (RELIABLE)</span>
+{
+  <span class="string">"type"</span>: <span class="string">"chat_message"</span>,
+  <span class="string">"userId"</span>: <span class="string">"user_456"</span>,
+  <span class="string">"name"</span>: <span class="string">"אלון"</span>,
+  <span class="string">"text"</span>: <span class="string">"שאלה לגבי הנושא..."</span>,
+  <span class="string">"timestamp"</span>: <span class="number">1713200400000</span>
+}</pre>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 7: Recording & Streaming -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="recording">
+    <div class="section-header">
+      <span class="section-num">7</span>
+      <h2>הקלטה ושידור</h2>
+    </div>
+
+    <h3>LiveKit Egress Service</h3>
+    <p>
+      Egress הוא שירות נפרד של LiveKit שמאפשר הקלטה ושידור (streaming). הוא רץ כ-container נפרד ומתחבר לחדר כ-"participant סמוי".
+    </p>
+
+    <h4>הפעלת Egress Service</h4>
+    <pre>docker run -d \
+  --name livekit-egress \
+  -e EGRESS_CONFIG_FILE=/egress.yaml \
+  -v /path/to/egress.yaml:/egress.yaml \
+  livekit/egress</pre>
+
+    <h4>קובץ תצורה — egress.yaml</h4>
+    <pre><span class="type">api_key</span>: <span class="string">WHITEBOARD_API_KEY</span>
+<span class="type">api_secret</span>: <span class="string">&lt;your-api-secret&gt;</span>
+<span class="type">ws_url</span>: <span class="string">wss://live.whiteboard.co.il</span>
+
+<span class="type">s3</span>:
+  <span class="type">access_key</span>: <span class="string">AKIA...</span>
+  <span class="type">secret</span>: <span class="string">...</span>
+  <span class="type">region</span>: <span class="string">eu-west-1</span>
+  <span class="type">bucket</span>: <span class="string">whiteboard-recordings</span></pre>
+
+    <h3>סוגי הקלטה</h3>
+    <table>
+      <thead>
+        <tr><th>סוג</th><th>תיאור</th><th>שימוש</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Room Composite</strong></td>
+          <td>קובץ MP4 אחד עם כל המשתתפים, כולל layout אוטומטי</td>
+          <td>ברירת מחדל — מתאים לרוב המקרים</td>
+        </tr>
+        <tr>
+          <td><strong>Track Composite</strong></td>
+          <td>בחירת טראקים ספציפיים להקלטה</td>
+          <td>הקלטת המרצה בלבד, או מסך בלבד</td>
+        </tr>
+        <tr>
+          <td><strong>Per-Track (Web Egress)</strong></td>
+          <td>קובץ נפרד לכל טראק</td>
+          <td>עריכה מתקדמת בפוסט-פרודקשן</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Signed URLs לגישה מאובטחת</h3>
+    <pre><span class="keyword">import</span> { S3Client, GetObjectCommand } <span class="keyword">from</span> <span class="string">'@aws-sdk/client-s3'</span>;
+<span class="keyword">import</span> { getSignedUrl } <span class="keyword">from</span> <span class="string">'@aws-sdk/s3-request-presigner'</span>;
+
+<span class="keyword">async function</span> <span class="fn">getRecordingUrl</span>(key) {
+  <span class="keyword">const</span> client = <span class="keyword">new</span> <span class="type">S3Client</span>({ region: <span class="string">'eu-west-1'</span> });
+  <span class="keyword">const</span> command = <span class="keyword">new</span> <span class="type">GetObjectCommand</span>({
+    Bucket: <span class="string">'whiteboard-recordings'</span>,
+    Key: key,
+  });
+  <span class="keyword">return</span> <span class="keyword">await</span> <span class="fn">getSignedUrl</span>(client, command, { expiresIn: <span class="number">3600</span> });
+}</pre>
+
+    <h3>HLS לקהל גדול (100+ צופים)</h3>
+    <p>
+      אם מצפים ליותר מ-100 צופים בו-זמנית, מומלץ להשתמש ב-HLS streaming במקום WebRTC ישיר.
+      LiveKit תומך ב-HLS output דרך Egress.
+    </p>
+    <pre><span class="comment">// Start HLS stream</span>
+<span class="keyword">await</span> egressClient.<span class="fn">startRoomCompositeEgress</span>(roomName, {
+  segments: {
+    protocol: <span class="string">'HLS'</span>,
+    filenamePrefix: <span class="string">`s3://whiteboard-hls/\${sessionId}/stream`</span>,
+    playlistName: <span class="string">'index.m3u8'</span>,
+    segmentDuration: <span class="number">4</span>,
+    output: { s3: s3Config }
+  }
+});</pre>
+
+    <h3>Webhook בסיום הקלטה</h3>
+    <pre><span class="keyword">import</span> { WebhookReceiver } <span class="keyword">from</span> <span class="string">'livekit-server-sdk'</span>;
+
+<span class="keyword">const</span> receiver = <span class="keyword">new</span> <span class="type">WebhookReceiver</span>(
+  process.env.<span class="type">LIVEKIT_API_KEY</span>,
+  process.env.<span class="type">LIVEKIT_API_SECRET</span>
+);
+
+app.<span class="fn">post</span>(<span class="string">'/webhook/livekit'</span>, <span class="keyword">async</span> (req, res) => {
+  <span class="keyword">const</span> event = <span class="keyword">await</span> receiver.<span class="fn">receive</span>(req.body, req.headers.authorization);
+
+  <span class="keyword">if</span> (event.event === <span class="string">'egress_ended'</span>) {
+    <span class="keyword">const</span> { egressId, roomName, file } = event.egressInfo;
+
+    <span class="comment">// Save recording to DB</span>
+    <span class="keyword">await</span> db.query(<span class="string">`
+      INSERT INTO live_recordings (session_id, url, duration, size_bytes)
+      VALUES ($1, $2, $3, $4)
+    `</span>, [sessionId, file.filename, file.duration, file.size]);
+
+    <span class="comment">// Trigger AI transcription (async)</span>
+    <span class="keyword">await</span> <span class="fn">triggerTranscription</span>(sessionId, file.filename);
+  }
+
+  res.<span class="fn">sendStatus</span>(<span class="number">200</span>);
+});</pre>
+
+    <div class="info-box tip">
+      מומלץ להגדיר auto-chapter detection כ-Phase 5 (AI). ב-Phase 4 הבסיסי, פשוט שמרו את ההקלטה ואפשרו נגינה עם timeline.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 8: Presets & Scheduling -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="presets">
+    <div class="section-header">
+      <span class="section-num">8</span>
+      <h2>פריסטים ותזמון</h2>
+    </div>
+
+    <h3>פריסטים — תבניות אינטראקציות</h3>
+    <p>
+      פריסט הוא תבנית JSON שמכילה רשימה מסודרת של אינטראקציות מוכנות מראש.
+      המרצה בונה פריסט לפני השיעור, ובזמן השיעור החי מפעיל אינטראקציה אחרי אינטראקציה בלחיצה אחת.
+    </p>
+
+    <h4>מבנה JSON של פריסט</h4>
+    <pre>{
+  <span class="string">"name"</span>: <span class="string">"שיעור React מתקדם"</span>,
+  <span class="string">"description"</span>: <span class="string">"פריסט עם סקר פתיחה, 3 חידונים ומשחק סיכום"</span>,
+  <span class="string">"items"</span>: [
+    {
+      <span class="string">"order"</span>: <span class="number">1</span>,
+      <span class="string">"type"</span>: <span class="string">"poll"</span>,
+      <span class="string">"label"</span>: <span class="string">"סקר פתיחה"</span>,
+      <span class="string">"config"</span>: {
+        <span class="string">"question"</span>: <span class="string">"מה הרמה שלכם ב-React?"</span>,
+        <span class="string">"options"</span>: [<span class="string">"מתחיל"</span>, <span class="string">"בינוני"</span>, <span class="string">"מתקדם"</span>],
+        <span class="string">"duration"</span>: <span class="number">20</span>
+      }
+    },
+    {
+      <span class="string">"order"</span>: <span class="number">2</span>,
+      <span class="string">"type"</span>: <span class="string">"quiz"</span>,
+      <span class="string">"label"</span>: <span class="string">"חידון Hooks"</span>,
+      <span class="string">"config"</span>: {
+        <span class="string">"question"</span>: <span class="string">"מה ההבדל בין useState ל-useRef?"</span>,
+        <span class="string">"answers"</span>: [...],
+        <span class="string">"correctIndex"</span>: <span class="number">2</span>,
+        <span class="string">"timer"</span>: <span class="number">15</span>,
+        <span class="string">"points"</span>: <span class="number">100</span>
+      }
+    },
+    {
+      <span class="string">"order"</span>: <span class="number">3</span>,
+      <span class="string">"type"</span>: <span class="string">"timer"</span>,
+      <span class="string">"label"</span>: <span class="string">"הפסקה"</span>,
+      <span class="string">"config"</span>: { <span class="string">"duration"</span>: <span class="number">300</span>, <span class="string">"label"</span>: <span class="string">"הפסקה - 5 דקות"</span> }
+    },
+    {
+      <span class="string">"order"</span>: <span class="number">4</span>,
+      <span class="string">"type"</span>: <span class="string">"game"</span>,
+      <span class="string">"label"</span>: <span class="string">"משחק סיכום"</span>,
+      <span class="string">"config"</span>: {
+        <span class="string">"gameType"</span>: <span class="string">"memory"</span>,
+        <span class="string">"pairs"</span>: <span class="number">6</span>,
+        <span class="string">"duration"</span>: <span class="number">120</span>
+      }
+    }
+  ]
+}</pre>
+
+    <h3>תזמון שיעור חי</h3>
+    <p>התהליך המלא מיצירת סשן ועד לשליחת הזמנות:</p>
+
+    <h4>1. יצירת סשן</h4>
+    <pre><span class="comment">// API: POST /api/live/sessions</span>
+<span class="keyword">async function</span> <span class="fn">createSession</span>(data) {
+  <span class="keyword">const</span> session = <span class="keyword">await</span> db.query(<span class="string">`
+    INSERT INTO live_sessions (course_id, title, scheduled_at, duration, preset_id, livekit_room)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING *
+  `</span>, [
+    data.courseId,
+    data.title,
+    data.scheduledAt,
+    data.duration,
+    data.presetId,
+    <span class="string">`session_\${uuid()}`</span>  <span class="comment">// unique room name</span>
+  ]);
+
+  <span class="comment">// Schedule reminder notification</span>
+  <span class="keyword">await</span> <span class="fn">scheduleReminder</span>(session.id, data.scheduledAt);
+
+  <span class="keyword">return</span> session;
+}</pre>
+
+    <h4>2. שליחת הזמנות</h4>
+    <pre><span class="comment">// After session creation, send invites</span>
+<span class="keyword">async function</span> <span class="fn">sendInvites</span>(sessionId, studentIds) {
+  <span class="keyword">const</span> session = <span class="keyword">await</span> <span class="fn">getSession</span>(sessionId);
+
+  <span class="keyword">for</span> (<span class="keyword">const</span> studentId <span class="keyword">of</span> studentIds) {
+    <span class="comment">// Generate join link with token</span>
+    <span class="keyword">const</span> token = <span class="keyword">await</span> <span class="fn">generateToken</span>(studentId, <span class="string">''</span>, session.livekitRoom, <span class="string">'student'</span>);
+    <span class="keyword">const</span> joinUrl = <span class="string">`https://app.whiteboard.co.il/live/\${sessionId}?token=\${token}`</span>;
+
+    <span class="comment">// Send email notification</span>
+    <span class="keyword">await</span> <span class="fn">sendEmail</span>({
+      to: student.email,
+      template: <span class="string">'live-invite'</span>,
+      data: { title: session.title, date: session.scheduledAt, joinUrl }
+    });
+
+    <span class="comment">// In-app notification</span>
+    <span class="keyword">await</span> <span class="fn">createNotification</span>(studentId, {
+      type: <span class="string">'live_invite'</span>,
+      sessionId,
+      title: session.title,
+    });
+  }
+}</pre>
+
+    <h4>3. תזכורות אוטומטיות (Cron)</h4>
+    <pre><span class="comment">// Cron job — runs every minute</span>
+<span class="keyword">async function</span> <span class="fn">checkUpcomingReminders</span>() {
+  <span class="keyword">const</span> sessions = <span class="keyword">await</span> db.query(<span class="string">`
+    SELECT * FROM live_sessions
+    WHERE status = 'scheduled'
+    AND scheduled_at BETWEEN NOW() AND NOW() + INTERVAL '15 minutes'
+    AND reminder_sent = false
+  `</span>);
+
+  <span class="keyword">for</span> (<span class="keyword">const</span> session <span class="keyword">of</span> sessions.rows) {
+    <span class="keyword">await</span> <span class="fn">sendReminderToParticipants</span>(session.id);
+    <span class="keyword">await</span> db.query(<span class="string">`UPDATE live_sessions SET reminder_sent = true WHERE id = $1`</span>, [session.id]);
+  }
+}</pre>
+
+    <h4>4. Google Calendar Integration (אופציונלי)</h4>
+    <pre><span class="keyword">import</span> { google } <span class="keyword">from</span> <span class="string">'googleapis'</span>;
+
+<span class="keyword">async function</span> <span class="fn">createCalendarEvent</span>(session, teacherAuth) {
+  <span class="keyword">const</span> calendar = google.<span class="fn">calendar</span>({ version: <span class="string">'v3'</span>, auth: teacherAuth });
+
+  <span class="keyword">await</span> calendar.events.<span class="fn">insert</span>({
+    calendarId: <span class="string">'primary'</span>,
+    resource: {
+      summary: <span class="string">`WHITEBOARD Live: \${session.title}`</span>,
+      start: { dateTime: session.scheduledAt },
+      end: { dateTime: addMinutes(session.scheduledAt, session.duration) },
+      conferenceData: {
+        entryPoints: [{
+          entryPointType: <span class="string">'video'</span>,
+          uri: <span class="string">`https://app.whiteboard.co.il/live/\${session.id}`</span>,
+        }]
+      }
+    }
+  });
+}</pre>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 9: BOARDi AI -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="ai">
+    <div class="section-header">
+      <span class="section-num">9</span>
+      <h2>BOARDi AI Integration (Phase 5)</h2>
+    </div>
+
+    <div class="info-box warning">
+      זהו שלב מתקדם (Phase 5) — יש לבנות אותו רק אחרי שה-Live הבסיסי, האינטראקציות, וההקלטה עובדים. אל תנסו לעשות הכל בבת אחת.
+    </div>
+
+    <h3>LiveKit AI Agent Framework</h3>
+    <p>
+      LiveKit מספקת framework מוכן לבניית AI Agents שמשתתפים בחדרים. ה-Agent מתחבר כמשתתף רגיל ויכול לשמוע, לראות ולשלוח data.
+    </p>
+
+    <pre><span class="comment">// Python — LiveKit Agent (recommended for AI)</span>
+<span class="keyword">from</span> livekit.agents <span class="keyword">import</span> AutoSubscribe, JobContext, WorkerOptions, cli
+<span class="keyword">from</span> livekit.agents.transcription <span class="keyword">import</span> STTSegmentsForwarder
+<span class="keyword">from</span> livekit.plugins <span class="keyword">import</span> deepgram
+
+<span class="keyword">async def</span> <span class="fn">entrypoint</span>(ctx: JobContext):
+    <span class="comment"># Connect to room as AI agent</span>
+    <span class="keyword">await</span> ctx.connect(auto_subscribe=AutoSubscribe.AUDIO_ONLY)
+
+    <span class="comment"># Real-time speech-to-text</span>
+    stt = deepgram.STT(language=<span class="string">"he"</span>)  <span class="comment"># Hebrew support</span>
+
+    <span class="comment"># Forward transcription to data channel</span>
+    forwarder = STTSegmentsForwarder(
+        room=ctx.room,
+        participant=ctx.room.local_participant,
+    )
+
+    <span class="keyword">async for</span> event <span class="keyword">in</span> stt.stream():
+        <span class="keyword">await</span> forwarder.forward(event)
+        <span class="comment"># Also save to DB for later</span>
+        <span class="keyword">await</span> save_transcript_segment(ctx.room.name, event)
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint))</pre>
+
+    <h3>יכולות AI</h3>
+    <table>
+      <thead>
+        <tr><th>יכולת</th><th>טכנולוגיה</th><th>תיאור</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>תמלול בזמן אמת</strong></td>
+          <td>Deepgram / Whisper</td>
+          <td>כתוביות חיות בעברית, נשמרות כחלק מההקלטה</td>
+        </tr>
+        <tr>
+          <td><strong>סיכום אוטומטי</strong></td>
+          <td>Claude / GPT-4</td>
+          <td>בסיום סשן — סיכום נקודות מפתח, החלטות, שאלות שעלו</td>
+        </tr>
+        <tr>
+          <td><strong>Q&A Chatbot</strong></td>
+          <td>RAG + Claude</td>
+          <td>בוט שעונה לשאלות תלמידים בצ'אט על בסיס חומר הקורס</td>
+        </tr>
+        <tr>
+          <td><strong>הערות חכמות</strong></td>
+          <td>Claude / GPT-4</td>
+          <td>יצירת notes מסודרים מתוך התמלול — כותרות, נקודות, דוגמאות</td>
+        </tr>
+        <tr>
+          <td><strong>פרקים אוטומטיים</strong></td>
+          <td>NLP Analysis</td>
+          <td>חלוקת ההקלטה לפרקים לפי נושאים שהשתנו</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Flow סיכום אוטומטי</h3>
+    <pre><span class="comment">// Triggered when recording is ready</span>
+<span class="keyword">async function</span> <span class="fn">generateSessionSummary</span>(sessionId) {
+  <span class="comment">// 1. Get transcript</span>
+  <span class="keyword">const</span> transcript = <span class="keyword">await</span> <span class="fn">getTranscript</span>(sessionId);
+
+  <span class="comment">// 2. Send to Claude for summary</span>
+  <span class="keyword">const</span> summary = <span class="keyword">await</span> anthropic.messages.<span class="fn">create</span>({
+    model: <span class="string">'claude-sonnet-4-20250514'</span>,
+    messages: [{
+      role: <span class="string">'user'</span>,
+      content: <span class="string">`סכם את השיעור הבא בעברית. חלק ל: נקודות מפתח, שאלות שעלו, משימות.
+
+      תמלול:
+      \${transcript}`</span>
+    }],
+    max_tokens: <span class="number">2000</span>,
+  });
+
+  <span class="comment">// 3. Save to DB</span>
+  <span class="keyword">await</span> db.query(
+    <span class="string">`UPDATE live_recordings SET summary = $1 WHERE session_id = $2`</span>,
+    [summary.content[<span class="number">0</span>].text, sessionId]
+  );
+
+  <span class="comment">// 4. Notify students</span>
+  <span class="keyword">await</span> <span class="fn">notifyStudents</span>(sessionId, <span class="string">'session_summary_ready'</span>);
+}</pre>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 10: Roadmap -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="roadmap">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2>מפת דרכים ליישום</h2>
+    </div>
+
+    <p>
+      הפיתוח מחולק ל-6 שלבים, מהבסיסי ביותר (חדר וידאו פשוט) ועד ליכולות מתקדמות (AI).
+      הזמנים מבוססים על צוות של 1-2 מפתחי fullstack.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>שלב</th>
+          <th>משך</th>
+          <th>מה כולל</th>
+          <th>עדיפות</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Phase 1</strong><br>חדר בסיסי</td>
+          <td>3-4 שבועות</td>
+          <td>
+            וידאו/אודיו בסיסי, שיתוף מסך, חיבור לחדר (lobby + room), token management, device selection
+          </td>
+          <td><span class="phase-badge p0">P0 — חובה</span></td>
+        </tr>
+        <tr>
+          <td><strong>Phase 2</strong><br>כלי מרצה</td>
+          <td>2-3 שבועות</td>
+          <td>
+            השתקת כולם, הרחקת משתתף, רשימת משתתפים, צ'אט בזמן אמת, הרמת יד, ריאקציות
+          </td>
+          <td><span class="phase-badge p0">P0 — חובה</span></td>
+        </tr>
+        <tr>
+          <td><strong>Phase 3</strong><br>אינטראקציות</td>
+          <td>3-4 שבועות</td>
+          <td>
+            סקר, חידון, משחק, טיימר, לוח לבן, חדרי דיון, פריסטים ועורך פריסט
+          </td>
+          <td><span class="phase-badge p1">P1 — גבוה</span></td>
+        </tr>
+        <tr>
+          <td><strong>Phase 4</strong><br>הקלטה + VOD</td>
+          <td>2-3 שבועות</td>
+          <td>
+            Egress setup, הקלטת composite, נגן VOD, signed URLs, ניהול הקלטות, webhook
+          </td>
+          <td><span class="phase-badge p1">P1 — גבוה</span></td>
+        </tr>
+        <tr>
+          <td><strong>Phase 5</strong><br>BOARDi AI</td>
+          <td>2-3 שבועות</td>
+          <td>
+            תמלול בזמן אמת, סיכום אוטומטי, Q&A chatbot, הערות חכמות, פרקים
+          </td>
+          <td><span class="phase-badge p2">P2 — בינוני</span></td>
+        </tr>
+        <tr>
+          <td><strong>Phase 6</strong><br>אופטימיזציה</td>
+          <td>2-3 שבועות</td>
+          <td>
+            Adaptive bitrate, simulcast, multi-region deployment, mobile optimization, HLS לקהל גדול, monitoring
+          </td>
+          <td><span class="phase-badge p2">P2 — בינוני</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>סה"כ משוער: 15-20 שבועות</strong> (כ-4-5 חודשים) עבור יישום מלא של כל ה-phases.</p>
+
+    <div class="info-box tip">
+      <strong>MVP בתוך 6-7 שבועות:</strong> Phase 1 + Phase 2 מספיקים ל-MVP עובד — חדר וידאו חי עם מצלמה, מיקרופון, שיתוף מסך, צ'אט וכלי ניהול בסיסיים. זה כבר שווה ערך ל-Zoom מובנה ב-LMS.
+    </div>
+
+    <h3>Dependencies בין Phases</h3>
+    <pre style="background: var(--light-gray); color: var(--text); border: 1px solid var(--border); text-align: center; font-family: 'Heebo', sans-serif; font-size: 13px; direction: ltr;">
+Phase 1 (Basic Room)
+    |
+    v
+Phase 2 (Teacher Tools)
+    |
+    +----------+----------+
+    |          |          |
+    v          v          v
+Phase 3    Phase 4    Phase 6
+(Interactive) (Recording) (Optimization)
+    |          |
+    +----+-----+
+         |
+         v
+      Phase 5
+     (BOARDi AI)
+</pre>
+
+    <h3>Tech Stack Summary</h3>
+    <table>
+      <thead>
+        <tr><th>שכבה</th><th>טכנולוגיה</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Frontend</td><td>React + TypeScript + livekit-client + @livekit/components-react</td></tr>
+        <tr><td>Backend</td><td>Node.js + Express/Fastify + livekit-server-sdk</td></tr>
+        <tr><td>Database</td><td>PostgreSQL (existing WHITEBOARD DB + new live_* tables)</td></tr>
+        <tr><td>Media Server</td><td>LiveKit SFU (Docker/K8s)</td></tr>
+        <tr><td>Recording</td><td>LiveKit Egress Service</td></tr>
+        <tr><td>Storage</td><td>AWS S3 / Google Cloud Storage</td></tr>
+        <tr><td>AI Agent</td><td>LiveKit Agents (Python) + Deepgram + Claude API</td></tr>
+        <tr><td>Notifications</td><td>Email (SendGrid/SES) + In-app + Push</td></tr>
+        <tr><td>Calendar</td><td>Google Calendar API</td></tr>
+        <tr><td>Monitoring</td><td>LiveKit Dashboard + Grafana + Prometheus</td></tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+    <div style="text-align:center; padding: 40px 0 0; color: var(--text-light); font-size: 13px;">
+      <p style="margin-bottom: 8px;">
+        <strong style="font-family: 'Fredoka', sans-serif; color: var(--navy); font-size: 16px;">WHITEBOARD Live</strong>
+      </p>
+      <p>Implementation Guide v1.0 &mdash; April 2026</p>
+      <p>For internal use only.</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- Sidebar active state JS -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const links = document.querySelectorAll('.sidebar nav a');
+  const sections = document.querySelectorAll('.section');
+
+  function updateActive() {
+    let current = '';
+    sections.forEach(section => {
+      const top = section.getBoundingClientRect().top;
+      if (top < 120) current = section.id;
+    });
+    links.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', updateActive);
+  updateActive();
+
+  // Smooth scroll
+  links.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+});
+</script>
+
+</body>
+</html>

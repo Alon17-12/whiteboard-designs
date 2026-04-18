@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תזמון שיעור חי | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:        #253E7A;
+    --navy-dark:   #1a2f5e;
+    --navy-light:  #3a5499;
+    --cyan:        #38C4F2;
+    --cyan-dark:   #1db0d8;
+    --cyan-light:  rgba(56,196,242,0.12);
+    --light-blue:  #E3F4FD;
+    --pink:        #F05680;
+    --pink-light:  rgba(240,86,128,0.12);
+    --yellow:      #EAD654;
+    --yellow-light:rgba(234,214,84,0.18);
+    --green:       #7DC57A;
+    --green-light: rgba(125,197,122,0.14);
+    --white:       #FFFFFF;
+    --bg:          #F0F6FF;
+    --surface:     #FFFFFF;
+    --surface-2:   #f5f8ff;
+    --border:      rgba(37,62,122,0.1);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #1a2f5e;
+    --text-sub:    rgba(37,62,122,0.55);
+    --text-light:  rgba(37,62,122,0.38);
+    --font-he:     'Heebo', sans-serif;
+    --font-en:     'Fredoka', sans-serif;
+    --radius-sm:   10px;
+    --radius-md:   16px;
+    --radius-lg:   22px;
+    --radius-xl:   28px;
+    --shadow-sm:   0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:   0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:   0 16px 48px rgba(37,62,122,0.14);
+    --sidebar-bg:  var(--navy);
+  }
+
+  [data-theme="dark"] {
+    --cyan-light:  rgba(56,196,242,0.14);
+    --light-blue:  rgba(56,196,242,0.1);
+    --pink-light:  rgba(240,86,128,0.18);
+    --yellow-light:rgba(234,214,84,0.18);
+    --green-light: rgba(125,197,122,0.18);
+    --bg:          #0c1424;
+    --surface:     #131e35;
+    --surface-2:   #1a2740;
+    --border:      rgba(255,255,255,0.07);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #dde5f5;
+    --text-sub:    rgba(221,229,245,0.55);
+    --text-light:  rgba(221,229,245,0.32);
+    --shadow-sm:   0 2px 12px rgba(0,0,0,0.3);
+    --shadow-md:   0 6px 28px rgba(0,0,0,0.4);
+    --shadow-lg:   0 16px 48px rgba(0,0,0,0.55);
+    --sidebar-bg:  #0d1628;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    transition: background .3s, color .3s;
+  }
+
+  /* ── SIDEBAR ───────────────────────────── */
+  .sidebar {
+    width: 220px;
+    background: var(--sidebar-bg);
+    border-left: 1px solid rgba(255,255,255,0.05);
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    padding: 24px 0; flex-shrink: 0;
+    position: fixed; right: 0; top: 0; bottom: 0;
+    z-index: 50; transition: background .3s;
+  }
+  .sidebar-logo {
+    padding: 16px 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sidebar-logo img { width: 150px; object-fit: contain; display: block; }
+  .sidebar-section { padding: 8px 12px; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: all 0.2s; text-decoration: none;
+    color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+  .nav-item.active { background: rgba(56,196,242,0.2); color: var(--cyan); font-weight: 700; }
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  .sidebar-bottom {
+    margin-top: auto; padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .mode-switcher {
+    display: flex; background: rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm); padding: 3px; margin-bottom: 12px;
+  }
+  .mode-btn {
+    flex: 1; padding: 7px 8px; border: none; background: transparent;
+    color: rgba(255,255,255,0.55); font-family: var(--font-he);
+    font-size: 12px; font-weight: 600; border-radius: 7px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .mode-btn.active { background: var(--cyan); color: var(--navy-dark); }
+
+  .profile-mini {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: background 0.2s;
+  }
+  .profile-mini:hover { background: rgba(255,255,255,0.08); }
+  .avatar-sm {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--navy-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+  .profile-mini-name { font-size: 13px; font-weight: 600; color: white; }
+  .profile-mini-role { font-size: 11px; color: rgba(255,255,255,0.45); }
+
+  /* ── MAIN ──────────────────────────────── */
+  .main { margin-right: 220px; flex: 1; display: flex; flex-direction: column; }
+
+  /* ── TOPBAR ────────────────────────────── */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 40;
+    box-shadow: var(--shadow-sm); transition: background .3s;
+  }
+  .topbar-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+  .breadcrumb-link { color: var(--text-sub); cursor: pointer; transition: color 0.2s; }
+  .breadcrumb-link:hover { color: var(--text-main); }
+  .breadcrumb-sep { color: var(--text-light); font-size: 16px; }
+  .breadcrumb-current { color: var(--text-main); font-weight: 700; }
+  .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+  .lang-toggle {
+    display: flex; background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px;
+  }
+  .lang-btn {
+    padding: 5px 10px; background: transparent; border: none;
+    cursor: pointer; font-size: 14px; border-radius: 7px; transition: background .2s;
+  }
+  .lang-btn.active { background: var(--cyan); }
+
+  .icon-btn {
+    width: 40px; height: 40px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; color: var(--text-sub);
+  }
+  .icon-btn:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  [data-theme="dark"] .icon-btn:hover { color: var(--cyan); border-color: var(--border-hover); }
+
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="dark"] .icon-sun  { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* ── PAGE BODY ─────────────────────────── */
+  .page-body {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  /* ── FORM CARD ─────────────────────────── */
+  .form-card {
+    width: 100%;
+    max-width: 100%;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+    animation: cardIn 0.35s ease forwards;
+  }
+  .form-body {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+    padding: 0 !important;
+  }
+  .form-col-left, .form-col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .form-section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+  .form-header-icon {
+    width: 48px; height: 48px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--cyan), var(--cyan-dark));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(56,196,242,0.3);
+  }
+  .form-header-icon svg { width: 24px; height: 24px; color: white; }
+  .form-header-title { font-size: 22px; font-weight: 800; color: var(--text-main); }
+
+  .form-body { padding: 0; }
+
+  /* ── FORM FIELDS ───────────────────────── */
+  .field-group {
+    margin-bottom: 20px;
+  }
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-sub);
+    margin-bottom: 6px;
+  }
+  .field-input {
+    width: 100%;
+    padding: 11px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field-input:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px var(--cyan-light);
+  }
+  textarea.field-input {
+    resize: vertical;
+    min-height: 70px;
+  }
+  select.field-input {
+    cursor: pointer;
+  }
+
+  .field-row {
+    display: flex;
+    gap: 14px;
+  }
+  .field-row .field-group { flex: 1; }
+
+  .field-hint {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  /* ── TOGGLES ───────────────────────────── */
+  .toggle-section {
+    margin-bottom: 24px;
+    padding: 20px;
+    background: var(--surface-2);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+  }
+  .toggle-section-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toggle-section-title svg { width: 18px; height: 18px; color: var(--cyan); }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .toggle-row:last-child { border-bottom: none; }
+
+  .toggle-info {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .toggle-label {
+    font-size: 14px; font-weight: 600; color: var(--text-main);
+  }
+  .toggle-desc {
+    font-size: 12px; color: var(--text-light);
+  }
+
+  .toggle-right {
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .toggle {
+    width: 44px; height: 24px;
+    background: var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.25s;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: var(--cyan); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: white;
+    top: 3px;
+    right: 3px;
+    transition: right 0.25s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .toggle.on::after { right: 23px; }
+
+  .reminder-select {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-main);
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .reminder-select:focus { outline: none; border-color: var(--cyan); }
+
+  /* ── INVITE SECTION ────────────────────── */
+  .invite-section {
+    margin-bottom: 24px;
+  }
+  .invite-label {
+    font-size: 15px; font-weight: 800; color: var(--text-main);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .invite-label svg { width: 18px; height: 18px; color: var(--cyan); }
+
+  .segmented {
+    display: flex;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+    margin-bottom: 12px;
+  }
+  .seg-btn {
+    flex: 1;
+    padding: 9px 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-sub);
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .seg-btn.active {
+    background: var(--cyan);
+    color: white;
+    box-shadow: 0 2px 8px rgba(56,196,242,0.3);
+  }
+  [data-theme="dark"] .seg-btn.active { color: #0b1424; }
+
+  .invite-preview {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--green-light);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green);
+  }
+  [data-theme="dark"] .invite-preview { color: var(--green); }
+  .invite-preview svg { width: 16px; height: 16px; }
+
+  /* ── INTERACTIVE CONTENT SECTION ─────── */
+  .interactive-section {
+    margin-bottom: 24px;
+  }
+  .interactive-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .interactive-header-icon {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--pink), #c93b5f);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 10px rgba(240,86,128,0.25);
+  }
+  .interactive-header-icon svg { width: 18px; height: 18px; color: white; }
+  .interactive-title { font-size: 15px; font-weight: 800; color: var(--text-main); }
+  .interactive-subtitle {
+    font-size: 12px; color: var(--text-light); margin-bottom: 14px; padding-right: 46px;
+  }
+
+  .accordion-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .accordion-card:hover { border-color: var(--border-hover); }
+  .accordion-card:last-child { margin-bottom: 0; }
+
+  .accordion-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-he);
+    transition: background 0.2s;
+  }
+  .accordion-trigger:hover { background: rgba(56,196,242,0.04); }
+  .accordion-trigger-right {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .accordion-trigger-right svg { width: 16px; height: 16px; color: var(--cyan); }
+  .accordion-trigger-title {
+    font-size: 14px; font-weight: 700; color: var(--text-main);
+  }
+  .accordion-count-badge {
+    padding: 2px 10px;
+    background: var(--cyan-light);
+    color: var(--cyan);
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .accordion-chevron {
+    width: 18px; height: 18px;
+    color: var(--text-light);
+    transition: transform 0.25s;
+  }
+  .accordion-card.open .accordion-chevron { transform: rotate(180deg); }
+
+  .accordion-body {
+    display: none;
+    padding: 0 16px 16px;
+  }
+  .accordion-card.open .accordion-body { display: block; }
+
+  .add-btn-dashed {
+    width: 100%;
+    padding: 10px;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-sub);
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: all 0.2s;
+    margin-bottom: 10px;
+  }
+  .add-btn-dashed:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    background: var(--cyan-light);
+  }
+  .add-btn-dashed svg { width: 14px; height: 14px; }
+
+  .prep-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    transition: border-color 0.2s;
+  }
+  .prep-item:hover { border-color: var(--border-hover); }
+  .prep-item:last-child { margin-bottom: 0; }
+
+  .prep-item-right {
+    display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;
+  }
+  .prep-item-icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .prep-item-icon svg { width: 14px; height: 14px; }
+  .prep-item-icon.survey-icon { background: var(--cyan-light); color: var(--cyan); }
+  .prep-item-icon.question-icon { background: var(--yellow-light); color: #b8a020; }
+  [data-theme="dark"] .prep-item-icon.question-icon { color: var(--yellow); }
+  .prep-item-icon.game-icon { background: var(--pink-light); color: var(--pink); }
+
+  .prep-item-text {
+    flex: 1; min-width: 0;
+  }
+  .prep-item-name {
+    font-size: 13px; font-weight: 600; color: var(--text-main);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .prep-item-meta {
+    font-size: 11px; color: var(--text-light); margin-top: 1px;
+  }
+
+  .prep-item-left {
+    display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+  }
+  .correct-indicator {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--green-light);
+    color: var(--green);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .correct-indicator svg { width: 10px; height: 10px; }
+
+  .game-type-badge {
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--pink-light);
+    color: var(--pink);
+  }
+  .game-pairs-badge {
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--cyan-light);
+    color: var(--cyan);
+  }
+
+  .delete-btn-mini {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-light);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .delete-btn-mini:hover {
+    background: var(--pink-light);
+    color: var(--pink);
+    border-color: var(--pink);
+  }
+  .delete-btn-mini svg { width: 14px; height: 14px; }
+
+  /* ── ACTION BAR ────────────────────────── */
+  .form-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 28px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 24px; border-radius: 30px;
+    font-family: var(--font-he); font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; border: none; white-space: nowrap;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--cyan), var(--cyan-dark));
+    color: white; box-shadow: 0 4px 16px rgba(56,196,242,0.35);
+  }
+  [data-theme="dark"] .btn-primary { color: #0b1424; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(56,196,242,0.45); }
+  .btn-ghost {
+    background: transparent; color: var(--text-sub);
+    border: 1.5px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  [data-theme="dark"] .btn-ghost:hover { color: var(--cyan); }
+  .btn svg { width: 16px; height: 16px; }
+
+  .btn-text {
+    background: none; border: none;
+    color: var(--text-light); font-family: var(--font-he);
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: color 0.2s;
+    padding: 8px 12px;
+  }
+  .btn-text:hover { color: var(--pink); }
+
+  .actions-spacer { flex: 1; }
+
+  /* ── TOAST ──────────────────────────────── */
+  .toast-container {
+    position: fixed; bottom: 24px; left: 24px;
+    display: flex; flex-direction: column; gap: 10px;
+    z-index: 200; pointer-events: none;
+  }
+  .toast {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    min-width: 260px; max-width: 400px;
+    pointer-events: auto;
+    transform: translateX(-20px); opacity: 0;
+    animation: toastIn .35s ease forwards, toastOut .35s ease forwards 3.5s;
+  }
+  @keyframes toastIn { to { opacity: 1; transform: translateX(0); } }
+  @keyframes toastOut { to { opacity: 0; transform: translateX(-20px); } }
+  .toast-icon {
+    width: 34px; height: 34px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .toast-icon svg { width: 16px; height: 16px; }
+  .toast.success .toast-icon { background: var(--green-light); color: var(--green); }
+  .toast.info    .toast-icon { background: var(--cyan-light); color: var(--cyan); }
+  .toast-body { flex: 1; }
+  .toast-title { font-size: 13.5px; font-weight: 700; color: var(--text-main); }
+  .toast-msg { font-size: 12px; color: var(--text-sub); margin-top: 1px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD">
+  </div>
+
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      לוח הבקרה
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="6" height="6" rx="1"/><path d="M2 13h6v8H2z"/><rect x="10" y="3" width="12" height="4" rx="1"/><rect x="10" y="11" width="12" height="4" rx="1"/><rect x="10" y="19" width="12" height="2" rx="1"/></svg>
+      בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      הגדרות
+    </a>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <button class="mode-btn">תלמיד</button>
+      <button class="mode-btn active">מרצה</button>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">א</div>
+      <div>
+        <div class="profile-mini-name">אלון</div>
+        <div class="profile-mini-role">מרצה</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span class="breadcrumb-link">מרכזי הידע</span>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-link">יסודות העיצוב</span>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">תזמון שיעור חי</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="lang-toggle">
+        <button class="lang-btn active">🇮🇱</button>
+        <button class="lang-btn">🇺🇸</button>
+      </div>
+      <div class="icon-btn" id="themeToggle" title="מצב כהה / בהיר">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+      <div class="icon-btn" title="הגדרות">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+    <div class="form-card">
+
+      <!-- HEADER -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:48px;height:48px;border-radius:14px;background:rgba(240,86,128,0.1);display:flex;align-items:center;justify-content:center;color:#F05680;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div>
+            <h1 style="font-size:22px;font-weight:800;font-family:var(--font-brand);color:var(--text-main);">תזמון שיעור חי חדש</h1>
+            <div style="font-size:13px;color:var(--text-sub);">הגדר פרטים, הזמנות ותוכן אינטראקטיבי</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM BODY — 2 COLUMNS -->
+      <div class="form-body">
+        <div class="form-col-left">
+        <div class="form-section-card">
+
+        <div class="field-group">
+          <label class="field-label">שם השיעור</label>
+          <input type="text" class="field-input" value="שיעור חי: צבע ומשמעות" id="lessonName">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">תיאור (אופציונלי)</label>
+          <textarea class="field-input" placeholder="תיאור קצר של השיעור..."></textarea>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">קורס / תכנית</label>
+          <select class="field-input" id="courseSelect">
+            <option selected>יסודות העיצוב</option>
+            <option>עיצוב UI מתקדם</option>
+            <option>UX Research</option>
+            <option>מותג ואסטרטגיה</option>
+            <option>עיצוב מוצר דיגיטלי</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">תאריך</label>
+            <input type="date" class="field-input" id="dateInput" value="2026-04-20">
+          </div>
+          <div class="field-group">
+            <label class="field-label">שעת התחלה</label>
+            <input type="time" class="field-input" id="timeInput" value="10:00">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">משך מוערך</label>
+            <select class="field-input" id="durationSelect">
+              <option value="30">30 דקות</option>
+              <option value="45" selected>45 דקות</option>
+              <option value="60">60 דקות</option>
+              <option value="90">90 דקות</option>
+              <option value="120">120 דקות</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">מספר משתתפים מקסימלי</label>
+            <input type="number" class="field-input" value="50" min="5" max="500" id="maxParticipants">
+          </div>
+        </div>
+
+        </div><!-- /form-section-card -->
+        </div><!-- /form-col-left -->
+
+        <div class="form-col-right">
+        <div class="form-section-card">
+        <!-- INTERACTIVE CONTENT PREPARATION -->
+        <div class="interactive-section">
+          <div class="interactive-header">
+            <div class="interactive-header-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4"/><path d="M14 12h4"/><circle cx="8" cy="16" r="0.5"/><circle cx="16" cy="16" r="0.5"/><path d="M12 6V2"/><path d="M10 2h4"/></svg>
+            </div>
+            <span class="interactive-title">הכנת תוכן אינטראקטיבי</span>
+          </div>
+          <div class="interactive-subtitle">בחר ערכה מוכנה או הכן תוכן ידנית</div>
+
+          <!-- PRESET SELECTOR -->
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:12px;margin-bottom:16px;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(56,196,242,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#38C4F2;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:13.5px;font-weight:700;color:var(--text-main);margin-bottom:4px;">ערכה מוכנה</div>
+              <select style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);font-family:var(--font-he);font-size:13px;color:var(--text-main);cursor:pointer;outline:none;appearance:none;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23253E7A' stroke-width='2.5'><polyline points='6 9 12 15 18 9'/></svg>&quot;);background-repeat:no-repeat;background-position:left 12px center;padding-left:32px;">
+                <option value="none" selected>ללא — הכנה ידנית</option>
+                <option value="standard">שיעור סטנדרטי (סקר + 3 שאלות + משחק)</option>
+                <option value="workshop">סדנה אינטראקטיבית (5 שאלות + 2 משחקים)</option>
+                <option value="lecture">הרצאה + Q&A (שיתוף + סקר + לוח)</option>
+                <option value="exam">מבחן חי (10 שאלות + לידרבורד)</option>
+              </select>
+            </div>
+            <button onclick="showToast('פותח עורך ערכה חדשה')" style="padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-he);font-size:12px;font-weight:700;color:var(--text-sub);cursor:pointer;transition:all .15s;white-space:nowrap;" onmouseenter="this.style.borderColor='#38C4F2';this.style.color='#38C4F2'" onmouseleave="this.style.borderColor='';this.style.color=''">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12" style="vertical-align:-1px;margin-left:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              צור חדשה
+            </button>
+          </div>
+
+          <div style="font-size:14px;font-weight:800;color:var(--text-main);margin:16px 0 12px;display:flex;align-items:center;gap:10px;">
+            <div style="flex:1;height:1.5px;background:var(--border);"></div>
+            <span style="white-space:nowrap;">או הכן ידנית</span>
+            <div style="flex:1;height:1.5px;background:var(--border);"></div>
+          </div>
+
+          <!-- 1. SURVEYS -->
+          <div class="accordion-card open" data-accordion>
+            <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+              <div class="accordion-trigger-right">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16"/><path d="M4 12h10"/><path d="M4 19h6"/><circle cx="20" cy="12" r="2"/><circle cx="16" cy="19" r="2"/></svg>
+                <span class="accordion-trigger-title">סקרים מוכנים</span>
+                <span class="accordion-count-badge">1</span>
+              </div>
+              <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="accordion-body">
+              <button class="add-btn-dashed" onclick="toast('info','הוסף סקר','פתח עורך סקרים חדש')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                הוסף סקר
+              </button>
+              <div class="prep-item">
+                <div class="prep-item-right">
+                  <div class="prep-item-icon survey-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16"/><path d="M4 12h10"/><path d="M4 19h6"/><circle cx="20" cy="12" r="2"/><circle cx="16" cy="19" r="2"/></svg>
+                  </div>
+                  <div class="prep-item-text">
+                    <div class="prep-item-name">איזה סגנון עיצוב אתם הכי אוהבים?</div>
+                    <div class="prep-item-meta">4 אפשרויות: מינימליסטי / מודרני / קלאסי / אקלקטי</div>
+                  </div>
+                </div>
+                <div class="prep-item-left">
+                  <button class="delete-btn-mini" onclick="this.closest('.prep-item').remove(); toast('info','סקר נמחק','')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. LIVE QUESTIONS -->
+          <div class="accordion-card" data-accordion>
+            <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+              <div class="accordion-trigger-right">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <span class="accordion-trigger-title">שאלות חיות</span>
+                <span class="accordion-count-badge">2</span>
+              </div>
+              <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="accordion-body">
+              <button class="add-btn-dashed" onclick="toast('info','הוסף שאלה','פתח עורך שאלות חדש')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                הוסף שאלה
+              </button>
+              <div class="prep-item">
+                <div class="prep-item-right">
+                  <div class="prep-item-icon question-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <div class="prep-item-text">
+                    <div class="prep-item-name">מהו צבע משלים לכחול?</div>
+                    <div class="prep-item-meta">4 אפשרויות &bull; תשובה נכונה: כתום</div>
+                  </div>
+                </div>
+                <div class="prep-item-left">
+                  <div class="correct-indicator" title="תשובה נכונה מסומנת">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <button class="delete-btn-mini" onclick="this.closest('.prep-item').remove(); toast('info','שאלה נמחקה','')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="prep-item" style="margin-top: 8px;">
+                <div class="prep-item-right">
+                  <div class="prep-item-icon question-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <div class="prep-item-text">
+                    <div class="prep-item-name">כמה צבעים ראשוניים?</div>
+                    <div class="prep-item-meta">3 אפשרויות</div>
+                  </div>
+                </div>
+                <div class="prep-item-left">
+                  <button class="delete-btn-mini" onclick="this.closest('.prep-item').remove(); toast('info','שאלה נמחקה','')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. GAMES -->
+          <div class="accordion-card" data-accordion>
+            <button class="accordion-trigger" onclick="this.parentElement.classList.toggle('open')">
+              <div class="accordion-trigger-right">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4"/><path d="M14 12h4"/></svg>
+                <span class="accordion-trigger-title">משחקים</span>
+                <span class="accordion-count-badge">1</span>
+              </div>
+              <svg class="accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="accordion-body">
+              <button class="add-btn-dashed" onclick="toast('info','הוסף משחק','בחר סוג משחק חדש')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                הוסף משחק
+              </button>
+              <div class="prep-item">
+                <div class="prep-item-right">
+                  <div class="prep-item-icon game-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="9" height="9" rx="1"/><rect x="13" y="2" width="9" height="9" rx="1"/><rect x="2" y="13" width="9" height="9" rx="1"/><rect x="13" y="13" width="9" height="9" rx="1"/></svg>
+                  </div>
+                  <div class="prep-item-text">
+                    <div class="prep-item-name">משחק זיכרון — מונחי עיצוב</div>
+                    <div class="prep-item-meta">התאם מונח להגדרה</div>
+                  </div>
+                </div>
+                <div class="prep-item-left">
+                  <span class="game-type-badge">זיכרון</span>
+                  <span class="game-pairs-badge">8 זוגות</span>
+                  <button class="delete-btn-mini" onclick="this.closest('.prep-item').remove(); toast('info','משחק נמחק','')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div style="display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap;">
+                <span class="game-type-badge" style="cursor:pointer; opacity:0.6" title="סוגי משחקים זמינים">זיכרון</span>
+                <span class="game-type-badge" style="cursor:pointer; opacity:0.6" title="סוגי משחקים זמינים">איש תלוי</span>
+                <span class="game-type-badge" style="cursor:pointer; opacity:0.6" title="סוגי משחקים זמינים">תשחץ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+        </div><!-- /form-section-card -->
+        </div><!-- /form-col-right -->
+      </div><!-- /form-body grid -->
+
+      <!-- FULL WIDTH: SETTINGS + INVITE + ACTIONS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;">
+        <!-- Settings -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow-sm);">
+          <div style="font-size:15px;font-weight:700;color:var(--text-main);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            הגדרות שיעור
+          </div>
+          <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">הקלט אוטומטית</div></div><div class="toggle on" data-toggle="record"></div></div>
+          <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">אפשר צ׳אט</div></div><div class="toggle on" data-toggle="chat"></div></div>
+          <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">אפשר הרמת יד</div></div><div class="toggle on" data-toggle="hand"></div></div>
+          <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">מיקרופון כבוי בכניסה</div></div><div class="toggle on" data-toggle="muted"></div></div>
+          <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">שלח תזכורת</div></div><div class="toggle-right"><select class="reminder-select"><option selected>שעה לפני</option><option>יום לפני</option></select><div class="toggle on" data-toggle="reminder"></div></div></div>
+        </div>
+        <!-- Invite -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow-sm);">
+          <div style="font-size:15px;font-weight:700;color:var(--text-main);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            הזמן משתתפים
+          </div>
+          <div class="segmented" id="inviteSegmented" style="margin-bottom:12px;">
+            <button class="seg-btn active" data-seg="all">כל תלמידי הקורס</button>
+            <button class="seg-btn" data-seg="manual">בחירה ידנית</button>
+          </div>
+          <div class="invite-preview" id="invitePreview" style="margin-top:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="inviteCount">32 תלמידים יקבלו הזמנה</span>
+          </div>
+
+          <!-- ACTION BUTTONS inside invite card -->
+          <div style="display:flex;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+            <button class="btn btn-primary" id="createBtn" style="flex:1;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              צור שיעור חי
+            </button>
+            <button class="btn btn-ghost" id="draftBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              טיוטה
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SUCCESS POPUP ═══ -->
+<div id="successOverlay" style="display:none;position:fixed;inset:0;background:rgba(26,47,94,0.5);backdrop-filter:blur(6px);z-index:600;"></div>
+<div id="successModal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);opacity:0;width:440px;background:var(--surface);border-radius:22px;box-shadow:0 24px 64px rgba(0,0,0,0.3);z-index:610;overflow:hidden;border:1px solid var(--border);transition:transform .3s cubic-bezier(.4,.8,.3,1),opacity .3s;text-align:center;">
+  <div style="padding:36px 28px 28px;">
+    <img src="../BOARDi/SVG/5.svg" alt="BOARDi" style="width:120px;margin-bottom:16px;filter:drop-shadow(0 6px 18px rgba(37,62,122,0.2));animation:boarFloat 3s ease-in-out infinite;">
+    <div style="font-family:var(--font-brand);font-size:24px;font-weight:700;color:var(--text-main);margin-bottom:6px;">הזימון נשלח בהצלחה!</div>
+    <div style="font-size:14px;color:var(--text-sub);line-height:1.6;margin-bottom:8px;">כל התלמידים קיבלו הודעה עם לינק ישיר למפגש.</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:rgba(125,197,122,0.1);color:#7DC57A;font-size:13px;font-weight:700;margin-bottom:20px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+      <span id="successInviteCount">32 תלמידים הוזמנו</span>
+    </div>
+  </div>
+  <div style="padding:16px 28px 24px;border-top:1px solid var(--border);">
+    <button onclick="closeSuccess()" style="padding:12px 28px;border-radius:24px;border:none;background:linear-gradient(135deg,#38C4F2,#1db0d8);color:white;font-family:var(--font-he);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(56,196,242,0.3);display:inline-flex;align-items:center;gap:8px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      חזרה למסך הבית
+    </button>
+  </div>
+</div>
+<style>
+@keyframes boarFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+</style>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ═══ STUDENT SELECTION POPUP ═══ -->
+<div id="studentSelectOverlay" onclick="closeStudentSelect()" style="display:none;position:fixed;inset:0;background:rgba(26,47,94,0.45);backdrop-filter:blur(4px);z-index:500;"></div>
+<div id="studentSelectModal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);opacity:0;width:480px;max-height:70vh;background:var(--surface);border-radius:18px;box-shadow:0 24px 64px rgba(0,0,0,0.25);z-index:510;overflow:hidden;border:1px solid var(--border);transition:transform .3s cubic-bezier(.4,.8,.3,1),opacity .3s;flex-direction:column;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);">
+    <div style="font-size:17px;font-weight:800;color:var(--text-main);">בחירת תלמידים</div>
+    <button onclick="closeStudentSelect()" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div style="padding:12px 22px;border-bottom:1px solid var(--border);">
+    <input type="text" id="studentSearch" placeholder="חפש תלמיד..." oninput="filterStudents()" style="width:100%;padding:9px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface-2);font-family:var(--font-he);font-size:13px;color:var(--text-main);outline:none;" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">
+  </div>
+  <div id="studentList" style="flex:1;overflow-y:auto;padding:8px 22px;max-height:340px;"></div>
+  <div style="padding:14px 22px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);">
+    <span id="selectedCount" style="font-size:13px;font-weight:700;color:var(--text-sub);">0 נבחרו</span>
+    <button onclick="confirmStudentSelect()" style="padding:9px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#38C4F2,#1db0d8);color:white;font-family:var(--font-he);font-size:13px;font-weight:700;cursor:pointer;">אישור</button>
+  </div>
+</div>
+
+<!-- ═══ SUMMARY POPUP ═══ -->
+<div id="summaryOverlay" onclick="closeSummary()" style="display:none;position:fixed;inset:0;background:rgba(26,47,94,0.45);backdrop-filter:blur(4px);z-index:500;"></div>
+<div id="summaryModal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);opacity:0;width:500px;background:var(--surface);border-radius:18px;box-shadow:0 24px 64px rgba(0,0,0,0.25);z-index:510;overflow:hidden;border:1px solid var(--border);transition:transform .3s cubic-bezier(.4,.8,.3,1),opacity .3s;">
+  <div style="display:flex;align-items:center;gap:14px;padding:22px 24px;border-bottom:1px solid var(--border);background:var(--surface-2);">
+    <img src="../BOARDi/SVG/12.svg" alt="BOARDi" style="width:56px;height:56px;flex-shrink:0;filter:drop-shadow(0 4px 10px rgba(37,62,122,0.15));">
+    <div>
+      <div style="font-size:18px;font-weight:800;color:var(--text-main);">אשר את המפגש שלך</div>
+      <div style="font-size:13px;color:var(--text-sub);">בדוק את הפרטים ושלח זימון לתלמידים</div>
+    </div>
+  </div>
+  <div style="padding:22px 24px;display:flex;flex-direction:column;gap:14px;">
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface-2);border-radius:10px;border:1px solid var(--border);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#38C4F2" stroke-width="2" width="18" height="18"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      <div style="flex:1;"><div style="font-size:11px;color:var(--text-light);">כותרת</div><div id="sumTitle" style="font-size:14px;font-weight:700;color:var(--text-main);">שיעור חי: צבע ומשמעות</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="padding:12px 14px;background:var(--surface-2);border-radius:10px;border:1px solid var(--border);">
+        <div style="font-size:11px;color:var(--text-light);">תאריך</div><div id="sumDate" style="font-size:14px;font-weight:700;color:var(--text-main);">20.04.2026</div>
+      </div>
+      <div style="padding:12px 14px;background:var(--surface-2);border-radius:10px;border:1px solid var(--border);">
+        <div style="font-size:11px;color:var(--text-light);">שעה</div><div id="sumTime" style="font-size:14px;font-weight:700;color:var(--text-main);">10:00</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="padding:12px 14px;background:var(--surface-2);border-radius:10px;border:1px solid var(--border);">
+        <div style="font-size:11px;color:var(--text-light);">מוזמנים</div><div id="sumInvited" style="font-size:14px;font-weight:700;color:var(--text-main);">32 תלמידים</div>
+      </div>
+      <div style="padding:12px 14px;background:var(--surface-2);border-radius:10px;border:1px solid var(--border);">
+        <div style="font-size:11px;color:var(--text-light);">משך</div><div id="sumDuration" style="font-size:14px;font-weight:700;color:var(--text-main);">45 דקות</div>
+      </div>
+    </div>
+    <div style="padding:12px 14px;background:var(--surface-2);border-radius:10px;border:1px solid var(--border);">
+      <div style="font-size:11px;color:var(--text-light);">ערכת תוכן</div><div id="sumPreset" style="font-size:14px;font-weight:700;color:var(--text-main);">ללא — הכנה ידנית</div>
+    </div>
+  </div>
+  <div style="padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:center;">
+    <button onclick="sendInvite()" style="padding:10px 24px;border-radius:20px;border:none;background:linear-gradient(135deg,#38C4F2,#1db0d8);color:white;font-family:var(--font-he);font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 3px 14px rgba(56,196,242,0.3);display:inline-flex;align-items:center;gap:8px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      שלח זימון
+    </button>
+  </div>
+</div>
+
+<script>
+  // ═══════════════════════════════════════
+  // THEME
+  // ═══════════════════════════════════════
+  const html = document.documentElement;
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  // LANG
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.lang-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+    });
+  });
+
+  // MODE
+  document.querySelectorAll('.mode-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      const isStudent = b.textContent.trim() === 'תלמיד';
+      document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      if (isStudent) toast('info', 'מעבר למצב תלמיד', 'פותח את הקורסים שלי...');
+    });
+  });
+
+  // NAV
+  document.querySelectorAll('.sidebar .nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  // ═══════════════════════════════════════
+  // TOAST
+  // ═══════════════════════════════════════
+  const toastContainer = document.getElementById('toastContainer');
+  const TOAST_ICONS = {
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>',
+    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+  };
+  function toast(type, title, msg = '') {
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.innerHTML = `<div class="toast-icon">${TOAST_ICONS[type] || TOAST_ICONS.info}</div>
+      <div class="toast-body"><div class="toast-title">${title}</div>${msg ? `<div class="toast-msg">${msg}</div>` : ''}</div>`;
+    toastContainer.appendChild(el);
+    setTimeout(() => el.remove(), 4100);
+  }
+
+  // ═══════════════════════════════════════
+  // TOGGLES
+  // ═══════════════════════════════════════
+  document.querySelectorAll('.toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('on');
+      const name = toggle.dataset.toggle;
+      const state = toggle.classList.contains('on');
+      const names = {
+        record: 'הקלטה אוטומטית',
+        chat: 'צ\'אט',
+        hand: 'הרמת יד',
+        muted: 'מיקרופון כבוי',
+        reminder: 'תזכורת'
+      };
+      toast('info', `${names[name] || name}: ${state ? 'מופעל' : 'כבוי'}`, '');
+    });
+  });
+
+  // ═══════════════════════════════════════
+  // SEGMENTED CONTROL
+  // ═══════════════════════════════════════
+  document.querySelectorAll('.seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const mode = btn.dataset.seg;
+      const preview = document.getElementById('inviteCount');
+      if (mode === 'all') {
+        preview.textContent = '32 תלמידים יקבלו הזמנה';
+        selectedStudents = new Set();
+      } else {
+        openStudentSelect();
+      }
+    });
+  });
+
+  // ═══════════════════════════════════════
+  // STUDENT SELECTION POPUP
+  // ═══════════════════════════════════════
+  const STUDENTS = [
+    'יעל כהן','רון ברק','מאיה לוי','דנה כהן','אבי ישראלי',
+    'שרה מזרחי','נועם דוד','תמר אברהם','עומר גל','ליאור שמש',
+    'רוני דהן','אלה פרידמן','יונתן סגל','נועה ביטון','עידו לוי',
+    'שירה כץ','איתי ברגר','רינת אדרי','גל מלכה','מיכל עמר',
+    'אורי חיים','ענבר רוזן','ניר שלום','הדר כהן','אייל בן דוד',
+    'שקד אוחנה','דביר משה','ליה גולן','תום פישר','ים ברנע',
+    'עדי חורב','רועי סבג'
+  ];
+  let selectedStudents = new Set();
+
+  function openStudentSelect() {
+    document.getElementById('studentSelectOverlay').style.display = 'block';
+    const m = document.getElementById('studentSelectModal');
+    m.style.display = 'flex';
+    requestAnimationFrame(() => { m.style.opacity = '1'; m.style.transform = 'translate(-50%,-50%) scale(1)'; });
+    renderStudentList();
+  }
+  function closeStudentSelect() {
+    const m = document.getElementById('studentSelectModal');
+    m.style.opacity = '0'; m.style.transform = 'translate(-50%,-50%) scale(.96)';
+    setTimeout(() => { m.style.display = 'none'; document.getElementById('studentSelectOverlay').style.display = 'none'; }, 300);
+  }
+  function renderStudentList(filter = '') {
+    const list = document.getElementById('studentList');
+    list.innerHTML = '';
+    const f = filter.trim().toLowerCase();
+    STUDENTS.forEach((name, i) => {
+      if (f && !name.includes(f)) return;
+      const checked = selectedStudents.has(i);
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;';
+      row.innerHTML = `
+        <div style="width:22px;height:22px;border-radius:6px;border:2px solid ${checked ? '#38C4F2' : 'var(--border)'};background:${checked ? '#38C4F2' : 'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;">
+          ${checked ? '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+        </div>
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#38C4F2,#253E7A);display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:700;flex-shrink:0;">${name[0]}</div>
+        <div style="font-size:13.5px;font-weight:600;color:var(--text-main);">${name}</div>
+      `;
+      row.onclick = () => {
+        if (selectedStudents.has(i)) selectedStudents.delete(i); else selectedStudents.add(i);
+        renderStudentList(document.getElementById('studentSearch').value);
+      };
+      list.appendChild(row);
+    });
+    document.getElementById('selectedCount').textContent = selectedStudents.size + ' נבחרו';
+  }
+  function filterStudents() {
+    renderStudentList(document.getElementById('studentSearch').value);
+  }
+  function confirmStudentSelect() {
+    const count = selectedStudents.size || 0;
+    document.getElementById('inviteCount').textContent = count > 0 ? count + ' תלמידים נבחרו' : 'לא נבחרו תלמידים';
+    closeStudentSelect();
+  }
+
+  // ═══════════════════════════════════════
+  // SUMMARY POPUP
+  // ═══════════════════════════════════════
+  function openSummary() {
+    const title = document.getElementById('lessonName').value || 'שיעור חי';
+    const date = document.getElementById('dateInput').value;
+    const time = document.getElementById('timeInput').value;
+    const dur = document.getElementById('durationSelect');
+    const durText = dur.options[dur.selectedIndex].text;
+    const inviteText = document.getElementById('inviteCount').textContent;
+    const presetEl = document.querySelector('.interactive-section select');
+    const presetText = presetEl ? presetEl.options[presetEl.selectedIndex].text : 'ללא';
+
+    // Format date
+    const [y,m,d] = date.split('-');
+    const dateFormatted = d + '.' + m + '.' + y;
+
+    document.getElementById('sumTitle').textContent = title;
+    document.getElementById('sumDate').textContent = dateFormatted;
+    document.getElementById('sumTime').textContent = time;
+    document.getElementById('sumInvited').textContent = inviteText;
+    document.getElementById('sumDuration').textContent = durText;
+    document.getElementById('sumPreset').textContent = presetText;
+
+    document.getElementById('summaryOverlay').style.display = 'block';
+    const modal = document.getElementById('summaryModal');
+    modal.style.display = 'block';
+    requestAnimationFrame(() => { modal.style.opacity = '1'; modal.style.transform = 'translate(-50%,-50%) scale(1)'; });
+  }
+  function closeSummary() {
+    const modal = document.getElementById('summaryModal');
+    modal.style.opacity = '0'; modal.style.transform = 'translate(-50%,-50%) scale(.96)';
+    setTimeout(() => { modal.style.display = 'none'; document.getElementById('summaryOverlay').style.display = 'none'; }, 300);
+  }
+
+  // ═══════════════════════════════════════
+  // SEND INVITE → SUCCESS POPUP
+  // ═══════════════════════════════════════
+  function sendInvite() {
+    closeSummary();
+    const inviteText = document.getElementById('inviteCount').textContent;
+    document.getElementById('successInviteCount').textContent = inviteText.replace('יקבלו הזמנה','הוזמנו').replace('נבחרו','הוזמנו');
+    setTimeout(() => {
+      document.getElementById('successOverlay').style.display = 'block';
+      const m = document.getElementById('successModal');
+      m.style.display = 'block';
+      requestAnimationFrame(() => { m.style.opacity = '1'; m.style.transform = 'translate(-50%,-50%) scale(1)'; });
+      launchConfetti();
+    }, 350);
+  }
+  function closeSuccess() {
+    const m = document.getElementById('successModal');
+    m.style.opacity = '0'; m.style.transform = 'translate(-50%,-50%) scale(.96)';
+    setTimeout(() => { m.style.display = 'none'; document.getElementById('successOverlay').style.display = 'none'; }, 300);
+    toast('success', 'חוזר למסך הבית', '');
+  }
+  function launchConfetti() {
+    const colors = ['#38C4F2','#F05680','#7DC57A','#EAD654','#253E7A','#ffffff'];
+    const container = document.createElement('div');
+    container.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;';
+    document.body.appendChild(container);
+    for (let i = 0; i < 80; i++) {
+      const p = document.createElement('div');
+      const c = colors[Math.floor(Math.random() * colors.length)];
+      const size = Math.random() * 8 + 4;
+      const x = Math.random() * 100;
+      const dur = Math.random() * 2 + 1.5;
+      const delay = Math.random() * 0.8;
+      const shape = Math.random() > 0.5 ? '50%' : '2px';
+      p.style.cssText = `position:absolute;top:-20px;left:${x}%;width:${size}px;height:${size*0.6}px;background:${c};border-radius:${shape};opacity:0.9;animation:confettiFall ${dur}s ease-in ${delay}s forwards;`;
+      container.appendChild(p);
+    }
+    setTimeout(() => container.remove(), 4000);
+  }
+
+  // ═══════════════════════════════════════
+  // CREATE / DRAFT
+  // ═══════════════════════════════════════
+  document.getElementById('createBtn').addEventListener('click', () => {
+    openSummary();
+  });
+
+  document.getElementById('draftBtn').addEventListener('click', () => {
+    toast('info', 'נשמר כטיוטה', 'תוכל לחזור ולערוך מאוחר יותר');
+  });
+</script>
+</body>
+</html>

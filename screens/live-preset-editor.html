@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>עורך ערכה | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:        #253E7A;
+    --navy-dark:   #1a2f5e;
+    --navy-light:  #3a5499;
+    --cyan:        #38C4F2;
+    --cyan-dark:   #1db0d8;
+    --cyan-light:  rgba(56,196,242,0.12);
+    --light-blue:  #E3F4FD;
+    --pink:        #F05680;
+    --pink-light:  rgba(240,86,128,0.12);
+    --yellow:      #EAD654;
+    --yellow-light:rgba(234,214,84,0.18);
+    --green:       #7DC57A;
+    --green-light: rgba(125,197,122,0.14);
+    --white:       #FFFFFF;
+    --bg:          #F0F6FF;
+    --surface:     #FFFFFF;
+    --surface-2:   #f5f8ff;
+    --border:      rgba(37,62,122,0.1);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #1a2f5e;
+    --text-sub:    rgba(37,62,122,0.55);
+    --text-light:  rgba(37,62,122,0.38);
+    --font-he:     'Heebo', sans-serif;
+    --font-en:     'Fredoka', sans-serif;
+    --radius-sm:   10px;
+    --radius-md:   16px;
+    --radius-lg:   22px;
+    --radius-xl:   28px;
+    --shadow-sm:   0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:   0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:   0 16px 48px rgba(37,62,122,0.14);
+    --sidebar-bg:  var(--navy);
+  }
+
+  [data-theme="dark"] {
+    --cyan-light:  rgba(56,196,242,0.14);
+    --light-blue:  rgba(56,196,242,0.1);
+    --pink-light:  rgba(240,86,128,0.18);
+    --yellow-light:rgba(234,214,84,0.18);
+    --green-light: rgba(125,197,122,0.18);
+    --bg:          #0c1424;
+    --surface:     #131e35;
+    --surface-2:   #1a2740;
+    --border:      rgba(255,255,255,0.07);
+    --border-hover:rgba(56,196,242,0.4);
+    --text-main:   #dde5f5;
+    --text-sub:    rgba(221,229,245,0.55);
+    --text-light:  rgba(221,229,245,0.32);
+    --shadow-sm:   0 2px 12px rgba(0,0,0,0.3);
+    --shadow-md:   0 6px 28px rgba(0,0,0,0.4);
+    --shadow-lg:   0 16px 48px rgba(0,0,0,0.55);
+    --sidebar-bg:  #0d1628;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-he);
+    background: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    transition: background .3s, color .3s;
+  }
+
+  /* ── SIDEBAR ───────────────────────────────── */
+  .sidebar {
+    width: 220px;
+    background: var(--sidebar-bg);
+    border-left: 1px solid rgba(255,255,255,0.05);
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    padding: 24px 0; flex-shrink: 0;
+    position: fixed; right: 0; top: 0; bottom: 0;
+    z-index: 50; transition: background .3s;
+  }
+  .sidebar-logo {
+    padding: 16px 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sidebar-logo-text {
+    font-family: var(--font-en); font-size: 22px; font-weight: 700;
+    color: white; letter-spacing: 1px;
+  }
+  .sidebar-logo-text span { color: var(--cyan); }
+  .sidebar-section { padding: 8px 12px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: all 0.2s; text-decoration: none;
+    color: rgba(255,255,255,0.65); font-size: 14px; font-weight: 500;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+  .nav-item.active { background: rgba(56,196,242,0.2); color: var(--cyan); font-weight: 700; }
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .sidebar-bottom {
+    margin-top: auto; padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .mode-switcher {
+    display: flex; background: rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm); padding: 3px; margin-bottom: 12px;
+  }
+  .mode-btn {
+    flex: 1; padding: 7px 8px; border: none; background: transparent;
+    color: rgba(255,255,255,0.55); font-family: var(--font-he);
+    font-size: 12px; font-weight: 600; border-radius: 7px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .mode-btn.active { background: var(--cyan); color: var(--navy-dark); }
+  .profile-mini {
+    display: flex; align-items: center; gap: 10px; padding: 10px;
+    border-radius: var(--radius-sm); cursor: pointer; transition: background 0.2s;
+  }
+  .profile-mini:hover { background: rgba(255,255,255,0.08); }
+  .avatar-sm {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--navy-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+  .profile-mini-name { font-size: 13px; font-weight: 600; color: white; }
+  .profile-mini-role { font-size: 11px; color: rgba(255,255,255,0.45); }
+
+  /* ── MAIN ──────────────────────────────────── */
+  .main { margin-right: 220px; flex: 1; display: flex; flex-direction: column; }
+
+  /* ── TOPBAR ────────────────────────────────── */
+  .topbar {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0 32px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 40;
+    box-shadow: var(--shadow-sm); transition: background .3s;
+  }
+  .topbar-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+  .breadcrumb-link { color: var(--text-sub); cursor: pointer; transition: color 0.2s; text-decoration: none; }
+  .breadcrumb-link:hover { color: var(--text-main); }
+  .breadcrumb-sep { color: var(--text-light); font-size: 16px; }
+  .breadcrumb-current { color: var(--text-main); font-weight: 700; }
+  .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+  .icon-btn {
+    width: 40px; height: 40px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; color: var(--text-sub);
+  }
+  .icon-btn:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  [data-theme="dark"] .icon-btn:hover { color: var(--cyan); border-color: var(--border-hover); }
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="dark"] .icon-sun  { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* ── PAGE BODY ─────────────────────────────── */
+  .page-body { padding: 32px; flex: 1; }
+
+  /* ── PAGE HEADER ───────────────────────────── */
+  .editor-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 28px; gap: 20px;
+  }
+  .editor-header-left { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+  .editor-title-input {
+    font-family: var(--font-he); font-size: 22px; font-weight: 700;
+    color: var(--text-main); border: none; background: transparent;
+    outline: none; width: 100%; padding: 4px 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color .2s;
+  }
+  .editor-title-input:focus { border-bottom-color: var(--cyan); }
+
+  .editor-desc-input {
+    font-family: var(--font-he); font-size: 14px; color: var(--text-sub);
+    border: none; background: transparent; outline: none;
+    width: 100%; padding: 4px 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color .2s;
+  }
+  .editor-desc-input:focus { border-bottom-color: var(--cyan); }
+
+  .editor-header-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+
+  .unsaved-badge {
+    font-size: 12px; font-weight: 600; color: var(--pink);
+    background: var(--pink-light); padding: 4px 12px;
+    border-radius: 20px; white-space: nowrap;
+    opacity: 0; transition: opacity .3s;
+  }
+  .unsaved-badge.visible { opacity: 1; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px; border-radius: 30px;
+    font-family: var(--font-he); font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; border: none; white-space: nowrap;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--cyan), var(--cyan-dark));
+    color: white; box-shadow: 0 4px 16px rgba(56,196,242,0.35);
+  }
+  [data-theme="dark"] .btn-primary { color: #0b1424; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(56,196,242,0.45); }
+  .btn svg { width: 16px; height: 16px; }
+
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 20px;
+    font-family: var(--font-he); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    border: 1px solid var(--border); background: transparent; color: var(--text-sub);
+  }
+  .btn-ghost:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  [data-theme="dark"] .btn-ghost:hover { color: var(--cyan); border-color: var(--border-hover); background: var(--surface-2); }
+  .btn-ghost svg { width: 14px; height: 14px; }
+
+  /* ── TWO COLUMNS ───────────────────────────── */
+  .editor-columns {
+    display: grid;
+    grid-template-columns: 65fr 35fr;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  /* ── LEFT: ITEMS TIMELINE ─────────────────── */
+  .items-section {}
+  .items-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .items-title { font-size: 16px; font-weight: 700; color: var(--text-main); }
+  .items-count {
+    font-size: 13px; font-weight: 600; color: var(--text-sub);
+    background: var(--surface-2); padding: 4px 12px;
+    border-radius: 20px; border: 1px solid var(--border);
+  }
+
+  .items-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .item-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); overflow: hidden;
+    box-shadow: var(--shadow-sm); transition: all .25s;
+    position: relative;
+  }
+  .item-card::before {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 4px; height: 100%;
+    background: var(--item-accent, var(--cyan));
+  }
+  .item-card:hover { box-shadow: var(--shadow-md); }
+
+  .item-main {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 18px; cursor: pointer;
+  }
+
+  .drag-handle {
+    display: flex; flex-direction: column; gap: 2px;
+    cursor: grab; padding: 4px; opacity: 0.4;
+    transition: opacity .2s;
+  }
+  .drag-handle:hover { opacity: 0.8; }
+  .drag-dot {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--text-light);
+  }
+  .drag-row { display: flex; gap: 3px; }
+
+  .item-icon {
+    width: 38px; height: 38px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .item-icon svg { width: 18px; height: 18px; }
+
+  .item-info { flex: 1; min-width: 0; }
+  .item-name { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 3px; }
+  .item-details { font-size: 12px; color: var(--text-sub); }
+
+  .item-actions {
+    display: flex; align-items: center; gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .btn-icon-sm {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid var(--border); background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; color: var(--text-light);
+  }
+  .btn-icon-sm:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  [data-theme="dark"] .btn-icon-sm:hover { color: var(--cyan); border-color: var(--border-hover); background: var(--surface-2); }
+  .btn-icon-sm.danger:hover { background: var(--pink-light); color: var(--pink); border-color: var(--pink); }
+  .btn-icon-sm svg { width: 14px; height: 14px; }
+
+  .expand-arrow {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: none; background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; color: var(--text-light);
+  }
+  .expand-arrow:hover { color: var(--text-main); }
+  .expand-arrow svg { width: 16px; height: 16px; transition: transform .25s; }
+  .expand-arrow.open svg { transform: rotate(180deg); }
+
+  .item-expanded {
+    max-height: 0; overflow: hidden;
+    transition: max-height .3s ease, padding .3s ease;
+    padding: 0 18px 0 70px;
+    border-top: 0 solid var(--border);
+  }
+  .item-expanded.open {
+    max-height: 400px;
+    padding: 14px 18px 18px 70px;
+    border-top-width: 1px;
+  }
+
+  .expanded-question {
+    font-size: 13px; font-weight: 600; color: var(--text-main);
+    margin-bottom: 10px;
+  }
+  .expanded-options { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .expanded-option {
+    font-size: 12.5px; color: var(--text-sub);
+    padding: 7px 12px; border-radius: var(--radius-sm);
+    background: var(--surface-2); border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .expanded-option.correct {
+    background: var(--green-light); border-color: var(--green);
+    color: var(--green);
+  }
+  [data-theme="dark"] .expanded-option.correct { color: #95d892; }
+  .option-marker {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid var(--border); display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .expanded-option.correct .option-marker {
+    border-color: var(--green); background: var(--green);
+  }
+  .option-marker svg { width: 10px; height: 10px; color: white; }
+
+  .expanded-pairs {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .pair-row {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12.5px; color: var(--text-sub);
+  }
+  .pair-item {
+    padding: 6px 12px; border-radius: var(--radius-sm);
+    background: var(--surface-2); border: 1px solid var(--border);
+    flex: 1; text-align: center;
+  }
+  .pair-arrow { color: var(--text-light); font-size: 14px; }
+
+  /* ── ADD ITEM BUTTON ──────────────────────── */
+  .add-item-wrapper { position: relative; margin-top: 12px; }
+  .add-item-btn {
+    width: 100%; padding: 16px;
+    border: 2px dashed var(--border); border-radius: var(--radius-md);
+    background: transparent; cursor: pointer;
+    font-family: var(--font-he); font-size: 14px; font-weight: 600;
+    color: var(--text-sub); transition: all .2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .add-item-btn:hover { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-light); }
+  .add-item-btn svg { width: 18px; height: 18px; }
+
+  .add-dropdown {
+    position: absolute; top: calc(100% + 6px); right: 0; left: 0;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    z-index: 20; overflow: hidden;
+    max-height: 0; opacity: 0;
+    transition: max-height .25s ease, opacity .2s ease;
+  }
+  .add-dropdown.open { max-height: 320px; opacity: 1; }
+
+  .dropdown-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; cursor: pointer;
+    font-size: 13px; font-weight: 500; color: var(--text-main);
+    transition: background .15s;
+  }
+  .dropdown-item:hover { background: var(--cyan-light); }
+  .dropdown-item svg { width: 18px; height: 18px; color: var(--text-sub); flex-shrink: 0; }
+  .dropdown-divider { height: 1px; background: var(--border); margin: 0; }
+  .dropdown-sub-label {
+    font-size: 11px; font-weight: 700; color: var(--text-light);
+    padding: 8px 16px 4px; text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── RIGHT: PREVIEW PANEL ─────────────────── */
+  .preview-panel {
+    position: sticky; top: 96px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .preview-title {
+    font-size: 15px; font-weight: 700; color: var(--text-main);
+    margin-bottom: 20px;
+  }
+
+  /* Timeline visual */
+  .timeline-visual {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0; margin-bottom: 24px; padding: 8px 0;
+  }
+  .timeline-node {
+    display: flex; align-items: center; gap: 12px; width: 100%;
+    padding: 6px 0;
+  }
+  .timeline-dot-col {
+    display: flex; flex-direction: column; align-items: center;
+    width: 40px; flex-shrink: 0;
+  }
+  .timeline-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; z-index: 2;
+  }
+  .timeline-dot svg { width: 14px; height: 14px; color: white; }
+  .timeline-line {
+    width: 3px; height: 20px; background: var(--border); flex-shrink: 0;
+  }
+  .timeline-label {
+    font-size: 12px; color: var(--text-sub); font-weight: 500;
+  }
+
+  .preview-stats {
+    display: flex; flex-direction: column; gap: 10px;
+    padding-top: 16px; border-top: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+  .preview-stat {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--text-sub);
+  }
+  .preview-stat svg { width: 16px; height: 16px; color: var(--text-light); }
+  .preview-stat strong { color: var(--text-main); font-weight: 600; }
+
+  .btn-preview {
+    width: 100%; padding: 10px; border-radius: 30px;
+    font-family: var(--font-he); font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-sub); display: flex; align-items: center;
+    justify-content: center; gap: 8px;
+  }
+  .btn-preview:hover { background: var(--light-blue); color: var(--navy); border-color: var(--cyan); }
+  [data-theme="dark"] .btn-preview:hover { color: var(--cyan); border-color: var(--border-hover); background: var(--surface-2); }
+  .btn-preview svg { width: 16px; height: 16px; }
+
+  /* ── TOAST ─────────────────────────────────── */
+  .toast-container {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+    z-index: 999; display: flex; flex-direction: column; gap: 8px; align-items: center;
+  }
+  .toast {
+    background: var(--navy); color: white; padding: 12px 24px;
+    border-radius: var(--radius-sm); font-size: 14px; font-weight: 600;
+    box-shadow: var(--shadow-lg);
+    animation: toastIn .3s ease, toastOut .3s ease 2.7s forwards;
+    display: flex; align-items: center; gap: 8px;
+  }
+  [data-theme="dark"] .toast { background: var(--surface-2); border: 1px solid var(--border); }
+  .toast svg { width: 16px; height: 16px; color: var(--cyan); flex-shrink: 0; }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(16px); } }
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ──────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-text">WHITE<span>BOARD</span></div>
+  </div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      לוח הבקרה
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      מרכזי הידע שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><path d="M7 2v20"/><path d="M17 2v20"/><path d="M2 12h20"/><path d="M2 7h5"/><path d="M2 17h5"/><path d="M17 7h5"/><path d="M17 17h5"/></svg>
+      בורדי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      הספריה שלי
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      הגדרות
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="mode-switcher">
+      <button class="mode-btn active">מרצה</button>
+      <button class="mode-btn">תלמיד</button>
+    </div>
+    <div class="profile-mini">
+      <div class="avatar-sm">אי</div>
+      <div>
+        <div class="profile-mini-name">אילנה כהן</div>
+        <div class="profile-mini-role">מרצה</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ── MAIN ─────────────────────────────────── -->
+<div class="main">
+  <header class="topbar">
+    <nav class="topbar-breadcrumb">
+      <a class="breadcrumb-link" href="#">מרכזי הידע</a>
+      <span class="breadcrumb-sep">/</span>
+      <a class="breadcrumb-link" href="#">שיעורים חיים</a>
+      <span class="breadcrumb-sep">/</span>
+      <a class="breadcrumb-link" href="#">ערכות מוכנות</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">שיעור סטנדרטי</span>
+    </nav>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="toggleTheme()" title="מצב כהה / בהיר">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <!-- EDITOR HEADER -->
+    <div class="editor-header">
+      <div class="editor-header-left">
+        <input class="editor-title-input" value="שיעור סטנדרטי" oninput="markUnsaved()">
+        <input class="editor-desc-input" value="סקר פתיחה + 3 שאלות חיות + משחק סיכום" oninput="markUnsaved()">
+      </div>
+      <div class="editor-header-right">
+        <span class="unsaved-badge" id="unsavedBadge">שינויים שלא נשמרו</span>
+        <button class="btn btn-primary" onclick="savePreset()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          שמור ערכה
+        </button>
+      </div>
+    </div>
+
+    <!-- TWO COLUMNS -->
+    <div class="editor-columns">
+
+      <!-- LEFT: ITEMS TIMELINE -->
+      <div class="items-section">
+        <div class="items-header">
+          <h2 class="items-title">פריטים בערכה</h2>
+          <span class="items-count" id="itemsCount">5 פריטים</span>
+        </div>
+
+        <div class="items-list" id="itemsList">
+
+          <!-- Item 1: סקר פתיחה -->
+          <div class="item-card" style="--item-accent: var(--cyan);" data-item="1">
+            <div class="item-main" onclick="toggleExpand(1)">
+              <div class="drag-handle" onclick="event.stopPropagation()">
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              </div>
+              <div class="item-icon" style="background: var(--cyan-light); color: var(--cyan);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="17" x2="7" y2="13"/><line x1="12" y1="17" x2="12" y2="9"/><line x1="17" y1="17" x2="17" y2="5"/></svg>
+              </div>
+              <div class="item-info">
+                <div class="item-name">סקר פתיחה — איזה סגנון אתם אוהבים?</div>
+                <div class="item-details">4 אפשרויות &bull; 30 שניות</div>
+              </div>
+              <div class="item-actions" onclick="event.stopPropagation()">
+                <button class="btn-icon-sm" onclick="showToast('פותח עריכת פריט')" title="עריכה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="btn-icon-sm danger" onclick="deleteItem(this)" title="מחיקה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+                <button class="expand-arrow" id="arrow-1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="item-expanded" id="expand-1">
+              <p class="expanded-question">איזה סגנון עיצוב אתם הכי אוהבים?</p>
+              <ul class="expanded-options">
+                <li class="expanded-option"><span class="option-marker"></span>מינימליסטי</li>
+                <li class="expanded-option"><span class="option-marker"></span>צבעוני ועשיר</li>
+                <li class="expanded-option"><span class="option-marker"></span>קלאסי ומסורתי</li>
+                <li class="expanded-option"><span class="option-marker"></span>מודרני ונועז</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Item 2: שאלה חיה 1 -->
+          <div class="item-card" style="--item-accent: var(--pink);" data-item="2">
+            <div class="item-main" onclick="toggleExpand(2)">
+              <div class="drag-handle" onclick="event.stopPropagation()">
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              </div>
+              <div class="item-icon" style="background: var(--pink-light); color: var(--pink);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="item-info">
+                <div class="item-name">מהו צבע משלים לכחול?</div>
+                <div class="item-details">4 תשובות &bull; 15 שניות &bull; 100 נק'</div>
+              </div>
+              <div class="item-actions" onclick="event.stopPropagation()">
+                <button class="btn-icon-sm" onclick="showToast('פותח עריכת פריט')" title="עריכה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="btn-icon-sm danger" onclick="deleteItem(this)" title="מחיקה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+                <button class="expand-arrow" id="arrow-2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="item-expanded" id="expand-2">
+              <p class="expanded-question">מהו צבע משלים לכחול?</p>
+              <ul class="expanded-options">
+                <li class="expanded-option"><span class="option-marker"></span>אדום</li>
+                <li class="expanded-option correct"><span class="option-marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>כתום</li>
+                <li class="expanded-option"><span class="option-marker"></span>ירוק</li>
+                <li class="expanded-option"><span class="option-marker"></span>סגול</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Item 3: שאלה חיה 2 -->
+          <div class="item-card" style="--item-accent: var(--pink);" data-item="3">
+            <div class="item-main" onclick="toggleExpand(3)">
+              <div class="drag-handle" onclick="event.stopPropagation()">
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              </div>
+              <div class="item-icon" style="background: var(--pink-light); color: var(--pink);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="item-info">
+                <div class="item-name">כמה צבעים ראשוניים יש?</div>
+                <div class="item-details">3 תשובות &bull; 15 שניות &bull; 100 נק'</div>
+              </div>
+              <div class="item-actions" onclick="event.stopPropagation()">
+                <button class="btn-icon-sm" onclick="showToast('פותח עריכת פריט')" title="עריכה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="btn-icon-sm danger" onclick="deleteItem(this)" title="מחיקה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+                <button class="expand-arrow" id="arrow-3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="item-expanded" id="expand-3">
+              <p class="expanded-question">כמה צבעים ראשוניים יש?</p>
+              <ul class="expanded-options">
+                <li class="expanded-option"><span class="option-marker"></span>2</li>
+                <li class="expanded-option correct"><span class="option-marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>3</li>
+                <li class="expanded-option"><span class="option-marker"></span>4</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Item 4: שאלה חיה 3 -->
+          <div class="item-card" style="--item-accent: var(--pink);" data-item="4">
+            <div class="item-main" onclick="toggleExpand(4)">
+              <div class="drag-handle" onclick="event.stopPropagation()">
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              </div>
+              <div class="item-icon" style="background: var(--pink-light); color: var(--pink);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="item-info">
+                <div class="item-name">מהו ניגודיות?</div>
+                <div class="item-details">4 תשובות &bull; 20 שניות &bull; 150 נק'</div>
+              </div>
+              <div class="item-actions" onclick="event.stopPropagation()">
+                <button class="btn-icon-sm" onclick="showToast('פותח עריכת פריט')" title="עריכה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="btn-icon-sm danger" onclick="deleteItem(this)" title="מחיקה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+                <button class="expand-arrow" id="arrow-4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="item-expanded" id="expand-4">
+              <p class="expanded-question">מהו ניגודיות בעיצוב?</p>
+              <ul class="expanded-options">
+                <li class="expanded-option"><span class="option-marker"></span>שימוש בצבעים דומים</li>
+                <li class="expanded-option correct"><span class="option-marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>הבדל בולט בין אלמנטים</li>
+                <li class="expanded-option"><span class="option-marker"></span>חזרה על דפוסים</li>
+                <li class="expanded-option"><span class="option-marker"></span>סימטריה בעיצוב</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Item 5: משחק זיכרון -->
+          <div class="item-card" style="--item-accent: var(--green);" data-item="5">
+            <div class="item-main" onclick="toggleExpand(5)">
+              <div class="drag-handle" onclick="event.stopPropagation()">
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+                <div class="drag-row"><span class="drag-dot"></span><span class="drag-dot"></span></div>
+              </div>
+              <div class="item-icon" style="background: var(--green-light); color: var(--green);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M17 12h.01"/><path d="M7 12h.01"/></svg>
+              </div>
+              <div class="item-info">
+                <div class="item-name">משחק זיכרון — מונחי עיצוב</div>
+                <div class="item-details">8 זוגות &bull; 60 שניות</div>
+              </div>
+              <div class="item-actions" onclick="event.stopPropagation()">
+                <button class="btn-icon-sm" onclick="showToast('פותח עריכת פריט')" title="עריכה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="btn-icon-sm danger" onclick="deleteItem(this)" title="מחיקה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+                <button class="expand-arrow" id="arrow-5">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="item-expanded" id="expand-5">
+              <p class="expanded-question">זוגות לזיכרון:</p>
+              <div class="expanded-pairs">
+                <div class="pair-row">
+                  <span class="pair-item">Typography</span>
+                  <span class="pair-arrow">&harr;</span>
+                  <span class="pair-item">טיפוגרפיה</span>
+                </div>
+                <div class="pair-row">
+                  <span class="pair-item">Contrast</span>
+                  <span class="pair-arrow">&harr;</span>
+                  <span class="pair-item">ניגודיות</span>
+                </div>
+                <div class="pair-row">
+                  <span class="pair-item">Layout</span>
+                  <span class="pair-arrow">&harr;</span>
+                  <span class="pair-item">פריסה</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ADD ITEM -->
+        <div class="add-item-wrapper">
+          <button class="add-item-btn" onclick="toggleAddDropdown()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            הוסף פריט
+          </button>
+          <div class="add-dropdown" id="addDropdown">
+            <div class="dropdown-item" onclick="addItemToast('סקר')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="17" x2="7" y2="13"/><line x1="12" y1="17" x2="12" y2="9"/><line x1="17" y1="17" x2="17" y2="5"/></svg>
+              הוסף סקר
+            </div>
+            <div class="dropdown-item" onclick="addItemToast('שאלה חיה')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              הוסף שאלה חיה
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-sub-label">משחקים</div>
+            <div class="dropdown-item" onclick="addItemToast('משחק זיכרון')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/></svg>
+              משחק זיכרון
+            </div>
+            <div class="dropdown-item" onclick="addItemToast('איש תלוי')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="6" r="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="10" y1="20" x2="12" y2="16"/><line x1="14" y1="20" x2="12" y2="16"/></svg>
+              איש תלוי
+            </div>
+            <div class="dropdown-item" onclick="addItemToast('תשחץ')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+              תשחץ
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" onclick="addItemToast('טיימר')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              הוסף טיימר
+            </div>
+            <div class="dropdown-item" onclick="addItemToast('חדרי דיון')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              הוסף חדרי דיון
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: PREVIEW PANEL -->
+      <div class="preview-panel">
+        <h3 class="preview-title">תצוגה מקדימה</h3>
+
+        <div class="timeline-visual">
+          <!-- Node 1 -->
+          <div class="timeline-node">
+            <div class="timeline-dot-col">
+              <div class="timeline-dot" style="background: var(--cyan);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="17" x2="7" y2="13"/><line x1="12" y1="17" x2="12" y2="9"/><line x1="17" y1="17" x2="17" y2="5"/></svg>
+              </div>
+              <div class="timeline-line"></div>
+            </div>
+            <span class="timeline-label">סקר פתיחה</span>
+          </div>
+          <!-- Node 2 -->
+          <div class="timeline-node">
+            <div class="timeline-dot-col">
+              <div class="timeline-dot" style="background: var(--pink);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="timeline-line"></div>
+            </div>
+            <span class="timeline-label">שאלה חיה 1</span>
+          </div>
+          <!-- Node 3 -->
+          <div class="timeline-node">
+            <div class="timeline-dot-col">
+              <div class="timeline-dot" style="background: var(--pink);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="timeline-line"></div>
+            </div>
+            <span class="timeline-label">שאלה חיה 2</span>
+          </div>
+          <!-- Node 4 -->
+          <div class="timeline-node">
+            <div class="timeline-dot-col">
+              <div class="timeline-dot" style="background: var(--pink);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="timeline-line"></div>
+            </div>
+            <span class="timeline-label">שאלה חיה 3</span>
+          </div>
+          <!-- Node 5 -->
+          <div class="timeline-node">
+            <div class="timeline-dot-col">
+              <div class="timeline-dot" style="background: var(--green);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/></svg>
+              </div>
+            </div>
+            <span class="timeline-label">משחק זיכרון</span>
+          </div>
+        </div>
+
+        <div class="preview-stats">
+          <div class="preview-stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            משך מוערך: <strong>~15 דקות</strong>
+          </div>
+          <div class="preview-stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            <strong id="interactionsCount">5</strong> אינטראקציות
+          </div>
+        </div>
+
+        <button class="btn-preview" onclick="showToast('מפעיל תצוגה מקדימה...')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          הפעל preview
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  // Theme toggle
+  function toggleTheme() {
+    const html = document.documentElement;
+    html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  }
+
+  // Toast
+  function showToast(msg) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>${msg}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3200);
+  }
+
+  // Expand/collapse items
+  function toggleExpand(id) {
+    const panel = document.getElementById('expand-' + id);
+    const arrow = document.getElementById('arrow-' + id);
+    panel.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+
+  // Delete item with fade
+  function deleteItem(btn) {
+    const card = btn.closest('.item-card');
+    card.style.transition = 'opacity .3s, transform .3s';
+    card.style.opacity = '0';
+    card.style.transform = 'translateX(20px)';
+    setTimeout(() => {
+      card.remove();
+      updateCount();
+      markUnsaved();
+    }, 300);
+    showToast('הפריט נמחק');
+  }
+
+  // Update item count
+  function updateCount() {
+    const count = document.querySelectorAll('.item-card').length;
+    document.getElementById('itemsCount').textContent = count + ' פריטים';
+    document.getElementById('interactionsCount').textContent = count;
+  }
+
+  // Unsaved state
+  function markUnsaved() {
+    document.getElementById('unsavedBadge').classList.add('visible');
+  }
+
+  // Save preset
+  function savePreset() {
+    document.getElementById('unsavedBadge').classList.remove('visible');
+    showToast('הערכה נשמרה בהצלחה');
+  }
+
+  // Add item dropdown
+  function toggleAddDropdown() {
+    document.getElementById('addDropdown').classList.toggle('open');
+  }
+  function addItemToast(type) {
+    document.getElementById('addDropdown').classList.remove('open');
+    showToast('נוסף פריט: ' + type);
+    markUnsaved();
+  }
+
+  // Close dropdown on outside click
+  document.addEventListener('click', function(e) {
+    const wrapper = document.querySelector('.add-item-wrapper');
+    if (!wrapper.contains(e.target)) {
+      document.getElementById('addDropdown').classList.remove('open');
+    }
+  });
+</script>
+</body>
+</html>
