@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>תצוגת תלמיד — אינטראקציות בלייב | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#253E7A;--navy-dark:#1a2f5e;--cyan:#38C4F2;--cyan-dark:#1db0d8;
+  --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.12);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.28);
+  --font:'Heebo',sans-serif;--font-brand:'Fredoka',sans-serif;
+  --r-sm:10px;--r-md:16px;--r-lg:22px;
+  --sh-sm:0 2px 12px rgba(0,0,0,0.3);--sh-md:0 6px 24px rgba(0,0,0,0.4);
+  --glass:rgba(12,20,34,0.7);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text-main);
+  height:100dvh;display:flex;flex-direction:column;overflow:hidden;user-select:none;}
+
+/* ══ TOP BAR ══ */
+.topbar{
+  height:48px;background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border-mid);
+  display:flex;align-items:center;justify-content:space-between;padding:0 20px;
+  flex-shrink:0;z-index:50;
+}
+.tb-right{display:flex;align-items:center;gap:14px;}
+.session-name{font-family:var(--font-brand);font-size:15px;font-weight:600;color:var(--cyan);}
+.tb-left{display:flex;align-items:center;gap:14px;}
+.theme-toggle{
+  width:36px;height:36px;border-radius:50%;border:1px solid var(--border-mid);
+  background:var(--surface-2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .2s;
+}
+.theme-toggle:hover{background:var(--surface-3);}
+.theme-toggle svg{width:18px;height:18px;color:var(--text-sub);}
+
+/* ══ TABS ══ */
+.tabs{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:10px 20px;flex-shrink:0;z-index:40;
+}
+.tab{
+  padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;border:1px solid transparent;
+  color:var(--text-sub);background:transparent;
+}
+.tab:hover{background:var(--surface-2);color:var(--text-main);}
+.tab.active{background:var(--cyan);color:#fff;border-color:var(--cyan);}
+
+/* ══ MAIN ══ */
+.main{flex:1;position:relative;overflow:hidden;}
+
+/* Video background */
+.video-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,#0a0f1a 0%,#131e35 50%,#0a0f1a 100%);
+}
+.video-bg .presenter{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);
+  width:60%;max-width:700px;aspect-ratio:16/9;border-radius:var(--r-md);
+  background:linear-gradient(135deg,#1a2f5e,#253E7A,#192740);
+  opacity:0.35;
+}
+.video-bg .presenter::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 40%,rgba(56,196,242,0.1),transparent 70%);
+}
+.video-bg .gallery{
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  display:flex;gap:6px;
+}
+.video-bg .gallery .tile{
+  width:80px;height:50px;border-radius:8px;
+  background:linear-gradient(135deg,#192740,#1e2e48);opacity:0.3;
+}
+.video-bg .overlay{position:absolute;inset:0;background:rgba(0,0,0,0.5);}
+
+/* ══ TAB PANELS ══ */
+.panel{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;z-index:10;
+}
+.panel.active{opacity:1;pointer-events:auto;}
+
+/* Shared card */
+.card{
+  background:rgba(19,30,53,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border-mid);border-radius:var(--r-md);
+  box-shadow:0 8px 48px rgba(0,0,0,0.5);padding:28px;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;
+  margin-bottom:14px;
+}
+.badge-cyan{background:rgba(56,196,242,0.15);color:var(--cyan);}
+.badge-pink{background:rgba(240,86,128,0.15);color:var(--pink);}
+.badge-green{background:rgba(125,197,122,0.15);color:var(--green);}
+
+/* ═══ POLL ═══ */
+.poll-card{width:100%;max-width:420px;}
+.poll-q{font-size:16px;font-weight:700;margin-bottom:18px;line-height:1.5;}
+.poll-options{display:flex;flex-direction:column;gap:10px;}
+.poll-opt{
+  height:44px;border-radius:22px;border:1px solid var(--border-mid);
+  background:var(--surface-2);font-size:14px;font-weight:600;color:var(--text-main);
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.poll-opt:hover{border-color:var(--cyan);background:var(--surface-3);}
+.poll-opt.selected{border-color:var(--cyan);background:rgba(56,196,242,0.15);color:var(--cyan);}
+.poll-opt.dimmed{opacity:0.4;pointer-events:none;}
+.poll-opt .bar{
+  position:absolute;top:0;right:0;bottom:0;border-radius:22px;
+  background:rgba(56,196,242,0.12);width:0;transition:width .6s ease;
+}
+.poll-opt .pct{
+  position:absolute;left:16px;font-family:var(--font-brand);font-size:13px;
+  color:var(--cyan);opacity:0;transition:opacity .3s;
+}
+.poll-opt.show-result .bar{width:var(--pct);}
+.poll-opt.show-result .pct{opacity:1;}
+.poll-footer{
+  margin-top:16px;display:flex;align-items:center;justify-content:space-between;
+  font-size:13px;color:var(--text-sub);
+}
+.poll-footer .check{display:flex;align-items:center;gap:6px;color:var(--green);font-weight:600;opacity:0;transition:opacity .3s;}
+.poll-footer .check.show{opacity:1;}
+.poll-footer .timer{font-family:var(--font-brand);color:var(--pink);font-weight:600;}
+
+/* ═══ QUIZ ═══ */
+.quiz-card{width:100%;max-width:420px;}
+.quiz-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.quiz-timer{font-family:var(--font-brand);font-size:14px;color:var(--pink);font-weight:600;}
+.quiz-q{font-size:16px;font-weight:700;margin-bottom:18px;line-height:1.5;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{
+  height:52px;border-radius:var(--r-sm);border:1px solid var(--border-mid);
+  background:var(--surface-2);font-size:14px;font-weight:600;color:var(--text-main);
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px;
+  padding:0 18px;
+}
+.quiz-opt:hover{border-color:var(--cyan);background:var(--surface-3);}
+.quiz-opt .prefix{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--surface-3);border:1px solid var(--border-mid);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-brand);font-size:13px;font-weight:700;
+  flex-shrink:0;transition:all .2s;
+}
+.quiz-opt.selected{border-color:var(--cyan);background:rgba(56,196,242,0.12);}
+.quiz-opt.selected .prefix{background:var(--cyan);color:#fff;border-color:var(--cyan);}
+.quiz-opt.correct{border-color:var(--green);background:rgba(125,197,122,0.15);}
+.quiz-opt.correct .prefix{background:var(--green);color:#fff;border-color:var(--green);}
+.quiz-opt.dimmed{opacity:0.35;pointer-events:none;}
+.score-popup{
+  position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);
+  font-family:var(--font-brand);font-size:24px;font-weight:700;color:var(--green);
+  opacity:0;pointer-events:none;text-shadow:0 2px 12px rgba(125,197,122,0.4);
+}
+.score-popup.show{animation:scoreUp .8s ease forwards;}
+@keyframes scoreUp{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(0.7);}
+  30%{opacity:1;transform:translate(-50%,-80%) scale(1.1);}
+  100%{opacity:0;transform:translate(-50%,-120%) scale(1);}
+}
+.quiz-leaderboard{
+  margin-top:18px;padding:14px;border-radius:var(--r-sm);
+  background:var(--surface);border:1px solid var(--border);
+  opacity:0;transition:opacity .3s;
+}
+.quiz-leaderboard.show{opacity:1;}
+.quiz-lb-title{font-size:13px;font-weight:600;color:var(--text-sub);margin-bottom:10px;}
+.quiz-lb-row{
+  display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;
+}
+.quiz-lb-row.me{color:var(--cyan);font-weight:700;}
+.quiz-lb-pos{width:22px;text-align:center;font-family:var(--font-brand);font-weight:700;font-size:14px;}
+.quiz-lb-name{flex:1;}
+.quiz-lb-score{font-family:var(--font-brand);font-weight:600;color:var(--yellow);}
+
+/* ═══ GAME ═══ */
+.game-card{width:100%;max-width:620px;display:flex;gap:20px;}
+.game-main{flex:1;}
+.game-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+.game-title{font-size:16px;font-weight:700;}
+.game-meta{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--text-sub);}
+.game-meta .gm-timer{font-family:var(--font-brand);color:var(--pink);font-weight:600;font-size:13px;}
+.memory-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+}
+.mem-card{
+  aspect-ratio:1;border-radius:var(--r-sm);cursor:pointer;
+  perspective:600px;position:relative;
+}
+.mem-card-inner{
+  width:100%;height:100%;position:relative;
+  transition:transform .4s;transform-style:preserve-3d;
+}
+.mem-card.flipped .mem-card-inner{transform:rotateY(180deg);}
+.mem-card-front,.mem-card-back{
+  position:absolute;inset:0;border-radius:var(--r-sm);
+  backface-visibility:hidden;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.mem-card-front{
+  background:linear-gradient(135deg,var(--navy-dark),var(--navy));
+  border:2px solid var(--border-mid);
+}
+.mem-card-front img{width:55%;height:55%;object-fit:contain;opacity:0.7;}
+.mem-card-back{
+  transform:rotateY(180deg);
+  background:var(--surface-2);border:2px solid var(--border-mid);
+  font-size:13px;font-weight:700;padding:6px;text-align:center;
+}
+.mem-card-back.clue{border-color:var(--cyan);color:var(--cyan);}
+.mem-card-back.answer{border-color:var(--pink);color:var(--pink);}
+.mem-card.matched .mem-card-inner{transform:rotateY(180deg);}
+.mem-card.matched .mem-card-back{border-color:var(--green);color:var(--green);background:rgba(125,197,122,0.1);}
+.game-sidebar{width:140px;flex-shrink:0;}
+.game-lb{padding:12px;border-radius:var(--r-sm);background:var(--surface);border:1px solid var(--border);}
+.game-lb-title{font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:10px;}
+.game-lb-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;}
+.game-lb-row.me{color:var(--cyan);font-weight:700;}
+.game-lb-pos{font-family:var(--font-brand);font-weight:700;width:18px;}
+.game-lb-name{flex:1;}
+.game-lb-pts{font-family:var(--font-brand);color:var(--yellow);font-weight:600;font-size:11px;}
+.card-label{
+  font-size:9px;font-weight:600;position:absolute;bottom:4px;
+  padding:2px 6px;border-radius:8px;background:rgba(0,0,0,0.4);
+}
+
+/* ═══ TIMER ═══ */
+.timer-panel{flex-direction:column;gap:16px;}
+.timer-ring-wrap{position:relative;width:200px;height:200px;}
+.timer-ring-wrap svg{width:200px;height:200px;transform:rotate(-90deg);}
+.timer-ring-wrap .bg-ring{fill:none;stroke:var(--surface-2);stroke-width:8;}
+.timer-ring-wrap .fg-ring{
+  fill:none;stroke:var(--cyan);stroke-width:8;
+  stroke-linecap:round;
+  stroke-dasharray:565;stroke-dashoffset:226;
+  transition:stroke-dashoffset 1s linear;
+}
+.timer-display{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:var(--font-brand);font-size:64px;font-weight:700;color:var(--cyan);
+  animation:timerPulse 2s ease-in-out infinite;
+}
+@keyframes timerPulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.02);}}
+.timer-label{font-size:14px;color:var(--text-sub);font-weight:500;}
+
+/* ═══ WHITEBOARD ═══ */
+.wb-panel{flex-direction:column;gap:0;padding:20px;}
+.wb-badge-top{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 16px;border-radius:20px;
+  background:rgba(19,30,53,0.85);backdrop-filter:blur(12px);
+  font-size:13px;font-weight:600;color:var(--cyan);
+  margin-bottom:12px;z-index:5;
+}
+.wb-badge-top svg{width:16px;height:16px;}
+.wb-canvas{
+  width:85%;max-height:70vh;aspect-ratio:16/10;
+  background:#fff;border-radius:var(--r-md);position:relative;
+  box-shadow:0 8px 40px rgba(0,0,0,0.5);overflow:hidden;
+}
+.wb-canvas svg{width:100%;height:100%;}
+.wb-note{
+  margin-top:10px;font-size:12px;color:var(--text-sub);font-weight:500;
+  display:flex;align-items:center;gap:6px;
+}
+.wb-note svg{width:14px;height:14px;opacity:0.5;}
+
+/* ═══ BREAKOUT ═══ */
+.breakout-card{width:100%;max-width:460px;text-align:center;}
+.breakout-icon{margin:0 auto 16px;width:64px;height:64px;
+  border-radius:50%;background:rgba(56,196,242,0.1);
+  display:flex;align-items:center;justify-content:center;}
+.breakout-icon svg{width:32px;height:32px;color:var(--cyan);}
+.breakout-title{font-size:22px;font-weight:700;margin-bottom:8px;}
+.breakout-room{font-size:16px;color:var(--cyan);font-weight:600;margin-bottom:10px;}
+.breakout-participants{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;border-radius:20px;
+  background:rgba(56,196,242,0.1);color:var(--cyan);font-size:12px;font-weight:600;
+  margin-bottom:16px;
+}
+.breakout-timer-wrap{margin-bottom:18px;}
+.breakout-timer-text{font-family:var(--font-brand);font-size:15px;font-weight:600;color:var(--pink);margin-bottom:6px;}
+.breakout-timer-bar{
+  height:4px;border-radius:2px;background:var(--surface-2);
+  width:80%;margin:0 auto;position:relative;overflow:hidden;
+}
+.breakout-timer-bar::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;
+  width:65%;border-radius:2px;background:var(--pink);
+}
+.breakout-grid{
+  display:flex;gap:8px;justify-content:center;margin-bottom:18px;flex-wrap:wrap;
+}
+.breakout-tile{
+  width:80px;height:60px;border-radius:8px;
+  background:linear-gradient(135deg,var(--surface-2),var(--surface-3));
+  border:1px solid var(--border-mid);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;
+}
+.breakout-tile-avatar{
+  width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,var(--cyan),var(--navy));
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:#fff;
+}
+.breakout-tile-name{font-size:9px;color:var(--text-sub);font-weight:500;}
+.breakout-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 28px;border-radius:22px;
+  background:var(--surface-2);border:1px solid var(--border-mid);
+  color:var(--text-xs);font-size:14px;font-weight:600;
+  cursor:not-allowed;opacity:0.5;margin-bottom:8px;
+}
+.breakout-note{font-size:11px;color:var(--text-xs);}
+</style>
+</head>
+<body>
+
+<!-- ══ TOP BAR ══ -->
+<div class="topbar">
+  <div class="tb-right">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--cyan)"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    <span class="session-name">תצוגת תלמיד — אינטראקציות בלייב</span>
+  </div>
+  <div class="tb-left">
+    <div class="theme-toggle" title="מצב בהיר/כהה">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TABS ══ -->
+<div class="tabs">
+  <div class="tab active" data-tab="poll">סקר</div>
+  <div class="tab" data-tab="quiz">שאלה חיה</div>
+  <div class="tab" data-tab="game">משחק</div>
+  <div class="tab" data-tab="timer">טיימר</div>
+  <div class="tab" data-tab="whiteboard">לוח לבן</div>
+  <div class="tab" data-tab="breakout">חדרי דיון</div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+  <!-- Dimmed live video background -->
+  <div class="video-bg">
+    <div class="presenter"></div>
+    <div class="gallery">
+      <div class="tile"></div><div class="tile"></div><div class="tile"></div>
+      <div class="tile"></div><div class="tile"></div>
+    </div>
+    <div class="overlay"></div>
+  </div>
+
+  <!-- ═══ TAB 1: POLL ═══ -->
+  <div class="panel active" id="panel-poll">
+    <div class="card poll-card">
+      <div class="badge badge-cyan">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        סקר מהיר
+      </div>
+      <div class="poll-q">איזה סגנון עיצוב אתם הכי אוהבים?</div>
+      <div class="poll-options">
+        <div class="poll-opt" data-pct="45" onclick="pollSelect(this)">
+          <span class="bar"></span><span class="pct">45%</span>
+          <span class="label">מינימליסטי</span>
+        </div>
+        <div class="poll-opt" data-pct="28" onclick="pollSelect(this)">
+          <span class="bar"></span><span class="pct">28%</span>
+          <span class="label">מודרני</span>
+        </div>
+        <div class="poll-opt" data-pct="18" onclick="pollSelect(this)">
+          <span class="bar"></span><span class="pct">18%</span>
+          <span class="label">קלאסי</span>
+        </div>
+        <div class="poll-opt" data-pct="9" onclick="pollSelect(this)">
+          <span class="bar"></span><span class="pct">9%</span>
+          <span class="label">יצירתי</span>
+        </div>
+      </div>
+      <div class="poll-footer">
+        <div class="check" id="pollCheck">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+          הצבעתך נרשמה
+        </div>
+        <div class="timer" id="pollTimer">00:18 נותרו</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB 2: QUIZ ═══ -->
+  <div class="panel" id="panel-quiz">
+    <div class="card quiz-card" style="position:relative;">
+      <div class="quiz-header">
+        <div class="badge badge-pink">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5"/></svg>
+          שאלה חיה
+        </div>
+        <div class="quiz-timer" id="quizTimer">00:08</div>
+      </div>
+      <div class="quiz-q">מהו צבע משלים לכחול?</div>
+      <div class="quiz-opts">
+        <div class="quiz-opt" data-correct="true" onclick="quizSelect(this)">
+          <span class="prefix">A</span><span>כתום</span>
+        </div>
+        <div class="quiz-opt" onclick="quizSelect(this)">
+          <span class="prefix">B</span><span>ירוק</span>
+        </div>
+        <div class="quiz-opt" onclick="quizSelect(this)">
+          <span class="prefix">C</span><span>אדום</span>
+        </div>
+        <div class="quiz-opt" onclick="quizSelect(this)">
+          <span class="prefix">D</span><span>סגול</span>
+        </div>
+      </div>
+      <div class="score-popup" id="scorePopup">+100 נקודות!</div>
+      <div class="quiz-leaderboard" id="quizLB">
+        <div class="quiz-lb-title">מקום 3 מתוך 28</div>
+        <div class="quiz-lb-row"><span class="quiz-lb-pos">1</span><span class="quiz-lb-name">נועה כ.</span><span class="quiz-lb-score">340</span></div>
+        <div class="quiz-lb-row"><span class="quiz-lb-pos">2</span><span class="quiz-lb-name">יונתן ש.</span><span class="quiz-lb-score">280</span></div>
+        <div class="quiz-lb-row me"><span class="quiz-lb-pos">3</span><span class="quiz-lb-name">את/ה</span><span class="quiz-lb-score">220</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB 3: GAME ═══ -->
+  <div class="panel" id="panel-game">
+    <div class="card game-card">
+      <div class="game-main">
+        <div class="game-header">
+          <div class="game-title">משחק חי: זיכרון</div>
+          <div class="game-meta">
+            <span class="gm-timer">01:12</span>
+            <span>28 משתתפים</span>
+          </div>
+        </div>
+        <div class="memory-grid" id="memGrid"></div>
+      </div>
+      <div class="game-sidebar">
+        <div class="game-lb">
+          <div class="game-lb-title">טבלת מובילים</div>
+          <div class="game-lb-row"><span class="game-lb-pos">1</span><span class="game-lb-name">נועה</span><span class="game-lb-pts">160</span></div>
+          <div class="game-lb-row"><span class="game-lb-pos">2</span><span class="game-lb-name">יונתן</span><span class="game-lb-pts">120</span></div>
+          <div class="game-lb-row me"><span class="game-lb-pos">3</span><span class="game-lb-name">את/ה</span><span class="game-lb-pts">80</span></div>
+          <div class="game-lb-row"><span class="game-lb-pos">4</span><span class="game-lb-name">מיכל</span><span class="game-lb-pts">60</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB 4: TIMER ═══ -->
+  <div class="panel timer-panel" id="panel-timer">
+    <div class="timer-ring-wrap">
+      <svg viewBox="0 0 200 200">
+        <circle class="bg-ring" cx="100" cy="100" r="90"/>
+        <circle class="fg-ring" cx="100" cy="100" r="90"/>
+      </svg>
+      <div class="timer-display">03:42</div>
+    </div>
+    <div class="timer-label">המרצה הפעיל טיימר</div>
+  </div>
+
+  <!-- ═══ TAB 5: WHITEBOARD ═══ -->
+  <div class="panel wb-panel" id="panel-whiteboard">
+    <div class="wb-badge-top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+      המרצה משתף לוח לבן
+    </div>
+    <div class="wb-canvas">
+      <svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+        <!-- Curved line -->
+        <path d="M120 320 C180 180, 320 140, 420 200 S580 300, 650 220" fill="none" stroke="#253E7A" stroke-width="3" stroke-linecap="round"/>
+        <!-- Arrow -->
+        <line x1="440" y1="160" x2="340" y2="200" stroke="#38C4F2" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="336,196 344,204 348,194" fill="#38C4F2"/>
+        <!-- Text -->
+        <text x="300" y="240" font-family="Heebo, sans-serif" font-size="24" font-weight="700" fill="#253E7A" text-anchor="middle">צבעים משלימים</text>
+        <!-- Image placeholder -->
+        <rect x="520" y="100" width="140" height="100" rx="8" fill="#f0f2f5" stroke="#ccc" stroke-width="1"/>
+        <text x="590" y="148" font-family="Heebo, sans-serif" font-size="13" fill="#999" text-anchor="middle">תמונה</text>
+        <rect x="560" y="158" width="60" height="3" rx="1" fill="#ddd"/>
+      </svg>
+    </div>
+    <div class="wb-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      המרצה מצייר — צפייה בלבד
+    </div>
+  </div>
+
+  <!-- ═══ TAB 6: BREAKOUT ═══ -->
+  <div class="panel" id="panel-breakout">
+    <div class="card breakout-card">
+      <div class="breakout-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      </div>
+      <div class="breakout-title">הועברת לחדר דיון</div>
+      <div class="breakout-room">חדר 2: צבעים חמים</div>
+      <div class="breakout-participants">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        5 משתתפים
+      </div>
+      <div class="breakout-timer-wrap">
+        <div class="breakout-timer-text">נותרו 08:32</div>
+        <div class="breakout-timer-bar"></div>
+      </div>
+      <div class="breakout-grid">
+        <div class="breakout-tile"><div class="breakout-tile-avatar">נ</div><div class="breakout-tile-name">נועה כ.</div></div>
+        <div class="breakout-tile"><div class="breakout-tile-avatar">י</div><div class="breakout-tile-name">יונתן ש.</div></div>
+        <div class="breakout-tile"><div class="breakout-tile-avatar" style="background:linear-gradient(135deg,var(--pink),var(--navy))">מ</div><div class="breakout-tile-name">מיכל א.</div></div>
+        <div class="breakout-tile"><div class="breakout-tile-avatar" style="background:linear-gradient(135deg,var(--green),var(--navy))">ד</div><div class="breakout-tile-name">דניאל ל.</div></div>
+      </div>
+      <div class="breakout-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+        חזרה לחדר ראשי
+      </div>
+      <div class="breakout-note">המרצה יחזיר אותך בסיום הדיון</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══ TAB SWITCHING ══ */
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+tabs.forEach(t => {
+  t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const id = 'panel-' + t.dataset.tab;
+    panels.forEach(p => {
+      p.classList.remove('active');
+      if (p.id === id) p.classList.add('active');
+    });
+  });
+});
+
+/* ══ POLL ══ */
+let pollVoted = false;
+function pollSelect(el) {
+  if (pollVoted) return;
+  pollVoted = true;
+  const opts = document.querySelectorAll('.poll-opt');
+  opts.forEach(o => {
+    if (o === el) {
+      o.classList.add('selected');
+    } else {
+      o.classList.add('dimmed');
+    }
+  });
+  setTimeout(() => {
+    opts.forEach(o => {
+      const pct = o.dataset.pct;
+      o.style.setProperty('--pct', pct + '%');
+      o.classList.add('show-result');
+    });
+    document.getElementById('pollCheck').classList.add('show');
+  }, 2000);
+}
+
+/* ══ QUIZ ══ */
+let quizAnswered = false;
+function quizSelect(el) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  el.classList.add('selected');
+  const opts = document.querySelectorAll('.quiz-opt');
+  setTimeout(() => {
+    opts.forEach(o => {
+      if (o.dataset.correct === 'true') {
+        o.classList.add('correct');
+        o.classList.remove('selected');
+      } else if (o !== el) {
+        o.classList.add('dimmed');
+      } else if (!o.dataset.correct) {
+        o.classList.add('dimmed');
+      }
+    });
+    // If user picked correct
+    if (el.dataset.correct === 'true') {
+      el.classList.add('correct');
+    }
+    document.getElementById('scorePopup').classList.add('show');
+    setTimeout(() => {
+      document.getElementById('quizLB').classList.add('show');
+    }, 400);
+  }, 2000);
+}
+
+/* ══ MEMORY GAME ══ */
+const memPairs = [
+  { id:0, face:'אדום', type:'clue' },
+  { id:0, face:'Red', type:'answer' },
+  { id:1, face:'כחול', type:'clue' },
+  { id:1, face:'Blue', type:'answer' },
+  { id:2, face:'ירוק', type:'clue' },
+  { id:2, face:'Green', type:'answer' },
+  { id:3, face:'צהוב', type:'clue' },
+  { id:3, face:'Yellow', type:'answer' },
+  { id:4, face:'סגול', type:'clue' },
+  { id:4, face:'Purple', type:'answer' },
+  { id:5, face:'כתום', type:'clue' },
+  { id:5, face:'Orange', type:'answer' },
+];
+
+// Pre-matched: pairs 0 and 1
+const preMatched = [0, 1];
+let flippedCards = [];
+let matchedIds = [...preMatched];
+const grid = document.getElementById('memGrid');
+
+// Shuffle
+const shuffled = memPairs.sort(() => Math.random() - 0.5);
+
+shuffled.forEach((item, i) => {
+  const card = document.createElement('div');
+  card.className = 'mem-card';
+  card.dataset.pairId = item.id;
+  card.dataset.idx = i;
+  const isMatched = preMatched.includes(item.id);
+  if (isMatched) card.classList.add('matched');
+
+  card.innerHTML = `
+    <div class="mem-card-inner">
+      <div class="mem-card-front">
+        <img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-10.png" alt="WB" onerror="this.style.display='none'">
+      </div>
+      <div class="mem-card-back ${item.type}">
+        ${item.face}
+        <span class="card-label">${item.type === 'clue' ? 'רמז' : 'תשובה'}</span>
+      </div>
+    </div>
+  `;
+
+  card.addEventListener('click', () => flipCard(card, item));
+  grid.appendChild(card);
+});
+
+function flipCard(card, item) {
+  if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+  if (flippedCards.length >= 2) return;
+
+  card.classList.add('flipped');
+  flippedCards.push({ card, item });
+
+  if (flippedCards.length === 2) {
+    const [a, b] = flippedCards;
+    if (a.item.id === b.item.id) {
+      setTimeout(() => {
+        a.card.classList.add('matched');
+        b.card.classList.add('matched');
+        matchedIds.push(a.item.id);
+        flippedCards = [];
+      }, 500);
+    } else {
+      setTimeout(() => {
+        a.card.classList.remove('flipped');
+        b.card.classList.remove('flipped');
+        flippedCards = [];
+      }, 1000);
+    }
+  }
+}
+
+/* ══ QUIZ TIMER COUNTDOWN ══ */
+let quizSec = 8;
+const quizTimerEl = document.getElementById('quizTimer');
+setInterval(() => {
+  if (quizSec > 0 && !quizAnswered) {
+    quizSec--;
+    quizTimerEl.textContent = '00:0' + quizSec;
+  }
+}, 1000);
+
+/* ══ POLL TIMER COUNTDOWN ══ */
+let pollSec = 18;
+const pollTimerEl = document.getElementById('pollTimer');
+setInterval(() => {
+  if (pollSec > 0) {
+    pollSec--;
+    const s = pollSec < 10 ? '0' + pollSec : pollSec;
+    pollTimerEl.textContent = '00:' + s + ' נותרו';
+  }
+}, 1000);
+</script>
+</body>
+</html>
