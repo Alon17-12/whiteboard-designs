@@ -76,10 +76,22 @@
   [data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
 
   /* ── CONTENT AREA ── */
-  .content-area{flex:1;display:flex;gap:24px;padding:24px 32px;overflow:hidden;min-height:0;}
+  .content-area{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
+  .content-columns{display:flex;gap:24px;padding:24px 32px 0;flex:1;overflow:hidden;min-height:0;}
 
-  /* ── LEFT COLUMN — Camera Preview ── */
-  .col-left{flex:0 0 60%;display:flex;flex-direction:column;gap:16px;min-height:0;}
+  /* ── LEFT COLUMN — Course Info & Lesson Assets (40%) ── */
+  .col-left{flex:0 0 40%;display:flex;flex-direction:column;min-height:0;}
+  .info-card{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-md);padding:24px;display:flex;flex-direction:column;gap:16px;flex:1;overflow-y:auto;transition:background .3s,box-shadow .3s;}
+  .info-card::-webkit-scrollbar{width:5px;}
+  .info-card::-webkit-scrollbar-track{background:transparent;}
+  .info-card::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+
+  /* ── RIGHT COLUMN — Camera + Settings (60%) ── */
+  .col-right{flex:0 0 calc(60% - 24px);display:flex;flex-direction:column;gap:16px;min-height:0;overflow-y:auto;}
+  .col-right::-webkit-scrollbar{width:5px;}
+  .col-right::-webkit-scrollbar-track{background:transparent;}
+  .col-right::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+
   .camera-preview{position:relative;width:100%;aspect-ratio:16/9;background:var(--preview-bg);border-radius:var(--radius-md);overflow:hidden;flex-shrink:0;box-shadow:var(--shadow-lg);}
   .camera-preview::after{content:'';position:absolute;inset:0;border-radius:var(--radius-md);box-shadow:inset 0 0 80px 20px rgba(0,0,0,0.3);pointer-events:none;z-index:2;}
   .camera-no-feed{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:1;}
@@ -110,9 +122,8 @@
   .device-select{width:100%;font-family:var(--font-he);font-size:13px;padding:10px 36px 10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);outline:none;appearance:none;cursor:pointer;transition:border-color .2s;min-height:44px;}
   .device-select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
 
-  /* ── RIGHT COLUMN — Setup Card ── */
-  .col-right{flex:0 0 calc(40% - 24px);display:flex;flex-direction:column;min-height:0;}
-  .setup-card{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-md);padding:24px;display:flex;flex-direction:column;gap:20px;flex:1;overflow-y:auto;transition:background .3s,box-shadow .3s;}
+  /* ── Settings Card ── */
+  .setup-card{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-md);padding:24px;display:flex;flex-direction:column;gap:20px;transition:background .3s,box-shadow .3s;}
   .setup-card::-webkit-scrollbar{width:5px;}
   .setup-card::-webkit-scrollbar-track{background:transparent;}
   .setup-card::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
@@ -165,8 +176,9 @@
   select.field-input{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23253E7A' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;}
   [data-theme="dark"] select.field-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23dde5f5' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");}
 
-  /* ── CTA Button ── */
-  .cta-record{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 24px;border-radius:30px;border:none;font-family:var(--font-he);font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;background:linear-gradient(135deg,var(--pink),#d63d6a);color:white;box-shadow:0 4px 20px rgba(240,86,128,0.35);min-height:52px;margin-top:auto;}
+  /* ── CTA Button (full width bottom) ── */
+  .cta-row{padding:16px 32px 0;flex-shrink:0;}
+  .cta-record{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 24px;border-radius:30px;border:none;font-family:var(--font-he);font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;background:linear-gradient(135deg,var(--pink),#d63d6a);color:white;box-shadow:0 4px 20px rgba(240,86,128,0.35);min-height:52px;}
   .cta-record:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(240,86,128,0.45);}
   .cta-record:active{transform:translateY(0);box-shadow:0 2px 12px rgba(240,86,128,0.3);}
   .cta-record svg{width:20px;height:20px;}
@@ -197,8 +209,6 @@
   .readonly-field{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-sub);font-size:14px;font-family:var(--font-he);min-height:44px;cursor:default;user-select:none;}
   .readonly-lock{width:14px;height:14px;color:var(--text-light);flex-shrink:0;}
 
-  /* (old shape selector removed — now in settings panel) */
-
   /* ── Screen share preview ── */
   .screen-share-bg{position:absolute;inset:0;z-index:0;display:none;}
   .screen-share-bg.visible{display:block;}
@@ -227,6 +237,51 @@
   .rec-overlay-content{text-align:center;color:white;}
   .rec-overlay-content .rec-countdown{font-family:var(--font-en);font-size:80px;font-weight:700;animation:fadeIn .3s ease;}
   .rec-overlay-content .rec-text{font-size:18px;font-weight:600;margin-top:8px;opacity:.7;}
+
+  /* ── Lesson Assets section ── */
+  .divider{height:1px;background:var(--border);margin:4px 0;}
+  .assets-section-title{font-size:15px;font-weight:700;color:var(--text-main);margin-bottom:2px;}
+  .assets-section-desc{font-size:12px;color:var(--text-sub);line-height:1.5;margin-bottom:12px;}
+  .upload-zone{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface-2);min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+  .upload-zone:hover{border-color:var(--cyan);background:rgba(56,196,242,0.04);}
+  .upload-zone.dragover{border-color:var(--cyan);background:rgba(56,196,242,0.08);}
+  .upload-zone svg{width:28px;height:28px;color:var(--text-light);}
+  .upload-zone .upload-text{font-size:13px;font-weight:600;color:var(--text-sub);}
+  .upload-zone .upload-sub{font-size:11px;color:var(--text-light);}
+
+  /* Asset type selector */
+  .asset-type-selector{display:none;flex-wrap:wrap;gap:6px;margin-top:8px;}
+  .asset-type-selector.visible{display:flex;}
+  .asset-type-btn{padding:6px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-size:11px;font-weight:600;font-family:var(--font-he);color:var(--text-sub);cursor:pointer;transition:all .2s;}
+  .asset-type-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+  .asset-type-btn.active{background:var(--cyan);border-color:var(--cyan);color:white;}
+
+  /* Asset list */
+  .asset-list{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+  .asset-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);transition:all .2s;}
+  .asset-item:hover{border-color:rgba(56,196,242,0.3);box-shadow:var(--shadow-sm);}
+  .asset-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;}
+  .asset-icon.html{background:rgba(240,86,128,0.1);color:var(--pink);}
+  .asset-icon.pdf{background:rgba(234,214,84,0.15);color:#b8a630;}
+  .asset-info{flex:1;min-width:0;}
+  .asset-name{font-size:13px;font-weight:600;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .asset-meta{display:flex;align-items:center;gap:8px;margin-top:2px;}
+  .asset-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--surface-2);color:var(--text-sub);}
+  .asset-badge.interactive{background:rgba(240,86,128,0.1);color:var(--pink);}
+  .asset-size{font-size:11px;color:var(--text-light);}
+  .asset-delete{width:28px;height:28px;border-radius:6px;border:none;background:transparent;color:var(--text-light);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+  .asset-delete:hover{background:rgba(240,86,128,0.1);color:var(--pink);}
+  .asset-delete svg{width:16px;height:16px;}
+
+  /* Info box */
+  .info-box{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);background:rgba(56,196,242,0.06);border:1px solid rgba(56,196,242,0.15);margin-top:8px;}
+  .info-box svg{width:16px;height:16px;color:var(--cyan);flex-shrink:0;margin-top:1px;}
+  .info-box span{font-size:11px;color:var(--text-sub);line-height:1.5;}
+
+  /* Settings card sections layout */
+  .settings-sections{display:flex;gap:20px;}
+  .settings-section-main{flex:1;min-width:0;}
+  .settings-section-side{flex:0 0 auto;}
 </style>
 </head>
 <body>
@@ -307,185 +362,264 @@
 
   <!-- ── CONTENT ── -->
   <div class="content-area">
+    <div class="content-columns">
 
-    <!-- LEFT COLUMN — Camera Preview -->
-    <div class="col-left fade-in">
-      <div class="camera-preview" id="cameraPreview">
-        <!-- No Camera State -->
-        <div class="camera-no-feed" id="noFeed">
-          <img src="../../BOARDi/SVG/12.svg" alt="BOARDi">
-          <div class="no-feed-text">הפעל את המצלמה כדי להתחיל</div>
-        </div>
-        <!-- Active Camera State -->
-        <div class="camera-active-view" id="activeFeed">
-          <div class="sim-gradient"></div>
-          <div class="sim-person"></div>
-          <div class="preview-label"><span>תצוגה מקדימה</span></div>
-        </div>
-        <!-- Screen Share Background -->
-        <div class="screen-share-bg" id="screenShareBg">
-          <div class="ss-gradient"></div>
-          <div class="ss-grid"></div>
-          <div class="ss-window">
-            <div class="ss-titlebar"><span class="ss-dot"></span><span class="ss-dot"></span><span class="ss-dot"></span></div>
-            <div class="ss-content">
-              <div class="ss-line" style="width:80%"></div>
-              <div class="ss-line" style="width:60%"></div>
-              <div class="ss-line" style="width:90%"></div>
-              <div class="ss-line" style="width:45%"></div>
-              <div class="ss-line" style="width:70%"></div>
+      <!-- ═══ LEFT COLUMN — Course Info & Lesson Assets (40%) ═══ -->
+      <div class="col-left fade-in">
+        <div class="info-card">
+          <!-- Course Name (read-only) -->
+          <div class="field-group">
+            <label class="field-label">קורס</label>
+            <div class="readonly-field">
+              <svg class="readonly-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>יסודות העיצוב</span>
             </div>
           </div>
-          <div class="ss-label">שיתוף מסך</div>
-        </div>
-        <!-- Camera Overlay (for screen+camera mode) -->
-        <div class="cam-overlay rect" id="camOverlay">
-          <div class="drag-handle"></div>
-          <div class="cam-overlay-inner">
-            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+
+          <!-- Chapter Name (read-only) -->
+          <div class="field-group">
+            <label class="field-label">פרק</label>
+            <div class="readonly-field">
+              <svg class="readonly-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>פרק 2: צבע וטיפוגרפיה</span>
+            </div>
+          </div>
+
+          <!-- Lesson Name (editable) -->
+          <div class="field-group">
+            <label class="field-label">שם השיעור</label>
+            <input class="field-input" type="text" id="lessonName" value="שיעור חדש" placeholder="הכנס שם לשיעור...">
+          </div>
+
+          <!-- Divider -->
+          <div class="divider"></div>
+
+          <!-- Lesson Assets Section -->
+          <div>
+            <div class="assets-section-title">נכסי שיעור</div>
+            <div class="assets-section-desc">קבצים להצגה במהלך השיעור — העלה מצגות, קבצים או תוכן אינטראקטיבי שתרצה לשתף</div>
+
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <div class="upload-text">גרור קבצים לכאן או לחץ להעלאה</div>
+              <div class="upload-sub">HTML, PPTX, PDF, תמונות ועוד</div>
+            </div>
+            <input type="file" id="fileInput" style="display:none" multiple onchange="handleFileSelect(event)">
+
+            <!-- Asset Type Selector (shown when uploading) -->
+            <div class="asset-type-selector" id="assetTypeSelector">
+              <button class="asset-type-btn active" data-type="html" onclick="selectAssetType('html')">מצגת HTML</button>
+              <button class="asset-type-btn" data-type="pptx" onclick="selectAssetType('pptx')">מצגת (PPTX/PDF)</button>
+              <button class="asset-type-btn" data-type="image" onclick="selectAssetType('image')">תמונה / אינפוגרפיקה</button>
+              <button class="asset-type-btn" data-type="other" onclick="selectAssetType('other')">קובץ אחר</button>
+            </div>
+
+            <!-- Pre-populated Asset List -->
+            <div class="asset-list" id="assetList">
+              <!-- HTML interactive asset -->
+              <div class="asset-item" data-asset="colors-presentation">
+                <div class="asset-icon html">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <div class="asset-info">
+                  <div class="asset-name">מצגת צבעים — אינטראקטיבית.html</div>
+                  <div class="asset-meta">
+                    <span class="asset-badge interactive">אינטראקטיבי</span>
+                    <span class="asset-badge">HTML</span>
+                    <span class="asset-size">2.4 MB</span>
+                  </div>
+                </div>
+                <button class="asset-delete" onclick="deleteAsset(this)" title="מחק">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+
+              <!-- PDF asset -->
+              <div class="asset-item" data-asset="color-wheel-pdf">
+                <div class="asset-icon pdf">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div class="asset-info">
+                  <div class="asset-name">חומרי עזר — גלגל הצבעים.pdf</div>
+                  <div class="asset-meta">
+                    <span class="asset-badge">PDF</span>
+                    <span class="asset-size">860 KB</span>
+                  </div>
+                </div>
+                <button class="asset-delete" onclick="deleteAsset(this)" title="מחק">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="info-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span>קבצי HTML יוצגו באופן אינטראקטיבי — התלמידים יוכלו לגלול ולתקשר עם התוכן</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Controls -->
-      <div class="controls-row">
-        <button class="ctrl-btn off" id="btnCamera" onclick="toggleControl('camera')" title="מצלמה">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-          <span class="off-line"></span>
-        </button>
-        <button class="ctrl-btn off" id="btnMic" onclick="toggleControl('mic')" title="מיקרופון">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-          <span class="off-line"></span>
-        </button>
-        <button class="ctrl-btn" id="btnScreen" onclick="toggleControl('screen')" title="שיתוף מסך">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          <span class="off-line"></span>
-        </button>
+      <!-- ═══ RIGHT COLUMN — Camera Preview + Settings (60%) ═══ -->
+      <div class="col-right fade-in" style="animation-delay:.1s;">
+
+        <!-- Camera Preview -->
+        <div class="camera-preview" id="cameraPreview">
+          <!-- No Camera State -->
+          <div class="camera-no-feed" id="noFeed">
+            <img src="../../BOARDi/SVG/12.svg" alt="BOARDi">
+            <div class="no-feed-text">הפעל את המצלמה כדי להתחיל</div>
+          </div>
+          <!-- Active Camera State -->
+          <div class="camera-active-view" id="activeFeed">
+            <div class="sim-gradient"></div>
+            <div class="sim-person"></div>
+            <div class="preview-label"><span>תצוגה מקדימה</span></div>
+          </div>
+          <!-- Screen Share Background -->
+          <div class="screen-share-bg" id="screenShareBg">
+            <div class="ss-gradient"></div>
+            <div class="ss-grid"></div>
+            <div class="ss-window">
+              <div class="ss-titlebar"><span class="ss-dot"></span><span class="ss-dot"></span><span class="ss-dot"></span></div>
+              <div class="ss-content">
+                <div class="ss-line" style="width:80%"></div>
+                <div class="ss-line" style="width:60%"></div>
+                <div class="ss-line" style="width:90%"></div>
+                <div class="ss-line" style="width:45%"></div>
+                <div class="ss-line" style="width:70%"></div>
+              </div>
+            </div>
+            <div class="ss-label">שיתוף מסך</div>
+          </div>
+          <!-- Camera Overlay (for screen+camera mode) -->
+          <div class="cam-overlay rect" id="camOverlay">
+            <div class="drag-handle"></div>
+            <div class="cam-overlay-inner">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-row">
+          <button class="ctrl-btn off" id="btnCamera" onclick="toggleControl('camera')" title="מצלמה">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            <span class="off-line"></span>
+          </button>
+          <button class="ctrl-btn off" id="btnMic" onclick="toggleControl('mic')" title="מיקרופון">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            <span class="off-line"></span>
+          </button>
+          <button class="ctrl-btn" id="btnScreen" onclick="toggleControl('screen')" title="שיתוף מסך">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <span class="off-line"></span>
+          </button>
+        </div>
+
+        <!-- Device Selectors -->
+        <div class="device-selectors">
+          <div class="device-select-wrap">
+            <svg class="select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            <select class="device-select" id="cameraSelect">
+              <option>FaceTime HD Camera</option>
+              <option>Logitech C920</option>
+              <option>OBS Virtual Camera</option>
+            </select>
+          </div>
+          <div class="device-select-wrap">
+            <svg class="select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+            <select class="device-select" id="micSelect">
+              <option>MacBook Pro Microphone</option>
+              <option>AirPods Pro</option>
+              <option>Blue Yeti</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Recording Settings Card -->
+        <div class="setup-card">
+          <div class="setup-title">הגדרות הקלטה</div>
+
+          <!-- Camera Display Settings -->
+          <div>
+            <div class="cam-settings-label">הגדרות תצוגת מצלמה</div>
+
+            <!-- Shape selector -->
+            <div class="cam-settings-sublabel">צורת חלון המצלמה (במצב שיתוף מסך)</div>
+            <div class="shape-toggle">
+              <button class="shape-toggle-btn active" id="shapeRect" onclick="setOverlayShape('rect')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/></svg>
+                מלבן
+              </button>
+              <button class="shape-toggle-btn" id="shapeCircle" onclick="setOverlayShape('circle')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                עיגול
+              </button>
+            </div>
+
+            <!-- Default position selector -->
+            <div class="position-grid-wrap">
+              <div class="cam-settings-sublabel">מיקום ברירת מחדל</div>
+              <div style="display:flex;gap:16px;align-items:flex-start;">
+                <div class="position-grid">
+                  <button class="position-grid-btn" data-pos="tr" onclick="setOverlayPosition('tr')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="7" x2="7" y2="17"/><polyline points="7 7 17 7 17 17"/></svg>
+                    ↗
+                  </button>
+                  <button class="position-grid-btn" data-pos="tl" onclick="setOverlayPosition('tl')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 7 7 7 17"/></svg>
+                    ↖
+                  </button>
+                  <button class="position-grid-btn active" data-pos="br" onclick="setOverlayPosition('br')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="17" x2="7" y2="7"/><polyline points="7 17 17 17 17 7"/></svg>
+                    ↘
+                  </button>
+                  <button class="position-grid-btn" data-pos="bl" onclick="setOverlayPosition('bl')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="17 17 7 17 7 7"/></svg>
+                    ↙
+                  </button>
+                </div>
+                <div class="position-preview" id="posPreview">
+                  <div class="pip-dot pos-br" id="pipDot"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Size slider -->
+            <div class="size-slider-wrap">
+              <div class="cam-settings-sublabel">גודל חלון מצלמה</div>
+              <div class="size-slider-row">
+                <span class="slider-label">קטן</span>
+                <input type="range" class="size-slider" id="sizeSlider" min="15" max="30" value="20" oninput="updateSizeSlider(this.value)">
+                <span class="slider-label">גדול</span>
+                <span class="size-slider-value" id="sizeValue">20%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quality -->
+          <div class="field-group">
+            <label class="field-label">איכות הקלטה</label>
+            <select class="field-input" id="qualitySelect">
+              <option value="1080">1080p HD</option>
+              <option value="720">720p</option>
+              <option value="480">480p</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      <!-- Device Selectors -->
-      <div class="device-selectors">
-        <div class="device-select-wrap">
-          <svg class="select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-          <select class="device-select" id="cameraSelect">
-            <option>FaceTime HD Camera</option>
-            <option>Logitech C920</option>
-            <option>OBS Virtual Camera</option>
-          </select>
-        </div>
-        <div class="device-select-wrap">
-          <svg class="select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
-          <select class="device-select" id="micSelect">
-            <option>MacBook Pro Microphone</option>
-            <option>AirPods Pro</option>
-            <option>Blue Yeti</option>
-          </select>
-        </div>
-      </div>
     </div>
 
-    <!-- RIGHT COLUMN — Recording Setup -->
-    <div class="col-right fade-in" style="animation-delay:.1s;">
-      <div class="setup-card">
-        <div class="setup-title">הגדרות הקלטה</div>
-
-        <!-- Camera Display Settings -->
-        <div>
-          <div class="cam-settings-label">הגדרות תצוגת מצלמה</div>
-
-          <!-- Shape selector -->
-          <div class="cam-settings-sublabel">צורת חלון המצלמה (במצב שיתוף מסך)</div>
-          <div class="shape-toggle">
-            <button class="shape-toggle-btn active" id="shapeRect" onclick="setOverlayShape('rect')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/></svg>
-              מלבן
-            </button>
-            <button class="shape-toggle-btn" id="shapeCircle" onclick="setOverlayShape('circle')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-              עיגול
-            </button>
-          </div>
-
-          <!-- Default position selector -->
-          <div class="position-grid-wrap">
-            <div class="cam-settings-sublabel">מיקום ברירת מחדל</div>
-            <div style="display:flex;gap:16px;align-items:flex-start;">
-              <div class="position-grid">
-                <button class="position-grid-btn" data-pos="tr" onclick="setOverlayPosition('tr')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="7" x2="7" y2="17"/><polyline points="7 7 17 7 17 17"/></svg>
-                  ↗
-                </button>
-                <button class="position-grid-btn" data-pos="tl" onclick="setOverlayPosition('tl')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 7 7 7 17"/></svg>
-                  ↖
-                </button>
-                <button class="position-grid-btn active" data-pos="br" onclick="setOverlayPosition('br')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="17" x2="7" y2="7"/><polyline points="7 17 17 17 17 7"/></svg>
-                  ↘
-                </button>
-                <button class="position-grid-btn" data-pos="bl" onclick="setOverlayPosition('bl')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="17 17 7 17 7 7"/></svg>
-                  ↙
-                </button>
-              </div>
-              <div class="position-preview" id="posPreview">
-                <div class="pip-dot pos-br" id="pipDot"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Size slider -->
-          <div class="size-slider-wrap">
-            <div class="cam-settings-sublabel">גודל חלון מצלמה</div>
-            <div class="size-slider-row">
-              <span class="slider-label">קטן</span>
-              <input type="range" class="size-slider" id="sizeSlider" min="15" max="30" value="20" oninput="updateSizeSlider(this.value)">
-              <span class="slider-label">גדול</span>
-              <span class="size-slider-value" id="sizeValue">20%</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Quality -->
-        <div class="field-group">
-          <label class="field-label">איכות הקלטה</label>
-          <select class="field-input" id="qualitySelect">
-            <option value="1080">1080p HD</option>
-            <option value="720">720p</option>
-            <option value="480">480p</option>
-          </select>
-        </div>
-
-        <!-- Course Name (read-only) -->
-        <div class="field-group">
-          <label class="field-label">קורס</label>
-          <div class="readonly-field">
-            <svg class="readonly-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            <span>יסודות העיצוב</span>
-          </div>
-        </div>
-
-        <!-- Chapter Name (read-only) -->
-        <div class="field-group">
-          <label class="field-label">פרק</label>
-          <div class="readonly-field">
-            <svg class="readonly-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            <span>פרק 2: צבע וטיפוגרפיה</span>
-          </div>
-        </div>
-
-        <!-- Lesson Name (editable) -->
-        <div class="field-group">
-          <label class="field-label">שם השיעור</label>
-          <input class="field-input" type="text" id="lessonName" value="שיעור חדש" placeholder="הכנס שם לשיעור...">
-        </div>
-
-        <!-- CTA -->
-        <button class="cta-record" onclick="startRecording()">
-          <span class="rec-circle"></span>
-          התחל הקלטה
-        </button>
-      </div>
+    <!-- ═══ FULL-WIDTH CTA ═══ -->
+    <div class="cta-row">
+      <button class="cta-record" onclick="startRecording()">
+        <span class="rec-circle"></span>
+        התחל הקלטה
+      </button>
     </div>
   </div>
 
@@ -641,8 +775,6 @@
     camOverlay.style.width = val + '%';
   }
 
-  // Shape selection is now handled by setOverlayShape in the settings panel
-
   // ── Draggable Camera Overlay ──
   (function initDrag() {
     const overlay = document.getElementById('camOverlay');
@@ -689,6 +821,95 @@
       }
     });
   })();
+
+  // ── Lesson Assets: Upload & Management ──
+  const uploadZone = document.getElementById('uploadZone');
+
+  uploadZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    uploadZone.classList.add('dragover');
+  });
+
+  uploadZone.addEventListener('dragleave', function() {
+    uploadZone.classList.remove('dragover');
+  });
+
+  uploadZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFiles(files);
+    }
+  });
+
+  function handleFileSelect(event) {
+    const files = event.target.files;
+    if (files.length > 0) {
+      handleFiles(files);
+    }
+  }
+
+  function handleFiles(files) {
+    // Show asset type selector
+    document.getElementById('assetTypeSelector').classList.add('visible');
+    for (let i = 0; i < files.length; i++) {
+      addAssetItem(files[i].name, detectFileType(files[i].name), formatFileSize(files[i].size));
+    }
+    showToast('success', files.length + ' קבצים הועלו בהצלחה');
+  }
+
+  function detectFileType(filename) {
+    const ext = filename.split('.').pop().toLowerCase();
+    if (ext === 'html' || ext === 'htm') return 'html';
+    if (ext === 'pdf') return 'pdf';
+    if (ext === 'pptx' || ext === 'ppt') return 'pptx';
+    if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(ext)) return 'image';
+    return 'other';
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return Math.round(bytes / 1024) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  }
+
+  function addAssetItem(name, type, size) {
+    const list = document.getElementById('assetList');
+    const typeIcons = {
+      html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+      pdf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+      pptx: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+      image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+      other: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
+    };
+    const iconClass = (type === 'html') ? 'html' : (type === 'pdf' ? 'pdf' : 'html');
+    const badgeLabel = { html: 'HTML', pdf: 'PDF', pptx: 'PPTX', image: 'תמונה', other: 'קובץ' };
+
+    const item = document.createElement('div');
+    item.className = 'asset-item';
+    item.innerHTML = '<div class="asset-icon ' + iconClass + '">' + (typeIcons[type] || typeIcons.other) + '</div>' +
+      '<div class="asset-info"><div class="asset-name">' + name + '</div><div class="asset-meta">' +
+      (type === 'html' ? '<span class="asset-badge interactive">אינטראקטיבי</span>' : '') +
+      '<span class="asset-badge">' + badgeLabel[type] + '</span>' +
+      '<span class="asset-size">' + size + '</span></div></div>' +
+      '<button class="asset-delete" onclick="deleteAsset(this)" title="מחק"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>';
+    list.appendChild(item);
+  }
+
+  function deleteAsset(btn) {
+    const item = btn.closest('.asset-item');
+    item.style.opacity = '0';
+    item.style.transform = 'translateX(-20px)';
+    item.style.transition = 'all .3s ease';
+    setTimeout(() => item.remove(), 300);
+    showToast('info', 'הקובץ נמחק');
+  }
+
+  function selectAssetType(type) {
+    document.querySelectorAll('.asset-type-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.asset-type-btn[data-type="' + type + '"]').classList.add('active');
+  }
 
   // ── Start Recording ──
   function startRecording() {

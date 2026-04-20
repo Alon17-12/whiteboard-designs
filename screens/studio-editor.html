@@ -386,6 +386,7 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
         <div class="tool-tab" data-tab="intros">פתיח / סגיר</div>
         <div class="tool-tab" data-tab="transitions">מעברים</div>
         <div class="tool-tab" data-tab="subtitles">כתוביות</div>
+        <div class="tool-tab" data-tab="presets">פריסט</div>
       </div>
 
       <!-- TAB 1: CUT -->
@@ -518,6 +519,16 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
 
       <!-- TAB 2: LOGO -->
       <div class="tool-content" id="tabLogo" style="display:none;">
+        <!-- Logo Toggle: No Logo / Add Logo -->
+        <div class="tool-section">
+          <div class="tool-section-title">הגדרת לוגו</div>
+          <div style="display:flex;gap:0;margin-bottom:16px;" id="logoTogglePills">
+            <button class="logo-pill active" data-mode="none" onclick="setLogoMode('none')" style="flex:1;padding:10px 16px;font-family:var(--font-he);font-size:13px;font-weight:700;border:2px solid var(--cyan);background:var(--cyan);color:white;border-radius:0 10px 10px 0;cursor:pointer;transition:all .2s;">ללא לוגו</button>
+            <button class="logo-pill" data-mode="add" onclick="setLogoMode('add')" style="flex:1;padding:10px 16px;font-family:var(--font-he);font-size:13px;font-weight:700;border:2px solid var(--border);background:var(--surface);color:var(--text-sub);border-radius:10px 0 0 10px;cursor:pointer;transition:all .2s;">הוסף לוגו</button>
+          </div>
+        </div>
+
+        <div id="logoConfigSection" style="display:none;">
         <div class="tool-section">
           <div class="tool-section-title">העלאת לוגו</div>
           <div class="upload-zone" id="logoUpload">
@@ -567,6 +578,7 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
             <span class="slider-label" style="min-width:auto;">100%</span>
           </div>
         </div>
+        </div><!-- /logoConfigSection -->
       </div>
 
       <!-- TAB 3: INTRO/OUTRO -->
@@ -900,6 +912,106 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
           </div>
         </div>
       </div>
+
+      <!-- TAB 6: PRESETS -->
+      <div class="tool-content" id="tabPresets" style="display:none;">
+        <!-- Save as Preset -->
+        <div class="tool-section">
+          <div class="tool-section-title" style="font-size:15px;display:flex;align-items:center;gap:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;color:var(--cyan);"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            שמור הגדרות נוכחיות כפריסט
+          </div>
+          <div style="font-size:12px;color:var(--text-sub);margin-bottom:12px;line-height:1.6;">
+            שמור את כל הגדרות העריכה (לוגו, פתיח, סגיר, מעברים, כתוביות) כפריסט לשימוש חוזר
+          </div>
+          <input type="text" placeholder="שם הפריסט..." style="width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-main);font-family:var(--font-he);font-size:13px;margin-bottom:10px;transition:border-color .2s;" id="presetNameInput" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">
+          <button class="btn-tool-primary" onclick="savePreset()" style="width:100%;justify-content:center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            שמור פריסט
+          </button>
+        </div>
+
+        <!-- My Presets -->
+        <div class="tool-section" style="border-top:1px solid var(--border);padding-top:16px;">
+          <div class="tool-section-title" style="font-size:15px;display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;color:var(--cyan);"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            הפריסטים שלי
+          </div>
+
+          <!-- Preset 1 -->
+          <div id="presetCard1" style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;transition:all .2s;">
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+              <div style="width:40px;height:40px;border-radius:10px;background:var(--cyan-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" style="width:20px;height:20px;"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                  <span style="font-size:13px;font-weight:700;color:var(--text-main);">ברירת מחדל — קורסי עיצוב</span>
+                  <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(125,197,122,0.15);color:var(--green);">פעיל</span>
+                </div>
+                <div style="font-size:11px;color:var(--text-sub);line-height:1.5;">לוגו + פתיח מינימלי + כתוביות Heebo</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+              <button class="btn-tool-primary" onclick="loadPreset('ברירת מחדל — קורסי עיצוב')" style="flex:1;justify-content:center;font-size:11px;padding:6px 10px;">טען</button>
+              <button class="btn-tool" onclick="showToast('עורך פריסט...')" style="flex:1;justify-content:center;font-size:11px;padding:6px 10px;">ערוך</button>
+              <button class="btn-tool danger" onclick="deletePreset('presetCard1')" style="flex:1;justify-content:center;font-size:11px;padding:6px 10px;">מחק</button>
+            </div>
+          </div>
+
+          <!-- Preset 2 -->
+          <div id="presetCard2" style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;transition:all .2s;">
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(240,86,128,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2" style="width:20px;height:20px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                  <span style="font-size:13px;font-weight:700;color:var(--text-main);">סדרת הרצאות — פרימיום</span>
+                </div>
+                <div style="font-size:11px;color:var(--text-sub);line-height:1.5;">לוגו + פתיח דינמי + סגיר CTA + מעבר Fade</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+              <button class="btn-tool-primary" onclick="loadPreset('סדרת הרצאות — פרימיום')" style="flex:1;justify-content:center;font-size:11px;padding:6px 10px;">טען</button>
+              <button class="btn-tool" onclick="showToast('עורך פריסט...')" style="flex:1;justify-content:center;font-size:11px;padding:6px 10px;">ערוך</button>
+              <button class="btn-tool danger" onclick="deletePreset('presetCard2')" style="flex:1;justify-content:center;font-size:11px;padding:6px 10px;">מחק</button>
+            </div>
+          </div>
+
+          <!-- Preset 3 -->
+          <div id="presetCard3" style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;transition:all .2s;">
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(234,214,84,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2" style="width:20px;height:20px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                  <span style="font-size:13px;font-weight:700;color:var(--text-main);">מהיר — ללא עריכה</span>
+                </div>
+                <div style="font-size:11px;color:var(--text-sub);line-height:1.5;">ללא לוגו, ללא פתיח/סגיר, כתוביות אוטומטיות בלבד</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+              <button class="btn-tool-primary" onclick="loadPreset('מהיר — ללא עריכה')" style="flex:1;justify-content:center;font-size:11px;padding:6px 10px;">טען</button>
+              <button class="btn-tool" onclick="showToast('עורך פריסט...')" style="flex:1;justify-content:center;font-size:11px;padding:6px 10px;">ערוך</button>
+              <button class="btn-tool danger" onclick="deletePreset('presetCard3')" style="flex:1;justify-content:center;font-size:11px;padding:6px 10px;">מחק</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Default Preset Toggle -->
+        <div class="tool-section" style="border-top:1px solid var(--border);padding-top:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:4px;">הגדר כברירת מחדל</div>
+              <div style="font-size:11px;color:var(--text-sub);line-height:1.5;">החל פריסט זה אוטומטית על כל סרטון חדש</div>
+            </div>
+            <div class="toggle-switch" id="presetDefaultToggle" onclick="togglePresetDefault()"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1036,7 +1148,7 @@ document.querySelectorAll('.tool-tab').forEach(tab=>{
   tab.addEventListener('click',()=>{
     document.querySelectorAll('.tool-tab').forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
-    const panels={cut:'tabCut',logo:'tabLogo',intros:'tabIntros',transitions:'tabTransitions',subtitles:'tabSubtitles'};
+    const panels={cut:'tabCut',logo:'tabLogo',intros:'tabIntros',transitions:'tabTransitions',subtitles:'tabSubtitles',presets:'tabPresets'};
     Object.values(panels).forEach(id=>{document.getElementById(id).style.display='none';});
     document.getElementById(panels[tab.dataset.tab]).style.display='';
   });
@@ -1411,6 +1523,71 @@ document.querySelectorAll('.slider-track').forEach(track=>{
     }
   });
 });
+
+// ── Logo Toggle (No Logo / Add Logo) ──
+function setLogoMode(mode){
+  const pills=document.querySelectorAll('#logoTogglePills .logo-pill');
+  const configSection=document.getElementById('logoConfigSection');
+  const logoOverlay=document.querySelector('.video-logo-overlay');
+  pills.forEach(p=>{
+    if(p.dataset.mode===mode){
+      p.style.border='2px solid var(--cyan)';
+      p.style.background='var(--cyan)';
+      p.style.color='white';
+    } else {
+      p.style.border='2px solid var(--border)';
+      p.style.background='var(--surface)';
+      p.style.color='var(--text-sub)';
+    }
+  });
+  if(mode==='add'){
+    configSection.style.display='';
+    if(logoOverlay)logoOverlay.style.display='';
+  } else {
+    configSection.style.display='none';
+    if(logoOverlay)logoOverlay.style.display='none';
+  }
+}
+// Initialize logo mode on load
+document.addEventListener('DOMContentLoaded',()=>{setLogoMode('none');});
+
+// ── Preset Functions ──
+function savePreset(){
+  const nameInput=document.getElementById('presetNameInput');
+  const name=nameInput.value.trim();
+  if(!name){
+    showToast('יש להזין שם לפריסט');
+    nameInput.focus();
+    return;
+  }
+  showToast('הפריסט נשמר בהצלחה!');
+  nameInput.value='';
+}
+
+function loadPreset(name){
+  showToast('הפריסט הוחל — כל ההגדרות עודכנו');
+}
+
+function deletePreset(cardId){
+  if(!confirm('למחוק את הפריסט?'))return;
+  const card=document.getElementById(cardId);
+  if(card){
+    card.style.opacity='0';
+    card.style.transform='translateX(-20px)';
+    setTimeout(()=>{card.style.display='none';},300);
+  }
+  showToast('הפריסט נמחק');
+}
+
+function togglePresetDefault(){
+  const toggle=document.getElementById('presetDefaultToggle');
+  const isActive=toggle.classList.toggle('active');
+  if(isActive){
+    showToast('פריסט ברירת מחדל הוגדר — יוחל על כל סרטון חדש');
+  } else {
+    showToast('פריסט ברירת מחדל בוטל');
+  }
+}
 
 // ── Save Draft ──
 document.getElementById('saveDraftBtn').addEventListener('click',()=>{

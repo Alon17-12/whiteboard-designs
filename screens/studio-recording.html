@@ -11,17 +11,26 @@
   --navy: #253E7A;
   --cyan: #38C4F2;
   --pink: #F05680;
-  --green: #7DC57A;
+  --green: #22c55e;
   --yellow: #EAD654;
+  --amber: #f59e0b;
   --bg: #0a0e1a;
   --bg-secondary: #111629;
   --surface: rgba(0,0,0,0.7);
+  --surface-panel: rgba(15,22,42,0.92);
   --text: #f0f0f5;
   --text-muted: rgba(255,255,255,0.5);
+  --text-dim: rgba(255,255,255,0.35);
   --red: #e53e3e;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 100px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   font-family: 'Heebo', sans-serif;
@@ -49,20 +58,21 @@ body {
   inset: 0;
   background:
     radial-gradient(circle at 30% 60%, rgba(56,196,242,0.03) 0%, transparent 50%),
-    radial-gradient(circle at 70% 30%, rgba(240,86,128,0.03) 0%, transparent 50%);
+    radial-gradient(circle at 70% 30%, rgba(240,86,128,0.02) 0%, transparent 50%);
   pointer-events: none;
 }
 
-/* Grid pattern overlay */
+/* Subtle grid pattern */
 .video-area::after {
   content: '';
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: 64px 64px;
   pointer-events: none;
+  opacity: 0.6;
 }
 
 /* ======= SCREEN SHARE BACKGROUND ======= */
@@ -90,7 +100,7 @@ body {
   max-width: 800px;
   aspect-ratio: 16/9;
   background: #1a1f36;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(255,255,255,0.08);
   display: flex;
   flex-direction: column;
@@ -98,7 +108,7 @@ body {
 }
 .screen-share-titlebar {
   height: 28px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.05);
   display: flex;
   align-items: center;
   padding: 0 12px;
@@ -111,7 +121,7 @@ body {
 }
 .screen-share-dot.r { background: #e53e3e; }
 .screen-share-dot.y { background: #EAD654; }
-.screen-share-dot.g { background: #7DC57A; }
+.screen-share-dot.g { background: #22c55e; }
 .screen-share-content {
   flex: 1;
   display: flex;
@@ -122,7 +132,7 @@ body {
   gap: 8px;
 }
 
-/* ======= TOP OVERLAYS ======= */
+/* ======= TOP OVERLAY — GRADIENT FADE ======= */
 .top-overlay {
   position: absolute;
   top: 0;
@@ -133,86 +143,99 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   z-index: 10;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 100%);
+  background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
   pointer-events: none;
+  min-height: 80px;
 }
 .top-overlay > * { pointer-events: auto; }
 
-/* Recording indicator */
+/* Recording indicator — pill */
 .rec-indicator {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 12px;
-  padding: 8px 16px;
-  border: 1px solid rgba(229,62,62,0.3);
-  transition: opacity 0.3s, border-color 0.3s;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-pill);
+  padding: 8px 18px 8px 14px;
+  border: 1px solid rgba(229,62,62,0.25);
+  transition: opacity 0.3s var(--ease-smooth), border-color 0.3s var(--ease-smooth), transform 0.3s var(--ease-out);
+  transform: translateY(0);
 }
 
-.rec-indicator.hidden { opacity: 0; pointer-events: none; }
+.rec-indicator.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+}
+
+.rec-indicator.state-paused {
+  border-color: rgba(245,158,11,0.3);
+}
 
 .rec-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   background: var(--red);
   border-radius: 50%;
-  animation: pulse-red 1.2s ease-in-out infinite;
+  animation: pulse-dot 1.4s ease-in-out infinite;
+  flex-shrink: 0;
 }
 
 .rec-dot.paused {
-  background: var(--yellow);
-  animation: pulse-yellow 1.5s ease-in-out infinite;
+  background: var(--amber);
+  animation: pulse-dot-amber 1.8s ease-in-out infinite;
 }
 
-@keyframes pulse-red {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(229,62,62,0.6); }
-  50% { opacity: 0.5; box-shadow: 0 0 12px 4px rgba(229,62,62,0.3); }
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.4; }
 }
 
-@keyframes pulse-yellow {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(234,214,84,0.5); }
-  50% { opacity: 0.6; box-shadow: 0 0 12px 4px rgba(234,214,84,0.2); }
+@keyframes pulse-dot-amber {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.5; }
 }
 
 .rec-label {
   font-family: 'Fredoka', sans-serif;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--red);
   letter-spacing: 2px;
-  transition: color 0.3s;
+  transition: color 0.3s var(--ease-smooth);
 }
 
-.rec-label.paused { color: var(--yellow); }
+.rec-label.paused { color: var(--amber); }
 
 .rec-timer {
-  font-family: 'Fredoka', monospace;
+  font-family: 'Fredoka', sans-serif;
+  font-variant-numeric: tabular-nums;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 26px;
   color: var(--text);
-  letter-spacing: 1px;
-  min-width: 70px;
+  letter-spacing: 1.5px;
+  min-width: 80px;
+  line-height: 1;
 }
 
-/* Lesson name pill */
+/* Lesson name pill — floats center top, clear of everything */
 .lesson-pill {
   position: absolute;
-  top: 20px;
+  top: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: 8px 24px;
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-pill);
+  padding: 6px 20px;
+  border: 1px solid rgba(255,255,255,0.08);
   font-family: 'Heebo', sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.7);
   white-space: nowrap;
   z-index: 10;
 }
@@ -221,24 +244,24 @@ body {
 .watermark {
   font-family: 'Fredoka', sans-serif;
   font-weight: 700;
-  font-size: 16px;
-  color: rgba(255,255,255,0.15);
-  letter-spacing: 2px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.1);
+  letter-spacing: 3px;
 }
 
-/* ======= MODE SWITCHER ======= */
+/* ======= MODE SWITCHER — floating pill ======= */
 .mode-switcher {
   position: absolute;
-  top: 64px;
+  top: 72px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 14px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-pill);
   padding: 4px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.08);
   z-index: 10;
   gap: 2px;
 }
@@ -247,45 +270,45 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 16px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 11px;
+  border-radius: var(--radius-pill);
   font-family: 'Heebo', sans-serif;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   background: transparent;
-  color: rgba(255,255,255,0.45);
-  transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+  color: rgba(255,255,255,0.4);
+  transition: background 0.25s var(--ease-smooth), color 0.25s var(--ease-smooth), box-shadow 0.25s var(--ease-smooth);
   outline: none;
   -webkit-tap-highlight-color: transparent;
   white-space: nowrap;
 }
 .mode-btn:hover {
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.65);
   background: rgba(255,255,255,0.06);
 }
 .mode-btn.active {
   background: var(--cyan);
   color: #fff;
-  box-shadow: 0 2px 12px rgba(56,196,242,0.35);
+  box-shadow: 0 2px 16px rgba(56,196,242,0.3);
 }
 .mode-btn svg {
   flex-shrink: 0;
 }
 
-/* ======= CAMERA OVERLAY (draggable) ======= */
+/* ======= CAMERA OVERLAY (draggable PiP) ======= */
 .camera-overlay {
   position: absolute;
-  bottom: 180px;
+  bottom: 200px;
   left: 24px;
   width: 18vw;
   min-width: 160px;
-  max-width: 280px;
+  max-width: 260px;
   aspect-ratio: 16/9;
   background: linear-gradient(135deg, #1a1f36, #111629);
-  border: 2px solid rgba(255,255,255,0.7);
-  border-radius: 10px;
+  border: 2px solid rgba(255,255,255,0.6);
+  border-radius: var(--radius-md);
   box-shadow: 0 8px 32px rgba(0,0,0,0.5);
   z-index: 12;
   cursor: grab;
@@ -293,7 +316,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: box-shadow 0.2s, opacity 0.3s, transform 0.3s;
+  transition: box-shadow 0.2s var(--ease-smooth), opacity 0.3s var(--ease-smooth), transform 0.3s var(--ease-out);
 }
 .camera-overlay:active { cursor: grabbing; box-shadow: 0 12px 40px rgba(0,0,0,0.7); }
 .camera-overlay .cam-placeholder {
@@ -302,43 +325,36 @@ body {
   align-items: center;
   gap: 6px;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
-/* Camera overlay size modes */
-.camera-overlay.full-mode {
-  /* Full camera = full screen, no overlay box */
-  display: none;
-}
-.camera-overlay.pip-mode {
-  display: flex;
-}
-.camera-overlay.hidden-mode {
-  display: none;
-}
+.camera-overlay.full-mode { display: none; }
+.camera-overlay.pip-mode { display: flex; }
+.camera-overlay.hidden-mode { display: none; }
 
-/* ======= AUDIO LEVEL STRIP (above control bar) ======= */
+/* ======= AUDIO LEVEL STRIP — subtle, above control bar ======= */
 .audio-strip {
   position: absolute;
-  bottom: 136px;
+  bottom: 144px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: flex-end;
   gap: 3px;
-  height: 20px;
+  height: 18px;
   z-index: 16;
-  opacity: 0.7;
+  opacity: 0.45;
+  transition: opacity 0.3s var(--ease-smooth);
 }
+.audio-strip.active { opacity: 0.6; }
 .audio-strip .meter-bar {
   width: 3px;
   border-radius: 1.5px;
   background: var(--green);
-  transition: height 0.1s ease;
+  transition: height 0.08s ease-out;
 }
-.audio-strip .meter-bar:nth-child(4),
 .audio-strip .meter-bar:nth-child(5) { background: var(--yellow); }
-.audio-strip .meter-bar:nth-child(6),
+.audio-strip .meter-bar:nth-child(6) { background: var(--amber); }
 .audio-strip .meter-bar:nth-child(7) { background: var(--red); }
 
 /* ======= BOTTOM CONTROL BAR ======= */
@@ -348,17 +364,17 @@ body {
   left: 0;
   right: 0;
   background: var(--surface);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(255,255,255,0.08);
-  padding: 0 24px 16px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 0 24px 20px;
   z-index: 15;
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-/* Take counter pill */
+/* Take counter pill — centered above controls */
 .take-pill {
   align-self: center;
   background: var(--cyan);
@@ -367,112 +383,29 @@ body {
   font-weight: 600;
   font-size: 13px;
   padding: 4px 16px;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
   margin-top: 12px;
-  margin-bottom: 8px;
-  transition: transform 0.3s, opacity 0.3s;
+  margin-bottom: 4px;
+  transition: transform 0.3s var(--ease-out), opacity 0.3s var(--ease-out);
   opacity: 0;
-  transform: scale(0.8);
+  transform: scale(0.8) translateY(4px);
 }
 .take-pill.visible {
   opacity: 1;
-  transform: scale(1);
+  transform: scale(1) translateY(0);
 }
 
-/* Main TikTok-style controls row */
+/* ======= TIKTOK-STYLE CONTROLS ROW ======= */
 .tiktok-controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 28px;
-  min-height: 90px;
+  gap: 32px;
+  min-height: 96px;
   position: relative;
 }
 
-/* Control buttons */
-.ctrl-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text);
-  font-family: 'Heebo', sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 0.3s, opacity 0.3s;
-}
-.ctrl-btn:hover { transform: scale(1.05); }
-.ctrl-btn:active { transform: scale(0.95); }
-
-/* Hidden state for buttons that come/go */
-.ctrl-btn.hidden {
-  opacity: 0;
-  transform: scale(0.6);
-  pointer-events: none;
-  position: absolute;
-}
-.ctrl-btn.hidden-left {
-  opacity: 0;
-  transform: scale(0.6) translateX(40px);
-  pointer-events: none;
-  position: absolute;
-  right: calc(50% + 60px);
-}
-.ctrl-btn.hidden-right {
-  opacity: 0;
-  transform: scale(0.6) translateX(-40px);
-  pointer-events: none;
-  position: absolute;
-  left: calc(50% + 60px);
-}
-
-/* Center big button */
-.center-btn-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.big-circle {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border: none;
-  transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.big-circle:hover { transform: scale(1.08); }
-.big-circle:active { transform: scale(0.93); }
-
-.big-circle.red {
-  background: var(--red);
-  box-shadow: 0 0 24px rgba(229,62,62,0.4);
-}
-.big-circle.green {
-  background: var(--green);
-  box-shadow: 0 0 24px rgba(125,197,122,0.4);
-}
-
-.center-label {
-  font-family: 'Heebo', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text);
-  transition: color 0.3s;
-}
-
-/* Side action buttons */
+/* Side action buttons (delete, finish) */
 .side-btn {
   display: flex;
   flex-direction: column;
@@ -482,15 +415,21 @@ body {
   border: none;
   cursor: pointer;
   color: var(--text);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.25s var(--ease-out), opacity 0.25s var(--ease-out);
+}
+.side-btn:hover { transform: scale(1.06); }
+.side-btn:active { transform: scale(0.94); }
+
+.side-btn .side-label {
   font-family: 'Heebo', sans-serif;
   font-size: 11px;
   font-weight: 500;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 0.3s, opacity 0.3s;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
-.side-btn:hover { transform: scale(1.05); }
-.side-btn:active { transform: scale(0.95); }
+
 .side-btn.hidden {
   opacity: 0;
   transform: scale(0.6);
@@ -502,45 +441,102 @@ body {
 }
 
 .side-icon {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.3s, box-shadow 0.3s;
+  transition: background 0.25s var(--ease-smooth), box-shadow 0.25s var(--ease-smooth), border-color 0.25s var(--ease-smooth);
 }
 
 .side-icon.delete {
-  background: rgba(229,62,62,0.15);
-  border: 2px solid rgba(229,62,62,0.4);
+  background: rgba(229,62,62,0.12);
+  border: 1.5px solid rgba(229,62,62,0.35);
 }
 .side-btn:hover .side-icon.delete {
-  background: rgba(229,62,62,0.3);
+  background: rgba(229,62,62,0.22);
+  border-color: rgba(229,62,62,0.5);
 }
 
 .side-icon.finish {
-  background: rgba(229,62,62,0.2);
-  border: 2px solid var(--red);
+  background: rgba(229,62,62,0.15);
+  border: 1.5px solid rgba(229,62,62,0.6);
 }
 .side-btn:hover .side-icon.finish {
-  background: rgba(229,62,62,0.35);
+  background: rgba(229,62,62,0.28);
+  box-shadow: 0 0 16px rgba(229,62,62,0.2);
 }
 
-/* ======= MINI TIMELINE (bottom strip) ======= */
+/* ======= CENTER BIG BUTTON ======= */
+.center-btn-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.big-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  transition: background 0.3s var(--ease-smooth), box-shadow 0.3s var(--ease-smooth), transform 0.2s var(--ease-out);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+.big-circle:hover { transform: scale(1.08); }
+.big-circle:active { transform: scale(0.92); }
+
+.big-circle.red {
+  background: var(--red);
+  box-shadow: 0 0 0 4px rgba(229,62,62,0.15), 0 4px 24px rgba(229,62,62,0.35);
+}
+.big-circle.green {
+  background: var(--green);
+  box-shadow: 0 0 0 4px rgba(34,197,94,0.15), 0 4px 24px rgba(34,197,94,0.35);
+}
+
+/* Outer ring animation for recording state */
+.big-circle.red.recording {
+  animation: ring-pulse 2s ease-in-out infinite;
+}
+
+@keyframes ring-pulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(229,62,62,0.15), 0 4px 24px rgba(229,62,62,0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(229,62,62,0.08), 0 4px 32px rgba(229,62,62,0.25); }
+}
+
+.center-label {
+  font-family: 'Heebo', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color 0.3s var(--ease-smooth);
+  white-space: nowrap;
+}
+
+/* ======= MINI TIMELINE ======= */
 .mini-timeline {
   width: 100%;
-  height: 22px;
+  height: 4px;
   position: relative;
   display: flex;
-  border-radius: 4px;
+  border-radius: 2px;
   overflow: hidden;
-  background: rgba(255,255,255,0.05);
-  margin-top: 10px;
-  transition: height 0.3s;
+  background: rgba(255,255,255,0.04);
+  margin-top: 8px;
+  transition: height 0.3s var(--ease-out), margin-top 0.3s var(--ease-out);
 }
 .mini-timeline.expanded {
-  height: 32px;
+  height: 28px;
+  border-radius: 6px;
+  margin-top: 12px;
 }
 
 .timeline-segment {
@@ -548,14 +544,14 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  min-width: 30px;
-  transition: flex 0.3s, opacity 0.3s, min-width 0.3s;
+  min-width: 24px;
+  transition: flex 0.3s var(--ease-out), opacity 0.3s var(--ease-out), min-width 0.3s var(--ease-out);
   cursor: pointer;
 }
 
-.timeline-segment:nth-child(odd) { background: rgba(56,196,242,0.25); }
-.timeline-segment:nth-child(even) { background: rgba(56,196,242,0.12); }
-.timeline-segment.current { background: rgba(56,196,242,0.4); }
+.timeline-segment:nth-child(odd) { background: rgba(56,196,242,0.2); }
+.timeline-segment:nth-child(even) { background: rgba(56,196,242,0.1); }
+.timeline-segment.current { background: rgba(56,196,242,0.35); }
 
 .timeline-segment.removing {
   opacity: 0;
@@ -564,34 +560,39 @@ body {
 }
 
 .segment-label {
-  font-size: 9px;
+  font-size: 10px;
   font-family: 'Fredoka', sans-serif;
   font-weight: 600;
-  color: rgba(255,255,255,0.6);
-  padding-right: 6px;
+  color: rgba(255,255,255,0.5);
+  padding-right: 8px;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-smooth);
+}
+.mini-timeline.expanded .segment-label {
+  opacity: 1;
 }
 
 /* Insert take button between segments */
 .timeline-insert-btn {
-  width: 18px;
-  min-width: 18px;
+  width: 16px;
+  min-width: 16px;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background: rgba(56,196,242,0.08);
+  background: rgba(56,196,242,0.06);
   border: none;
   padding: 0;
   position: relative;
-  transition: background 0.2s;
+  transition: background 0.2s var(--ease-smooth);
 }
 .timeline-insert-btn:hover {
-  background: rgba(56,196,242,0.25);
+  background: rgba(56,196,242,0.2);
 }
 .timeline-insert-btn svg {
-  opacity: 0.5;
-  transition: opacity 0.2s;
+  opacity: 0.4;
+  transition: opacity 0.2s var(--ease-smooth);
 }
 .timeline-insert-btn:hover svg {
   opacity: 1;
@@ -599,18 +600,18 @@ body {
 .timeline-insert-btn .insert-tooltip {
   display: none;
   position: absolute;
-  bottom: calc(100% + 6px);
+  bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  background: #1e2440;
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 8px;
-  padding: 5px 10px;
+  background: var(--surface-panel);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
   font-size: 11px;
   font-family: 'Heebo', sans-serif;
   white-space: nowrap;
   color: var(--text);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
   z-index: 20;
 }
 .timeline-insert-btn:hover .insert-tooltip {
@@ -623,26 +624,37 @@ body {
   width: 2px;
   height: 100%;
   background: #fff;
-  box-shadow: 0 0 6px rgba(255,255,255,0.5);
+  box-shadow: 0 0 6px rgba(255,255,255,0.4);
   transition: right 0.3s linear;
   z-index: 2;
 }
 
-/* ======= TAKES PANEL (visible when paused) ======= */
+/* ======= TAKES PANEL — slides up smoothly ======= */
 .takes-panel {
-  display: none;
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.08);
-  padding: 12px 14px;
-  margin-top: 10px;
-  max-height: 160px;
-  overflow-y: auto;
-  transition: opacity 0.3s;
+  background: var(--surface-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 12px 16px;
+  margin-top: 8px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: max-height 0.3s var(--ease-out), opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out), padding 0.3s var(--ease-out), margin-top 0.3s var(--ease-out);
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
 }
-.takes-panel.visible { display: block; }
+.takes-panel.visible {
+  max-height: 200px;
+  opacity: 1;
+  transform: translateY(0);
+  padding: 12px 16px;
+  margin-top: 8px;
+  overflow-y: auto;
+}
 
 .takes-panel-title {
   font-family: 'Fredoka', sans-serif;
@@ -659,14 +671,14 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 8px;
-  border-radius: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
   background: rgba(255,255,255,0.03);
   margin-bottom: 4px;
-  transition: background 0.15s;
+  transition: background 0.15s var(--ease-smooth);
 }
 .take-row:hover {
-  background: rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.06);
 }
 .take-row:last-child { margin-bottom: 0; }
 
@@ -680,7 +692,8 @@ body {
 }
 
 .take-duration {
-  font-family: 'Fredoka', monospace;
+  font-family: 'Fredoka', sans-serif;
+  font-variant-numeric: tabular-nums;
   font-size: 12px;
   color: var(--text-muted);
   min-width: 42px;
@@ -688,36 +701,43 @@ body {
 
 .take-note-input {
   flex: 1;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 6px;
-  padding: 4px 10px;
+  padding: 5px 10px;
   font-family: 'Heebo', sans-serif;
   font-size: 12px;
   color: var(--text);
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s var(--ease-smooth), background 0.2s var(--ease-smooth);
 }
 .take-note-input:focus {
   border-color: var(--cyan);
+  background: rgba(56,196,242,0.04);
 }
 .take-note-input::placeholder {
-  color: rgba(255,255,255,0.25);
+  color: var(--text-dim);
 }
 
 /* ======= CONFIRMATION DIALOG ======= */
 .dialog-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: none;
+  background: rgba(0,0,0,0.65);
+  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s var(--ease-smooth);
 }
-.dialog-overlay.visible { display: flex; }
+.dialog-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
 
 .dialog {
   background: #1a1f36;
@@ -726,11 +746,16 @@ body {
   max-width: 360px;
   width: 90%;
   text-align: center;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  transform: scale(0.95) translateY(8px);
+  transition: transform 0.2s var(--ease-out);
+}
+.dialog-overlay.visible .dialog {
+  transform: scale(1) translateY(0);
 }
 
-.dialog-icon { margin-bottom: 12px; }
+.dialog-icon { margin-bottom: 16px; }
 
 .dialog h3 {
   font-family: 'Fredoka', sans-serif;
@@ -742,7 +767,7 @@ body {
 .dialog p {
   font-size: 14px;
   color: var(--text-muted);
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .dialog-actions {
@@ -753,7 +778,7 @@ body {
 
 .dialog-btn {
   padding: 10px 24px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   border: none;
   font-family: 'Heebo', sans-serif;
   font-size: 14px;
@@ -761,15 +786,15 @@ body {
   cursor: pointer;
   min-width: 44px;
   min-height: 44px;
-  transition: transform 0.15s, opacity 0.15s;
+  transition: transform 0.15s var(--ease-out), opacity 0.15s var(--ease-smooth);
 }
 .dialog-btn:hover { transform: scale(1.03); }
 .dialog-btn:active { transform: scale(0.97); }
 
 .dialog-btn.cancel {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.06);
   color: var(--text);
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.12);
 }
 
 .dialog-btn.confirm-red {
@@ -790,7 +815,7 @@ body {
 /* ======= TOAST ======= */
 .toast-container {
   position: fixed;
-  top: 80px;
+  top: 120px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 200;
@@ -801,23 +826,23 @@ body {
 }
 
 .toast {
-  background: #1e2440;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 14px;
-  padding: 12px 20px;
-  font-size: 14px;
+  background: var(--surface-panel);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-pill);
+  padding: 10px 20px;
+  font-size: 13px;
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-  animation: toast-in 0.3s ease;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: toast-in 0.3s var(--ease-out);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .toast.leaving {
-  animation: toast-out 0.3s ease forwards;
+  animation: toast-out 0.25s var(--ease-smooth) forwards;
 }
 
 .toast-undo {
@@ -838,30 +863,30 @@ body {
 .toast-undo:hover { background: rgba(56,196,242,0.1); }
 
 @keyframes toast-in {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 @keyframes toast-out {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(-10px); }
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-10px) scale(0.95); }
 }
 
 /* ======= KEYBOARD HINTS ======= */
 kbd {
   display: inline-block;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 4px;
   padding: 1px 6px;
   font-family: 'Fredoka', monospace;
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--text-dim);
 }
 
 /* ======= SCROLLBAR ======= */
-.takes-panel::-webkit-scrollbar { width: 4px; }
+.takes-panel::-webkit-scrollbar { width: 3px; }
 .takes-panel::-webkit-scrollbar-track { background: transparent; }
-.takes-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+.takes-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
 </style>
 </head>
 <body>
@@ -884,7 +909,7 @@ kbd {
 
   <!-- Top overlay -->
   <div class="top-overlay">
-    <!-- Recording indicator (top-right in RTL = visually right) -->
+    <!-- Recording indicator (top-right in RTL) -->
     <div class="rec-indicator hidden" id="recIndicator">
       <div class="rec-dot" id="recDot"></div>
       <span class="rec-label" id="recLabel">REC</span>
@@ -898,30 +923,25 @@ kbd {
   <!-- Lesson name pill -->
   <div class="lesson-pill">שיעור 3: צבע ומשמעות</div>
 
-  <!-- Mode Switcher (camera / screen+camera / screen) -->
+  <!-- Mode Switcher -->
   <div class="mode-switcher" id="modeSwitcher">
     <button class="mode-btn active" id="modeCamera" data-mode="camera" title="מצלמה בלבד">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M23 7l-7 5 7 5V7z"/>
         <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
       </svg>
       <span>מצלמה</span>
     </button>
     <button class="mode-btn" id="modeScreenCam" data-mode="screen-cam" title="מסך + מצלמה">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="2" y="3" width="20" height="14" rx="2"/>
         <line x1="8" y1="21" x2="16" y2="21"/>
         <line x1="12" y1="17" x2="12" y2="21"/>
       </svg>
-      <span>+</span>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M23 7l-7 5 7 5V7z"/>
-        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-      </svg>
       <span>מסך + מצלמה</span>
     </button>
     <button class="mode-btn" id="modeScreen" data-mode="screen" title="מסך בלבד">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="2" y="3" width="20" height="14" rx="2"/>
         <line x1="8" y1="21" x2="16" y2="21"/>
         <line x1="12" y1="17" x2="12" y2="21"/>
@@ -941,15 +961,15 @@ kbd {
     </div>
   </div>
 
-  <!-- Audio level strip (above control bar) -->
+  <!-- Audio level strip -->
   <div class="audio-strip" id="audioStrip">
-    <div class="meter-bar" style="height:4px"></div>
-    <div class="meter-bar" style="height:6px"></div>
-    <div class="meter-bar" style="height:10px"></div>
-    <div class="meter-bar" style="height:14px"></div>
-    <div class="meter-bar" style="height:8px"></div>
-    <div class="meter-bar" style="height:5px"></div>
     <div class="meter-bar" style="height:3px"></div>
+    <div class="meter-bar" style="height:5px"></div>
+    <div class="meter-bar" style="height:8px"></div>
+    <div class="meter-bar" style="height:12px"></div>
+    <div class="meter-bar" style="height:7px"></div>
+    <div class="meter-bar" style="height:4px"></div>
+    <div class="meter-bar" style="height:2px"></div>
   </div>
 
   <!-- Bottom control bar -->
@@ -967,34 +987,28 @@ kbd {
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
           </svg>
         </div>
-        <span>מחק טייק אחרון</span>
+        <span class="side-label">מחק טייק</span>
       </button>
 
       <!-- Center big button -->
       <div class="center-btn-wrap" id="centerWrap">
-        <button class="big-circle red" id="bigBtn">
-          <!-- Initial: empty red circle (start recording) -->
-          <!-- Recording: pause icon -->
-          <!-- Paused: play icon (green) -->
-        </button>
+        <button class="big-circle red" id="bigBtn"></button>
         <span class="center-label" id="centerLabel">התחל הקלטה</span>
       </div>
 
-      <!-- Finish recording (visible during recording & paused) -->
+      <!-- Finish recording -->
       <button class="side-btn hidden" id="btnFinish" title="סיים הקלטה (Esc)">
         <div class="side-icon finish">
           <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
             <rect x="3" y="3" width="14" height="14" rx="2" fill="currentColor"/>
           </svg>
         </div>
-        <span>סיים הקלטה</span>
+        <span class="side-label">סיים הקלטה</span>
       </button>
     </div>
 
     <!-- Mini timeline -->
-    <div class="mini-timeline" id="miniTimeline">
-      <!-- Segments injected by JS -->
-    </div>
+    <div class="mini-timeline" id="miniTimeline"></div>
 
     <!-- Takes panel (visible when paused) -->
     <div class="takes-panel" id="takesPanel">
@@ -1012,7 +1026,7 @@ kbd {
   <div class="dialog">
     <div class="dialog-icon">
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-        <circle cx="24" cy="24" r="22" fill="rgba(229,62,62,0.15)" stroke="#e53e3e" stroke-width="2"/>
+        <circle cx="24" cy="24" r="22" fill="rgba(229,62,62,0.12)" stroke="#e53e3e" stroke-width="1.5"/>
         <path d="M16 18h16M20 18v-2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M30 18v14a2 2 0 0 1-2 2H20a2 2 0 0 1-2-2V18" stroke="#e53e3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
@@ -1030,7 +1044,7 @@ kbd {
   <div class="dialog">
     <div class="dialog-icon">
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-        <circle cx="24" cy="24" r="22" fill="rgba(56,196,242,0.1)" stroke="#38C4F2" stroke-width="2"/>
+        <circle cx="24" cy="24" r="22" fill="rgba(56,196,242,0.08)" stroke="#38C4F2" stroke-width="1.5"/>
         <rect x="16" y="16" width="16" height="16" rx="3" fill="#38C4F2"/>
       </svg>
     </div>
@@ -1048,18 +1062,16 @@ kbd {
 
 <script>
 // ======= STATE =======
-// States: 'initial' | 'recording' | 'paused' | 'done'
 const state = {
   phase: 'initial',
   seconds: 0,
   takeNum: 0,
-  takes: [], // { start, duration, note }
+  takes: [],
   intervalId: null,
   meterIntervalId: null,
-  currentMode: 'camera', // 'camera' | 'screen-cam' | 'screen'
+  currentMode: 'camera',
 };
 
-// Demo take notes (pre-filled after first 3 takes)
 const demoNotes = ['יצא סבבה', 'פתיח טוב', 'מבוא ויסודות'];
 
 // ======= ELEMENTS =======
@@ -1110,23 +1122,17 @@ function updateTimerDisplay() {
 // ======= MODE SWITCHER =======
 function setMode(mode) {
   state.currentMode = mode;
-
-  // Update button active states
   document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.mode === mode);
   });
 
-  // Update visuals
   if (mode === 'camera') {
-    // Full camera view, no screen share, hide PiP overlay (camera is full-screen)
     screenShareBg.classList.remove('visible');
     cameraOverlay.style.display = 'none';
   } else if (mode === 'screen-cam') {
-    // Screen share bg + camera PiP
     screenShareBg.classList.add('visible');
     cameraOverlay.style.display = 'flex';
   } else if (mode === 'screen') {
-    // Screen share bg only, no camera
     screenShareBg.classList.add('visible');
     cameraOverlay.style.display = 'none';
   }
@@ -1137,7 +1143,6 @@ function setMode(mode) {
   }
 }
 
-// Mode button click handlers
 document.querySelectorAll('.mode-btn').forEach(btn => {
   btn.addEventListener('click', () => setMode(btn.dataset.mode));
 });
@@ -1152,6 +1157,9 @@ function renderControls() {
   } else {
     recIndicator.classList.remove('hidden');
   }
+
+  // REC indicator border color for state
+  recIndicator.classList.toggle('state-paused', phase === 'paused');
 
   // REC dot & label
   if (phase === 'recording') {
@@ -1169,42 +1177,50 @@ function renderControls() {
     recDot.style.background = 'var(--green)';
     recLabel.textContent = 'DONE';
     recLabel.classList.remove('paused');
+    recLabel.style.color = 'var(--green)';
   }
+
+  // Audio strip
+  audioStrip.classList.toggle('active', phase === 'recording');
 
   // Big center button
   if (phase === 'initial') {
     bigBtn.className = 'big-circle red';
     bigBtn.innerHTML = '';
     centerLabel.textContent = 'התחל הקלטה';
+    centerLabel.style.color = '';
   } else if (phase === 'recording') {
-    bigBtn.className = 'big-circle red';
+    bigBtn.className = 'big-circle red recording';
     bigBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-      <rect x="7" y="5" width="4.5" height="18" rx="1.5" fill="#fff"/>
-      <rect x="16.5" y="5" width="4.5" height="18" rx="1.5" fill="#fff"/>
+      <rect x="7" y="6" width="4.5" height="16" rx="1.5" fill="#fff"/>
+      <rect x="16.5" y="6" width="4.5" height="16" rx="1.5" fill="#fff"/>
     </svg>`;
-    centerLabel.textContent = 'עצור';
+    centerLabel.textContent = 'השהה';
+    centerLabel.style.color = '';
   } else if (phase === 'paused') {
     bigBtn.className = 'big-circle green';
     bigBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none">
       <path d="M10 5.5L23 14L10 22.5V5.5Z" fill="#0a0e1a"/>
     </svg>`;
-    centerLabel.textContent = 'המשך';
+    centerLabel.textContent = 'המשך הקלטה';
+    centerLabel.style.color = 'var(--green)';
   } else if (phase === 'done') {
     bigBtn.className = 'big-circle red';
-    bigBtn.style.opacity = '0.4';
+    bigBtn.style.opacity = '0.3';
     bigBtn.style.pointerEvents = 'none';
     bigBtn.innerHTML = '';
     centerLabel.textContent = 'ההקלטה הסתיימה';
+    centerLabel.style.color = 'var(--green)';
   }
 
-  // Delete button (only when paused & more than 1 take)
+  // Delete button
   if (phase === 'paused' && state.takes.length >= 1) {
     btnDelete.classList.remove('hidden');
   } else {
     btnDelete.classList.add('hidden');
   }
 
-  // Finish button (recording or paused)
+  // Finish button
   if (phase === 'recording' || phase === 'paused') {
     btnFinish.classList.remove('hidden');
   } else {
@@ -1219,7 +1235,7 @@ function renderControls() {
     takePill.classList.remove('visible');
   }
 
-  // Takes panel (visible when paused with takes)
+  // Takes panel & timeline expansion
   if (phase === 'paused' && state.takes.length > 0) {
     takesPanel.classList.add('visible');
     miniTimeline.classList.add('expanded');
@@ -1234,9 +1250,8 @@ function renderControls() {
 function renderTakesPanel() {
   let html = '';
   state.takes.forEach((take, i) => {
-    const note = take.note || '';
-    const placeholder = demoNotes[i] !== undefined && !take.note ? demoNotes[i] : 'הוסף הערה...';
     const value = take.note || (demoNotes[i] !== undefined ? demoNotes[i] : '');
+    const placeholder = 'הוסף הערה...';
     html += `<div class="take-row">
       <span class="take-number">${i + 1}</span>
       <span class="take-duration">${formatTime(take.duration)}</span>
@@ -1245,7 +1260,6 @@ function renderTakesPanel() {
   });
   takesList.innerHTML = html;
 
-  // Attach input handlers
   takesList.querySelectorAll('.take-note-input').forEach(input => {
     input.addEventListener('input', e => {
       const idx = parseInt(e.target.dataset.takeIndex);
@@ -1253,7 +1267,6 @@ function renderTakesPanel() {
         state.takes[idx].note = e.target.value;
       }
     });
-    // Prevent keyboard shortcuts when typing in note fields
     input.addEventListener('keydown', e => {
       e.stopPropagation();
     });
@@ -1277,7 +1290,6 @@ function startRecording() {
 }
 
 function pauseRecording() {
-  // Pressing "stop" during recording = pause (creates take boundary)
   state.phase = 'paused';
   renderControls();
   updateTimeline();
@@ -1286,7 +1298,6 @@ function pauseRecording() {
 
 function resumeRecording(insertAtIndex) {
   if (insertAtIndex !== undefined && insertAtIndex !== null) {
-    // Insert a new take at a specific position
     state.takeNum++;
     const newTake = { start: state.seconds, duration: 0, note: '' };
     state.takes.splice(insertAtIndex, 0, newTake);
@@ -1295,7 +1306,6 @@ function resumeRecording(insertAtIndex) {
     updateTimeline();
     showToast(`טייק חדש הוכנס במיקום ${insertAtIndex + 1}`, 'cyan');
   } else {
-    // Resume = start new take at end
     state.takeNum++;
     state.takes.push({ start: state.seconds, duration: 0, note: '' });
     state.phase = 'recording';
@@ -1332,7 +1342,6 @@ function confirmDeleteTake() {
   state.takeNum--;
   updateTimerDisplay();
 
-  // Animate segment removal
   const segments = miniTimeline.querySelectorAll('.timeline-segment');
   const lastSeg = segments[segments.length - 1];
   if (lastSeg) {
@@ -1347,7 +1356,6 @@ function confirmDeleteTake() {
   renderControls();
   showToast(`טייק ${state.takeNum + 1} נמחק`, 'red', true);
 
-  // If no takes left, go back to initial
   if (state.takes.length === 0) {
     state.phase = 'initial';
     state.takeNum = 0;
@@ -1363,7 +1371,6 @@ function confirmDeleteTake() {
 function requestStop() {
   $('stopDialogDesc').textContent = `משך כולל: ${formatTime(state.seconds)}`;
   $('dialogStop').classList.add('visible');
-  // Auto-pause if recording
   if (state.phase === 'recording') {
     state.phase = 'paused';
     renderControls();
@@ -1384,7 +1391,6 @@ function closeDialog(id) {
   $(id).classList.remove('visible');
 }
 
-// close dialog on overlay click
 document.querySelectorAll('.dialog-overlay').forEach(el => {
   el.addEventListener('click', e => {
     if (e.target === el) el.classList.remove('visible');
@@ -1400,10 +1406,9 @@ function updateTimeline() {
   state.takes.forEach((take, i) => {
     const isCurrent = i === state.takes.length - 1;
 
-    // Insert "+" button BEFORE each take (except the first) when paused
     if (isPaused && i > 0) {
       html += `<button class="timeline-insert-btn" data-insert-index="${i}" title="הקלט טייק חדש כאן">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round">
           <line x1="12" y1="5" x2="12" y2="19"/>
           <line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
@@ -1416,10 +1421,9 @@ function updateTimeline() {
     </div>`;
   });
 
-  // Insert "+" button AFTER the last take when paused
   if (isPaused && state.takes.length > 0) {
     html += `<button class="timeline-insert-btn" data-insert-index="${state.takes.length}" title="הקלט טייק חדש כאן">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round">
         <line x1="12" y1="5" x2="12" y2="19"/>
         <line x1="5" y1="12" x2="19" y2="12"/>
       </svg>
@@ -1432,7 +1436,6 @@ function updateTimeline() {
   }
   miniTimeline.innerHTML = html;
 
-  // Attach insert button handlers
   miniTimeline.querySelectorAll('.timeline-insert-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const idx = parseInt(btn.dataset.insertIndex);
@@ -1449,8 +1452,8 @@ function animateMeter() {
       bar.style.height = '2px';
       return;
     }
-    const bases = [8, 12, 16, 14, 10, 7, 4];
-    const h = Math.max(2, bases[i] + Math.random() * 10 - 3);
+    const bases = [6, 10, 14, 12, 8, 5, 3];
+    const h = Math.max(2, bases[i] + Math.random() * 8 - 2);
     bar.style.height = h + 'px';
   });
 }
@@ -1463,9 +1466,9 @@ function showToast(msg, color, withUndo) {
 
   const colors = {
     cyan: 'var(--cyan)', red: 'var(--red)', green: 'var(--green)',
-    yellow: 'var(--yellow)', pink: 'var(--pink)'
+    yellow: 'var(--amber)', pink: 'var(--pink)'
   };
-  toast.style.borderColor = colors[color] || 'rgba(255,255,255,0.12)';
+  toast.style.borderColor = colors[color] || 'rgba(255,255,255,0.08)';
 
   let inner = `<span style="color:${colors[color] || '#fff'}">${msg}</span>`;
   if (withUndo) {
@@ -1474,10 +1477,10 @@ function showToast(msg, color, withUndo) {
   toast.innerHTML = inner;
   container.appendChild(toast);
 
-  const timeout = withUndo ? 3000 : 2000;
+  const timeout = withUndo ? 3500 : 2000;
   setTimeout(() => {
     toast.classList.add('leaving');
-    setTimeout(() => toast.remove(), 300);
+    setTimeout(() => toast.remove(), 250);
   }, timeout);
 }
 
@@ -1489,7 +1492,7 @@ function undoDelete(btn) {
   const toastEl = btn.closest('.toast');
   if (toastEl) {
     toastEl.classList.add('leaving');
-    setTimeout(() => toastEl.remove(), 300);
+    setTimeout(() => toastEl.remove(), 250);
   }
   showToast('הטייק שוחזר', 'cyan');
 }
@@ -1512,7 +1515,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     if (dialogOpen) {
       dialogOpen.classList.remove('visible');
-      // If we paused for stop dialog, keep paused state
     } else if (state.phase === 'recording' || state.phase === 'paused') {
       requestStop();
     }
@@ -1529,7 +1531,6 @@ document.addEventListener('keydown', e => {
     if (state.phase === 'paused') requestDeleteTake();
   }
 
-  // Mode switching shortcuts: 1, 2, 3
   if (e.key === '1') setMode('camera');
   if (e.key === '2') setMode('screen-cam');
   if (e.key === '3') setMode('screen');
@@ -1554,7 +1555,6 @@ document.addEventListener('keydown', e => {
     const parent = cameraOverlay.parentElement.getBoundingClientRect();
     let x = e.clientX - parent.left - offsetX;
     let y = e.clientY - parent.top - offsetY;
-    // Clamp to parent
     const w = cameraOverlay.offsetWidth;
     const h = cameraOverlay.offsetHeight;
     x = Math.max(0, Math.min(x, parent.width - w));
@@ -1572,7 +1572,6 @@ document.addEventListener('keydown', e => {
     }
   });
 
-  // Touch support
   cameraOverlay.addEventListener('touchstart', e => {
     isDragging = true;
     const touch = e.touches[0];
@@ -1605,17 +1604,15 @@ document.addEventListener('keydown', e => {
   });
 })();
 
-// ======= DEMO: Pre-fill takes for demo mode =======
-// Auto-populate 3 demo takes when first starting
+// ======= DEMO: Pre-fill takes =======
 function initDemoTakes() {
-  // This runs on first start to show a realistic scenario
   state.phase = 'paused';
   state.takeNum = 3;
-  state.seconds = 207; // 3:27 total
+  state.seconds = 207;
   state.takes = [
-    { start: 0, duration: 72, note: 'יצא סבבה' },       // 1:12
-    { start: 72, duration: 45, note: 'פתיח טוב' },      // 0:45
-    { start: 117, duration: 90, note: 'מבוא ויסודות' },  // 1:30
+    { start: 0, duration: 72, note: 'יצא סבבה' },
+    { start: 72, duration: 45, note: 'פתיח טוב' },
+    { start: 117, duration: 90, note: 'מבוא ויסודות' },
   ];
   updateTimerDisplay();
   renderControls();
@@ -1624,8 +1621,6 @@ function initDemoTakes() {
 
 // ======= INIT =======
 state.meterIntervalId = setInterval(animateMeter, 100);
-
-// Start in demo mode with pre-filled takes
 initDemoTakes();
 </script>
 </body>

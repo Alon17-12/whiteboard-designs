@@ -668,7 +668,7 @@ function renderTakesList() {
           <span class="take-badge ${t.status === 'ok' ? 'badge-ok' : 'badge-review'}">${t.status === 'ok' ? 'תקין' : 'לבדיקה'}</span>
         </div>
         <span class="take-duration">${formatTime(t.duration)}</span>
-        <input class="take-note-input" type="text"
+        <input class="take-note-input" type="text" dir="rtl"
                value="${(t.note || '').replace(/"/g, '&quot;')}"
                placeholder="הוסף הערה..."
                onclick="event.stopPropagation()"
