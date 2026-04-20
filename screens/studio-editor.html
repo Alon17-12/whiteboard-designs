@@ -171,6 +171,64 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
 .subtitle-status{display:flex;align-items:center;gap:8px;padding:12px;background:var(--surface-2);border-radius:10px;margin-bottom:12px;font-size:13px;color:var(--text-sub);}
 .subtitle-status svg{width:20px;height:20px;color:var(--text-light);}
 
+/* ── INTRO/OUTRO ENHANCED ── */
+.intro-section-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--cyan);font-size:15px;font-weight:700;color:var(--text-main);}
+.intro-section-header svg{width:20px;height:20px;color:var(--cyan);}
+.outro-section-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--pink);font-size:15px;font-weight:700;color:var(--text-main);}
+.outro-section-header svg{width:20px;height:20px;color:var(--pink);}
+.template-card{aspect-ratio:16/9;border-radius:10px;border:2px solid var(--border);overflow:hidden;cursor:pointer;transition:all .2s;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;}
+.template-card:hover{border-color:var(--cyan);transform:translateY(-1px);}
+.template-card.active{border-color:var(--cyan);box-shadow:0 0 0 2px var(--cyan-light);}
+.template-card .check{position:absolute;top:4px;left:4px;width:18px;height:18px;border-radius:50%;background:var(--cyan);color:white;display:none;align-items:center;justify-content:center;}
+.template-card.active .check{display:flex;}
+.template-card .check svg{width:11px;height:11px;}
+.template-card-name{font-size:12px;font-weight:700;color:white;text-shadow:0 1px 3px rgba(0,0,0,0.5);z-index:1;}
+.template-card-hint{font-size:9px;color:rgba(255,255,255,0.7);z-index:1;margin-top:2px;text-align:center;}
+.template-card-badge{position:absolute;top:4px;right:4px;font-size:8px;font-weight:700;padding:2px 6px;border-radius:4px;z-index:2;}
+.upload-drop-zone{border:2px dashed var(--border);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface-2);margin-bottom:12px;}
+.upload-drop-zone:hover{border-color:var(--cyan);background:var(--cyan-light);}
+.upload-drop-zone.dragover{border-color:var(--cyan);background:var(--cyan-light);transform:scale(1.01);}
+.upload-drop-zone svg{width:28px;height:28px;color:var(--text-light);margin-bottom:4px;}
+.cta-badge{background:var(--pink);color:white;font-size:9px;font-weight:700;padding:2px 7px;border-radius:6px;position:absolute;top:4px;right:4px;z-index:2;}
+
+/* ── SUBTITLE STYLING ── */
+.sub-style-section{margin-bottom:16px;}
+.sub-style-label{font-size:12px;font-weight:600;color:var(--text-main);margin-bottom:8px;display:block;}
+.font-select{width:100%;padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);font-family:var(--font-he);font-size:13px;cursor:pointer;transition:all .2s;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23253E7A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 12px center;}
+.font-select:hover{border-color:var(--cyan);}
+.font-select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 2px var(--cyan-light);}
+.size-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.size-pill{padding:6px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-he);font-size:11px;font-weight:600;color:var(--text-sub);cursor:pointer;transition:all .2s;}
+.size-pill:hover{border-color:var(--cyan);}
+.size-pill.active{border-color:var(--cyan);background:var(--cyan-light);color:var(--navy);}
+.color-swatches{display:flex;gap:8px;align-items:center;}
+.color-swatch{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);cursor:pointer;transition:all .2s;position:relative;}
+.color-swatch:hover{transform:scale(1.1);}
+.color-swatch.active{border-color:var(--cyan);box-shadow:0 0 0 2px var(--cyan-light);}
+.color-swatch.active::after{content:'';position:absolute;inset:4px;border-radius:50%;border:2px solid white;}
+.bg-style-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.bg-pill{padding:6px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-he);font-size:11px;font-weight:600;color:var(--text-sub);cursor:pointer;transition:all .2s;}
+.bg-pill:hover{border-color:var(--cyan);}
+.bg-pill.active{border-color:var(--cyan);background:var(--cyan-light);color:var(--navy);}
+.shadow-toggle{display:flex;align-items:center;gap:10px;}
+.toggle-switch{width:36px;height:20px;border-radius:10px;background:var(--border);position:relative;cursor:pointer;transition:background .2s;}
+.toggle-switch.active{background:var(--cyan);}
+.toggle-switch::after{content:'';position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:white;box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:transform .2s;}
+.toggle-switch.active::after{transform:translateX(-16px);}
+.pos-pills{display:flex;gap:6px;}
+.pos-pill{padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-he);font-size:11px;font-weight:600;color:var(--text-sub);cursor:pointer;transition:all .2s;}
+.pos-pill:hover{border-color:var(--cyan);}
+.pos-pill.active{border-color:var(--cyan);background:var(--cyan-light);color:var(--navy);}
+.align-pills{display:flex;gap:6px;}
+.align-pill{width:34px;height:30px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;color:var(--text-sub);}
+.align-pill:hover{border-color:var(--cyan);}
+.align-pill.active{border-color:var(--cyan);background:var(--cyan-light);color:var(--navy);}
+.align-pill svg{width:16px;height:16px;}
+.sub-preview-strip{width:100%;border-radius:10px;overflow:hidden;margin-bottom:14px;position:relative;height:80px;background:#1a2740;}
+.sub-preview-video{width:100%;height:100%;background:linear-gradient(135deg,#0d1628 0%,#1a2f5e 100%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;position:relative;}
+.sub-preview-video.top-pos{align-items:flex-start;padding-top:8px;padding-bottom:0;}
+.sub-preview-text{font-size:14px;font-weight:600;padding:3px 10px;border-radius:4px;z-index:1;transition:all .3s;max-width:90%;text-align:center;line-height:1.4;}
+
 /* ── TIMELINE ── */
 .timeline-panel{flex-shrink:0;height:200px;background:var(--timeline-bg);border-top:1px solid var(--timeline-border);display:flex;flex-direction:column;position:relative;}
 .timeline-toolbar{display:flex;align-items:center;justify-content:space-between;padding:4px 12px;border-bottom:1px solid var(--timeline-border);flex-shrink:0;}
@@ -513,101 +571,161 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
 
       <!-- TAB 3: INTRO/OUTRO -->
       <div class="tool-content" id="tabIntros" style="display:none;">
-        <div class="tool-section">
-          <div class="tool-section-title">פתיח (Intro)</div>
 
-          <!-- Course Preset Template -->
-          <div class="template-thumb active" onclick="selectTemplate(this)" style="aspect-ratio:16/9;border-radius:12px;border:2px solid var(--cyan);overflow:hidden;cursor:pointer;position:relative;margin-bottom:12px;box-shadow:0 0 0 2px var(--cyan-light);">
-            <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a2f5e 0%,#253E7A 40%,#38C4F2 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;position:relative;">
-              <!-- Simulated course cover overlay -->
-              <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><rect fill=%22%23253E7A%22 width=%22200%22 height=%22200%22/><circle cx=%2240%22 cy=%2260%22 r=%2230%22 fill=%22%2338C4F2%22 opacity=%220.15%22/><circle cx=%22160%22 cy=%22140%22 r=%2250%22 fill=%22%23F05680%22 opacity=%220.1%22/></svg>') center/cover;opacity:0.4;"></div>
-              <div style="font-family:var(--font-en);font-size:14px;font-weight:700;color:white;z-index:1;text-shadow:0 1px 4px rgba(0,0,0,0.4);">פרק 2: צבע וטיפוגרפיה</div>
-              <div style="font-family:var(--font-he);font-size:12px;font-weight:500;color:rgba(255,255,255,0.85);z-index:1;margin-top:4px;">שיעור 3: צבע ומשמעות</div>
-              <div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-family:var(--font-en);font-size:9px;color:rgba(255,255,255,0.35);font-weight:600;letter-spacing:1px;z-index:1;">WHITEBOARD</div>
-            </div>
-            <!-- Badge: מותאם אישית -->
-            <div style="position:absolute;top:6px;right:6px;background:var(--cyan);color:white;font-size:9px;font-weight:700;padding:2px 7px;border-radius:6px;z-index:2;">מותאם אישית</div>
-            <!-- נבחר badge -->
-            <div class="check" style="display:flex;position:absolute;top:6px;left:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <!-- ═══ INTRO SECTION ═══ -->
+        <div class="tool-section" style="margin-bottom:24px;">
+          <div class="intro-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            פתיח (Intro)
           </div>
-          <div style="font-size:11px;color:var(--text-sub);margin-bottom:14px;margin-top:-8px;line-height:1.5;">
+
+          <!-- Course Preset — auto from cover -->
+          <div class="template-card active" onclick="selectTemplate(this)" style="aspect-ratio:16/9;border-radius:12px;border:2px solid var(--cyan);margin-bottom:10px;box-shadow:0 0 0 2px var(--cyan-light);">
+            <div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a2f5e 0%,#253E7A 40%,#38C4F2 100%);"></div>
+            <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><rect fill=%22%23253E7A%22 width=%22200%22 height=%22200%22/><circle cx=%2240%22 cy=%2260%22 r=%2230%22 fill=%22%2338C4F2%22 opacity=%220.15%22/><circle cx=%22160%22 cy=%22140%22 r=%2250%22 fill=%22%23F05680%22 opacity=%220.1%22/></svg>') center/cover;opacity:0.4;"></div>
+            <div style="font-family:var(--font-en);font-size:14px;font-weight:700;color:white;z-index:1;text-shadow:0 1px 4px rgba(0,0,0,0.4);">פרק 2: צבע וטיפוגרפיה</div>
+            <div style="font-family:var(--font-he);font-size:12px;font-weight:500;color:rgba(255,255,255,0.85);z-index:1;margin-top:4px;">שיעור 3: צבע ומשמעות</div>
+            <div style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-family:var(--font-en);font-size:9px;color:rgba(255,255,255,0.35);font-weight:600;letter-spacing:1px;z-index:1;">WHITEBOARD</div>
+            <div class="template-card-badge" style="background:var(--cyan);color:white;">פריסט מהקאבר</div>
+            <div class="check" style="display:flex;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div style="font-size:11px;color:var(--text-sub);margin-bottom:14px;line-height:1.5;">
             <strong style="color:var(--text-main);">פריסט אוטומטי מהקורס</strong> — תמונת הקאבר של הקורס עם כותרת הפרק והשיעור
           </div>
 
-          <div class="template-grid">
-            <div class="template-thumb" onclick="selectTemplate(this)">
-              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#253E7A,#38C4F2);">קלאסי</div>
+          <!-- 4 Template Cards -->
+          <div class="template-grid" style="margin-bottom:14px;">
+            <!-- Template 1: Minimalist -->
+            <div class="template-card" onclick="selectTemplate(this)">
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg,#f8f9fa 0%,#e9ecef 100%);"></div>
+              <div class="template-card-name" style="color:#253E7A;text-shadow:none;font-size:13px;">מינימלי</div>
+              <div class="template-card-hint" style="color:rgba(37,62,122,0.5);">רקע לבן, טקסט נכנס בעדינות</div>
               <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
             </div>
-            <div class="template-thumb" onclick="selectTemplate(this)">
-              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#F05680,#EAD654);">דינמי</div>
+            <!-- Template 2: Dynamic -->
+            <div class="template-card" onclick="selectTemplate(this)">
+              <div style="position:absolute;inset:0;background:linear-gradient(135deg,#0d1628 0%,#1a2740 50%,#F05680 100%);"></div>
+              <div class="template-card-name">דינמי</div>
+              <div class="template-card-hint">רקע כהה, כותרת מונפשת</div>
               <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
             </div>
-            <div class="template-thumb" onclick="selectTemplate(this)">
-              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#7DC57A,#38C4F2);">מינימלי</div>
+            <!-- Template 3: Branded -->
+            <div class="template-card" onclick="selectTemplate(this)">
+              <div style="position:absolute;inset:0;background:linear-gradient(135deg,#253E7A 0%,#38C4F2 50%,#F05680 100%);"></div>
+              <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);font-family:var(--font-en);font-size:8px;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:1px;">LOGO</div>
+              <div class="template-card-name">מותגי</div>
+              <div class="template-card-hint">גרדיאנט מותג + לוגו</div>
               <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
             </div>
-            <div class="template-thumb" onclick="selectTemplate(this)">
-              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#1a2f5e,#0d1628);">כהה</div>
+            <!-- Template 4: Classic -->
+            <div class="template-card" onclick="selectTemplate(this)">
+              <div style="position:absolute;inset:0;background:#000;"></div>
+              <div class="template-card-name" style="font-size:14px;letter-spacing:1px;">קלאסי</div>
+              <div class="template-card-hint">שחור פשוט, טקסט ממורכז</div>
               <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
             </div>
           </div>
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
-            <button class="btn-tool">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              העלה קליפ מותאם
-            </button>
-            <button class="btn-tool">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              תצוגה מקדימה
-            </button>
+
+          <!-- Upload custom clip -->
+          <div class="upload-drop-zone" id="introUploadZone" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="event.preventDefault();this.classList.remove('dragover');showToast('קליפ פתיח הועלה!')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div style="font-size:12px;font-weight:600;color:var(--text-sub);">העלה קליפ מותאם</div>
+            <div style="font-size:10px;color:var(--text-light);margin-top:2px;">גרור קובץ לכאן או לחץ לבחירה — MP4 / MOV</div>
           </div>
-          <div class="tool-row">
-            <span class="tool-label">משך:</span>
+
+          <!-- Duration -->
+          <div style="margin-bottom:12px;">
+            <span class="sub-style-label">משך פתיח:</span>
             <div class="duration-selector">
-              <button class="dur-btn active">5 שניות</button>
-              <button class="dur-btn">10 שניות</button>
+              <button class="dur-btn">3s</button>
+              <button class="dur-btn active">5s</button>
+              <button class="dur-btn">7s</button>
+              <button class="dur-btn">10s</button>
             </div>
           </div>
+
+          <!-- Preview -->
+          <button class="btn-tool-primary" onclick="showToast('מציג תצוגה מקדימה של הפתיח...')" style="width:100%;justify-content:center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            תצוגה מקדימה
+          </button>
         </div>
 
-        <div class="tool-section" style="border-top:1px solid var(--border);padding-top:16px;">
-          <div class="tool-section-title">סגיר (Outro)</div>
-          <div class="template-grid">
-            <div class="template-thumb" onclick="selectTemplate(this)">
-              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#253E7A,#38C4F2);">קלאסי</div>
+        <!-- ═══ OUTRO SECTION ═══ -->
+        <div class="tool-section" style="border-top:2px solid var(--border);padding-top:20px;">
+          <div class="outro-section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+            סגיר (Outro)
+          </div>
+
+          <!-- 4 Template Cards + CTA -->
+          <div class="template-grid" style="margin-bottom:8px;">
+            <!-- Template 1: Minimalist -->
+            <div class="template-card" onclick="selectTemplate(this)">
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg,#f8f9fa 0%,#e9ecef 100%);"></div>
+              <div class="template-card-name" style="color:#253E7A;text-shadow:none;">מינימלי</div>
+              <div class="template-card-hint" style="color:rgba(37,62,122,0.5);">רקע לבן, טקסט נכנס בעדינות</div>
               <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
             </div>
-            <div class="template-thumb" onclick="selectTemplate(this)">
-              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#F05680,#EAD654);">CTA</div>
+            <!-- Template 2: Dynamic -->
+            <div class="template-card" onclick="selectTemplate(this)">
+              <div style="position:absolute;inset:0;background:linear-gradient(135deg,#0d1628 0%,#1a2740 50%,#F05680 100%);"></div>
+              <div class="template-card-name">דינמי</div>
+              <div class="template-card-hint">רקע כהה, כותרת מונפשת</div>
               <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
             </div>
-            <div class="template-thumb" onclick="selectTemplate(this)">
-              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#7DC57A,#38C4F2);">סיכום</div>
+            <!-- Template 3: Branded -->
+            <div class="template-card" onclick="selectTemplate(this)">
+              <div style="position:absolute;inset:0;background:linear-gradient(135deg,#253E7A 0%,#38C4F2 50%,#F05680 100%);"></div>
+              <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);font-family:var(--font-en);font-size:8px;color:rgba(255,255,255,0.5);font-weight:700;letter-spacing:1px;">LOGO</div>
+              <div class="template-card-name">מותגי</div>
+              <div class="template-card-hint">גרדיאנט מותג + לוגו</div>
               <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
             </div>
-            <div class="template-thumb" onclick="selectTemplate(this)">
-              <div class="template-thumb-inner" style="background:linear-gradient(135deg,#1a2f5e,#0d1628);">כהה</div>
+            <!-- Template 4: Classic -->
+            <div class="template-card" onclick="selectTemplate(this)">
+              <div style="position:absolute;inset:0;background:#000;"></div>
+              <div class="template-card-name" style="font-size:14px;letter-spacing:1px;">קלאסי</div>
+              <div class="template-card-hint">שחור פשוט, טקסט ממורכז</div>
               <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
             </div>
           </div>
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
-            <button class="btn-tool">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              העלה קליפ מותאם
-            </button>
-            <button class="btn-tool">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              תצוגה מקדימה
-            </button>
+
+          <!-- CTA Template (special) -->
+          <div class="template-card active" onclick="selectTemplate(this)" style="aspect-ratio:16/9;border-radius:12px;border:2px solid var(--pink);margin-bottom:14px;box-shadow:0 0 0 2px rgba(240,86,128,0.15);">
+            <div style="position:absolute;inset:0;background:linear-gradient(135deg,#253E7A 0%,#F05680 100%);"></div>
+            <div class="cta-badge">CTA</div>
+            <div class="template-card-name" style="font-size:14px;">CTA — קריאה לפעולה</div>
+            <div class="template-card-hint" style="margin-top:4px;font-size:10px;">
+              "הירשם עכשיו" / "צפה בשיעור הבא"
+            </div>
+            <div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:white;color:#253E7A;font-size:8px;font-weight:700;padding:3px 10px;border-radius:4px;z-index:1;">הירשם עכשיו &larr;</div>
+            <div class="check" style="display:flex;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
           </div>
-          <div class="tool-row">
-            <span class="tool-label">משך:</span>
+
+          <!-- Upload custom clip -->
+          <div class="upload-drop-zone" id="outroUploadZone" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="event.preventDefault();this.classList.remove('dragover');showToast('קליפ סגיר הועלה!')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div style="font-size:12px;font-weight:600;color:var(--text-sub);">העלה קליפ מותאם</div>
+            <div style="font-size:10px;color:var(--text-light);margin-top:2px;">גרור קובץ לכאן או לחץ לבחירה — MP4 / MOV</div>
+          </div>
+
+          <!-- Duration -->
+          <div style="margin-bottom:12px;">
+            <span class="sub-style-label">משך סגיר:</span>
             <div class="duration-selector">
-              <button class="dur-btn">5 שניות</button>
-              <button class="dur-btn active">10 שניות</button>
+              <button class="dur-btn">3s</button>
+              <button class="dur-btn">5s</button>
+              <button class="dur-btn">7s</button>
+              <button class="dur-btn active">10s</button>
             </div>
           </div>
+
+          <!-- Preview -->
+          <button class="btn-tool-primary" onclick="showToast('מציג תצוגה מקדימה של הסגיר...')" style="width:100%;justify-content:center;background:var(--pink);box-shadow:0 2px 8px rgba(240,86,128,0.3);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            תצוגה מקדימה
+          </button>
         </div>
       </div>
 
@@ -672,7 +790,104 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
           </div>
         </div>
 
-        <div class="tool-section">
+        <!-- Live Preview Strip -->
+        <div class="sub-style-section">
+          <span class="sub-style-label">תצוגה מקדימה</span>
+          <div class="sub-preview-strip" id="subPreviewStrip">
+            <div class="sub-preview-video" id="subPreviewVideo">
+              <!-- Fake video frame lines -->
+              <div style="position:absolute;top:12px;right:14px;width:40px;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;"></div>
+              <div style="position:absolute;top:12px;right:60px;width:24px;height:6px;background:rgba(255,255,255,0.05);border-radius:3px;"></div>
+              <div style="position:absolute;top:24px;right:14px;width:55px;height:4px;background:rgba(255,255,255,0.04);border-radius:2px;"></div>
+              <div class="sub-preview-text" id="subPreviewText" style="font-family:'Heebo',sans-serif;font-size:14px;color:white;background:rgba(0,0,0,0.6);text-shadow:none;">
+                זוהי דוגמה לכתובית בסרטון
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Font Selector -->
+        <div class="sub-style-section">
+          <span class="sub-style-label">גופן</span>
+          <select class="font-select" id="subFontSelect" onchange="updateSubPreview()">
+            <option value="'Heebo',sans-serif" selected>Heebo</option>
+            <option value="'Fredoka',sans-serif">Fredoka</option>
+            <option value="'Assistant',sans-serif">Assistant</option>
+            <option value="'Rubik',sans-serif">Rubik</option>
+            <option value="'Frank Ruhl Libre',serif">Frank Ruhl Libre</option>
+          </select>
+        </div>
+
+        <!-- Font Size -->
+        <div class="sub-style-section">
+          <span class="sub-style-label">גודל טקסט</span>
+          <div class="size-pills" id="subSizePills">
+            <button class="size-pill" data-size="14" onclick="setSubSize(this)">קטן</button>
+            <button class="size-pill active" data-size="18" onclick="setSubSize(this)">בינוני</button>
+            <button class="size-pill" data-size="24" onclick="setSubSize(this)">גדול</button>
+            <button class="size-pill" data-size="32" onclick="setSubSize(this)">ענק</button>
+          </div>
+        </div>
+
+        <!-- Text Color -->
+        <div class="sub-style-section">
+          <span class="sub-style-label">צבע טקסט</span>
+          <div class="color-swatches" id="subColorSwatches">
+            <div class="color-swatch active" data-color="#ffffff" style="background:#ffffff;" onclick="setSubColor(this)"></div>
+            <div class="color-swatch" data-color="#EAD654" style="background:#EAD654;" onclick="setSubColor(this)"></div>
+            <div class="color-swatch" data-color="#38C4F2" style="background:#38C4F2;" onclick="setSubColor(this)"></div>
+            <div class="color-swatch" data-color="#F05680" style="background:#F05680;" onclick="setSubColor(this)"></div>
+            <div class="color-swatch" data-color="#7DC57A" style="background:#7DC57A;" onclick="setSubColor(this)"></div>
+          </div>
+        </div>
+
+        <!-- Background Style -->
+        <div class="sub-style-section">
+          <span class="sub-style-label">רקע כתובית</span>
+          <div class="bg-style-pills" id="subBgPills">
+            <button class="bg-pill" data-bg="none" onclick="setSubBg(this)">ללא רקע</button>
+            <button class="bg-pill" data-bg="rgba(0,0,0,0.3)" onclick="setSubBg(this)">שקוף</button>
+            <button class="bg-pill active" data-bg="rgba(0,0,0,0.6)" onclick="setSubBg(this)">חצי שקוף</button>
+            <button class="bg-pill" data-bg="rgba(0,0,0,1)" onclick="setSubBg(this)">אטום</button>
+          </div>
+        </div>
+
+        <!-- Text Shadow -->
+        <div class="sub-style-section">
+          <span class="sub-style-label">צל טקסט</span>
+          <div class="shadow-toggle">
+            <div class="toggle-switch" id="subShadowToggle" onclick="toggleSubShadow()"></div>
+            <span style="font-size:12px;color:var(--text-sub);" id="subShadowLabel">כבוי</span>
+          </div>
+        </div>
+
+        <!-- Position -->
+        <div class="sub-style-section">
+          <span class="sub-style-label">מיקום</span>
+          <div class="pos-pills" id="subPosPills">
+            <button class="pos-pill active" data-pos="bottom" onclick="setSubPos(this)">למטה</button>
+            <button class="pos-pill" data-pos="top" onclick="setSubPos(this)">למעלה</button>
+          </div>
+        </div>
+
+        <!-- Alignment -->
+        <div class="sub-style-section">
+          <span class="sub-style-label">יישור</span>
+          <div class="align-pills" id="subAlignPills">
+            <button class="align-pill" data-align="right" onclick="setSubAlign(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="12" x2="9" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
+            </button>
+            <button class="align-pill active" data-align="center" onclick="setSubAlign(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="6"/><line x1="21" y1="12" x2="3" y2="12"/><line x1="18" y1="18" x2="6" y2="18"/></svg>
+            </button>
+            <button class="align-pill" data-align="left" onclick="setSubAlign(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:6px;">
           <div style="display:flex;flex-direction:column;gap:8px;">
             <button class="btn-tool-primary" style="justify-content:center;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="15" x2="14" y2="15"/></svg>
@@ -1203,6 +1418,65 @@ document.getElementById('saveDraftBtn').addEventListener('click',()=>{
   document.querySelector('.autosave-dot').classList.add('saved');
   document.querySelector('.autosave-text').textContent='נשמר אוטומטית';
 });
+
+// ── Subtitle Styling Controls ──
+function updateSubPreview(){
+  const preview=document.getElementById('subPreviewText');
+  if(!preview)return;
+  const font=document.getElementById('subFontSelect').value;
+  preview.style.fontFamily=font;
+}
+
+function setSubSize(el){
+  document.querySelectorAll('#subSizePills .size-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const size=el.dataset.size+'px';
+  const preview=document.getElementById('subPreviewText');
+  if(preview)preview.style.fontSize=size;
+}
+
+function setSubColor(el){
+  document.querySelectorAll('#subColorSwatches .color-swatch').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  const color=el.dataset.color;
+  const preview=document.getElementById('subPreviewText');
+  if(preview)preview.style.color=color;
+}
+
+function setSubBg(el){
+  document.querySelectorAll('#subBgPills .bg-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const bg=el.dataset.bg;
+  const preview=document.getElementById('subPreviewText');
+  if(preview)preview.style.background=bg==='none'?'transparent':bg;
+}
+
+function toggleSubShadow(){
+  const toggle=document.getElementById('subShadowToggle');
+  const label=document.getElementById('subShadowLabel');
+  const preview=document.getElementById('subPreviewText');
+  const isActive=toggle.classList.toggle('active');
+  label.textContent=isActive?'פעיל':'כבוי';
+  if(preview)preview.style.textShadow=isActive?'0 1px 4px rgba(0,0,0,0.7), 0 0 8px rgba(0,0,0,0.4)':'none';
+}
+
+function setSubPos(el){
+  document.querySelectorAll('#subPosPills .pos-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const video=document.getElementById('subPreviewVideo');
+  if(el.dataset.pos==='top'){
+    video.classList.add('top-pos');
+  } else {
+    video.classList.remove('top-pos');
+  }
+}
+
+function setSubAlign(el){
+  document.querySelectorAll('#subAlignPills .align-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const preview=document.getElementById('subPreviewText');
+  if(preview)preview.style.textAlign=el.dataset.align;
+}
 </script>
 </body>
 </html>

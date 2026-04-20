@@ -65,6 +65,63 @@ body {
   pointer-events: none;
 }
 
+/* ======= SCREEN SHARE BACKGROUND ======= */
+.screen-share-bg {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  align-items: center;
+  justify-content: center;
+  background: #111629;
+}
+.screen-share-bg.visible { display: flex; }
+.screen-share-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.screen-share-placeholder svg { opacity: 0.4; }
+.screen-share-window {
+  width: 70%;
+  max-width: 800px;
+  aspect-ratio: 16/9;
+  background: #1a1f36;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.screen-share-titlebar {
+  height: 28px;
+  background: rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 6px;
+}
+.screen-share-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.screen-share-dot.r { background: #e53e3e; }
+.screen-share-dot.y { background: #EAD654; }
+.screen-share-dot.g { background: #7DC57A; }
+.screen-share-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  gap: 8px;
+}
+
 /* ======= TOP OVERLAYS ======= */
 .top-overlay {
   position: absolute;
@@ -169,6 +226,54 @@ body {
   letter-spacing: 2px;
 }
 
+/* ======= MODE SWITCHER ======= */
+.mode-switcher {
+  position: absolute;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 14px;
+  padding: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  z-index: 10;
+  gap: 2px;
+}
+
+.mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border: none;
+  border-radius: 11px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  color: rgba(255,255,255,0.45);
+  transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+.mode-btn:hover {
+  color: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.06);
+}
+.mode-btn.active {
+  background: var(--cyan);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(56,196,242,0.35);
+}
+.mode-btn svg {
+  flex-shrink: 0;
+}
+
 /* ======= CAMERA OVERLAY (draggable) ======= */
 .camera-overlay {
   position: absolute;
@@ -188,7 +293,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, opacity 0.3s, transform 0.3s;
 }
 .camera-overlay:active { cursor: grabbing; box-shadow: 0 12px 40px rgba(0,0,0,0.7); }
 .camera-overlay .cam-placeholder {
@@ -198,6 +303,18 @@ body {
   gap: 6px;
   color: var(--text-muted);
   font-size: 12px;
+}
+
+/* Camera overlay size modes */
+.camera-overlay.full-mode {
+  /* Full camera = full screen, no overlay box */
+  display: none;
+}
+.camera-overlay.pip-mode {
+  display: flex;
+}
+.camera-overlay.hidden-mode {
+  display: none;
 }
 
 /* ======= AUDIO LEVEL STRIP (above control bar) ======= */
@@ -420,6 +537,10 @@ body {
   overflow: hidden;
   background: rgba(255,255,255,0.05);
   margin-top: 10px;
+  transition: height 0.3s;
+}
+.mini-timeline.expanded {
+  height: 32px;
 }
 
 .timeline-segment {
@@ -429,6 +550,7 @@ body {
   align-items: center;
   min-width: 30px;
   transition: flex 0.3s, opacity 0.3s, min-width 0.3s;
+  cursor: pointer;
 }
 
 .timeline-segment:nth-child(odd) { background: rgba(56,196,242,0.25); }
@@ -449,6 +571,52 @@ body {
   padding-right: 6px;
 }
 
+/* Insert take button between segments */
+.timeline-insert-btn {
+  width: 18px;
+  min-width: 18px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: rgba(56,196,242,0.08);
+  border: none;
+  padding: 0;
+  position: relative;
+  transition: background 0.2s;
+}
+.timeline-insert-btn:hover {
+  background: rgba(56,196,242,0.25);
+}
+.timeline-insert-btn svg {
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.timeline-insert-btn:hover svg {
+  opacity: 1;
+}
+.timeline-insert-btn .insert-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2440;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-family: 'Heebo', sans-serif;
+  white-space: nowrap;
+  color: var(--text);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  z-index: 20;
+}
+.timeline-insert-btn:hover .insert-tooltip {
+  display: block;
+}
+
 .playhead {
   position: absolute;
   top: 0;
@@ -458,6 +626,83 @@ body {
   box-shadow: 0 0 6px rgba(255,255,255,0.5);
   transition: right 0.3s linear;
   z-index: 2;
+}
+
+/* ======= TAKES PANEL (visible when paused) ======= */
+.takes-panel {
+  display: none;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 12px 14px;
+  margin-top: 10px;
+  max-height: 160px;
+  overflow-y: auto;
+  transition: opacity 0.3s;
+}
+.takes-panel.visible { display: block; }
+
+.takes-panel-title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cyan);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.take-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  margin-bottom: 4px;
+  transition: background 0.15s;
+}
+.take-row:hover {
+  background: rgba(255,255,255,0.07);
+}
+.take-row:last-child { margin-bottom: 0; }
+
+.take-number {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--cyan);
+  min-width: 20px;
+  text-align: center;
+}
+
+.take-duration {
+  font-family: 'Fredoka', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 42px;
+}
+
+.take-note-input {
+  flex: 1;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 12px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.take-note-input:focus {
+  border-color: var(--cyan);
+}
+.take-note-input::placeholder {
+  color: rgba(255,255,255,0.25);
 }
 
 /* ======= CONFIRMATION DIALOG ======= */
@@ -612,11 +857,31 @@ kbd {
   font-size: 11px;
   color: var(--text-muted);
 }
+
+/* ======= SCROLLBAR ======= */
+.takes-panel::-webkit-scrollbar { width: 4px; }
+.takes-panel::-webkit-scrollbar-track { background: transparent; }
+.takes-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
 </style>
 </head>
 <body>
 
 <div class="video-area" id="videoArea">
+  <!-- Screen share background (shown in screen modes) -->
+  <div class="screen-share-bg" id="screenShareBg">
+    <div class="screen-share-window">
+      <div class="screen-share-titlebar">
+        <div class="screen-share-dot r"></div>
+        <div class="screen-share-dot y"></div>
+        <div class="screen-share-dot g"></div>
+      </div>
+      <div class="screen-share-content">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <span>שיתוף מסך (דמו)</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Top overlay -->
   <div class="top-overlay">
     <!-- Recording indicator (top-right in RTL = visually right) -->
@@ -632,6 +897,38 @@ kbd {
 
   <!-- Lesson name pill -->
   <div class="lesson-pill">שיעור 3: צבע ומשמעות</div>
+
+  <!-- Mode Switcher (camera / screen+camera / screen) -->
+  <div class="mode-switcher" id="modeSwitcher">
+    <button class="mode-btn active" id="modeCamera" data-mode="camera" title="מצלמה בלבד">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M23 7l-7 5 7 5V7z"/>
+        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+      </svg>
+      <span>מצלמה</span>
+    </button>
+    <button class="mode-btn" id="modeScreenCam" data-mode="screen-cam" title="מסך + מצלמה">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2"/>
+        <line x1="8" y1="21" x2="16" y2="21"/>
+        <line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
+      <span>+</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M23 7l-7 5 7 5V7z"/>
+        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+      </svg>
+      <span>מסך + מצלמה</span>
+    </button>
+    <button class="mode-btn" id="modeScreen" data-mode="screen" title="מסך בלבד">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2"/>
+        <line x1="8" y1="21" x2="16" y2="21"/>
+        <line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
+      <span>מסך</span>
+    </button>
+  </div>
 
   <!-- Camera overlay (draggable) -->
   <div class="camera-overlay" id="cameraOverlay">
@@ -698,6 +995,15 @@ kbd {
     <div class="mini-timeline" id="miniTimeline">
       <!-- Segments injected by JS -->
     </div>
+
+    <!-- Takes panel (visible when paused) -->
+    <div class="takes-panel" id="takesPanel">
+      <div class="takes-panel-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        הערות לטייקים
+      </div>
+      <div id="takesList"></div>
+    </div>
   </div>
 </div>
 
@@ -747,10 +1053,14 @@ const state = {
   phase: 'initial',
   seconds: 0,
   takeNum: 0,
-  takes: [],
+  takes: [], // { start, duration, note }
   intervalId: null,
   meterIntervalId: null,
+  currentMode: 'camera', // 'camera' | 'screen-cam' | 'screen'
 };
+
+// Demo take notes (pre-filled after first 3 takes)
+const demoNotes = ['יצא סבבה', 'פתיח טוב', 'מבוא ויסודות'];
 
 // ======= ELEMENTS =======
 const $ = id => document.getElementById(id);
@@ -766,6 +1076,9 @@ const takePill = $('takePill');
 const miniTimeline = $('miniTimeline');
 const audioStrip = $('audioStrip');
 const cameraOverlay = $('cameraOverlay');
+const screenShareBg = $('screenShareBg');
+const takesPanel = $('takesPanel');
+const takesList = $('takesList');
 
 // ======= TIMER =======
 function formatTime(s) {
@@ -793,6 +1106,41 @@ function startTimer() {
 function updateTimerDisplay() {
   recTimer.textContent = formatTime(state.seconds);
 }
+
+// ======= MODE SWITCHER =======
+function setMode(mode) {
+  state.currentMode = mode;
+
+  // Update button active states
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+
+  // Update visuals
+  if (mode === 'camera') {
+    // Full camera view, no screen share, hide PiP overlay (camera is full-screen)
+    screenShareBg.classList.remove('visible');
+    cameraOverlay.style.display = 'none';
+  } else if (mode === 'screen-cam') {
+    // Screen share bg + camera PiP
+    screenShareBg.classList.add('visible');
+    cameraOverlay.style.display = 'flex';
+  } else if (mode === 'screen') {
+    // Screen share bg only, no camera
+    screenShareBg.classList.add('visible');
+    cameraOverlay.style.display = 'none';
+  }
+
+  const modeNames = { camera: 'מצלמה', 'screen-cam': 'מסך + מצלמה', screen: 'מסך' };
+  if (state.phase !== 'initial') {
+    showToast(`מצב: ${modeNames[mode]}`, 'cyan');
+  }
+}
+
+// Mode button click handlers
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => setMode(btn.dataset.mode));
+});
 
 // ======= RENDER CONTROLS BY STATE =======
 function renderControls() {
@@ -870,13 +1218,57 @@ function renderControls() {
   } else {
     takePill.classList.remove('visible');
   }
+
+  // Takes panel (visible when paused with takes)
+  if (phase === 'paused' && state.takes.length > 0) {
+    takesPanel.classList.add('visible');
+    miniTimeline.classList.add('expanded');
+    renderTakesPanel();
+  } else {
+    takesPanel.classList.remove('visible');
+    miniTimeline.classList.remove('expanded');
+  }
+}
+
+// ======= TAKES PANEL =======
+function renderTakesPanel() {
+  let html = '';
+  state.takes.forEach((take, i) => {
+    const note = take.note || '';
+    const placeholder = demoNotes[i] !== undefined && !take.note ? demoNotes[i] : 'הוסף הערה...';
+    const value = take.note || (demoNotes[i] !== undefined ? demoNotes[i] : '');
+    html += `<div class="take-row">
+      <span class="take-number">${i + 1}</span>
+      <span class="take-duration">${formatTime(take.duration)}</span>
+      <input class="take-note-input" type="text" value="${escapeHtml(value)}" placeholder="${escapeHtml(placeholder)}" data-take-index="${i}" />
+    </div>`;
+  });
+  takesList.innerHTML = html;
+
+  // Attach input handlers
+  takesList.querySelectorAll('.take-note-input').forEach(input => {
+    input.addEventListener('input', e => {
+      const idx = parseInt(e.target.dataset.takeIndex);
+      if (state.takes[idx]) {
+        state.takes[idx].note = e.target.value;
+      }
+    });
+    // Prevent keyboard shortcuts when typing in note fields
+    input.addEventListener('keydown', e => {
+      e.stopPropagation();
+    });
+  });
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 // ======= STATE TRANSITIONS =======
 function startRecording() {
   state.phase = 'recording';
   state.takeNum = 1;
-  state.takes = [{ start: 0, duration: 0 }];
+  state.takes = [{ start: 0, duration: 0, note: '' }];
   startTimer();
   state.meterIntervalId = setInterval(animateMeter, 100);
   renderControls();
@@ -888,17 +1280,29 @@ function pauseRecording() {
   // Pressing "stop" during recording = pause (creates take boundary)
   state.phase = 'paused';
   renderControls();
+  updateTimeline();
   showToast('ההקלטה מושהית', 'yellow');
 }
 
-function resumeRecording() {
-  // Resume = start new take
-  state.takeNum++;
-  state.takes.push({ start: state.seconds, duration: 0 });
-  state.phase = 'recording';
-  renderControls();
-  updateTimeline();
-  showToast(`טייק ${state.takeNum} התחיל`, 'cyan');
+function resumeRecording(insertAtIndex) {
+  if (insertAtIndex !== undefined && insertAtIndex !== null) {
+    // Insert a new take at a specific position
+    state.takeNum++;
+    const newTake = { start: state.seconds, duration: 0, note: '' };
+    state.takes.splice(insertAtIndex, 0, newTake);
+    state.phase = 'recording';
+    renderControls();
+    updateTimeline();
+    showToast(`טייק חדש הוכנס במיקום ${insertAtIndex + 1}`, 'cyan');
+  } else {
+    // Resume = start new take at end
+    state.takeNum++;
+    state.takes.push({ start: state.seconds, duration: 0, note: '' });
+    state.phase = 'recording';
+    renderControls();
+    updateTimeline();
+    showToast(`טייק ${state.takeNum} התחיל`, 'cyan');
+  }
 }
 
 function handleCenterButton() {
@@ -990,17 +1394,51 @@ document.querySelectorAll('.dialog-overlay').forEach(el => {
 // ======= TIMELINE =======
 function updateTimeline() {
   const total = Math.max(state.seconds, 1);
+  const isPaused = state.phase === 'paused';
   let html = '';
+
   state.takes.forEach((take, i) => {
     const isCurrent = i === state.takes.length - 1;
+
+    // Insert "+" button BEFORE each take (except the first) when paused
+    if (isPaused && i > 0) {
+      html += `<button class="timeline-insert-btn" data-insert-index="${i}" title="הקלט טייק חדש כאן">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        <span class="insert-tooltip">הקלט טייק חדש כאן</span>
+      </button>`;
+    }
+
     html += `<div class="timeline-segment${isCurrent ? ' current' : ''}" style="flex:${take.duration || 1}">
       <span class="segment-label">${i + 1}</span>
     </div>`;
   });
-  if (state.takes.length > 0) {
+
+  // Insert "+" button AFTER the last take when paused
+  if (isPaused && state.takes.length > 0) {
+    html += `<button class="timeline-insert-btn" data-insert-index="${state.takes.length}" title="הקלט טייק חדש כאן">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      <span class="insert-tooltip">הקלט טייק חדש כאן</span>
+    </button>`;
+  }
+
+  if (state.takes.length > 0 && !isPaused) {
     html += `<div class="playhead" style="left:auto;right:0"></div>`;
   }
   miniTimeline.innerHTML = html;
+
+  // Attach insert button handlers
+  miniTimeline.querySelectorAll('.timeline-insert-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.insertIndex);
+      resumeRecording(idx);
+    });
+  });
 }
 
 // ======= AUDIO METER =======
@@ -1045,7 +1483,7 @@ function showToast(msg, color, withUndo) {
 
 function undoDelete(btn) {
   state.takeNum++;
-  state.takes.push({ start: state.seconds, duration: 0 });
+  state.takes.push({ start: state.seconds, duration: 0, note: '' });
   renderControls();
   updateTimeline();
   const toastEl = btn.closest('.toast');
@@ -1090,6 +1528,11 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Backspace' || e.key === 'Delete') {
     if (state.phase === 'paused') requestDeleteTake();
   }
+
+  // Mode switching shortcuts: 1, 2, 3
+  if (e.key === '1') setMode('camera');
+  if (e.key === '2') setMode('screen-cam');
+  if (e.key === '3') setMode('screen');
 });
 
 // ======= DRAGGABLE CAMERA OVERLAY =======
@@ -1162,10 +1605,28 @@ document.addEventListener('keydown', e => {
   });
 })();
 
+// ======= DEMO: Pre-fill takes for demo mode =======
+// Auto-populate 3 demo takes when first starting
+function initDemoTakes() {
+  // This runs on first start to show a realistic scenario
+  state.phase = 'paused';
+  state.takeNum = 3;
+  state.seconds = 207; // 3:27 total
+  state.takes = [
+    { start: 0, duration: 72, note: 'יצא סבבה' },       // 1:12
+    { start: 72, duration: 45, note: 'פתיח טוב' },      // 0:45
+    { start: 117, duration: 90, note: 'מבוא ויסודות' },  // 1:30
+  ];
+  updateTimerDisplay();
+  renderControls();
+  updateTimeline();
+}
+
 // ======= INIT =======
 state.meterIntervalId = setInterval(animateMeter, 100);
-renderControls();
-updateTimeline();
+
+// Start in demo mode with pre-filled takes
+initDemoTakes();
 </script>
 </body>
 </html>

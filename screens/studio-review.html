@@ -248,6 +248,21 @@
 
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
+  /* ── TAKE NOTE INPUT ── */
+  .take-note-input{width:100%;font-family:var(--font-he);font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-sub);outline:none;transition:border-color .2s,box-shadow .2s;margin-top:2px;}
+  .take-note-input::placeholder{color:var(--text-light);font-size:12px;}
+  .take-note-input:focus{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(56,196,242,0.12);color:var(--text-main);}
+
+  /* ── TIMELINE SEGMENT LABEL ── */
+  .take-segment-label{font-size:9px;font-weight:600;color:white;text-shadow:0 1px 3px rgba(0,0,0,0.3);pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%;line-height:1;}
+
+  /* ── TAKE TITLE OVERLAY ON VIDEO ── */
+  .take-title-overlay{position:absolute;top:16px;left:16px;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;color:white;opacity:0;transition:opacity .4s ease;pointer-events:none;z-index:5;max-width:60%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .take-title-overlay.visible{opacity:1;}
+
+  @keyframes takeTitleFadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes takeTitleFadeOut{from{opacity:1}to{opacity:0}}
+
   /* ── FILE UPLOAD SECTION ── */
   .files-card{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);overflow:hidden;transition:background .3s;}
   .files-card-header{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
@@ -363,6 +378,8 @@
             <div class="take-label-dot dot-1" id="takeOverlayDot"></div>
             <span id="takeOverlayText">טייק 1</span>
           </div>
+          <!-- Take title overlay (top-left) -->
+          <div class="take-title-overlay" id="takeTitleOverlay"></div>
           <!-- Play icon center -->
           <svg id="bigPlayIcon" viewBox="0 0 24 24" fill="currentColor" stroke="none" width="64" height="64"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           <div class="video-placeholder-text">תצוגה מקדימה של ההקלטה</div>
@@ -590,10 +607,10 @@
 <script>
 // ── DATA ──
 let takes = [
-  { id: 1, duration: 83, status: 'ok', color: 1 },
-  { id: 2, duration: 67, status: 'review', color: 2 },
-  { id: 3, duration: 92, status: 'ok', color: 3 },
-  { id: 4, duration: 50, status: 'ok', color: 4 }
+  { id: 1, duration: 83, status: 'ok', color: 1, note: 'יצא סבבה' },
+  { id: 2, duration: 67, status: 'review', color: 2, note: 'פתיח טוב' },
+  { id: 3, duration: 92, status: 'ok', color: 3, note: 'מבוא ויסודות' },
+  { id: 4, duration: 50, status: 'ok', color: 4, note: '' }
 ];
 let activeTakeId = 1;
 let isPlaying = false;
@@ -651,6 +668,12 @@ function renderTakesList() {
           <span class="take-badge ${t.status === 'ok' ? 'badge-ok' : 'badge-review'}">${t.status === 'ok' ? 'תקין' : 'לבדיקה'}</span>
         </div>
         <span class="take-duration">${formatTime(t.duration)}</span>
+        <input class="take-note-input" type="text"
+               value="${(t.note || '').replace(/"/g, '&quot;')}"
+               placeholder="הוסף הערה..."
+               onclick="event.stopPropagation()"
+               oninput="updateTakeNote(${t.id}, this.value)"
+               onfocus="event.stopPropagation()">
       </div>
       <div class="take-actions" onclick="event.stopPropagation()">
         <button class="take-action-btn" title="נגן טייק" onclick="selectTake(${t.id})">
@@ -674,11 +697,13 @@ function renderTimeline() {
   if (takes.length === 0) { tl.innerHTML = ''; return; }
   tl.innerHTML = takes.map(t => {
     const pct = (t.duration / total * 100).toFixed(1);
+    const segLabel = t.note ? t.note : 'טייק ' + t.id;
     return `<div class="take-segment take-color-${t.color} ${t.id === activeTakeId ? 'active' : ''}"
-                 style="width:${pct}%"
+                 style="width:${pct}%;flex-direction:column;gap:1px;"
                  onclick="selectTake(${t.id})"
-                 title="טייק ${t.id} — ${formatTime(t.duration)}">
+                 title="טייק ${t.id}${t.note ? ': ' + t.note : ''} — ${formatTime(t.duration)}">
               <span>${t.id}</span>
+              <span class="take-segment-label">${segLabel}</span>
             </div>`;
   }).join('');
   document.getElementById('timelineEnd').textContent = formatTime(total);
@@ -705,6 +730,7 @@ function selectTake(id) {
   renderTakesList();
   renderTimeline();
   updateOverlay();
+  showTakeTitleOverlay();
 }
 
 // ── UPDATE PLAYER UI ──
@@ -722,6 +748,36 @@ function updateOverlay() {
   if (!take) return;
   document.getElementById('takeOverlayText').textContent = 'טייק ' + take.id;
   document.getElementById('takeOverlayDot').className = 'take-label-dot dot-' + take.color;
+}
+
+// ── UPDATE TAKE NOTE ──
+function updateTakeNote(id, value) {
+  const take = takes.find(t => t.id === id);
+  if (take) {
+    take.note = value;
+    renderTimeline();
+    // Update title overlay if this is the active take
+    if (id === activeTakeId) {
+      showTakeTitleOverlay();
+    }
+  }
+}
+
+// ── TAKE TITLE OVERLAY ON VIDEO ──
+let takeTitleTimer = null;
+let lastShownTakeId = null;
+function showTakeTitleOverlay() {
+  const overlay = document.getElementById('takeTitleOverlay');
+  const take = takes.find(t => t.id === activeTakeId);
+  if (!take) { overlay.classList.remove('visible'); return; }
+  const titleText = take.note ? 'טייק ' + take.id + ': ' + take.note : 'טייק ' + take.id;
+  overlay.textContent = titleText;
+  overlay.classList.add('visible');
+  clearTimeout(takeTitleTimer);
+  takeTitleTimer = setTimeout(() => {
+    overlay.classList.remove('visible');
+  }, 2000);
+  lastShownTakeId = activeTakeId;
 }
 
 // ── PLAYBACK ──
@@ -746,6 +802,7 @@ function togglePlay() {
             renderTakesList();
             renderTimeline();
             updateOverlay();
+            showTakeTitleOverlay();
           }
           break;
         }
@@ -769,6 +826,7 @@ function skip(sec) {
         renderTakesList();
         renderTimeline();
         updateOverlay();
+        showTakeTitleOverlay();
       }
       break;
     }
@@ -790,6 +848,7 @@ function seekTo(e) {
         renderTakesList();
         renderTimeline();
         updateOverlay();
+        showTakeTitleOverlay();
       }
       break;
     }
@@ -1027,6 +1086,7 @@ updateSummary();
 updatePlayerUI();
 updateOverlay();
 renderFileList();
+showTakeTitleOverlay();
 </script>
 </body>
 </html>

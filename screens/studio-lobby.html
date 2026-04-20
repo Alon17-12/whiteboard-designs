@@ -119,22 +119,43 @@
   .setup-title{font-family:var(--font-en);font-size:18px;font-weight:600;color:var(--navy);}
   [data-theme="dark"] .setup-title{color:var(--cyan);}
 
-  /* ── Recording Mode Cards ── */
-  .mode-section-label{font-size:13px;font-weight:700;color:var(--text-sub);margin-bottom:8px;}
-  .mode-cards{display:flex;flex-direction:column;gap:8px;}
-  .mode-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface-2);cursor:pointer;transition:all .2s;min-height:44px;}
-  .mode-card:hover{border-color:rgba(56,196,242,0.4);background:var(--light-blue);}
-  .mode-card.selected{border-color:var(--cyan);background:rgba(56,196,242,0.08);box-shadow:0 0 0 3px rgba(56,196,242,0.08);}
-  .mode-card-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(37,62,122,0.06);color:var(--navy);transition:all .2s;}
-  [data-theme="dark"] .mode-card-icon{background:rgba(56,196,242,0.1);color:var(--cyan);}
-  .mode-card.selected .mode-card-icon{background:rgba(56,196,242,0.15);color:var(--cyan);}
-  .mode-card-icon svg{width:20px;height:20px;}
-  .mode-card-text{flex:1;min-width:0;}
-  .mode-card-label{font-size:13px;font-weight:700;color:var(--text-main);}
-  .mode-card-desc{font-size:11px;color:var(--text-sub);margin-top:2px;}
-  .mode-card-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
-  .mode-card.selected .mode-card-radio{border-color:var(--cyan);}
-  .mode-card.selected .mode-card-radio::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--cyan);}
+  /* ── Camera Display Settings ── */
+  .cam-settings-label{font-size:13px;font-weight:700;color:var(--text-sub);margin-bottom:8px;}
+  .cam-settings-sublabel{font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:6px;}
+
+  /* Shape toggle */
+  .shape-toggle{display:flex;gap:8px;margin-bottom:16px;}
+  .shape-toggle-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-sub);font-size:13px;font-weight:600;font-family:var(--font-he);cursor:pointer;transition:all .2s;min-height:40px;}
+  .shape-toggle-btn:hover{border-color:rgba(56,196,242,0.4);}
+  .shape-toggle-btn.active{background:var(--cyan);border-color:var(--cyan);color:white;}
+  .shape-toggle-btn svg{width:18px;height:18px;}
+
+  /* Position grid */
+  .position-grid-wrap{margin-bottom:16px;}
+  .position-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:120px;}
+  .position-grid-btn{display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 6px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-sub);font-size:11px;font-weight:600;font-family:var(--font-he);cursor:pointer;transition:all .2s;min-height:36px;}
+  .position-grid-btn:hover{border-color:rgba(56,196,242,0.4);}
+  .position-grid-btn.active{border-color:var(--cyan);background:rgba(56,196,242,0.1);color:var(--cyan);}
+  .position-grid-btn svg{width:14px;height:14px;}
+
+  /* Position preview */
+  .position-preview{width:120px;height:68px;border-radius:8px;background:var(--preview-bg);position:relative;border:1px solid var(--border);margin-top:8px;}
+  .position-preview .pip-dot{position:absolute;width:22px;height:14px;border-radius:3px;background:var(--cyan);opacity:0.7;transition:all .3s ease;}
+  .position-preview .pip-dot.circle{width:16px;height:16px;border-radius:50%;}
+  .position-preview .pip-dot.pos-tr{top:6px;right:6px;}
+  .position-preview .pip-dot.pos-tl{top:6px;left:6px;}
+  .position-preview .pip-dot.pos-br{bottom:6px;right:6px;}
+  .position-preview .pip-dot.pos-bl{bottom:6px;left:6px;}
+
+  /* Size slider */
+  .size-slider-wrap{display:flex;flex-direction:column;gap:6px;}
+  .size-slider-row{display:flex;align-items:center;gap:10px;}
+  .size-slider-row .slider-label{font-size:11px;color:var(--text-light);white-space:nowrap;}
+  .size-slider{flex:1;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer;}
+  .size-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--cyan);border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.2);cursor:pointer;transition:transform .15s;}
+  .size-slider::-webkit-slider-thumb:hover{transform:scale(1.15);}
+  .size-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--cyan);border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.2);cursor:pointer;}
+  .size-slider-value{font-size:12px;font-weight:700;color:var(--cyan);min-width:32px;text-align:center;}
 
   /* ── Form fields ── */
   .field-group{display:flex;flex-direction:column;gap:6px;}
@@ -176,15 +197,7 @@
   .readonly-field{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-sub);font-size:14px;font-family:var(--font-he);min-height:44px;cursor:default;user-select:none;}
   .readonly-lock{width:14px;height:14px;color:var(--text-light);flex-shrink:0;}
 
-  /* ── Shape Selector ── */
-  .shape-selector{display:none;align-items:center;justify-content:center;gap:8px;margin-top:4px;}
-  .shape-selector.visible{display:flex;}
-  .shape-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-sub);font-size:12px;font-weight:600;font-family:var(--font-he);cursor:pointer;transition:all .2s;min-height:36px;}
-  .shape-btn:hover{border-color:rgba(56,196,242,0.4);}
-  .shape-btn.active{background:var(--cyan);border-color:var(--cyan);color:white;}
-  .shape-btn svg{width:16px;height:16px;}
-  .shape-hint{text-align:center;font-size:11px;color:var(--text-light);margin-top:4px;display:none;}
-  .shape-hint.visible{display:block;}
+  /* (old shape selector removed — now in settings panel) */
 
   /* ── Screen share preview ── */
   .screen-share-bg{position:absolute;inset:0;z-index:0;display:none;}
@@ -350,19 +363,6 @@
         </button>
       </div>
 
-      <!-- Shape Selector (screen+camera mode only) -->
-      <div class="shape-selector" id="shapeSelector">
-        <button class="shape-btn active" id="btnRect" onclick="selectShape('rect')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/></svg>
-          מלבן
-        </button>
-        <button class="shape-btn" id="btnCircle" onclick="selectShape('circle')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-          עיגול
-        </button>
-      </div>
-      <div class="shape-hint" id="shapeHint">גרור את חלון המצלמה למיקום הרצוי</div>
-
       <!-- Device Selectors -->
       <div class="device-selectors">
         <div class="device-select-wrap">
@@ -389,39 +389,59 @@
       <div class="setup-card">
         <div class="setup-title">הגדרות הקלטה</div>
 
-        <!-- Recording Mode -->
+        <!-- Camera Display Settings -->
         <div>
-          <div class="mode-section-label">מצב הקלטה</div>
-          <div class="mode-cards">
-            <div class="mode-card selected" onclick="selectMode(this)" data-mode="camera">
-              <div class="mode-card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          <div class="cam-settings-label">הגדרות תצוגת מצלמה</div>
+
+          <!-- Shape selector -->
+          <div class="cam-settings-sublabel">צורת חלון המצלמה (במצב שיתוף מסך)</div>
+          <div class="shape-toggle">
+            <button class="shape-toggle-btn active" id="shapeRect" onclick="setOverlayShape('rect')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/></svg>
+              מלבן
+            </button>
+            <button class="shape-toggle-btn" id="shapeCircle" onclick="setOverlayShape('circle')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              עיגול
+            </button>
+          </div>
+
+          <!-- Default position selector -->
+          <div class="position-grid-wrap">
+            <div class="cam-settings-sublabel">מיקום ברירת מחדל</div>
+            <div style="display:flex;gap:16px;align-items:flex-start;">
+              <div class="position-grid">
+                <button class="position-grid-btn" data-pos="tr" onclick="setOverlayPosition('tr')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="7" x2="7" y2="17"/><polyline points="7 7 17 7 17 17"/></svg>
+                  ↗
+                </button>
+                <button class="position-grid-btn" data-pos="tl" onclick="setOverlayPosition('tl')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 7 7 7 17"/></svg>
+                  ↖
+                </button>
+                <button class="position-grid-btn active" data-pos="br" onclick="setOverlayPosition('br')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="17" x2="7" y2="7"/><polyline points="7 17 17 17 17 7"/></svg>
+                  ↘
+                </button>
+                <button class="position-grid-btn" data-pos="bl" onclick="setOverlayPosition('bl')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="17 17 7 17 7 7"/></svg>
+                  ↙
+                </button>
               </div>
-              <div class="mode-card-text">
-                <div class="mode-card-label">מצלמה בלבד</div>
-                <div class="mode-card-desc">הקלטה ישירה מהמצלמה</div>
+              <div class="position-preview" id="posPreview">
+                <div class="pip-dot pos-br" id="pipDot"></div>
               </div>
-              <div class="mode-card-radio"></div>
             </div>
-            <div class="mode-card" onclick="selectMode(this)" data-mode="screen-camera">
-              <div class="mode-card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><rect x="14" y="10" width="7" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-              </div>
-              <div class="mode-card-text">
-                <div class="mode-card-label">מסך + מצלמה</div>
-                <div class="mode-card-desc">שיתוף מסך עם חלון מצלמה קטן</div>
-              </div>
-              <div class="mode-card-radio"></div>
-            </div>
-            <div class="mode-card" onclick="selectMode(this)" data-mode="screen">
-              <div class="mode-card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-              </div>
-              <div class="mode-card-text">
-                <div class="mode-card-label">מסך בלבד</div>
-                <div class="mode-card-desc">הקלטת מסך ללא מצלמה</div>
-              </div>
-              <div class="mode-card-radio"></div>
+          </div>
+
+          <!-- Size slider -->
+          <div class="size-slider-wrap">
+            <div class="cam-settings-sublabel">גודל חלון מצלמה</div>
+            <div class="size-slider-row">
+              <span class="slider-label">קטן</span>
+              <input type="range" class="size-slider" id="sizeSlider" min="15" max="30" value="20" oninput="updateSizeSlider(this.value)">
+              <span class="slider-label">גדול</span>
+              <span class="size-slider-value" id="sizeValue">20%</span>
             </div>
           </div>
         </div>
@@ -544,86 +564,84 @@
       } else {
         showToast('info', 'המצלמה כובתה');
       }
-      updatePreviewForMode();
+      updatePreview();
     } else if (type === 'mic') {
       showToast(controlState.mic ? 'success' : 'info', controlState.mic ? 'המיקרופון הופעל' : 'המיקרופון כובה');
     } else if (type === 'screen') {
       showToast(controlState.screen ? 'success' : 'info', controlState.screen ? 'שיתוף מסך הופעל' : 'שיתוף מסך כובה');
-      updatePreviewForMode();
+      updatePreview();
     }
   }
 
-  // ── Current recording mode ──
-  let currentMode = 'camera';
+  // ── Camera overlay settings ──
   let currentShape = 'rect';
+  let currentPosition = 'br';
 
-  // ── Recording Mode Selection ──
-  function selectMode(card) {
-    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    currentMode = card.dataset.mode;
-    const labels = { 'camera': 'מצלמה בלבד', 'screen-camera': 'מסך + מצלמה', 'screen': 'מסך בלבד' };
-    showToast('info', 'מצב הקלטה: ' + labels[currentMode]);
-    updatePreviewForMode();
-  }
-
-  function updatePreviewForMode() {
+  function updatePreview() {
     const noFeed = document.getElementById('noFeed');
     const activeFeed = document.getElementById('activeFeed');
-    const screenShareBg = document.getElementById('screenShareBg');
-    const camOverlay = document.getElementById('camOverlay');
-    const shapeSelector = document.getElementById('shapeSelector');
-    const shapeHint = document.getElementById('shapeHint');
 
-    // Reset all
-    screenShareBg.classList.remove('visible');
-    camOverlay.classList.remove('visible');
-    shapeSelector.classList.remove('visible');
-    shapeHint.classList.remove('visible');
-
-    if (currentMode === 'camera') {
-      // Camera only: show camera feed if on, no screen share
-      if (controlState.camera) {
-        noFeed.style.display = 'none';
-        activeFeed.classList.add('visible');
-      } else {
-        noFeed.style.display = 'flex';
-        activeFeed.classList.remove('visible');
-      }
-    } else if (currentMode === 'screen-camera') {
-      // Screen + Camera: show screen share bg + camera overlay
+    if (controlState.camera) {
       noFeed.style.display = 'none';
+      activeFeed.classList.add('visible');
+    } else {
+      noFeed.style.display = 'flex';
       activeFeed.classList.remove('visible');
-      screenShareBg.classList.add('visible');
-      camOverlay.classList.add('visible');
-      shapeSelector.classList.add('visible');
-      shapeHint.classList.add('visible');
-    } else if (currentMode === 'screen') {
-      // Screen only: show screen share bg, no camera overlay
-      noFeed.style.display = 'none';
-      activeFeed.classList.remove('visible');
-      screenShareBg.classList.add('visible');
     }
   }
 
-  // ── Shape Selection ──
-  function selectShape(shape) {
+  // ── Shape selection (for overlay settings) ──
+  function setOverlayShape(shape) {
     currentShape = shape;
-    const camOverlay = document.getElementById('camOverlay');
-    const btnRect = document.getElementById('btnRect');
-    const btnCircle = document.getElementById('btnCircle');
+    document.getElementById('shapeRect').classList.toggle('active', shape === 'rect');
+    document.getElementById('shapeCircle').classList.toggle('active', shape === 'circle');
 
+    // Update pip dot in preview
+    const pip = document.getElementById('pipDot');
+    pip.classList.toggle('circle', shape === 'circle');
+
+    // Update camera overlay in preview
+    const camOverlay = document.getElementById('camOverlay');
     camOverlay.classList.remove('rect', 'circle');
     camOverlay.classList.add(shape);
 
-    if (shape === 'rect') {
-      btnRect.classList.add('active');
-      btnCircle.classList.remove('active');
-    } else {
-      btnCircle.classList.add('active');
-      btnRect.classList.remove('active');
-    }
+    showToast('info', shape === 'rect' ? 'צורה: מלבן' : 'צורה: עיגול');
   }
+
+  // ── Position selection ──
+  function setOverlayPosition(pos) {
+    currentPosition = pos;
+    document.querySelectorAll('.position-grid-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.position-grid-btn[data-pos="' + pos + '"]').classList.add('active');
+
+    // Update pip dot position
+    const pip = document.getElementById('pipDot');
+    pip.className = 'pip-dot pos-' + pos + (currentShape === 'circle' ? ' circle' : '');
+
+    // Update cam overlay position in preview
+    const camOverlay = document.getElementById('camOverlay');
+    camOverlay.style.right = '';
+    camOverlay.style.left = '';
+    camOverlay.style.top = '';
+    camOverlay.style.bottom = '';
+
+    if (pos === 'tr') { camOverlay.style.top = '12px'; camOverlay.style.right = '12px'; }
+    else if (pos === 'tl') { camOverlay.style.top = '12px'; camOverlay.style.left = '12px'; }
+    else if (pos === 'br') { camOverlay.style.bottom = '12px'; camOverlay.style.right = '12px'; }
+    else if (pos === 'bl') { camOverlay.style.bottom = '12px'; camOverlay.style.left = '12px'; }
+
+    const labels = { tr: 'למעלה-ימין', tl: 'למעלה-שמאל', br: 'למטה-ימין', bl: 'למטה-שמאל' };
+    showToast('info', 'מיקום: ' + labels[pos]);
+  }
+
+  // ── Size slider ──
+  function updateSizeSlider(val) {
+    document.getElementById('sizeValue').textContent = val + '%';
+    const camOverlay = document.getElementById('camOverlay');
+    camOverlay.style.width = val + '%';
+  }
+
+  // Shape selection is now handled by setOverlayShape in the settings panel
 
   // ── Draggable Camera Overlay ──
   (function initDrag() {
