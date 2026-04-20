@@ -92,7 +92,10 @@ body {
   border-radius: 12px;
   padding: 8px 16px;
   border: 1px solid rgba(229,62,62,0.3);
+  transition: opacity 0.3s, border-color 0.3s;
 }
+
+.rec-indicator.hidden { opacity: 0; pointer-events: none; }
 
 .rec-dot {
   width: 12px;
@@ -123,6 +126,7 @@ body {
   font-size: 14px;
   color: var(--red);
   letter-spacing: 2px;
+  transition: color 0.3s;
 }
 
 .rec-label.paused { color: var(--yellow); }
@@ -165,46 +169,60 @@ body {
   letter-spacing: 2px;
 }
 
-/* ======= PAUSED OVERLAY ======= */
-.paused-overlay {
+/* ======= CAMERA OVERLAY (draggable) ======= */
+.camera-overlay {
   position: absolute;
-  inset: 0;
-  background: rgba(10,14,26,0.85);
-  display: none;
-  flex-direction: column;
+  bottom: 180px;
+  left: 24px;
+  width: 18vw;
+  min-width: 160px;
+  max-width: 280px;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1a1f36, #111629);
+  border: 2px solid rgba(255,255,255,0.7);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  z-index: 12;
+  cursor: grab;
+  overflow: hidden;
+  display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 20;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  transition: box-shadow 0.2s;
 }
-
-.paused-overlay.visible {
+.camera-overlay:active { cursor: grabbing; box-shadow: 0 12px 40px rgba(0,0,0,0.7); }
+.camera-overlay .cam-placeholder {
   display: flex;
-}
-
-.paused-icon {
-  animation: breathe 2.5s ease-in-out infinite;
-}
-
-@keyframes breathe {
-  0%, 100% { transform: scale(1); opacity: 0.9; }
-  50% { transform: scale(1.08); opacity: 1; }
-}
-
-.paused-text {
-  font-family: 'Fredoka', sans-serif;
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--yellow);
-  margin-top: 16px;
-}
-
-.paused-hint {
-  font-size: 14px;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   color: var(--text-muted);
-  margin-top: 8px;
+  font-size: 12px;
 }
+
+/* ======= AUDIO LEVEL STRIP (above control bar) ======= */
+.audio-strip {
+  position: absolute;
+  bottom: 136px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 20px;
+  z-index: 16;
+  opacity: 0.7;
+}
+.audio-strip .meter-bar {
+  width: 3px;
+  border-radius: 1.5px;
+  background: var(--green);
+  transition: height 0.1s ease;
+}
+.audio-strip .meter-bar:nth-child(4),
+.audio-strip .meter-bar:nth-child(5) { background: var(--yellow); }
+.audio-strip .meter-bar:nth-child(6),
+.audio-strip .meter-bar:nth-child(7) { background: var(--red); }
 
 /* ======= BOTTOM CONTROL BAR ======= */
 .control-bar {
@@ -216,54 +234,45 @@ body {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid rgba(255,255,255,0.08);
-  padding: 12px 24px 16px;
+  padding: 0 24px 16px;
   z-index: 15;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
 }
 
-/* Row 1 — Take indicator */
-.take-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-
-.take-badge {
+/* Take counter pill */
+.take-pill {
+  align-self: center;
   background: var(--cyan);
   color: #0a0e1a;
   font-family: 'Fredoka', sans-serif;
   font-weight: 600;
-  font-size: 14px;
-  padding: 4px 14px;
+  font-size: 13px;
+  padding: 4px 16px;
   border-radius: 20px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+  transition: transform 0.3s, opacity 0.3s;
+  opacity: 0;
+  transform: scale(0.8);
+}
+.take-pill.visible {
+  opacity: 1;
+  transform: scale(1);
 }
 
-.take-dots {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
-.take-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.3);
-  transition: background 0.3s;
-}
-.take-dot.current { background: var(--cyan); }
-
-/* Row 2 — Main controls */
-.main-controls {
+/* Main TikTok-style controls row */
+.tiktok-controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 28px;
+  min-height: 90px;
+  position: relative;
 }
 
+/* Control buttons */
 .ctrl-btn {
   display: flex;
   flex-direction: column;
@@ -278,124 +287,139 @@ body {
   font-weight: 500;
   outline: none;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.15s, opacity 0.15s;
+  transition: transform 0.3s, opacity 0.3s;
 }
-
 .ctrl-btn:hover { transform: scale(1.05); }
 .ctrl-btn:active { transform: scale(0.95); }
 
-.ctrl-icon {
-  width: 48px;
-  height: 48px;
+/* Hidden state for buttons that come/go */
+.ctrl-btn.hidden {
+  opacity: 0;
+  transform: scale(0.6);
+  pointer-events: none;
+  position: absolute;
+}
+.ctrl-btn.hidden-left {
+  opacity: 0;
+  transform: scale(0.6) translateX(40px);
+  pointer-events: none;
+  position: absolute;
+  right: calc(50% + 60px);
+}
+.ctrl-btn.hidden-right {
+  opacity: 0;
+  transform: scale(0.6) translateX(-40px);
+  pointer-events: none;
+  position: absolute;
+  left: calc(50% + 60px);
+}
+
+/* Center big button */
+.center-btn-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.big-circle {
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, box-shadow 0.2s;
-}
-
-.ctrl-icon.delete {
-  background: rgba(229,62,62,0.15);
-  border: 2px solid rgba(229,62,62,0.4);
-}
-.ctrl-btn:hover .ctrl-icon.delete {
-  background: rgba(229,62,62,0.25);
-}
-
-.ctrl-icon.pause-resume {
-  width: 64px;
-  height: 64px;
-  background: var(--cyan);
-  box-shadow: 0 0 24px rgba(56,196,242,0.3);
-}
-.ctrl-icon.pause-resume.is-paused {
-  background: var(--yellow);
-  box-shadow: 0 0 24px rgba(234,214,84,0.3);
-  animation: pulse-btn 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse-btn {
-  0%, 100% { box-shadow: 0 0 24px rgba(234,214,84,0.3); }
-  50% { box-shadow: 0 0 36px rgba(234,214,84,0.5); }
-}
-
-.ctrl-icon.new-take {
-  background: rgba(56,196,242,0.15);
-  border: 2px solid rgba(56,196,242,0.4);
-}
-.ctrl-btn:hover .ctrl-icon.new-take {
-  background: rgba(56,196,242,0.25);
-}
-
-.ctrl-icon.stop {
-  background: rgba(229,62,62,0.2);
-  border: 2px solid var(--red);
-}
-.ctrl-btn:hover .ctrl-icon.stop {
-  background: rgba(229,62,62,0.35);
-}
-
-/* Row 3 — Secondary controls */
-.secondary-controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-}
-
-.sec-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  color: var(--text);
-  transition: background 0.2s;
+  border: none;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
   outline: none;
   -webkit-tap-highlight-color: transparent;
 }
-.sec-btn:hover { background: rgba(255,255,255,0.12); }
-.sec-btn.off { color: var(--red); border-color: rgba(229,62,62,0.3); }
-.sec-btn.off svg { opacity: 0.6; }
+.big-circle:hover { transform: scale(1.08); }
+.big-circle:active { transform: scale(0.93); }
 
-/* Audio level meter */
-.audio-meter {
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 28px;
-  padding: 0 8px;
+.big-circle.red {
+  background: var(--red);
+  box-shadow: 0 0 24px rgba(229,62,62,0.4);
 }
-
-.meter-bar {
-  width: 4px;
-  border-radius: 2px;
+.big-circle.green {
   background: var(--green);
-  transition: height 0.1s ease;
+  box-shadow: 0 0 24px rgba(125,197,122,0.4);
 }
-.meter-bar:nth-child(4) { background: var(--yellow); }
-.meter-bar:nth-child(5) { background: var(--red); }
 
-.sec-info {
+.center-label {
+  font-family: 'Heebo', sans-serif;
   font-size: 12px;
-  color: var(--text-muted);
-  font-family: 'Fredoka', sans-serif;
-  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: var(--text);
+  transition: color 0.3s;
 }
 
-/* ======= MINI TIMELINE ======= */
+/* Side action buttons */
+.side-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  font-family: 'Heebo', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.3s, opacity 0.3s;
+}
+.side-btn:hover { transform: scale(1.05); }
+.side-btn:active { transform: scale(0.95); }
+.side-btn.hidden {
+  opacity: 0;
+  transform: scale(0.6);
+  pointer-events: none;
+  width: 0;
+  overflow: hidden;
+  margin: 0;
+  gap: 0;
+}
+
+.side-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.side-icon.delete {
+  background: rgba(229,62,62,0.15);
+  border: 2px solid rgba(229,62,62,0.4);
+}
+.side-btn:hover .side-icon.delete {
+  background: rgba(229,62,62,0.3);
+}
+
+.side-icon.finish {
+  background: rgba(229,62,62,0.2);
+  border: 2px solid var(--red);
+}
+.side-btn:hover .side-icon.finish {
+  background: rgba(229,62,62,0.35);
+}
+
+/* ======= MINI TIMELINE (bottom strip) ======= */
 .mini-timeline {
   width: 100%;
-  height: 20px;
+  height: 22px;
   position: relative;
   display: flex;
   border-radius: 4px;
   overflow: hidden;
   background: rgba(255,255,255,0.05);
+  margin-top: 10px;
 }
 
 .timeline-segment {
@@ -404,18 +428,24 @@ body {
   display: flex;
   align-items: center;
   min-width: 30px;
-  transition: flex 0.3s;
+  transition: flex 0.3s, opacity 0.3s, min-width 0.3s;
 }
 
-.timeline-segment:nth-child(odd) { background: rgba(56,196,242,0.2); }
-.timeline-segment:nth-child(even) { background: rgba(37,62,122,0.4); }
-.timeline-segment.current { background: rgba(56,196,242,0.35); }
+.timeline-segment:nth-child(odd) { background: rgba(56,196,242,0.25); }
+.timeline-segment:nth-child(even) { background: rgba(56,196,242,0.12); }
+.timeline-segment.current { background: rgba(56,196,242,0.4); }
+
+.timeline-segment.removing {
+  opacity: 0;
+  min-width: 0;
+  flex: 0 !important;
+}
 
 .segment-label {
   font-size: 9px;
   font-family: 'Fredoka', sans-serif;
   font-weight: 600;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.6);
   padding-right: 6px;
 }
 
@@ -590,7 +620,7 @@ kbd {
   <!-- Top overlay -->
   <div class="top-overlay">
     <!-- Recording indicator (top-right in RTL = visually right) -->
-    <div class="rec-indicator" id="recIndicator">
+    <div class="rec-indicator hidden" id="recIndicator">
       <div class="rec-dot" id="recDot"></div>
       <span class="rec-label" id="recLabel">REC</span>
       <span class="rec-timer" id="recTimer">00:00</span>
@@ -603,78 +633,60 @@ kbd {
   <!-- Lesson name pill -->
   <div class="lesson-pill">שיעור 3: צבע ומשמעות</div>
 
-  <!-- Paused overlay -->
-  <div class="paused-overlay" id="pausedOverlay">
-    <div class="paused-icon">
-      <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
-        <rect x="18" y="14" width="12" height="44" rx="4" fill="#EAD654"/>
-        <rect x="42" y="14" width="12" height="44" rx="4" fill="#EAD654"/>
+  <!-- Camera overlay (draggable) -->
+  <div class="camera-overlay" id="cameraOverlay">
+    <div class="cam-placeholder">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M23 7l-7 5 7 5V7z"/>
+        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
       </svg>
+      <span>מצלמה</span>
     </div>
-    <div class="paused-text">ההקלטה מושהית</div>
-    <div class="paused-hint">לחץ <kbd>רווח</kbd> או כפתור המשך</div>
+  </div>
+
+  <!-- Audio level strip (above control bar) -->
+  <div class="audio-strip" id="audioStrip">
+    <div class="meter-bar" style="height:4px"></div>
+    <div class="meter-bar" style="height:6px"></div>
+    <div class="meter-bar" style="height:10px"></div>
+    <div class="meter-bar" style="height:14px"></div>
+    <div class="meter-bar" style="height:8px"></div>
+    <div class="meter-bar" style="height:5px"></div>
+    <div class="meter-bar" style="height:3px"></div>
   </div>
 
   <!-- Bottom control bar -->
   <div class="control-bar">
-    <!-- Mini timeline -->
-    <div class="mini-timeline" id="miniTimeline">
-      <!-- Segments injected by JS -->
-    </div>
+    <!-- Take counter pill -->
+    <div class="take-pill" id="takePill">טייק 1</div>
 
-    <!-- Row 1: Take indicator -->
-    <div class="take-row">
-      <span class="take-badge" id="takeBadge">טייק 1</span>
-      <div class="take-dots" id="takeDots">
-        <div class="take-dot current"></div>
-      </div>
-    </div>
-
-    <!-- Row 2: Main controls -->
-    <div class="main-controls">
-      <button class="ctrl-btn" id="btnDeleteTake" title="מחק טייק אחרון (Backspace)">
-        <div class="ctrl-icon delete">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- TikTok-style controls -->
+    <div class="tiktok-controls" id="tiktokControls">
+      <!-- Delete last take (only visible when paused) -->
+      <button class="side-btn hidden" id="btnDelete" title="מחק טייק אחרון (Backspace)">
+        <div class="side-icon delete">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="3 6 5 6 21 6"/>
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-            <line x1="10" y1="11" x2="10" y2="17"/>
-            <line x1="14" y1="11" x2="14" y2="17"/>
           </svg>
         </div>
-        <span>מחק טייק</span>
+        <span>מחק טייק אחרון</span>
       </button>
 
-      <button class="ctrl-btn" id="btnPauseResume" title="השהה / המשך (Space)">
-        <div class="ctrl-icon pause-resume" id="pauseResumeIcon">
-          <!-- Pause icon -->
-          <svg id="iconPause" width="28" height="28" viewBox="0 0 28 28" fill="none">
-            <rect x="7" y="5" width="4.5" height="18" rx="1.5" fill="#0a0e1a"/>
-            <rect x="16.5" y="5" width="4.5" height="18" rx="1.5" fill="#0a0e1a"/>
-          </svg>
-          <!-- Play/Resume icon (hidden) -->
-          <svg id="iconResume" width="28" height="28" viewBox="0 0 28 28" fill="none" style="display:none">
-            <path d="M9 5.5L22 14L9 22.5V5.5Z" fill="#0a0e1a"/>
-          </svg>
-        </div>
-        <span id="pauseResumeLabel">השהה</span>
-      </button>
+      <!-- Center big button -->
+      <div class="center-btn-wrap" id="centerWrap">
+        <button class="big-circle red" id="bigBtn">
+          <!-- Initial: empty red circle (start recording) -->
+          <!-- Recording: pause icon -->
+          <!-- Paused: play icon (green) -->
+        </button>
+        <span class="center-label" id="centerLabel">התחל הקלטה</span>
+      </div>
 
-      <button class="ctrl-btn" id="btnNewTake" title="טייק חדש (T)">
-        <div class="ctrl-icon new-take">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="6" cy="6" r="3"/>
-            <circle cx="6" cy="18" r="3"/>
-            <line x1="20" y1="4" x2="8.12" y2="15.88"/>
-            <line x1="14.47" y1="14.48" x2="20" y2="20"/>
-            <line x1="8.12" y1="8.12" x2="12" y2="12"/>
-          </svg>
-        </div>
-        <span>טייק חדש</span>
-      </button>
-
-      <button class="ctrl-btn" id="btnStop" title="סיים הקלטה (Esc)">
-        <div class="ctrl-icon stop">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <!-- Finish recording (visible during recording & paused) -->
+      <button class="side-btn hidden" id="btnFinish" title="סיים הקלטה (Esc)">
+        <div class="side-icon finish">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
             <rect x="3" y="3" width="14" height="14" rx="2" fill="currentColor"/>
           </svg>
         </div>
@@ -682,34 +694,9 @@ kbd {
       </button>
     </div>
 
-    <!-- Row 3: Secondary controls -->
-    <div class="secondary-controls">
-      <button class="sec-btn" id="btnCamera" title="מצלמה">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M23 7l-7 5 7 5V7z"/>
-          <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-        </svg>
-      </button>
-
-      <button class="sec-btn" id="btnMic" title="מיקרופון">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-          <line x1="12" y1="19" x2="12" y2="23"/>
-          <line x1="8" y1="23" x2="16" y2="23"/>
-        </svg>
-      </button>
-
-      <div class="audio-meter" id="audioMeter">
-        <div class="meter-bar" style="height:8px"></div>
-        <div class="meter-bar" style="height:12px"></div>
-        <div class="meter-bar" style="height:18px"></div>
-        <div class="meter-bar" style="height:10px"></div>
-        <div class="meter-bar" style="height:4px"></div>
-      </div>
-
-      <span class="sec-info" id="elapsedInfo">00:00</span>
-      <span class="sec-info" id="fileSizeInfo">~0 MB</span>
+    <!-- Mini timeline -->
+    <div class="mini-timeline" id="miniTimeline">
+      <!-- Segments injected by JS -->
     </div>
   </div>
 </div>
@@ -723,7 +710,7 @@ kbd {
         <path d="M16 18h16M20 18v-2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M30 18v14a2 2 0 0 1-2 2H20a2 2 0 0 1-2-2V18" stroke="#e53e3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
-    <h3 id="deleteDialogTitle">האם למחוק את טייק 1?</h3>
+    <h3 id="deleteDialogTitle">למחוק את הטייק האחרון?</h3>
     <p id="deleteDialogDesc">(0:00)</p>
     <div class="dialog-actions">
       <button class="dialog-btn cancel" onclick="closeDialog('dialogDeleteTake')">ביטול</button>
@@ -755,17 +742,14 @@ kbd {
 
 <script>
 // ======= STATE =======
+// States: 'initial' | 'recording' | 'paused' | 'done'
 const state = {
-  recording: true,
-  paused: false,
+  phase: 'initial',
   seconds: 0,
-  takeNum: 1,
-  takes: [{ start: 0, duration: 0 }],
-  cameraOn: true,
-  micOn: true,
+  takeNum: 0,
+  takes: [],
   intervalId: null,
   meterIntervalId: null,
-  pendingUndo: null
 };
 
 // ======= ELEMENTS =======
@@ -774,17 +758,14 @@ const recDot = $('recDot');
 const recLabel = $('recLabel');
 const recTimer = $('recTimer');
 const recIndicator = $('recIndicator');
-const pausedOverlay = $('pausedOverlay');
-const pauseResumeIcon = $('pauseResumeIcon');
-const iconPause = $('iconPause');
-const iconResume = $('iconResume');
-const pauseResumeLabel = $('pauseResumeLabel');
-const takeBadge = $('takeBadge');
-const takeDots = $('takeDots');
+const bigBtn = $('bigBtn');
+const centerLabel = $('centerLabel');
+const btnDelete = $('btnDelete');
+const btnFinish = $('btnFinish');
+const takePill = $('takePill');
 const miniTimeline = $('miniTimeline');
-const elapsedInfo = $('elapsedInfo');
-const fileSizeInfo = $('fileSizeInfo');
-const audioMeter = $('audioMeter');
+const audioStrip = $('audioStrip');
+const cameraOverlay = $('cameraOverlay');
 
 // ======= TIMER =======
 function formatTime(s) {
@@ -794,10 +775,13 @@ function formatTime(s) {
 }
 
 function tick() {
-  if (!state.paused && state.recording) {
+  if (state.phase === 'recording') {
     state.seconds++;
-    state.takes[state.takes.length - 1].duration++;
-    updateUI();
+    if (state.takes.length > 0) {
+      state.takes[state.takes.length - 1].duration++;
+    }
+    updateTimerDisplay();
+    updateTimeline();
   }
 }
 
@@ -806,94 +790,188 @@ function startTimer() {
   state.intervalId = setInterval(tick, 1000);
 }
 
-function updateUI() {
+function updateTimerDisplay() {
   recTimer.textContent = formatTime(state.seconds);
-  elapsedInfo.textContent = formatTime(state.seconds);
-  const mb = Math.round(state.seconds * 0.85);
-  fileSizeInfo.textContent = `~${mb} MB`;
-  updateTimeline();
 }
 
-// ======= PAUSE / RESUME =======
-function togglePause() {
-  state.paused = !state.paused;
-  if (state.paused) {
-    pausedOverlay.classList.add('visible');
-    iconPause.style.display = 'none';
-    iconResume.style.display = 'block';
-    pauseResumeIcon.classList.add('is-paused');
-    pauseResumeLabel.textContent = 'המשך';
+// ======= RENDER CONTROLS BY STATE =======
+function renderControls() {
+  const phase = state.phase;
+
+  // REC indicator
+  if (phase === 'initial' || phase === 'done') {
+    recIndicator.classList.add('hidden');
+  } else {
+    recIndicator.classList.remove('hidden');
+  }
+
+  // REC dot & label
+  if (phase === 'recording') {
+    recDot.classList.remove('paused');
+    recDot.style.animation = '';
+    recDot.style.background = '';
+    recLabel.classList.remove('paused');
+    recLabel.textContent = 'REC';
+  } else if (phase === 'paused') {
     recDot.classList.add('paused');
     recLabel.classList.add('paused');
     recLabel.textContent = 'PAUSED';
-    showToast('ההקלטה מושהית', 'yellow');
-  } else {
-    pausedOverlay.classList.remove('visible');
-    iconPause.style.display = 'block';
-    iconResume.style.display = 'none';
-    pauseResumeIcon.classList.remove('is-paused');
-    pauseResumeLabel.textContent = 'השהה';
-    recDot.classList.remove('paused');
+  } else if (phase === 'done') {
+    recDot.style.animation = 'none';
+    recDot.style.background = 'var(--green)';
+    recLabel.textContent = 'DONE';
     recLabel.classList.remove('paused');
-    recLabel.textContent = 'REC';
-    showToast('ההקלטה ממשיכה', 'green');
+  }
+
+  // Big center button
+  if (phase === 'initial') {
+    bigBtn.className = 'big-circle red';
+    bigBtn.innerHTML = '';
+    centerLabel.textContent = 'התחל הקלטה';
+  } else if (phase === 'recording') {
+    bigBtn.className = 'big-circle red';
+    bigBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect x="7" y="5" width="4.5" height="18" rx="1.5" fill="#fff"/>
+      <rect x="16.5" y="5" width="4.5" height="18" rx="1.5" fill="#fff"/>
+    </svg>`;
+    centerLabel.textContent = 'עצור';
+  } else if (phase === 'paused') {
+    bigBtn.className = 'big-circle green';
+    bigBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <path d="M10 5.5L23 14L10 22.5V5.5Z" fill="#0a0e1a"/>
+    </svg>`;
+    centerLabel.textContent = 'המשך';
+  } else if (phase === 'done') {
+    bigBtn.className = 'big-circle red';
+    bigBtn.style.opacity = '0.4';
+    bigBtn.style.pointerEvents = 'none';
+    bigBtn.innerHTML = '';
+    centerLabel.textContent = 'ההקלטה הסתיימה';
+  }
+
+  // Delete button (only when paused & more than 1 take)
+  if (phase === 'paused' && state.takes.length >= 1) {
+    btnDelete.classList.remove('hidden');
+  } else {
+    btnDelete.classList.add('hidden');
+  }
+
+  // Finish button (recording or paused)
+  if (phase === 'recording' || phase === 'paused') {
+    btnFinish.classList.remove('hidden');
+  } else {
+    btnFinish.classList.add('hidden');
+  }
+
+  // Take pill
+  if (state.takeNum >= 1) {
+    takePill.textContent = `טייק ${state.takeNum}`;
+    takePill.classList.add('visible');
+  } else {
+    takePill.classList.remove('visible');
   }
 }
 
-// ======= TAKES =======
-function newTake() {
-  if (state.paused) return;
+// ======= STATE TRANSITIONS =======
+function startRecording() {
+  state.phase = 'recording';
+  state.takeNum = 1;
+  state.takes = [{ start: 0, duration: 0 }];
+  startTimer();
+  state.meterIntervalId = setInterval(animateMeter, 100);
+  renderControls();
+  updateTimeline();
+  showToast('ההקלטה התחילה', 'red');
+}
+
+function pauseRecording() {
+  // Pressing "stop" during recording = pause (creates take boundary)
+  state.phase = 'paused';
+  renderControls();
+  showToast('ההקלטה מושהית', 'yellow');
+}
+
+function resumeRecording() {
+  // Resume = start new take
   state.takeNum++;
   state.takes.push({ start: state.seconds, duration: 0 });
-  updateTakeUI();
+  state.phase = 'recording';
+  renderControls();
   updateTimeline();
-  showToast(`טייק חדש: #${state.takeNum}`, 'cyan');
+  showToast(`טייק ${state.takeNum} התחיל`, 'cyan');
 }
 
-function updateTakeUI() {
-  takeBadge.textContent = `טייק ${state.takeNum}`;
-  takeDots.innerHTML = '';
-  for (let i = 0; i < state.takeNum; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'take-dot' + (i === state.takeNum - 1 ? ' current' : '');
-    takeDots.appendChild(dot);
+function handleCenterButton() {
+  if (state.phase === 'initial') {
+    startRecording();
+  } else if (state.phase === 'recording') {
+    pauseRecording();
+  } else if (state.phase === 'paused') {
+    resumeRecording();
   }
 }
 
+// ======= DELETE TAKE =======
 function requestDeleteTake() {
-  if (state.takeNum <= 1) return;
+  if (state.phase !== 'paused') return;
+  if (state.takes.length < 1) return;
   const lastTake = state.takes[state.takes.length - 1];
-  $('deleteDialogTitle').textContent = `האם למחוק את טייק ${state.takeNum}?`;
-  $('deleteDialogDesc').textContent = `(${formatTime(lastTake.duration)})`;
+  $('deleteDialogTitle').textContent = `למחוק את הטייק האחרון? (${formatTime(lastTake.duration)})`;
+  $('deleteDialogDesc').textContent = `טייק ${state.takeNum}`;
   $('dialogDeleteTake').classList.add('visible');
 }
 
 function confirmDeleteTake() {
   closeDialog('dialogDeleteTake');
-  const deletedNum = state.takeNum;
   const deletedTake = state.takes.pop();
   state.seconds -= deletedTake.duration;
   state.takeNum--;
-  updateTakeUI();
-  updateUI();
-  showToast(`טייק ${deletedNum} נמחק`, 'red', true);
+  updateTimerDisplay();
+
+  // Animate segment removal
+  const segments = miniTimeline.querySelectorAll('.timeline-segment');
+  const lastSeg = segments[segments.length - 1];
+  if (lastSeg) {
+    lastSeg.classList.add('removing');
+    setTimeout(() => {
+      updateTimeline();
+    }, 300);
+  } else {
+    updateTimeline();
+  }
+
+  renderControls();
+  showToast(`טייק ${state.takeNum + 1} נמחק`, 'red', true);
+
+  // If no takes left, go back to initial
+  if (state.takes.length === 0) {
+    state.phase = 'initial';
+    state.takeNum = 0;
+    state.seconds = 0;
+    clearInterval(state.intervalId);
+    clearInterval(state.meterIntervalId);
+    renderControls();
+    updateTimeline();
+  }
 }
 
-// ======= STOP =======
+// ======= STOP / FINISH =======
 function requestStop() {
   $('stopDialogDesc').textContent = `משך כולל: ${formatTime(state.seconds)}`;
   $('dialogStop').classList.add('visible');
-  if (!state.paused) togglePause();
+  // Auto-pause if recording
+  if (state.phase === 'recording') {
+    state.phase = 'paused';
+    renderControls();
+  }
 }
 
 function confirmStop() {
   closeDialog('dialogStop');
-  state.recording = false;
+  state.phase = 'done';
   clearInterval(state.intervalId);
   clearInterval(state.meterIntervalId);
-  recLabel.textContent = 'DONE';
-  recDot.style.animation = 'none';
-  recDot.style.background = 'var(--green)';
+  renderControls();
   showToast('ההקלטה נשמרה בהצלחה', 'green');
 }
 
@@ -914,40 +992,30 @@ function updateTimeline() {
   const total = Math.max(state.seconds, 1);
   let html = '';
   state.takes.forEach((take, i) => {
-    const pct = Math.max((take.duration / total) * 100, 2);
     const isCurrent = i === state.takes.length - 1;
     html += `<div class="timeline-segment${isCurrent ? ' current' : ''}" style="flex:${take.duration || 1}">
       <span class="segment-label">${i + 1}</span>
     </div>`;
   });
-  // playhead at the end of current segment
-  miniTimeline.innerHTML = html + `<div class="playhead" style="left:auto;right:0"></div>`;
+  if (state.takes.length > 0) {
+    html += `<div class="playhead" style="left:auto;right:0"></div>`;
+  }
+  miniTimeline.innerHTML = html;
 }
 
 // ======= AUDIO METER =======
 function animateMeter() {
-  const bars = audioMeter.querySelectorAll('.meter-bar');
+  const bars = audioStrip.querySelectorAll('.meter-bar');
   bars.forEach((bar, i) => {
-    if (state.paused || !state.recording || !state.micOn) {
-      bar.style.height = '3px';
+    if (state.phase !== 'recording') {
+      bar.style.height = '2px';
       return;
     }
-    const base = [14, 18, 22, 12, 6][i];
-    const h = Math.max(3, base + Math.random() * 12 - 4);
+    const bases = [8, 12, 16, 14, 10, 7, 4];
+    const h = Math.max(2, bases[i] + Math.random() * 10 - 3);
     bar.style.height = h + 'px';
   });
 }
-
-// ======= CAMERA / MIC =======
-$('btnCamera').addEventListener('click', () => {
-  state.cameraOn = !state.cameraOn;
-  $('btnCamera').classList.toggle('off', !state.cameraOn);
-});
-
-$('btnMic').addEventListener('click', () => {
-  state.micOn = !state.micOn;
-  $('btnMic').classList.toggle('off', !state.micOn);
-});
 
 // ======= TOASTS =======
 function showToast(msg, color, withUndo) {
@@ -976,10 +1044,9 @@ function showToast(msg, color, withUndo) {
 }
 
 function undoDelete(btn) {
-  // Simple undo: re-add a take with 0 duration
   state.takeNum++;
   state.takes.push({ start: state.seconds, duration: 0 });
-  updateTakeUI();
+  renderControls();
   updateTimeline();
   const toastEl = btn.closest('.toast');
   if (toastEl) {
@@ -990,37 +1057,25 @@ function undoDelete(btn) {
 }
 
 // ======= BUTTON EVENTS =======
-$('btnPauseResume').addEventListener('click', () => {
-  if (!state.recording) return;
-  togglePause();
+bigBtn.addEventListener('click', handleCenterButton);
+
+btnDelete.addEventListener('click', () => {
+  if (state.phase === 'paused') requestDeleteTake();
 });
 
-$('btnNewTake').addEventListener('click', () => {
-  if (!state.recording || state.paused) return;
-  newTake();
-});
-
-$('btnDeleteTake').addEventListener('click', () => {
-  if (!state.recording) return;
-  requestDeleteTake();
-});
-
-$('btnStop').addEventListener('click', () => {
-  if (!state.recording) return;
-  requestStop();
+btnFinish.addEventListener('click', () => {
+  if (state.phase === 'recording' || state.phase === 'paused') requestStop();
 });
 
 // ======= KEYBOARD SHORTCUTS =======
 document.addEventListener('keydown', e => {
-  // Don't trigger if a dialog is open (unless Escape)
   const dialogOpen = document.querySelector('.dialog-overlay.visible');
 
   if (e.key === 'Escape') {
     if (dialogOpen) {
       dialogOpen.classList.remove('visible');
-      // If we paused for stop dialog, resume
-      if (state.paused && state.recording) togglePause();
-    } else if (state.recording) {
+      // If we paused for stop dialog, keep paused state
+    } else if (state.phase === 'recording' || state.phase === 'paused') {
       requestStop();
     }
     return;
@@ -1030,22 +1085,87 @@ document.addEventListener('keydown', e => {
 
   if (e.code === 'Space') {
     e.preventDefault();
-    if (state.recording) togglePause();
+    handleCenterButton();
   }
-  if (e.key === 't' || e.key === 'T' || e.key === 'ט') {
-    if (state.recording && !state.paused) newTake();
-  }
-  if (e.key === 'Backspace') {
-    if (state.recording) requestDeleteTake();
+  if (e.key === 'Backspace' || e.key === 'Delete') {
+    if (state.phase === 'paused') requestDeleteTake();
   }
 });
 
+// ======= DRAGGABLE CAMERA OVERLAY =======
+(function initDrag() {
+  let isDragging = false;
+  let offsetX = 0, offsetY = 0;
+
+  cameraOverlay.addEventListener('mousedown', e => {
+    isDragging = true;
+    const rect = cameraOverlay.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    cameraOverlay.style.transition = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    const parent = cameraOverlay.parentElement.getBoundingClientRect();
+    let x = e.clientX - parent.left - offsetX;
+    let y = e.clientY - parent.top - offsetY;
+    // Clamp to parent
+    const w = cameraOverlay.offsetWidth;
+    const h = cameraOverlay.offsetHeight;
+    x = Math.max(0, Math.min(x, parent.width - w));
+    y = Math.max(0, Math.min(y, parent.height - h));
+    cameraOverlay.style.left = x + 'px';
+    cameraOverlay.style.top = y + 'px';
+    cameraOverlay.style.bottom = 'auto';
+    cameraOverlay.style.right = 'auto';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      cameraOverlay.style.transition = '';
+    }
+  });
+
+  // Touch support
+  cameraOverlay.addEventListener('touchstart', e => {
+    isDragging = true;
+    const touch = e.touches[0];
+    const rect = cameraOverlay.getBoundingClientRect();
+    offsetX = touch.clientX - rect.left;
+    offsetY = touch.clientY - rect.top;
+    cameraOverlay.style.transition = 'none';
+    e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    const touch = e.touches[0];
+    const parent = cameraOverlay.parentElement.getBoundingClientRect();
+    let x = touch.clientX - parent.left - offsetX;
+    let y = touch.clientY - parent.top - offsetY;
+    const w = cameraOverlay.offsetWidth;
+    const h = cameraOverlay.offsetHeight;
+    x = Math.max(0, Math.min(x, parent.width - w));
+    y = Math.max(0, Math.min(y, parent.height - h));
+    cameraOverlay.style.left = x + 'px';
+    cameraOverlay.style.top = y + 'px';
+    cameraOverlay.style.bottom = 'auto';
+    cameraOverlay.style.right = 'auto';
+  }, { passive: false });
+
+  document.addEventListener('touchend', () => {
+    isDragging = false;
+    cameraOverlay.style.transition = '';
+  });
+})();
+
 // ======= INIT =======
-startTimer();
 state.meterIntervalId = setInterval(animateMeter, 100);
-updateTakeUI();
+renderControls();
 updateTimeline();
-updateUI();
 </script>
 </body>
 </html>

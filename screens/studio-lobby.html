@@ -172,6 +172,42 @@
   @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
   .fade-in{animation:fadeIn .4s ease both;}
 
+  /* ── Read-only fields ── */
+  .readonly-field{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-sub);font-size:14px;font-family:var(--font-he);min-height:44px;cursor:default;user-select:none;}
+  .readonly-lock{width:14px;height:14px;color:var(--text-light);flex-shrink:0;}
+
+  /* ── Shape Selector ── */
+  .shape-selector{display:none;align-items:center;justify-content:center;gap:8px;margin-top:4px;}
+  .shape-selector.visible{display:flex;}
+  .shape-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-sub);font-size:12px;font-weight:600;font-family:var(--font-he);cursor:pointer;transition:all .2s;min-height:36px;}
+  .shape-btn:hover{border-color:rgba(56,196,242,0.4);}
+  .shape-btn.active{background:var(--cyan);border-color:var(--cyan);color:white;}
+  .shape-btn svg{width:16px;height:16px;}
+  .shape-hint{text-align:center;font-size:11px;color:var(--text-light);margin-top:4px;display:none;}
+  .shape-hint.visible{display:block;}
+
+  /* ── Screen share preview ── */
+  .screen-share-bg{position:absolute;inset:0;z-index:0;display:none;}
+  .screen-share-bg.visible{display:block;}
+  .screen-share-bg .ss-gradient{position:absolute;inset:0;background:linear-gradient(135deg,#1a1e3a 0%,#0d1628 40%,#1a2a4a 100%);}
+  .screen-share-bg .ss-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(56,196,242,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(56,196,242,0.04) 1px,transparent 1px);background-size:40px 40px;}
+  .screen-share-bg .ss-window{position:absolute;top:12%;left:15%;right:15%;bottom:20%;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 30px rgba(0,0,0,0.3);}
+  .screen-share-bg .ss-titlebar{height:24px;background:rgba(255,255,255,0.06);border-radius:8px 8px 0 0;display:flex;align-items:center;padding:0 10px;gap:5px;}
+  .screen-share-bg .ss-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.15);}
+  .screen-share-bg .ss-content{padding:16px;display:flex;flex-direction:column;gap:8px;}
+  .screen-share-bg .ss-line{height:6px;border-radius:3px;background:rgba(255,255,255,0.06);}
+  .screen-share-bg .ss-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:13px;color:rgba(255,255,255,0.2);font-weight:600;letter-spacing:1px;}
+
+  /* ── Camera overlay in screen share mode ── */
+  .cam-overlay{position:absolute;z-index:4;cursor:grab;transition:border-radius .3s, width .3s, height .3s;display:none;overflow:hidden;}
+  .cam-overlay.visible{display:block;}
+  .cam-overlay.dragging{cursor:grabbing;}
+  .cam-overlay.rect{width:20%;aspect-ratio:16/9;border-radius:8px;bottom:12px;right:12px;border:2px solid rgba(255,255,255,0.9);box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+  .cam-overlay.circle{width:15%;aspect-ratio:1/1;border-radius:50%;bottom:12px;right:12px;border:2px solid rgba(255,255,255,0.9);box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+  .cam-overlay-inner{width:100%;height:100%;background:radial-gradient(ellipse at 50% 40%,rgba(100,160,220,0.35) 0%,rgba(40,60,100,0.5) 50%,rgba(15,25,50,0.8) 100%);display:flex;align-items:center;justify-content:center;}
+  .cam-overlay-inner svg{width:40%;height:40%;opacity:0.4;}
+  .cam-overlay .drag-handle{position:absolute;top:4px;left:50%;transform:translateX(-50%);width:20px;height:4px;border-radius:2px;background:rgba(255,255,255,0.4);z-index:5;}
+
   /* ── Recording overlay ── */
   .rec-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:none;align-items:center;justify-content:center;}
   .rec-overlay.visible{display:flex;}
@@ -239,6 +275,10 @@
       <span class="breadcrumb-sep">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>
       </span>
+      <a class="breadcrumb-link" onclick="showToast('info','מעבר לפרק...')">פרק 2: צבע וטיפוגרפיה</a>
+      <span class="breadcrumb-sep">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"/></svg>
+      </span>
       <span class="breadcrumb-current">הקלט שיעור חדש</span>
     </nav>
     <div class="topbar-actions">
@@ -269,6 +309,29 @@
           <div class="sim-person"></div>
           <div class="preview-label"><span>תצוגה מקדימה</span></div>
         </div>
+        <!-- Screen Share Background -->
+        <div class="screen-share-bg" id="screenShareBg">
+          <div class="ss-gradient"></div>
+          <div class="ss-grid"></div>
+          <div class="ss-window">
+            <div class="ss-titlebar"><span class="ss-dot"></span><span class="ss-dot"></span><span class="ss-dot"></span></div>
+            <div class="ss-content">
+              <div class="ss-line" style="width:80%"></div>
+              <div class="ss-line" style="width:60%"></div>
+              <div class="ss-line" style="width:90%"></div>
+              <div class="ss-line" style="width:45%"></div>
+              <div class="ss-line" style="width:70%"></div>
+            </div>
+          </div>
+          <div class="ss-label">שיתוף מסך</div>
+        </div>
+        <!-- Camera Overlay (for screen+camera mode) -->
+        <div class="cam-overlay rect" id="camOverlay">
+          <div class="drag-handle"></div>
+          <div class="cam-overlay-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+          </div>
+        </div>
       </div>
 
       <!-- Controls -->
@@ -286,6 +349,19 @@
           <span class="off-line"></span>
         </button>
       </div>
+
+      <!-- Shape Selector (screen+camera mode only) -->
+      <div class="shape-selector" id="shapeSelector">
+        <button class="shape-btn active" id="btnRect" onclick="selectShape('rect')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/></svg>
+          מלבן
+        </button>
+        <button class="shape-btn" id="btnCircle" onclick="selectShape('circle')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+          עיגול
+        </button>
+      </div>
+      <div class="shape-hint" id="shapeHint">גרור את חלון המצלמה למיקום הרצוי</div>
 
       <!-- Device Selectors -->
       <div class="device-selectors">
@@ -360,20 +436,28 @@
           </select>
         </div>
 
-        <!-- Lesson Name -->
+        <!-- Course Name (read-only) -->
+        <div class="field-group">
+          <label class="field-label">קורס</label>
+          <div class="readonly-field">
+            <svg class="readonly-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>יסודות העיצוב</span>
+          </div>
+        </div>
+
+        <!-- Chapter Name (read-only) -->
+        <div class="field-group">
+          <label class="field-label">פרק</label>
+          <div class="readonly-field">
+            <svg class="readonly-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>פרק 2: צבע וטיפוגרפיה</span>
+          </div>
+        </div>
+
+        <!-- Lesson Name (editable) -->
         <div class="field-group">
           <label class="field-label">שם השיעור</label>
           <input class="field-input" type="text" id="lessonName" value="שיעור חדש" placeholder="הכנס שם לשיעור...">
-        </div>
-
-        <!-- Chapter -->
-        <div class="field-group">
-          <label class="field-label">פרק</label>
-          <select class="field-input" id="chapterSelect">
-            <option>פרק ראשון — מבוא</option>
-            <option>פרק שני — עקרונות בסיסיים</option>
-            <option>פרק שלישי — תרגול מעשי</option>
-          </select>
         </div>
 
         <!-- CTA -->
@@ -455,32 +539,138 @@
 
     // Camera preview logic
     if (type === 'camera') {
-      const noFeed = document.getElementById('noFeed');
-      const activeFeed = document.getElementById('activeFeed');
       if (controlState.camera) {
-        noFeed.style.display = 'none';
-        activeFeed.classList.add('visible');
         showToast('success', 'המצלמה הופעלה');
       } else {
-        noFeed.style.display = 'flex';
-        activeFeed.classList.remove('visible');
         showToast('info', 'המצלמה כובתה');
       }
+      updatePreviewForMode();
     } else if (type === 'mic') {
       showToast(controlState.mic ? 'success' : 'info', controlState.mic ? 'המיקרופון הופעל' : 'המיקרופון כובה');
     } else if (type === 'screen') {
       showToast(controlState.screen ? 'success' : 'info', controlState.screen ? 'שיתוף מסך הופעל' : 'שיתוף מסך כובה');
+      updatePreviewForMode();
     }
   }
+
+  // ── Current recording mode ──
+  let currentMode = 'camera';
+  let currentShape = 'rect';
 
   // ── Recording Mode Selection ──
   function selectMode(card) {
     document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
-    const mode = card.dataset.mode;
+    currentMode = card.dataset.mode;
     const labels = { 'camera': 'מצלמה בלבד', 'screen-camera': 'מסך + מצלמה', 'screen': 'מסך בלבד' };
-    showToast('info', 'מצב הקלטה: ' + labels[mode]);
+    showToast('info', 'מצב הקלטה: ' + labels[currentMode]);
+    updatePreviewForMode();
   }
+
+  function updatePreviewForMode() {
+    const noFeed = document.getElementById('noFeed');
+    const activeFeed = document.getElementById('activeFeed');
+    const screenShareBg = document.getElementById('screenShareBg');
+    const camOverlay = document.getElementById('camOverlay');
+    const shapeSelector = document.getElementById('shapeSelector');
+    const shapeHint = document.getElementById('shapeHint');
+
+    // Reset all
+    screenShareBg.classList.remove('visible');
+    camOverlay.classList.remove('visible');
+    shapeSelector.classList.remove('visible');
+    shapeHint.classList.remove('visible');
+
+    if (currentMode === 'camera') {
+      // Camera only: show camera feed if on, no screen share
+      if (controlState.camera) {
+        noFeed.style.display = 'none';
+        activeFeed.classList.add('visible');
+      } else {
+        noFeed.style.display = 'flex';
+        activeFeed.classList.remove('visible');
+      }
+    } else if (currentMode === 'screen-camera') {
+      // Screen + Camera: show screen share bg + camera overlay
+      noFeed.style.display = 'none';
+      activeFeed.classList.remove('visible');
+      screenShareBg.classList.add('visible');
+      camOverlay.classList.add('visible');
+      shapeSelector.classList.add('visible');
+      shapeHint.classList.add('visible');
+    } else if (currentMode === 'screen') {
+      // Screen only: show screen share bg, no camera overlay
+      noFeed.style.display = 'none';
+      activeFeed.classList.remove('visible');
+      screenShareBg.classList.add('visible');
+    }
+  }
+
+  // ── Shape Selection ──
+  function selectShape(shape) {
+    currentShape = shape;
+    const camOverlay = document.getElementById('camOverlay');
+    const btnRect = document.getElementById('btnRect');
+    const btnCircle = document.getElementById('btnCircle');
+
+    camOverlay.classList.remove('rect', 'circle');
+    camOverlay.classList.add(shape);
+
+    if (shape === 'rect') {
+      btnRect.classList.add('active');
+      btnCircle.classList.remove('active');
+    } else {
+      btnCircle.classList.add('active');
+      btnRect.classList.remove('active');
+    }
+  }
+
+  // ── Draggable Camera Overlay ──
+  (function initDrag() {
+    const overlay = document.getElementById('camOverlay');
+    const preview = document.getElementById('cameraPreview');
+    let isDragging = false;
+    let startX, startY, startLeft, startBottom;
+
+    overlay.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      overlay.classList.add('dragging');
+      const rect = overlay.getBoundingClientRect();
+      const previewRect = preview.getBoundingClientRect();
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeft = rect.left - previewRect.left;
+      startBottom = previewRect.bottom - rect.bottom;
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      const previewRect = preview.getBoundingClientRect();
+      const overlayRect = overlay.getBoundingClientRect();
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+
+      let newRight = previewRect.right - (startLeft + overlayRect.width) - dx;
+      let newBottom = startBottom - dy;
+
+      // Clamp within preview bounds
+      const maxRight = previewRect.width - overlayRect.width;
+      const maxBottom = previewRect.height - overlayRect.height;
+      newRight = Math.max(0, Math.min(newRight, maxRight));
+      newBottom = Math.max(0, Math.min(newBottom, maxBottom));
+
+      overlay.style.right = newRight + 'px';
+      overlay.style.bottom = newBottom + 'px';
+    });
+
+    document.addEventListener('mouseup', function() {
+      if (isDragging) {
+        isDragging = false;
+        overlay.classList.remove('dragging');
+      }
+    });
+  })();
 
   // ── Start Recording ──
   function startRecording() {

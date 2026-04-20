@@ -247,6 +247,48 @@
   .take-item.drag-over{border-top:2px solid var(--cyan);}
 
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+  /* ── FILE UPLOAD SECTION ── */
+  .files-card{background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);overflow:hidden;transition:background .3s;}
+  .files-card-header{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+  .files-card-header svg{width:18px;height:18px;color:var(--text-sub);}
+  .files-card-title{font-size:15px;font-weight:900;color:var(--text-main);}
+  .files-card-body{padding:16px 20px;}
+  .drop-zone{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:28px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);}
+  .drop-zone:hover,.drop-zone.dragover{border-color:var(--cyan);background:rgba(56,196,242,0.04);}
+  .drop-zone-icon{margin-bottom:8px;color:var(--text-light);}
+  .drop-zone-icon svg{width:32px;height:32px;}
+  .drop-zone-text{font-size:13px;font-weight:600;color:var(--text-sub);margin-bottom:4px;}
+  .drop-zone-hint{font-size:11px;color:var(--text-light);}
+  .file-list{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
+  .file-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border-radius:var(--radius-sm);transition:background .2s;}
+  .file-item:hover{background:var(--light-blue);}
+  .file-item-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .file-item-icon svg{width:18px;height:18px;}
+  .file-item-icon.fi-pdf{background:rgba(240,86,128,0.12);color:var(--pink);}
+  .file-item-icon.fi-pptx{background:rgba(234,214,84,0.15);color:#b8a830;}
+  [data-theme="dark"] .file-item-icon.fi-pptx{color:var(--yellow);}
+  .file-item-icon.fi-img{background:rgba(125,197,122,0.15);color:var(--green);}
+  .file-item-icon.fi-doc{background:rgba(56,196,242,0.12);color:var(--cyan);}
+  .file-item-info{flex:1;min-width:0;}
+  .file-item-name{font-size:13px;font-weight:700;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .file-item-size{font-size:11px;color:var(--text-sub);}
+  .file-item-delete{width:28px;height:28px;border-radius:6px;border:none;background:transparent;color:var(--text-light);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0;}
+  .file-item-delete:hover{background:rgba(240,86,128,0.1);color:var(--pink);}
+  .file-item-delete svg{width:14px;height:14px;}
+
+  /* ── PUBLISH CONFIRMATION MODAL ── */
+  .publish-modal .modal{max-width:440px;padding:28px 32px 32px;animation:publishModalIn .3s ease;}
+  @keyframes publishModalIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+  .publish-modal-mascot{width:80px;height:80px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;}
+  .publish-modal-mascot img{width:80px;height:80px;object-fit:contain;}
+  .publish-modal-title{font-family:var(--font-en);font-size:20px;font-weight:700;color:var(--text-main);margin-bottom:6px;}
+  .publish-modal-text{font-size:14px;color:var(--text-sub);margin-bottom:18px;line-height:1.6;}
+  .publish-checklist{text-align:right;margin:0 auto 22px;display:inline-flex;flex-direction:column;gap:8px;}
+  .publish-checklist-item{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text-sub);}
+  .publish-x-icon{width:22px;height:22px;border-radius:50%;background:rgba(240,86,128,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .publish-x-icon svg{width:12px;height:12px;color:var(--pink);}
+  .publish-modal .modal-actions{margin-top:4px;}
 </style>
 </head>
 <body>
@@ -410,6 +452,25 @@
         <!-- Takes List -->
         <div class="takes-list" id="takesList"></div>
       </div>
+
+      <!-- File Upload Section -->
+      <div class="files-card" id="filesCard">
+        <div class="files-card-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+          <div class="files-card-title">קבצים מצורפים</div>
+        </div>
+        <div class="files-card-body">
+          <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+            <div class="drop-zone-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div class="drop-zone-text">גרור קבצים לכאן או לחץ להעלאה</div>
+            <div class="drop-zone-hint">PDF, PPTX, DOCX, JPG עד 50MB</div>
+          </div>
+          <input type="file" id="fileInput" style="display:none" multiple accept=".pdf,.pptx,.docx,.jpg,.jpeg,.png" onchange="handleFileSelect(event)">
+          <div class="file-list" id="fileList"></div>
+        </div>
+      </div>
     </div>
 
     <!-- EMPTY STATE (hidden by default) -->
@@ -438,7 +499,7 @@
       <input class="lesson-input" id="lessonName" type="text" value="מבוא לעקרונות עיצוב" placeholder="שם השיעור...">
     </div>
     <div class="bottom-bar-right">
-      <button class="btn btn-cyan" onclick="showToast('ההקלטה מוכנה לפרסום!')">
+      <button class="btn btn-cyan" onclick="document.getElementById('publishModal').classList.add('show')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
         פרסם כמו שזה
       </button>
@@ -482,6 +543,42 @@
       <button class="btn" style="background:linear-gradient(135deg,var(--cyan),#1db0d8);color:white;box-shadow:0 3px 14px rgba(56,196,242,0.3);" onclick="closeModal('rerecordModal');showToast('מעביר ללובי הקלטה...')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
         הקלט מחדש
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLISH CONFIRMATION MODAL -->
+<div class="modal-overlay publish-modal" id="publishModal">
+  <div class="modal">
+    <div class="publish-modal-mascot">
+      <img src="../../BOARDi/SVG/4.svg" alt="BOARDi" onerror="this.style.display='none'">
+    </div>
+    <div class="publish-modal-title">פרסום ללא עריכה</div>
+    <div class="publish-modal-text">הסרטון יפורסם כפי שהוקלט — ללא חיתוכים, לוגו, פתיח או כתוביות. האם להמשיך?</div>
+    <div class="publish-checklist">
+      <div class="publish-checklist-item">
+        <div class="publish-x-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+        חיתוכים ועריכה
+      </div>
+      <div class="publish-checklist-item">
+        <div class="publish-x-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+        לוגו מותג
+      </div>
+      <div class="publish-checklist-item">
+        <div class="publish-x-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+        פתיח וסגיר
+      </div>
+      <div class="publish-checklist-item">
+        <div class="publish-x-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+        כתוביות
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('publishModal')">חזרה לעריכה</button>
+      <button class="btn btn-primary" onclick="closeModal('publishModal');showToast('השיעור פורסם בהצלחה!')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        פרסם בכל זאת
       </button>
     </div>
   </div>
@@ -842,12 +939,94 @@ function onDragEnd(e) {
   dragSrcIdx = null;
 }
 
+// ── FILE UPLOAD ──
+let attachedFiles = [
+  { name: 'מצגת צבעים.pptx', size: '4.2 MB', type: 'pptx' },
+  { name: 'תרגיל צבע — דוגמאות.pdf', size: '1.8 MB', type: 'pdf' }
+];
+
+function getFileTypeFromName(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  if (ext === 'pdf') return 'pdf';
+  if (ext === 'pptx' || ext === 'ppt') return 'pptx';
+  if (ext === 'docx' || ext === 'doc') return 'doc';
+  if (['jpg','jpeg','png','gif','webp','svg'].includes(ext)) return 'img';
+  return 'doc';
+}
+
+function getFileIcon(type) {
+  const icons = {
+    pdf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+    pptx: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+    img: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>'
+  };
+  return icons[type] || icons.doc;
+}
+
+function renderFileList() {
+  const list = document.getElementById('fileList');
+  if (attachedFiles.length === 0) { list.innerHTML = ''; return; }
+  list.innerHTML = attachedFiles.map((f, i) => `
+    <div class="file-item">
+      <div class="file-item-icon fi-${f.type}">${getFileIcon(f.type)}</div>
+      <div class="file-item-info">
+        <div class="file-item-name">${f.name}</div>
+        <div class="file-item-size">${f.size}</div>
+      </div>
+      <button class="file-item-delete" title="הסר קובץ" onclick="removeFile(${i})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `).join('');
+}
+
+function removeFile(idx) {
+  const removed = attachedFiles.splice(idx, 1)[0];
+  renderFileList();
+  showToast('הקובץ "' + removed.name + '" הוסר');
+}
+
+function handleFileSelect(e) {
+  const files = e.target.files;
+  for (const f of files) {
+    const sizeMB = (f.size / (1024 * 1024)).toFixed(1);
+    attachedFiles.push({
+      name: f.name,
+      size: sizeMB + ' MB',
+      type: getFileTypeFromName(f.name)
+    });
+  }
+  renderFileList();
+  e.target.value = '';
+}
+
+// Drag & drop for file upload zone
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('dragover'); });
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  const files = e.dataTransfer.files;
+  for (const f of files) {
+    const sizeMB = (f.size / (1024 * 1024)).toFixed(1);
+    attachedFiles.push({
+      name: f.name,
+      size: sizeMB + ' MB',
+      type: getFileTypeFromName(f.name)
+    });
+  }
+  renderFileList();
+});
+
 // ── INIT ──
 renderTakesList();
 renderTimeline();
 updateSummary();
 updatePlayerUI();
 updateOverlay();
+renderFileList();
 </script>
 </body>
 </html>

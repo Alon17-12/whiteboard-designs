@@ -307,12 +307,12 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
         </div>
       </div>
       <div class="video-controls">
-        <button class="video-ctrl-btn" title="פריים קודם"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 20L9 12l10-8v16z"/><line x1="5" y1="4" x2="5" y2="20"/></svg></button>
+        <button class="video-ctrl-btn" title="פריים קודם"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:scaleX(-1);"><path d="M19 20L9 12l10-8v16z"/><line x1="5" y1="4" x2="5" y2="20"/></svg></button>
         <button class="video-ctrl-btn play-btn" id="playPauseBtn" title="נגן / עצור (Space)">
           <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21"/></svg>
           <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="3" width="5" height="18"/><rect x="14" y="3" width="5" height="18"/></svg>
         </button>
-        <button class="video-ctrl-btn" title="פריים הבא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4l10 8-10 8V4z"/><line x1="19" y1="4" x2="19" y2="20"/></svg></button>
+        <button class="video-ctrl-btn" title="פריים הבא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:scaleX(-1);"><path d="M5 4l10 8-10 8V4z"/><line x1="19" y1="4" x2="19" y2="20"/></svg></button>
         <span class="video-time" id="videoTime">01:23 / 04:52</span>
         <button class="speed-btn" id="speedBtn">1.0x</button>
       </div>
@@ -366,33 +366,94 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
           </div>
         </div>
 
-        <div class="tool-section">
-          <div class="tool-section-title">חיתוכים שבוצעו</div>
-          <div id="cutsList">
-            <div class="cut-item">
-              <div class="cut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/></svg></div>
-              <div class="cut-info">
-                <div class="cut-time">00:12.00 — 00:18.30</div>
-                <div class="cut-label">הוסר — 6.3 שניות</div>
-              </div>
-              <button class="cut-undo" title="בטל חיתוך"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 7"/></svg></button>
+        <!-- Silence Cut Feature -->
+        <div class="tool-section" style="border-top:1px solid var(--border);padding-top:16px;">
+          <div class="tool-section-title">כלי חכם</div>
+          <button class="btn-tool" onclick="openSilenceCutter()" style="width:100%;justify-content:center;padding:12px 16px;border-radius:12px;background:var(--surface-2);border:1.5px dashed var(--border);gap:10px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;">
+              <rect x="2" y="8" width="2" height="8" rx="1" opacity=".3"/>
+              <rect x="5.5" y="5" width="2" height="14" rx="1" opacity=".5"/>
+              <rect x="9" y="10" width="2" height="4" rx="1" opacity=".15"/>
+              <rect x="12.5" y="3" width="2" height="18" rx="1" opacity=".6"/>
+              <rect x="16" y="9" width="2" height="6" rx="1" opacity=".2"/>
+              <rect x="19.5" y="6" width="2" height="12" rx="1" opacity=".5"/>
+            </svg>
+            <span style="font-size:13px;font-weight:700;">חיתוך רגעי שקט</span>
+          </button>
+        </div>
+
+        <!-- Silence Cutter Panel (hidden by default) -->
+        <div class="tool-section" id="silenceCutterPanel" style="display:none;border-top:1px solid var(--border);padding-top:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div class="tool-section-title" style="margin-bottom:0;">חיתוך אוטומטי של שקט</div>
+            <button onclick="closeSilenceCutter()" style="background:none;border:none;cursor:pointer;color:var(--text-sub);padding:4px;" title="סגור">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+
+          <!-- dB Threshold Slider -->
+          <div style="margin-bottom:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:12px;font-weight:600;color:var(--text-main);">סף שקט (דציבל)</span>
+              <span style="font-size:12px;font-weight:700;font-family:var(--font-en);color:var(--cyan);" id="dbValue">-40dB</span>
             </div>
-            <div class="cut-item">
-              <div class="cut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/></svg></div>
-              <div class="cut-info">
-                <div class="cut-time">02:44.10</div>
-                <div class="cut-label">פיצול</div>
+            <div class="slider-row" style="margin-bottom:0;">
+              <span class="slider-label" style="font-family:var(--font-en);">-60dB</span>
+              <div class="slider-track" id="dbSlider">
+                <div class="slider-fill" style="width:50%"></div>
+                <div class="slider-thumb" style="right:50%"></div>
               </div>
-              <button class="cut-undo" title="בטל פיצול"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 7"/></svg></button>
+              <span class="slider-label" style="min-width:auto;font-family:var(--font-en);">-20dB</span>
             </div>
-            <div class="cut-item">
-              <div class="cut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/></svg></div>
-              <div class="cut-info">
-                <div class="cut-time">03:50.00 — 04:02.15</div>
-                <div class="cut-label">הוסר — 12.15 שניות</div>
+          </div>
+
+          <!-- Minimum Duration Slider -->
+          <div style="margin-bottom:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:12px;font-weight:600;color:var(--text-main);">משך מינימלי של שקט</span>
+              <span style="font-size:12px;font-weight:700;font-family:var(--font-en);color:var(--cyan);" id="minDurValue">1.5s</span>
+            </div>
+            <div class="slider-row" style="margin-bottom:0;">
+              <span class="slider-label" style="font-family:var(--font-en);">0.5s</span>
+              <div class="slider-track" id="minDurSlider">
+                <div class="slider-fill" style="width:22%"></div>
+                <div class="slider-thumb" style="right:22%"></div>
               </div>
-              <button class="cut-undo" title="בטל חיתוך"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 7"/></svg></button>
+              <span class="slider-label" style="min-width:auto;font-family:var(--font-en);">5s</span>
             </div>
+            <div style="font-size:10px;color:var(--text-light);margin-top:4px;">רגעי שקט קצרים מזה לא יחתכו</div>
+          </div>
+
+          <!-- Scan Button -->
+          <button class="btn-tool" id="scanSilenceBtn" onclick="scanSilence()" style="width:100%;justify-content:center;margin-bottom:10px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            סרוק שקט
+          </button>
+
+          <!-- Progress bar (hidden) -->
+          <div id="silenceScanProgress" style="display:none;margin-bottom:10px;">
+            <div style="height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;">
+              <div id="silenceScanFill" style="height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:3px;width:0%;transition:width 0.3s ease;"></div>
+            </div>
+            <div style="font-size:11px;color:var(--text-sub);margin-top:4px;text-align:center;" id="silenceScanStatus">סורק...</div>
+          </div>
+
+          <!-- Results (hidden) -->
+          <div id="silenceScanResults" style="display:none;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(56,196,242,0.08);border:1px solid rgba(56,196,242,0.2);border-radius:10px;margin-bottom:10px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span style="font-size:12px;font-weight:600;color:var(--text-main);" id="silenceResultText">נמצאו 7 רגעי שקט (סה״כ 1:23)</span>
+            </div>
+            <button class="btn-tool-primary" onclick="applySilenceCut()" style="width:100%;justify-content:center;background:var(--pink);box-shadow:0 2px 8px rgba(240,86,128,0.3);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/></svg>
+              חתוך שקט
+            </button>
+          </div>
+
+          <!-- Info box -->
+          <div class="info-box" style="margin-top:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span>המטרה: לחתוך זמני הכנה בין טייקים</span>
           </div>
         </div>
       </div>
@@ -454,8 +515,27 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
       <div class="tool-content" id="tabIntros" style="display:none;">
         <div class="tool-section">
           <div class="tool-section-title">פתיח (Intro)</div>
+
+          <!-- Course Preset Template -->
+          <div class="template-thumb active" onclick="selectTemplate(this)" style="aspect-ratio:16/9;border-radius:12px;border:2px solid var(--cyan);overflow:hidden;cursor:pointer;position:relative;margin-bottom:12px;box-shadow:0 0 0 2px var(--cyan-light);">
+            <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a2f5e 0%,#253E7A 40%,#38C4F2 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;position:relative;">
+              <!-- Simulated course cover overlay -->
+              <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><rect fill=%22%23253E7A%22 width=%22200%22 height=%22200%22/><circle cx=%2240%22 cy=%2260%22 r=%2230%22 fill=%22%2338C4F2%22 opacity=%220.15%22/><circle cx=%22160%22 cy=%22140%22 r=%2250%22 fill=%22%23F05680%22 opacity=%220.1%22/></svg>') center/cover;opacity:0.4;"></div>
+              <div style="font-family:var(--font-en);font-size:14px;font-weight:700;color:white;z-index:1;text-shadow:0 1px 4px rgba(0,0,0,0.4);">פרק 2: צבע וטיפוגרפיה</div>
+              <div style="font-family:var(--font-he);font-size:12px;font-weight:500;color:rgba(255,255,255,0.85);z-index:1;margin-top:4px;">שיעור 3: צבע ומשמעות</div>
+              <div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-family:var(--font-en);font-size:9px;color:rgba(255,255,255,0.35);font-weight:600;letter-spacing:1px;z-index:1;">WHITEBOARD</div>
+            </div>
+            <!-- Badge: מותאם אישית -->
+            <div style="position:absolute;top:6px;right:6px;background:var(--cyan);color:white;font-size:9px;font-weight:700;padding:2px 7px;border-radius:6px;z-index:2;">מותאם אישית</div>
+            <!-- נבחר badge -->
+            <div class="check" style="display:flex;position:absolute;top:6px;left:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div style="font-size:11px;color:var(--text-sub);margin-bottom:14px;margin-top:-8px;line-height:1.5;">
+            <strong style="color:var(--text-main);">פריסט אוטומטי מהקורס</strong> — תמונת הקאבר של הקורס עם כותרת הפרק והשיעור
+          </div>
+
           <div class="template-grid">
-            <div class="template-thumb active" onclick="selectTemplate(this)">
+            <div class="template-thumb" onclick="selectTemplate(this)">
               <div class="template-thumb-inner" style="background:linear-gradient(135deg,#253E7A,#38C4F2);">קלאסי</div>
               <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
             </div>
@@ -858,31 +938,82 @@ function setOutPoint(){
 
 // ── Cut/Split ──
 function cutSelection(){
-  const inT=document.getElementById('inPoint').textContent;
-  const outT=document.getElementById('outPoint').textContent;
-  const item=document.createElement('div');
-  item.className='cut-item';
-  item.innerHTML=`
-    <div class="cut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/></svg></div>
-    <div class="cut-info"><div class="cut-time">${inT} — ${outT}</div><div class="cut-label">הוסר</div></div>
-    <button class="cut-undo" title="בטל חיתוך" onclick="this.closest('.cut-item').remove()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 7"/></svg></button>`;
-  document.getElementById('cutsList').appendChild(item);
   markUnsaved();
+  showToast('חיתוך בוצע בהצלחה');
 }
 function splitAtPlayhead(){
-  const ph=parseFloat(document.getElementById('playhead').style.right)||0;
-  const total=292;
-  const cur=Math.floor(total*ph/100);
-  const m=String(Math.floor(cur/60)).padStart(2,'0');
-  const s=String(cur%60).padStart(2,'0');
-  const item=document.createElement('div');
-  item.className='cut-item';
-  item.innerHTML=`
-    <div class="cut-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/></svg></div>
-    <div class="cut-info"><div class="cut-time">${m}:${s}.00</div><div class="cut-label">פיצול</div></div>
-    <button class="cut-undo" title="בטל פיצול" onclick="this.closest('.cut-item').remove()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 7"/></svg></button>`;
-  document.getElementById('cutsList').appendChild(item);
   markUnsaved();
+  showToast('פיצול בוצע בנקודת הנגן');
+}
+
+// ── Toast Notification ──
+function showToast(msg){
+  let toast=document.getElementById('toastNotif');
+  if(!toast){
+    toast=document.createElement('div');
+    toast.id='toastNotif';
+    toast.style.cssText='position:fixed;bottom:220px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-main);box-shadow:var(--shadow-md);z-index:200;opacity:0;transition:all .3s ease;pointer-events:none;white-space:nowrap;font-family:var(--font-he);';
+    document.body.appendChild(toast);
+  }
+  toast.textContent=msg;
+  toast.style.opacity='1';
+  toast.style.transform='translateX(-50%) translateY(0)';
+  setTimeout(()=>{
+    toast.style.opacity='0';
+    toast.style.transform='translateX(-50%) translateY(20px)';
+  },2500);
+}
+
+// ── Silence Cutter ──
+function openSilenceCutter(){
+  document.getElementById('silenceCutterPanel').style.display='';
+  document.getElementById('silenceScanResults').style.display='none';
+  document.getElementById('silenceScanProgress').style.display='none';
+}
+function closeSilenceCutter(){
+  document.getElementById('silenceCutterPanel').style.display='none';
+}
+function scanSilence(){
+  const prog=document.getElementById('silenceScanProgress');
+  const fill=document.getElementById('silenceScanFill');
+  const status=document.getElementById('silenceScanStatus');
+  const results=document.getElementById('silenceScanResults');
+  const btn=document.getElementById('scanSilenceBtn');
+
+  prog.style.display='';
+  results.style.display='none';
+  btn.disabled=true;
+  btn.style.opacity='0.5';
+  fill.style.width='0%';
+  status.textContent='סורק...';
+
+  let pct=0;
+  const interval=setInterval(()=>{
+    pct+=Math.random()*8+2;
+    if(pct>=100){
+      pct=100;
+      clearInterval(interval);
+      fill.style.width='100%';
+      status.textContent='הסריקה הושלמה!';
+      setTimeout(()=>{
+        prog.style.display='none';
+        results.style.display='';
+        btn.disabled=false;
+        btn.style.opacity='1';
+      },500);
+    } else {
+      fill.style.width=pct+'%';
+      if(pct>30&&pct<60) status.textContent='מנתח גל קול...';
+      else if(pct>=60&&pct<90) status.textContent='מזהה רגעי שקט...';
+      else if(pct>=90) status.textContent='מסיים...';
+    }
+  },120);
+}
+function applySilenceCut(){
+  document.getElementById('silenceScanResults').style.display='none';
+  document.getElementById('silenceCutterPanel').style.display='none';
+  markUnsaved();
+  showToast('7 רגעי שקט נחתכו — חסכת 1:23!');
 }
 
 // ── Auto-save indicator ──
@@ -917,9 +1048,19 @@ document.querySelectorAll('.pos-cell').forEach(cell=>{
 
 // ── Template Selection ──
 function selectTemplate(el){
-  const grid=el.closest('.template-grid');
-  grid.querySelectorAll('.template-thumb').forEach(t=>t.classList.remove('active'));
+  // Deselect all templates within the same section (intro or outro)
+  const section=el.closest('.tool-section');
+  section.querySelectorAll('.template-thumb').forEach(t=>{
+    t.classList.remove('active');
+    t.style.borderColor='';
+    t.style.boxShadow='';
+  });
   el.classList.add('active');
+  // If this is the course preset, re-apply cyan border
+  if(!el.closest('.template-grid')){
+    el.style.borderColor='var(--cyan)';
+    el.style.boxShadow='0 0 0 2px var(--cyan-light)';
+  }
 }
 
 // ── Transition Selection ──
@@ -1043,6 +1184,15 @@ document.querySelectorAll('.slider-track').forEach(track=>{
       if(track.id==='sizeSlider')valueEl.textContent=Math.round(10+pct*0.3)+'%';
       else if(track.id==='opacitySlider')valueEl.textContent=Math.round(20+pct*0.8)+'%';
       else if(track.id==='transitionSlider')valueEl.textContent=(0.3+pct*0.012).toFixed(1)+'s';
+    }
+    // Silence cutter sliders
+    if(track.id==='dbSlider'){
+      const db=Math.round(-60+pct*0.4);
+      document.getElementById('dbValue').textContent=db+'dB';
+    }
+    if(track.id==='minDurSlider'){
+      const dur=(0.5+pct*0.045).toFixed(1);
+      document.getElementById('minDurValue').textContent=dur+'s';
     }
   });
 });
