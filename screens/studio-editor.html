@@ -320,6 +320,35 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
 
 /* ── KEYBOARD HINTS ── */
 .kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:18px;padding:0 5px;border-radius:4px;background:var(--surface-2);border:1px solid var(--border);font-size:10px;font-family:var(--font-en);font-weight:600;color:var(--text-sub);}
+
+/* ── ACTIONS BAR ── */
+.actions-bar{height:36px;background:var(--timeline-bg);display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex-shrink:0;border-top:1px solid var(--timeline-border);border-bottom:1px solid var(--timeline-border);}
+.actions-bar-tools{display:flex;align-items:center;gap:4px;}
+.ab-tool-btn{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:rgba(255,255,255,0.55);font-family:var(--font-he);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.ab-tool-btn:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);}
+.ab-tool-btn.active{background:var(--cyan);border-color:var(--cyan);color:#0d1628;}
+.ab-tool-btn svg{width:14px;height:14px;}
+.ab-separator{width:1px;height:20px;background:rgba(255,255,255,0.12);margin:0 8px;flex-shrink:0;}
+.actions-bar-actions{display:flex;align-items:center;gap:4px;}
+.ab-action-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);font-family:var(--font-he);font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.ab-action-btn:hover{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);}
+.ab-action-btn .ab-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;border-radius:3px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);font-size:9px;font-family:var(--font-en);font-weight:700;color:rgba(255,255,255,0.6);line-height:1;}
+
+/* ── FADE TOGGLE PROMINENT ── */
+.fade-toggle-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;margin-bottom:14px;border:1.5px solid var(--border);background:var(--surface-2);transition:all .2s;}
+.fade-toggle-bar.active-fade{border-color:var(--cyan);background:var(--cyan-light);}
+.fade-toggle-bar .fade-label{display:flex;align-items:center;gap:8px;}
+.fade-toggle-bar .fade-label svg{width:18px;height:18px;}
+.fade-toggle-bar .fade-label-text{font-size:13px;font-weight:700;color:var(--text-main);}
+.fade-toggle-bar .fade-label-sub{font-size:11px;color:var(--text-sub);margin-top:1px;}
+
+/* ── TRANSITION POPOVER ── */
+.transition-popover{position:fixed;z-index:80;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-md);padding:14px;width:220px;display:none;}
+.transition-popover.show{display:block;}
+.transition-popover-title{font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.transition-popover-title svg{width:16px;height:16px;color:var(--yellow);}
+.tp-close{position:absolute;top:8px;left:8px;background:none;border:none;cursor:pointer;color:var(--text-sub);padding:4px;}
+.tp-close:hover{color:var(--text-main);}
 </style>
 </head>
 <body>
@@ -391,28 +420,6 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
 
       <!-- TAB 1: CUT -->
       <div class="tool-content" id="tabCut">
-        <!-- Tool Selection Toolbar -->
-        <div class="tool-section" style="margin-bottom:12px;">
-          <div style="display:flex;gap:6px;margin-bottom:10px;">
-            <button class="btn-tool active" id="toolCursor" onclick="selectCutTool('cursor')" title="עכבר (V)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M4 4l7 18 2.5-7.5L21 12z"/></svg>
-              עכבר
-            </button>
-            <button class="btn-tool" id="toolSplit" onclick="selectCutTool('split')" title="פיצול (S)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
-              פיצול
-            </button>
-            <button class="btn-tool" id="toolTrim" onclick="selectCutTool('trim')" title="חיתוך (T)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M4 7h16"/><path d="M4 17h16"/><path d="M7 4v4"/><path d="M17 16v4"/></svg>
-              חיתוך
-            </button>
-          </div>
-          <!-- Keyboard Shortcuts Bar -->
-          <div style="background:var(--timeline-bg);border-radius:8px;padding:6px 12px;direction:ltr;text-align:center;">
-            <span style="font-family:'Fredoka',monospace;font-size:11px;color:rgba(255,255,255,0.55);letter-spacing:0.5px;">Space = נגן &nbsp;|&nbsp; I = התחלה &nbsp;|&nbsp; O = סיום &nbsp;|&nbsp; S = פיצול &nbsp;|&nbsp; Del = מחק</span>
-          </div>
-        </div>
-
         <div class="tool-section">
           <div class="tool-section-title">פעולות</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -593,6 +600,18 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
             פתיח (Intro)
           </div>
 
+          <!-- Fade In Toggle — prominent -->
+          <div class="fade-toggle-bar active-fade" id="introFadeBar" onclick="toggleIntroFade()">
+            <div class="fade-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M2 12h4l3-9 4 18 3-9h6"/></svg>
+              <div>
+                <div class="fade-label-text">פייד אין (Fade In)</div>
+                <div class="fade-label-sub">הסרטון נכנס בעדינות מרקע שחור</div>
+              </div>
+            </div>
+            <div class="toggle-switch active" id="introFadeInToggle"></div>
+          </div>
+
           <!-- Course Preset — auto from cover -->
           <div class="template-card active" onclick="selectTemplate(this)" style="aspect-ratio:16/9;border-radius:12px;border:2px solid var(--cyan);margin-bottom:10px;box-shadow:0 0 0 2px var(--cyan-light);">
             <div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a2f5e 0%,#253E7A 40%,#38C4F2 100%);"></div>
@@ -647,15 +666,9 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
             <div style="font-size:10px;color:var(--text-light);margin-top:2px;">גרור קובץ לכאן או לחץ לבחירה — MP4 / MOV</div>
           </div>
 
-          <!-- Duration + Fade In -->
+          <!-- Duration -->
           <div style="margin-bottom:12px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-              <span class="sub-style-label" style="margin-bottom:0;">משך פתיח:</span>
-              <div style="display:flex;align-items:center;gap:8px;">
-                <span style="font-size:11px;color:var(--text-sub);">פייד אין</span>
-                <div class="toggle-switch active" id="introFadeInToggle" onclick="toggleIntroFade()"></div>
-              </div>
-            </div>
+            <span class="sub-style-label">משך פתיח:</span>
             <div class="duration-selector">
               <button class="dur-btn">3s</button>
               <button class="dur-btn active">5s</button>
@@ -676,6 +689,18 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
           <div class="outro-section-header">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
             סגיר (Outro)
+          </div>
+
+          <!-- Fade Out Toggle — prominent -->
+          <div class="fade-toggle-bar active-fade" id="outroFadeBar" onclick="toggleOutroFade()" style="border-color:var(--pink);">
+            <div class="fade-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2"><path d="M2 12h4l3-9 4 18 3-9h6"/></svg>
+              <div>
+                <div class="fade-label-text">פייד אאוט (Fade Out)</div>
+                <div class="fade-label-sub">הסרטון נעלם בעדינות לרקע שחור</div>
+              </div>
+            </div>
+            <div class="toggle-switch active" id="outroFadeOutToggle"></div>
           </div>
 
           <!-- 4 Template Cards + CTA -->
@@ -730,15 +755,9 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
             <div style="font-size:10px;color:var(--text-light);margin-top:2px;">גרור קובץ לכאן או לחץ לבחירה — MP4 / MOV</div>
           </div>
 
-          <!-- Duration + Fade Out -->
+          <!-- Duration -->
           <div style="margin-bottom:12px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-              <span class="sub-style-label" style="margin-bottom:0;">משך סגיר:</span>
-              <div style="display:flex;align-items:center;gap:8px;">
-                <span style="font-size:11px;color:var(--text-sub);">פייד אאוט</span>
-                <div class="toggle-switch active" id="outroFadeOutToggle" onclick="toggleOutroFade()"></div>
-              </div>
-            </div>
+            <span class="sub-style-label">משך סגיר:</span>
             <div class="duration-selector">
               <button class="dur-btn">3s</button>
               <button class="dur-btn">5s</button>
@@ -797,7 +816,8 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
         </div>
 
         <div class="tool-section">
-          <div class="tool-section-title">משך מעבר</div>
+          <div class="tool-section-title">משך ברירת מחדל</div>
+          <div style="font-size:11px;color:var(--text-sub);margin-bottom:8px;">משך ברירת מחדל למעברים חדשים. לכל מעבר שהוחל ניתן לערוך בנפרד.</div>
           <div class="slider-row">
             <span class="slider-label">0.3s</span>
             <div class="slider-track" id="transitionSlider">
@@ -807,6 +827,11 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
             <span class="slider-value" id="transitionValue">0.8s</span>
             <span class="slider-label" style="min-width:auto;">1.5s</span>
           </div>
+        </div>
+
+        <div class="info-box" style="margin-bottom:10px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span>לחץ על סמל המעבר (&#9670;) בטיימליין כדי לערוך את המשך של כל מעבר בנפרד</span>
         </div>
 
         <div class="info-box">
@@ -1115,11 +1140,37 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
 
 </div>
 
+<!-- ══ ACTIONS BAR ══ -->
+<div class="actions-bar" id="actionsBar">
+  <div class="actions-bar-tools">
+    <button class="ab-tool-btn active" id="abCursor" onclick="selectAbTool('cursor')" title="עכבר (V)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l7 18 2.5-7.5L21 12z"/></svg>
+      עכבר
+    </button>
+    <button class="ab-tool-btn" id="abSplit" onclick="selectAbTool('split')" title="פיצול (S)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+      פיצול
+    </button>
+    <button class="ab-tool-btn" id="abTrim" onclick="selectAbTool('trim')" title="חיתוך (T)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M4 17h16"/><path d="M7 4v4"/><path d="M17 16v4"/></svg>
+      חיתוך
+    </button>
+    <div class="ab-separator"></div>
+  </div>
+  <div class="actions-bar-actions">
+    <button class="ab-action-btn" onclick="togglePlay()" title="נגן / עצור">נגן <span class="ab-kbd">Space</span></button>
+    <button class="ab-action-btn" onclick="showToast('נקודת התחלה סומנה')" title="סמן התחלה">התחלה <span class="ab-kbd">I</span></button>
+    <button class="ab-action-btn" onclick="showToast('נקודת סיום סומנה')" title="סמן סיום">סיום <span class="ab-kbd">O</span></button>
+    <button class="ab-action-btn" onclick="splitAtPlayhead()" title="פיצול בנקודה">פיצול <span class="ab-kbd">S</span></button>
+    <button class="ab-action-btn" onclick="cutSelection()" title="מחק סגמנט">מחק <span class="ab-kbd">Del</span></button>
+  </div>
+</div>
+
 <!-- ══ TIMELINE ══ -->
 <div class="timeline-panel">
   <div class="timeline-toolbar">
     <div class="timeline-toolbar-right">
-      <span class="timeline-info">Space=נגן | I=התחלה | O=סיום | S=פיצול | Del=מחק</span>
+      <span class="timeline-info" id="videoTime2">04:52 סה״כ</span>
     </div>
     <div class="zoom-controls">
       <button class="zoom-btn" onclick="zoomTimeline(-1)" title="הקטן"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
@@ -1145,13 +1196,13 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
 
           <!-- Cut points with drop zones -->
           <div class="cut-point" style="right:22%;"><div class="cut-point-line"></div><div class="transition-diamond"></div></div>
-          <div class="transition-drop-zone" style="position:absolute;right:20.5%;width:3%;top:0;bottom:0;border:2px dashed transparent;border-radius:4px;z-index:5;transition:all .2s;" ondragover="event.preventDefault();this.style.borderColor='var(--cyan)';this.style.background='rgba(56,196,242,0.15)'" ondragleave="this.style.borderColor='transparent';this.style.background='transparent'" ondrop="event.preventDefault();this.style.borderColor='transparent';this.style.background='transparent';showToast('מעבר הוחל בין טייק 1 לטייק 2')"></div>
+          <div class="transition-drop-zone" style="position:absolute;right:20.5%;width:3%;top:0;bottom:0;border:2px dashed transparent;border-radius:4px;z-index:5;transition:all .2s;" ondragover="event.preventDefault();this.style.borderColor='var(--cyan)';this.style.background='rgba(56,196,242,0.15)'" ondragleave="this.style.borderColor='transparent';this.style.background='transparent'" ondrop="event.preventDefault();this.style.borderColor='transparent';this.style.background='transparent';handleTransitionDrop(this,event,'טייק 1','טייק 2')"></div>
           <div class="cut-point" style="right:41%;"><div class="cut-point-line"></div><div class="transition-diamond"></div></div>
-          <div class="transition-drop-zone" style="position:absolute;right:39.5%;width:3%;top:0;bottom:0;border:2px dashed transparent;border-radius:4px;z-index:5;transition:all .2s;" ondragover="event.preventDefault();this.style.borderColor='var(--cyan)';this.style.background='rgba(56,196,242,0.15)'" ondragleave="this.style.borderColor='transparent';this.style.background='transparent'" ondrop="event.preventDefault();this.style.borderColor='transparent';this.style.background='transparent';showToast('מעבר הוחל בין טייק 2 לטייק 3')"></div>
+          <div class="transition-drop-zone" style="position:absolute;right:39.5%;width:3%;top:0;bottom:0;border:2px dashed transparent;border-radius:4px;z-index:5;transition:all .2s;" ondragover="event.preventDefault();this.style.borderColor='var(--cyan)';this.style.background='rgba(56,196,242,0.15)'" ondragleave="this.style.borderColor='transparent';this.style.background='transparent'" ondrop="event.preventDefault();this.style.borderColor='transparent';this.style.background='transparent';handleTransitionDrop(this,event,'טייק 2','טייק 3')"></div>
           <div class="cut-point" style="right:68%;"><div class="cut-point-line"></div><div class="transition-diamond"></div></div>
-          <div class="transition-drop-zone" style="position:absolute;right:66.5%;width:3%;top:0;bottom:0;border:2px dashed transparent;border-radius:4px;z-index:5;transition:all .2s;" ondragover="event.preventDefault();this.style.borderColor='var(--cyan)';this.style.background='rgba(56,196,242,0.15)'" ondragleave="this.style.borderColor='transparent';this.style.background='transparent'" ondrop="event.preventDefault();this.style.borderColor='transparent';this.style.background='transparent';showToast('מעבר הוחל בין טייק 3 לטייק 4')"></div>
+          <div class="transition-drop-zone" style="position:absolute;right:66.5%;width:3%;top:0;bottom:0;border:2px dashed transparent;border-radius:4px;z-index:5;transition:all .2s;" ondragover="event.preventDefault();this.style.borderColor='var(--cyan)';this.style.background='rgba(56,196,242,0.15)'" ondragleave="this.style.borderColor='transparent';this.style.background='transparent'" ondrop="event.preventDefault();this.style.borderColor='transparent';this.style.background='transparent';handleTransitionDrop(this,event,'טייק 3','טייק 4')"></div>
           <div class="cut-point" style="right:83%;"><div class="cut-point-line"></div></div>
-          <div class="transition-drop-zone" style="position:absolute;right:81.5%;width:3%;top:0;bottom:0;border:2px dashed transparent;border-radius:4px;z-index:5;transition:all .2s;" ondragover="event.preventDefault();this.style.borderColor='var(--cyan)';this.style.background='rgba(56,196,242,0.15)'" ondragleave="this.style.borderColor='transparent';this.style.background='transparent'" ondrop="event.preventDefault();this.style.borderColor='transparent';this.style.background='transparent';showToast('מעבר הוחל בין טייק 4 לטייק 5')"></div>
+          <div class="transition-drop-zone" style="position:absolute;right:81.5%;width:3%;top:0;bottom:0;border:2px dashed transparent;border-radius:4px;z-index:5;transition:all .2s;" ondragover="event.preventDefault();this.style.borderColor='var(--cyan)';this.style.background='rgba(56,196,242,0.15)'" ondragleave="this.style.borderColor='transparent';this.style.background='transparent'" ondrop="event.preventDefault();this.style.borderColor='transparent';this.style.background='transparent';handleTransitionDrop(this,event,'טייק 4','טייק 5')"></div>
         </div>
       </div>
 
@@ -1205,6 +1256,33 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
     מחק סגמנט
   </div>
+</div>
+
+<!-- ══ TRANSITION POPOVER ══ -->
+<div class="transition-popover" id="transitionPopover">
+  <button class="tp-close" onclick="closeTransitionPopover()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  <div class="transition-popover-title">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5z"/></svg>
+    <span id="tpTypeName">Fade</span>
+  </div>
+  <div style="margin-bottom:10px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <span style="font-size:12px;font-weight:600;color:var(--text-main);">משך מעבר</span>
+      <span style="font-size:12px;font-weight:700;font-family:var(--font-en);color:var(--cyan);" id="tpDurValue">0.8s</span>
+    </div>
+    <div class="slider-row" style="margin-bottom:0;">
+      <span class="slider-label">0.3s</span>
+      <div class="slider-track" id="tpDurSlider">
+        <div class="slider-fill" style="width:40%"></div>
+        <div class="slider-thumb" style="right:40%"></div>
+      </div>
+      <span class="slider-label" style="min-width:auto;">1.5s</span>
+    </div>
+  </div>
+  <button class="btn-tool-primary" onclick="applyTransitionDuration()" style="width:100%;justify-content:center;font-size:12px;padding:7px 12px;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+    החל
+  </button>
 </div>
 
 <!-- ══ EXPORT MODAL ══ -->
@@ -1347,34 +1425,89 @@ document.addEventListener('click',(e)=>{
   if(!e.target.closest('.context-menu'))hideCtxMenu();
 });
 
-// ── Cut Tool Selection ──
-function selectCutTool(tool){
-  document.querySelectorAll('#tabCut .btn-tool[id^="tool"]').forEach(b=>{
-    b.classList.remove('active');
-    b.style.background='';
-    b.style.borderColor='';
-    b.style.color='';
+// ── Actions Bar Tool Selection ──
+function selectAbTool(tool){
+  document.querySelectorAll('.ab-tool-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById('ab'+tool.charAt(0).toUpperCase()+tool.slice(1));
+  if(btn) btn.classList.add('active');
+}
+
+// ── Transition Popover ──
+let currentTransitionDiamond=null;
+function openTransitionPopover(diamond, typeName){
+  const popover=document.getElementById('transitionPopover');
+  const rect=diamond.getBoundingClientRect();
+  popover.style.left=(rect.left-100)+'px';
+  popover.style.top=(rect.top-180)+'px';
+  document.getElementById('tpTypeName').textContent=typeName||'Fade';
+  currentTransitionDiamond=diamond;
+  popover.classList.add('show');
+}
+function closeTransitionPopover(){
+  document.getElementById('transitionPopover').classList.remove('show');
+  currentTransitionDiamond=null;
+}
+function applyTransitionDuration(){
+  const val=document.getElementById('tpDurValue').textContent;
+  showToast('משך מעבר עודכן ל-'+val);
+  closeTransitionPopover();
+}
+// Click on transition diamonds to open popover
+document.querySelectorAll('.transition-diamond').forEach(d=>{
+  d.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    openTransitionPopover(d,'Fade');
   });
-  const btn=document.getElementById('tool'+tool.charAt(0).toUpperCase()+tool.slice(1));
-  if(btn){
-    btn.classList.add('active');
-    btn.style.background='var(--cyan)';
-    btn.style.borderColor='var(--cyan)';
-    btn.style.color='white';
+});
+// Close popover on outside click
+document.addEventListener('click',(e)=>{
+  if(!e.target.closest('.transition-popover')&&!e.target.closest('.transition-diamond')){
+    closeTransitionPopover();
+  }
+});
+// Transition popover slider interaction
+const tpSlider=document.getElementById('tpDurSlider');
+if(tpSlider){
+  tpSlider.addEventListener('click',(e)=>{
+    const rect=tpSlider.getBoundingClientRect();
+    const x=rect.right-e.clientX;
+    const pct=Math.max(0,Math.min(100,(x/rect.width)*100));
+    tpSlider.querySelector('.slider-fill').style.width=pct+'%';
+    tpSlider.querySelector('.slider-thumb').style.right=pct+'%';
+    const dur=(0.3+pct*0.012).toFixed(1);
+    document.getElementById('tpDurValue').textContent=dur+'s';
+  });
+}
+
+// Handle transition drop on timeline — show toast + open popover
+function handleTransitionDrop(zone,event,fromLabel,toLabel){
+  const type=event.dataTransfer?event.dataTransfer.getData('text/plain'):'fade';
+  const typeNames={fade:'Fade',dissolve:'Dissolve','slide-left':'Slide Left','slide-right':'Slide Right',zoom:'Zoom'};
+  const typeName=typeNames[type]||'Fade';
+  showToast('מעבר '+typeName+' הוחל בין '+fromLabel+' ל'+toLabel);
+  // Find the nearest diamond to open the popover on
+  const prevCut=zone.previousElementSibling;
+  const diamond=prevCut?prevCut.querySelector('.transition-diamond'):null;
+  if(diamond){
+    setTimeout(()=>{openTransitionPopover(diamond,typeName);},400);
   }
 }
-// Initialize cursor tool as active with cyan bg
-document.addEventListener('DOMContentLoaded',()=>{selectCutTool('cursor');});
 
 // ── Intro/Outro Fade Toggles ──
 function toggleIntroFade(){
   const toggle=document.getElementById('introFadeInToggle');
+  const bar=document.getElementById('introFadeBar');
   const isActive=toggle.classList.toggle('active');
+  if(isActive){bar.classList.add('active-fade');bar.style.borderColor='var(--cyan)';}
+  else{bar.classList.remove('active-fade');bar.style.borderColor='';}
   showToast(isActive?'פייד אין מופעל':'פייד אין כבוי');
 }
 function toggleOutroFade(){
   const toggle=document.getElementById('outroFadeOutToggle');
+  const bar=document.getElementById('outroFadeBar');
   const isActive=toggle.classList.toggle('active');
+  if(isActive){bar.classList.add('active-fade');bar.style.borderColor='var(--pink)';}
+  else{bar.classList.remove('active-fade');bar.style.borderColor='';}
   showToast(isActive?'פייד אאוט מופעל':'פייד אאוט כבוי');
 }
 

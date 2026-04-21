@@ -620,7 +620,7 @@ body {
 /* ======= AUDIO LEVEL STRIP — separated, above control bar ======= */
 .audio-strip {
   position: absolute;
-  bottom: 144px;
+  bottom: 110px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -652,7 +652,7 @@ body {
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-top: 1px solid rgba(255,255,255,0.06);
-  padding: 0 24px 20px;
+  padding: 8px 16px;
   z-index: 15;
   display: flex;
   flex-direction: column;
@@ -667,10 +667,10 @@ body {
   font-family: 'Fredoka', sans-serif;
   font-weight: 600;
   font-size: 13px;
-  padding: 4px 16px;
+  padding: 3px 14px;
   border-radius: var(--radius-pill);
-  margin-top: 12px;
-  margin-bottom: 4px;
+  margin-top: 4px;
+  margin-bottom: 2px;
   transition: transform 0.3s var(--ease-out), opacity 0.3s var(--ease-out);
   opacity: 0;
   transform: scale(0.8) translateY(4px);
@@ -685,8 +685,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 32px;
-  min-height: 96px;
+  gap: 24px;
+  min-height: 72px;
   position: relative;
 }
 
@@ -695,7 +695,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 3px;
   background: none;
   border: none;
   cursor: pointer;
@@ -758,7 +758,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .big-circle {
@@ -815,14 +815,21 @@ body {
   border-radius: 2px;
   overflow: hidden;
   background: rgba(255,255,255,0.04);
-  margin-top: 8px;
+  margin-top: 6px;
   transition: height 0.3s var(--ease-out), margin-top 0.3s var(--ease-out);
 }
 .mini-timeline.expanded {
-  height: 28px;
+  height: 24px;
   border-radius: 6px;
-  margin-top: 12px;
+  margin-top: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
+/* Scrollbar styling for timeline */
+.mini-timeline.expanded::-webkit-scrollbar { height: 3px; }
+.mini-timeline.expanded::-webkit-scrollbar-track { background: transparent; }
+.mini-timeline.expanded::-webkit-scrollbar-thumb { background: rgba(56,196,242,0.25); border-radius: 2px; }
+.mini-timeline.expanded::-webkit-scrollbar-thumb:hover { background: rgba(56,196,242,0.45); }
 
 .timeline-segment {
   height: 100%;
@@ -830,8 +837,13 @@ body {
   display: flex;
   align-items: center;
   min-width: 24px;
+  flex-shrink: 0;
   transition: flex 0.3s var(--ease-out), opacity 0.3s var(--ease-out), min-width 0.3s var(--ease-out);
   cursor: pointer;
+}
+/* When expanded (paused), ensure segments have readable min-width for scrolling */
+.mini-timeline.expanded .timeline-segment {
+  min-width: 60px;
 }
 
 .timeline-segment:nth-child(odd) { background: rgba(56,196,242,0.2); }
@@ -921,8 +933,8 @@ body {
   -webkit-backdrop-filter: blur(16px);
   border-radius: var(--radius-md);
   border: 1px solid rgba(255,255,255,0.06);
-  padding: 12px 16px;
-  margin-top: 8px;
+  padding: 10px 16px;
+  margin-top: 6px;
   max-height: 0;
   overflow: hidden;
   opacity: 0;
@@ -936,8 +948,8 @@ body {
   max-height: 220px;
   opacity: 1;
   transform: translateY(0);
-  padding: 0 16px 12px;
-  margin-top: 8px;
+  padding: 0 16px 10px;
+  margin-top: 6px;
   overflow-y: auto;
 }
 .takes-panel.visible.collapsed {
@@ -1586,7 +1598,7 @@ const state = {
   intervalId: null,
   meterIntervalId: null,
   currentMode: 'camera',
-  takesPanelCollapsed: false,
+  takesPanelCollapsed: true,
   activeAssetId: null,
 };
 
@@ -1888,6 +1900,9 @@ function renderControls() {
   if (phase === 'paused' && state.takes.length > 0) {
     takesPanel.classList.add('visible');
     miniTimeline.classList.add('expanded');
+    // Default to collapsed — user can expand via chevron
+    state.takesPanelCollapsed = true;
+    takesPanel.classList.add('collapsed');
     // Update toggle label
     takesToggleLabel.textContent = `${state.takes.length} טייקים`;
     renderTakesPanel();
@@ -2102,6 +2117,14 @@ function updateTimeline() {
       resumeRecording(idx);
     });
   });
+
+  // Auto-scroll the current segment into view when timeline is expanded
+  if (isPaused) {
+    const currentSeg = miniTimeline.querySelector('.timeline-segment.current');
+    if (currentSeg) {
+      currentSeg.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  }
 }
 
 // ======= AUDIO METER =======
