@@ -92,7 +92,7 @@
   .col-right::-webkit-scrollbar-track{background:transparent;}
   .col-right::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
 
-  .camera-preview{position:relative;width:100%;aspect-ratio:16/9;max-height:26vh;background:var(--preview-bg);border-radius:var(--radius-sm);overflow:hidden;flex-shrink:1;box-shadow:var(--shadow-lg);}
+  .camera-preview{position:relative;width:100%;aspect-ratio:16/9;max-height:40vh;background:var(--preview-bg);border-radius:var(--radius-sm);overflow:hidden;flex-shrink:1;box-shadow:var(--shadow-lg);}
   .camera-preview::after{content:'';position:absolute;inset:0;border-radius:var(--radius-md);box-shadow:inset 0 0 80px 20px rgba(0,0,0,0.3);pointer-events:none;z-index:2;}
   .camera-no-feed{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:1;}
   .camera-no-feed img{width:80px;height:80px;object-fit:contain;opacity:.85;}
@@ -158,6 +158,11 @@
   .position-preview .pip-dot.pos-br{bottom:6px;right:6px;}
   .position-preview .pip-dot.pos-bl{bottom:6px;left:6px;}
 
+  /* Size + Position row */
+  .cam-size-position-row{display:flex;gap:16px;align-items:flex-start;}
+  .cam-size-position-row .size-slider-wrap{flex:1;min-width:0;}
+  .cam-size-position-row .position-grid-wrap{flex:0 0 auto;margin-bottom:0;}
+
   /* Size slider */
   .size-slider-wrap{display:flex;flex-direction:column;gap:6px;}
   .size-slider-row{display:flex;align-items:center;gap:10px;}
@@ -173,6 +178,9 @@
   .field-label{font-size:11px;font-weight:700;color:var(--text-sub);}
   .field-input{width:100%;font-family:var(--font-he);font-size:12px;padding:7px 10px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);outline:none;transition:border-color .2s,box-shadow .2s;min-height:34px;}
   .field-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.1);}
+  .lesson-name-input{font-size:16px!important;font-weight:700;padding:12px!important;border-color:rgba(56,196,242,0.35);background:rgba(56,196,242,0.04);min-height:46px;}
+  .lesson-name-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,0.15);}
+  [data-theme="dark"] .lesson-name-input{background:rgba(56,196,242,0.06);border-color:rgba(56,196,242,0.25);}
   select.field-input{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23253E7A' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;}
   [data-theme="dark"] select.field-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23dde5f5' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");}
 
@@ -204,6 +212,12 @@
   /* ── ANIMATIONS ── */
   @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
   .fade-in{animation:fadeIn .4s ease both;}
+
+  /* ── Info card title ── */
+  .info-card-title{display:flex;align-items:center;gap:8px;padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:2px;}
+  .info-card-title svg{width:18px;height:18px;color:var(--cyan);flex-shrink:0;}
+  .info-card-title span{font-family:var(--font-en);font-size:16px;font-weight:600;color:var(--navy);}
+  [data-theme="dark"] .info-card-title span{color:var(--cyan);}
 
   /* ── Read-only fields ── */
   .readonly-field{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-sub);font-size:14px;font-family:var(--font-he);min-height:44px;cursor:default;user-select:none;}
@@ -367,6 +381,12 @@
       <!-- ═══ LEFT COLUMN — Course Info & Lesson Assets (40%) ═══ -->
       <div class="col-left fade-in">
         <div class="info-card">
+          <!-- Card Title -->
+          <div class="info-card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/><circle cx="5" cy="5" r="3" fill="currentColor" stroke="none" opacity="0.7"/></svg>
+            <span>הקלט שיעור חדש</span>
+          </div>
+
           <!-- Course Name (read-only) -->
           <div class="field-group">
             <label class="field-label">קורס</label>
@@ -388,7 +408,7 @@
           <!-- Lesson Name (editable) -->
           <div class="field-group">
             <label class="field-label">שם השיעור</label>
-            <input class="field-input" type="text" id="lessonName" value="שיעור חדש" placeholder="הכנס שם לשיעור...">
+            <input class="field-input lesson-name-input" type="text" id="lessonName" value="שיעור חדש" placeholder="הכנס שם לשיעור...">
           </div>
 
           <!-- Divider -->
@@ -560,42 +580,45 @@
               </button>
             </div>
 
-            <!-- Default position selector -->
-            <div class="position-grid-wrap">
-              <div class="cam-settings-sublabel">מיקום ברירת מחדל</div>
-              <div style="display:flex;gap:16px;align-items:flex-start;">
-                <div class="position-grid">
-                  <button class="position-grid-btn" data-pos="tr" onclick="setOverlayPosition('tr')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="7" x2="7" y2="17"/><polyline points="7 7 17 7 17 17"/></svg>
-                    ↗
-                  </button>
-                  <button class="position-grid-btn" data-pos="tl" onclick="setOverlayPosition('tl')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 7 7 7 17"/></svg>
-                    ↖
-                  </button>
-                  <button class="position-grid-btn active" data-pos="br" onclick="setOverlayPosition('br')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="17" x2="7" y2="7"/><polyline points="7 17 17 17 17 7"/></svg>
-                    ↘
-                  </button>
-                  <button class="position-grid-btn" data-pos="bl" onclick="setOverlayPosition('bl')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="17 17 7 17 7 7"/></svg>
-                    ↙
-                  </button>
-                </div>
-                <div class="position-preview" id="posPreview">
-                  <div class="pip-dot pos-br" id="pipDot"></div>
+            <!-- Size slider + Position grid — side by side -->
+            <div class="cam-size-position-row">
+              <!-- Size slider (left in RTL = visually left) -->
+              <div class="size-slider-wrap">
+                <div class="cam-settings-sublabel">גודל חלון מצלמה</div>
+                <div class="size-slider-row">
+                  <span class="slider-label">קטן</span>
+                  <input type="range" class="size-slider" id="sizeSlider" min="15" max="30" value="20" oninput="updateSizeSlider(this.value)">
+                  <span class="slider-label">גדול</span>
+                  <span class="size-slider-value" id="sizeValue">20%</span>
                 </div>
               </div>
-            </div>
 
-            <!-- Size slider -->
-            <div class="size-slider-wrap">
-              <div class="cam-settings-sublabel">גודל חלון מצלמה</div>
-              <div class="size-slider-row">
-                <span class="slider-label">קטן</span>
-                <input type="range" class="size-slider" id="sizeSlider" min="15" max="30" value="20" oninput="updateSizeSlider(this.value)">
-                <span class="slider-label">גדול</span>
-                <span class="size-slider-value" id="sizeValue">20%</span>
+              <!-- Position grid (right in RTL = visually right) -->
+              <div class="position-grid-wrap">
+                <div class="cam-settings-sublabel">מיקום ברירת מחדל</div>
+                <div style="display:flex;gap:10px;align-items:flex-start;">
+                  <div class="position-grid">
+                    <button class="position-grid-btn" data-pos="tr" onclick="setOverlayPosition('tr')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="7" x2="7" y2="17"/><polyline points="7 7 17 7 17 17"/></svg>
+                      ↗
+                    </button>
+                    <button class="position-grid-btn" data-pos="tl" onclick="setOverlayPosition('tl')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 7 7 7 17"/></svg>
+                      ↖
+                    </button>
+                    <button class="position-grid-btn active" data-pos="br" onclick="setOverlayPosition('br')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="17" x2="7" y2="7"/><polyline points="7 17 17 17 17 7"/></svg>
+                      ↘
+                    </button>
+                    <button class="position-grid-btn" data-pos="bl" onclick="setOverlayPosition('bl')">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="17 17 7 17 7 7"/></svg>
+                      ↙
+                    </button>
+                  </div>
+                  <div class="position-preview" id="posPreview">
+                    <div class="pip-dot pos-br" id="pipDot"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

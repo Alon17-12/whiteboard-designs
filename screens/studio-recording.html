@@ -14,9 +14,9 @@
   --green: #22c55e;
   --yellow: #EAD654;
   --amber: #f59e0b;
-  --bg: #0a0e1a;
-  --bg-secondary: #111629;
-  --surface: rgba(0,0,0,0.7);
+  --bg: #0c1422;
+  --bg-secondary: #111d33;
+  --surface: rgba(10,18,32,0.75);
   --surface-panel: rgba(15,22,42,0.92);
   --text: #f0f0f5;
   --text-muted: rgba(255,255,255,0.5);
@@ -47,7 +47,7 @@ body {
   position: relative;
   width: 100%;
   height: 100dvh;
-  background: radial-gradient(ellipse at 50% 40%, #141a35 0%, #0d1020 50%, #080b16 100%);
+  background: linear-gradient(135deg, #0f1729 0%, #162040 50%, #0f1729 100%);
   display: flex;
   flex-direction: column;
 }
@@ -57,8 +57,9 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 30% 60%, rgba(56,196,242,0.03) 0%, transparent 50%),
-    radial-gradient(circle at 70% 30%, rgba(240,86,128,0.02) 0%, transparent 50%);
+    radial-gradient(ellipse at 50% 40%, rgba(22,32,64,0.6) 0%, transparent 60%),
+    radial-gradient(circle at 30% 60%, rgba(56,196,242,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 70% 30%, rgba(240,86,128,0.03) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -68,11 +69,13 @@ body {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
-  background-size: 64px 64px;
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 48px 48px;
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse at 50% 50%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 30%, transparent 80%);
 }
 
 /* ======= SCREEN SHARE BACKGROUND — FULL SCREEN ======= */
@@ -81,7 +84,7 @@ body {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: #111629;
+  background: linear-gradient(145deg, #0f1729 0%, #111d33 50%, #0c1422 100%);
   overflow: hidden;
 }
 .screen-share-bg.visible { display: block; }
@@ -214,7 +217,7 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   z-index: 10;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+  background: linear-gradient(to bottom, rgba(12,20,34,0.65) 0%, rgba(12,20,34,0.25) 60%, transparent 100%);
   pointer-events: none;
   min-height: 80px;
 }
@@ -481,7 +484,7 @@ body {
 }
 .asset-show-btn.active {
   background: var(--cyan);
-  color: #0a0e1a;
+  color: #0c1422;
   border-color: var(--cyan);
 }
 
@@ -648,7 +651,7 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--surface);
+  background: linear-gradient(to top, rgba(12,20,34,0.95), rgba(12,20,34,0.7));
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-top: 1px solid rgba(255,255,255,0.06);
@@ -663,7 +666,7 @@ body {
 .take-pill {
   align-self: center;
   background: var(--cyan);
-  color: #0a0e1a;
+  color: #0c1422;
   font-family: 'Fredoka', sans-serif;
   font-weight: 600;
   font-size: 13px;
@@ -1243,12 +1246,12 @@ body {
 
 .dialog-btn.confirm-green {
   background: var(--green);
-  color: #0a0e1a;
+  color: #0c1422;
 }
 
 .dialog-btn.confirm-cyan {
   background: var(--cyan);
-  color: #0a0e1a;
+  color: #0c1422;
 }
 
 /* ======= TOAST ======= */
@@ -1861,7 +1864,7 @@ function renderControls() {
   } else if (phase === 'paused') {
     bigBtn.className = 'big-circle green';
     bigBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-      <path d="M10 5.5L23 14L10 22.5V5.5Z" fill="#0a0e1a"/>
+      <path d="M10 5.5L23 14L10 22.5V5.5Z" fill="#0c1422"/>
     </svg>`;
     centerLabel.textContent = 'המשך הקלטה';
     centerLabel.style.color = 'var(--green)';
