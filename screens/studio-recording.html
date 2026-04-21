@@ -1450,6 +1450,12 @@ kbd {
   <!-- Lesson name pill -->
   <div class="lesson-pill">שיעור 3: צבע ומשמעות</div>
 
+  <!-- Undo button -->
+  <button class="assets-btn" id="undoBtn" title="ביטול פעולה אחרונה" aria-label="ביטול" onclick="undoLastAction()" style="left:auto;right:16px;top:16px;position:absolute;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+    <span>ביטול</span>
+  </button>
+
   <!-- Assets button -->
   <button class="assets-btn" id="assetsBtn" title="נכסי שיעור" aria-label="נכסי שיעור">
     <span>📎</span>
@@ -2239,6 +2245,10 @@ function animateMeter() {
 }
 
 // ======= TOASTS =======
+function undoLastAction() {
+  showToast('הפעולה האחרונה בוטלה', 'cyan');
+}
+
 function showToast(msg, color, withUndo) {
   const container = $('toastContainer');
   const toast = document.createElement('div');
