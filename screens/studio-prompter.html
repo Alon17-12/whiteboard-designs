@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhiteBoard — פרומפטר</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --focus-color: #38C4F2;
+      --text-color: #ffffff;
+      --bg-opacity: 1;
+      --font-size: 36px;
+      --focus-position: 33.333%;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: rgba(0, 0, 0, var(--bg-opacity));
+      font-family: 'Fredoka', sans-serif;
+      cursor: none;
+    }
+
+    /* ===== Scrolling Text Container ===== */
+    #prompter-viewport {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    #text-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 0 8%;
+      transition: transform 0.2s ease;
+    }
+
+    #text-container.mirror {
+      transform: scaleX(-1);
+    }
+
+    /* Top spacer pushes first line to focus position */
+    .spacer-top {
+      height: calc(var(--focus-position));
+    }
+
+    .spacer-bottom {
+      height: 70vh;
+    }
+
+    /* Script lines */
+    .script-line {
+      font-size: var(--font-size);
+      color: var(--text-color);
+      line-height: 1.8;
+      text-align: center;
+      padding: 4px 0;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      opacity: 0.7;
+    }
+
+    .script-line.above-focus {
+      opacity: 0.35;
+    }
+
+    .script-line.at-focus {
+      opacity: 1;
+      font-weight: 600;
+      transform: scale(1.04);
+    }
+
+    .script-line.below-focus {
+      opacity: 0.65;
+    }
+
+    /* Divider lines */
+    .script-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 0;
+    }
+
+    .script-divider::before {
+      content: '';
+      display: block;
+      width: 120px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* ===== Focus Line ===== */
+    #focus-line {
+      position: fixed;
+      top: var(--focus-position);
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--focus-color);
+      opacity: 0.5;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* Gradient overlays for dimming above/below */
+    #gradient-top {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: calc(var(--focus-position) - 60px);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* ===== End of Script Indicator ===== */
+    #end-indicator {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 24px 48px;
+      border: 2px solid var(--focus-color);
+      border-radius: 12px;
+      color: var(--focus-color);
+      font-family: 'Fredoka', sans-serif;
+      font-size: 28px;
+      font-weight: 500;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 50;
+      animation: fadeInEnd 0.6s ease forwards;
+    }
+
+    #end-indicator.visible {
+      display: block;
+    }
+
+    @keyframes fadeInEnd {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* ===== Controls Bar ===== */
+    #controls-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.7));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      cursor: default;
+    }
+
+    #controls-bar.visible {
+      opacity: 1;
+    }
+
+    .ctrl-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 14px;
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .ctrl-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .ctrl-btn.active {
+      background: rgba(56, 196, 242, 0.2);
+      border-color: var(--focus-color);
+      color: var(--focus-color);
+    }
+
+    .ctrl-label {
+      color: rgba(255, 255, 255, 0.5);
+      font-family: 'Fredoka', sans-serif;
+      font-size: 12px;
+    }
+
+    .ctrl-value {
+      color: #fff;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ctrl-small {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka', sans-serif;
+      transition: background 0.2s;
+    }
+
+    .ctrl-small:hover {
+      background: rgba(255,255,255,0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Focus Line -->
+  <div id="focus-line"></div>
+  <div id="gradient-top"></div>
+
+  <!-- Scrolling Text -->
+  <div id="prompter-viewport">
+    <div id="text-container">
+      <div class="spacer-top" id="spacer-top"></div>
+      <div id="script-content"></div>
+      <div class="spacer-bottom"></div>
+    </div>
+  </div>
+
+  <!-- End of Script -->
+  <div id="end-indicator">סוף התסריט</div>
+
+  <!-- Controls Bar -->
+  <div id="controls-bar">
+    <button class="ctrl-btn" id="btn-play" title="Play / Pause">
+      <span id="play-icon">&#9654;</span>
+    </button>
+
+    <div class="ctrl-group">
+      <span class="ctrl-label">מהירות</span>
+      <button class="ctrl-small" id="btn-speed-down">−</button>
+      <span class="ctrl-value" id="speed-value">4</span>
+      <button class="ctrl-small" id="btn-speed-up">+</button>
+    </div>
+
+    <div class="ctrl-group">
+      <span class="ctrl-label">גודל</span>
+      <button class="ctrl-small" id="btn-font-down">−</button>
+      <span class="ctrl-value" id="font-value">36</span>
+      <button class="ctrl-small" id="btn-font-up">+</button>
+    </div>
+
+    <button class="ctrl-btn" id="btn-mirror">מראה</button>
+    <button class="ctrl-btn" id="btn-close">סגור</button>
+  </div>
+
+  <script>
+    // ===== State =====
+    let scrollSpeed = 4;
+    let isScrolling = false;
+    let fontSize = 36;
+    let textColor = '#ffffff';
+    let bgOpacity = 1;
+    let isMirrored = false;
+    let scrollOffset = 0;
+
+    // ===== Elements =====
+    const viewport = document.getElementById('prompter-viewport');
+    const textContainer = document.getElementById('text-container');
+    const scriptContent = document.getElementById('script-content');
+    const spacerTop = document.getElementById('spacer-top');
+    const endIndicator = document.getElementById('end-indicator');
+    const controlsBar = document.getElementById('controls-bar');
+    const playIcon = document.getElementById('play-icon');
+    const speedValue = document.getElementById('speed-value');
+    const fontValue = document.getElementById('font-value');
+    const btnMirror = document.getElementById('btn-mirror');
+
+    // ===== Demo Script =====
+    const demoScript = `ברוכים הבאים לשיעור השלישי בקורס יסודות העיצוב.
+היום נדבר על צבע ומשמעות.
+
+---
+
+צבעים חמים כמו אדום, כתום וצהוב מעוררים תחושות של אנרגיה, חום ותשוקה.
+צבעים קרים כמו כחול, ירוק וסגול מעוררים תחושות של רוגע, אמון ומקצועיות.
+
+---
+
+כשאנחנו בוחרים פלטת צבעים לפרויקט, חשוב לשאול:
+מי קהל היעד שלנו?
+מה התחושה שאנחנו רוצים ליצור?
+האם הצבעים נגישים לכולם?
+
+---
+
+בתרגיל המעשי היום, ניצור קולאז׳ של צבעים חמים וקרים.
+נבחן איך שילובים שונים משפיעים על התחושה הכללית של העיצוב.
+
+---
+
+זכרו: אין צבע "נכון" או "לא נכון" — הכל תלוי בהקשר, בקהל, ובמסר שאתם רוצים להעביר.`;
+
+    // ===== Render Script =====
+    function renderScript(text) {
+      scriptContent.innerHTML = '';
+      const lines = text.split('\n');
+
+      lines.forEach((line, i) => {
+        const trimmed = line.trim();
+        if (trimmed === '---') {
+          const divider = document.createElement('div');
+          divider.className = 'script-divider';
+          scriptContent.appendChild(divider);
+        } else if (trimmed === '') {
+          const spacer = document.createElement('div');
+          spacer.style.height = '0.6em';
+          scriptContent.appendChild(spacer);
+        } else {
+          const el = document.createElement('div');
+          el.className = 'script-line';
+          el.textContent = trimmed;
+          scriptContent.appendChild(el);
+        }
+      });
+
+      // Reset scroll
+      scrollOffset = 0;
+      textContainer.style.transform = isMirrored ? 'scaleX(-1)' : '';
+      textContainer.style.top = '0px';
+      endIndicator.classList.remove('visible');
+    }
+
+    // ===== Update Spacer =====
+    function updateSpacer() {
+      const vh = window.innerHeight;
+      spacerTop.style.height = (vh * parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--focus-position')) / 100) + 'px';
+    }
+
+    // ===== Focus Effect =====
+    function updateFocusEffect() {
+      const focusY = window.innerHeight * 0.3333;
+      const scriptLines = scriptContent.querySelectorAll('.script-line');
+
+      scriptLines.forEach(line => {
+        const rect = line.getBoundingClientRect();
+        const lineCenter = rect.top + rect.height / 2;
+        const distance = lineCenter - focusY;
+        const absDistance = Math.abs(distance);
+
+        line.classList.remove('above-focus', 'at-focus', 'below-focus');
+
+        if (absDistance < 40) {
+          line.classList.add('at-focus');
+        } else if (distance < 0) {
+          line.classList.add('above-focus');
+        } else {
+          line.classList.add('below-focus');
+        }
+      });
+    }
+
+    // ===== Scroll Loop =====
+    function scrollLoop() {
+      if (isScrolling) {
+        scrollOffset += scrollSpeed * 0.3;
+
+        const maxScroll = textContainer.scrollHeight - window.innerHeight;
+        if (scrollOffset >= maxScroll) {
+          scrollOffset = maxScroll;
+          isScrolling = false;
+          playIcon.innerHTML = '&#9654;';
+          endIndicator.classList.add('visible');
+        }
+
+        textContainer.style.transform = `translateY(${-scrollOffset}px)` + (isMirrored ? ' scaleX(-1)' : '');
+      }
+
+      updateFocusEffect();
+      requestAnimationFrame(scrollLoop);
+    }
+
+    // ===== Controls Bar Auto-Hide =====
+    let hideTimeout = null;
+
+    function showControls() {
+      controlsBar.classList.add('visible');
+      document.body.style.cursor = 'default';
+      clearTimeout(hideTimeout);
+      hideTimeout = setTimeout(() => {
+        controlsBar.classList.remove('visible');
+        document.body.style.cursor = 'none';
+      }, 3000);
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      if (e.clientY > window.innerHeight - 120) {
+        showControls();
+      }
+    });
+
+    controlsBar.addEventListener('mouseenter', () => {
+      clearTimeout(hideTimeout);
+      controlsBar.classList.add('visible');
+      document.body.style.cursor = 'default';
+    });
+
+    controlsBar.addEventListener('mouseleave', () => {
+      hideTimeout = setTimeout(() => {
+        controlsBar.classList.remove('visible');
+        document.body.style.cursor = 'none';
+      }, 1500);
+    });
+
+    // ===== Local Controls =====
+    document.getElementById('btn-play').addEventListener('click', () => {
+      if (endIndicator.classList.contains('visible')) {
+        // Reset if at end
+        scrollOffset = 0;
+        textContainer.style.transform = isMirrored ? 'scaleX(-1)' : '';
+        endIndicator.classList.remove('visible');
+      }
+      isScrolling = !isScrolling;
+      playIcon.innerHTML = isScrolling ? '&#9208;' : '&#9654;';
+    });
+
+    document.getElementById('btn-speed-up').addEventListener('click', () => {
+      scrollSpeed = Math.min(10, scrollSpeed + 1);
+      speedValue.textContent = scrollSpeed;
+    });
+
+    document.getElementById('btn-speed-down').addEventListener('click', () => {
+      scrollSpeed = Math.max(1, scrollSpeed - 1);
+      speedValue.textContent = scrollSpeed;
+    });
+
+    document.getElementById('btn-font-up').addEventListener('click', () => {
+      fontSize = Math.min(80, fontSize + 2);
+      document.documentElement.style.setProperty('--font-size', fontSize + 'px');
+      fontValue.textContent = fontSize;
+    });
+
+    document.getElementById('btn-font-down').addEventListener('click', () => {
+      fontSize = Math.max(18, fontSize - 2);
+      document.documentElement.style.setProperty('--font-size', fontSize + 'px');
+      fontValue.textContent = fontSize;
+    });
+
+    document.getElementById('btn-mirror').addEventListener('click', () => {
+      isMirrored = !isMirrored;
+      btnMirror.classList.toggle('active', isMirrored);
+      textContainer.style.transform = `translateY(${-scrollOffset}px)` + (isMirrored ? ' scaleX(-1)' : '');
+    });
+
+    document.getElementById('btn-close').addEventListener('click', () => {
+      window.close();
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        document.getElementById('btn-play').click();
+      } else if (e.code === 'ArrowUp') {
+        e.preventDefault();
+        scrollSpeed = Math.min(10, scrollSpeed + 1);
+        speedValue.textContent = scrollSpeed;
+      } else if (e.code === 'ArrowDown') {
+        e.preventDefault();
+        scrollSpeed = Math.max(1, scrollSpeed - 1);
+        speedValue.textContent = scrollSpeed;
+      } else if (e.code === 'Escape') {
+        window.close();
+      }
+    });
+
+    // ===== BroadcastChannel Communication =====
+    let channel = null;
+    try {
+      channel = new BroadcastChannel('whiteboard-prompter');
+      channel.onmessage = (event) => {
+        const msg = event.data;
+        if (!msg || !msg.type) return;
+
+        switch (msg.type) {
+          case 'play':
+            if (!isScrolling) {
+              isScrolling = true;
+              playIcon.innerHTML = '&#9208;';
+              endIndicator.classList.remove('visible');
+            }
+            break;
+
+          case 'pause':
+            isScrolling = false;
+            playIcon.innerHTML = '&#9654;';
+            break;
+
+          case 'speed':
+            scrollSpeed = Math.max(1, Math.min(10, msg.value));
+            speedValue.textContent = scrollSpeed;
+            break;
+
+          case 'fontSize':
+            fontSize = Math.max(18, Math.min(80, msg.value));
+            document.documentElement.style.setProperty('--font-size', fontSize + 'px');
+            fontValue.textContent = fontSize;
+            break;
+
+          case 'color':
+            textColor = msg.value;
+            document.documentElement.style.setProperty('--text-color', textColor);
+            break;
+
+          case 'opacity':
+            bgOpacity = Math.max(0, Math.min(1, msg.value));
+            document.documentElement.style.setProperty('--bg-opacity', bgOpacity);
+            break;
+
+          case 'mirror':
+            isMirrored = !!msg.value;
+            btnMirror.classList.toggle('active', isMirrored);
+            textContainer.style.transform = `translateY(${-scrollOffset}px)` + (isMirrored ? ' scaleX(-1)' : '');
+            break;
+
+          case 'text':
+            renderScript(msg.value);
+            break;
+
+          case 'jumpCue':
+            // Jump to next/prev divider
+            const dividers = scriptContent.querySelectorAll('.script-divider');
+            const focusY = window.innerHeight * 0.3333 + scrollOffset;
+            let targetOffset = null;
+
+            if (msg.direction > 0) {
+              // Next cue
+              for (const div of dividers) {
+                const divTop = div.offsetTop + spacerTop.offsetHeight;
+                if (divTop > focusY + 20) {
+                  targetOffset = divTop - window.innerHeight * 0.3333;
+                  break;
+                }
+              }
+            } else {
+              // Previous cue
+              const arr = Array.from(dividers).reverse();
+              for (const div of arr) {
+                const divTop = div.offsetTop + spacerTop.offsetHeight;
+                if (divTop < focusY - 20) {
+                  targetOffset = divTop - window.innerHeight * 0.3333;
+                  break;
+                }
+              }
+            }
+
+            if (targetOffset !== null) {
+              scrollOffset = Math.max(0, targetOffset);
+              textContainer.style.transform = `translateY(${-scrollOffset}px)` + (isMirrored ? ' scaleX(-1)' : '');
+              endIndicator.classList.remove('visible');
+            }
+            break;
+        }
+      };
+    } catch (e) {
+      console.warn('BroadcastChannel not supported:', e);
+    }
+
+    // ===== Init =====
+    function init() {
+      updateSpacer();
+      renderScript(demoScript);
+      requestAnimationFrame(scrollLoop);
+    }
+
+    window.addEventListener('resize', updateSpacer);
+    init();
+  </script>
+</body>
+</html>

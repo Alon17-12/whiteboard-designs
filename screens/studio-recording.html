@@ -1450,6 +1450,566 @@ kbd {
   justify-content: center;
   background: #000;
 }
+
+/* ======= PROMPTER BUTTON ======= */
+.prompter-btn {
+  position: absolute;
+  top: 24px;
+  left: 100px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-pill);
+  padding: 10px 18px;
+  min-height: 44px;
+  border: 1px solid rgba(255,255,255,0.1);
+  font-family: 'Heebo', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  z-index: 11;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s var(--ease-smooth), border-color 0.2s var(--ease-smooth);
+}
+.prompter-btn:hover {
+  background: rgba(0,0,0,0.65);
+  border-color: rgba(56,196,242,0.3);
+  color: var(--text);
+}
+.prompter-btn.active {
+  background: rgba(56,196,242,0.12);
+  border-color: rgba(56,196,242,0.4);
+  color: var(--cyan);
+}
+
+/* ======= PROMPTER PANEL ======= */
+.prompter-panel {
+  position: absolute;
+  top: 68px;
+  left: 100px;
+  width: 320px;
+  max-height: 520px;
+  background: var(--surface-panel);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.08);
+  z-index: 30;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px) scale(0.97);
+  transition: opacity 0.2s var(--ease-smooth), transform 0.2s var(--ease-out);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.prompter-panel.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.prompter-panel-header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.prompter-panel-title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cyan);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.prompter-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: background 0.15s var(--ease-smooth);
+}
+.prompter-close-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+}
+
+.prompter-panel-body {
+  padding: 12px 16px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Scrollbar for panel body */
+.prompter-panel-body::-webkit-scrollbar { width: 3px; }
+.prompter-panel-body::-webkit-scrollbar-track { background: transparent; }
+.prompter-panel-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+.prompter-section-label {
+  font-family: 'Heebo', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.prompter-textarea {
+  width: 100%;
+  min-height: 110px;
+  max-height: 160px;
+  resize: vertical;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text);
+  outline: none;
+  direction: rtl;
+  transition: border-color 0.2s var(--ease-smooth);
+}
+.prompter-textarea:focus {
+  border-color: var(--cyan);
+}
+.prompter-textarea::placeholder {
+  color: var(--text-dim);
+}
+
+.prompter-word-count {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: left;
+  margin-top: 4px;
+}
+
+/* Scroll controls */
+.prompter-scroll-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prompter-play-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--cyan);
+  border: none;
+  color: #0c1422;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.15s var(--ease-out), box-shadow 0.15s var(--ease-smooth);
+  box-shadow: 0 2px 12px rgba(56,196,242,0.3);
+}
+.prompter-play-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 18px rgba(56,196,242,0.4);
+}
+.prompter-play-btn:active {
+  transform: scale(0.94);
+}
+
+.prompter-speed-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.prompter-speed-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  justify-content: space-between;
+}
+.prompter-speed-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.08);
+  outline: none;
+}
+.prompter-speed-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cyan);
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.prompter-cue-btns {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.prompter-cue-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s var(--ease-smooth), border-color 0.15s var(--ease-smooth);
+}
+.prompter-cue-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(56,196,242,0.3);
+  color: var(--text);
+}
+
+/* Display settings */
+.prompter-setting-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.prompter-font-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.08);
+  outline: none;
+}
+.prompter-font-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cyan);
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.prompter-swatches {
+  display: flex;
+  gap: 6px;
+}
+.prompter-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.12);
+  cursor: pointer;
+  transition: border-color 0.15s var(--ease-smooth), transform 0.15s var(--ease-out);
+}
+.prompter-swatch:hover { transform: scale(1.1); }
+.prompter-swatch.active { border-color: var(--cyan); transform: scale(1.1); }
+.prompter-swatch.sw-white { background: #ffffff; }
+.prompter-swatch.sw-yellow { background: #EAD654; }
+.prompter-swatch.sw-green { background: #22c55e; }
+
+.prompter-opacity-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.08);
+  outline: none;
+}
+.prompter-opacity-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cyan);
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.prompter-pills {
+  display: flex;
+  gap: 4px;
+}
+.prompter-pill {
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  font-family: 'Heebo', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s var(--ease-smooth), border-color 0.15s var(--ease-smooth), color 0.15s var(--ease-smooth);
+}
+.prompter-pill:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(56,196,242,0.2);
+}
+.prompter-pill.active {
+  background: rgba(56,196,242,0.12);
+  border-color: rgba(56,196,242,0.4);
+  color: var(--cyan);
+}
+
+.prompter-mirror-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.prompter-mirror-switch {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.1);
+  position: relative;
+  transition: background 0.2s var(--ease-smooth);
+  flex-shrink: 0;
+}
+.prompter-mirror-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform 0.2s var(--ease-smooth), background 0.2s var(--ease-smooth);
+}
+.prompter-mirror-switch.on {
+  background: rgba(56,196,242,0.25);
+}
+.prompter-mirror-switch.on::after {
+  transform: translateX(-16px);
+  background: var(--cyan);
+}
+.prompter-mirror-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Display mode */
+.prompter-display-mode {
+  display: flex;
+  gap: 4px;
+}
+.prompter-display-mode-btn {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  font-family: 'Heebo', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s var(--ease-smooth), border-color 0.15s var(--ease-smooth), color 0.15s var(--ease-smooth);
+}
+.prompter-display-mode-btn:hover {
+  background: rgba(255,255,255,0.08);
+}
+.prompter-display-mode-btn.active {
+  background: rgba(56,196,242,0.12);
+  border-color: rgba(56,196,242,0.4);
+  color: var(--cyan);
+}
+
+.prompter-external-btn {
+  width: 100%;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(56,196,242,0.25);
+  background: rgba(56,196,242,0.08);
+  font-family: 'Heebo', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cyan);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.15s var(--ease-smooth);
+}
+.prompter-external-btn:hover {
+  background: rgba(56,196,242,0.18);
+}
+.prompter-external-btn.visible {
+  display: flex;
+}
+
+/* ======= PROMPTER OVERLAY (on video) ======= */
+.prompter-overlay {
+  position: absolute;
+  top: 120px;
+  right: 40px;
+  width: 340px;
+  height: 220px;
+  min-width: 200px;
+  min-height: 120px;
+  z-index: 14;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: none;
+  flex-direction: column;
+  cursor: default;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.prompter-overlay.visible {
+  display: flex;
+}
+
+.prompter-overlay-grip {
+  height: 22px;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  flex-shrink: 0;
+  gap: 4px;
+}
+.prompter-overlay-grip:active { cursor: grabbing; }
+.prompter-overlay-grip-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+}
+
+.prompter-overlay-content {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  direction: rtl;
+}
+
+.prompter-overlay-bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  pointer-events: none;
+}
+
+.prompter-overlay-text {
+  position: absolute;
+  inset: 0;
+  padding: 16px 20px;
+  overflow-y: auto;
+  font-family: 'Heebo', sans-serif;
+  font-weight: 500;
+  line-height: 1.8;
+  color: #ffffff;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.prompter-overlay-text::-webkit-scrollbar { display: none; }
+
+.prompter-overlay-text.mirrored {
+  transform: scaleX(-1);
+}
+
+.prompter-focus-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--cyan);
+  box-shadow: 0 0 12px rgba(56,196,242,0.5);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.prompter-dim-above {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.35);
+  pointer-events: none;
+  z-index: 1;
+  transition: height 0.1s linear;
+}
+
+/* Resize handle */
+.prompter-overlay-resize {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  cursor: nwse-resize;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.prompter-overlay-resize svg {
+  opacity: 0.3;
+  transition: opacity 0.15s;
+}
+.prompter-overlay-resize:hover svg { opacity: 0.6; }
+
+/* End of script indicator */
+.prompter-end-indicator {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(56,196,242,0.15);
+  border: 1px solid rgba(56,196,242,0.3);
+  border-radius: var(--radius-pill);
+  padding: 4px 14px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cyan);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+  transition: opacity 0.3s var(--ease-smooth);
+}
+.prompter-end-indicator.visible {
+  opacity: 1;
+  animation: end-flash 1.5s ease-in-out infinite;
+}
+@keyframes end-flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
 </style>
 </head>
 <body>
@@ -1557,6 +2117,164 @@ kbd {
         <input class="assets-url-input" type="text" placeholder="https://example.com/presentation.html" id="assetUrlInput" />
         <button class="assets-url-go-btn" onclick="loadAssetUrl()">הצג</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Prompter button -->
+  <button class="prompter-btn" id="prompterBtn" aria-label="פרומפטר" onclick="togglePrompter()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    <span>פרומפטר</span>
+  </button>
+
+  <!-- Prompter panel -->
+  <div class="prompter-panel" id="prompterPanel">
+    <div class="prompter-panel-header">
+      <div class="prompter-panel-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        פרומפטר
+      </div>
+      <button class="prompter-close-btn" onclick="togglePrompter()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="prompter-panel-body">
+      <!-- Script editor -->
+      <div>
+        <div class="prompter-section-label">תסריט</div>
+        <textarea class="prompter-textarea" id="prompterTextarea" placeholder="כתוב כאן את התסריט שלך...">ברוכים הבאים לשיעור השלישי בקורס יסודות העיצוב.
+היום נדבר על צבע ומשמעות.
+
+---
+
+צבעים חמים כמו אדום, כתום וצהוב מעוררים תחושות של אנרגיה, חום ותשוקה.
+צבעים קרים כמו כחול, ירוק וסגול מעוררים תחושות של רוגע, אמון ומקצועיות.
+
+---
+
+כשאנחנו בוחרים פלטת צבעים לפרויקט, חשוב לשאול:
+מי קהל היעד שלנו?
+מה התחושה שאנחנו רוצים ליצור?
+האם הצבעים נגישים לכולם?
+
+---
+
+בתרגיל המעשי היום, ניצור קולאז׳ של צבעים חמים וקרים.
+נבחן איך שילובים שונים משפיעים על התחושה הכללית של העיצוב.</textarea>
+        <div class="prompter-word-count" id="prompterWordCount">0 מילים</div>
+      </div>
+
+      <!-- Scroll controls -->
+      <div>
+        <div class="prompter-section-label">בקרות גלילה</div>
+        <div class="prompter-scroll-controls">
+          <button class="prompter-play-btn" id="prompterPlayBtn" onclick="togglePrompterScroll()" title="הפעל/השהה גלילה">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" id="prompterPlayIcon"><polygon points="5 3 19 12 5 21"/></svg>
+          </button>
+          <div class="prompter-speed-wrap">
+            <div class="prompter-speed-label">
+              <span>מהירות</span>
+              <span id="prompterSpeedVal">4</span>
+            </div>
+            <input type="range" class="prompter-speed-slider" id="prompterSpeedSlider" min="1" max="10" value="4" oninput="setPrompterSpeed(this.value)">
+          </div>
+          <div class="prompter-cue-btns">
+            <button class="prompter-cue-btn" onclick="prompterPrevCue()" title="cue הקודם">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+            </button>
+            <button class="prompter-cue-btn" onclick="prompterNextCue()" title="קפוץ ל-cue הבא">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Display settings -->
+      <div>
+        <div class="prompter-section-label">הגדרות תצוגה</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <!-- Font size -->
+          <div class="prompter-setting-row">
+            <span style="font-size:11px;color:var(--text-dim);min-width:55px;">גודל גופן</span>
+            <input type="range" class="prompter-font-slider" id="prompterFontSlider" min="24" max="72" value="36" oninput="setPrompterFontSize(this.value)">
+            <span style="font-size:11px;color:var(--text-muted);min-width:30px;text-align:left;" id="prompterFontVal">36px</span>
+          </div>
+          <!-- Text color -->
+          <div class="prompter-setting-row">
+            <span style="font-size:11px;color:var(--text-dim);min-width:55px;">צבע טקסט</span>
+            <div class="prompter-swatches">
+              <div class="prompter-swatch sw-white active" data-color="#ffffff" onclick="setPrompterColor(this)"></div>
+              <div class="prompter-swatch sw-yellow" data-color="#EAD654" onclick="setPrompterColor(this)"></div>
+              <div class="prompter-swatch sw-green" data-color="#22c55e" onclick="setPrompterColor(this)"></div>
+            </div>
+          </div>
+          <!-- Background opacity -->
+          <div class="prompter-setting-row">
+            <span style="font-size:11px;color:var(--text-dim);min-width:55px;">שקיפות רקע</span>
+            <input type="range" class="prompter-opacity-slider" id="prompterOpacitySlider" min="20" max="95" value="75" oninput="setPrompterBgOpacity(this.value)">
+            <span style="font-size:11px;color:var(--text-muted);min-width:30px;text-align:left;" id="prompterOpacityVal">75%</span>
+          </div>
+          <!-- Line spacing -->
+          <div class="prompter-setting-row">
+            <span style="font-size:11px;color:var(--text-dim);min-width:55px;">ריווח שורות</span>
+            <div class="prompter-pills" id="prompterLineSpacing">
+              <button class="prompter-pill" data-spacing="1.4" onclick="setPrompterLineSpacing(this)">צפוף</button>
+              <button class="prompter-pill active" data-spacing="1.8" onclick="setPrompterLineSpacing(this)">רגיל</button>
+              <button class="prompter-pill" data-spacing="2.4" onclick="setPrompterLineSpacing(this)">מרווח</button>
+            </div>
+          </div>
+          <!-- Focus line position -->
+          <div class="prompter-setting-row">
+            <span style="font-size:11px;color:var(--text-dim);min-width:55px;">קו מיקוד</span>
+            <div class="prompter-pills" id="prompterFocusPos">
+              <button class="prompter-pill active" data-pos="33" onclick="setPrompterFocusPos(this)">שליש עליון</button>
+              <button class="prompter-pill" data-pos="50" onclick="setPrompterFocusPos(this)">מרכז</button>
+              <button class="prompter-pill" data-pos="66" onclick="setPrompterFocusPos(this)">שליש תחתון</button>
+            </div>
+          </div>
+          <!-- Mirror toggle -->
+          <div class="prompter-setting-row">
+            <span style="font-size:11px;color:var(--text-dim);min-width:55px;">מראה</span>
+            <div class="prompter-mirror-toggle" onclick="togglePrompterMirror()">
+              <div class="prompter-mirror-switch" id="prompterMirrorSwitch"></div>
+              <span class="prompter-mirror-label" id="prompterMirrorLabel">כבוי</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Display mode -->
+      <div>
+        <div class="prompter-section-label">מצב תצוגה</div>
+        <div class="prompter-display-mode" id="prompterDisplayMode">
+          <button class="prompter-display-mode-btn active" data-display="onscreen" onclick="setPrompterDisplayMode(this)">על המסך</button>
+          <button class="prompter-display-mode-btn" data-display="external" onclick="setPrompterDisplayMode(this)">מסך חיצוני</button>
+        </div>
+        <button class="prompter-external-btn" id="prompterExternalBtn" onclick="openExternalPrompter()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          פתח במסך חיצוני
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prompter overlay on video -->
+  <div class="prompter-overlay" id="prompterOverlay">
+    <div class="prompter-overlay-grip" id="prompterOverlayGrip">
+      <div class="prompter-overlay-grip-dot"></div>
+      <div class="prompter-overlay-grip-dot"></div>
+      <div class="prompter-overlay-grip-dot"></div>
+      <div class="prompter-overlay-grip-dot"></div>
+      <div class="prompter-overlay-grip-dot"></div>
+    </div>
+    <div class="prompter-overlay-content">
+      <div class="prompter-overlay-bg" id="prompterOverlayBg"></div>
+      <div class="prompter-dim-above" id="prompterDimAbove"></div>
+      <div class="prompter-focus-line" id="prompterFocusLine" style="top:33%"></div>
+      <div class="prompter-overlay-text" id="prompterOverlayText"></div>
+      <div class="prompter-end-indicator" id="prompterEndIndicator">סוף התסריט</div>
+    </div>
+    <div class="prompter-overlay-resize" id="prompterOverlayResize">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"><line x1="10" y1="2" x2="2" y2="10"/><line x1="10" y1="6" x2="6" y2="10"/></svg>
     </div>
   </div>
 
@@ -2399,6 +3117,10 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     if (dialogOpen) {
       dialogOpen.classList.remove('visible');
+    } else if (prompterState.visible) {
+      prompterState.visible = false;
+      prompterPanel.classList.remove('visible');
+      prompterBtn.classList.remove('active');
     } else if (assetsPanel.classList.contains('visible')) {
       assetsPanel.classList.remove('visible');
     } else if (state.phase === 'recording' || state.phase === 'paused') {
@@ -2422,6 +3144,9 @@ document.addEventListener('keydown', e => {
   if (e.key === '3') setMode('screen');
   if (e.key === 'a' || e.key === 'A') {
     assetsPanel.classList.toggle('visible');
+  }
+  if (e.key === 'p' || e.key === 'P') {
+    togglePrompter();
   }
 });
 
@@ -2492,6 +3217,417 @@ document.addEventListener('keydown', e => {
     cameraOverlay.style.transition = '';
   });
 })();
+
+// ======= PROMPTER =======
+const prompterState = {
+  visible: false,
+  scrolling: false,
+  speed: 4,
+  fontSize: 36,
+  textColor: '#ffffff',
+  bgOpacity: 75,
+  lineSpacing: 1.8,
+  focusPos: 33,
+  mirrored: false,
+  displayMode: 'onscreen',
+  overlayVisible: false,
+  animFrameId: null,
+  externalWindow: null,
+  lastTimestamp: 0,
+};
+
+const prompterBtn = $('prompterBtn');
+const prompterPanel = $('prompterPanel');
+const prompterTextarea = $('prompterTextarea');
+const prompterOverlay = $('prompterOverlay');
+const prompterOverlayText = $('prompterOverlayText');
+const prompterOverlayBg = $('prompterOverlayBg');
+const prompterFocusLine = $('prompterFocusLine');
+const prompterDimAbove = $('prompterDimAbove');
+const prompterEndIndicator = $('prompterEndIndicator');
+const prompterPlayBtn = $('prompterPlayBtn');
+
+function togglePrompter() {
+  prompterState.visible = !prompterState.visible;
+  prompterPanel.classList.toggle('visible', prompterState.visible);
+  prompterBtn.classList.toggle('active', prompterState.visible);
+  if (prompterState.visible) {
+    updatePrompterWordCount();
+    syncPrompterOverlay();
+  }
+}
+
+// Close prompter panel on outside click
+document.addEventListener('click', e => {
+  if (prompterState.visible && !prompterPanel.contains(e.target) && !prompterBtn.contains(e.target) && !prompterOverlay.contains(e.target)) {
+    prompterState.visible = false;
+    prompterPanel.classList.remove('visible');
+    prompterBtn.classList.remove('active');
+  }
+});
+
+// Word count
+function updatePrompterWordCount() {
+  const text = prompterTextarea.value.trim();
+  const words = text ? text.split(/\s+/).length : 0;
+  $('prompterWordCount').textContent = words + ' מילים';
+}
+prompterTextarea.addEventListener('input', () => {
+  updatePrompterWordCount();
+  syncPrompterOverlay();
+  if (prompterState.externalWindow && !prompterState.externalWindow.closed) {
+    updateExternalPrompterContent();
+  }
+});
+
+// Sync overlay text
+function syncPrompterOverlay() {
+  prompterOverlayText.textContent = prompterTextarea.value;
+  if (prompterState.displayMode === 'onscreen') {
+    prompterOverlay.classList.add('visible');
+    prompterState.overlayVisible = true;
+  }
+}
+
+// Play / Pause scroll
+function togglePrompterScroll() {
+  prompterState.scrolling = !prompterState.scrolling;
+  const icon = $('prompterPlayIcon');
+  if (prompterState.scrolling) {
+    icon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+    startPrompterScroll();
+  } else {
+    icon.innerHTML = '<polygon points="5 3 19 12 5 21"/>';
+    stopPrompterScroll();
+  }
+}
+
+function startPrompterScroll() {
+  if (prompterState.animFrameId) cancelAnimationFrame(prompterState.animFrameId);
+  prompterState.lastTimestamp = 0;
+  prompterEndIndicator.classList.remove('visible');
+  function scrollStep(timestamp) {
+    if (!prompterState.scrolling) return;
+    if (!prompterState.lastTimestamp) prompterState.lastTimestamp = timestamp;
+    const delta = timestamp - prompterState.lastTimestamp;
+    prompterState.lastTimestamp = timestamp;
+    const pixelsPerFrame = (prompterState.speed * 0.5) * (delta / 16.67);
+    const el = prompterOverlayText;
+    el.scrollTop += pixelsPerFrame;
+
+    // Check if reached end
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 2) {
+      prompterEndIndicator.classList.add('visible');
+    } else {
+      prompterEndIndicator.classList.remove('visible');
+    }
+
+    // Also scroll external window if open
+    if (prompterState.externalWindow && !prompterState.externalWindow.closed) {
+      const extText = prompterState.externalWindow.document.getElementById('extPrompterText');
+      if (extText) extText.scrollTop += pixelsPerFrame;
+    }
+
+    prompterState.animFrameId = requestAnimationFrame(scrollStep);
+  }
+  prompterState.animFrameId = requestAnimationFrame(scrollStep);
+}
+
+function stopPrompterScroll() {
+  if (prompterState.animFrameId) {
+    cancelAnimationFrame(prompterState.animFrameId);
+    prompterState.animFrameId = null;
+  }
+}
+
+function setPrompterSpeed(val) {
+  prompterState.speed = parseInt(val);
+  $('prompterSpeedVal').textContent = val;
+}
+
+function setPrompterFontSize(val) {
+  prompterState.fontSize = parseInt(val);
+  $('prompterFontVal').textContent = val + 'px';
+  prompterOverlayText.style.fontSize = val + 'px';
+  if (prompterState.externalWindow && !prompterState.externalWindow.closed) {
+    const extText = prompterState.externalWindow.document.getElementById('extPrompterText');
+    if (extText) extText.style.fontSize = val + 'px';
+  }
+}
+
+function setPrompterColor(el) {
+  document.querySelectorAll('.prompter-swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  prompterState.textColor = el.dataset.color;
+  prompterOverlayText.style.color = el.dataset.color;
+  if (prompterState.externalWindow && !prompterState.externalWindow.closed) {
+    const extText = prompterState.externalWindow.document.getElementById('extPrompterText');
+    if (extText) extText.style.color = el.dataset.color;
+  }
+}
+
+function setPrompterBgOpacity(val) {
+  prompterState.bgOpacity = parseInt(val);
+  $('prompterOpacityVal').textContent = val + '%';
+  prompterOverlayBg.style.background = `rgba(0,0,0,${val / 100})`;
+}
+
+function setPrompterLineSpacing(el) {
+  $('prompterLineSpacing').querySelectorAll('.prompter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  prompterState.lineSpacing = parseFloat(el.dataset.spacing);
+  prompterOverlayText.style.lineHeight = el.dataset.spacing;
+  if (prompterState.externalWindow && !prompterState.externalWindow.closed) {
+    const extText = prompterState.externalWindow.document.getElementById('extPrompterText');
+    if (extText) extText.style.lineHeight = el.dataset.spacing;
+  }
+}
+
+function setPrompterFocusPos(el) {
+  $('prompterFocusPos').querySelectorAll('.prompter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  prompterState.focusPos = parseInt(el.dataset.pos);
+  prompterFocusLine.style.top = el.dataset.pos + '%';
+  prompterDimAbove.style.height = el.dataset.pos + '%';
+}
+
+function togglePrompterMirror() {
+  prompterState.mirrored = !prompterState.mirrored;
+  const sw = $('prompterMirrorSwitch');
+  sw.classList.toggle('on', prompterState.mirrored);
+  $('prompterMirrorLabel').textContent = prompterState.mirrored ? 'פעיל' : 'כבוי';
+  prompterOverlayText.classList.toggle('mirrored', prompterState.mirrored);
+}
+
+function setPrompterDisplayMode(el) {
+  $('prompterDisplayMode').querySelectorAll('.prompter-display-mode-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  prompterState.displayMode = el.dataset.display;
+  const extBtn = $('prompterExternalBtn');
+  if (prompterState.displayMode === 'external') {
+    prompterOverlay.classList.remove('visible');
+    prompterState.overlayVisible = false;
+    extBtn.classList.add('visible');
+  } else {
+    extBtn.classList.remove('visible');
+    if (prompterState.visible) {
+      prompterOverlay.classList.add('visible');
+      prompterState.overlayVisible = true;
+      syncPrompterOverlay();
+    }
+  }
+}
+
+function openExternalPrompter() {
+  const w = 480, h = 320;
+  const left = window.screenX + window.outerWidth - w - 40;
+  const top = window.screenY + 80;
+  const win = window.open('', 'prompterExternal', `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=no`);
+  if (!win) { showToast('חלון חיצוני נחסם - אפשר popups', 'red'); return; }
+  prompterState.externalWindow = win;
+
+  const bgOpacity = prompterState.bgOpacity / 100;
+  const html = `<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<title>פרומפטר — WHITEBOARD</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:rgba(0,0,0,${bgOpacity});font-family:'Heebo',sans-serif;overflow:hidden;height:100vh;}
+#extPrompterText{
+  position:absolute;inset:0;padding:24px;
+  font-size:${prompterState.fontSize}px;
+  line-height:${prompterState.lineSpacing};
+  color:${prompterState.textColor};
+  white-space:pre-wrap;word-wrap:break-word;
+  overflow-y:auto;scrollbar-width:none;
+  ${prompterState.mirrored ? 'transform:scaleX(-1);' : ''}
+}
+#extPrompterText::-webkit-scrollbar{display:none;}
+.focus-line{position:fixed;left:0;right:0;height:2px;background:#38C4F2;box-shadow:0 0 12px rgba(56,196,242,0.5);z-index:2;top:${prompterState.focusPos}%;}
+.dim-above{position:fixed;top:0;left:0;right:0;height:${prompterState.focusPos}%;background:rgba(0,0,0,0.35);z-index:1;}
+</style>
+</head>
+<body>
+<div class="dim-above"></div>
+<div class="focus-line"></div>
+<div id="extPrompterText">${escapeHtml(prompterTextarea.value)}</div>
+</body>
+</html>`;
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
+  showToast('נפתח חלון פרומפטר חיצוני', 'cyan');
+}
+
+function updateExternalPrompterContent() {
+  if (!prompterState.externalWindow || prompterState.externalWindow.closed) return;
+  const extText = prompterState.externalWindow.document.getElementById('extPrompterText');
+  if (extText) extText.textContent = prompterTextarea.value;
+}
+
+// Cue navigation (jump to --- markers)
+function findCuePositions() {
+  const text = prompterOverlayText.textContent;
+  const lines = text.split('\n');
+  const positions = [];
+  let charCount = 0;
+  // We'll use a rough calculation based on line positions
+  const lineHeight = prompterState.fontSize * prompterState.lineSpacing;
+  let lineNum = 0;
+  for (const line of lines) {
+    if (line.trim() === '---') {
+      positions.push(lineNum * lineHeight);
+    }
+    lineNum++;
+  }
+  return positions;
+}
+
+function prompterNextCue() {
+  const positions = findCuePositions();
+  const currentScroll = prompterOverlayText.scrollTop;
+  for (const pos of positions) {
+    if (pos > currentScroll + 10) {
+      prompterOverlayText.scrollTo({ top: pos, behavior: 'smooth' });
+      return;
+    }
+  }
+  // If no more cues, scroll to end
+  prompterOverlayText.scrollTo({ top: prompterOverlayText.scrollHeight, behavior: 'smooth' });
+}
+
+function prompterPrevCue() {
+  const positions = findCuePositions();
+  const currentScroll = prompterOverlayText.scrollTop;
+  for (let i = positions.length - 1; i >= 0; i--) {
+    if (positions[i] < currentScroll - 10) {
+      prompterOverlayText.scrollTo({ top: positions[i], behavior: 'smooth' });
+      return;
+    }
+  }
+  // If no prev cue, scroll to top
+  prompterOverlayText.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Draggable overlay
+(function initPrommpterDrag() {
+  let isDragging = false;
+  let offsetX = 0, offsetY = 0;
+  const grip = $('prompterOverlayGrip');
+
+  grip.addEventListener('mousedown', e => {
+    isDragging = true;
+    const rect = prompterOverlay.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    prompterOverlay.style.transition = 'none';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    const parent = prompterOverlay.parentElement.getBoundingClientRect();
+    let x = e.clientX - parent.left - offsetX;
+    let y = e.clientY - parent.top - offsetY;
+    const w = prompterOverlay.offsetWidth;
+    const h = prompterOverlay.offsetHeight;
+    x = Math.max(0, Math.min(x, parent.width - w));
+    y = Math.max(0, Math.min(y, parent.height - h));
+    prompterOverlay.style.left = x + 'px';
+    prompterOverlay.style.top = y + 'px';
+    prompterOverlay.style.right = 'auto';
+    prompterOverlay.style.bottom = 'auto';
+  });
+  document.addEventListener('mouseup', () => {
+    if (isDragging) { isDragging = false; prompterOverlay.style.transition = ''; }
+  });
+})();
+
+// Resizable overlay
+(function initPrompterResize() {
+  let isResizing = false;
+  let startX = 0, startY = 0, startW = 0, startH = 0;
+  const handle = $('prompterOverlayResize');
+
+  handle.addEventListener('mousedown', e => {
+    isResizing = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    startW = prompterOverlay.offsetWidth;
+    startH = prompterOverlay.offsetHeight;
+    prompterOverlay.style.transition = 'none';
+    e.preventDefault();
+    e.stopPropagation();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!isResizing) return;
+    // Since it's RTL, left resize handle means width changes with negative dx
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    const newW = Math.max(200, startW - dx);
+    const newH = Math.max(120, startH + dy);
+    prompterOverlay.style.width = newW + 'px';
+    prompterOverlay.style.height = newH + 'px';
+  });
+  document.addEventListener('mouseup', () => {
+    if (isResizing) { isResizing = false; prompterOverlay.style.transition = ''; }
+  });
+})();
+
+// Sync with recording states
+const origStartRecording = startRecording;
+startRecording = function() {
+  origStartRecording();
+  if (prompterState.overlayVisible || (prompterState.externalWindow && !prompterState.externalWindow.closed)) {
+    prompterState.scrolling = true;
+    const icon = $('prompterPlayIcon');
+    icon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+    // Reset scroll position
+    prompterOverlayText.scrollTop = 0;
+    prompterEndIndicator.classList.remove('visible');
+    startPrompterScroll();
+  }
+};
+
+const origPauseRecording = pauseRecording;
+pauseRecording = function() {
+  origPauseRecording();
+  if (prompterState.scrolling) {
+    prompterState.scrolling = false;
+    const icon = $('prompterPlayIcon');
+    icon.innerHTML = '<polygon points="5 3 19 12 5 21"/>';
+    stopPrompterScroll();
+  }
+};
+
+const origDoResume = doResume;
+doResume = function(insertAtIndex) {
+  origDoResume(insertAtIndex);
+  if (prompterState.overlayVisible || (prompterState.externalWindow && !prompterState.externalWindow.closed)) {
+    prompterState.scrolling = true;
+    const icon = $('prompterPlayIcon');
+    icon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+    startPrompterScroll();
+  }
+};
+
+const origConfirmStop = confirmStop;
+confirmStop = function() {
+  origConfirmStop();
+  prompterState.scrolling = false;
+  const icon = $('prompterPlayIcon');
+  icon.innerHTML = '<polygon points="5 3 19 12 5 21"/>';
+  stopPrompterScroll();
+};
+
+// Update dim-above height based on focus position
+prompterDimAbove.style.height = prompterState.focusPos + '%';
+
+// Initial overlay text sync
+syncPrompterOverlay();
+updatePrompterWordCount();
 
 // ======= DEMO: Pre-fill takes =======
 function initDemoTakes() {
