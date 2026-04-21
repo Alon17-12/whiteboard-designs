@@ -393,6 +393,11 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
           <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 12h6" stroke="#0d1628" stroke-width="1.5" fill="none"/></svg>
           WHITEBOARD
         </div>
+        <!-- Draggable Title Overlay -->
+        <div id="titleOverlay" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);cursor:grab;z-index:20;text-align:center;user-select:none;padding:12px 24px;border-radius:8px;background:rgba(0,0,0,0.35);border:1px dashed rgba(56,196,242,0.5);transition:background .2s;" onmousedown="startDragTitle(event)">
+          <div id="titleOverlayMain" style="font-size:22px;font-weight:700;color:white;font-family:var(--font-he);text-shadow:0 2px 8px rgba(0,0,0,0.5);line-height:1.3;">כותרת לדוגמה</div>
+          <div id="titleOverlaySub" style="font-size:14px;font-weight:400;color:rgba(255,255,255,0.7);font-family:var(--font-he);margin-top:2px;"></div>
+        </div>
       </div>
       <div class="video-controls">
         <button class="video-ctrl-btn" title="פריים קודם"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:scaleX(-1);"><path d="M19 20L9 12l10-8v16z"/><line x1="5" y1="4" x2="5" y2="20"/></svg></button>
@@ -417,6 +422,7 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
         <div class="tool-tab" data-tab="transitions">מעברים</div>
         <div class="tool-tab" data-tab="subtitles">כתוביות</div>
         <div class="tool-tab" data-tab="presets">פריסט</div>
+        <div class="tool-tab" data-tab="titles">כותרות</div>
       </div>
 
       <!-- TAB 1: CUT -->
@@ -1184,6 +1190,125 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
         </div>
       </div>
 
+      <!-- TAB 7: TITLES -->
+      <div class="tool-content" id="tabTitles" style="display:none;">
+
+        <!-- Title styles grid -->
+        <div class="tool-section">
+          <div class="tool-section-title">סגנון כותרת</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div class="title-style-card active" data-style="minimal" onclick="selectTitleStyle(this)" style="height:80px;border-radius:12px;background:linear-gradient(135deg,#e8f0fe,#f5f8ff);border:2px solid var(--cyan);cursor:pointer;display:flex;align-items:flex-end;padding:10px 12px;position:relative;overflow:hidden;transition:all .2s;">
+              <span style="font-size:18px;font-weight:300;color:#4a5568;opacity:0.4;position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);font-family:var(--font-he);">Aa</span>
+              <span style="font-size:12px;font-weight:700;color:var(--text-main);">מינימלי</span>
+            </div>
+            <div class="title-style-card" data-style="dynamic" onclick="selectTitleStyle(this)" style="height:80px;border-radius:12px;background:linear-gradient(135deg,#1a2740,#253E7A);border:2px solid transparent;cursor:pointer;display:flex;align-items:flex-end;padding:10px 12px;position:relative;overflow:hidden;transition:all .2s;">
+              <span style="font-size:18px;font-weight:900;color:var(--cyan);opacity:0.5;position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);font-family:var(--font-he);">Aa</span>
+              <span style="font-size:12px;font-weight:700;color:white;">דינמי</span>
+            </div>
+            <div class="title-style-card" data-style="branded" onclick="selectTitleStyle(this)" style="height:80px;border-radius:12px;background:linear-gradient(135deg,#1a2f5e,#253E7A);border:2px solid transparent;cursor:pointer;display:flex;align-items:flex-end;padding:10px 12px;position:relative;overflow:hidden;transition:all .2s;">
+              <svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.1)" style="position:absolute;top:8px;left:8px;width:24px;height:24px;"><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
+              <span style="font-size:12px;font-weight:700;color:white;">מותגי</span>
+            </div>
+            <div class="title-style-card" data-style="cinematic" onclick="selectTitleStyle(this)" style="height:80px;border-radius:12px;background:linear-gradient(135deg,#0c0c0c,#2a2a2a);border:2px solid transparent;cursor:pointer;display:flex;align-items:flex-end;padding:10px 12px;position:relative;overflow:hidden;transition:all .2s;">
+              <div style="position:absolute;top:0;left:0;right:0;height:16px;background:black;"></div>
+              <div style="position:absolute;bottom:24px;left:0;right:0;height:16px;background:black;"></div>
+              <span style="font-size:15px;font-weight:400;color:rgba(255,255,255,0.35);position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);font-family:Georgia,serif;letter-spacing:2px;">Aa</span>
+              <span style="font-size:12px;font-weight:700;color:white;">קולנועי</span>
+            </div>
+            <div class="title-style-card" data-style="pop" onclick="selectTitleStyle(this)" style="height:80px;border-radius:12px;background:linear-gradient(135deg,#F05680,#38C4F2);border:2px solid transparent;cursor:pointer;display:flex;align-items:flex-end;padding:10px 12px;position:relative;overflow:hidden;transition:all .2s;">
+              <span style="font-size:20px;font-weight:900;color:rgba(255,255,255,0.4);position:absolute;top:50%;left:50%;transform:translate(-50%,-60%) rotate(-5deg);font-family:var(--font-en);">Aa</span>
+              <span style="font-size:12px;font-weight:700;color:white;">פופ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Title text input -->
+        <div class="tool-section">
+          <div class="tool-section-title">טקסט הכותרת</div>
+          <input type="text" id="titleMainInput" placeholder="הקלד כותרת..." oninput="updateTitleOverlay()" style="width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-main);font-family:var(--font-he);font-size:15px;font-weight:700;margin-bottom:8px;transition:border-color .2s;" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">
+          <input type="text" id="titleSubInput" placeholder="תת כותרת (אופציונלי)" oninput="updateTitleOverlay()" style="width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-sub);font-family:var(--font-he);font-size:13px;transition:border-color .2s;" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+
+        <!-- Duration pills -->
+        <div class="tool-section">
+          <div class="tool-section-title">משך הצגה</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-tool title-dur-pill" data-dur="3" onclick="selectTitleDuration(this)" style="flex:1;justify-content:center;">3s</button>
+            <button class="btn-tool title-dur-pill active" data-dur="5" onclick="selectTitleDuration(this)" style="flex:1;justify-content:center;border-color:var(--cyan);background:var(--cyan-light);color:var(--navy);">5s</button>
+            <button class="btn-tool title-dur-pill" data-dur="7" onclick="selectTitleDuration(this)" style="flex:1;justify-content:center;">7s</button>
+          </div>
+        </div>
+
+        <!-- Position hint -->
+        <div class="tool-section">
+          <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:var(--cyan-light);margin-bottom:10px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+            <span style="font-size:12px;color:var(--navy);font-weight:500;">גרור את הכותרת למיקום הרצוי בתצוגה המקדימה</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-sub);margin-bottom:10px;">
+            <span>מיקום נוכחי:</span>
+            <span id="titlePosLabel" style="font-weight:700;color:var(--cyan);font-family:var(--font-en);">מרכז</span>
+          </div>
+          <button class="btn-tool" onclick="addTitleToTimeline()" style="width:100%;justify-content:center;padding:10px;font-weight:700;background:var(--cyan);color:white;border-color:var(--cyan);">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            הוסף במיקום הנוכחי
+          </button>
+        </div>
+
+        <!-- Placed titles list -->
+        <div class="tool-section">
+          <div class="tool-section-title">כותרות שהוצבו</div>
+          <div id="placedTitlesList" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;">
+            <!-- Demo title 1 -->
+            <div class="placed-title-item" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);transition:all .2s;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:700;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">מבוא ויסודות</div>
+                <div style="font-size:11px;color:var(--text-sub);display:flex;gap:8px;margin-top:2px;">
+                  <span style="background:var(--cyan-light);padding:1px 6px;border-radius:4px;font-weight:600;color:var(--cyan);">מינימלי</span>
+                  <span style="font-family:var(--font-en);">00:00</span>
+                  <span style="font-family:var(--font-en);">5s</span>
+                </div>
+              </div>
+              <button class="icon-btn-sm" onclick="showToast('עריכת כותרת...')" title="ערוך" style="width:28px;height:28px;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+              <button class="icon-btn-sm" onclick="this.closest('.placed-title-item').remove();showToast('כותרת הוסרה')" title="מחק" style="width:28px;height:28px;flex-shrink:0;color:var(--pink);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div>
+            <!-- Demo title 2 -->
+            <div class="placed-title-item" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);transition:all .2s;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:700;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">עקרונות הצבע</div>
+                <div style="font-size:11px;color:var(--text-sub);display:flex;gap:8px;margin-top:2px;">
+                  <span style="background:rgba(56,196,242,0.15);padding:1px 6px;border-radius:4px;font-weight:600;color:var(--cyan);">דינמי</span>
+                  <span style="font-family:var(--font-en);">01:23</span>
+                  <span style="font-family:var(--font-en);">3s</span>
+                </div>
+              </div>
+              <button class="icon-btn-sm" onclick="showToast('עריכת כותרת...')" title="ערוך" style="width:28px;height:28px;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+              <button class="icon-btn-sm" onclick="this.closest('.placed-title-item').remove();showToast('כותרת הוסרה')" title="מחק" style="width:28px;height:28px;flex-shrink:0;color:var(--pink);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div>
+            <!-- Demo title 3 -->
+            <div class="placed-title-item" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);transition:all .2s;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:700;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">תרגיל מעשי</div>
+                <div style="font-size:11px;color:var(--text-sub);display:flex;gap:8px;margin-top:2px;">
+                  <span style="background:rgba(240,86,128,0.12);padding:1px 6px;border-radius:4px;font-weight:600;color:var(--pink);">פופ</span>
+                  <span style="font-family:var(--font-en);">03:15</span>
+                  <span style="font-family:var(--font-en);">5s</span>
+                </div>
+              </div>
+              <button class="icon-btn-sm" onclick="showToast('עריכת כותרת...')" title="ערוך" style="width:28px;height:28px;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+              <button class="icon-btn-sm" onclick="this.closest('.placed-title-item').remove();showToast('כותרת הוסרה')" title="מחק" style="width:28px;height:28px;flex-shrink:0;color:var(--pink);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info note -->
+        <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--text-sub)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span style="font-size:11px;color:var(--text-sub);line-height:1.5;">כותרות מונפשות מעובדות בשרת</span>
+        </div>
+
+      </div>
+
     </div>
   </div>
 
@@ -1375,9 +1500,12 @@ document.querySelectorAll('.tool-tab').forEach(tab=>{
   tab.addEventListener('click',()=>{
     document.querySelectorAll('.tool-tab').forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
-    const panels={cut:'tabCut',logo:'tabLogo',intros:'tabIntros',transitions:'tabTransitions',subtitles:'tabSubtitles',presets:'tabPresets'};
+    const panels={cut:'tabCut',logo:'tabLogo',intros:'tabIntros',transitions:'tabTransitions',subtitles:'tabSubtitles',presets:'tabPresets',titles:'tabTitles'};
     Object.values(panels).forEach(id=>{document.getElementById(id).style.display='none';});
     document.getElementById(panels[tab.dataset.tab]).style.display='';
+    // Show/hide title overlay on video
+    const overlay=document.getElementById('titleOverlay');
+    if(overlay) overlay.style.display=tab.dataset.tab==='titles'?'block':'none';
   });
 });
 
@@ -2015,6 +2143,122 @@ function savePresetEdit(cardId){
 function cancelPresetEdit(cardId){
   const editPanel=document.getElementById(cardId+'Edit');
   if(editPanel)editPanel.style.display='none';
+}
+
+// ── Titles Tab ──
+let selectedTitleStyle='minimal';
+let selectedTitleDuration=5;
+
+function selectTitleStyle(el){
+  document.querySelectorAll('.title-style-card').forEach(c=>{
+    c.style.borderColor='transparent';
+    c.classList.remove('active');
+  });
+  el.style.borderColor='var(--cyan)';
+  el.classList.add('active');
+  selectedTitleStyle=el.dataset.style;
+}
+
+function selectTitleDuration(el){
+  document.querySelectorAll('.title-dur-pill').forEach(p=>{
+    p.classList.remove('active');
+    p.style.borderColor='';
+    p.style.background='';
+    p.style.color='';
+  });
+  el.classList.add('active');
+  el.style.borderColor='var(--cyan)';
+  el.style.background='var(--cyan-light)';
+  el.style.color='var(--navy)';
+  selectedTitleDuration=parseInt(el.dataset.dur);
+}
+
+function updateTitleOverlay(){
+  const main=document.getElementById('titleMainInput').value;
+  const sub=document.getElementById('titleSubInput').value;
+  document.getElementById('titleOverlayMain').textContent=main||'כותרת לדוגמה';
+  document.getElementById('titleOverlaySub').textContent=sub;
+}
+
+// Draggable title
+let isDraggingTitle=false;
+let titleDragOffset={x:0,y:0};
+
+function startDragTitle(e){
+  e.preventDefault();
+  isDraggingTitle=true;
+  const overlay=document.getElementById('titleOverlay');
+  overlay.style.cursor='grabbing';
+  const rect=overlay.getBoundingClientRect();
+  titleDragOffset.x=e.clientX-rect.left-rect.width/2;
+  titleDragOffset.y=e.clientY-rect.top-rect.height/2;
+  document.addEventListener('mousemove',dragTitle);
+  document.addEventListener('mouseup',stopDragTitle);
+}
+
+function dragTitle(e){
+  if(!isDraggingTitle)return;
+  const container=document.getElementById('videoContainer');
+  const overlay=document.getElementById('titleOverlay');
+  const cRect=container.getBoundingClientRect();
+  const oW=overlay.offsetWidth;
+  const oH=overlay.offsetHeight;
+  let x=e.clientX-cRect.left-titleDragOffset.x-oW/2;
+  let y=e.clientY-cRect.top-titleDragOffset.y-oH/2;
+  // Clamp
+  x=Math.max(0,Math.min(x,cRect.width-oW));
+  y=Math.max(0,Math.min(y,cRect.height-oH));
+  overlay.style.left=x+'px';
+  overlay.style.top=y+'px';
+  overlay.style.transform='none';
+  // Update position label
+  const cx=x+oW/2, cy=y+oH/2;
+  const relX=cx/cRect.width, relY=cy/cRect.height;
+  let posName='מרכז';
+  if(relY<0.35) posName=relX<0.35?'למעלה ימין':relX>0.65?'למעלה שמאל':'למעלה';
+  else if(relY>0.65) posName=relX<0.35?'למטה ימין':relX>0.65?'למטה שמאל':'למטה';
+  else if(relX<0.35) posName='ימין';
+  else if(relX>0.65) posName='שמאל';
+  const label=document.getElementById('titlePosLabel');
+  if(label) label.textContent=posName;
+}
+
+function stopDragTitle(){
+  isDraggingTitle=false;
+  const overlay=document.getElementById('titleOverlay');
+  if(overlay) overlay.style.cursor='grab';
+  document.removeEventListener('mousemove',dragTitle);
+  document.removeEventListener('mouseup',stopDragTitle);
+}
+
+function addTitleToTimeline(){
+  const mainText=document.getElementById('titleMainInput').value||'כותרת ללא שם';
+  const styleNames={minimal:'מינימלי',dynamic:'דינמי',branded:'מותגי',cinematic:'קולנועי',pop:'פופ'};
+  const styleName=styleNames[selectedTitleStyle]||selectedTitleStyle;
+  const time=document.getElementById('videoTime').textContent.split('/')[0].trim();
+  const dur=selectedTitleDuration+'s';
+  const styleColors={minimal:'var(--cyan-light)',dynamic:'rgba(56,196,242,0.15)',branded:'rgba(37,62,122,0.1)',cinematic:'rgba(0,0,0,0.1)',pop:'rgba(240,86,128,0.12)'};
+  const styleFontColors={minimal:'var(--cyan)',dynamic:'var(--cyan)',branded:'var(--navy)',cinematic:'var(--text-main)',pop:'var(--pink)'};
+  const bg=styleColors[selectedTitleStyle]||'var(--cyan-light)';
+  const fc=styleFontColors[selectedTitleStyle]||'var(--cyan)';
+  const html=`
+    <div class="placed-title-item" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);transition:all .2s;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${mainText}</div>
+        <div style="font-size:11px;color:var(--text-sub);display:flex;gap:8px;margin-top:2px;">
+          <span style="background:${bg};padding:1px 6px;border-radius:4px;font-weight:600;color:${fc};">${styleName}</span>
+          <span style="font-family:var(--font-en);">${time}</span>
+          <span style="font-family:var(--font-en);">${dur}</span>
+        </div>
+      </div>
+      <button class="icon-btn-sm" onclick="showToast('עריכת כותרת...')" title="ערוך" style="width:28px;height:28px;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="icon-btn-sm" onclick="this.closest('.placed-title-item').remove();showToast('כותרת הוסרה')" title="מחק" style="width:28px;height:28px;flex-shrink:0;color:var(--pink);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+    </div>`;
+  document.getElementById('placedTitlesList').insertAdjacentHTML('beforeend',html);
+  showToast('כותרת "'+mainText+'" נוספה בהצלחה');
+  document.getElementById('titleMainInput').value='';
+  document.getElementById('titleSubInput').value='';
+  updateTitleOverlay();
 }
 </script>
 </body>
