@@ -75,62 +75,133 @@ body {
   opacity: 0.6;
 }
 
-/* ======= SCREEN SHARE BACKGROUND ======= */
+/* ======= SCREEN SHARE BACKGROUND — FULL SCREEN ======= */
 .screen-share-bg {
   display: none;
   position: absolute;
   inset: 0;
   z-index: 1;
-  align-items: center;
-  justify-content: center;
   background: #111629;
-}
-.screen-share-bg.visible { display: flex; }
-.screen-share-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  color: var(--text-muted);
-  font-size: 14px;
-}
-.screen-share-placeholder svg { opacity: 0.4; }
-.screen-share-window {
-  width: 70%;
-  max-width: 800px;
-  aspect-ratio: 16/9;
-  background: #1a1f36;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(255,255,255,0.08);
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
 }
-.screen-share-titlebar {
-  height: 28px;
-  background: rgba(255,255,255,0.05);
+.screen-share-bg.visible { display: block; }
+
+/* Full-screen simulated screen share content */
+.screen-share-fullscreen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, #1a2240 0%, #0f1628 40%, #162040 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mock app UI for screen share */
+.mock-app-toolbar {
+  height: 36px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
   display: flex;
   align-items: center;
-  padding: 0 12px;
-  gap: 6px;
-}
-.screen-share-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-.screen-share-dot.r { background: #e53e3e; }
-.screen-share-dot.y { background: #EAD654; }
-.screen-share-dot.g { background: #22c55e; }
-.screen-share-content {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  font-size: 13px;
+  padding: 0 16px;
   gap: 8px;
 }
+.mock-dots {
+  display: flex; gap: 5px;
+}
+.mock-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.mock-dot.r { background: #e53e3e; }
+.mock-dot.y { background: #EAD654; }
+.mock-dot.g { background: #22c55e; }
+.mock-app-title {
+  font-size: 12px; color: var(--text-dim); margin-right: 12px; font-family: 'Heebo', sans-serif;
+}
+
+.mock-app-body {
+  flex: 1;
+  display: flex;
+  padding: 24px;
+  gap: 20px;
+}
+.mock-sidebar {
+  width: 180px;
+  background: rgba(255,255,255,0.02);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mock-sidebar-item {
+  height: 10px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+}
+.mock-sidebar-item.active {
+  background: rgba(56,196,242,0.15);
+  border: 1px solid rgba(56,196,242,0.2);
+}
+.mock-sidebar-item:nth-child(1) { width: 80%; }
+.mock-sidebar-item:nth-child(2) { width: 60%; }
+.mock-sidebar-item:nth-child(3) { width: 90%; }
+.mock-sidebar-item:nth-child(4) { width: 50%; }
+
+.mock-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.mock-heading {
+  height: 14px; width: 40%; border-radius: 4px; background: rgba(255,255,255,0.08);
+}
+.mock-paragraph {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.mock-line {
+  height: 8px; border-radius: 3px; background: rgba(255,255,255,0.04);
+}
+.mock-line:nth-child(1) { width: 100%; }
+.mock-line:nth-child(2) { width: 85%; }
+.mock-line:nth-child(3) { width: 92%; }
+.mock-line:nth-child(4) { width: 70%; }
+
+.mock-cards {
+  display: flex; gap: 12px; margin-top: 12px;
+}
+.mock-card {
+  flex: 1;
+  height: 80px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.02);
+}
+.mock-card:nth-child(1) { background: linear-gradient(135deg, rgba(56,196,242,0.06), rgba(56,196,242,0.02)); }
+.mock-card:nth-child(2) { background: linear-gradient(135deg, rgba(240,86,128,0.06), rgba(240,86,128,0.02)); }
+.mock-card:nth-child(3) { background: linear-gradient(135deg, rgba(34,197,94,0.06), rgba(34,197,94,0.02)); }
+
+/* Asset display indicator */
+.asset-display-indicator {
+  position: absolute;
+  top: 44px;
+  right: 16px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-pill);
+  padding: 5px 14px;
+  font-size: 12px;
+  color: var(--cyan);
+  border: 1px solid rgba(56,196,242,0.2);
+  display: none;
+  align-items: center;
+  gap: 6px;
+  z-index: 5;
+  font-family: 'Heebo', sans-serif;
+}
+.asset-display-indicator.visible { display: flex; }
 
 /* ======= TOP OVERLAY — GRADIENT FADE ======= */
 .top-overlay {
@@ -249,6 +320,220 @@ body {
   letter-spacing: 3px;
 }
 
+/* ======= ASSETS BUTTON & PANEL ======= */
+.assets-btn {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-pill);
+  padding: 7px 16px;
+  border: 1px solid rgba(255,255,255,0.1);
+  font-family: 'Heebo', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  z-index: 11;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s var(--ease-smooth), border-color 0.2s var(--ease-smooth);
+}
+.assets-btn:hover {
+  background: rgba(0,0,0,0.65);
+  border-color: rgba(56,196,242,0.3);
+  color: var(--text);
+}
+
+.assets-panel {
+  position: absolute;
+  top: 68px;
+  left: 24px;
+  width: 340px;
+  background: var(--surface-panel);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 0;
+  z-index: 30;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px) scale(0.97);
+  transition: opacity 0.2s var(--ease-smooth), transform 0.2s var(--ease-out);
+  overflow: hidden;
+}
+.assets-panel.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.assets-panel-header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.assets-panel-title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cyan);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.assets-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: background 0.15s var(--ease-smooth);
+}
+.assets-close-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+}
+
+.assets-list {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.asset-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.03);
+  transition: background 0.15s var(--ease-smooth);
+}
+.asset-item:hover { background: rgba(255,255,255,0.06); }
+
+.asset-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+.asset-icon.html-type {
+  background: rgba(56,196,242,0.12);
+  border: 1px solid rgba(56,196,242,0.2);
+  color: var(--cyan);
+}
+.asset-icon.pdf-type {
+  background: rgba(240,86,128,0.12);
+  border: 1px solid rgba(240,86,128,0.2);
+  color: var(--pink);
+}
+
+.asset-info {
+  flex: 1;
+  min-width: 0;
+}
+.asset-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.asset-type-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.asset-show-btn {
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(56,196,242,0.25);
+  background: rgba(56,196,242,0.08);
+  color: var(--cyan);
+  font-family: 'Heebo', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s var(--ease-smooth), border-color 0.15s var(--ease-smooth);
+}
+.asset-show-btn:hover {
+  background: rgba(56,196,242,0.18);
+  border-color: rgba(56,196,242,0.4);
+}
+.asset-show-btn.active {
+  background: var(--cyan);
+  color: #0a0e1a;
+  border-color: var(--cyan);
+}
+
+.assets-url-input-wrap {
+  padding: 8px 12px 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.assets-url-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.assets-url-row {
+  display: flex;
+  gap: 6px;
+}
+.assets-url-input {
+  flex: 1;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 12px;
+  color: var(--text);
+  outline: none;
+  direction: ltr;
+  text-align: left;
+  transition: border-color 0.2s var(--ease-smooth);
+}
+.assets-url-input:focus {
+  border-color: var(--cyan);
+}
+.assets-url-input::placeholder {
+  color: var(--text-dim);
+}
+.assets-url-go-btn {
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(56,196,242,0.25);
+  background: rgba(56,196,242,0.08);
+  color: var(--cyan);
+  font-family: 'Heebo', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s var(--ease-smooth);
+}
+.assets-url-go-btn:hover {
+  background: rgba(56,196,242,0.18);
+}
+
 /* ======= MODE SWITCHER — floating pill ======= */
 .mode-switcher {
   position: absolute;
@@ -332,7 +617,7 @@ body {
 .camera-overlay.pip-mode { display: flex; }
 .camera-overlay.hidden-mode { display: none; }
 
-/* ======= AUDIO LEVEL STRIP — subtle, above control bar ======= */
+/* ======= AUDIO LEVEL STRIP — separated, above control bar ======= */
 .audio-strip {
   position: absolute;
   bottom: 144px;
@@ -374,7 +659,7 @@ body {
   gap: 0;
 }
 
-/* Take counter pill — centered above controls */
+/* Take counter pill — standalone, clean, NO audio waves near it */
 .take-pill {
   align-self: center;
   background: var(--cyan);
@@ -629,7 +914,7 @@ body {
   z-index: 2;
 }
 
-/* ======= TAKES PANEL — slides up smoothly ======= */
+/* ======= TAKES PANEL — collapsible when paused ======= */
 .takes-panel {
   background: var(--surface-panel);
   backdrop-filter: blur(16px);
@@ -648,12 +933,58 @@ body {
   margin-top: 0;
 }
 .takes-panel.visible {
-  max-height: 200px;
+  max-height: 220px;
   opacity: 1;
   transform: translateY(0);
-  padding: 12px 16px;
+  padding: 0 16px 12px;
   margin-top: 8px;
   overflow-y: auto;
+}
+.takes-panel.visible.collapsed {
+  max-height: 42px;
+  overflow: hidden;
+  padding: 0 16px;
+}
+
+/* Collapsible handle/toggle */
+.takes-panel-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0 4px;
+  cursor: pointer;
+  gap: 8px;
+  transition: opacity 0.15s var(--ease-smooth);
+}
+.takes-panel-toggle:hover {
+  opacity: 0.8;
+}
+
+.takes-toggle-chevron {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s var(--ease-out);
+}
+.takes-panel.collapsed .takes-toggle-chevron {
+  transform: rotate(180deg);
+}
+
+.takes-toggle-label {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cyan);
+}
+
+.takes-panel-content {
+  transition: opacity 0.2s var(--ease-smooth);
+}
+.takes-panel.collapsed .takes-panel-content {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .takes-panel-title {
@@ -717,6 +1048,103 @@ body {
 }
 .take-note-input::placeholder {
   color: var(--text-dim);
+}
+
+/* ======= COUNTDOWN OVERLAY ======= */
+.countdown-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease-smooth);
+}
+.countdown-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.countdown-number {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 120px;
+  color: #fff;
+  position: absolute;
+  opacity: 0;
+  text-shadow: 0 0 60px rgba(255,255,255,0.3);
+}
+
+.countdown-number.animating {
+  animation: countdown-pop 0.85s var(--ease-out) forwards;
+}
+
+@keyframes countdown-pop {
+  0% {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+  15% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+/* Ring pulse visual "beep" */
+.countdown-ring {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.3);
+  opacity: 0;
+  pointer-events: none;
+}
+.countdown-ring.animating {
+  animation: ring-expand 0.85s var(--ease-out) forwards;
+}
+@keyframes ring-expand {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
+/* "Recording" flash text */
+.countdown-recording-flash {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: 28px;
+  color: var(--red);
+  letter-spacing: 4px;
+  position: absolute;
+  opacity: 0;
+  text-shadow: 0 0 30px rgba(229,62,62,0.4);
+}
+.countdown-recording-flash.animating {
+  animation: flash-in 0.6s var(--ease-out) forwards;
+}
+@keyframes flash-in {
+  0% { opacity: 0; transform: scale(0.9); }
+  30% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
 }
 
 /* ======= CONFIRMATION DIALOG ======= */
@@ -796,7 +1224,6 @@ body {
   color: var(--text);
   border: 1px solid rgba(255,255,255,0.12);
 }
-
 .dialog-btn.confirm-red {
   background: var(--red);
   color: #fff;
@@ -892,18 +1319,44 @@ kbd {
 <body>
 
 <div class="video-area" id="videoArea">
-  <!-- Screen share background (shown in screen modes) -->
+  <!-- Screen share background — FULL SCREEN with simulated app UI -->
   <div class="screen-share-bg" id="screenShareBg">
-    <div class="screen-share-window">
-      <div class="screen-share-titlebar">
-        <div class="screen-share-dot r"></div>
-        <div class="screen-share-dot y"></div>
-        <div class="screen-share-dot g"></div>
+    <div class="screen-share-fullscreen">
+      <div class="mock-app-toolbar">
+        <div class="mock-dots">
+          <div class="mock-dot r"></div>
+          <div class="mock-dot y"></div>
+          <div class="mock-dot g"></div>
+        </div>
+        <span class="mock-app-title">Keynote — מצגת צבעים</span>
       </div>
-      <div class="screen-share-content">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        <span>שיתוף מסך (דמו)</span>
+      <div class="mock-app-body">
+        <div class="mock-sidebar">
+          <div class="mock-sidebar-item active"></div>
+          <div class="mock-sidebar-item"></div>
+          <div class="mock-sidebar-item"></div>
+          <div class="mock-sidebar-item"></div>
+        </div>
+        <div class="mock-main-content">
+          <div class="mock-heading"></div>
+          <div class="mock-paragraph">
+            <div class="mock-line"></div>
+            <div class="mock-line"></div>
+            <div class="mock-line"></div>
+            <div class="mock-line"></div>
+          </div>
+          <div class="mock-cards">
+            <div class="mock-card"></div>
+            <div class="mock-card"></div>
+            <div class="mock-card"></div>
+          </div>
+        </div>
       </div>
+    </div>
+    <!-- Asset display indicator -->
+    <div class="asset-display-indicator" id="assetDisplayIndicator">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span id="assetDisplayName">מציג: מצגת צבעים</span>
     </div>
   </div>
 
@@ -922,6 +1375,53 @@ kbd {
 
   <!-- Lesson name pill -->
   <div class="lesson-pill">שיעור 3: צבע ומשמעות</div>
+
+  <!-- Assets button -->
+  <button class="assets-btn" id="assetsBtn" title="נכסי שיעור">
+    <span>📎</span>
+    <span>נכסים</span>
+  </button>
+
+  <!-- Assets panel -->
+  <div class="assets-panel" id="assetsPanel">
+    <div class="assets-panel-header">
+      <div class="assets-panel-title">
+        <span>📎</span> נכסי שיעור
+      </div>
+      <button class="assets-close-btn" id="assetsCloseBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="assets-list">
+      <div class="asset-item" data-asset-id="1">
+        <div class="asset-icon html-type">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div class="asset-info">
+          <div class="asset-name">מצגת צבעים — אינטראקטיבית.html</div>
+          <div class="asset-type-label">HTML אינטראקטיבי</div>
+        </div>
+        <button class="asset-show-btn" data-asset-id="1" onclick="toggleAssetDisplay(1)">הצג</button>
+      </div>
+      <div class="asset-item" data-asset-id="2">
+        <div class="asset-icon pdf-type">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="asset-info">
+          <div class="asset-name">חומרי עזר — גלגל הצבעים.pdf</div>
+          <div class="asset-type-label">PDF מסמך</div>
+        </div>
+        <button class="asset-show-btn" data-asset-id="2" onclick="toggleAssetDisplay(2)">הצג</button>
+      </div>
+    </div>
+    <div class="assets-url-input-wrap">
+      <div class="assets-url-label">הדבק לינק לאתר / HTML</div>
+      <div class="assets-url-row">
+        <input class="assets-url-input" type="text" placeholder="https://example.com/presentation.html" id="assetUrlInput" />
+        <button class="assets-url-go-btn" onclick="loadAssetUrl()">הצג</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Mode Switcher -->
   <div class="mode-switcher" id="modeSwitcher">
@@ -961,7 +1461,7 @@ kbd {
     </div>
   </div>
 
-  <!-- Audio level strip -->
+  <!-- Audio level strip — separated from take pill, positioned independently -->
   <div class="audio-strip" id="audioStrip">
     <div class="meter-bar" style="height:3px"></div>
     <div class="meter-bar" style="height:5px"></div>
@@ -974,7 +1474,7 @@ kbd {
 
   <!-- Bottom control bar -->
   <div class="control-bar">
-    <!-- Take counter pill -->
+    <!-- Take counter pill — standalone, clean -->
     <div class="take-pill" id="takePill">טייק 1</div>
 
     <!-- TikTok-style controls -->
@@ -1010,15 +1510,31 @@ kbd {
     <!-- Mini timeline -->
     <div class="mini-timeline" id="miniTimeline"></div>
 
-    <!-- Takes panel (visible when paused) -->
+    <!-- Takes panel (visible when paused, collapsible) -->
     <div class="takes-panel" id="takesPanel">
-      <div class="takes-panel-title">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        הערות לטייקים
+      <!-- Collapsible toggle handle -->
+      <div class="takes-panel-toggle" id="takesPanelToggle">
+        <div class="takes-toggle-chevron">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <span class="takes-toggle-label" id="takesToggleLabel">3 טייקים</span>
       </div>
-      <div id="takesList"></div>
+      <div class="takes-panel-content" id="takesPanelContent">
+        <div class="takes-panel-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          הערות לטייקים
+        </div>
+        <div id="takesList"></div>
+      </div>
     </div>
   </div>
+</div>
+
+<!-- Countdown overlay -->
+<div class="countdown-overlay" id="countdownOverlay">
+  <div class="countdown-ring" id="countdownRing"></div>
+  <div class="countdown-number" id="countdownNumber">3</div>
+  <div class="countdown-recording-flash" id="countdownFlash">מקליט</div>
 </div>
 
 <!-- Delete Take Dialog -->
@@ -1070,9 +1586,16 @@ const state = {
   intervalId: null,
   meterIntervalId: null,
   currentMode: 'camera',
+  takesPanelCollapsed: false,
+  activeAssetId: null,
 };
 
 const demoNotes = ['יצא סבבה', 'פתיח טוב', 'מבוא ויסודות'];
+
+const assetData = {
+  1: { name: 'מצגת צבעים — אינטראקטיבית.html', shortName: 'מצגת צבעים', type: 'HTML' },
+  2: { name: 'חומרי עזר — גלגל הצבעים.pdf', shortName: 'גלגל הצבעים', type: 'PDF' },
+};
 
 // ======= ELEMENTS =======
 const $ = id => document.getElementById(id);
@@ -1091,6 +1614,17 @@ const cameraOverlay = $('cameraOverlay');
 const screenShareBg = $('screenShareBg');
 const takesPanel = $('takesPanel');
 const takesList = $('takesList');
+const takesPanelToggle = $('takesPanelToggle');
+const takesToggleLabel = $('takesToggleLabel');
+const countdownOverlay = $('countdownOverlay');
+const countdownNumber = $('countdownNumber');
+const countdownRing = $('countdownRing');
+const countdownFlash = $('countdownFlash');
+const assetsBtn = $('assetsBtn');
+const assetsPanel = $('assetsPanel');
+const assetsCloseBtn = $('assetsCloseBtn');
+const assetDisplayIndicator = $('assetDisplayIndicator');
+const assetDisplayName = $('assetDisplayName');
 
 // ======= TIMER =======
 function formatTime(s) {
@@ -1146,6 +1680,121 @@ function setMode(mode) {
 document.querySelectorAll('.mode-btn').forEach(btn => {
   btn.addEventListener('click', () => setMode(btn.dataset.mode));
 });
+
+// ======= ASSETS PANEL =======
+assetsBtn.addEventListener('click', () => {
+  assetsPanel.classList.toggle('visible');
+});
+assetsCloseBtn.addEventListener('click', () => {
+  assetsPanel.classList.remove('visible');
+});
+
+function toggleAssetDisplay(assetId) {
+  const allBtns = document.querySelectorAll('.asset-show-btn');
+
+  if (state.activeAssetId === assetId) {
+    // Turn off
+    state.activeAssetId = null;
+    allBtns.forEach(b => b.classList.remove('active'));
+    allBtns.forEach(b => b.textContent = 'הצג');
+    assetDisplayIndicator.classList.remove('visible');
+    showToast('הפסקת שיתוף נכס', 'cyan');
+  } else {
+    // Turn on this asset
+    state.activeAssetId = assetId;
+    allBtns.forEach(b => {
+      if (parseInt(b.dataset.assetId) === assetId) {
+        b.classList.add('active');
+        b.textContent = 'מוצג';
+      } else {
+        b.classList.remove('active');
+        b.textContent = 'הצג';
+      }
+    });
+
+    const asset = assetData[assetId];
+    if (asset) {
+      assetDisplayName.textContent = `מציג: ${asset.shortName}`;
+      assetDisplayIndicator.classList.add('visible');
+
+      // Switch to screen mode if not already
+      if (state.currentMode === 'camera') {
+        setMode('screen-cam');
+      }
+    }
+    showToast(`מציג: ${asset ? asset.shortName : 'נכס'}`, 'cyan');
+  }
+}
+
+function loadAssetUrl() {
+  const url = $('assetUrlInput').value.trim();
+  if (!url) return;
+
+  // Switch to screen share mode
+  if (state.currentMode === 'camera') {
+    setMode('screen-cam');
+  }
+
+  // Show indicator
+  const displayUrl = url.length > 30 ? url.substring(0, 30) + '...' : url;
+  assetDisplayName.textContent = `מציג: ${displayUrl}`;
+  assetDisplayIndicator.classList.add('visible');
+  state.activeAssetId = 'url';
+
+  showToast(`טוען: ${displayUrl}`, 'cyan');
+}
+
+// Close assets panel when clicking outside
+document.addEventListener('click', e => {
+  if (!assetsPanel.contains(e.target) && !assetsBtn.contains(e.target)) {
+    assetsPanel.classList.remove('visible');
+  }
+});
+
+// ======= COLLAPSIBLE TAKES PANEL =======
+takesPanelToggle.addEventListener('click', () => {
+  state.takesPanelCollapsed = !state.takesPanelCollapsed;
+  takesPanel.classList.toggle('collapsed', state.takesPanelCollapsed);
+});
+
+// ======= COUNTDOWN =======
+function showCountdown(callback) {
+  countdownOverlay.classList.add('visible');
+  const numbers = [3, 2, 1];
+  let i = 0;
+
+  function showNext() {
+    if (i >= numbers.length) {
+      // Show "recording" flash
+      countdownNumber.classList.remove('animating');
+      countdownRing.classList.remove('animating');
+      countdownFlash.classList.add('animating');
+
+      setTimeout(() => {
+        countdownFlash.classList.remove('animating');
+        countdownOverlay.classList.remove('visible');
+        callback();
+      }, 600);
+      return;
+    }
+
+    countdownNumber.textContent = numbers[i];
+    countdownNumber.classList.remove('animating');
+    countdownRing.classList.remove('animating');
+
+    // Force reflow
+    void countdownNumber.offsetWidth;
+    void countdownRing.offsetWidth;
+
+    countdownNumber.classList.add('animating');
+    countdownRing.classList.add('animating');
+
+    i++;
+    setTimeout(showNext, 900);
+  }
+
+  showNext();
+}
 
 // ======= RENDER CONTROLS BY STATE =======
 function renderControls() {
@@ -1227,7 +1876,7 @@ function renderControls() {
     btnFinish.classList.add('hidden');
   }
 
-  // Take pill
+  // Take pill — standalone, clean
   if (state.takeNum >= 1) {
     takePill.textContent = `טייק ${state.takeNum}`;
     takePill.classList.add('visible');
@@ -1239,9 +1888,13 @@ function renderControls() {
   if (phase === 'paused' && state.takes.length > 0) {
     takesPanel.classList.add('visible');
     miniTimeline.classList.add('expanded');
+    // Update toggle label
+    takesToggleLabel.textContent = `${state.takes.length} טייקים`;
     renderTakesPanel();
   } else {
     takesPanel.classList.remove('visible');
+    takesPanel.classList.remove('collapsed');
+    state.takesPanelCollapsed = false;
     miniTimeline.classList.remove('expanded');
   }
 }
@@ -1289,6 +1942,13 @@ function startRecording() {
   showToast('ההקלטה התחילה', 'red');
 }
 
+function startRecordingWithCountdown() {
+  // Show 3-2-1 countdown, then start recording
+  showCountdown(() => {
+    startRecording();
+  });
+}
+
 function pauseRecording() {
   state.phase = 'paused';
   renderControls();
@@ -1317,7 +1977,7 @@ function resumeRecording(insertAtIndex) {
 
 function handleCenterButton() {
   if (state.phase === 'initial') {
-    startRecording();
+    startRecordingWithCountdown();
   } else if (state.phase === 'recording') {
     pauseRecording();
   } else if (state.phase === 'paused') {
@@ -1515,6 +2175,8 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     if (dialogOpen) {
       dialogOpen.classList.remove('visible');
+    } else if (assetsPanel.classList.contains('visible')) {
+      assetsPanel.classList.remove('visible');
     } else if (state.phase === 'recording' || state.phase === 'paused') {
       requestStop();
     }
@@ -1534,6 +2196,9 @@ document.addEventListener('keydown', e => {
   if (e.key === '1') setMode('camera');
   if (e.key === '2') setMode('screen-cam');
   if (e.key === '3') setMode('screen');
+  if (e.key === 'a' || e.key === 'A') {
+    assetsPanel.classList.toggle('visible');
+  }
 });
 
 // ======= DRAGGABLE CAMERA OVERLAY =======
