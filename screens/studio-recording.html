@@ -954,7 +954,7 @@ body {
   margin-top: 0;
 }
 .takes-panel.visible {
-  max-height: 220px;
+  max-height: 55vh;
   opacity: 1;
   transform: translateY(0);
   padding: 0 16px 10px;
@@ -1095,6 +1095,59 @@ body {
 .take-card-info .take-note-input {
   flex: 1;
   max-width: 100px;
+}
+
+/* Mini scrubber per take */
+.take-card-scrubber {
+  padding: 2px 6px 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.take-scrub-time {
+  font-size: 8px;
+  color: rgba(255,255,255,0.4);
+  font-family: 'Fredoka', sans-serif;
+  font-variant-numeric: tabular-nums;
+  min-width: 28px;
+}
+.take-scrub-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+  overflow: visible;
+}
+.take-scrub-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--cyan);
+  width: 0%;
+  transition: width 0.1s linear;
+}
+.take-scrub-handle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  cursor: grab;
+  left: 0%;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.take-card:hover .take-scrub-handle,
+.take-card.playing .take-scrub-handle {
+  opacity: 1;
+}
+.take-scrub-handle:active {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.2);
 }
 
 .take-number {
@@ -2798,6 +2851,14 @@ function renderTakesPanel() {
         </div>
         <span class="take-dur-badge">${formatTime(take.duration)}</span>
       </div>
+      <div class="take-card-scrubber" onclick="event.stopPropagation()">
+        <span class="take-scrub-time" id="takeScrubTime${i}">0:00</span>
+        <div class="take-scrub-bar" data-take="${i}" onmousedown="startScrub(event,${i})">
+          <div class="take-scrub-fill" id="takeScrubFill${i}"></div>
+          <div class="take-scrub-handle" id="takeScrubHandle${i}"></div>
+        </div>
+        <span class="take-scrub-time">${formatTime(take.duration)}</span>
+      </div>
       <div class="take-card-info">
         <span class="take-number">${i + 1}</span>
         <input class="take-note-input" type="text" maxlength="30" value="${escapeHtml(value)}" placeholder="${escapeHtml(placeholder)}" data-take-index="${i}" onclick="event.stopPropagation()" />
@@ -2829,9 +2890,62 @@ function previewTake(index) {
   if(thumb) {
     thumb.classList.add('active');
     const video = thumb.querySelector('video');
-    if(video) { video.currentTime = index * 5; video.play().catch(()=>{}); }
+    if(video) {
+      video.currentTime = index * 5;
+      video.play().catch(()=>{});
+      // Update scrubber as video plays
+      video.ontimeupdate = () => updateTakeScrubber(index, video);
+    }
   }
-  showToast(`מציג טייק ${index + 1}`, 'cyan');
+}
+
+function updateTakeScrubber(index, video) {
+  const dur = state.takes[index] ? state.takes[index].duration : video.duration || 60;
+  const elapsed = video.currentTime - (index * 5);
+  const pct = Math.min(100, Math.max(0, (elapsed / dur) * 100));
+  const fill = document.getElementById('takeScrubFill' + index);
+  const handle = document.getElementById('takeScrubHandle' + index);
+  const timeEl = document.getElementById('takeScrubTime' + index);
+  if(fill) fill.style.width = pct + '%';
+  if(handle) handle.style.left = pct + '%';
+  if(timeEl) timeEl.textContent = formatTime(Math.max(0, elapsed));
+}
+
+let scrubbing = null;
+function startScrub(e, takeIndex) {
+  e.preventDefault();
+  e.stopPropagation();
+  scrubbing = { takeIndex, bar: e.currentTarget };
+  doScrub(e);
+  document.addEventListener('mousemove', doScrub);
+  document.addEventListener('mouseup', stopScrub);
+}
+function doScrub(e) {
+  if(!scrubbing) return;
+  const bar = scrubbing.bar;
+  const rect = bar.getBoundingClientRect();
+  // RTL: right = 0%, left = 100%
+  let pct = ((rect.right - e.clientX) / rect.width) * 100;
+  pct = Math.min(100, Math.max(0, pct));
+  const fill = document.getElementById('takeScrubFill' + scrubbing.takeIndex);
+  const handle = document.getElementById('takeScrubHandle' + scrubbing.takeIndex);
+  if(fill) fill.style.width = pct + '%';
+  if(handle) { handle.style.left = pct + '%'; handle.style.opacity = '1'; }
+  // Seek the video
+  const thumb = document.getElementById('takeThumb' + scrubbing.takeIndex);
+  if(thumb) {
+    const video = thumb.querySelector('video');
+    const dur = state.takes[scrubbing.takeIndex] ? state.takes[scrubbing.takeIndex].duration : 60;
+    if(video) video.currentTime = (scrubbing.takeIndex * 5) + (pct / 100 * dur);
+  }
+  const timeEl = document.getElementById('takeScrubTime' + scrubbing.takeIndex);
+  const dur = state.takes[scrubbing.takeIndex] ? state.takes[scrubbing.takeIndex].duration : 60;
+  if(timeEl) timeEl.textContent = formatTime(pct / 100 * dur);
+}
+function stopScrub() {
+  scrubbing = null;
+  document.removeEventListener('mousemove', doScrub);
+  document.removeEventListener('mouseup', stopScrub);
 }
 
 function escapeHtml(str) {
