@@ -885,71 +885,71 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
           </select>
         </div>
 
-        <!-- Font Size -->
-        <div class="sub-style-section">
-          <span class="sub-style-label">גודל טקסט</span>
-          <div class="size-pills" id="subSizePills">
-            <button class="size-pill" data-size="14" onclick="setSubSize(this)">קטן</button>
-            <button class="size-pill active" data-size="18" onclick="setSubSize(this)">בינוני</button>
-            <button class="size-pill" data-size="24" onclick="setSubSize(this)">גדול</button>
-            <button class="size-pill" data-size="32" onclick="setSubSize(this)">ענק</button>
+        <!-- Font Size + Background Style (same row) -->
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div class="sub-style-section" style="flex:1;">
+            <span class="sub-style-label">גודל טקסט</span>
+            <div class="size-pills" id="subSizePills">
+              <button class="size-pill" data-size="14" onclick="setSubSize(this)">קטן</button>
+              <button class="size-pill active" data-size="18" onclick="setSubSize(this)">בינוני</button>
+              <button class="size-pill" data-size="24" onclick="setSubSize(this)">גדול</button>
+              <button class="size-pill" data-size="32" onclick="setSubSize(this)">ענק</button>
+            </div>
+          </div>
+          <div class="sub-style-section" style="flex:1;">
+            <span class="sub-style-label">רקע כתובית</span>
+            <div class="bg-style-pills" id="subBgPills">
+              <button class="bg-pill" data-bg="none" onclick="setSubBg(this)">ללא</button>
+              <button class="bg-pill" data-bg="rgba(0,0,0,0.3)" onclick="setSubBg(this)">שקוף</button>
+              <button class="bg-pill active" data-bg="rgba(0,0,0,0.6)" onclick="setSubBg(this)">חצי</button>
+              <button class="bg-pill" data-bg="rgba(0,0,0,1)" onclick="setSubBg(this)">אטום</button>
+            </div>
           </div>
         </div>
 
-        <!-- Text Color -->
-        <div class="sub-style-section">
-          <span class="sub-style-label">צבע טקסט</span>
-          <div class="color-swatches" id="subColorSwatches">
-            <div class="color-swatch active" data-color="#ffffff" style="background:#ffffff;" onclick="setSubColor(this)"></div>
-            <div class="color-swatch" data-color="#EAD654" style="background:#EAD654;" onclick="setSubColor(this)"></div>
-            <div class="color-swatch" data-color="#38C4F2" style="background:#38C4F2;" onclick="setSubColor(this)"></div>
-            <div class="color-swatch" data-color="#F05680" style="background:#F05680;" onclick="setSubColor(this)"></div>
-            <div class="color-swatch" data-color="#7DC57A" style="background:#7DC57A;" onclick="setSubColor(this)"></div>
+        <!-- Text Color + Text Shadow (same row) -->
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div class="sub-style-section" style="flex:1;">
+            <span class="sub-style-label">צבע טקסט</span>
+            <div class="color-swatches" id="subColorSwatches">
+              <div class="color-swatch active" data-color="#ffffff" style="background:#ffffff;" onclick="setSubColor(this)"></div>
+              <div class="color-swatch" data-color="#EAD654" style="background:#EAD654;" onclick="setSubColor(this)"></div>
+              <div class="color-swatch" data-color="#38C4F2" style="background:#38C4F2;" onclick="setSubColor(this)"></div>
+              <div class="color-swatch" data-color="#F05680" style="background:#F05680;" onclick="setSubColor(this)"></div>
+              <div class="color-swatch" data-color="#7DC57A" style="background:#7DC57A;" onclick="setSubColor(this)"></div>
+            </div>
+          </div>
+          <div class="sub-style-section" style="flex:0 0 auto;">
+            <span class="sub-style-label">צל טקסט</span>
+            <div class="shadow-toggle">
+              <div class="toggle-switch" id="subShadowToggle" onclick="toggleSubShadow()"></div>
+              <span style="font-size:12px;color:var(--text-sub);" id="subShadowLabel">כבוי</span>
+            </div>
           </div>
         </div>
 
-        <!-- Background Style -->
-        <div class="sub-style-section">
-          <span class="sub-style-label">רקע כתובית</span>
-          <div class="bg-style-pills" id="subBgPills">
-            <button class="bg-pill" data-bg="none" onclick="setSubBg(this)">ללא רקע</button>
-            <button class="bg-pill" data-bg="rgba(0,0,0,0.3)" onclick="setSubBg(this)">שקוף</button>
-            <button class="bg-pill active" data-bg="rgba(0,0,0,0.6)" onclick="setSubBg(this)">חצי שקוף</button>
-            <button class="bg-pill" data-bg="rgba(0,0,0,1)" onclick="setSubBg(this)">אטום</button>
+        <!-- Position + Alignment (same row) -->
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div class="sub-style-section" style="flex:1;">
+            <span class="sub-style-label">מיקום</span>
+            <div class="pos-pills" id="subPosPills">
+              <button class="pos-pill active" data-pos="bottom" onclick="setSubPos(this)">למטה</button>
+              <button class="pos-pill" data-pos="top" onclick="setSubPos(this)">למעלה</button>
+            </div>
           </div>
-        </div>
-
-        <!-- Text Shadow -->
-        <div class="sub-style-section">
-          <span class="sub-style-label">צל טקסט</span>
-          <div class="shadow-toggle">
-            <div class="toggle-switch" id="subShadowToggle" onclick="toggleSubShadow()"></div>
-            <span style="font-size:12px;color:var(--text-sub);" id="subShadowLabel">כבוי</span>
-          </div>
-        </div>
-
-        <!-- Position -->
-        <div class="sub-style-section">
-          <span class="sub-style-label">מיקום</span>
-          <div class="pos-pills" id="subPosPills">
-            <button class="pos-pill active" data-pos="bottom" onclick="setSubPos(this)">למטה</button>
-            <button class="pos-pill" data-pos="top" onclick="setSubPos(this)">למעלה</button>
-          </div>
-        </div>
-
-        <!-- Alignment -->
-        <div class="sub-style-section">
-          <span class="sub-style-label">יישור</span>
-          <div class="align-pills" id="subAlignPills">
-            <button class="align-pill" data-align="right" onclick="setSubAlign(this)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="12" x2="9" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
-            </button>
-            <button class="align-pill active" data-align="center" onclick="setSubAlign(this)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="6"/><line x1="21" y1="12" x2="3" y2="12"/><line x1="18" y1="18" x2="6" y2="18"/></svg>
-            </button>
-            <button class="align-pill" data-align="left" onclick="setSubAlign(this)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            </button>
+          <div class="sub-style-section" style="flex:1;">
+            <span class="sub-style-label">יישור</span>
+            <div class="align-pills" id="subAlignPills">
+              <button class="align-pill" data-align="right" onclick="setSubAlign(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="12" x2="9" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
+              </button>
+              <button class="align-pill active" data-align="center" onclick="setSubAlign(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="6"/><line x1="21" y1="12" x2="3" y2="12"/><line x1="18" y1="18" x2="6" y2="18"/></svg>
+              </button>
+              <button class="align-pill" data-align="left" onclick="setSubAlign(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              </button>
+            </div>
           </div>
         </div>
 
