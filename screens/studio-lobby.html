@@ -185,7 +185,7 @@
   [data-theme="dark"] select.field-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23dde5f5' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");}
 
   /* ── CTA Button (full width bottom) ── */
-  .cta-row{padding:6px 16px 0;flex-shrink:0;}
+  /* cta-row removed — button now inside setup-card */
   .cta-record{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 24px;border-radius:30px;border:none;font-family:var(--font-he);font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;background:linear-gradient(135deg,var(--pink),#d63d6a);color:white;box-shadow:0 4px 20px rgba(240,86,128,0.35);min-height:52px;}
   .cta-record:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(240,86,128,0.45);}
   .cta-record:active{transform:translateY(0);box-shadow:0 2px 12px rgba(240,86,128,0.3);}
@@ -632,17 +632,15 @@
               <option value="480">480p</option>
             </select>
           </div>
+
+          <!-- CTA inside setup card -->
+          <button class="cta-record" onclick="startRecording()" style="margin-top:6px;width:100%;">
+            <span class="rec-circle"></span>
+            התחל הקלטה
+          </button>
         </div>
       </div>
 
-    </div>
-
-    <!-- ═══ FULL-WIDTH CTA ═══ -->
-    <div class="cta-row">
-      <button class="cta-record" onclick="startRecording()">
-        <span class="rec-circle"></span>
-        התחל הקלטה
-      </button>
     </div>
   </div>
 
