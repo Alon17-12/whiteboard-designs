@@ -2259,12 +2259,17 @@ kbd {
 
   <!-- Prompter overlay on video -->
   <div class="prompter-overlay" id="prompterOverlay">
-    <div class="prompter-overlay-grip" id="prompterOverlayGrip">
-      <div class="prompter-overlay-grip-dot"></div>
-      <div class="prompter-overlay-grip-dot"></div>
-      <div class="prompter-overlay-grip-dot"></div>
-      <div class="prompter-overlay-grip-dot"></div>
-      <div class="prompter-overlay-grip-dot"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:3px 6px;">
+      <div class="prompter-overlay-grip" id="prompterOverlayGrip" style="flex:1;">
+        <div class="prompter-overlay-grip-dot"></div>
+        <div class="prompter-overlay-grip-dot"></div>
+        <div class="prompter-overlay-grip-dot"></div>
+        <div class="prompter-overlay-grip-dot"></div>
+        <div class="prompter-overlay-grip-dot"></div>
+      </div>
+      <button onclick="closePrompterOverlay()" style="width:22px;height:22px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.6);flex-shrink:0;" title="סגור פרומפטר">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="10" height="10"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
     <div class="prompter-overlay-content">
       <div class="prompter-overlay-bg" id="prompterOverlayBg"></div>
@@ -3255,6 +3260,11 @@ function togglePrompter() {
     updatePrompterWordCount();
     syncPrompterOverlay();
   }
+}
+function closePrompterOverlay() {
+  prompterOverlay.classList.remove('visible');
+  prompterState.scrolling = false;
+  showToast('פרומפטר נסגר', 'cyan');
 }
 
 // Close prompter panel on outside click
