@@ -1018,20 +1018,83 @@ body {
   gap: 6px;
 }
 
-.take-row {
+.takes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.take-card {
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.take-card:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(56,196,242,0.3);
+}
+.take-card.playing {
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(56,196,242,0.25);
+}
+.take-card-thumb {
+  aspect-ratio: 16/9;
+  background: rgba(0,0,0,0.4);
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: var(--radius-sm);
-  background: rgba(255,255,255,0.03);
-  margin-bottom: 4px;
-  transition: background 0.15s var(--ease-smooth);
+  justify-content: center;
 }
-.take-row:hover {
-  background: rgba(255,255,255,0.06);
+.take-card-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
 }
-.take-row:last-child { margin-bottom: 0; }
+.take-card-thumb.active video {
+  display: block;
+}
+.take-card-thumb .play-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.take-card:hover .play-icon {
+  background: rgba(56,196,242,0.3);
+  transform: scale(1.1);
+}
+.take-card-thumb .take-dur-badge {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.7);
+  font-size: 9px;
+  color: white;
+  font-weight: 600;
+}
+.take-card-info {
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.take-card-info .take-number {
+  font-size: 11px;
+}
+.take-card-info .take-note-input {
+  flex: 1;
+  max-width: 100px;
+}
 
 .take-number {
   font-family: 'Fredoka', sans-serif;
@@ -1450,12 +1513,6 @@ kbd {
   <!-- Lesson name pill -->
   <div class="lesson-pill">שיעור 3: צבע ומשמעות</div>
 
-  <!-- Undo button -->
-  <button class="assets-btn" id="undoBtn" title="ביטול פעולה אחרונה" aria-label="ביטול" onclick="undoLastAction()" style="left:auto;right:16px;top:16px;position:absolute;">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-    <span>ביטול</span>
-  </button>
-
   <!-- Assets button -->
   <button class="assets-btn" id="assetsBtn" title="נכסי שיעור" aria-label="נכסי שיעור">
     <span>📎</span>
@@ -1559,6 +1616,15 @@ kbd {
 
     <!-- TikTok-style controls -->
     <div class="tiktok-controls" id="tiktokControls">
+      <!-- Undo (only visible when paused) -->
+      <button class="side-btn hidden" id="btnUndo" title="ביטול פעולה אחרונה (Ctrl+Z)" aria-label="ביטול" onclick="undoLastAction()">
+        <div class="side-icon" style="background:rgba(56,196,242,0.12);border-color:rgba(56,196,242,0.25);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan, #38C4F2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
+        </div>
+        <span class="side-label">ביטול</span>
+      </button>
       <!-- Delete last take (only visible when paused) -->
       <button class="side-btn hidden" id="btnDelete" title="מחק טייק אחרון (Backspace)" aria-label="מחק טייק אחרון">
         <div class="side-icon delete">
@@ -1950,11 +2016,14 @@ function renderControls() {
     centerLabel.style.color = 'var(--green)';
   }
 
-  // Delete button
+  // Delete + Undo buttons
+  const btnUndo = $('btnUndo');
   if (phase === 'paused' && state.takes.length >= 1) {
     btnDelete.classList.remove('hidden');
+    if(btnUndo) btnUndo.classList.remove('hidden');
   } else {
     btnDelete.classList.add('hidden');
+    if(btnUndo) btnUndo.classList.add('hidden');
   }
 
   // Finish button
@@ -1992,29 +2061,53 @@ function renderControls() {
 
 // ======= TAKES PANEL =======
 function renderTakesPanel() {
-  let html = '';
+  const videoSrc = '../../BOARDi/BOARDi Coding.mp4';
+  let html = '<div class="takes-grid">';
   state.takes.forEach((take, i) => {
     const value = take.note || (demoNotes[i] !== undefined ? demoNotes[i] : '');
-    const placeholder = 'הערה קצרה...';
-    html += `<div class="take-row">
-      <span class="take-number">${i + 1}</span>
-      <span class="take-duration">${formatTime(take.duration)}</span>
-      <input class="take-note-input" type="text" maxlength="30" value="${escapeHtml(value)}" placeholder="${escapeHtml(placeholder)}" data-take-index="${i}" />
+    const placeholder = 'הערה...';
+    html += `<div class="take-card" data-take-index="${i}" onclick="previewTake(${i})">
+      <div class="take-card-thumb" id="takeThumb${i}">
+        <video src="${videoSrc}" preload="metadata" muted loop></video>
+        <div class="play-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21"/></svg>
+        </div>
+        <span class="take-dur-badge">${formatTime(take.duration)}</span>
+      </div>
+      <div class="take-card-info">
+        <span class="take-number">${i + 1}</span>
+        <input class="take-note-input" type="text" maxlength="30" value="${escapeHtml(value)}" placeholder="${escapeHtml(placeholder)}" data-take-index="${i}" onclick="event.stopPropagation()" />
+      </div>
     </div>`;
   });
+  html += '</div>';
   takesList.innerHTML = html;
 
   takesList.querySelectorAll('.take-note-input').forEach(input => {
     input.addEventListener('input', e => {
       const idx = parseInt(e.target.dataset.takeIndex);
-      if (state.takes[idx]) {
-        state.takes[idx].note = e.target.value;
-      }
+      if (state.takes[idx]) state.takes[idx].note = e.target.value;
     });
-    input.addEventListener('keydown', e => {
-      e.stopPropagation();
-    });
+    input.addEventListener('keydown', e => e.stopPropagation());
   });
+}
+
+function previewTake(index) {
+  document.querySelectorAll('.take-card').forEach(c => c.classList.remove('playing'));
+  document.querySelectorAll('.take-card-thumb').forEach(t => {
+    t.classList.remove('active');
+    const v = t.querySelector('video');
+    if(v) { v.pause(); v.currentTime = 0; }
+  });
+  const card = document.querySelector(`.take-card[data-take-index="${index}"]`);
+  const thumb = document.getElementById('takeThumb' + index);
+  if(card) card.classList.add('playing');
+  if(thumb) {
+    thumb.classList.add('active');
+    const video = thumb.querySelector('video');
+    if(video) { video.currentTime = index * 5; video.play().catch(()=>{}); }
+  }
+  showToast(`מציג טייק ${index + 1}`, 'cyan');
 }
 
 function escapeHtml(str) {
