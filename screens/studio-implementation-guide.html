@@ -537,6 +537,7 @@ tbody tr:hover {
 .phase-badge.p2 { background: rgba(37,62,122,.1); color: var(--navy); }
 .phase-badge.p3 { background: rgba(234,214,84,.15); color: #a89520; }
 .phase-badge.p4 { background: rgba(52,211,153,.12); color: #0d9669; }
+.phase-badge.p5 { background: rgba(168,85,247,.12); color: #7c3aed; }
 
 /* ── Separator ── */
 hr {
@@ -620,7 +621,7 @@ hr {
 <aside class="sidebar">
   <div class="sidebar-logo">
     <h1>WHITEBOARD Studio</h1>
-    <div class="subtitle">Implementation Guide v1.0</div>
+    <div class="subtitle">Implementation Guide v2.0</div>
   </div>
   <nav>
     <a href="#overview"><span class="num">1</span>סקירה כללית</a>
@@ -628,12 +629,14 @@ hr {
     <a href="#recording-flow"><span class="num">3</span>תהליך ההקלטה</a>
     <a href="#editor"><span class="num">4</span>עורך הווידאו</a>
     <a href="#subtitles"><span class="num">5</span>כתוביות</a>
-    <a href="#schema"><span class="num">6</span>מודל נתונים</a>
-    <a href="#trigger-jobs"><span class="num">7</span>Trigger.dev Jobs</a>
-    <a href="#bunny"><span class="num">8</span>Bunny Stream</a>
-    <a href="#roadmap"><span class="num">9</span>מפת דרכים</a>
-    <a href="#components"><span class="num">10</span>רכיבי ממשק</a>
-    <a href="#tech-summary"><span class="num">11</span>סיכום טכנולוגיות</a>
+    <a href="#teleprompter"><span class="num">6</span>פרומפטר</a>
+    <a href="#titles"><span class="num">7</span>כותרות מונפשות</a>
+    <a href="#schema"><span class="num">8</span>מודל נתונים</a>
+    <a href="#trigger-jobs"><span class="num">9</span>Trigger.dev Jobs</a>
+    <a href="#bunny"><span class="num">10</span>Bunny Stream</a>
+    <a href="#roadmap"><span class="num">11</span>מפת דרכים</a>
+    <a href="#components"><span class="num">12</span>רכיבי ממשק</a>
+    <a href="#tech-summary"><span class="num">13</span>סיכום טכנולוגיות</a>
   </nav>
   <div class="sidebar-footer">
     WHITEBOARD LMS &copy; 2026<br>
@@ -652,9 +655,9 @@ hr {
       מסמך זה מכיל את כל מה שמפתח צריך לדעת כדי לבנות את המערכת מאפס — מהקלטה בדפדפן ועד פרסום שיעור ערוך עם כתוביות.
     </p>
     <div class="meta">
-      <span>גרסה 1.0</span>
+      <span>גרסה 2.0</span>
       <span>תאריך: אפריל 2026</span>
-      <span>11 פרקים</span>
+      <span>13 פרקים</span>
     </div>
   </header>
 
@@ -832,22 +835,34 @@ hr {
         <strong>בקשת הרשאות</strong> — מצלמה + מיקרופון (+ שיתוף מסך אופציונלי)
       </li>
       <li>
-        <strong>Pre-Recording Lobby</strong> — תצוגה מקדימה של המצלמה, בחירת מיקרופון/מצלמה, בחירת מצב הקלטה (מצלמה בלבד / מסך+מצלמה / מסך בלבד)
+        <strong>Pre-Recording Lobby</strong> — תצוגה מקדימה של המצלמה, בחירת מיקרופון/מצלמה, בחירת מצב הקלטה (מצלמה בלבד / מסך+מצלמה / מסך בלבד). טעינת נכסי שיעור (מצגות HTML, PDF) ותסריט פרומפטר.
       </li>
       <li>
-        <strong>תחילת הקלטה</strong> — טיימר ויזואלי מתחיל לרוץ
+        <strong>ספירה לאחור</strong> — 3 שניות countdown לפני כל טייק (גם ראשון וגם resume), עם אנימציה ויזואלית
       </li>
       <li>
-        <strong>במהלך ההקלטה</strong> — כפתור Pause/Resume, כפתור Take marker (יוצר גבול סגמנט חדש)
+        <strong>תחילת הקלטה (TikTok-style)</strong> — לחיצה על Record מפעילה הקלטה, לחיצה שנייה = Pause, לחיצה שלישית = Resume (עם countdown). הפרומפטר מתחיל לגלול אוטומטית עם ההקלטה.
+      </li>
+      <li>
+        <strong>במהלך ההקלטה</strong> — כפתור Pause/Resume, כפתור Take marker (יוצר גבול סגמנט חדש). אפשרות להחליף מצב (camera/screen+cam/screen) ללא הפסקת ההקלטה.
+      </li>
+      <li>
+        <strong>הערות טייק</strong> — הוספת תווית קצרה לכל טייק (מקסימום 30 תווים) לזיהוי מהיר
+      </li>
+      <li>
+        <strong>הכנסת טייק</strong> — אפשרות להכניס טייק חדש בין טייקים קיימים (insert between)
       </li>
       <li>
         <strong>מחיקת טייק אחרון</strong> — מסיר את הסגמנט האחרון, ממשיך מנקודת הסיום הקודמת
       </li>
       <li>
+        <strong>כפתור Undo</strong> — ביטול הפעולה האחרונה (מחיקת טייק, סימון גבול, שינוי מצב)
+      </li>
+      <li>
         <strong>סיום הקלטה</strong> — לחיצה על Stop &rarr; מעבר למסך Review
       </li>
       <li>
-        <strong>Review</strong> — צפייה בכל הטייקים, אפשרות להקליט מחדש טייקים ספציפיים
+        <strong>Review — Take Gallery</strong> — גלריית טייקים ברשת 3 עמודות, עם scrubber וידאו לכל טייק. אפשרות להקליט מחדש טייקים ספציפיים.
       </li>
       <li>
         <strong>Upload</strong> — העלאה ל-Bunny Stream ב-TUS עם progress bar (דרך Uppy)
@@ -856,6 +871,39 @@ hr {
         <strong>לאחר העלאה</strong> — אפשרות "פרסם כמו שזה" או "פתח בעורך"
       </li>
     </ol>
+
+    <h3>מצלמה PiP (Picture-in-Picture)</h3>
+    <p>
+      במצב מסך+מצלמה, המצלמה מוצגת כשכבת PiP שניתנת לגרירה על גבי המסך המשותף.
+    </p>
+    <ul>
+      <li><strong>צורה:</strong> מלבן (rectangle) או עיגול (circle) — ניתן להחלפה</li>
+      <li><strong>מיקום:</strong> draggable לכל מיקום על המסך, עם snap-to-corners</li>
+      <li><strong>גודל:</strong> slider לשינוי גודל ה-PiP (20%-40% מרוחב המסך)</li>
+      <li><strong>שמירה:</strong> מיקום וגודל נשמרים ב-state ומועברים ל-render הסופי</li>
+    </ul>
+
+    <h3>נכסי שיעור (Lesson Assets)</h3>
+    <p>
+      המרצה יכול לטעון חומרי עזר שיוצגו במהלך ההקלטה בתוך iframe:
+    </p>
+    <ul>
+      <li><strong>מצגות HTML</strong> — תצוגת שקפים עם ניווט קדימה/אחורה</li>
+      <li><strong>קבצי PDF</strong> — תצוגה עם דפדוף עמודים</li>
+      <li><strong>כתובת URL</strong> — טעינת אתר חיצוני (whitelist בלבד)</li>
+      <li><strong>אינטגרציה:</strong> הנכס מוצג כ-layer בהקלטת המסך, או כ-split view לצד המצלמה</li>
+    </ul>
+
+    <h3>אינטגרציית פרומפטר</h3>
+    <p>
+      הפרומפטר מסתנכרן אוטומטית עם מצב ההקלטה:
+    </p>
+    <ul>
+      <li><strong>Record = Scroll</strong> — כשההקלטה פעילה, הפרומפטר גולל אוטומטית</li>
+      <li><strong>Pause = Stop</strong> — עצירת הקלטה עוצרת את הגלילה</li>
+      <li><strong>Resume = Resume Scroll</strong> — חידוש הקלטה מחדש את הגלילה מהמיקום הנוכחי</li>
+      <li><strong>Cue Markers</strong> — סימני <code>---</code> בתסריט מאפשרים קפיצה מהירה לנקודות בטקסט</li>
+    </ul>
 
     <h3>קוד: אתחול MediaRecorder</h3>
     <pre><span class="keyword">const</span> <span class="fn">startRecording</span> = <span class="keyword">async</span> (mode: <span class="type">RecordingMode</span>) =&gt; {
@@ -949,9 +997,9 @@ hr {
     <h3>פיצ'רים</h3>
     <div class="screen-grid">
       <div class="screen-card">
-        <div class="card-title">Timeline</div>
-        <div class="card-desc">ציר זמן ויזואלי עם סגמנטים של טייקים. גרור לסידור מחדש.</div>
-        <div class="card-backend"><strong>UI:</strong> react-video-editor Timeline component</div>
+        <div class="card-title">Timeline + Actions Bar</div>
+        <div class="card-desc">ציר זמן ויזואלי עם סגמנטים של טייקים. גרור לסידור מחדש. סרגל פעולות קבוע (permanent) עם כלי cursor/split/trim וקיצורי מקלדת.</div>
+        <div class="card-backend"><strong>UI:</strong> react-video-editor Timeline component<br><strong>Shortcuts:</strong> S=split, T=trim, V=cursor, Delete=remove</div>
       </div>
       <div class="screen-card">
         <div class="card-title">Cut / Trim</div>
@@ -960,23 +1008,38 @@ hr {
       </div>
       <div class="screen-card">
         <div class="card-title">Logo Overlay</div>
-        <div class="card-desc">העלאת PNG/SVG, מיקום (corner picker), גודל (slider), שקיפות.</div>
+        <div class="card-desc">העלאת PNG/SVG, מיקום (corner picker), גודל (slider), שקיפות. אפשרות auto-preset מתמונת שער הקורס.</div>
         <div class="card-backend"><strong>Client:</strong> CSS overlay preview<br><strong>Server:</strong> FFmpeg burn-in at render</div>
       </div>
       <div class="screen-card">
         <div class="card-title">Intro / Outro</div>
-        <div class="card-desc">בחירה מתבניות או העלאת קליפים מותאמים (מקסימום 10 שניות כל אחד).</div>
-        <div class="card-backend"><strong>Templates:</strong> Remotion render<br><strong>Concat:</strong> FFmpeg server-side</div>
+        <div class="card-desc">בחירה מתבניות או העלאת קליפים מותאמים (מקסימום 10 שניות כל אחד). Fade in/out toggles עם אפשרות הפעלה/כיבוי.</div>
+        <div class="card-backend"><strong>Templates:</strong> Remotion render<br><strong>Concat:</strong> FFmpeg server-side<br><strong>Fades:</strong> Toggle per intro/outro</div>
       </div>
       <div class="screen-card">
         <div class="card-title">Transitions</div>
-        <div class="card-desc">Fade, dissolve, slide — בין סגמנטים. נוצרים בצד השרת.</div>
-        <div class="card-backend"><strong>Server:</strong> FFmpeg xfade filter via Trigger.dev</div>
+        <div class="card-desc">Fade, dissolve, slide — בין סגמנטים. הגדרת duration אישית לכל מעבר בנפרד. נוצרים בצד השרת.</div>
+        <div class="card-backend"><strong>Server:</strong> FFmpeg xfade filter via Trigger.dev<br><strong>Duration:</strong> Per-transition individual setting</div>
       </div>
       <div class="screen-card">
         <div class="card-title">Subtitles</div>
-        <div class="card-desc">ייבוא SRT, יצירה אוטומטית ב-Whisper, עריכה inline, toggle burn-in.</div>
-        <div class="card-backend"><strong>Preview:</strong> VTT overlay client-side<br><strong>Burn:</strong> libass server-side</div>
+        <div class="card-desc">ייבוא SRT, יצירה אוטומטית ב-Whisper, יצירה ידנית, עריכה inline, toggle burn-in עם הערות הסבר. עיצוב: פונט, גודל, צבע, רקע, צל, מיקום, יישור.</div>
+        <div class="card-backend"><strong>Preview:</strong> VTT overlay client-side<br><strong>Burn:</strong> libass server-side<br><strong>Styling:</strong> Full subtitle customization</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Silence Detection</div>
+        <div class="card-desc">סריקת אודיו לאיתור שתיקות — הגדרת סף dB ומשך מינימלי. סימון אוטומטי על ה-Timeline עם אפשרות חיתוך בקליק.</div>
+        <div class="card-backend"><strong>Client:</strong> Web Audio API analysis<br><strong>Params:</strong> dB threshold + min duration<br><strong>Server:</strong> Trigger.dev for batch cutting</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Titles (כותרות מונפשות)</div>
+        <div class="card-desc">5 סגנונות: minimal, dynamic, branded, cinematic, pop. מיקום draggable על הווידאו. טראק כותרות ייעודי על ה-Timeline.</div>
+        <div class="card-backend"><strong>Render:</strong> Remotion + Trigger.dev<br><strong>Styles:</strong> 5 preset styles<br><strong>Duration:</strong> 3/5/7s per title</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Preset System</div>
+        <div class="card-desc">שמירה, טעינה, עריכה ומחיקה של פריסטים לעריכה. כל פריסט שומר: לוגו, אינטרו, אאוטרו, מעברים, הגדרות כתוביות.</div>
+        <div class="card-backend"><strong>Storage:</strong> EditPreset model in DB<br><strong>Actions:</strong> save / load / edit / delete / set default</div>
       </div>
     </div>
 
@@ -1105,11 +1168,220 @@ hr {
   </section>
 
   <!-- ═══════════════════════════════════════════════ -->
-  <!-- SECTION 6: Database Schema -->
+  <!-- SECTION 6: Teleprompter -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="teleprompter">
+    <div class="section-header">
+      <span class="section-num">6</span>
+      <h2>פרומפטר (Teleprompter)</h2>
+    </div>
+
+    <h3>סקירה</h3>
+    <p>
+      מודול פרומפטר מובנה המאפשר למרצה לקרוא תסריט מוכן מראש במהלך ההקלטה.
+      הפרומפטר מסתנכרן אוטומטית עם מצב ההקלטה — כשמקליטים הטקסט גולל, כשעוצרים הגלילה נעצרת.
+    </p>
+
+    <h3>עורך תסריט</h3>
+    <ul>
+      <li><strong>טקסט חופשי</strong> — עורך טקסט פשוט לכתיבת התסריט</li>
+      <li><strong>מונה מילים</strong> — ספירת מילים בזמן אמת</li>
+      <li><strong>הערכת זמן קריאה</strong> — חישוב אוטומטי לפי מהירות ממוצעת (150 מילים/דקה עברית)</li>
+      <li><strong>Cue Markers</strong> — מפרידים <code>---</code> (שלושה מקפים) ליצירת נקודות ציון בתסריט לקפיצה מהירה</li>
+    </ul>
+
+    <h3>מצבי תצוגה</h3>
+    <div class="screen-grid">
+      <div class="screen-card">
+        <div class="card-title">Overlay על המסך</div>
+        <div class="card-desc">שכבה שקופה למחצה מעל תצוגת המצלמה. המרצה רואה את הטקסט מבלי לעזוב את מבטו מהמצלמה.</div>
+        <div class="card-backend"><strong>Component:</strong> PrompterOverlay.tsx<br><strong>Opacity:</strong> Adjustable background</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">חלון חיצוני</div>
+        <div class="card-desc">חלון נפרד שניתן להציג על מסך חיצוני (מוניטור שני). מסתנכרן עם החלון הראשי דרך BroadcastChannel API.</div>
+        <div class="card-backend"><strong>Component:</strong> PrompterWindow.tsx<br><strong>Sync:</strong> BroadcastChannel API</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Mirror Mode</div>
+        <div class="card-desc">תצוגת מראה (טקסט הפוך אופקית) לשימוש עם זכוכית beam-splitter בסגנון Elgato Prompter. המרצה קורא מול המצלמה ישירות.</div>
+        <div class="card-backend"><strong>CSS:</strong> transform: scaleX(-1)<br><strong>Use case:</strong> Elgato-style glass</div>
+      </div>
+    </div>
+
+    <h3>פקדי גלילה</h3>
+    <ul>
+      <li><strong>Play / Pause</strong> — התחלה ועצירת גלילה (מסתנכרן עם הקלטה)</li>
+      <li><strong>מהירות</strong> — סקאלה 1-10, ברירת מחדל 5</li>
+      <li><strong>ניווט Cue</strong> — קפיצה בין נקודות ציון (מפרידי <code>---</code>) קדימה ואחורה</li>
+    </ul>
+
+    <h3>הגדרות תצוגה</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>הגדרה</th>
+          <th>טווח</th>
+          <th>ברירת מחדל</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>גודל פונט</td><td>24px — 72px</td><td>36px</td></tr>
+        <tr><td>צבע טקסט</td><td>לבן / צהוב / ירוק</td><td>לבן</td></tr>
+        <tr><td>שקיפות רקע</td><td>0% — 90%</td><td>60%</td></tr>
+        <tr><td>ריווח שורות</td><td>1.2 — 2.5</td><td>1.8</td></tr>
+        <tr><td>מיקום שורת מיקוד (Focus Line)</td><td>שליש עליון / מרכז / שליש תחתון</td><td>שליש עליון</td></tr>
+        <tr><td>מצב מראה</td><td>פעיל / כבוי</td><td>כבוי</td></tr>
+      </tbody>
+    </table>
+
+    <h3>סנכרון חלון חיצוני — BroadcastChannel API</h3>
+    <pre><span class="comment">// Main window — sends scroll commands</span>
+<span class="keyword">const</span> channel = <span class="keyword">new</span> <span class="type">BroadcastChannel</span>(<span class="string">'whiteboard-prompter'</span>);
+
+<span class="comment">// When recording starts</span>
+channel.<span class="fn">postMessage</span>({
+  type: <span class="string">'scroll-start'</span>,
+  speed: prompterSpeed,
+  position: currentScrollPosition,
+});
+
+<span class="comment">// When recording pauses</span>
+channel.<span class="fn">postMessage</span>({ type: <span class="string">'scroll-stop'</span> });
+
+<span class="comment">// When settings change</span>
+channel.<span class="fn">postMessage</span>({
+  type: <span class="string">'settings-update'</span>,
+  settings: { fontSize, textColor, bgOpacity, mirror, focusLine },
+});
+
+<span class="comment">// External window — receives commands</span>
+<span class="keyword">const</span> channel = <span class="keyword">new</span> <span class="type">BroadcastChannel</span>(<span class="string">'whiteboard-prompter'</span>);
+channel.<span class="fn">onmessage</span> = (event) =&gt; {
+  <span class="keyword">switch</span> (event.data.type) {
+    <span class="keyword">case</span> <span class="string">'scroll-start'</span>:
+      <span class="fn">startScrolling</span>(event.data.speed, event.data.position);
+      <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="string">'scroll-stop'</span>:
+      <span class="fn">stopScrolling</span>();
+      <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="string">'settings-update'</span>:
+      <span class="fn">applySettings</span>(event.data.settings);
+      <span class="keyword">break</span>;
+  }
+};</pre>
+
+    <div class="info-box tip">
+      <strong>Auto-Sync עם הקלטה:</strong> הפרומפטר מאזין ל-recording state. כש-<code>MediaRecorder.state === 'recording'</code> הגלילה פעילה, כש-<code>state === 'paused'</code> הגלילה נעצרת. אין צורך בסנכרון ידני — הכל אוטומטי.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 7: Titles -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <section class="section" id="titles">
+    <div class="section-header">
+      <span class="section-num">7</span>
+      <h2>כותרות מונפשות (Animated Titles)</h2>
+    </div>
+
+    <h3>סקירה</h3>
+    <p>
+      מערכת כותרות מונפשות שניתן להוסיף על הווידאו בכל נקודה על ה-Timeline.
+      הכותרות נוצרות בצד הלקוח לתצוגה מקדימה, ורינדור סופי מתבצע בצד השרת דרך Remotion + Trigger.dev.
+    </p>
+
+    <h3>5 סגנונות כותרת</h3>
+    <div class="screen-grid">
+      <div class="screen-card">
+        <div class="card-title">Minimal</div>
+        <div class="card-desc">טקסט נקי עם fade in/out עדין. מתאים לתוכן אקדמי ומקצועי.</div>
+        <div class="card-backend"><strong>Animation:</strong> Fade + slight slide up</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Dynamic</div>
+        <div class="card-desc">כניסה מהירה עם bounce, אפקט אנרגטי. מתאים לתוכן צעיר ותוסס.</div>
+        <div class="card-backend"><strong>Animation:</strong> Scale + bounce + color sweep</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Branded</div>
+        <div class="card-desc">כותרת עם רקע בצבעי המותג (navy/cyan/pink). לוגו אופציונלי.</div>
+        <div class="card-backend"><strong>Animation:</strong> Slide in bar + text reveal</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Cinematic</div>
+        <div class="card-desc">כותרת קולנועית עם blur background, טקסט גדול, כניסה דרמטית.</div>
+        <div class="card-backend"><strong>Animation:</strong> Slow zoom + lens blur + fade</div>
+      </div>
+      <div class="screen-card">
+        <div class="card-title">Pop</div>
+        <div class="card-desc">כותרת פופ צבעונית עם אפקט 3D, צל ואנימציית הקפצה.</div>
+        <div class="card-backend"><strong>Animation:</strong> 3D rotate in + drop shadow pulse</div>
+      </div>
+    </div>
+
+    <h3>מאפייני כותרת</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>מאפיין</th>
+          <th>תיאור</th>
+          <th>ברירת מחדל</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>טקסט ראשי</td><td>כותרת ראשית (חובה)</td><td>—</td></tr>
+        <tr><td>כותרת משנה</td><td>טקסט נוסף מתחת לכותרת (אופציונלי)</td><td>ריק</td></tr>
+        <tr><td>משך</td><td>זמן הצגה על המסך</td><td>5 שניות (3/5/7s)</td></tr>
+        <tr><td>מיקום</td><td>נקודת x,y על הווידאו — draggable</td><td>מרכז תחתון</td></tr>
+        <tr><td>Timecode</td><td>נקודה על ה-Timeline שבה הכותרת מופיעה</td><td>מיקום playhead</td></tr>
+        <tr><td>מהירות אנימציה</td><td>slow / normal / fast</td><td>normal</td></tr>
+      </tbody>
+    </table>
+
+    <h3>טראק כותרות על ה-Timeline</h3>
+    <p>
+      הכותרות מוצגות כטראק נפרד על ציר הזמן, מעל טראק הווידאו. כל כותרת מיוצגת כבלוק צבעוני
+      שניתן לגרור (שינוי timecode) ולשנות גודל (שינוי duration). קליק כפול פותח את עורך הכותרת.
+    </p>
+
+    <h3>רינדור כותרות בצד השרת</h3>
+    <pre><span class="comment">// Remotion composition for title rendering</span>
+<span class="keyword">import</span> { AbsoluteFill, useCurrentFrame, interpolate } <span class="keyword">from</span> <span class="string">'remotion'</span>;
+
+<span class="keyword">export const</span> <span class="fn">TitleComposition</span> = ({
+  text, subtitle, style, duration, animSpeed
+}: <span class="type">TitleProps</span>) =&gt; {
+  <span class="keyword">const</span> frame = <span class="fn">useCurrentFrame</span>();
+  <span class="keyword">const</span> fps = <span class="number">30</span>;
+  <span class="keyword">const</span> totalFrames = duration * fps;
+
+  <span class="comment">// Fade in over first 15 frames</span>
+  <span class="keyword">const</span> opacity = <span class="fn">interpolate</span>(
+    frame,
+    [<span class="number">0</span>, <span class="number">15</span>, totalFrames - <span class="number">15</span>, totalFrames],
+    [<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>],
+    { extrapolateRight: <span class="string">'clamp'</span> }
+  );
+
+  <span class="keyword">return</span> (
+    &lt;<span class="type">AbsoluteFill</span> style={{ opacity }}&gt;
+      &lt;<span class="type">TitleStyle</span> variant={style} text={text} subtitle={subtitle} /&gt;
+    &lt;/<span class="type">AbsoluteFill</span>&gt;
+  );
+};</pre>
+
+    <div class="info-box tip">
+      <strong>Workflow:</strong> המרצה בוחר סגנון &rarr; כותב טקסט &rarr; גורר למיקום הרצוי על הווידאו &rarr; ממקם על ה-Timeline. בתצוגה מקדימה הכותרת מוצגת כ-CSS overlay. ברינדור סופי — Trigger.dev מפעיל Remotion לרינדור אנימציה איכותית ומשלב בווידאו.
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- SECTION 8: Database Schema -->
   <!-- ═══════════════════════════════════════════════ -->
   <section class="section" id="schema">
     <div class="section-header">
-      <span class="section-num">6</span>
+      <span class="section-num">8</span>
       <h2>מודל נתונים</h2>
     </div>
 
@@ -1195,10 +1467,48 @@ hr {
   <span class="string">AUTO_WHISPER</span>
   <span class="string">MANUAL_UPLOAD</span>
   <span class="string">MANUAL_EDIT</span>
+  <span class="string">MANUAL_CREATE</span>
+}</pre>
+
+    <h3>מודלים חדשים: פרומפטר, כותרות, פריסטים</h3>
+    <pre><span class="keyword">model</span> <span class="type">PrompterScript</span> {
+  id          <span class="type">String</span>   @id @default(<span class="fn">cuid</span>())
+  lessonId    <span class="type">String</span>
+  lesson      <span class="type">Lesson</span>   @relation(fields: [lessonId], references: [id])
+  text        <span class="type">String</span>   <span class="comment">// full script text</span>
+  cueMarkers  <span class="type">Int</span>[]    <span class="comment">// character positions of --- dividers</span>
+  settings    <span class="type">Json</span>     <span class="comment">// { speed, fontSize, textColor, bgOpacity, mirror, focusLine, lineSpacing }</span>
+  createdAt   <span class="type">DateTime</span> @default(<span class="fn">now</span>())
+  updatedAt   <span class="type">DateTime</span> @updatedAt
+}
+
+<span class="keyword">model</span> <span class="type">TitleOverlay</span> {
+  id            <span class="type">String</span>   @id @default(<span class="fn">cuid</span>())
+  editProjectId <span class="type">String</span>
+  editProject   <span class="type">EditProject</span> @relation(fields: [editProjectId], references: [id])
+  style         <span class="type">String</span>   <span class="comment">// minimal, dynamic, branded, cinematic, pop</span>
+  text          <span class="type">String</span>   <span class="comment">// main title text</span>
+  subtitle      <span class="type">String</span>?  <span class="comment">// optional subtitle text</span>
+  position      <span class="type">Json</span>     <span class="comment">// { x, y } coordinates on video</span>
+  duration      <span class="type">Int</span>      <span class="comment">// display duration in seconds (3, 5, or 7)</span>
+  timecode      <span class="type">Float</span>    <span class="comment">// position in video (seconds)</span>
+  animSpeed     <span class="type">String</span>   <span class="comment">// slow, normal, fast</span>
+  createdAt     <span class="type">DateTime</span> @default(<span class="fn">now</span>())
+}
+
+<span class="keyword">model</span> <span class="type">EditPreset</span> {
+  id          <span class="type">String</span>   @id @default(<span class="fn">cuid</span>())
+  teacherId   <span class="type">String</span>
+  teacher     <span class="type">User</span>     @relation(fields: [teacherId], references: [id])
+  name        <span class="type">String</span>   <span class="comment">// preset display name</span>
+  settings    <span class="type">Json</span>     <span class="comment">// { logo, intro, outro, transitions, subtitlesConfig, titleDefaults }</span>
+  isDefault   <span class="type">Boolean</span>  @default(<span class="keyword">false</span>)
+  createdAt   <span class="type">DateTime</span> @default(<span class="fn">now</span>())
+  updatedAt   <span class="type">DateTime</span> @updatedAt
 }</pre>
 
     <div class="info-box tip">
-      <strong>יחסים:</strong> כל <code>Recording</code> שייך ל-<code>Lesson</code>. לכל הקלטה יכולים להיות מספר <code>Take</code>-ים, פרויקט עריכה אחד (<code>EditProject</code>), ומספר קבצי כתוביות (<code>Subtitle</code>) בשפות שונות.
+      <strong>יחסים:</strong> כל <code>Recording</code> שייך ל-<code>Lesson</code>. לכל הקלטה יכולים להיות מספר <code>Take</code>-ים, פרויקט עריכה אחד (<code>EditProject</code>), ומספר קבצי כתוביות (<code>Subtitle</code>) בשפות שונות. כל <code>EditProject</code> יכול לכלול מספר <code>TitleOverlay</code>-ים. לכל מרצה יכולים להיות מספר <code>EditPreset</code>-ים (אחד כברירת מחדל). כל שיעור יכול לכלול <code>PrompterScript</code> אחד.
     </div>
   </section>
 
@@ -1207,7 +1517,7 @@ hr {
   <!-- ═══════════════════════════════════════════════ -->
   <section class="section" id="trigger-jobs">
     <div class="section-header">
-      <span class="section-num">7</span>
+      <span class="section-num">9</span>
       <h2>Trigger.dev Jobs</h2>
     </div>
 
@@ -1240,6 +1550,16 @@ hr {
           <td><code>burn-subtitles</code></td>
           <td>לחיצה על "צריבת כתוביות"</td>
           <td>FFmpeg + libass subtitle burn &rarr; העלאה מחדש ל-Bunny</td>
+        </tr>
+        <tr>
+          <td><code>render-title-overlay</code></td>
+          <td>רינדור סופי / הוספת כותרת</td>
+          <td>רינדור כותרת מונפשת באמצעות Remotion &rarr; יצירת segment וידאו &rarr; שילוב בווידאו הסופי</td>
+        </tr>
+        <tr>
+          <td><code>detect-silence</code></td>
+          <td>לחיצה על "זיהוי שתיקות"</td>
+          <td>ניתוח אודיו לאיתור קטעי שתיקה (dB threshold + min duration) &rarr; החזרת timestamps לחיתוך</td>
         </tr>
       </tbody>
     </table>
@@ -1424,6 +1744,100 @@ hr {
   },
 });</pre>
     </div>
+
+    <h3>render-title-overlay</h3>
+    <div class="protocol-group">
+      <h4>trigger/render-title-overlay.ts</h4>
+      <pre><span class="keyword">import</span> { task } <span class="keyword">from</span> <span class="string">'@trigger.dev/sdk/v3'</span>;
+<span class="keyword">import</span> { bundle } <span class="keyword">from</span> <span class="string">'@remotion/bundler'</span>;
+<span class="keyword">import</span> { renderMedia } <span class="keyword">from</span> <span class="string">'@remotion/renderer'</span>;
+
+<span class="keyword">export const</span> renderTitleOverlay = <span class="fn">task</span>({
+  id: <span class="string">'render-title-overlay'</span>,
+  machine: { preset: <span class="string">'large-2x'</span> },
+  maxDuration: <span class="number">300</span>, <span class="comment">// 5 minutes max</span>
+  <span class="keyword">async</span> <span class="fn">run</span>(payload: {
+    titleOverlayId: <span class="type">string</span>;
+    editProjectId: <span class="type">string</span>;
+  }) {
+    <span class="keyword">const</span> title = <span class="keyword">await</span> prisma.titleOverlay.<span class="fn">findUniqueOrThrow</span>({
+      where: { id: payload.titleOverlayId },
+    });
+
+    <span class="comment">// 1. Bundle Remotion composition</span>
+    <span class="keyword">const</span> bundled = <span class="keyword">await</span> <span class="fn">bundle</span>({
+      entryPoint: <span class="string">'./remotion/title-compositions/index.ts'</span>,
+    });
+
+    <span class="comment">// 2. Render title animation as transparent video segment</span>
+    <span class="keyword">await</span> <span class="fn">renderMedia</span>({
+      composition: <span class="string">'TitleComposition'</span>,
+      serveUrl: bundled,
+      codec: <span class="string">'vp8'</span>,
+      outputLocation: <span class="string">'title-segment.webm'</span>,
+      inputProps: {
+        text: title.text,
+        subtitle: title.subtitle,
+        style: title.style,
+        duration: title.duration,
+        animSpeed: title.animSpeed,
+        position: title.position,
+      },
+      imageFormat: <span class="string">'png'</span>, <span class="comment">// for transparency support</span>
+    });
+
+    <span class="comment">// 3. Upload rendered segment for compositing</span>
+    <span class="keyword">const</span> segmentUrl = <span class="keyword">await</span> <span class="fn">uploadToTempStorage</span>(<span class="string">'title-segment.webm'</span>);
+    <span class="keyword">return</span> { segmentUrl, timecode: title.timecode };
+  },
+});</pre>
+    </div>
+
+    <h3>detect-silence</h3>
+    <div class="protocol-group">
+      <h4>trigger/detect-silence.ts</h4>
+      <pre><span class="keyword">import</span> { task } <span class="keyword">from</span> <span class="string">'@trigger.dev/sdk/v3'</span>;
+<span class="keyword">import</span> { execSync } <span class="keyword">from</span> <span class="string">'child_process'</span>;
+
+<span class="keyword">export const</span> detectSilence = <span class="fn">task</span>({
+  id: <span class="string">'detect-silence'</span>,
+  <span class="keyword">async</span> <span class="fn">run</span>(payload: {
+    recordingId: <span class="type">string</span>;
+    dbThreshold: <span class="type">number</span>;  <span class="comment">// e.g. -30 dB</span>
+    minDuration: <span class="type">number</span>;  <span class="comment">// e.g. 1.0 seconds</span>
+  }) {
+    <span class="keyword">const</span> recording = <span class="keyword">await</span> prisma.recording.<span class="fn">findUniqueOrThrow</span>({
+      where: { id: payload.recordingId },
+    });
+
+    <span class="comment">// 1. Download video from Bunny</span>
+    <span class="keyword">const</span> videoPath = <span class="keyword">await</span> <span class="fn">downloadFromBunny</span>(recording.bunnyVideoId);
+
+    <span class="comment">// 2. Use FFmpeg silencedetect filter to find silent segments</span>
+    <span class="keyword">const</span> output = <span class="fn">execSync</span>(
+      <span class="string">`ffmpeg -i </span><span class="number">\${videoPath}</span><span class="string"> -af silencedetect=noise=</span><span class="number">\${payload.dbThreshold}</span><span class="string">dB:d=</span><span class="number">\${payload.minDuration}</span><span class="string"> -f null - 2&gt;&amp;1`</span>,
+      { encoding: <span class="string">'utf-8'</span> }
+    );
+
+    <span class="comment">// 3. Parse silence timestamps from FFmpeg output</span>
+    <span class="keyword">const</span> silences: { start: <span class="type">number</span>; end: <span class="type">number</span> }[] = [];
+    <span class="keyword">const</span> startRegex = <span class="string">/silence_start: ([\d.]+)/g</span>;
+    <span class="keyword">const</span> endRegex = <span class="string">/silence_end: ([\d.]+)/g</span>;
+
+    <span class="keyword">let</span> startMatch, endMatch;
+    <span class="keyword">while</span> ((startMatch = startRegex.<span class="fn">exec</span>(output)) &&
+           (endMatch = endRegex.<span class="fn">exec</span>(output))) {
+      silences.<span class="fn">push</span>({
+        start: <span class="fn">parseFloat</span>(startMatch[<span class="number">1</span>]),
+        end: <span class="fn">parseFloat</span>(endMatch[<span class="number">1</span>]),
+      });
+    }
+
+    <span class="comment">// 4. Return timestamps for UI to display on timeline</span>
+    <span class="keyword">return</span> { silences, totalFound: silences.length };
+  },
+});</pre>
+    </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════ -->
@@ -1431,7 +1845,7 @@ hr {
   <!-- ═══════════════════════════════════════════════ -->
   <section class="section" id="bunny">
     <div class="section-header">
-      <span class="section-num">8</span>
+      <span class="section-num">10</span>
       <h2>Bunny Stream Integration</h2>
     </div>
 
@@ -1610,7 +2024,7 @@ hls.<span class="fn">attachMedia</span>(videoElement);</pre>
   <!-- ═══════════════════════════════════════════════ -->
   <section class="section" id="roadmap">
     <div class="section-header">
-      <span class="section-num">9</span>
+      <span class="section-num">11</span>
       <h2>מפת דרכים</h2>
     </div>
 
@@ -1644,25 +2058,46 @@ hls.<span class="fn">attachMedia</span>(videoElement);</pre>
       <li>צריבה דרך FFmpeg בצד השרת</li>
     </ul>
 
-    <h3><span class="phase-badge p3">Phase 4</span> מעברים ושיפורים — 2 שבועות</h3>
+    <h3><span class="phase-badge p3">Phase 4</span> מעברים, פרומפטר, כותרות ופריסטים — 3 שבועות</h3>
     <ul>
-      <li>אפקטי מעבר בין סגמנטים (fade, dissolve, slide)</li>
-      <li>מיקום לוגו מתקדם</li>
-      <li>העלאת intro/outro מותאם אישית</li>
-      <li>Recording templates — פריסטים לסוגי שיעורים שונים</li>
+      <li>אפקטי מעבר בין סגמנטים (fade, dissolve, slide) עם duration אישי לכל מעבר</li>
+      <li>מיקום לוגו מתקדם + auto-preset מתמונת שער הקורס</li>
+      <li>העלאת intro/outro מותאם אישית + fade in/out toggles</li>
+      <li><strong>פרומפטר (Teleprompter)</strong> — עורך תסריט, overlay/חלון חיצוני/mirror, סנכרון עם הקלטה</li>
+      <li><strong>כותרות מונפשות (Titles)</strong> — 5 סגנונות, מיקום draggable, טראק ייעודי על Timeline</li>
+      <li><strong>זיהוי שתיקות (Silence Detection)</strong> — סריקת אודיו, סימון אוטומטי, חיתוך בקליק</li>
+      <li><strong>מערכת פריסטים (Presets)</strong> — שמירה/טעינה/עריכה/מחיקה של הגדרות עריכה</li>
+      <li>סרגל פעולות קבוע (cursor/split/trim) עם קיצורי מקלדת</li>
+      <li>עיצוב כתוביות מתקדם (פונט, צבע, רקע, צל, מיקום)</li>
+      <li>יצירת כתוביות ידנית + burn-in toggle עם הערות הסבר</li>
       <li>אנליטיקס: סטטיסטיקות משך הקלטה, שימוש בעורך</li>
     </ul>
 
-    <h3><span class="phase-badge p4">Phase 5</span> מחולל כתוביות פנימי — עתידי</h3>
+    <h3><span class="phase-badge p4">Phase 5</span> שיפורי הקלטה מתקדמים — 2 שבועות</h3>
+    <ul>
+      <li>TikTok-style recording controls (record/pause/resume)</li>
+      <li>ספירה לאחור 3 שניות לפני כל טייק</li>
+      <li>מצלמה PiP draggable (rectangle/circle) עם snap-to-corners</li>
+      <li>נכסי שיעור (מצגות HTML, PDF, URL) בתוך iframe</li>
+      <li>הערות טייק (30 תווים), הכנסת טייק בין קיימים</li>
+      <li>Take Gallery ברשת 3 עמודות עם scrubber לכל טייק</li>
+      <li>כפתור Undo לביטול פעולה אחרונה</li>
+      <li>החלפת מצב (camera/screen+cam/screen) במהלך הקלטה</li>
+    </ul>
+
+    <h3><span class="phase-badge p5">Phase 6</span> AI ומחולל כתוביות פנימי — עתידי</h3>
     <ul>
       <li>מודל Whisper self-hosted</li>
       <li>תמלול בזמן אמת במהלך ההקלטה</li>
       <li>תמיכה רב-שפתית</li>
       <li>Speaker diarization — זיהוי דוברים</li>
+      <li><strong>כותרות אוטומטיות מ-AI</strong> — יצירת כותרות חכמות מתוכן הווידאו</li>
+      <li><strong>זיהוי שתיקות חכם</strong> — AI-based silence detection שמבחין בין שתיקה מכוונת לבלתי-מכוונת</li>
+      <li><strong>הצעות עריכה</strong> — AI שמזהה טייקים חלשים ומציע מה למחוק/לחתוך</li>
     </ul>
 
     <div class="info-box warning">
-      <strong>הערכת זמנים:</strong> סך הכל Phase 1-4 = כ-9 שבועות עבודה. Phase 5 הוא עתידי ותלוי בהיקף השימוש ובעלויות Whisper API. אם העלויות גבוהות — עוברים ל-self-hosted.
+      <strong>הערכת זמנים:</strong> סך הכל Phase 1-5 = כ-12 שבועות עבודה. Phase 6 הוא עתידי ותלוי בהיקף השימוש ובעלויות Whisper API. אם העלויות גבוהות — עוברים ל-self-hosted.
     </div>
   </section>
 
@@ -1671,7 +2106,7 @@ hls.<span class="fn">attachMedia</span>(videoElement);</pre>
   <!-- ═══════════════════════════════════════════════ -->
   <section class="section" id="components">
     <div class="section-header">
-      <span class="section-num">10</span>
+      <span class="section-num">12</span>
       <h2>רכיבי ממשק</h2>
     </div>
 
@@ -1682,20 +2117,36 @@ hls.<span class="fn">attachMedia</span>(videoElement);</pre>
     <span class="folder">studio/</span>
       <span class="file">RecordingLobby.tsx</span>      <span class="desc">— Pre-record setup: camera preview, device selection</span>
       <span class="file">RecordingView.tsx</span>        <span class="desc">— Active recording with controls overlay</span>
-      <span class="file">RecordingControls.tsx</span>    <span class="desc">— Record/Pause/Resume/Stop/Take buttons</span>
-      <span class="file">TakeManager.tsx</span>          <span class="desc">— Take list with delete option</span>
+      <span class="file">RecordingControls.tsx</span>    <span class="desc">— TikTok-style Record/Pause/Resume/Stop/Take buttons</span>
+      <span class="file">TakeManager.tsx</span>          <span class="desc">— Take list with delete, notes, insert between</span>
+      <span class="file">TakeGallery.tsx</span>          <span class="desc">— 3-column grid with per-take scrubbers</span>
+      <span class="file">TakeScrubber.tsx</span>         <span class="desc">— Per-take mini timeline for review</span>
       <span class="file">RecordingReview.tsx</span>      <span class="desc">— Playback and review all takes</span>
       <span class="file">UploadProgress.tsx</span>       <span class="desc">— Uppy TUS upload with progress bar</span>
+      <span class="file">CountdownOverlay.tsx</span>     <span class="desc">— 3-second countdown animation before each take</span>
+      <span class="file">CameraPiP.tsx</span>            <span class="desc">— Draggable camera PiP overlay (rect/circle)</span>
+      <span class="file">AssetViewer.tsx</span>          <span class="desc">— Display HTML presentations/PDF/URL during recording</span>
+      <span class="file">PrompterEditor.tsx</span>       <span class="desc">— Script editor with word count + reading time</span>
+      <span class="file">PrompterOverlay.tsx</span>      <span class="desc">— Floating teleprompter overlay on video</span>
+      <span class="file">PrompterWindow.tsx</span>       <span class="desc">— External window (standalone, BroadcastChannel sync)</span>
+      <span class="file">PrompterControls.tsx</span>     <span class="desc">— Play/pause/speed/cue navigation controls</span>
 
     <span class="folder">editor/</span>
       <span class="file">VideoEditor.tsx</span>          <span class="desc">— Main editor container</span>
       <span class="file">Timeline.tsx</span>             <span class="desc">— Visual timeline with draggable segments</span>
+      <span class="file">ActionsBar.tsx</span>           <span class="desc">— Permanent toolbar: cursor/split/trim + shortcuts</span>
       <span class="file">TrimControls.tsx</span>         <span class="desc">— In/Out point markers</span>
       <span class="file">LogoOverlay.tsx</span>          <span class="desc">— Logo position/size/opacity controls</span>
-      <span class="file">IntroOutroSelector.tsx</span>   <span class="desc">— Template picker for intro/outro</span>
-      <span class="file">TransitionPicker.tsx</span>     <span class="desc">— Transition type selector between cuts</span>
-      <span class="file">SubtitleEditor.tsx</span>       <span class="desc">— Cue list editor with timestamps</span>
+      <span class="file">IntroOutroSelector.tsx</span>   <span class="desc">— Template picker for intro/outro + fade toggles</span>
+      <span class="file">TransitionPicker.tsx</span>     <span class="desc">— Transition type + per-transition duration</span>
+      <span class="file">SubtitleEditor.tsx</span>       <span class="desc">— Cue list editor with timestamps + manual creation</span>
+      <span class="file">SubtitleStyler.tsx</span>       <span class="desc">— Font, size, color, bg, shadow, position, alignment</span>
       <span class="file">SubtitlePreview.tsx</span>      <span class="desc">— VTT overlay on video player</span>
+      <span class="file">TitleEditor.tsx</span>          <span class="desc">— Animated title creator (text + settings)</span>
+      <span class="file">TitleStylePicker.tsx</span>     <span class="desc">— 5 style cards (minimal/dynamic/branded/cinematic/pop)</span>
+      <span class="file">TitleOverlay.tsx</span>         <span class="desc">— Draggable title preview on video</span>
+      <span class="file">SilenceDetector.tsx</span>      <span class="desc">— Silence scanning UI (dB threshold + min duration)</span>
+      <span class="file">PresetManager.tsx</span>        <span class="desc">— Save/load/edit/delete editing presets</span>
       <span class="file">RenderProgress.tsx</span>       <span class="desc">— Server render status indicator</span>
       <span class="file">ExportOptions.tsx</span>        <span class="desc">— Publish to lesson / Download</span>
 
@@ -1747,7 +2198,7 @@ hls.<span class="fn">attachMedia</span>(videoElement);</pre>
   <!-- ═══════════════════════════════════════════════ -->
   <section class="section" id="tech-summary">
     <div class="section-header">
-      <span class="section-num">11</span>
+      <span class="section-num">13</span>
       <h2>סיכום טכנולוגיות</h2>
     </div>
 
@@ -1814,6 +2265,26 @@ hls.<span class="fn">attachMedia</span>(videoElement);</pre>
           <td>עיבוד רקע</td>
           <td><strong>Trigger.dev</strong></td>
           <td>כל עיבוד אסינכרוני: render, subtitles, upload processing</td>
+        </tr>
+        <tr>
+          <td>פרומפטר</td>
+          <td><strong>BroadcastChannel API</strong></td>
+          <td>סנכרון cross-window בין חלון ראשי לחלון פרומפטר חיצוני</td>
+        </tr>
+        <tr>
+          <td>כותרות מונפשות</td>
+          <td><strong>Remotion + Trigger.dev</strong></td>
+          <td>רינדור כותרות מונפשות בצד השרת עם 5 סגנונות מובנים</td>
+        </tr>
+        <tr>
+          <td>זיהוי שתיקות</td>
+          <td><strong>Web Audio API + FFmpeg</strong></td>
+          <td>ניתוח dB לאיתור קטעי שתיקה לחיתוך אוטומטי</td>
+        </tr>
+        <tr>
+          <td>פריסטים</td>
+          <td><strong>Prisma + JSON</strong></td>
+          <td>שמירה וטעינה של הגדרות עריכה מועדפות למרצה</td>
         </tr>
       </tbody>
     </table>
