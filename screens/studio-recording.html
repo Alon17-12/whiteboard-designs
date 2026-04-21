@@ -334,7 +334,8 @@ body {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-radius: var(--radius-pill);
-  padding: 7px 16px;
+  padding: 10px 18px;
+  min-height: 44px;
   border: 1px solid rgba(255,255,255,0.1);
   font-family: 'Heebo', sans-serif;
   font-size: 13px;
@@ -750,12 +751,14 @@ body {
 }
 
 .side-icon.finish {
-  background: rgba(229,62,62,0.15);
-  border: 1.5px solid rgba(229,62,62,0.6);
+  background: rgba(56,196,242,0.15);
+  border: 1.5px solid rgba(56,196,242,0.3);
+  color: #38C4F2;
 }
 .side-btn:hover .side-icon.finish {
-  background: rgba(229,62,62,0.28);
-  box-shadow: 0 0 16px rgba(229,62,62,0.2);
+  background: rgba(56,196,242,0.28);
+  box-shadow: 0 0 16px rgba(56,196,242,0.2);
+  border-color: rgba(56,196,242,0.5);
 }
 
 /* ======= CENTER BIG BUTTON ======= */
@@ -1448,7 +1451,7 @@ kbd {
   <div class="lesson-pill">שיעור 3: צבע ומשמעות</div>
 
   <!-- Assets button -->
-  <button class="assets-btn" id="assetsBtn" title="נכסי שיעור">
+  <button class="assets-btn" id="assetsBtn" title="נכסי שיעור" aria-label="נכסי שיעור">
     <span>📎</span>
     <span>נכסים</span>
   </button>
@@ -1496,14 +1499,14 @@ kbd {
 
   <!-- Mode Switcher -->
   <div class="mode-switcher" id="modeSwitcher">
-    <button class="mode-btn active" id="modeCamera" data-mode="camera" title="מצלמה בלבד">
+    <button class="mode-btn active" id="modeCamera" data-mode="camera" title="מצלמה בלבד" aria-label="מצלמה בלבד">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M23 7l-7 5 7 5V7z"/>
         <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
       </svg>
       <span>מצלמה</span>
     </button>
-    <button class="mode-btn" id="modeScreenCam" data-mode="screen-cam" title="מסך + מצלמה">
+    <button class="mode-btn" id="modeScreenCam" data-mode="screen-cam" title="מסך + מצלמה" aria-label="מסך + מצלמה">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="2" y="3" width="20" height="14" rx="2"/>
         <line x1="8" y1="21" x2="16" y2="21"/>
@@ -1511,7 +1514,7 @@ kbd {
       </svg>
       <span>מסך + מצלמה</span>
     </button>
-    <button class="mode-btn" id="modeScreen" data-mode="screen" title="מסך בלבד">
+    <button class="mode-btn" id="modeScreen" data-mode="screen" title="מסך בלבד" aria-label="מסך בלבד">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="2" y="3" width="20" height="14" rx="2"/>
         <line x1="8" y1="21" x2="16" y2="21"/>
@@ -1551,7 +1554,7 @@ kbd {
     <!-- TikTok-style controls -->
     <div class="tiktok-controls" id="tiktokControls">
       <!-- Delete last take (only visible when paused) -->
-      <button class="side-btn hidden" id="btnDelete" title="מחק טייק אחרון (Backspace)">
+      <button class="side-btn hidden" id="btnDelete" title="מחק טייק אחרון (Backspace)" aria-label="מחק טייק אחרון">
         <div class="side-icon delete">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="3 6 5 6 21 6"/>
@@ -1563,12 +1566,12 @@ kbd {
 
       <!-- Center big button -->
       <div class="center-btn-wrap" id="centerWrap">
-        <button class="big-circle red" id="bigBtn"></button>
+        <button class="big-circle red" id="bigBtn" aria-label="התחל הקלטה"></button>
         <span class="center-label" id="centerLabel">התחל הקלטה</span>
       </div>
 
       <!-- Finish recording -->
-      <button class="side-btn hidden" id="btnFinish" title="סיים הקלטה (Esc)">
+      <button class="side-btn hidden" id="btnFinish" title="סיים הקלטה (Esc)" aria-label="סיים הקלטה">
         <div class="side-icon finish">
           <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
             <rect x="3" y="3" width="14" height="14" rx="2" fill="currentColor"/>
@@ -1912,6 +1915,7 @@ function renderControls() {
   if (phase === 'initial') {
     bigBtn.className = 'big-circle red';
     bigBtn.innerHTML = '';
+    bigBtn.setAttribute('aria-label', 'התחל הקלטה');
     centerLabel.textContent = 'התחל הקלטה';
     centerLabel.style.color = '';
   } else if (phase === 'recording') {
@@ -1920,6 +1924,7 @@ function renderControls() {
       <rect x="7" y="6" width="4.5" height="16" rx="1.5" fill="#fff"/>
       <rect x="16.5" y="6" width="4.5" height="16" rx="1.5" fill="#fff"/>
     </svg>`;
+    bigBtn.setAttribute('aria-label', 'השהה');
     centerLabel.textContent = 'השהה';
     centerLabel.style.color = '';
   } else if (phase === 'paused') {
@@ -1927,6 +1932,7 @@ function renderControls() {
     bigBtn.innerHTML = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none">
       <path d="M10 5.5L23 14L10 22.5V5.5Z" fill="#0c1422"/>
     </svg>`;
+    bigBtn.setAttribute('aria-label', 'המשך הקלטה');
     centerLabel.textContent = 'המשך הקלטה';
     centerLabel.style.color = 'var(--green)';
   } else if (phase === 'done') {
@@ -2284,6 +2290,7 @@ btnFinish.addEventListener('click', () => {
 
 // ======= KEYBOARD SHORTCUTS =======
 document.addEventListener('keydown', e => {
+  if(e.target.matches('input,textarea,[contenteditable]')) return;
   const dialogOpen = document.querySelector('.dialog-overlay.visible');
 
   if (e.key === 'Escape') {
