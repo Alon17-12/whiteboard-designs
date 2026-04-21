@@ -822,9 +822,10 @@ body {
   display: flex;
   border-radius: 2px;
   overflow: hidden;
-  background: rgba(255,255,255,0.04);
-  margin-top: 6px;
+  background: transparent;
+  margin-top: 4px;
   transition: height 0.3s var(--ease-out), margin-top 0.3s var(--ease-out);
+  cursor: pointer;
 }
 .mini-timeline.expanded {
   height: 24px;
@@ -2015,7 +2016,7 @@ kbd {
 <body>
 
 <div class="video-area-wrapper">
-<div class="video-area" id="videoArea">
+<div class="video-area" id="videoArea" onclick="hideTasksPanelOnVideoClick(event)">
   <!-- Screen share background — FULL SCREEN with simulated app UI -->
   <div class="screen-share-bg" id="screenShareBg">
     <div class="screen-share-fullscreen">
@@ -3010,7 +3011,7 @@ function updateTimeline() {
       </button>`;
     }
 
-    html += `<div class="timeline-segment${isCurrent ? ' current' : ''}" style="flex:${take.duration || 1}">
+    html += `<div class="timeline-segment${isCurrent ? ' current' : ''}" style="flex:${take.duration || 1};cursor:pointer;" data-index="${i}" title="טייק ${i+1}${take.note ? ': '+take.note : ''}">
       <span class="segment-label">${i + 1}</span>
     </div>`;
   });
@@ -3034,6 +3035,20 @@ function updateTimeline() {
     btn.addEventListener('click', () => {
       const idx = parseInt(btn.dataset.insertIndex);
       resumeRecording(idx);
+    });
+  });
+
+  // Click segment to seek/preview that take
+  miniTimeline.querySelectorAll('.timeline-segment').forEach(seg => {
+    seg.addEventListener('click', () => {
+      const idx = parseInt(seg.dataset.index);
+      if (!isNaN(idx) && state.takes[idx]) {
+        showToast('טייק ' + (idx+1) + ': ' + (state.takes[idx].note || formatTime(state.takes[idx].duration)), 'cyan');
+        // Highlight this segment
+        miniTimeline.querySelectorAll('.timeline-segment').forEach(s => s.style.outline = 'none');
+        seg.style.outline = '2px solid var(--cyan)';
+        seg.style.outlineOffset = '-2px';
+      }
     });
   });
 
@@ -3265,6 +3280,17 @@ function closePrompterOverlay() {
   prompterOverlay.classList.remove('visible');
   prompterState.scrolling = false;
   showToast('פרומפטר נסגר', 'cyan');
+}
+
+function hideTasksPanelOnVideoClick(e) {
+  // Only hide if clicking the video area itself (not buttons/overlays inside)
+  if (e.target === $('videoArea') || e.target.closest('.video-area') === $('videoArea') && !e.target.closest('.control-bar') && !e.target.closest('.prompter-overlay') && !e.target.closest('.camera-overlay') && !e.target.closest('.assets-panel') && !e.target.closest('button')) {
+    const tp = $('takesPanel');
+    if (tp && tp.classList.contains('visible') && !state.takesPanelCollapsed) {
+      state.takesPanelCollapsed = true;
+      tp.classList.add('collapsed');
+    }
+  }
 }
 
 // Close prompter panel on outside click
