@@ -973,6 +973,41 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
             </button>
           </div>
         </div>
+
+        <!-- Manual Subtitle Creation -->
+        <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:6px;">
+          <div class="tool-section-title" style="display:flex;align-items:center;gap:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--cyan);"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            הוספת כתובית ידנית
+          </div>
+          <div id="manualSubForm" style="display:none;background:var(--surface-2);border-radius:12px;padding:14px;margin-bottom:12px;">
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+              <div style="flex:1;">
+                <label style="font-size:11px;font-weight:600;color:var(--text-sub);display:block;margin-bottom:4px;">זמן התחלה</label>
+                <input type="text" placeholder="00:00.000" id="manualSubStart" style="width:100%;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);font-family:var(--font-en);font-size:12px;text-align:center;direction:ltr;" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">
+              </div>
+              <div style="flex:1;">
+                <label style="font-size:11px;font-weight:600;color:var(--text-sub);display:block;margin-bottom:4px;">זמן סיום</label>
+                <input type="text" placeholder="00:03.000" id="manualSubEnd" style="width:100%;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);font-family:var(--font-en);font-size:12px;text-align:center;direction:ltr;" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">
+              </div>
+            </div>
+            <div style="margin-bottom:10px;">
+              <label style="font-size:11px;font-weight:600;color:var(--text-sub);display:block;margin-bottom:4px;">טקסט כתובית</label>
+              <input type="text" placeholder="הקלד את הכתובית כאן..." id="manualSubText" style="width:100%;padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);font-family:var(--font-he);font-size:13px;" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='var(--border)'">
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn-tool-primary" onclick="addManualSubtitle()" style="flex:1;justify-content:center;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+                הוסף
+              </button>
+              <button class="btn-tool" onclick="toggleManualSubForm()" style="justify-content:center;">ביטול</button>
+            </div>
+          </div>
+          <button class="btn-tool" id="manualSubToggleBtn" onclick="toggleManualSubForm()" style="width:100%;justify-content:center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            הוסף כתובית ידנית
+          </button>
+        </div>
       </div>
 
       <!-- TAB 6: PRESETS -->
@@ -1173,8 +1208,6 @@ body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);disp
   </div>
   <div class="actions-bar-actions">
     <button class="ab-action-btn" onclick="togglePlay()" title="נגן / עצור">נגן <span class="ab-kbd">Space</span></button>
-    <button class="ab-action-btn" onclick="showToast('נקודת התחלה סומנה')" title="סמן התחלה">התחלה <span class="ab-kbd">I</span></button>
-    <button class="ab-action-btn" onclick="showToast('נקודת סיום סומנה')" title="סמן סיום">סיום <span class="ab-kbd">O</span></button>
     <button class="ab-action-btn" onclick="splitAtPlayhead()" title="פיצול בנקודה">פיצול <span class="ab-kbd">S</span></button>
     <button class="ab-action-btn" onclick="cutSelection()" title="מחק סגמנט">מחק <span class="ab-kbd">Del</span></button>
   </div>
@@ -1752,8 +1785,6 @@ document.addEventListener('keydown',(e)=>{
   if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
   switch(e.key){
     case ' ':e.preventDefault();togglePlay();break;
-    case 'i':case 'I':showToast('נקודת התחלה סומנה');break;
-    case 'o':case 'O':showToast('נקודת סיום סומנה');break;
     case 's':case 'S':if(!e.ctrlKey&&!e.metaKey)splitAtPlayhead();break;
     case 'Delete':case 'Backspace':cutSelection();break;
   }
@@ -1915,6 +1946,29 @@ function toggleBurnIn(){
     note.style.background='var(--cyan-light)';
     note.style.borderColor='rgba(56,196,242,0.2)';
   }
+}
+
+function toggleManualSubForm(){
+  const form=document.getElementById('manualSubForm');
+  const btn=document.getElementById('manualSubToggleBtn');
+  if(form.style.display==='none'){
+    form.style.display='block';
+    btn.style.display='none';
+  } else {
+    form.style.display='none';
+    btn.style.display='';
+  }
+}
+function addManualSubtitle(){
+  const start=document.getElementById('manualSubStart').value;
+  const end=document.getElementById('manualSubEnd').value;
+  const text=document.getElementById('manualSubText').value;
+  if(!text){showToast('יש להזין טקסט לכתובית');return;}
+  showToast('כתובית נוספה: '+text);
+  document.getElementById('manualSubStart').value='';
+  document.getElementById('manualSubEnd').value='';
+  document.getElementById('manualSubText').value='';
+  toggleManualSubForm();
 }
 
 function setSubPos(el){

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>כותרות מונפשות | WHITEBOARD Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#253E7A;--navy-dark:#1a2f5e;--navy-light:#3a5499;
+  --cyan:#38C4F2;--cyan-light:rgba(56,196,242,0.12);--light-blue:#E3F4FD;
+  --pink:#F05680;--yellow:#EAD654;--green:#7DC57A;
+  --font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+  --radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+  --bg:#F0F6FF;--surface:#FFFFFF;--surface-2:#f5f8ff;
+  --border:rgba(37,62,122,0.1);--text-main:#1a2f5e;
+  --text-sub:rgba(37,62,122,0.55);--text-light:rgba(37,62,122,0.38);
+  --shadow-sm:0 2px 10px rgba(37,62,122,0.07);--shadow-md:0 6px 24px rgba(37,62,122,0.1);
+  --timeline-bg:#1a2740;--timeline-border:rgba(255,255,255,0.08);
+}
+[data-theme="dark"] {
+  --bg:#0c1424;--surface:#131e35;--surface-2:#1a2740;
+  --border:rgba(255,255,255,0.07);--text-main:#dde5f5;
+  --text-sub:rgba(221,229,245,0.5);--text-light:rgba(221,229,245,0.3);
+  --shadow-sm:0 2px 12px rgba(0,0,0,0.3);--shadow-md:0 6px 28px rgba(0,0,0,0.4);
+  --light-blue:rgba(56,196,242,0.08);
+  --timeline-bg:#0d1628;--timeline-border:rgba(255,255,255,0.05);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);display:flex;flex-direction:column;transition:background .3s,color .3s;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:48px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50;box-shadow:var(--shadow-sm);transition:background .3s;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.back-btn{display:flex;align-items:center;gap:6px;font-family:var(--font-he);font-size:13px;font-weight:600;color:var(--text-sub);background:none;border:none;cursor:pointer;padding:6px 10px;border-radius:var(--radius-sm);transition:all .2s;}
+.back-btn:hover{background:var(--light-blue);color:var(--navy);}
+.back-btn svg{width:18px;height:18px;transform:scaleX(-1);}
+.topbar-center{font-size:14px;font-weight:700;color:var(--text-main);position:absolute;left:50%;transform:translateX(50%);}
+.topbar-left{display:flex;align-items:center;gap:8px;}
+.btn-save{font-family:var(--font-he);font-size:12px;font-weight:700;padding:6px 18px;border-radius:8px;border:none;background:var(--cyan);color:white;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(56,196,242,0.3);}
+.btn-save:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.icon-btn-sm{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-sub);}
+.icon-btn-sm:hover{background:var(--light-blue);color:var(--navy);border-color:var(--cyan);}
+.icon-sun{display:none;}.icon-moon{display:block;}
+[data-theme="dark"] .icon-sun{display:block;}[data-theme="dark"] .icon-moon{display:none;}
+
+/* ── MAIN PANELS ── */
+.main-area{flex:1;display:flex;overflow:hidden;min-height:0;}
+.panel-preview{flex:0 0 55%;display:flex;flex-direction:column;padding:12px 6px 12px 12px;gap:8px;}
+.panel-tools{flex:0 0 45%;display:flex;flex-direction:column;padding:12px 12px 12px 6px;min-width:0;}
+
+/* ── VIDEO PREVIEW ── */
+.video-container{flex:1;background:#0d1628;border-radius:var(--radius-md);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;min-height:0;}
+.video-canvas{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;}
+.video-placeholder{color:rgba(255,255,255,0.08);font-size:72px;font-family:var(--font-en);font-weight:700;user-select:none;letter-spacing:4px;}
+.video-logo-overlay{position:absolute;top:16px;right:16px;opacity:0.3;display:flex;align-items:center;gap:6px;color:white;font-family:var(--font-en);font-size:13px;font-weight:600;}
+.video-logo-overlay svg{width:18px;height:18px;}
+
+/* Title Overlay Preview */
+.title-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;pointer-events:none;z-index:5;transition:all .4s ease;}
+.title-overlay.hidden{opacity:0;}
+.title-overlay-main{font-size:42px;font-weight:700;color:white;text-align:center;text-shadow:0 3px 16px rgba(0,0,0,0.5);line-height:1.3;animation:titleFadeIn .8s ease;}
+.title-overlay-sub{font-size:20px;font-weight:400;color:rgba(255,255,255,0.75);text-align:center;margin-top:6px;animation:titleFadeIn 1s ease .2s both;}
+@keyframes titleFadeIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@keyframes titleSlideIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:translateX(0);}}
+@keyframes titleBounce{0%{opacity:0;transform:scale(0.3);}50%{transform:scale(1.08);}100%{opacity:1;transform:scale(1);}}
+
+/* Style-specific overlays */
+.title-overlay.style-minimal .title-overlay-main{font-family:var(--font-en);font-weight:600;font-size:40px;text-shadow:0 2px 10px rgba(0,0,0,0.4);}
+.title-overlay.style-dynamic .title-overlay-main{font-family:var(--font-he);font-weight:900;font-size:48px;animation:titleSlideIn .6s ease;text-shadow:0 3px 20px rgba(0,0,0,0.5);}
+.title-overlay.style-dynamic .title-accent{height:4px;width:120px;background:var(--cyan);border-radius:2px;margin-top:10px;animation:titleSlideIn .7s ease .15s both;}
+.title-overlay.style-branded{background:linear-gradient(135deg,rgba(37,62,122,0.92),rgba(26,47,94,0.95));border-radius:0;}
+.title-overlay.style-branded .title-overlay-main{font-family:var(--font-en);font-weight:700;font-size:38px;text-shadow:none;}
+.title-overlay.style-branded .brand-watermark{position:absolute;bottom:20px;left:20px;opacity:0.15;font-family:var(--font-en);font-size:28px;font-weight:700;color:white;}
+.title-overlay.style-cinematic{background:transparent;}
+.title-overlay.style-cinematic::before,.title-overlay.style-cinematic::after{content:'';position:absolute;left:0;right:0;height:16%;background:#000;z-index:1;}
+.title-overlay.style-cinematic::before{top:0;}
+.title-overlay.style-cinematic::after{bottom:0;}
+.title-overlay.style-cinematic .title-overlay-main{font-family:'Georgia','Frank Ruhl Libre',serif;font-weight:400;font-size:36px;letter-spacing:2px;z-index:2;animation:titleFadeIn 1.5s ease;}
+.title-overlay.style-cinematic .title-overlay-sub{z-index:2;font-style:italic;}
+.title-overlay.style-pop .title-overlay-main{font-family:var(--font-en);font-weight:700;font-size:52px;animation:titleBounce .6s ease;background:linear-gradient(135deg,var(--pink),var(--cyan),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.3));}
+
+/* Video Controls */
+.video-controls{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.7));padding:12px 16px 10px;display:flex;align-items:center;gap:10px;}
+.video-ctrl-btn{width:36px;height:36px;border-radius:50%;border:none;background:rgba(255,255,255,0.15);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.video-ctrl-btn:hover{background:rgba(255,255,255,0.3);}
+.video-ctrl-btn.play-btn{width:40px;height:40px;background:var(--cyan);color:#0d1628;}
+.video-ctrl-btn.play-btn:hover{background:#4dd4ff;transform:scale(1.05);}
+.video-ctrl-btn svg{width:18px;height:18px;}
+.video-time{font-size:12px;color:rgba(255,255,255,0.7);font-family:var(--font-en);font-weight:500;margin-right:auto;direction:ltr;text-align:left;}
+
+/* ── TOOLS PANEL ── */
+.tools-card{flex:1;background:var(--surface);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;overflow:hidden;transition:background .3s;min-height:0;}
+.tools-header{padding:14px 16px 0;flex-shrink:0;}
+.tools-header-title{font-size:16px;font-weight:700;color:var(--text-main);display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.tools-header-title svg{width:20px;height:20px;color:var(--cyan);}
+.tools-header-sub{font-size:12px;color:var(--text-sub);margin-bottom:12px;}
+.tool-content{flex:1;overflow-y:auto;padding:16px;min-height:0;}
+.tool-content::-webkit-scrollbar{width:5px;}
+.tool-content::-webkit-scrollbar-track{background:transparent;}
+.tool-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* ── SECTIONS ── */
+.section-title{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text-main);}
+.section{margin-bottom:20px;}
+
+/* ── TITLE STYLE CARDS ── */
+.style-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;}
+.style-card{aspect-ratio:16/10;border-radius:12px;border:2px solid var(--border);overflow:hidden;cursor:pointer;transition:all .2s;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;}
+.style-card:hover{border-color:var(--cyan);transform:translateY(-2px);box-shadow:0 4px 16px rgba(56,196,242,0.15);}
+.style-card.active{border-color:var(--cyan);box-shadow:0 0 0 2px var(--cyan-light),0 4px 16px rgba(56,196,242,0.2);}
+.style-card .check{position:absolute;top:6px;left:6px;width:20px;height:20px;border-radius:50%;background:var(--cyan);color:white;display:none;align-items:center;justify-content:center;z-index:3;}
+.style-card.active .check{display:flex;}
+.style-card .check svg{width:12px;height:12px;}
+.style-card-name{position:absolute;bottom:6px;right:8px;font-size:11px;font-weight:700;color:white;text-shadow:0 1px 4px rgba(0,0,0,0.6);z-index:2;}
+
+/* Style 1: Minimal */
+.style-card.s-minimal{background:linear-gradient(135deg,#1a2740,#253E7A);}
+.style-card.s-minimal .card-preview-text{font-family:var(--font-en);font-size:16px;font-weight:600;color:white;text-shadow:0 1px 6px rgba(0,0,0,0.3);}
+
+/* Style 2: Dynamic */
+.style-card.s-dynamic{background:linear-gradient(135deg,#0d1628,#1a3a6b);}
+.style-card.s-dynamic .card-preview-text{font-family:var(--font-he);font-size:18px;font-weight:900;color:white;}
+.style-card.s-dynamic .card-preview-accent{height:3px;width:40px;background:var(--cyan);border-radius:2px;margin-top:4px;}
+
+/* Style 3: Branded */
+.style-card.s-branded{background:linear-gradient(135deg,var(--navy),var(--navy-dark));}
+.style-card.s-branded .card-preview-text{font-family:var(--font-en);font-size:15px;font-weight:700;color:white;}
+.style-card.s-branded .card-preview-logo{font-family:var(--font-en);font-size:8px;color:rgba(255,255,255,0.2);position:absolute;bottom:18px;left:8px;font-weight:700;}
+
+/* Style 4: Cinematic */
+.style-card.s-cinematic{background:linear-gradient(135deg,#0a0a0a,#1a1a2e);}
+.style-card.s-cinematic::before,.style-card.s-cinematic::after{content:'';position:absolute;left:0;right:0;height:14%;background:#000;z-index:1;}
+.style-card.s-cinematic::before{top:0;}
+.style-card.s-cinematic::after{bottom:0;}
+.style-card.s-cinematic .card-preview-text{font-family:Georgia,serif;font-size:14px;font-weight:400;color:white;letter-spacing:1.5px;z-index:2;}
+
+/* Style 5: Pop */
+.style-card.s-pop{background:linear-gradient(135deg,#2a1a3e,#1a2740);}
+.style-card.s-pop .card-preview-text{font-family:var(--font-en);font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--pink),var(--cyan),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* ── TITLE SETTINGS ── */
+.title-input{width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-main);font-family:var(--font-he);font-size:15px;font-weight:600;transition:border-color .2s;}
+.title-input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 2px var(--cyan-light);}
+.title-input.sub-input{font-size:13px;font-weight:400;margin-top:8px;}
+.title-input::placeholder{color:var(--text-light);}
+
+/* Duration Pills */
+.pill-group{display:flex;gap:6px;flex-wrap:wrap;}
+.pill{padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-he);font-size:12px;font-weight:600;color:var(--text-sub);cursor:pointer;transition:all .2s;}
+.pill:hover{border-color:var(--cyan);}
+.pill.active{border-color:var(--cyan);background:var(--cyan-light);color:var(--navy);}
+
+/* Timecode Input */
+.timecode-row{display:flex;align-items:center;gap:8px;}
+.timecode-input{width:100px;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);font-family:var(--font-en);font-size:13px;text-align:center;direction:ltr;transition:border-color .2s;}
+.timecode-input:focus{outline:none;border-color:var(--cyan);}
+.btn-tool{font-family:var(--font-he);font-size:12px;font-weight:600;padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-main);cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-tool:hover{border-color:var(--cyan);background:var(--light-blue);}
+.btn-tool svg{width:16px;height:16px;}
+.btn-tool-primary{font-family:var(--font-he);font-size:12px;font-weight:700;padding:8px 16px;border-radius:8px;border:none;background:var(--cyan);color:white;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-tool-primary:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.btn-tool-primary svg{width:16px;height:16px;}
+
+/* ── TITLES LIST ── */
+.titles-list{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.title-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface-2);border-radius:10px;transition:all .2s;cursor:pointer;border:1.5px solid transparent;}
+.title-item:hover{background:var(--light-blue);border-color:var(--border);}
+.title-item.active{border-color:var(--cyan);background:var(--cyan-light);}
+.title-item-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
+.title-item-icon.ic-minimal{background:linear-gradient(135deg,#1a2740,#253E7A);}
+.title-item-icon.ic-dynamic{background:linear-gradient(135deg,#0d1628,#1a3a6b);}
+.title-item-icon.ic-branded{background:linear-gradient(135deg,var(--navy),var(--navy-dark));}
+.title-item-icon.ic-cinematic{background:linear-gradient(135deg,#0a0a0a,#1a1a2e);}
+.title-item-icon.ic-pop{background:linear-gradient(135deg,#2a1a3e,#1a2740);}
+.title-item-icon svg{width:16px;height:16px;color:white;}
+.title-item-info{flex:1;min-width:0;}
+.title-item-name{font-size:13px;font-weight:700;color:var(--text-main);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.title-item-meta{font-size:11px;color:var(--text-sub);display:flex;align-items:center;gap:6px;margin-top:2px;}
+.title-item-meta span{font-family:var(--font-en);font-weight:500;}
+.title-item-actions{display:flex;gap:4px;flex-shrink:0;}
+.title-item-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text-sub);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
+.title-item-btn:hover{border-color:var(--cyan);color:var(--cyan);background:var(--light-blue);}
+.title-item-btn.danger:hover{border-color:var(--pink);color:var(--pink);background:rgba(240,86,128,0.06);}
+.title-item-btn svg{width:13px;height:13px;}
+
+/* ── INFO BOX ── */
+.info-box{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:rgba(234,214,84,0.1);border:1px solid rgba(234,214,84,0.25);border-radius:10px;font-size:11px;color:var(--text-sub);line-height:1.5;}
+.info-box svg{width:16px;height:16px;color:var(--yellow);flex-shrink:0;margin-top:1px;}
+
+/* ── TIMELINE ── */
+.timeline-panel{flex-shrink:0;height:160px;background:var(--timeline-bg);border-top:1px solid var(--timeline-border);display:flex;flex-direction:column;position:relative;}
+.timeline-toolbar{display:flex;align-items:center;justify-content:space-between;padding:4px 12px;border-bottom:1px solid var(--timeline-border);flex-shrink:0;}
+.timeline-toolbar-right{display:flex;align-items:center;gap:6px;}
+.timeline-info{font-size:11px;color:rgba(255,255,255,0.4);font-weight:500;}
+.zoom-controls{display:flex;align-items:center;gap:6px;}
+.zoom-btn{width:26px;height:26px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
+.zoom-btn:hover{background:rgba(255,255,255,0.08);color:white;}
+.zoom-btn svg{width:14px;height:14px;}
+.zoom-slider-mini{width:60px;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;position:relative;}
+.zoom-slider-mini-fill{height:100%;background:var(--cyan);border-radius:2px;width:50%;}
+
+.timeline-body{flex:1;overflow-x:auto;overflow-y:hidden;position:relative;min-height:0;}
+.timeline-body::-webkit-scrollbar{height:6px;}
+.timeline-body::-webkit-scrollbar-track{background:rgba(255,255,255,0.03);}
+.timeline-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:3px;}
+.timeline-content{position:relative;min-width:100%;width:1400px;height:100%;display:flex;flex-direction:column;}
+
+/* Time Ruler */
+.time-ruler{height:22px;position:relative;flex-shrink:0;border-bottom:1px solid var(--timeline-border);}
+.time-mark{position:absolute;top:0;height:100%;display:flex;flex-direction:column;align-items:center;}
+.time-mark-line{width:1px;height:8px;background:rgba(255,255,255,0.15);}
+.time-mark-label{font-size:9px;font-family:var(--font-en);color:rgba(255,255,255,0.35);margin-top:1px;}
+
+/* Tracks */
+.track{position:relative;height:38px;display:flex;align-items:center;margin:0 0 2px;padding:0 55px 0 0;}
+.track-label{position:absolute;right:0;top:0;bottom:0;width:55px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:.3px;z-index:2;}
+.track-content{position:relative;flex:1;height:100%;}
+
+/* Video Segments */
+.segment{position:absolute;height:28px;top:5px;border-radius:6px;cursor:pointer;transition:all .15s;display:flex;align-items:center;padding:0 10px;font-size:10px;font-weight:600;color:white;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.segment:hover{filter:brightness(1.15);}
+.segment.seg-video{background:linear-gradient(135deg,#2a7a9e,#38C4F2);}
+
+/* Title Blocks */
+.title-block{position:absolute;height:28px;top:5px;border-radius:6px;cursor:pointer;transition:all .15s;display:flex;align-items:center;padding:0 8px;font-size:10px;font-weight:700;color:white;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid rgba(255,255,255,0.2);}
+.title-block:hover{filter:brightness(1.15);transform:scaleY(1.06);}
+.title-block.selected{box-shadow:0 0 0 2px var(--cyan),0 0 12px rgba(56,196,242,0.3);}
+.title-block.tb-minimal{background:linear-gradient(135deg,#3a5499,#5a7ac9);}
+.title-block.tb-dynamic{background:linear-gradient(135deg,#1a3a6b,#38C4F2);}
+.title-block.tb-branded{background:linear-gradient(135deg,var(--navy),var(--navy-light));}
+.title-block.tb-cinematic{background:linear-gradient(135deg,#1a1a2e,#3a3a5e);}
+.title-block.tb-pop{background:linear-gradient(135deg,#8a3a8e,#F05680);}
+
+/* Playhead */
+.playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--cyan);z-index:10;pointer-events:none;}
+.playhead-handle{position:absolute;top:-2px;left:50%;transform:translateX(-50%);width:14px;height:10px;background:var(--cyan);clip-path:polygon(0 0,100% 0,50% 100%);pointer-events:auto;cursor:grab;z-index:11;}
+.playhead-time{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:9px;font-family:var(--font-en);color:var(--cyan);white-space:nowrap;font-weight:600;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-main);box-shadow:var(--shadow-md);z-index:200;transition:transform .3s ease,opacity .3s ease;opacity:0;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="topbar-right">
+    <button class="back-btn" onclick="history.back()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      חזרה לעורך
+    </button>
+  </div>
+
+  <div class="topbar-center">
+    כותרות — שיעור 3: צבע ומשמעות
+  </div>
+
+  <div class="topbar-left">
+    <button class="btn-save" id="saveBtn" onclick="saveAll()">שמור</button>
+    <button class="icon-btn-sm" onclick="toggleTheme()" title="מצב כהה/בהיר">
+      <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ══ MAIN AREA ══ -->
+<div class="main-area">
+
+  <!-- ── VIDEO PREVIEW ── -->
+  <div class="panel-preview">
+    <div class="video-container" id="videoContainer">
+      <div class="video-canvas">
+        <div class="video-placeholder">WHITEBOARD</div>
+        <div class="video-logo-overlay">
+          <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 12h6" stroke="#0d1628" stroke-width="1.5" fill="none"/></svg>
+          WHITEBOARD
+        </div>
+        <!-- Title Preview Overlay -->
+        <div class="title-overlay style-minimal" id="titleOverlay">
+          <div class="title-overlay-main" id="overlayMainText">מבוא ויסודות</div>
+          <div class="title-overlay-sub" id="overlaySubText"></div>
+          <div class="title-accent" style="display:none;"></div>
+          <div class="brand-watermark" style="display:none;">WHITEBOARD</div>
+        </div>
+      </div>
+      <div class="video-controls">
+        <button class="video-ctrl-btn play-btn" id="playPauseBtn" title="נגן / עצור (Space)" onclick="togglePlay()">
+          <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21"/></svg>
+          <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="3" width="5" height="18"/><rect x="14" y="3" width="5" height="18"/></svg>
+        </button>
+        <span class="video-time" id="videoTime">01:23 / 04:52</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOOLS PANEL ── -->
+  <div class="panel-tools">
+    <div class="tools-card">
+      <div class="tools-header">
+        <div class="tools-header-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+          כותרות מונפשות
+        </div>
+        <div class="tools-header-sub">הוסף כותרות פרקים וכיתובים מונפשים לסרטון</div>
+      </div>
+
+      <div class="tool-content">
+        <!-- ── TITLE STYLES ── -->
+        <div class="section">
+          <div class="section-title">בחר סגנון</div>
+          <div class="style-grid" id="styleGrid">
+            <!-- 1. Minimal -->
+            <div class="style-card s-minimal active" data-style="minimal" onclick="selectStyle(this)">
+              <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="card-preview-text">כותרת</span>
+              <span class="style-card-name">מינימלי</span>
+            </div>
+            <!-- 2. Dynamic -->
+            <div class="style-card s-dynamic" data-style="dynamic" onclick="selectStyle(this)">
+              <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="card-preview-text">כותרת</span>
+              <div class="card-preview-accent"></div>
+              <span class="style-card-name">דינמי</span>
+            </div>
+            <!-- 3. Branded -->
+            <div class="style-card s-branded" data-style="branded" onclick="selectStyle(this)">
+              <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="card-preview-text">כותרת</span>
+              <span class="card-preview-logo">WHITEBOARD</span>
+              <span class="style-card-name">מותגי</span>
+            </div>
+            <!-- 4. Cinematic -->
+            <div class="style-card s-cinematic" data-style="cinematic" onclick="selectStyle(this)">
+              <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="card-preview-text">כותרת</span>
+              <span class="style-card-name">קולנועי</span>
+            </div>
+            <!-- 5. Pop -->
+            <div class="style-card s-pop" data-style="pop" onclick="selectStyle(this)">
+              <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="card-preview-text">POP</span>
+              <span class="style-card-name">פופ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TITLE SETTINGS ── -->
+        <div class="section">
+          <div class="section-title">הגדרות כותרת</div>
+          <input class="title-input" id="titleMainInput" type="text" placeholder="הקלד כותרת..." value="מבוא ויסודות" oninput="updateOverlayText()">
+          <input class="title-input sub-input" id="titleSubInput" type="text" placeholder="תת כותרת (אופציונלי)" oninput="updateOverlayText()">
+        </div>
+
+        <!-- Duration -->
+        <div class="section">
+          <div class="section-title">משך תצוגה</div>
+          <div class="pill-group" id="durationPills">
+            <button class="pill" data-dur="3" onclick="setDuration(this)">3 שניות</button>
+            <button class="pill active" data-dur="5" onclick="setDuration(this)">5 שניות</button>
+            <button class="pill" data-dur="7" onclick="setDuration(this)">7 שניות</button>
+          </div>
+        </div>
+
+        <!-- Position in Video -->
+        <div class="section">
+          <div class="section-title">מיקום בסרטון</div>
+          <div class="timecode-row">
+            <input class="timecode-input" id="titleTimecode" type="text" value="00:00" placeholder="00:00">
+            <button class="btn-tool" onclick="insertAtCurrent()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              הוסף במיקום הנוכחי
+            </button>
+          </div>
+        </div>
+
+        <!-- Animation Speed -->
+        <div class="section">
+          <div class="section-title">מהירות אנימציה</div>
+          <div class="pill-group" id="speedPills">
+            <button class="pill" data-speed="slow" onclick="setSpeed(this)">איטי</button>
+            <button class="pill active" data-speed="normal" onclick="setSpeed(this)">רגיל</button>
+            <button class="pill" data-speed="fast" onclick="setSpeed(this)">מהיר</button>
+          </div>
+        </div>
+
+        <!-- Add Title Button -->
+        <div class="section">
+          <button class="btn-tool-primary" onclick="addTitle()" style="width:100%;justify-content:center;padding:10px 16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            הוסף כותרת לסרטון
+          </button>
+        </div>
+
+        <!-- ── PLACED TITLES LIST ── -->
+        <div class="section" style="border-top:1px solid var(--border);padding-top:16px;">
+          <div class="section-title">כותרות בסרטון</div>
+          <div class="titles-list" id="titlesList">
+            <!-- Title 1 -->
+            <div class="title-item active" data-index="0" onclick="selectTitle(0)">
+              <div class="title-item-icon ic-minimal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+              </div>
+              <div class="title-item-info">
+                <div class="title-item-name">מבוא ויסודות</div>
+                <div class="title-item-meta">
+                  מינימלי &middot; <span>00:00</span> &middot; <span>5s</span>
+                </div>
+              </div>
+              <div class="title-item-actions">
+                <button class="title-item-btn" onclick="event.stopPropagation();previewTitle(0)" title="תצוגה מקדימה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+                </button>
+                <button class="title-item-btn" onclick="event.stopPropagation();editTitle(0)" title="עריכה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="title-item-btn danger" onclick="event.stopPropagation();deleteTitle(0)" title="מחיקה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Title 2 -->
+            <div class="title-item" data-index="1" onclick="selectTitle(1)">
+              <div class="title-item-icon ic-dynamic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+              </div>
+              <div class="title-item-info">
+                <div class="title-item-name">עקרונות הצבע</div>
+                <div class="title-item-meta">
+                  דינמי &middot; <span>01:23</span> &middot; <span>3s</span>
+                </div>
+              </div>
+              <div class="title-item-actions">
+                <button class="title-item-btn" onclick="event.stopPropagation();previewTitle(1)" title="תצוגה מקדימה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+                </button>
+                <button class="title-item-btn" onclick="event.stopPropagation();editTitle(1)" title="עריכה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="title-item-btn danger" onclick="event.stopPropagation();deleteTitle(1)" title="מחיקה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Title 3 -->
+            <div class="title-item" data-index="2" onclick="selectTitle(2)">
+              <div class="title-item-icon ic-pop">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+              </div>
+              <div class="title-item-info">
+                <div class="title-item-name">תרגיל מעשי</div>
+                <div class="title-item-meta">
+                  פופ &middot; <span>03:15</span> &middot; <span>5s</span>
+                </div>
+              </div>
+              <div class="title-item-actions">
+                <button class="title-item-btn" onclick="event.stopPropagation();previewTitle(2)" title="תצוגה מקדימה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+                </button>
+                <button class="title-item-btn" onclick="event.stopPropagation();editTitle(2)" title="עריכה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="title-item-btn danger" onclick="event.stopPropagation();deleteTitle(2)" title="מחיקה">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── INFO BOX ── -->
+        <div class="info-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span>כותרות מונפשות מעובדות בשרת — ייתכן עיכוב ביצוא</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TIMELINE ══ -->
+<div class="timeline-panel">
+  <div class="timeline-toolbar">
+    <div class="timeline-toolbar-right">
+      <span class="timeline-info" id="videoTime2">04:52 סה״כ</span>
+    </div>
+    <div class="zoom-controls">
+      <button class="zoom-btn" title="הקטן"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      <div class="zoom-slider-mini"><div class="zoom-slider-mini-fill"></div></div>
+      <button class="zoom-btn" title="הגדל"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+    </div>
+  </div>
+
+  <div class="timeline-body">
+    <div class="timeline-content">
+      <!-- Time Ruler -->
+      <div class="time-ruler">
+        <div class="time-mark" style="right:0%;"><div class="time-mark-line"></div><div class="time-mark-label">0:00</div></div>
+        <div class="time-mark" style="right:10.2%;"><div class="time-mark-line"></div><div class="time-mark-label">0:30</div></div>
+        <div class="time-mark" style="right:20.4%;"><div class="time-mark-line"></div><div class="time-mark-label">1:00</div></div>
+        <div class="time-mark" style="right:30.6%;"><div class="time-mark-line"></div><div class="time-mark-label">1:30</div></div>
+        <div class="time-mark" style="right:40.8%;"><div class="time-mark-line"></div><div class="time-mark-label">2:00</div></div>
+        <div class="time-mark" style="right:51%;"><div class="time-mark-line"></div><div class="time-mark-label">2:30</div></div>
+        <div class="time-mark" style="right:61.2%;"><div class="time-mark-line"></div><div class="time-mark-label">3:00</div></div>
+        <div class="time-mark" style="right:71.4%;"><div class="time-mark-line"></div><div class="time-mark-label">3:30</div></div>
+        <div class="time-mark" style="right:81.6%;"><div class="time-mark-line"></div><div class="time-mark-label">4:00</div></div>
+        <div class="time-mark" style="right:91.8%;"><div class="time-mark-line"></div><div class="time-mark-label">4:30</div></div>
+      </div>
+
+      <!-- Video Track -->
+      <div class="track">
+        <div class="track-label">וידאו</div>
+        <div class="track-content">
+          <div class="segment seg-video" style="right:0;width:100%;">שיעור 3: צבע ומשמעות</div>
+        </div>
+      </div>
+
+      <!-- Titles Track -->
+      <div class="track" style="border-top:1px solid var(--timeline-border);">
+        <div class="track-label">כותרות</div>
+        <div class="track-content">
+          <div class="title-block tb-minimal selected" style="right:0%;width:5.1%;" onclick="selectTitle(0)">מבוא ויסודות</div>
+          <div class="title-block tb-dynamic" style="right:28%;width:3.06%;" onclick="selectTitle(1)">עקרונות הצבע</div>
+          <div class="title-block tb-pop" style="right:65%;width:5.1%;" onclick="selectTitle(2)">תרגיל מעשי</div>
+        </div>
+      </div>
+
+      <!-- Playhead -->
+      <div class="playhead" id="playhead" style="right:26%;">
+        <div class="playhead-handle"></div>
+        <div class="playhead-time">01:23</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Theme Toggle ──
+function toggleTheme(){
+  const html=document.documentElement;
+  html.dataset.theme=html.dataset.theme==='dark'?'light':'dark';
+}
+
+// ── Toast ──
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ── Title Data ──
+const titlesData=[
+  {name:'מבוא ויסודות',sub:'',style:'minimal',time:'00:00',duration:5,speed:'normal'},
+  {name:'עקרונות הצבע',sub:'',style:'dynamic',time:'01:23',duration:3,speed:'normal'},
+  {name:'תרגיל מעשי',sub:'',style:'pop',time:'03:15',duration:5,speed:'normal'}
+];
+let selectedTitleIndex=0;
+let currentStyle='minimal';
+let isPlaying=false;
+
+// ── Style Selection ──
+function selectStyle(el){
+  document.querySelectorAll('#styleGrid .style-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  currentStyle=el.dataset.style;
+  updateOverlayStyle();
+}
+
+function updateOverlayStyle(){
+  const overlay=document.getElementById('titleOverlay');
+  overlay.className='title-overlay style-'+currentStyle;
+  const accent=overlay.querySelector('.title-accent');
+  const watermark=overlay.querySelector('.brand-watermark');
+  accent.style.display=currentStyle==='dynamic'?'block':'none';
+  watermark.style.display=currentStyle==='branded'?'block':'none';
+}
+
+// ── Overlay Text ──
+function updateOverlayText(){
+  const main=document.getElementById('titleMainInput').value;
+  const sub=document.getElementById('titleSubInput').value;
+  document.getElementById('overlayMainText').textContent=main||'כותרת';
+  document.getElementById('overlaySubText').textContent=sub;
+}
+
+// ── Duration ──
+function setDuration(el){
+  document.querySelectorAll('#durationPills .pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── Speed ──
+function setSpeed(el){
+  document.querySelectorAll('#speedPills .pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── Insert at Current Position ──
+function insertAtCurrent(){
+  document.getElementById('titleTimecode').value='01:23';
+  showToast('מיקום עודכן לנקודת ההשמעה הנוכחית');
+}
+
+// ── Add Title ──
+function addTitle(){
+  const mainText=document.getElementById('titleMainInput').value.trim();
+  if(!mainText){showToast('יש להזין טקסט לכותרת');return;}
+  const durEl=document.querySelector('#durationPills .pill.active');
+  const dur=durEl?parseInt(durEl.dataset.dur):5;
+  const time=document.getElementById('titleTimecode').value||'00:00';
+  const speedEl=document.querySelector('#speedPills .pill.active');
+  const speed=speedEl?speedEl.dataset.speed:'normal';
+  const sub=document.getElementById('titleSubInput').value.trim();
+  titlesData.push({name:mainText,sub:sub,style:currentStyle,time:time,duration:dur,speed:speed});
+  showToast('כותרת "'+mainText+'" נוספה בהצלחה');
+  document.getElementById('titleMainInput').value='';
+  document.getElementById('titleSubInput').value='';
+  document.getElementById('titleTimecode').value='00:00';
+}
+
+// ── Select Title ──
+function selectTitle(index){
+  selectedTitleIndex=index;
+  document.querySelectorAll('.title-item').forEach(i=>i.classList.remove('active'));
+  document.querySelectorAll('.title-block').forEach(b=>b.classList.remove('selected'));
+  const items=document.querySelectorAll('.title-item');
+  const blocks=document.querySelectorAll('.title-block');
+  if(items[index])items[index].classList.add('active');
+  if(blocks[index])blocks[index].classList.add('selected');
+  // Update overlay
+  const t=titlesData[index];
+  if(t){
+    document.getElementById('overlayMainText').textContent=t.name;
+    document.getElementById('overlaySubText').textContent=t.sub||'';
+    currentStyle=t.style;
+    updateOverlayStyle();
+    document.querySelectorAll('#styleGrid .style-card').forEach(c=>{
+      c.classList.toggle('active',c.dataset.style===t.style);
+    });
+  }
+}
+
+// ── Preview Title ──
+function previewTitle(index){
+  const t=titlesData[index];
+  if(!t)return;
+  selectTitle(index);
+  const overlay=document.getElementById('titleOverlay');
+  overlay.classList.add('hidden');
+  setTimeout(()=>{
+    overlay.classList.remove('hidden');
+    showToast('תצוגה מקדימה: '+t.name);
+  },100);
+}
+
+// ── Edit Title ──
+function editTitle(index){
+  const t=titlesData[index];
+  if(!t)return;
+  selectTitle(index);
+  document.getElementById('titleMainInput').value=t.name;
+  document.getElementById('titleSubInput').value=t.sub||'';
+  document.getElementById('titleTimecode').value=t.time;
+  showToast('עריכת כותרת: '+t.name);
+}
+
+// ── Delete Title ──
+function deleteTitle(index){
+  const t=titlesData[index];
+  if(!t)return;
+  showToast('כותרת "'+t.name+'" נמחקה');
+}
+
+// ── Play/Pause ──
+function togglePlay(){
+  isPlaying=!isPlaying;
+  const playIcon=document.querySelector('.play-icon');
+  const pauseIcon=document.querySelector('.pause-icon');
+  if(isPlaying){
+    playIcon.style.display='none';
+    pauseIcon.style.display='block';
+  } else {
+    playIcon.style.display='block';
+    pauseIcon.style.display='none';
+  }
+}
+
+// ── Save ──
+function saveAll(){
+  showToast('כותרות נשמרו בהצלחה');
+}
+
+// ── Keyboard Shortcuts ──
+document.addEventListener('keydown',(e)=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  switch(e.key){
+    case ' ':e.preventDefault();togglePlay();break;
+  }
+});
+
+// ── Init: select first title ──
+selectTitle(0);
+</script>
+</body>
+</html>

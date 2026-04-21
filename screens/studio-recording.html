@@ -34,7 +34,7 @@
 
 body {
   font-family: 'Heebo', sans-serif;
-  background: var(--bg);
+  background: #000;
   color: var(--text);
   height: 100dvh;
   overflow: hidden;
@@ -46,10 +46,12 @@ body {
 .video-area {
   position: relative;
   width: 100%;
-  height: 100dvh;
+  max-height: 100dvh;
+  aspect-ratio: 16 / 9;
   background: linear-gradient(135deg, #0f1729 0%, #162040 50%, #0f1729 100%);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .video-area::before {
@@ -1046,13 +1048,14 @@ body {
 }
 
 .take-note-input {
-  flex: 1;
+  flex: 0 1 160px;
+  max-width: 160px;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 6px;
-  padding: 5px 10px;
+  padding: 5px 8px;
   font-family: 'Heebo', sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text);
   outline: none;
   transition: border-color 0.2s var(--ease-smooth), background 0.2s var(--ease-smooth);
@@ -1329,10 +1332,63 @@ kbd {
 .takes-panel::-webkit-scrollbar { width: 3px; }
 .takes-panel::-webkit-scrollbar-track { background: transparent; }
 .takes-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+/* ======= RECORDING START FLASH ======= */
+.recording-start-flash {
+  position: fixed;
+  inset: 0;
+  border: 4px solid var(--red);
+  pointer-events: none;
+  z-index: 499;
+  opacity: 0;
+  border-radius: 0;
+}
+.recording-start-flash.active {
+  animation: border-flash 0.15s ease-out forwards;
+}
+@keyframes border-flash {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.recording-start-text {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--red);
+  letter-spacing: 3px;
+  pointer-events: none;
+  z-index: 499;
+  opacity: 0;
+  text-shadow: 0 0 24px rgba(229,62,62,0.5);
+}
+.recording-start-text.active {
+  animation: rec-text-fade 0.6s var(--ease-out) forwards;
+}
+@keyframes rec-text-fade {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+  20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ======= 16:9 VIDEO AREA ======= */
+.video-area-wrapper {
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
 </style>
 </head>
 <body>
 
+<div class="video-area-wrapper">
 <div class="video-area" id="videoArea">
   <!-- Screen share background — FULL SCREEN with simulated app UI -->
   <div class="screen-share-bg" id="screenShareBg">
@@ -1544,6 +1600,11 @@ kbd {
     </div>
   </div>
 </div>
+</div><!-- /video-area-wrapper -->
+
+<!-- Recording start flash elements -->
+<div class="recording-start-flash" id="recStartFlash"></div>
+<div class="recording-start-text" id="recStartText">● מקליט</div>
 
 <!-- Countdown overlay -->
 <div class="countdown-overlay" id="countdownOverlay">
@@ -1922,11 +1983,11 @@ function renderTakesPanel() {
   let html = '';
   state.takes.forEach((take, i) => {
     const value = take.note || (demoNotes[i] !== undefined ? demoNotes[i] : '');
-    const placeholder = 'הוסף הערה...';
+    const placeholder = 'הערה קצרה...';
     html += `<div class="take-row">
       <span class="take-number">${i + 1}</span>
       <span class="take-duration">${formatTime(take.duration)}</span>
-      <input class="take-note-input" type="text" value="${escapeHtml(value)}" placeholder="${escapeHtml(placeholder)}" data-take-index="${i}" />
+      <input class="take-note-input" type="text" maxlength="30" value="${escapeHtml(value)}" placeholder="${escapeHtml(placeholder)}" data-take-index="${i}" />
     </div>`;
   });
   takesList.innerHTML = html;
@@ -1949,6 +2010,23 @@ function escapeHtml(str) {
 }
 
 // ======= STATE TRANSITIONS =======
+function showRecordingStartFlash() {
+  const flash = $('recStartFlash');
+  const text = $('recStartText');
+  flash.classList.remove('active');
+  text.classList.remove('active');
+  void flash.offsetWidth;
+  void text.offsetWidth;
+  flash.classList.add('active');
+  text.classList.add('active');
+  setTimeout(() => {
+    flash.classList.remove('active');
+  }, 150);
+  setTimeout(() => {
+    text.classList.remove('active');
+  }, 600);
+}
+
 function startRecording() {
   state.phase = 'recording';
   state.takeNum = 1;
@@ -1957,6 +2035,7 @@ function startRecording() {
   state.meterIntervalId = setInterval(animateMeter, 100);
   renderControls();
   updateTimeline();
+  showRecordingStartFlash();
   showToast('ההקלטה התחילה', 'red');
 }
 
@@ -1974,7 +2053,7 @@ function pauseRecording() {
   showToast('ההקלטה מושהית', 'yellow');
 }
 
-function resumeRecording(insertAtIndex) {
+function doResume(insertAtIndex) {
   if (insertAtIndex !== undefined && insertAtIndex !== null) {
     state.takeNum++;
     const newTake = { start: state.seconds, duration: 0, note: '' };
@@ -1982,6 +2061,7 @@ function resumeRecording(insertAtIndex) {
     state.phase = 'recording';
     renderControls();
     updateTimeline();
+    showRecordingStartFlash();
     showToast(`טייק חדש הוכנס במיקום ${insertAtIndex + 1}`, 'cyan');
   } else {
     state.takeNum++;
@@ -1989,8 +2069,16 @@ function resumeRecording(insertAtIndex) {
     state.phase = 'recording';
     renderControls();
     updateTimeline();
+    showRecordingStartFlash();
     showToast(`טייק ${state.takeNum} התחיל`, 'cyan');
   }
+}
+
+function resumeRecording(insertAtIndex) {
+  // Show 3-2-1 countdown before every take resume
+  showCountdown(() => {
+    doResume(insertAtIndex);
+  });
 }
 
 function handleCenterButton() {

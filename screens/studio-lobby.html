@@ -92,7 +92,7 @@
   .col-right::-webkit-scrollbar-track{background:transparent;}
   .col-right::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
 
-  .camera-preview{position:relative;width:100%;aspect-ratio:16/9;max-height:40vh;background:var(--preview-bg);border-radius:var(--radius-sm);overflow:hidden;flex-shrink:1;box-shadow:var(--shadow-lg);}
+  .camera-preview{position:relative;width:100%;aspect-ratio:16/9;background:var(--preview-bg);border-radius:var(--radius-sm);overflow:hidden;flex-shrink:0;box-shadow:var(--shadow-lg);}
   .camera-preview::after{content:'';position:absolute;inset:0;border-radius:var(--radius-md);box-shadow:inset 0 0 80px 20px rgba(0,0,0,0.3);pointer-events:none;z-index:2;}
   .camera-no-feed{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:1;}
   .camera-no-feed img{width:80px;height:80px;object-fit:contain;opacity:.85;}
@@ -159,7 +159,7 @@
   .position-preview .pip-dot.pos-bl{bottom:6px;left:6px;}
 
   /* Size + Position row */
-  .cam-size-position-row{display:flex;gap:16px;align-items:flex-start;}
+  .cam-size-position-row{display:flex;gap:16px;align-items:center;}
   .cam-size-position-row .size-slider-wrap{flex:1;min-width:0;}
   .cam-size-position-row .position-grid-wrap{flex:0 0 auto;margin-bottom:0;}
 
@@ -596,7 +596,7 @@
               <!-- Position grid (right in RTL = visually right) -->
               <div class="position-grid-wrap">
                 <div class="cam-settings-sublabel">מיקום ברירת מחדל</div>
-                <div style="display:flex;gap:10px;align-items:flex-start;">
+                <div style="display:flex;gap:10px;align-items:center;">
                   <div class="position-grid">
                     <button class="position-grid-btn" data-pos="tr" onclick="setOverlayPosition('tr')">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="17" y1="7" x2="7" y2="17"/><polyline points="7 7 17 7 17 17"/></svg>
