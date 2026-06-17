@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHITEBOARD · סליקה וחשבוניות — מדריך יישום CTO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green:#7DC57A;--green-bright:#22c55e;--yellow:#EAD654;
+  --bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.18);
+  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);
+  --r-sm:10px;--r-md:16px;--shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);
+  --code-bg:#0f1b33;--code-text:#cfe3f7;
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.52);--text-xs:rgba(221,229,245,0.3);--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);
+  --code-bg:#060d1a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:var(--cyan);text-decoration:none}
+.shell{display:flex;min-height:100vh}
+/* sidebar */
+.side{width:248px;flex:0 0 248px;background:var(--navy);color:#fff;position:sticky;top:0;height:100vh;overflow-y:auto;padding:22px 16px}
+.side .brand{display:flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:700;font-size:17px;margin-bottom:6px}
+.side .brand .lg{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),#fff3);display:flex;align-items:center;justify-content:center;font-weight:700}
+.side .sub{font-size:12px;color:#ffffff88;margin-bottom:22px;padding-right:2px}
+.side nav a{display:block;color:#dbe6ff;font-size:13.5px;padding:9px 12px;border-radius:8px;margin-bottom:2px;transition:.15s;border-right:3px solid transparent}
+.side nav a:hover{background:#ffffff12}
+.side nav a.on{background:#ffffff18;color:#fff;font-weight:600;border-right-color:var(--cyan)}
+.side .tag{font-size:10.5px;color:#ffffff66;text-transform:uppercase;letter-spacing:1px;margin:18px 12px 6px;display:block}
+/* main */
+.main{flex:1;min-width:0;padding:48px clamp(24px,5vw,72px);max-width:1000px}
+.toprow{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.5px;color:var(--cyan);background:color-mix(in srgb,var(--cyan) 14%,transparent);padding:6px 14px;border-radius:100px;border:1px solid color-mix(in srgb,var(--cyan) 26%,transparent)}
+.iconbtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--text-main);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm)}
+h1{font-family:'Fredoka';font-weight:700;font-size:clamp(30px,4.5vw,46px);line-height:1.1;letter-spacing:-.4px;margin:14px 0 10px}
+h2{font-family:'Fredoka';font-weight:700;font-size:clamp(22px,2.6vw,30px);margin:0 0 14px;letter-spacing:-.2px}
+h3{font-family:'Fredoka';font-weight:600;font-size:18px;margin:22px 0 8px}
+p{color:var(--text-sub);margin-bottom:12px}
+.lead{font-size:18px;color:var(--text-sub);max-width:70ch;margin-bottom:10px}
+section{padding:38px 0;border-top:1px solid var(--border);scroll-margin-top:20px}
+section:first-of-type{border-top:none}
+b,strong{color:var(--text-main);font-weight:700}
+ul{margin:0 22px 14px 0;color:var(--text-sub)}li{margin-bottom:7px}
+.hl{color:var(--cyan);font-weight:700}.hl-g{color:var(--green-bright);font-weight:700}.hl-p{color:var(--pink);font-weight:700}
+/* CTO rules box */
+.rules{background:linear-gradient(135deg,var(--navy),var(--navy-dark));color:#fff;border-radius:var(--r-md);padding:24px 26px;margin:22px 0;box-shadow:var(--shadow)}
+.rules h3{color:#fff;margin:0 0 14px;font-size:16px;display:flex;align-items:center;gap:9px}
+.rules .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.rules .r{background:#ffffff12;border:1px solid #ffffff20;border-radius:10px;padding:13px 15px}
+.rules .r .n{font-family:'Fredoka';font-weight:600;color:var(--cyan);font-size:12.5px;margin-bottom:4px}
+.rules .r .t{font-size:12.5px;color:#e7eeff;line-height:1.45}
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:18px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:18px 20px;box-shadow:var(--shadow-sm)}
+.card h3{margin:0 0 7px;font-size:16px}
+.card p{font-size:13.5px;margin:0}
+.ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:11px;background:color-mix(in srgb,var(--cyan) 15%,transparent);color:var(--cyan)}
+/* code */
+pre{background:var(--code-bg);color:var(--code-text);border-radius:var(--r-md);padding:18px 20px;overflow-x:auto;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.8px;line-height:1.65;margin:14px 0;direction:ltr;text-align:left;border:1px solid #ffffff14}
+pre .c{color:#6b88b0}pre .k{color:#7cc7ff}pre .s{color:#9ae6a4}pre .f{color:#f7a3be}
+code.inl{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:var(--surface-3);color:#1769a3;padding:2px 7px;border-radius:6px;direction:ltr;display:inline-block}
+[data-theme="dark"] code.inl{color:var(--cyan)}
+/* flow steps */
+.flow{display:flex;flex-direction:column;gap:9px;margin:16px 0}
+.fstep{display:flex;gap:13px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 16px;box-shadow:var(--shadow-sm)}
+.fstep .n{flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;font-size:13px}
+[data-theme="dark"] .fstep .n{background:var(--cyan);color:var(--navy-dark)}
+.fstep div{font-size:14px;color:var(--text-main)}
+/* table */
+.tbl{border:1px solid var(--border);border-radius:var(--r-md);overflow:auto;margin:16px 0;box-shadow:var(--shadow-sm);background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th,td{padding:11px 14px;text-align:right;border-bottom:1px solid var(--border)}
+thead th{background:var(--navy);color:#fff;font-family:'Fredoka';font-weight:500;font-size:13px}
+tbody tr:last-child td{border-bottom:none}tbody td:first-child{font-weight:700}
+.note{display:flex;gap:13px;align-items:flex-start;border-radius:var(--r-md);padding:16px 18px;margin:16px 0;font-size:14px;line-height:1.55}
+.note.cy{background:color-mix(in srgb,var(--cyan) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--cyan) 35%,transparent)}
+.note.y{background:color-mix(in srgb,var(--yellow) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--yellow) 50%,transparent)}
+.note.g{background:color-mix(in srgb,var(--green-bright) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--green-bright) 38%,transparent)}
+.note b{font-weight:700}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:100px;background:color-mix(in srgb,var(--cyan) 16%,transparent);color:var(--cyan)}
+@media (max-width:820px){.side{display:none}.main{padding:28px 20px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><span class="lg">W</span> WHITEBOARD</div>
+    <div class="sub">מדריך יישום CTO · סליקה וחשבוניות</div>
+    <nav id="nav">
+      <span class="tag">המוצר</span>
+      <a href="#overview" class="on">סקירה והחלטות מפתח</a>
+      <a href="#architecture">ארכיטקטורה</a>
+      <span class="tag">הזרימות</span>
+      <a href="#flow-buy">זרימת רכישה</a>
+      <a href="#flow-invoice">זרימת חשבונית</a>
+      <a href="#flow-onboard">אונבורדינג מרצה</a>
+      <span class="tag">בנייה</span>
+      <a href="#db">סכמת DB</a>
+      <a href="#jobs">משימות רקע</a>
+      <a href="#api">API ואינטגרציות</a>
+      <a href="#engine">מנוע החשבוניות</a>
+      <a href="#components">רכיבי UI</a>
+      <span class="tag">תכנון</span>
+      <a href="#regulation">רגולציה ובקרות</a>
+      <a href="#roadmap">מפת דרכים</a>
+      <a href="#stack">סיכום טכנולוגי</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="toprow">
+      <span class="eyebrow"><span style="width:7px;height:7px;border-radius:50%;background:var(--cyan);display:inline-block"></span> מדריך יישום · CTO</span>
+      <button class="iconbtn" id="theme" aria-label="מצב תצוגה"><svg id="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section id="overview">
+      <h1>סליקה פנימית ומנוע חשבוניות</h1>
+      <p class="lead">מדריך יישום טכני להוספת שכבת מסחר ל‑WHITEBOARD: כל מרצה סולק את התלמידים שלו, הכסף עובר ישירות אליו, אנחנו מנפיקים חשבוניות מס בעצמנו (מנוע פנימי מול רשות המסים) וגוזרים נתח מעמלת הסליקה — בלי להחזיק כסף ובלי רישיון.</p>
+
+      <div class="rules">
+        <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> כללי ה‑CTO — חובה</h3>
+        <div class="grid">
+          <div class="r"><div class="n">1 · Next.js</div><div class="t">App Router, Server Components כברירת מחדל</div></div>
+          <div class="r"><div class="n">2 · TypeScript</div><div class="t">strict, ללא any, Zod לוולידציה</div></div>
+          <div class="r"><div class="n">3 · Bunny CDN</div><div class="t">כל מדיה דרך Bunny Stream/CDN</div></div>
+          <div class="r"><div class="n">4 · Trigger.dev</div><div class="t">כל job רקע — אין setTimeout/cron ידני</div></div>
+          <div class="r"><div class="n">5 · Styled Alerts</div><div class="t">Toast/Modal בלבד — אין alert/confirm</div></div>
+        </div>
+      </div>
+
+      <h3>שלוש החלטות המוצר</h3>
+      <div class="cards">
+        <div class="card"><div class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><h3>סליקה: מסוף לכל מרצה</h3><p>כל מרצה = עוסק עצמאי עם מסוף משלו. הכסף מסולק ישירות לחשבונו. אנחנו לא בזרימת הכסף → <b>לא מאגד, אין רישיון</b>.</p></div>
+        <div class="card"><div class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><h3>חשבוניות: מנוע פנימי</h3><p>אנחנו מתחברים ישירות ל‑Open API של רשות המסים ומנפיקים חשבונית מס <b>בשם המרצה</b> — בלי ספק חיצוני.</p></div>
+        <div class="card"><div class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>הכנסה: נתח מהעמלה</h3><p>חברת הסליקה גובה מהמרצה ומעבירה לנו נתח (rev‑share). הכנסה נטו, <b>אפס סיכון גבייה</b>.</p></div>
+      </div>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div><b>ספק סליקה מומלץ:</b> PayPlus — תוכנית שותפים מתועדת (נתח 2%–10% + בונוס ₪100–195 למרצה), כל מרצה פותח חשבון משלו, השותף מחוץ לזרימת הכסף. HYP/PayMe כחלופות במו"מ. הארכיטקטורה למטה אגנוסטית לספק (Adapter).</div></div>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section id="architecture">
+      <h2>ארכיטקטורה</h2>
+      <p>ארבעה מודולים עצמאיים, כולם תחת ה‑LMS הקיים. כל אינטגרציה חיצונית עוברת דרך Adapter כדי שנוכל להחליף ספק סליקה בלי לגעת בלוגיקה.</p>
+      <div class="cards">
+        <div class="card"><span class="pill">Checkout</span><h3>מודול סליקה</h3><p>הטמעת דף תשלום (iframe) של מסוף המרצה, יצירת עסקה, קבלת Webhook על תשלום מוצלח. <code class="inl">PaymentAdapter</code>: PayPlus / HYP / PayMe.</p></div>
+        <div class="card"><span class="pill">Invoicing</span><h3>מנוע חשבוניות</h3><p>חיבור OAuth פר‑מרצה ל‑Open API של רשות המסים, משיכת מספר הקצאה, יצירת מסמך חשבונית חתום, ארכוב.</p></div>
+        <div class="card"><span class="pill">Revenue</span><h3>התאמת עמלות</h3><p>רישום מכירות פר‑מרצה (partner_id), התאמה מול דוח ה‑rev‑share של הספק, הנפקת חשבונית עמלה לספק.</p></div>
+        <div class="card"><span class="pill">Onboarding</span><h3>אונבורדינג מרצה</h3><p>אשף: פתיחת מסוף, אימות עוסק מורשה, מתן הרשאה דיגיטלית לרשות המסים, חתימה על הסכם שירות.</p></div>
+      </div>
+      <div class="note g"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>עקרון מנחה:</b> WHITEBOARD לעולם לא מחזיקה בכספי הקורסים. כל זרימת כסף של מכירה היא תלמיד→מרצה. השרת שלנו רואה רק <b>אירועים</b> (Webhooks) ומנפיק <b>מסמכים</b> — לא כספים.</div></div>
+    </section>
+
+    <!-- FLOW BUY -->
+    <section id="flow-buy">
+      <h2>זרימת רכישה</h2>
+      <div class="flow">
+        <div class="fstep"><span class="n">1</span><div>התלמיד לוחץ "קנה קורס" → אנחנו פותחים את דף התשלום (iframe) של <b>מסוף המרצה</b>.</div></div>
+        <div class="fstep"><span class="n">2</span><div>התלמיד משלם → הכסף מסולק <b>ישירות לחשבון המרצה</b> (אנחנו לא בזרימה).</div></div>
+        <div class="fstep"><span class="n">3</span><div>הספק שולח <code class="inl">Webhook</code> מאומת (חתימת HMAC) לשרת שלנו: עסקה, סכום, אמצעי תשלום, מזהה מרצה.</div></div>
+        <div class="fstep"><span class="n">4</span><div>אנחנו רושמים <code class="inl">Sale</code>, פותחים גישה לקורס לתלמיד, ומפעילים job להנפקת חשבונית.</div></div>
+        <div class="fstep"><span class="n">5</span><div>job התאמת העמלות מצרף את המכירה לחישוב ה‑rev‑share החודשי מול הספק.</div></div>
+      </div>
+      <pre><span class="c">// app/api/webhooks/payment/route.ts — אימות וטיפול ב‑Webhook</span>
+<span class="k">export async function</span> <span class="f">POST</span>(req: Request) {
+  <span class="k">const</span> raw = <span class="k">await</span> req.text();
+  <span class="k">const</span> sig = req.headers.<span class="f">get</span>(<span class="s">"x-signature"</span>);
+  <span class="k">if</span> (!paymentAdapter.<span class="f">verify</span>(raw, sig)) <span class="k">return</span> <span class="f">json</span>({ error: <span class="s">"bad signature"</span> }, 401);
+
+  <span class="k">const</span> evt = saleEventSchema.<span class="f">parse</span>(<span class="f">JSON</span>.<span class="f">parse</span>(raw)); <span class="c">// Zod</span>
+  <span class="k">await</span> prisma.sale.<span class="f">create</span>({ data: { ...evt, status: <span class="s">"PAID"</span> } });
+  <span class="k">await</span> <span class="f">grantCourseAccess</span>(evt.studentId, evt.courseId);
+  <span class="k">await</span> tasks.<span class="f">trigger</span>(<span class="s">"issue-invoice"</span>, { saleId: evt.id }); <span class="c">// Trigger.dev</span>
+  <span class="k">return</span> <span class="f">json</span>({ ok: <span class="k">true</span> });
+}</pre>
+    </section>
+
+    <!-- FLOW INVOICE -->
+    <section id="flow-invoice">
+      <h2>זרימת הנפקת חשבונית</h2>
+      <div class="flow">
+        <div class="fstep"><span class="n">1</span><div>job <code class="inl">issue-invoice</code> נטען עם ה‑Sale. שולף את הטוקן התקף של המרצה מול רשות המסים.</div></div>
+        <div class="fstep"><span class="n">2</span><div>אם העסקה <b>B2B מעל הסף</b> → מושך <b>מספר הקצאה</b> מ‑Open API. אם B2C → מדלג (לא נדרש).</div></div>
+        <div class="fstep"><span class="n">3</span><div>בונה מסמך חשבונית מס: פרטי המרצה כמוכר, מספור רציף פר‑מרצה, מספר הקצאה (אם יש), חתימה דיגיטלית.</div></div>
+        <div class="fstep"><span class="n">4</span><div>שומר ב‑DB, מארכב (Bunny), שולח לתלמיד במייל (Trigger.dev), ורושם ב‑קובץ אחיד (BKMVDATA).</div></div>
+      </div>
+      <div class="note y"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span><div><b>בקרת §50 (קריטי):</b> לפני הנפקה — לוודא שהמרצה הוא <b>עוסק מורשה</b>. עוסק פטור / לא‑רשום → לחסום הנפקת חשבונית מס (מותר רק קבלה/חשבונית עסקה). הנפקה שגויה = קנס כפל מס.</div></div>
+    </section>
+
+    <!-- FLOW ONBOARD -->
+    <section id="flow-onboard">
+      <h2>אונבורדינג מרצה</h2>
+      <div class="flow">
+        <div class="fstep"><span class="n">1</span><div>המרצה פותח מסוף אצל ספק הסליקה (דרך לינק שותף ייחודי שלנו — מיוחס ל‑<code class="inl">partner_id</code>).</div></div>
+        <div class="fstep"><span class="n">2</span><div>אימות סטטוס: <b>עוסק מורשה</b> פעיל + הזנת מספר עוסק/ח.פ. (חוסם עוסק פטור).</div></div>
+        <div class="fstep"><span class="n">3</span><div>הרשאה דיגיטלית: המרצה מופנה לאתר רשות המסים, מאשר את האפליקציה שלנו (OAuth), חוזר עם code.</div></div>
+        <div class="fstep"><span class="n">4</span><div>חתימה על הסכם שירות (מנפיקים מסמכים בשמו; אחריות המס עליו; שיפוי). שמירת טוקן + refresh.</div></div>
+        <div class="fstep"><span class="n">5</span><div>המרצה פעיל — יכול לתמחר קורסים ולמכור. סטטוס מוצג בדשבורד.</div></div>
+      </div>
+    </section>
+
+    <!-- DB -->
+    <section id="db">
+      <h2>סכמת DB (Prisma)</h2>
+      <pre><span class="k">model</span> Lecturer {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  vatStatus     VatStatus            <span class="c">// AUTHORIZED | EXEMPT | UNREGISTERED</span>
+  vatNumber     String?              <span class="c">// מספר עוסק / ח.פ.</span>
+  partnerId     String?              <span class="c">// שיוך מול ספק הסליקה</span>
+  terminalId    String?              <span class="c">// מסוף הספק של המרצה</span>
+  taxAuth       TaxAuthGrant?
+  invoiceSeq    Int      @default(0) <span class="c">// מספור רציף פר‑עוסק</span>
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+<span class="k">model</span> TaxAuthGrant {                 <span class="c">// הרשאת רשות המסים פר‑מרצה</span>
+  id            String   @id @default(cuid())
+  lecturerId    String   @unique
+  accessToken   String                <span class="c">// מוצפן at rest</span>
+  refreshToken  String
+  expiresAt     DateTime              <span class="c">// ~3 חודשים → renewal job</span>
+  lecturer      Lecturer @relation(fields: [lecturerId], references: [id])
+}
+
+<span class="k">model</span> Sale {
+  id            String   @id @default(cuid())
+  lecturerId    String
+  studentId     String
+  courseId      String
+  amount        Int                   <span class="c">// אגורות</span>
+  method        PayMethod             <span class="c">// CREDIT | BIT | APPLE_PAY ...</span>
+  providerTxId  String   @unique
+  status        SaleStatus            <span class="c">// PAID | REFUNDED</span>
+  invoice       Invoice?
+  createdAt     DateTime @default(now())
+}
+
+<span class="k">model</span> Invoice {
+  id             String   @id @default(cuid())
+  saleId         String   @unique
+  lecturerId     String
+  serial         Int                  <span class="c">// רציף פר‑מרצה</span>
+  allocationNo   String?              <span class="c">// מספר הקצאה (B2B מעל הסף)</span>
+  pdfUrl         String               <span class="c">// Bunny</span>
+  signedAt       DateTime
+  status         InvoiceStatus        <span class="c">// ISSUED | CANCELLED</span>
+}
+
+<span class="k">model</span> RevSharePayout {              <span class="c">// תשלום rev‑share מהספק</span>
+  id            String   @id @default(cuid())
+  periodMonth   String                <span class="c">// "2026-07"</span>
+  grossMdr      Int                   <span class="c">// עמלת הסליקה שנגבתה</span>
+  ourShare      Int                   <span class="c">// הנתח שלנו</span>
+  reconciled    Boolean  @default(false)
+  invoiceToProviderUrl String?        <span class="c">// חשבונית שלנו לספק</span>
+}</pre>
+    </section>
+
+    <!-- JOBS -->
+    <section id="jobs">
+      <h2>משימות רקע (Trigger.dev)</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>Job</th><th>טריגר</th><th>תפקיד</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inl">issue-invoice</code></td><td>על כל Sale</td><td>משיכת מספר הקצאה (אם נדרש) + בניית חשבונית חתומה + מייל לתלמיד</td></tr>
+          <tr><td><code class="inl">renew-tax-tokens</code></td><td>יומי (cron)</td><td>סורק TaxAuthGrant שפג תוקפם בקרוב, מרענן refresh token, מתריע למרצה אם נכשל</td></tr>
+          <tr><td><code class="inl">reconcile-revshare</code></td><td>חודשי</td><td>משיכת דוח ה‑rev‑share מהספק, התאמה מול ה‑Sales שלנו, הנפקת חשבונית עמלה לספק</td></tr>
+          <tr><td><code class="inl">retry-allocation</code></td><td>על כשל</td><td>ניסיון חוזר למספר הקצאה בעת כשל תקשורת מול רשות המסים (מצב חירום)</td></tr>
+        </tbody>
+      </table></div>
+      <pre><span class="c">// trigger/renew-tax-tokens.ts — חידוש טוקני רשות המסים (~3 חודשים)</span>
+<span class="k">export const</span> renewTaxTokens = schedules.<span class="f">task</span>({
+  id: <span class="s">"renew-tax-tokens"</span>,
+  cron: <span class="s">"0 3 * * *"</span>,
+  run: <span class="k">async</span> () => {
+    <span class="k">const</span> soon = <span class="k">await</span> prisma.taxAuthGrant.<span class="f">findMany</span>({
+      where: { expiresAt: { lte: <span class="f">addDays</span>(<span class="k">new</span> Date(), 10) } },
+    });
+    <span class="k">for</span> (<span class="k">const</span> g <span class="k">of</span> soon) {
+      <span class="k">const</span> next = <span class="k">await</span> taxApi.<span class="f">refresh</span>(g.refreshToken).<span class="f">catch</span>(() => <span class="k">null</span>);
+      <span class="k">if</span> (!next) { <span class="k">await</span> <span class="f">notifyLecturer</span>(g.lecturerId, <span class="s">"renew_auth"</span>); <span class="k">continue</span>; }
+      <span class="k">await</span> prisma.taxAuthGrant.<span class="f">update</span>({ where: { id: g.id }, data: next });
+    }
+  },
+});</pre>
+    </section>
+
+    <!-- API -->
+    <section id="api">
+      <h2>API ואינטגרציות</h2>
+      <h3>ספק הסליקה — Adapter</h3>
+      <p>ממשק אחיד שמסתיר את הספק. מימוש ראשון: PayPlus. כל ספק חדש = מחלקה שמממשת את ה‑interface.</p>
+      <pre><span class="k">interface</span> PaymentAdapter {
+  <span class="f">createCheckout</span>(p: { lecturerId: string; amount: number; courseId: string }): Promise&lt;{ iframeUrl: string }&gt;;
+  <span class="f">verify</span>(rawBody: string, signature: string): boolean;       <span class="c">// HMAC</span>
+  <span class="f">getRevShareReport</span>(month: string): Promise&lt;RevShareRow[]&gt;;
+}</pre>
+      <h3>רשות המסים — Open API (חשבוניות ישראל)</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>רכיב</th><th>פרט</th></tr></thead>
+        <tbody>
+          <tr><td>פורטל</td><td><code class="inl">openapi-portal.taxes.gov.il</code> (Sandbox + Production)</td></tr>
+          <tr><td>הזדהות</td><td>OAuth 2.0 — App אחד שלנו (CLIENT_ID/SECRET), הרשאה פר‑מרצה</td></tr>
+          <tr><td>טוקן</td><td>access + refresh, תוקף ~3 חודשים → <code class="inl">renew-tax-tokens</code></td></tr>
+          <tr><td>שירות מרכזי</td><td>בקשת מספר הקצאה לחשבונית (לפי <code class="inl">INVOICE_ID</code> ייחודי)</td></tr>
+          <tr><td>רישום</td><td>בית תוכנה במרשם (טופס 513) + אישור PROD (מסמכים חתומים לשע"ם)</td></tr>
+        </tbody>
+      </table></div>
+      <pre><span class="c">// lib/tax/allocation.ts — משיכת מספר הקצאה בשם המרצה</span>
+<span class="k">export async function</span> <span class="f">getAllocationNumber</span>(sale: Sale, grant: TaxAuthGrant) {
+  <span class="k">const</span> res = <span class="k">await</span> <span class="f">fetch</span>(<span class="s">`${TAX_BASE}/Invoices/allocateNumber`</span>, {
+    method: <span class="s">"POST"</span>,
+    headers: { Authorization: <span class="s">`Bearer ${grant.accessToken}`</span> },
+    body: <span class="f">JSON</span>.<span class="f">stringify</span>({ invoiceId: sale.id, amount: sale.amount, ... }),
+  });
+  <span class="k">if</span> (res.status === 401) <span class="k">throw new</span> <span class="f">TokenExpired</span>(); <span class="c">// → retry אחרי refresh</span>
+  <span class="k">return</span> (<span class="k">await</span> res.<span class="f">json</span>()).allocationNumber; <span class="c">// 9 ספרות</span>
+}</pre>
+    </section>
+
+    <!-- ENGINE -->
+    <section id="engine">
+      <h2>מנוע החשבוניות הפנימי</h2>
+      <p>מה שמבדיל אותנו מאינטגרציה עם iCount/Green Invoice: אנחנו בונים את שכבת המסמך בעצמנו. ארבעה רכיבים שחייבים להיבנות נכון מההתחלה:</p>
+      <div class="cards">
+        <div class="card"><h3>מספור רציף פר‑עוסק</h3><p>לכל מרצה רצף עצמאי ורציף, ללא דילוגים. אטומי ב‑transaction (<code class="inl">invoiceSeq++</code> תחת lock).</p></div>
+        <div class="card"><h3>חתימה דיגיטלית</h3><p>תעודת CA (Comsign) + סימון "מסמך ממוחשב" — דרישת סעיף 18(ב) להוראות ניהול ספרים.</p></div>
+        <div class="card"><h3>קובץ אחיד (BKMVDATA)</h3><p>ייצוא במבנה OPENFRMT לביקורת רשות המסים, פר‑עוסק. עמידות בפני שינוי (ללא מחיקה/עריכה).</p></div>
+        <div class="card"><h3>ארכוב</h3><p>שמירת PDF חתום ב‑Bunny, גיבוי 7 שנים, מסמך נעול לאחר הנפקה.</p></div>
+      </div>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div><b>הערכת מאמץ:</b> ה‑API למספר הקצאה פשוט. הכובד האמיתי — ניהול הרשאות פר‑מרצה + חידוש, חתימה דיגיטלית, ומבנה אחיד. <b>דרך ביניים:</b> חיבור ישיר לרשות המסים רק להקצאה, ומודול ייעודי לחתימה/מבנה — מקטין סיכון בלי לוותר על השליטה.</div></div>
+    </section>
+
+    <!-- COMPONENTS -->
+    <section id="components">
+      <h2>רכיבי UI</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>רכיב</th><th>היכן</th><th>תיאור</th></tr></thead>
+        <tbody>
+          <tr><td>כפתור + מחיר קורס</td><td>מסך קורס / חנות</td><td>הצגת מחיר + "קנה עכשיו" → פתיחת iframe תשלום</td></tr>
+          <tr><td>דף תשלום (iframe)</td><td>מודאל / מסך ייעודי</td><td>הטמעת דף הספק, מצבי טעינה/הצלחה/שגיאה (Toast)</td></tr>
+          <tr><td>אשף אונבורדינג מרצה</td><td>הגדרות מרצה</td><td>מסוף → אימות עוסק → הרשאת רשות המסים → הסכם, עם מעקב סטטוס</td></tr>
+          <tr><td>דשבורד מכירות</td><td>אזור מרצה</td><td>מכירות, חשבוניות, הכנסות, סטטוס הרשאה, החזרים</td></tr>
+          <tr><td>"הרכישות שלי"</td><td>אזור תלמיד</td><td>קורסים שנרכשו + הורדת חשבונית</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note y"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></span><div>כל המסכים בשפת WHITEBOARD (navy/cyan, Fredoka+Heebo, RTL, מצב כהה). הודעות = Toast; אישורים = Modal. ללא <code class="inl">alert/confirm</code>.</div></div>
+    </section>
+
+    <!-- REGULATION -->
+    <section id="regulation">
+      <h2>רגולציה ובקרות</h2>
+      <ul>
+        <li><b>לא מחזיקים כספים</b> → אין רישיון "נותן שירותי תשלום", אין מאגד (חוק שירותי תשלום 2023). הכסף תמיד תלמיד→מרצה.</li>
+        <li><b>בקרת §50:</b> חסימת הנפקת חשבונית מס לעוסק פטור/לא‑רשום. אימות שם↔מספר עוסק↔תיק לפני הנפקה.</li>
+        <li><b>הרשאה דיגיטלית פר‑מרצה</b> + הסכם שירות בכתב (אחריות מס על המרצה, סעיף שיפוי).</li>
+        <li><b>דיווח נטו:</b> אנחנו מדווחים רק על העמלה/ה‑rev‑share כהכנסה (מודל סוכן).</li>
+        <li><b>לפני השקה:</b> חוות דעת עו"ד רגולציה + רו"ח, ושקילת Pre‑ruling מרשות המסים.</li>
+      </ul>
+      <div class="note g"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><div>הסף לחובת מספר הקצאה יורד ל‑₪5,000 ב‑1.6.2026. רוב מכירות הקורסים הן B2C (תלמיד פרטי) → לא נדרש מספר הקצאה כלל; החובה רק במכירה לעוסק מעל הסף.</div></div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section id="roadmap">
+      <h2>מפת דרכים</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>שלב</th><th>תוצרים</th></tr></thead>
+        <tbody>
+          <tr><td>1 · סגירה משפטית (שבועות 1–4)</td><td>חוו"ד עו"ד+רו"ח, הסכם ספק (PayPlus), רישום בית תוכנה + מייל לשע"ם</td></tr>
+          <tr><td>2 · אינטגרציית ליבה (4–10)</td><td>PaymentAdapter + Webhooks, חיבור Open API (Sandbox), מנוע חשבונית + חתימה</td></tr>
+          <tr><td>3 · חוויית מרצה (8–14)</td><td>אשף אונבורדינג, מחיר+קנייה במסך קורס, דשבורד מכירות, "הרכישות שלי"</td></tr>
+          <tr><td>4 · פיילוט והשקה (14–18)</td><td>3–5 מרצים, בקרות §50/החזרים, התאמת rev‑share, השקה מדורגת</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack">
+      <h2>סיכום טכנולוגי</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>שכבה</th><th>טכנולוגיה</th></tr></thead>
+        <tbody>
+          <tr><td>Frontend</td><td>React + Next.js (App Router), TypeScript strict, Zod</td></tr>
+          <tr><td>DB</td><td>PostgreSQL + Prisma</td></tr>
+          <tr><td>רקע</td><td>Trigger.dev (הנפקת חשבונית, חידוש טוקנים, התאמת עמלות)</td></tr>
+          <tr><td>מדיה/ארכוב</td><td>Bunny CDN (PDF חשבוניות + נכסים)</td></tr>
+          <tr><td>סליקה</td><td>PaymentAdapter → PayPlus (ברירת מחדל) / HYP / PayMe</td></tr>
+          <tr><td>חשבוניות</td><td>Open API רשות המסים + חתימה (Comsign) + BKMVDATA</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note cy" style="margin-top:22px"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span><div>מסמך נלווה למצגת ההנהלה. כל ההחלטות העסקיות (מודל, ספק, רגולציה) מפורטות שם; כאן — איך בונים. לעדכון מול שינויי רגולציה/ספק, ה‑Adapter ו‑מנוע החשבוניות הם נקודות ההחלפה היחידות.</div></div>
+    </section>
+  </main>
+</div>
+
+<script>
+const links=[...document.querySelectorAll('#nav a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const obs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')===id));}});},{rootMargin:'-20% 0px -70% 0px'});
+secs.forEach(s=>s&&obs.observe(s));
+const root=document.documentElement,tb=document.getElementById('theme');
+tb.onclick=()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');
+  tb.querySelector('svg').innerHTML=d?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';};
+</script>
+</body>
+</html>

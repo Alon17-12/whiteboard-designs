@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHITEBOARD · סליקה וחשבוניות פנימיות — תמצית מנכ"ל</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A; --navy-dark:#1a2e5e;
+  --cyan:#38C4F2; --pink:#F05680; --green:#7DC57A; --green-bright:#22c55e; --yellow:#EAD654;
+  --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+  --border:rgba(37,62,122,0.1); --border-strong:rgba(37,62,122,0.18);
+  --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.55); --text-xs:rgba(37,62,122,0.38);
+  --r-xs:6px; --r-sm:10px; --r-md:16px; --r-lg:22px;
+  --shadow:0 18px 50px -22px rgba(37,62,122,0.45);
+  --shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);
+}
+[data-theme="dark"]{
+  --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.16);
+  --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.52); --text-xs:rgba(221,229,245,0.3);
+  --shadow:0 22px 60px -22px rgba(0,0,0,0.7);
+  --shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);overflow:hidden;-webkit-font-smoothing:antialiased;transition:background .4s ease,color .4s ease}
+.bg-fx{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg-fx::before,.bg-fx::after{content:"";position:absolute;border-radius:50%;filter:blur(90px)}
+.bg-fx::before{width:48vw;height:48vw;background:radial-gradient(circle,var(--cyan),transparent 65%);top:-16vw;left:-12vw;opacity:.28}
+.bg-fx::after{width:46vw;height:46vw;background:radial-gradient(circle,var(--pink),transparent 65%);bottom:-18vw;right:-12vw;opacity:.20}
+.progress{position:fixed;top:0;left:0;right:0;height:4px;z-index:60}
+.progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green-bright));transition:width .45s cubic-bezier(.4,0,.2,1);border-radius:0 4px 4px 0}
+.deck{position:relative;z-index:1;height:100dvh;width:100%}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,5vw,90px);opacity:0;visibility:hidden;transform:translateY(26px) scale(.99);transition:opacity .5s ease,transform .55s cubic-bezier(.2,.7,.2,1),visibility .5s;overflow-y:auto}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.wrap{width:100%;max-width:1180px;margin:0 auto}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;letter-spacing:.5px;color:var(--cyan);background:color-mix(in srgb,var(--cyan) 14%,transparent);padding:7px 15px;border-radius:100px;margin-bottom:22px;border:1px solid color-mix(in srgb,var(--cyan) 26%,transparent)}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 4px color-mix(in srgb,var(--cyan) 22%,transparent)}
+h1{font-family:'Fredoka',sans-serif;font-weight:700;line-height:1.04;letter-spacing:-.5px;font-size:clamp(34px,6vw,76px)}
+h2{font-family:'Fredoka',sans-serif;font-weight:700;line-height:1.08;letter-spacing:-.3px;font-size:clamp(28px,4.4vw,52px);margin-bottom:10px}
+h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:clamp(17px,1.5vw,21px);line-height:1.2}
+.lead{font-size:clamp(15px,1.6vw,21px);color:var(--text-sub);line-height:1.6;max-width:66ch;font-weight:400}
+.muted{color:var(--text-sub)}
+.hl{color:var(--cyan);font-weight:700}.hl-g{color:var(--green-bright);font-weight:700}.hl-p{color:var(--pink);font-weight:700}
+.grid{display:grid;gap:16px;margin-top:30px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:22px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+.card .ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:13px;font-family:'Fredoka';font-weight:700}
+.card h3{margin-bottom:7px}
+.card p{font-size:13.5px;color:var(--text-sub);line-height:1.55}
+.tint-cyan{background:color-mix(in srgb,var(--cyan) 16%,transparent);color:var(--cyan)}
+.tint-pink{background:color-mix(in srgb,var(--pink) 16%,transparent);color:var(--pink)}
+.tint-green{background:color-mix(in srgb,var(--green-bright) 16%,transparent);color:var(--green-bright)}
+.tint-yellow{background:color-mix(in srgb,var(--yellow) 26%,transparent);color:#9a8d10}
+[data-theme="dark"] .tint-yellow{color:var(--yellow)}
+.tint-navy{background:color-mix(in srgb,var(--navy) 16%,transparent);color:var(--navy)}
+[data-theme="dark"] .tint-navy{background:rgba(255,255,255,.08);color:var(--cyan)}
+.list{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:11px}
+.list li{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;line-height:1.5;color:var(--text-main)}
+.list li .mk{flex:0 0 auto;width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;margin-top:1px;font-weight:700;font-size:13px}
+.tablewrap{margin-top:26px;border:1px solid var(--border);border-radius:var(--r-md);overflow:auto;box-shadow:var(--shadow-sm);background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:680px}
+th,td{padding:15px 16px;text-align:right;border-bottom:1px solid var(--border)}
+thead th{background:var(--navy);color:#fff;font-family:'Fredoka';font-weight:500;font-size:13.5px;white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surface-2)}
+tbody td:first-child{font-weight:700;font-family:'Fredoka';white-space:nowrap}
+.rowstar{background:color-mix(in srgb,var(--green-bright) 9%,transparent)!important}
+.yes{color:var(--green-bright);font-weight:700}.no{color:var(--pink);font-weight:700}.mayb{color:#9a8d10;font-weight:700}
+[data-theme="dark"] .mayb{color:var(--yellow)}
+.callout{margin-top:26px;display:flex;gap:15px;align-items:flex-start;background:color-mix(in srgb,var(--yellow) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--yellow) 50%,transparent);border-radius:var(--r-md);padding:18px 20px}
+.callout.cy{background:color-mix(in srgb,var(--cyan) 11%,var(--surface));border-color:color-mix(in srgb,var(--cyan) 38%,transparent)}
+.callout.gr{background:color-mix(in srgb,var(--green-bright) 11%,var(--surface));border-color:color-mix(in srgb,var(--green-bright) 40%,transparent)}
+.callout .ic{flex:0 0 auto}
+.callout p{font-size:14.5px;line-height:1.55}
+.callout b{font-weight:700}
+.kpi{display:flex;gap:24px;margin-top:34px;flex-wrap:wrap}
+.kpi .k{min-width:150px;flex:1}
+.kpi .k .n{font-family:'Fredoka';font-weight:700;font-size:clamp(26px,3.2vw,42px);line-height:1;color:var(--cyan)}
+.kpi .k .n.p{color:var(--pink)}.kpi .k .n.g{color:var(--green-bright)}
+.kpi .k .l{font-size:13px;color:var(--text-sub);margin-top:9px;line-height:1.4;max-width:22ch}
+.tstep{display:flex;gap:13px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 16px;font-size:14.5px;line-height:1.5;box-shadow:var(--shadow-sm)}
+.tstep .tn{flex:0 0 auto;width:28px;height:28px;border-radius:8px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;font-size:14px}
+[data-theme="dark"] .tstep .tn{background:var(--cyan);color:var(--navy-dark)}
+code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;background:var(--surface-3);color:#1769a3;padding:2px 7px;border-radius:6px;direction:ltr}
+[data-theme="dark"] code{color:var(--cyan)}
+.road{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px;counter-reset:ph}
+.phase{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:20px 18px;position:relative;box-shadow:var(--shadow-sm)}
+.phase::before{counter-increment:ph;content:counter(ph);font-family:'Fredoka';font-weight:700;font-size:13px;width:30px;height:30px;border-radius:9px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:13px}
+.phase .ph-t{font-family:'Fredoka';font-weight:600;font-size:16px;margin-bottom:9px}
+.phase ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.phase li{font-size:12.5px;color:var(--text-sub);line-height:1.4;padding-right:13px;position:relative}
+.phase li::before{content:"";position:absolute;right:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--cyan)}
+.cover-badge{display:inline-flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:15px;color:var(--navy);margin-bottom:30px}
+[data-theme="dark"] .cover-badge{color:var(--text-main)}
+.logo-sq{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),var(--navy));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+.cover h1 em{font-style:normal;background:linear-gradient(120deg,var(--cyan),var(--green-bright));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cover .meta{margin-top:36px;display:flex;gap:14px;flex-wrap:wrap}
+.chip{font-size:13px;font-weight:600;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:9px 17px;box-shadow:var(--shadow-sm);display:flex;gap:8px;align-items:center}
+.flowrow{display:flex;align-items:stretch;gap:0;margin-top:30px;flex-wrap:wrap}
+.fnode{flex:1;min-width:150px;text-align:center}
+.farrow{display:flex;align-items:center;padding:0 10px;color:var(--green-bright)}
+.nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:7px 9px;box-shadow:var(--shadow)}
+.nav button{width:38px;height:38px;border:none;background:transparent;border-radius:50%;cursor:pointer;color:var(--navy);display:flex;align-items:center;justify-content:center;transition:.2s}
+[data-theme="dark"] .nav button{color:var(--text-main)}
+.nav button:hover{background:var(--surface-2)}
+.nav .count{font-family:'Fredoka';font-weight:600;font-size:13.5px;padding:0 10px;min-width:54px;text-align:center;font-variant-numeric:tabular-nums}
+.dots{position:fixed;top:50%;left:20px;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:9px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--border-strong);cursor:pointer;transition:.25s;display:block}
+.dots i.on{background:var(--cyan);transform:scale(1.5)}
+.topbar{position:fixed;top:16px;right:20px;left:20px;z-index:60;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.topbar .brand{font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--text-sub);pointer-events:auto;display:flex;align-items:center;gap:9px}
+.topbar .brand .lg{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,var(--cyan),var(--navy));display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700}
+.iconbtn{pointer-events:auto;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--text-main);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);transition:.2s}
+.iconbtn:hover{transform:translateY(-2px)}
+.fade-up{opacity:0;transform:translateY(18px)}
+.slide.active .fade-up{opacity:1;transform:none;transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+.slide.active .fade-up.d1{transition-delay:.08s}.slide.active .fade-up.d2{transition-delay:.16s}.slide.active .fade-up.d3{transition-delay:.24s}.slide.active .fade-up.d4{transition-delay:.32s}
+svg{display:block}
+@media (max-width:860px){.g2,.g3,.g4,.road,.flowrow{grid-template-columns:1fr}.road{grid-template-columns:1fr 1fr}.dots{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="bg-fx"></div>
+<div class="progress"><i id="bar"></i></div>
+
+<div class="topbar">
+  <div class="brand"><span class="lg">W</span> WHITEBOARD · תמצית מנכ"ל</div>
+  <button class="iconbtn" id="theme" aria-label="החלפת מצב תצוגה">
+    <svg id="ic-moon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</div>
+
+<div class="dots" id="dots"></div>
+
+<main class="deck" id="deck">
+
+  <!-- 0 · COVER -->
+  <section class="slide cover active">
+    <div class="wrap">
+      <div class="cover-badge fade-up"><span class="logo-sq">W</span> WHITEBOARD LMS</div>
+      <h1 class="fade-up d1">סליקה וחשבוניות<br><em>פנימיות</em></h1>
+      <p class="lead fade-up d2" style="margin-top:24px">המרצים מוכרים קורסים לתלמידים דרך סליקה פנימית; אנחנו מנפיקים את החשבוניות בעצמנו וגוזרים עמלה — בלי להחזיק כסף, בלי רישיון.</p>
+      <div class="meta fade-up d3">
+        <span class="chip"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M3 10h18M8 2v4M16 2v4"/></svg> יוני 2026</span>
+        <span class="chip"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> תמצית החלטה · 9 שקופיות</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 · BLUF -->
+  <section class="slide">
+    <div class="wrap">
+      <span class="eyebrow fade-up"><span class="dot"></span> השורה התחתונה</span>
+      <h2 class="fade-up d1">מנוע הכנסה חדש — בלי כסף שעובר דרכנו</h2>
+      <p class="lead fade-up d1">המרצים סולקים את התלמידים דרכנו; הכסף עובר ישירות אליהם. אנחנו מרוויחים מעמלה וממנוע חשבוניות פנימי — ונשארים מחוץ לרגולציה הכבדה.</p>
+      <div class="kpi fade-up d2">
+        <div class="k"><div class="n g">נתח מהעמלה</div><div class="l">חברת הסליקה גובה מהמרצה ומעבירה לנו נתח, על כל מכירה</div></div>
+        <div class="k"><div class="n">0 רישיון</div><div class="l">לא מחזיקים כסף → אין מאגד, אין רגולציית תשלומים</div></div>
+        <div class="k"><div class="n">מנוע פנימי</div><div class="l">מנפיקים חשבוניות בעצמנו, ישירות מול רשות המסים</div></div>
+        <div class="k"><div class="n g">0 סיכון גבייה</div><div class="l">חברת הסליקה גובה מהמרצה ומשלמת לנו</div></div>
+      </div>
+      <div class="callout cy fade-up d3">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>ההמלצה:</b> להתחיל עם <b>PayPlus</b> (נתח מתועד 2%–10% מהעמלה). HYP — המועמד המקורי — בלי מחירון פומבי, דורש מו"מ. PayMe — אם נרצה מיתוג מלא תחת המותג שלנו.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · HOW IT WORKS -->
+  <section class="slide">
+    <div class="wrap">
+      <span class="eyebrow fade-up"><span class="dot"></span> איך זה עובד</span>
+      <h2 class="fade-up d1">מסוף לכל מרצה — הכסף ישיר</h2>
+      <p class="lead fade-up d1">כל מרצה סולק את התלמידים שלו דרך מסוף משלו, תחת מטריית התוכנה שלנו. הכסף עובר ישירות מהתלמיד למרצה.</p>
+      <div class="flowrow fade-up d2">
+        <div class="fnode card"><div class="ic tint-cyan" style="margin:0 auto 12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/></svg></div><h3>תלמיד</h3><p style="text-align:center">משלם על הקורס</p></div>
+        <div class="farrow"><svg width="34" height="22" viewBox="0 0 34 22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M32 11H2M2 11l7-6M2 11l7 6"/></svg></div>
+        <div class="fnode card" style="border:1.5px solid var(--cyan)"><div class="ic tint-navy" style="margin:0 auto 12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></div><h3>מסוף המרצה</h3><p style="text-align:center">תחת מטריית WHITEBOARD</p></div>
+        <div class="farrow"><svg width="34" height="22" viewBox="0 0 34 22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M32 11H2M2 11l7-6M2 11l7 6"/></svg></div>
+        <div class="fnode card"><div class="ic tint-green" style="margin:0 auto 12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 3v3M17 3v3"/></svg></div><h3>חשבון המרצה</h3><p style="text-align:center">הכסף נוחת ישירות</p></div>
+      </div>
+      <div class="grid g3 fade-up d3" style="margin-top:16px">
+        <div class="card" style="border-right:3px solid var(--green-bright)"><h3 style="color:var(--green-bright);margin-bottom:6px">הכסף</h3><p>ישיר לחשבון המרצה. לא נוגע בנו.</p></div>
+        <div class="card" style="border-right:3px solid var(--cyan)"><h3 style="color:var(--cyan);margin-bottom:6px">החשבונית</h3><p>מנוע פנימי שלנו מנפיק בשם המרצה.</p></div>
+        <div class="card" style="border-right:3px solid var(--pink)"><h3 style="color:var(--pink);margin-bottom:6px">העמלה</h3><p>חברת הסליקה גובה ומעבירה לנו נתח.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · ECONOMICS -->
+  <section class="slide">
+    <div class="wrap">
+      <span class="eyebrow fade-up"><span class="dot"></span> איך מרוויחים</span>
+      <h2 class="fade-up d1">נתח מעמלת הסליקה על כל מכירה</h2>
+      <p class="lead fade-up d1">חברת הסליקה גובה מהמרצה עמלת סליקה (כ-1% מהעסקה), ומעבירה לנו נתח ממנה על כל מרצה שהבאנו. הכנסה פסיבית, נטו, ללא סיכון.</p>
+      <div class="kpi fade-up d2">
+        <div class="k"><div class="n g">2%–10%</div><div class="l">נתח חודשי מעמלת הסליקה (PayPlus, מתועד)</div></div>
+        <div class="k"><div class="n">₪100–195</div><div class="l">בונוס חד-פעמי על כל מרצה חדש שנפתח</div></div>
+        <div class="k"><div class="n g">100%</div><div class="l">מרווח נקי — אין עלות סליקה עלינו, אין סיכון גבייה</div></div>
+      </div>
+      <div class="callout fade-up d3">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></span>
+        <p><b>רוצים מרווח גבוה יותר?</b> חלופה — לחייב את המרצה ישירות באחוז שאנחנו קובעים (1%–2%), במקום נתח מעמלת הסליקה. מרווח גדול בהרבה, אבל אנחנו הגובים → נכנס סיכון גבייה. <b>ההמלצה: להתחיל בנתח מהעמלה</b> (פשוט ובטוח), ולשקול שדרוג בהמשך.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · INVOICING + REGULATION -->
+  <section class="slide">
+    <div class="wrap">
+      <span class="eyebrow fade-up"><span class="dot"></span> חשבוניות ורגולציה</span>
+      <h2 class="fade-up d1">אנחנו מנפיקים — ונשארים קלים</h2>
+      <div class="grid g2 fade-up d2" style="align-items:start">
+        <div class="card">
+          <div class="ic tint-cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg></div>
+          <h3 style="margin-bottom:12px">חשבוניות — אנחנו הבעלים</h3>
+          <ul class="list" style="margin-top:0;gap:9px">
+            <li><span class="mk tint-cyan">✓</span><div>מנוע פנימי, חיבור ישיר לרשות המסים — <b>בלי ספק חיצוני</b></div></li>
+            <li><span class="mk tint-cyan">✓</span><div>חשבונית בשם המרצה (הרשאה דיגיטלית פר‑מרצה)</div></li>
+            <li><span class="mk tint-cyan">✓</span><div><b>אין רישיון</b> — רק רישום טכני כבית תוכנה</div></li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="ic tint-green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <h3 style="margin-bottom:12px">רגולציה — למה אנחנו קלים</h3>
+          <ul class="list" style="margin-top:0;gap:9px">
+            <li><span class="mk tint-green">✓</span><div>לא בזרימת הכסף → <b>אין מאגד, אין רישיון תשלומים</b></div></li>
+            <li><span class="mk tint-green">✓</span><div>מס רק על העמלה שלנו (נטו)</div></li>
+            <li><span class="mk tint-pink">!</span><div>הסיכון היחיד: לא להנפיק חשבונית מס ל<b>עוסק פטור</b> (אסור לו על פי חוק — עבירת מס)</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout cy fade-up d3">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span>
+        <p>זה בדיוק המודל של iCount/Green Invoice — רק שאנחנו בונים אותו בעצמנו. הגורם הוא <b>שע"ם</b> (רשות המסים), והחיבור הוא רישום טכני, לא רישיון.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4b · INVOICE APPROVAL PROCESS -->
+  <section class="slide">
+    <div class="wrap">
+      <span class="eyebrow fade-up"><span class="dot"></span> אישור להפקת חשבוניות</span>
+      <h2 class="fade-up d1">איך מקבלים אישור להפיק חשבוניות מס</h2>
+      <p class="lead fade-up d1">הגורם הוא רשות המסים (יחידת המחשוב, "שע"ם"). <b>אין רישיון</b> — זה רישום טכני. שני שלבים פשוטים:</p>
+      <div class="grid g2 fade-up d2" style="align-items:start">
+        <div class="card">
+          <div class="ic tint-cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6"/></svg></div>
+          <h3 style="margin-bottom:12px">פעם אחת — WHITEBOARD נרשמת</h3>
+          <ul class="list" style="margin-top:0;gap:9px">
+            <li><span class="mk tint-cyan">1</span><div>רישום WHITEBOARD כ<b>בית תוכנה</b> ברשות המסים (טופס רשמי)</div></li>
+            <li><span class="mk tint-cyan">2</span><div>חיבור למערכת <b>"חשבוניות ישראל"</b> של רשות המסים</div></li>
+            <li><span class="mk tint-cyan">3</span><div>בדיקות ואישור הפעלה — ואז עולים לאוויר</div></li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="ic tint-green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a4 4 0 0 0-3-3.9"/></svg></div>
+          <h3 style="margin-bottom:12px">לכל מרצה — אישור חד‑פעמי</h3>
+          <ul class="list" style="margin-top:0;gap:9px">
+            <li><span class="mk tint-green">1</span><div>מאמתים שהמרצה הוא <b>עוסק מורשה</b> (לא עוסק פטור)</div></li>
+            <li><span class="mk tint-green">2</span><div>המרצה מאשר לנו, דרך אתר רשות המסים, <b>להנפיק חשבוניות בשמו</b></div></li>
+            <li><span class="mk tint-green">3</span><div>מאותו רגע — המנוע מנפיק אוטומטית, בשם המרצה</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout cy fade-up d3">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p>זה בדיוק מה ש‑iCount/Green Invoice עושים עבור לקוחותיהם — <b>אנחנו עושים זאת בעצמנו</b>, בלי גוף חיצוני ובלי רישיון. החשבונית תמיד בשם המרצה.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · CLEARING VENDOR -->
+  <section class="slide">
+    <div class="wrap">
+      <span class="eyebrow fade-up"><span class="dot"></span> ספק הסליקה</span>
+      <h2 class="fade-up d1">המלצה: PayPlus</h2>
+      <p class="lead fade-up d1">חקרנו את כל גופי הסליקה. המודל מוכח — אבל רק חלק מפרסמים תנאים. דווקא HYP, המועמד המקורי, חסר תוכנית פומבית.</p>
+      <div class="tablewrap fade-up d2">
+        <table>
+          <thead><tr><th>ספק</th><th>נתח מהעמלה</th><th>מתי מתאים</th></tr></thead>
+          <tbody>
+            <tr class="rowstar"><td>PayPlus ⭐</td><td class="yes">2%–10% + בונוס ₪100–195 למרצה</td><td>התחלה מהירה, תנאים שקופים — <b>הבחירה המומלצת</b></td></tr>
+            <tr><td>PayMe</td><td class="mayb">במו"מ ישיר</td><td>אם נרצה מיתוג מלא תחת המותג שלנו</td></tr>
+            <tr><td>HYP</td><td class="no">אין מחירון — מו"מ בלבד</td><td>המועמד המקורי — אך לא מתועד, הימור</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout gr fade-up d3">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>למה PayPlus:</b> המודל מתאים מילה‑במילה — כל מרצה נרשם דרך לינק, פותח חשבון משלו, הכסף ישיר אליו, ואנחנו מקבלים עמלה לחשבון נפרד. <b>מחוץ לזרימת הכסף, אפס רגולציה</b>, ואפשר להתחיל מיד.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · ROADMAP -->
+  <section class="slide">
+    <div class="wrap">
+      <span class="eyebrow fade-up"><span class="dot"></span> מסלול</span>
+      <h2 class="fade-up d1">מהיום להשקה — 4 שלבים</h2>
+      <div class="road fade-up d2">
+        <div class="phase"><div class="ph-t">סגירה משפטית</div><ul><li>עו"ד רגולציה + רו"ח</li><li>הסכם PayPlus (נתח מהעמלה)</li><li>מייל פתיחה לשע"ם</li></ul></div>
+        <div class="phase"><div class="ph-t">אינטגרציה</div><ul><li>סליקה (מסוף לכל מרצה)</li><li>מנוע חשבוניות + רשות המסים</li><li>סביבת בדיקות</li></ul></div>
+        <div class="phase"><div class="ph-t">חוויית מרצה</div><ul><li>מסך מכירה + "קנה עכשיו"</li><li>אשף אונבורדינג מרצה</li><li>דשבורד מכירות</li></ul></div>
+        <div class="phase"><div class="ph-t">פיילוט + השקה</div><ul><li>3–5 מרצים נבחרים</li><li>חסימת עוסק פטור + החזרים</li><li>השקה מדורגת</li></ul></div>
+      </div>
+      <div class="callout cy fade-up d3">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 7v5l3 2"/></svg></span>
+        <p>השלבים חופפים — אפשר להתחיל אינטגרציה במקביל לחוות הדעת המשפטית. <b>אומדן ריאלי להשקה ראשונית: ~4 חודשים.</b></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · DECISIONS -->
+  <section class="slide">
+    <div class="wrap">
+      <span class="eyebrow fade-up"><span class="dot"></span> ההחלטות שלפנינו</span>
+      <h2 class="fade-up d1">שלוש החלטות לקבל</h2>
+      <div class="grid g3 fade-up d2">
+        <div class="card"><div class="ic tint-cyan">1</div><h3>ספק סליקה</h3><p style="margin-top:6px"><b>המלצה: PayPlus.</b> תנאים שקופים, אפס רגולציה, התחלה מהירה. HYP/PayMe כחלופות מו"מ.</p></div>
+        <div class="card"><div class="ic tint-cyan">2</div><h3>מודל עמלה</h3><p style="margin-top:6px"><b>המלצה: נתח מהעמלה.</b> פשוט ובטוח. אם נרצה מרווח גבוה יותר — חיוב ישיר של המרצה בהמשך.</p></div>
+        <div class="card"><div class="ic tint-cyan">3</div><h3>אישור להתחיל</h3><p style="margin-top:6px">חוות דעת עו"ד+רו"ח, ואז פיילוט עם 3–5 מרצים. השקה מלאה אחרי הוכחת המודל.</p></div>
+      </div>
+      <div class="callout gr fade-up d3">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>הקו התחתון:</b> מנוע הכנסה חדש על כל מכירה, אפס סיכון גבייה, רגולציה מינימלית, ונעילת המרצים אצלנו. <b>שווה להתקדם — מתחילים מ‑PayPlus + חוות דעת משפטית.</b></p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="nav">
+  <button id="prev" aria-label="הקודם"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  <span class="count" id="count">1 / 9</span>
+  <button id="next" aria-label="הבא"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+</nav>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+let i=0;
+slides.forEach((_,n)=>{const d=document.createElement('i');d.onclick=()=>go(n);dotsBox.appendChild(d);});
+const dots=[...dotsBox.children];
+const bar=document.getElementById('bar');
+const count=document.getElementById('count');
+function go(n){
+  i=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+  dots.forEach((d,k)=>d.classList.toggle('on',k===i));
+  bar.style.width=((i)/(slides.length-1)*100)+'%';
+  count.textContent=(i+1)+' / '+slides.length;
+}
+document.getElementById('next').onclick=()=>go(i+1);
+document.getElementById('prev').onclick=()=>go(i-1);
+addEventListener('keydown',e=>{
+  if(['ArrowLeft','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();go(i+1);}
+  else if(['ArrowRight','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();go(i-1);}
+  else if(e.key==='Home')go(0); else if(e.key==='End')go(slides.length-1);
+});
+let sx=0;
+addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>55){ dx<0?go(i+1):go(i-1);} });
+let wl=0;
+addEventListener('wheel',e=>{const t=Date.now(); if(t-wl<700)return; if(Math.abs(e.deltaY)<24)return; wl=t; go(i+(e.deltaY>0?1:-1));},{passive:true});
+const root=document.documentElement, tb=document.getElementById('theme');
+tb.onclick=()=>{const d=root.getAttribute('data-theme')==='dark'; root.setAttribute('data-theme',d?'light':'dark');
+  tb.querySelector('svg').innerHTML=d
+    ?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'
+    :'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+};
+go(0);
+</script>
+</body>
+</html>
