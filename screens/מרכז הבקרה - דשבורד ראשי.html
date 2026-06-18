@@ -190,6 +190,13 @@
   .chart-dot { fill:var(--surface); stroke:var(--cyan); stroke-width:3; opacity:0; animation:fadeIn .3s ease-out 1.5s forwards; }
   .chart-grid-line { stroke:var(--border); stroke-width:1; stroke-dasharray:3 4; }
   .chart-x-label { font-family:var(--font-en); font-size:11px; fill:var(--text-light); text-anchor:middle; }
+  .chart-legend { display:flex; gap:18px; margin-bottom:12px; }
+  .cl-item { display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:var(--text-sub); }
+  .cl-dot { width:14px; height:4px; border-radius:3px; flex-shrink:0; }
+  .line-cash { fill:none; stroke:var(--green); stroke-width:3; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:1400; stroke-dashoffset:1400; animation:drawLine 1.7s ease-out forwards; }
+  .line-mrr { fill:none; stroke:var(--cyan); stroke-width:3; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:1400; stroke-dashoffset:1400; animation:drawLine 1.7s ease-out .2s forwards; }
+  .dot-cash { fill:var(--surface); stroke:var(--green); stroke-width:3; opacity:0; animation:fadeIn .3s ease-out 1.5s forwards; }
+  .dot-mrr { fill:var(--surface); stroke:var(--cyan); stroke-width:3; opacity:0; animation:fadeIn .3s ease-out 1.6s forwards; }
 
   /* FUNNEL */
   .funnel-mini { display:flex; flex-direction:column; gap:10px; }
@@ -418,18 +425,25 @@
           </div>
           <span class="chart-delta" style="align-self:flex-end;color:var(--text-sub)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>כולל תשלומים שנתיים מראש</span>
         </div>
+        <div class="chart-legend">
+          <span class="cl-item"><span class="cl-dot" style="background:var(--green)"></span>תזרים · סה״כ הכנסה החודש</span>
+          <span class="cl-item"><span class="cl-dot" style="background:var(--cyan)"></span>מכירות · MRR (הכרה)</span>
+        </div>
         <div class="chart-wrap">
           <svg class="chart-svg" viewBox="0 0 600 210" preserveAspectRatio="none">
             <defs>
-              <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#38C4F2"/><stop offset="100%" stop-color="#7DC57A"/></linearGradient>
-              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(56,196,242,0.28)"/><stop offset="100%" stop-color="rgba(56,196,242,0)"/></linearGradient>
+              <linearGradient id="areaGradGreen" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(125,197,122,0.26)"/><stop offset="100%" stop-color="rgba(125,197,122,0)"/></linearGradient>
             </defs>
-            <line class="chart-grid-line" x1="0" y1="40" x2="600" y2="40"/>
-            <line class="chart-grid-line" x1="0" y1="90" x2="600" y2="90"/>
-            <line class="chart-grid-line" x1="0" y1="140" x2="600" y2="140"/>
-            <path class="chart-area" d="M40,156 L144,124 L248,105 L352,82 L456,55 L560,27 L560,185 L40,185 Z"/>
-            <path class="chart-path" d="M40,156 L144,124 L248,105 L352,82 L456,55 L560,27"/>
-            <circle class="chart-dot" cx="40" cy="156" r="4.5"/><circle class="chart-dot" cx="144" cy="124" r="4.5"/><circle class="chart-dot" cx="248" cy="105" r="4.5"/><circle class="chart-dot" cx="352" cy="82" r="4.5"/><circle class="chart-dot" cx="456" cy="55" r="4.5"/><circle class="chart-dot" cx="560" cy="27" r="5.5"/>
+            <line class="chart-grid-line" x1="0" y1="45" x2="600" y2="45"/>
+            <line class="chart-grid-line" x1="0" y1="95" x2="600" y2="95"/>
+            <line class="chart-grid-line" x1="0" y1="145" x2="600" y2="145"/>
+            <!-- cash (תזרים) area + line -->
+            <path class="chart-area" style="fill:url(#areaGradGreen)" d="M40,129 L144,88 L248,110 L352,58 L456,79 L560,34 L560,185 L40,185 Z"/>
+            <path class="line-cash" d="M40,129 L144,88 L248,110 L352,58 L456,79 L560,34"/>
+            <!-- MRR (מכירות) line -->
+            <path class="line-mrr" d="M40,162 L144,151 L248,145 L352,137 L456,128 L560,118"/>
+            <circle class="dot-cash" cx="40" cy="129" r="4.5"/><circle class="dot-cash" cx="144" cy="88" r="4.5"/><circle class="dot-cash" cx="248" cy="110" r="4.5"/><circle class="dot-cash" cx="352" cy="58" r="4.5"/><circle class="dot-cash" cx="456" cy="79" r="4.5"/><circle class="dot-cash" cx="560" cy="34" r="5.5"/>
+            <circle class="dot-mrr" cx="40" cy="162" r="4"/><circle class="dot-mrr" cx="144" cy="151" r="4"/><circle class="dot-mrr" cx="248" cy="145" r="4"/><circle class="dot-mrr" cx="352" cy="137" r="4"/><circle class="dot-mrr" cx="456" cy="128" r="4"/><circle class="dot-mrr" cx="560" cy="118" r="5"/>
             <text class="chart-x-label" x="40" y="205">ינו׳</text><text class="chart-x-label" x="144" y="205">פבר׳</text><text class="chart-x-label" x="248" y="205">מרץ</text><text class="chart-x-label" x="352" y="205">אפר׳</text><text class="chart-x-label" x="456" y="205">מאי</text><text class="chart-x-label" x="560" y="205">יוני</text>
           </svg>
         </div>
