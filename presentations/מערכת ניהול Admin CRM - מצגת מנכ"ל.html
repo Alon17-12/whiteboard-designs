@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHITEBOARD · מרכז הבקרה — מצגת מנכ"ל</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green:#7DC57A;--green-bright:#22c55e;--yellow:#EAD654;
+  --bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.18);
+  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);
+  --r-sm:10px;--r-md:16px;--shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.52);--text-xs:rgba(221,229,245,0.3);--shadow:0 22px 60px -22px rgba(0,0,0,0.7);--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);
+}
+*{margin:0;padding:0;box-sizing:border-box}html,body{height:100%}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);overflow:hidden;-webkit-font-smoothing:antialiased;transition:background .4s,color .4s}
+.bg-fx{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg-fx::before,.bg-fx::after{content:"";position:absolute;border-radius:50%;filter:blur(90px)}
+.bg-fx::before{width:48vw;height:48vw;background:radial-gradient(circle,var(--cyan),transparent 65%);top:-16vw;left:-12vw;opacity:.28}
+.bg-fx::after{width:46vw;height:46vw;background:radial-gradient(circle,var(--pink),transparent 65%);bottom:-18vw;right:-12vw;opacity:.20}
+.progress{position:fixed;top:0;left:0;right:0;height:4px;z-index:60}
+.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green-bright));transition:width .45s cubic-bezier(.4,0,.2,1);border-radius:0 4px 4px 0}
+.deck{position:relative;z-index:1;height:100dvh;width:100%}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,5vw,90px);opacity:0;visibility:hidden;transform:translateY(26px) scale(.99);transition:opacity .5s,transform .55s cubic-bezier(.2,.7,.2,1),visibility .5s;overflow-y:auto}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.wrap{width:100%;max-width:1180px;margin:0 auto}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;letter-spacing:.5px;color:var(--cyan);background:color-mix(in srgb,var(--cyan) 14%,transparent);padding:7px 15px;border-radius:100px;margin-bottom:22px;border:1px solid color-mix(in srgb,var(--cyan) 26%,transparent)}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 4px color-mix(in srgb,var(--cyan) 22%,transparent)}
+h1{font-family:'Fredoka';font-weight:700;line-height:1.04;letter-spacing:-.5px;font-size:clamp(34px,6vw,76px)}
+h2{font-family:'Fredoka';font-weight:700;line-height:1.08;letter-spacing:-.3px;font-size:clamp(28px,4.4vw,52px);margin-bottom:10px}
+h3{font-family:'Fredoka';font-weight:600;font-size:clamp(16px,1.5vw,20px);line-height:1.2}
+.lead{font-size:clamp(15px,1.6vw,21px);color:var(--text-sub);line-height:1.6;max-width:66ch;font-weight:400}
+.muted{color:var(--text-sub)}.hl{color:var(--cyan);font-weight:700}.hl-g{color:var(--green-bright);font-weight:700}.hl-p{color:var(--pink);font-weight:700}
+.grid{display:grid;gap:16px;margin-top:28px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:20px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+.card .ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.card h3{margin-bottom:7px}.card p{font-size:13.5px;color:var(--text-sub);line-height:1.55}
+.tint-cyan{background:color-mix(in srgb,var(--cyan) 16%,transparent);color:var(--cyan)}
+.tint-pink{background:color-mix(in srgb,var(--pink) 16%,transparent);color:var(--pink)}
+.tint-green{background:color-mix(in srgb,var(--green-bright) 16%,transparent);color:var(--green-bright)}
+.tint-yellow{background:color-mix(in srgb,var(--yellow) 26%,transparent);color:#9a8d10}
+[data-theme="dark"] .tint-yellow{color:var(--yellow)}
+.tint-navy{background:color-mix(in srgb,var(--navy) 16%,transparent);color:var(--navy)}
+[data-theme="dark"] .tint-navy{background:rgba(255,255,255,.08);color:var(--cyan)}
+.kpi{display:flex;gap:22px;margin-top:32px;flex-wrap:wrap}
+.kpi .k{min-width:140px;flex:1}
+.kpi .k .n{font-family:'Fredoka';font-weight:700;font-size:clamp(26px,3.2vw,42px);line-height:1;color:var(--cyan)}
+.kpi .k .n.p{color:var(--pink)}.kpi .k .n.g{color:var(--green-bright)}
+.kpi .k .l{font-size:12.5px;color:var(--text-sub);margin-top:8px;line-height:1.4;max-width:20ch}
+.callout{margin-top:24px;display:flex;gap:15px;align-items:flex-start;background:color-mix(in srgb,var(--cyan) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--cyan) 38%,transparent);border-radius:var(--r-md);padding:18px 20px}
+.callout.y{background:color-mix(in srgb,var(--yellow) 16%,var(--surface));border-color:color-mix(in srgb,var(--yellow) 50%,transparent)}
+.callout .ic{flex:0 0 auto}.callout p{font-size:14.5px;line-height:1.55}.callout b{font-weight:700}
+.tablewrap{margin-top:24px;border:1px solid var(--border);border-radius:var(--r-md);overflow:auto;box-shadow:var(--shadow-sm);background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+th,td{padding:13px 15px;text-align:right;border-bottom:1px solid var(--border)}
+thead th{background:var(--navy);color:#fff;font-family:'Fredoka';font-weight:500;font-size:13.5px;white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}tbody tr:hover{background:var(--surface-2)}tbody td:first-child{font-weight:700;font-family:'Fredoka'}
+/* funnel */
+.funnel{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.fbar{margin-inline:auto;border-radius:12px;padding:14px 20px;color:#fff;font-family:'Fredoka';font-weight:600;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow-sm);font-size:15px}
+.fbar .v{font-size:18px}
+/* pipeline */
+.pipe{display:flex;gap:0;margin-top:8px;flex-wrap:wrap;align-items:stretch}
+.pstep{flex:1;min-width:120px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px 12px;text-align:center;box-shadow:var(--shadow-sm)}
+.pstep .pt{font-family:'Fredoka';font-weight:600;font-size:14px}.pstep .pv{font-size:12px;color:var(--text-sub);margin-top:4px}
+.parrow{display:flex;align-items:center;padding:0 6px;color:var(--cyan)}
+.cover-badge{display:inline-flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:15px;color:var(--navy);margin-bottom:30px}
+[data-theme="dark"] .cover-badge{color:var(--text-main)}
+.logo-sq{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),var(--navy));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+.cover h1 em{font-style:normal;background:linear-gradient(120deg,var(--cyan),var(--green-bright));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cover .meta{margin-top:34px;display:flex;gap:14px;flex-wrap:wrap}
+.chip{font-size:13px;font-weight:600;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:9px 17px;box-shadow:var(--shadow-sm);display:flex;gap:8px;align-items:center}
+.nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:7px 9px;box-shadow:var(--shadow)}
+.nav button{width:38px;height:38px;border:none;background:transparent;border-radius:50%;cursor:pointer;color:var(--navy);display:flex;align-items:center;justify-content:center;transition:.2s}
+[data-theme="dark"] .nav button{color:var(--text-main)}.nav button:hover{background:var(--surface-2)}
+.nav .count{font-family:'Fredoka';font-weight:600;font-size:13.5px;padding:0 10px;min-width:58px;text-align:center;font-variant-numeric:tabular-nums}
+.dots{position:fixed;top:50%;left:20px;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:9px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--border-strong);cursor:pointer;transition:.25s;display:block}.dots i.on{background:var(--cyan);transform:scale(1.5)}
+.topbar{position:fixed;top:16px;right:20px;left:20px;z-index:60;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.topbar .brand{font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--text-sub);pointer-events:auto;display:flex;align-items:center;gap:9px}
+.topbar .brand .lg{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,var(--cyan),var(--navy));display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700}
+.iconbtn{pointer-events:auto;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--text-main);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);transition:.2s}.iconbtn:hover{transform:translateY(-2px)}
+.fade-up{opacity:0;transform:translateY(18px)}
+.slide.active .fade-up{opacity:1;transform:none;transition:opacity .6s,transform .6s cubic-bezier(.2,.7,.2,1)}
+.slide.active .fade-up.d1{transition-delay:.08s}.slide.active .fade-up.d2{transition-delay:.16s}.slide.active .fade-up.d3{transition-delay:.24s}.slide.active .fade-up.d4{transition-delay:.32s}
+svg{display:block}
+@media (max-width:860px){.g2,.g3,.g4{grid-template-columns:1fr}.dots{display:none}.pipe{flex-direction:column}.parrow{transform:rotate(90deg);padding:4px 0}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg-fx"></div>
+<div class="progress"><i id="bar"></i></div>
+<div class="topbar">
+  <div class="brand"><span class="lg">W</span> WHITEBOARD · מרכז הבקרה</div>
+  <button class="iconbtn" id="theme" aria-label="מצב תצוגה"><svg id="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+</div>
+<div class="dots" id="dots"></div>
+
+<main class="deck" id="deck">
+
+  <!-- 0 COVER -->
+  <section class="slide cover active"><div class="wrap">
+    <div class="cover-badge fade-up"><span class="logo-sq">W</span> WHITEBOARD ADMIN</div>
+    <h1 class="fade-up d1">מרכז הבקרה<br><em>של ההנהלה</em></h1>
+    <p class="lead fade-up d2" style="margin-top:24px">מערכת admin אחת חכמה לשיווק, מכירות ושירות — לראות הכול במקום אחד, להחליט מהר, ולהגדיל הכנסות.</p>
+    <div class="meta fade-up d3">
+      <span class="chip"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M3 10h18M8 2v4M16 2v4"/></svg> יוני 2026</span>
+      <span class="chip"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> מצגת מנכ"ל · 13 שקופיות</span>
+    </div>
+  </div></section>
+
+  <!-- 1 PROBLEM -->
+  <section class="slide"><div class="wrap">
+    <span class="eyebrow fade-up"><span class="dot"></span> הבעיה</span>
+    <h2 class="fade-up d1">היום אנחנו טסים בלי מכשירים</h2>
+    <p class="lead fade-up d1">הדאטה מפוזרת — לידים במקום אחד, מנויים בשני, מרצים בשלישי, כסף ברביעי. אין תמונה אחת, ואין על מה להחליט.</p>
+    <div class="grid g4 fade-up d2">
+      <div class="card"><div class="ic tint-pink"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h3>לידים נופלים</h3><p>מי השאיר פרטים? מי התחיל ניסיון? מי נטש בדרך לתשלום?</p></div>
+      <div class="card"><div class="ic tint-pink"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div><h3>אין תמונת לקוח</h3><p>מי בסיכון נטישה? מי בשל לשדרוג מסלול? אין דרך לדעת.</p></div>
+      <div class="card"><div class="ic tint-pink"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div><h3>מרצים בערפל</h3><p>איזה מרצה מצליח? כמה תלמידים והכנסות יש לכל אחד?</p></div>
+      <div class="card"><div class="ic tint-pink"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>שותפים ידני</h3><p>כמה עמלות אנחנו חייבים? למי? מתי? הכול בגיליונות.</p></div>
+    </div>
+  </div></section>
+
+  <!-- 2 THE IDEA -->
+  <section class="slide"><div class="wrap">
+    <span class="eyebrow fade-up"><span class="dot"></span> הרעיון</span>
+    <h2 class="fade-up d1">מוח ניהולי אחד</h2>
+    <p class="lead fade-up d1">מרכז הבקרה מאחד את כל הדאטה לתמונה חיה אחת — ומפנה אותנו לפעולה: מי לרדוף, מי לשמר, מה למכור.</p>
+    <div class="kpi fade-up d2">
+      <div class="k"><div class="n">שיווק</div><div class="l">משפך לידים → ניסיון → לקוח</div></div>
+      <div class="k"><div class="n g">מכירות</div><div class="l">מנויים, Enterprise, הכנסות</div></div>
+      <div class="k"><div class="n p">שירות</div><div class="l">תמונת לקוח אחת, שימור</div></div>
+      <div class="k"><div class="n">ביצועים</div><div class="l">מרצים, מערכת, צמיחה</div></div>
+    </div>
+    <div class="callout fade-up d3"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><p>הכול במסך אחד, בזמן אמת, עם <b>התראות יזומות</b> — לא עוד גיליונות מפוזרים וניחושים.</p></div>
+  </div></section>
+
+  <!-- 3 MODULE MAP -->
+  <section class="slide"><div class="wrap">
+    <span class="eyebrow fade-up"><span class="dot"></span> מפת המערכת</span>
+    <h2 class="fade-up d1">שבעה מודולים, מסך אחד</h2>
+    <div class="grid g3 fade-up d2">
+      <div class="card"><div class="ic tint-cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h3>שיווק ומשפך</h3><p>לידים, פותחי ניסיון, נוטשי עגלה, שיעורי המרה לפי מקור.</p></div>
+      <div class="card"><div class="ic tint-green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg></div><h3>לקוחות ומנויים</h3><p>לקוחות לפי מסלול, MRR, נטישה, בריאות חשבון.</p></div>
+      <div class="card"><div class="ic tint-navy"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div><h3>אנליטיקת מרצים</h3><p>תלמידים פר מרצה, נתוני צפייה, הכנסה פר מרצה.</p></div>
+      <div class="card"><div class="ic tint-yellow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>שותפים ועמלות</h3><p>מסלולי שותפים, הפניות, עמלות לתשלום.</p></div>
+      <div class="card"><div class="ic tint-cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v4H3zM3 10h18v11H3z"/><path d="M8 14h8"/></svg></div><h3>מכירות Enterprise</h3><p>pipeline, עסקאות גדולות, חיזוי הכנסות.</p></div>
+      <div class="card"><div class="ic tint-pink"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>שירות (CS)</h3><p>תמונת לקוח אחת, פניות, שימור.</p></div>
+      <div class="card"><div class="ic tint-yellow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="M12 6V3M5 9H2M22 9h-3M5 15H2M22 15h-3M7 4l-2-2M17 4l2-2"/></svg></div><h3>מוצר, באגים ופידבק</h3><p>דיווחי באגים, בקשות פיצ'ר, וצ'אט חכם במסכים.</p></div>
+    </div>
+  </div></section>
+
+  <!-- 4 MARKETING FUNNEL -->
+  <section class="slide"><div class="wrap">
+    <span class="eyebrow fade-up"><span class="dot"></span> מודול · שיווק</span>
+    <h2 class="fade-up d1">משפך ההמרה — מליד ללקוח</h2>
+    <p class="lead fade-up d1">לראות כל שלב, לזהות איפה נושרים, ולפעול. נוטשי העגלה הם זהב — נזהה ונחזיר אותם.</p>
+    <div class="funnel fade-up d2">
+      <div class="fbar" style="width:100%;background:linear-gradient(135deg,var(--cyan),#5ad0f5)"><span>לידים (השאירו פרטים)</span><span class="v">1,000</span></div>
+      <div class="fbar" style="width:72%;background:linear-gradient(135deg,#3aa9d8,var(--navy))"><span>התחילו ניסיון</span><span class="v">300</span></div>
+      <div class="fbar" style="width:46%;background:linear-gradient(135deg,var(--green),var(--green-bright))"><span>הומרו ללקוח משלם</span><span class="v">90</span></div>
+    </div>
+    <div class="callout y fade-up d3"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.6 13a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg></span><p><b>נוטשי עגלה</b> — מי הגיע לתשלום ולא השלים → רשימת ריטרגוט + תזכורת אוטומטית. <span class="muted">(מספרים להמחשה)</span></p></div>
+  </div></section>
+
+  <!-- 5 CUSTOMERS -->
+  <section class="slide"><div class="wrap">
+    <span class="eyebrow fade-up"><span class="dot"></span> מודול · לקוחות</span>
+    <h2 class="fade-up d1">לקוחות לפי מסלול, ובריאות החשבון</h2>
+    <p class="lead fade-up d1">פילוח חי של בסיס הלקוחות, הכנסה חוזרת (MRR), ונטישה — עם התראות מי בסיכון ומי בשל לשדרוג.</p>
+    <div class="kpi fade-up d2">
+      <div class="k"><div class="n g">₪212K</div><div class="l">MRR — הכנסה חודשית חוזרת</div></div>
+      <div class="k"><div class="n">1,180</div><div class="l">לקוחות פעילים</div></div>
+      <div class="k"><div class="n p">3.4%</div><div class="l">נטישה חודשית</div></div>
+      <div class="k"><div class="n">4</div><div class="l">מסלולים: Starts · Growth · Pro · Enterprise</div></div>
+    </div>
+    <div class="callout fade-up d3"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="M12 6v6l4 2"/></svg></span><p>פילוח לפי מסלול, חיזוי נטישה, והתראות <b>at‑risk / upsell</b> — כדי לפעול לפני שמאבדים לקוח. <span class="muted">(מספרים להמחשה)</span></p></div>
+  </div></section>
+
+  <!-- 6 LECTURER ANALYTICS -->
+  <section class="slide"><div class="wrap">
+    <span class="eyebrow fade-up"><span class="dot"></span> מודול · מרצים</span>
+    <h2 class="fade-up d1">ביצועי הלקוחות שלנו</h2>
+    <p class="lead fade-up d1">לכל מרצה: כמה תלמידים רשומים, כמה צופים בפועל, וכמה הכנסה הוא מייצר — מי הכוכבים, ומי צריך עזרה.</p>
+    <div class="tablewrap fade-up d2"><table>
+      <thead><tr><th>מרצה</th><th>תלמידים רשומים</th><th>שעות צפייה</th><th>הכנסה (חודש)</th><th>מגמה</th></tr></thead>
+      <tbody>
+        <tr><td>דנה לוי</td><td>1,240</td><td>8,900</td><td>₪38,200</td><td class="hl-g">▲ 12%</td></tr>
+        <tr><td>יוסי כהן</td><td>860</td><td>5,100</td><td>₪21,400</td><td class="hl-g">▲ 6%</td></tr>
+        <tr><td>מאיה ברק</td><td>410</td><td>1,150</td><td>₪7,800</td><td class="hl-p">▼ 9%</td></tr>
+      </tbody>
+    </table></div>
+    <p class="muted fade-up d3" style="font-size:12.5px;margin-top:12px">מספרים להמחשה. מאפשר לזהות מרצים מצליחים לקידום, ומרצים בסיכון נטישה להתערבות יזומה.</p>
+  </div></section>
+
+  <!-- 7 AFFILIATES -->
+  <section class="slide"><div class="wrap">
+    <span class="eyebrow fade-up"><span class="dot"></span> מודול · שותפים</span>
+    <h2 class="fade-up d1">שותפים, הפניות ועמלות</h2>
+    <p class="lead fade-up d1">ניהול מלא של מסלולי השותפים: מי הביא כמה, כמה מגיע לו, ומתי לשלם — בלי גיליונות.</p>
+    <div class="kpi fade-up d2">
+      <div class="k"><div class="n">42</div><div class="l">שותפים פעילים</div></div>
+      <div class="k"><div class="n g">168</div><div class="l">הפניות החודש</div></div>
+      <div class="k"><div class="n p">₪19,400</div><div class="l">עמלות לתשלום החודש</div></div>
+      <div class="k"><div class="n">15%</div><div class="l">עמלה ממוצעת למסלול</div></div>
+    </div>
+    <div class="callout fade-up d3"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><p>מסלולי שותפים, מעקב הפניות פר שותף, חישוב עמלות אוטומטי, ו<b>רשימת תשלומים מוכנה</b> לאישור. <span class="muted">(מספרים להמחשה)</span></p></div>
+  </div></section>
+
+  <!-- 8 ENTERPRISE SALES -->
+  <section class="slide"><div class="wrap">
+    <span class="eyebrow fade-up"><span class="dot"></span> מודול · מכירות</span>
+    <h2 class="fade-up d1">מערך מכירות Enterprise</h2>
+    <p class="lead fade-up d1">CRM מלא לעסקאות הגדולות — מה‑pipeline ועד הצעת המחיר, הבקשות המיוחדות והחוזה.</p>
+    <div class="pipe fade-up d2">
+      <div class="pstep"><div class="pt">ליד</div><div class="pv">24</div></div>
+      <div class="parrow"><svg width="22" height="16" viewBox="0 0 34 22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M32 11H2M2 11l7-6M2 11l7 6"/></svg></div>
+      <div class="pstep"><div class="pt">שיחת היכרות</div><div class="pv">14</div></div>
+      <div class="parrow"><svg width="22" height="16" viewBox="0 0 34 22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M32 11H2M2 11l7-6M2 11l7 6"/></svg></div>
+      <div class="pstep"><div class="pt">הצעת מחיר</div><div class="pv">8</div></div>
+      <div class="parrow"><svg width="22" height="16" viewBox="0 0 34 22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M32 11H2M2 11l7-6M2 11l7 6"/></svg></div>
+      <div class="pstep"><div class="pt">משא ומתן</div><div class="pv">5</div></div>
+      <div class="parrow"><svg width="22" height="16" viewBox="0 0 34 22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M32 11H2M2 11l7-6M2 11l7 6"/></svg></div>
+      <div class="pstep" style="border-color:var(--green-bright)"><div class="pt" style="color:var(--green-bright)">סגירה</div><div class="pv">3</div></div>
+    </div>
+    <div class="grid g3 fade-up d3">
+      <div class="card"><div class="ic tint-cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg></div><h3>הצעות מחיר</h3><p>פורמט מובנה להצעה מותאמת — מסלול, מספר מושבים, הנחה ותנאים. שליחה ללקוח ומעקב: נשלחה · נצפתה · אושרה.</p></div>
+      <div class="card"><div class="ic tint-yellow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.9 6 6.6.5-5 4.3 1.6 6.4L12 16.9 5.9 19.2 7.5 12.8l-5-4.3L9.1 8z"/></svg></div><h3>בקשות מיוחדות</h3><p>דרישות מותאמות לכל עסקה — פיצ'רים, אינטגרציות, SLA, מיתוג. מתועדות ומחוברות לצוות המוצר.</p></div>
+      <div class="card"><div class="ic tint-green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 2H6a2 2 0 0 0-2 2v16l4-2 4 2 4-2 4 2V8z"/><path d="M9 7h6M9 11h6"/></svg></div><h3>חוזים ותנאים</h3><p>תנאי התקשרות, חתימה דיגיטלית, ותאריכי חידוש — הכול מחובר לעסקה.</p></div>
+    </div>
+    <div class="callout fade-up d4"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="M12 6v6l4 2"/></svg></span><p>הכול מחובר ל‑pipeline ול<b>חיזוי הכנסות</b> לפי שלב וסבירות סגירה. <span class="muted">(מספרים להמחשה)</span></p></div>
+  </div></section>
+
+  <!-- 9 SERVICE -->
+  <section class="slide"><div class="wrap">
+    <span class="eyebrow fade-up"><span class="dot"></span> מודול · שירות</span>
+    <h2 class="fade-up d1">תמונת לקוח אחת לשירות</h2>
+    <p class="lead fade-up d1">כשלקוח פונה — הכול לפנינו: המסלול, התשלומים, השימוש, וההיסטוריה. שירות מהיר שמונע נטישה.</p>
+    <div class="grid g3 fade-up d2">
+      <div class="card"><div class="ic tint-cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/></svg></div><h3>פרופיל 360°</h3><p>מנוי, תשלומים, חשבוניות, שימוש ופניות — במקום אחד.</p></div>
+      <div class="card"><div class="ic tint-yellow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>פניות וטיקטים</h3><p>פניות פתוחות, זמני מענה, ומה דורש טיפול עכשיו.</p></div>
+      <div class="card"><div class="ic tint-green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></div><h3>שימור ומניעת נטישה</h3><p>זיהוי לקוח מתוסכל/לא פעיל → פעולת שימור יזומה.</p></div>
+    </div>
+  </div></section>
+
+  <!-- 9b PRODUCT / BUGS / FEEDBACK -->
+  <section class="slide"><div class="wrap">
+    <span class="eyebrow fade-up"><span class="dot"></span> מודול · מוצר</span>
+    <h2 class="fade-up d1">מוצר, באגים ופידבק</h2>
+    <p class="lead fade-up d1">כל מה שלא עובד או חסר — נכנס למערכת אוטומטית. מהדיווח הקטן של תלמיד ועד ההחלטה האסטרטגית מה לפתח הבא.</p>
+    <div class="grid g3 fade-up d2">
+      <div class="card"><div class="ic tint-pink"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="M12 6V3M5 9H2M22 9h-3M5 15H2M22 15h-3M7 4l-2-2M17 4l2-2"/></svg></div><h3>דיווחי באגים</h3><p>לקוח/מרצה/תלמיד מדווח שמשהו לא עובד → <b>קריאה נפתחת אוטומטית</b>. Support ו‑Admin רואים, מתעדפים, ועוקבים עד פתרון.</p></div>
+      <div class="card"><div class="ic tint-cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg></div><h3>בקשות פיצ'ר</h3><p>בקשות לפיצ'רים נאספות ל<b>טבלה מתועדפת</b> — כמה ביקשו ומאיזה מסלול. תעדוף מוצר מבוסס‑דאטה, לא תחושות.</p></div>
+      <div class="card"><div class="ic tint-green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg></div><h3>צ'אט חכם במסכים</h3><p>תיבת פנייה מובנית במסכי המרצים והתלמידים — מזרימה דיווחים ובקשות <b>ישירות למערכת</b>.</p></div>
+    </div>
+    <div class="callout fade-up d3"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span><p>כל הפידבק במקום אחד → <b>החלטות אסטרטגיות</b>: מה הכי כואב למשתמשים, מה הכי מבוקש, ומה לפתח הבא — לפי דאטה אמיתית.</p></div>
+  </div></section>
+
+  <!-- 10 MACRO IMPLEMENTATION -->
+  <section class="slide"><div class="wrap">
+    <span class="eyebrow fade-up"><span class="dot"></span> יישום · מאקרו</span>
+    <h2 class="fade-up d1">איך בונים — מודול בתוך הפלטפורמה</h2>
+    <p class="lead fade-up d1">לא מערכת נפרדת — אזור <b>admin</b> בתוך WHITEBOARD, שיושב על אותו מידע ועל אותו stack.</p>
+    <div class="grid g2 fade-up d2" style="align-items:start">
+      <div class="card">
+        <h3 style="margin-bottom:11px">מקורות הדאטה</h3>
+        <p style="line-height:1.7">• ה‑DB הקיים — תלמידים, קורסים, מנויים, צפיות<br>• נתוני הסליקה והחשבוניות (מודול התשלומים)<br>• נתוני השותפים וההפניות<br>• אירועי שיווק — לידים, ניסיונות, נטישות</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:11px">איך זה עובד</h3>
+        <p style="line-height:1.7">• מודול <code style="font-family:monospace;background:var(--surface-3);padding:1px 6px;border-radius:5px;direction:ltr">admin/</code> — אותו Next.js/Prisma<br>• Trigger.dev מחשב KPIs מתוזמן<br>• דשבורדים בזמן אמת + התראות<br>• הרשאות צוות פנימי (שיווק/מכירות/שירות/הנהלה)</p>
+      </div>
+    </div>
+    <div class="callout fade-up d3"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span><p><b>שלביות:</b> v1 — דשבורד + משפך + לקוחות + מרצים. v2 — שותפים + Enterprise + שירות מתקדם. הכול נשען על דאטה שכבר קיימת אצלנו.</p></div>
+  </div></section>
+
+  <!-- 11 RECOMMENDATION -->
+  <section class="slide"><div class="wrap" style="text-align:center">
+    <span class="eyebrow fade-up" style="margin-inline:auto"><span class="dot"></span> סיכום</span>
+    <h2 class="fade-up d1" style="font-size:clamp(28px,4.6vw,52px)">מרכז בקרה אחד =<br>החלטות מהירות, הכנסות גבוהות</h2>
+    <div class="kpi fade-up d2" style="justify-content:center;margin-top:38px">
+      <div class="k"><div class="n">7 מודולים</div><div class="l">שיווק · לקוחות · מרצים · שותפים · Enterprise · שירות · מוצר</div></div>
+      <div class="k"><div class="n g">מסך אחד</div><div class="l">כל הדאטה במקום אחד, בזמן אמת</div></div>
+      <div class="k"><div class="n">בתוך הפלטפורמה</div><div class="l">אותו stack, אותו מידע — לא מערכת נפרדת</div></div>
+    </div>
+    <p class="lead fade-up d3" style="margin:34px auto 0;text-align:center">השלב הבא: <span class="hl">איפיון מלא</span> של כל המודולים (מודל נתונים, מסכים, KPIs, הרשאות), ואז עיצוב מסכי הליבה.</p>
+    <div class="cover-badge fade-up d4" style="justify-content:center;margin-top:36px;color:var(--text-sub)"><span class="logo-sq">W</span> WHITEBOARD · יוני 2026</div>
+  </div></section>
+
+</main>
+
+<nav class="nav">
+  <button id="prev" aria-label="הקודם"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  <span class="count" id="count">1 / 13</span>
+  <button id="next" aria-label="הבא"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+</nav>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');let i=0;
+slides.forEach((_,n)=>{const d=document.createElement('i');d.onclick=()=>go(n);dotsBox.appendChild(d);});
+const dots=[...dotsBox.children];const bar=document.getElementById('bar');const count=document.getElementById('count');
+function go(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));dots.forEach((d,k)=>d.classList.toggle('on',k===i));bar.style.width=((i)/(slides.length-1)*100)+'%';count.textContent=(i+1)+' / '+slides.length;}
+document.getElementById('next').onclick=()=>go(i+1);document.getElementById('prev').onclick=()=>go(i-1);
+addEventListener('keydown',e=>{if(['ArrowLeft','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();go(i+1);}else if(['ArrowRight','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();go(i-1);}else if(e.key==='Home')go(0);else if(e.key==='End')go(slides.length-1);});
+let sx=0;addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>55){dx<0?go(i+1):go(i-1);}});
+let wl=0;addEventListener('wheel',e=>{const t=Date.now();if(t-wl<700)return;if(Math.abs(e.deltaY)<24)return;wl=t;go(i+(e.deltaY>0?1:-1));},{passive:true});
+const root=document.documentElement,tb=document.getElementById('theme');
+tb.onclick=()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');tb.querySelector('svg').innerHTML=d?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';};
+go(0);
+</script>
+</body>
+</html>
