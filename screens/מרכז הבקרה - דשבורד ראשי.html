@@ -257,6 +257,7 @@
   .toast.success .toast-icon{background:var(--green-light);color:var(--green);} .toast.info .toast-icon{background:var(--cyan-light);color:var(--cyan);} .toast.warn .toast-icon{background:var(--yellow-light);color:#b89c00;}
   .toast-text { font-size:13.5px; font-weight:600; color:var(--text-main); }
 </style>
+<script>try{var t=localStorage.getItem("wb-admin-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 </head>
 <body>
 
@@ -355,10 +356,10 @@
       <div class="kpi-card" style="--c:var(--pink);--c-light:var(--pink-light)">
         <div class="kpi-top">
           <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M17 8l5 5M22 8l-5 5"/></svg></div>
-          <span class="kpi-delta down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>0.4%</span>
+          <span class="kpi-delta up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>0.4%</span>
         </div>
         <div class="kpi-value">3.4%</div>
-        <div class="kpi-label">נטישה חודשית (Churn)</div>
+        <div class="kpi-label">נטישה חודשית — ירדה (שיפור)</div>
       </div>
       <div class="kpi-card" style="--c:var(--yellow);--c-light:var(--yellow-light)">
         <div class="kpi-top">
@@ -455,9 +456,9 @@
           <a class="card-link" href="שיווק ומשפך.html">למודול<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></a>
         </div>
         <div class="funnel-mini">
-          <div class="fbar-row"><div class="fbar-head"><span class="fbar-label">לידים (השאירו פרטים)</span><span class="fbar-val">1,000</span></div><div class="fbar-track"><div class="fbar-fill" style="width:100%;background:linear-gradient(135deg,#38C4F2,#5ad0f5)">100%</div></div></div>
-          <div class="fbar-row"><div class="fbar-head"><span class="fbar-label">התחילו ניסיון</span><span class="fbar-val">300</span></div><div class="fbar-track"><div class="fbar-fill" style="width:72%;background:linear-gradient(135deg,#3aa9d8,#253E7A)">30%</div></div></div>
-          <div class="fbar-row"><div class="fbar-head"><span class="fbar-label">הומרו ללקוח משלם</span><span class="fbar-val">90</span></div><div class="fbar-track"><div class="fbar-fill" style="width:46%;background:linear-gradient(135deg,#7DC57A,#22c55e)">9%</div></div></div>
+          <div class="fbar-row"><div class="fbar-head"><span class="fbar-label">לידים (השאירו פרטים)</span><span class="fbar-val">1,000 · 100%</span></div><div class="fbar-track"><div class="fbar-fill" style="width:100%;background:linear-gradient(135deg,#38C4F2,#5ad0f5)"></div></div></div>
+          <div class="fbar-row"><div class="fbar-head"><span class="fbar-label">התחילו ניסיון</span><span class="fbar-val">300 · 30%</span></div><div class="fbar-track"><div class="fbar-fill" style="width:30%;background:linear-gradient(135deg,#3aa9d8,#253E7A)"></div></div></div>
+          <div class="fbar-row"><div class="fbar-head"><span class="fbar-label">הומרו ללקוח משלם</span><span class="fbar-val">90 · 9%</span></div><div class="fbar-track"><div class="fbar-fill" style="width:9%;background:linear-gradient(135deg,#7DC57A,#22c55e)"></div></div></div>
         </div>
         <div class="funnel-foot">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.6 13a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
@@ -562,6 +563,7 @@
       showToast('הגרף עודכן · ' + tab.textContent, 'info');
     });
   });
+  document.getElementById("themeBtn")&&document.getElementById("themeBtn").addEventListener("click",function(){try{localStorage.setItem("wb-admin-theme",document.documentElement.getAttribute("data-theme"));}catch(e){}});
 </script>
 </body>
 </html>

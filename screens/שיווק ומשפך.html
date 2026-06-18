@@ -210,6 +210,7 @@
   .toast.success .toast-icon{background:var(--green-light);color:var(--green);} .toast.info .toast-icon{background:var(--cyan-light);color:var(--cyan);} .toast.warn .toast-icon{background:var(--yellow-light);color:#b89c00;}
   .toast-text { font-size:13.5px; font-weight:600; color:var(--text-main); }
 </style>
+<script>try{var t=localStorage.getItem("wb-admin-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 </head>
 <body>
 
@@ -369,6 +370,7 @@
   document.getElementById('campaignBtn').addEventListener('click', () => showToast('יצירת קמפיין חדש', 'info'));
   document.getElementById('remindAll').addEventListener('click', () => showToast('נשלחה תזכורת ל‑47 נוטשי עגלה', 'success'));
   document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => { b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); showToast('עודכן · ' + b.textContent, 'info'); }));
+  document.getElementById("themeBtn")&&document.getElementById("themeBtn").addEventListener("click",function(){try{localStorage.setItem("wb-admin-theme",document.documentElement.getAttribute("data-theme"));}catch(e){}});
 </script>
 </body>
 </html>
