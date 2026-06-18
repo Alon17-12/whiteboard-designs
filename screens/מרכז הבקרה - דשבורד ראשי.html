@@ -271,6 +271,7 @@
     <a class="nav-item" href="לקוחות ומנויים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg>לקוחות ומנויים</a>
     <a class="nav-item" href="מכירות Enterprise.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v4H3zM3 10h18v11H3z"/><path d="M8 14h8"/></svg>מכירות Enterprise</a>
     <a class="nav-item" href="שותפים ועמלות.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>שותפים ועמלות</a>
+    <a class="nav-item" href="סליקה ותשלומים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>סליקה ותשלומים<span style="margin-inline-start:auto;font-size:9.5px;font-weight:700;color:#b89c00;background:rgba(234,214,84,0.2);padding:2px 6px;border-radius:8px;font-family:var(--font-en)">עתידי</span></a>
   </div>
 
   <div class="nav-group-label">תפעול ומוצר</div>
@@ -403,12 +404,19 @@
     <div class="dash-grid">
       <div class="card chart-card">
         <div class="card-head">
-          <div class="card-title"><span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>הכנסה חוזרת (MRR)</div>
+          <div><div class="card-title"><span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>הכנסות</div><div style="font-size:12.5px;color:var(--text-sub);font-weight:500;margin-top:2px">מכירות (הכרה) מול תזרים בפועל</div></div>
           <div class="chart-tabs"><button class="chart-tab">7 ימים</button><button class="chart-tab">30 יום</button><button class="chart-tab active">6 חודשים</button></div>
         </div>
-        <div class="chart-summary">
-          <div class="chart-total">₪212,400</div>
-          <span class="chart-delta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>36% מתחילת השנה</span>
+        <div class="chart-summary" style="gap:30px;flex-wrap:wrap">
+          <div>
+            <div style="font-size:11.5px;color:var(--text-sub);font-weight:600;margin-bottom:3px">מכירות · MRR (הכרה חודשית)</div>
+            <div class="chart-total" style="color:var(--cyan)">₪212,400</div>
+          </div>
+          <div>
+            <div style="font-size:11.5px;color:var(--text-sub);font-weight:600;margin-bottom:3px">סה״כ הכנסה החודש · תזרים בפועל</div>
+            <div class="chart-total" style="color:var(--green)">₪318,000</div>
+          </div>
+          <span class="chart-delta" style="align-self:flex-end;color:var(--text-sub)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>כולל תשלומים שנתיים מראש</span>
         </div>
         <div class="chart-wrap">
           <svg class="chart-svg" viewBox="0 0 600 210" preserveAspectRatio="none">
