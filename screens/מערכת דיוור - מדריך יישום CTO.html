@@ -103,7 +103,7 @@
   <div class="doc-head">
     <span class="eyebrow"><span class="dot"></span> מדריך יישום · CTO</span>
     <h1>מערכת דיוור — עורך מייל מבוסס בלוקים</h1>
-    <p class="lead">איחוד פלואו יצירת המייל המבולגן (פופאפ הגדרות ← עורך נפרד ← ריבוי טאבים) ל<b>עורך אחוד אחד</b>: הגדרות + קנבס בלוקים + מאפיינים במסך אחד. ה<b>בלוק‑בילדר זהה לזה של הקורס</b> — אותו רג'יסטרי, אותם רכיבים — מה שמוריד תחזוקה ומאחד חוויה.</p>
+    <p class="lead">פישוט פלואו יצירת המייל: <b>מסך פתיחה</b> (כותרת + משתנים + בחירת עורך ויזואלי/HTML) ואז <b>עורך בלוקים inline</b> — בדיוק <b>אותו מודל בלוקים של הקורס</b>: כפתור "הוסף בלוק תוכן" → block‑picker → בלוק נכנס inline ונערך במקום, עם toolbar מינימלי. אותו <code class="inl">addBlock()</code>, אותם <code class="inl">.content-block</code> — מה שמוריד תחזוקה ומאחד חוויה. <b>סדרות מיילים מוגדרות בדף נפרד.</b></p>
   </div>
 
   <section id="overview">
@@ -132,14 +132,15 @@
         <li>סטטוסים לא ברורים (פעיל/מתוזמן/מתמשך)</li>
       </ul></div>
       <div class="card"><h3 style="margin-top:0;color:var(--green)">אחרי</h3><ul style="margin-bottom:0">
-        <li>מסך אחד: הגדרות (ימין) · קנבס (מרכז) · רכיבים/מאפיינים (שמאל)</li>
-        <li>טאב אחד = בונה בלוקים; AI ו‑HTML כפעולות משניות</li>
-        <li>בלוק‑בילדר זהה לקורס (גרירה, בחירה, מאפיינים)</li>
-        <li>ציר שלבים לסדרה עם השהיות + "הוסף שלב"</li>
-        <li>CTA ראשי יחיד (שמור) + תצוגת דסקטופ/מובייל</li>
+        <li><b>מסך פתיחה</b> נקי: כותרת המייל + משתנים זמינים + בחירת עורך</li>
+        <li>בחירה מפורשת: <b>עורך ויזואלי</b> או <b>בניית HTML</b></li>
+        <li><b>עורך בלוקים inline זהה לקורס</b> — "הוסף בלוק" → block‑picker</li>
+        <li>עריכה <b>במקום</b>, toolbar מינימלי (מעלה/מטה/מחק) — בלי הגדרות מיותרות</li>
+        <li>סדרות מוגדרות <b>בדף נפרד</b> (לא בתוך העורך)</li>
+        <li>CTA ראשי יחיד (שמור) + שלח טסט + תצוגה מקדימה</li>
       </ul></div>
     </div>
-    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p>עקרון מנחה (UI/UX Pro Max): <b>CTA ראשי יחיד</b> לכל מסך, <b>חשיפה הדרגתית</b> בפאנל המאפיינים, ומשוב מיידי (&lt;100ms) על כל גרירה/בחירה.</p></div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p>עקרון מנחה (UI/UX Pro Max): פשוט ונקי — <b>ברירות מחדל חזקות, מעט מאוד הגדרות לכל בלוק</b>. עריכה inline (contenteditable) במקום פאנל מאפיינים. משתנים אישיים מוצגים <b>בעברית</b> (מה הם אומרים) ומוכנסים כטוקן.</p></div>
   </section>
 
   <section id="arch">
@@ -161,11 +162,11 @@ trigger/mailing/            <span class="cm">// עבודות שליחה</span></
     <h2><span class="h2num">03</span>מודל הבלוקים המשותף</h2>
     <p class="sec-sub">הלב של האיחוד: גוף המייל וגוף שיעור בקורס הם <b>אותו מבנה</b> — מערך בלוקים מסודר. רג'יסטרי אחד מגדיר כל סוג בלוק; הקשר (קורס/מייל) רק מסנן אילו בלוקים זמינים ואיך הם מרונדרים.</p>
     <pre><code><span class="cm">// lib/blocks/registry.ts — מקור אמת אחד</span>
+<span class="cm">// 8 הסוגים הקיימים במערכת (זהים לקורס) — אותם labels/אייקונים</span>
 <span class="kw">type</span> <span class="ty">BlockType</span> =
-  <span class="st">"heading"</span> | <span class="st">"text"</span> | <span class="st">"image"</span> | <span class="st">"button"</span> | <span class="st">"quote"</span>
-  | <span class="st">"divider"</span> | <span class="st">"spacer"</span>            <span class="cm">// משותפים לקורס+מייל</span>
-  | <span class="st">"header"</span> | <span class="st">"social"</span> | <span class="st">"video"</span> | <span class="st">"columns"</span>  <span class="cm">// ייעודיים למייל</span>
-  | <span class="st">"iframe"</span> | <span class="st">"lessonVideo"</span>;        <span class="cm">// ייעודיים לקורס</span>
+  <span class="st">"h1"</span> | <span class="st">"h2"</span> | <span class="st">"text"</span> | <span class="st">"quote"</span>
+  | <span class="st">"divider"</span> | <span class="st">"cta"</span> | <span class="st">"image"</span> | <span class="st">"iframe"</span>;
+  <span class="cm">// תוספות ייעודיות-מייל (לוגו/רשתות) — אופציה עתידית, נכנסות לאותו picker</span>
 
 <span class="kw">interface</span> <span class="ty">BlockDef</span>&lt;P&gt; {
   type: <span class="ty">BlockType</span>;
@@ -284,10 +285,10 @@ trigger/mailing/            <span class="cm">// עבודות שליחה</span></
   <section id="components">
     <h2><span class="h2num">08</span>רכיבי UI</h2>
     <div class="grid2">
-      <div class="card"><h3 style="margin-top:0">שלד העורך</h3><ul style="margin-bottom:0"><li><code class="inl">&lt;EmailEditor&gt;</code> — top bar + 3 פאנלים</li><li><code class="inl">&lt;SetupPanel&gt;</code> — נושא, preheader, מאת, משתנים, נספח</li><li><code class="inl">&lt;SeriesRail&gt;</code> — ציר שלבים + השהיות</li><li><code class="inl">&lt;DeviceToggle&gt;</code> — דסקטופ/מובייל</li></ul></div>
-      <div class="card"><h3 style="margin-top:0">בלוקים (משותף)</h3><ul style="margin-bottom:0"><li><code class="inl">&lt;BlockCanvas&gt;</code> — גרירה, בחירה, insert lines</li><li><code class="inl">&lt;BlockPalette&gt;</code> — מהרג'יסטרי, מסונן לפי context</li><li><code class="inl">&lt;BlockRenderer&gt;</code> — תצוגה חיה</li><li><code class="inl">&lt;PropertiesPanel&gt;</code> — לפי <code class="inl">BlockDef.Props</code></li></ul></div>
+      <div class="card"><h3 style="margin-top:0">מסך פתיחה + שלד</h3><ul style="margin-bottom:0"><li><code class="inl">&lt;EmailSetup&gt;</code> — כותרת + Preheader + משתנים</li><li><code class="inl">&lt;EditorChoice&gt;</code> — ויזואלי / HTML</li><li><code class="inl">&lt;EmailEditor&gt;</code> — top bar + קנבס + block‑picker</li><li><code class="inl">&lt;VarsPopover&gt;</code> — משתנים בעברית → טוקן</li></ul></div>
+      <div class="card"><h3 style="margin-top:0">בלוקים (משותף עם הקורס)</h3><ul style="margin-bottom:0"><li><code class="inl">openBlockPicker()</code> → <code class="inl">.block-picker</code> (8 פריטי <code class="inl">.bp-item</code>)</li><li><code class="inl">addBlock(type)</code> — מכניס <code class="inl">.content-block</code> inline</li><li><code class="inl">.block-toolbar</code> — מעלה/מטה/מחק בלבד</li><li>עריכה <code class="inl">contenteditable</code> במקום — ללא PropertiesPanel</li></ul></div>
     </div>
-    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p>נגישות: גרירה עם סף תזוזה + חלופת לחיצה (הוסף בסוף), aria-labels על כל כפתורי הבלוק, focus order תקין, ו‑<code class="inl">prefers-reduced-motion</code> לאנימציות.</p></div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p>נגישות: הוספה בלחיצה מה‑block‑picker (לא תלוי גרירה), הזזה דרך toolbar (מעלה/מטה), aria-labels על כל כפתורי הבלוק, focus עובר אוטומטית לבלוק החדש, ו‑<code class="inl">prefers-reduced-motion</code> לאנימציות.</p></div>
   </section>
 
   <section id="roadmap">

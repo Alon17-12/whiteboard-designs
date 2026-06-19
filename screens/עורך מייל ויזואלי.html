@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light" data-mode="teacher">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>עורך מייל ויזואלי | WHITEBOARD דיוור</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --cyan-dark:#1db0d8;
+    --pink:#F05680; --green:#22c55e; --amber:#F59E0B; --yellow:#EAD654;
+    --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+    --border:rgba(37,62,122,0.1); --border-mid:rgba(37,62,122,0.18);
+    --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.62); --text-xs:rgba(37,62,122,0.4);
+    --font:'Heebo',sans-serif; --font-body:'Heebo',sans-serif; --font-brand:'Fredoka',sans-serif;
+    --font-h1:'Fredoka',sans-serif; --font-h2:'Fredoka',sans-serif;
+    --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:18px; --btn-radius-course:30px;
+    --sh-sm:0 2px 8px rgba(37,62,122,0.08); --sh-md:0 6px 22px rgba(37,62,122,0.12); --sh-lg:0 16px 44px rgba(37,62,122,0.18);
+  }
+  [data-theme="dark"]{
+    --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+    --border:rgba(255,255,255,0.08); --border-mid:rgba(255,255,255,0.14);
+    --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.62); --text-xs:rgba(221,229,245,0.36);
+    --sh-sm:0 2px 10px rgba(0,0,0,0.3); --sh-md:0 6px 26px rgba(0,0,0,0.4); --sh-lg:0 16px 44px rgba(0,0,0,0.55);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font);background:var(--bg);color:var(--text-main);height:100dvh;overflow:hidden;display:flex;flex-direction:column;transition:background .3s,color .3s;}
+  button{font-family:var(--font);cursor:pointer;}
+  ::-webkit-scrollbar{width:9px;} ::-webkit-scrollbar-thumb{background:var(--border-mid);border-radius:6px;}
+
+  /* top bar */
+  .top{height:58px;flex-shrink:0;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 18px;gap:12px;box-shadow:var(--sh-sm);z-index:30;}
+  .top-r{display:flex;align-items:center;gap:12px;min-width:0;}
+  .iconbtn{width:38px;height:38px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--text-sub);transition:all .2s;flex-shrink:0;}
+  .iconbtn:hover{background:var(--surface-2);color:var(--navy);border-color:var(--cyan);} [data-theme="dark"] .iconbtn:hover{color:var(--cyan);}
+  .iconbtn svg{width:18px;height:18px;}
+  .icon-sun{display:none;} [data-theme="dark"] .icon-sun{display:block;} [data-theme="dark"] .icon-moon{display:none;}
+  .email-name{font-size:15px;font-weight:800;color:var(--text-main);background:transparent;border:1px solid transparent;border-radius:7px;padding:4px 9px;font-family:var(--font);max-width:300px;outline:none;transition:all .15s;}
+  .email-name:hover{border-color:var(--border);} .email-name:focus{border-color:var(--cyan);background:var(--surface-2);}
+  .edit-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#fff;background:var(--amber);padding:6px 13px;border-radius:20px;}
+  .edit-tag svg{width:14px;height:14px;}
+  .top-l{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+  .autosave{font-size:11.5px;color:var(--text-sub);display:flex;align-items:center;gap:6px;}
+  .autosave .dot{width:7px;height:7px;border-radius:50%;background:var(--green);}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 17px;border-radius:24px;font-size:13.5px;font-weight:700;border:none;transition:all .2s;white-space:nowrap;}
+  .btn svg{width:15px;height:15px;}
+  .btn-ghost{background:var(--surface);color:var(--navy);border:1.5px solid var(--border-mid);} .btn-ghost:hover{background:var(--surface-2);border-color:var(--cyan);} [data-theme="dark"] .btn-ghost{color:var(--text-main);}
+  .btn-primary{background:linear-gradient(135deg,var(--navy),#2f4d96);color:#fff;} .btn-primary:hover{background:linear-gradient(135deg,var(--cyan),var(--cyan-dark));}
+
+  /* workspace */
+  .work{flex:1;display:flex;min-height:0;}
+  .canvas{flex:1;overflow-y:auto;padding:30px 20px 80px;display:flex;justify-content:center;}
+  .paper{width:640px;max-width:100%;display:flex;flex-direction:column;}
+  .paper-subject{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:13px 18px;margin-bottom:14px;box-shadow:var(--sh-sm);}
+  .paper-subject .lbl{font-size:10.5px;font-weight:700;color:var(--text-xs);text-transform:uppercase;letter-spacing:.5px;font-family:var(--font-brand);}
+  .paper-subject .subj{font-size:15px;font-weight:700;color:var(--text-main);margin-top:3px;}
+
+  /* ===== REAL block model ===== */
+  .content-block{background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border);margin-bottom:10px;flex-shrink:0;position:relative;transition:border-color .15s;}
+  [data-mode="teacher"] .content-block{border:1.5px solid var(--border-mid);}
+  [data-mode="teacher"] .content-block:hover{border-color:var(--amber);}
+  [data-mode="teacher"] .content-block:hover .block-toolbar{opacity:1;pointer-events:auto;}
+  .block-toolbar{position:absolute;top:-13px;left:10px;display:flex;gap:3px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:5;}
+  .block-tb-btn{width:24px;height:24px;border-radius:6px;border:1px solid var(--border-mid);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .13s;}
+  .block-tb-btn:hover{background:var(--surface-2);color:var(--text-main);} .block-tb-btn.del:hover{color:#dc2626;}
+  .block-tb-btn svg{width:11px;height:11px;}
+  .block-h1{padding:14px 16px;font-size:26px;font-weight:800;font-family:var(--font-h1);color:var(--navy);outline:none;min-height:52px;}
+  [data-theme="dark"] .block-h1{color:var(--text-main);}
+  .block-h1:empty::before{content:attr(data-ph);color:var(--text-xs);font-weight:400;font-family:var(--font);}
+  .block-h2{padding:12px 16px;font-size:19px;font-weight:700;font-family:var(--font-h2);color:var(--cyan);outline:none;min-height:44px;}
+  .block-h2:empty::before{content:attr(data-ph);color:var(--text-xs);font-weight:400;font-family:var(--font);}
+  .block-text{padding:12px 16px;font-size:14px;color:var(--text-main);font-family:var(--font-body);line-height:1.75;outline:none;min-height:60px;}
+  .block-text:empty::before{content:attr(data-ph);color:var(--text-xs);}
+  .content-block[data-type="divider"]{background:transparent!important;border:none!important;box-shadow:none!important;}
+  [data-mode="teacher"] .content-block[data-type="divider"]:hover{border:1.5px dashed var(--border-mid)!important;background:transparent!important;}
+  .block-divider{padding:14px 16px;display:flex;align-items:center;background:transparent!important;border:none!important;}
+  .block-divider-line{height:1.5px;flex:1;background:var(--border-mid);border-radius:2px;}
+  .block-cta-wrap{padding:16px;display:flex;flex-direction:column;gap:8px;align-items:flex-start;}
+  .block-cta-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:var(--btn-radius-course);background:var(--pink);color:#fff;font-family:var(--font);font-size:14px;font-weight:700;border:none;cursor:text;outline:none;min-width:80px;}
+  .block-cta-btn:empty::before{content:'טקסט הכפתור';opacity:.5;}
+  .block-cta-link-row{display:flex;align-items:center;gap:6px;width:100%;}
+  .block-cta-link-row svg{width:13px;height:13px;color:var(--text-xs);flex-shrink:0;}
+  .block-cta-link-input{flex:1;border:none;border-bottom:1px solid var(--border);background:transparent;font-family:var(--font);font-size:11.5px;color:var(--text-sub);outline:none;padding:2px 0;direction:ltr;transition:border-color .15s;}
+  .block-cta-link-input:focus{border-color:var(--cyan);}
+  .content-block[data-type="quote"]{border-right:4px solid var(--cyan)!important;}
+  .block-quote-wrap{padding:20px 22px;position:relative;overflow:hidden;}
+  .block-quote-bg{position:absolute;top:-16px;right:14px;font-size:110px;line-height:1;font-family:Georgia,serif;color:var(--cyan);opacity:.1;pointer-events:none;user-select:none;}
+  .block-quote-text{font-size:16.5px;font-style:italic;font-family:Georgia,serif;color:var(--text-main);line-height:1.8;outline:none;position:relative;z-index:1;min-height:40px;}
+  .block-quote-text:empty::before{content:attr(data-ph);color:var(--text-xs);font-style:normal;font-family:var(--font);}
+  .block-quote-attr{margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text-xs);outline:none;font-style:normal;font-family:var(--font);}
+  .block-quote-attr:empty::before{content:attr(data-ph);color:var(--text-xs);}
+  .block-image{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:24px;min-height:120px;cursor:pointer;background:var(--surface-2);color:var(--text-xs);font-size:12px;font-weight:600;border-radius:var(--r-md);}
+  .block-image svg{width:28px;height:28px;opacity:.4;}
+  .block-iframe-wrap{display:flex;flex-direction:column;}
+  .block-iframe-url-row{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--surface-2);}
+  .block-iframe-url-row svg{width:13px;height:13px;color:var(--text-xs);}
+  .block-iframe-url-input{flex:1;border:none;background:transparent;font-family:var(--font);font-size:11.5px;color:var(--text-main);outline:none;direction:ltr;}
+  .block-iframe-preview{min-height:160px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--text-xs);font-size:12px;font-weight:600;}
+  .block-iframe-preview svg{width:28px;height:28px;opacity:.35;}
+  .e-var{color:var(--cyan);font-weight:700;}
+
+  /* add block button */
+  .add-block-btn{display:flex;align-items:center;gap:7px;width:100%;padding:11px;border-radius:var(--r-md);border:2px dashed rgba(245,158,11,.35);background:transparent;font-family:var(--font);font-size:13px;font-weight:700;color:var(--amber);cursor:pointer;justify-content:center;transition:all .18s;margin-top:4px;}
+  .add-block-btn:hover{background:rgba(245,158,11,.07);border-color:var(--amber);}
+  .add-block-btn svg{width:16px;height:16px;}
+
+  /* attachment */
+  .files-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;margin-top:14px;}
+  .files-head{display:flex;align-items:center;justify-content:space-between;}
+  .files-head .t{font-size:13px;font-weight:800;display:flex;align-items:center;gap:7px;} .files-head .t svg{width:15px;height:15px;color:var(--cyan);}
+  .files-add{font-size:12px;font-weight:700;color:var(--cyan);display:flex;align-items:center;gap:5px;background:none;border:none;} .files-add svg{width:14px;height:14px;}
+
+  /* RIGHT: block picker panel */
+  .side{width:330px;flex-shrink:0;background:var(--surface);border-inline-end:1px solid var(--border);display:flex;flex-direction:column;min-height:0;}
+  .bp-head{display:flex;align-items:center;gap:8px;padding:16px 18px 10px;flex-shrink:0;}
+  .bp-title{font-size:16px;font-weight:800;color:var(--text-main);font-family:var(--font-brand);flex:1;}
+  .bp-close{background:none;border:none;cursor:pointer;color:var(--text-sub);display:flex;padding:5px;border-radius:var(--r-xs);transition:all .15s;} .bp-close:hover{background:var(--surface-2);color:var(--text-main);} .bp-close svg{width:15px;height:15px;}
+  .bp-subtitle{padding:0 18px 12px;font-size:11.5px;color:var(--text-xs);font-weight:600;}
+  .bp-list{flex:1;overflow-y:auto;padding:0 12px 16px;display:flex;flex-direction:column;gap:5px;}
+  .bp-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:var(--surface-2);cursor:pointer;transition:all .15s;}
+  .bp-item:hover{border-color:var(--cyan);background:var(--surface);transform:translateY(-1px);box-shadow:var(--sh-sm);}
+  .bp-icon{width:38px;height:38px;border-radius:var(--r-sm);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface-3);border:1px solid var(--border);}
+  .bp-icon svg{width:17px;height:17px;color:var(--navy);} [data-theme="dark"] .bp-icon svg{color:var(--cyan);}
+  .bp-info{flex:1;} .bp-item-name{font-size:13.5px;font-weight:700;color:var(--text-main);} .bp-item-desc{font-size:10.5px;color:var(--text-xs);margin-top:2px;}
+  .bp-arrow{color:var(--text-xs);} .bp-arrow svg{width:13px;height:13px;}
+  .bp-foot{padding:12px 16px;border-top:1px solid var(--border);}
+  .bp-vars-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:var(--r-sm);border:1px solid var(--border-mid);background:var(--surface-2);font-size:12.5px;font-weight:700;color:var(--text-main);transition:all .15s;}
+  .bp-vars-btn:hover{border-color:var(--cyan);color:var(--cyan);} .bp-vars-btn svg{width:15px;height:15px;}
+
+  /* variables popover */
+  .vars-pop{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(26,47,94,0.45);backdrop-filter:blur(3px);}
+  [data-theme="dark"] .vars-pop{background:rgba(0,0,0,0.6);}
+  .vars-pop.open{display:flex;}
+  .vars-card{width:100%;max-width:420px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-lg);overflow:hidden;animation:pop .3s cubic-bezier(.4,.8,.3,1);}
+  @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.96);}to{opacity:1;transform:none;}}
+  .vars-h{display:flex;align-items:center;gap:11px;padding:18px 20px 14px;border-bottom:1px solid var(--border);}
+  .vars-h .vi{width:38px;height:38px;border-radius:11px;background:rgba(56,196,242,0.13);color:var(--cyan);display:flex;align-items:center;justify-content:center;} .vars-h .vi svg{width:19px;height:19px;}
+  .vars-h h3{font-size:16px;font-weight:800;} .vars-h p{font-size:12px;color:var(--text-sub);margin-top:2px;}
+  .vars-h .x{margin-inline-start:auto;background:none;border:none;color:var(--text-sub);cursor:pointer;} .vars-h .x svg{width:18px;height:18px;}
+  .vars-list{padding:14px 16px;display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow-y:auto;}
+  .var-row{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--surface-2);cursor:pointer;transition:all .15s;text-align:start;}
+  .var-row:hover{border-color:var(--cyan);background:var(--surface);}
+  .var-he{font-size:13.5px;font-weight:700;color:var(--text-main);flex:1;}
+  .var-token{font-family:'SF Mono',Menlo,monospace;font-size:11px;color:var(--cyan);direction:ltr;background:var(--surface-3);padding:3px 8px;border-radius:6px;}
+
+  /* toast */
+  .toasts{position:fixed;bottom:22px;inset-inline-start:22px;z-index:200;display:flex;flex-direction:column;gap:10px;}
+  .toast{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 15px;box-shadow:var(--sh-lg);font-size:13px;font-weight:600;animation:tin .3s ease;}
+  @keyframes tin{from{opacity:0;transform:translateX(-26px);}to{opacity:1;transform:none;}}
+  .toast.out{animation:tout .3s forwards;} @keyframes tout{to{opacity:0;transform:translateX(-26px);}}
+  .toast svg{width:17px;height:17px;color:var(--green);}
+
+  @media (max-width:880px){ .side{display:none;} }
+</style>
+</head>
+<body>
+  <header class="top">
+    <div class="top-r">
+      <button class="iconbtn" id="back" aria-label="חזרה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+      <input class="email-name" value="מייל הגעה למועדון" aria-label="שם המייל">
+      <span class="edit-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>מצב עריכה</span>
+    </div>
+    <div class="top-l">
+      <span class="autosave"><span class="dot"></span>שמור אוטומטי</span>
+      <button class="iconbtn" id="themeBtn" aria-label="מצב תצוגה">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+      <button class="btn btn-ghost" id="testBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>שלח טסט</button>
+      <button class="btn btn-ghost" id="prevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>תצוגה מקדימה</button>
+      <button class="btn btn-primary" id="saveBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>שמור</button>
+    </div>
+  </header>
+
+  <div class="work">
+    <!-- CANVAS -->
+    <main class="canvas">
+      <div class="paper">
+        <div class="paper-subject"><div class="lbl">נושא המייל</div><div class="subj">ברוכים הבאים למועדון להורות התפתחותית!</div></div>
+        <div class="lesson-scroll" id="scroll">
+          <!-- prefilled blocks -->
+          <div class="content-block" data-type="h1"><div class="block-toolbar"></div><div class="block-h1" contenteditable="true" data-ph="כותרת ראשית...">ברוכים הבאים!</div></div>
+          <div class="content-block" data-type="text"><div class="block-toolbar"></div><div class="block-text" contenteditable="true" data-ph="כתוב כאן...">היי <span class="e-var">{{שם הנמען}}</span>, כאן ד״ר אבי ברקר. שמח שהצטרפת למועדון הראשון מסוגו בישראל להורות התפתחותית.</div></div>
+          <div class="content-block" data-type="cta"><div class="block-toolbar"></div><div class="block-cta-wrap"><div class="block-cta-btn" contenteditable="true" spellcheck="false">כניסה למועדון</div><div class="block-cta-link-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><input class="block-cta-link-input" type="url" value="{{login_url}}" dir="ltr"></div></div></div>
+          <!-- add block -->
+          <button class="add-block-btn" id="addBtn" onclick="openBlockPicker()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>הוסף בלוק תוכן</button>
+        </div>
+        <div class="files-card">
+          <div class="files-head"><span class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>קבצים נלווים</span><button class="files-add" id="fileAdd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>הוסף קובץ</button></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT: block picker -->
+    <aside class="side">
+      <div class="bp-head"><span class="bp-title">הוסף בלוק</span><button class="bp-close" id="bpClose" aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+      <p class="bp-subtitle">בחר סוג תוכן להוספה למייל</p>
+      <div class="bp-list" id="bpList">
+        <div class="bp-item" onclick="addBlock('h1')"><div class="bp-icon" style="color:var(--navy)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div><div class="bp-info"><div class="bp-item-name">כותרת ראשית H1</div><div class="bp-item-desc">כותרת גדולה — 26px, Fredoka</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('h2')"><div class="bp-icon" style="color:var(--cyan)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h6"/></svg></div><div class="bp-info"><div class="bp-item-name">כותרת משנה H2</div><div class="bp-item-desc">כותרת סעיף — 19px, תכלת</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('text')"><div class="bp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div><div class="bp-info"><div class="bp-item-name">גוף טקסט</div><div class="bp-item-desc">פסקת תוכן חופשי</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('quote')"><div class="bp-icon" style="color:var(--cyan)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg></div><div class="bp-info"><div class="bp-item-name">ציטוט</div><div class="bp-item-desc">ציטוט מרשים עם פונט רשמי</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('divider')"><div class="bp-icon" style="color:var(--text-xs)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/></svg></div><div class="bp-info"><div class="bp-item-name">מפריד</div><div class="bp-item-desc">קו הפרדה בין חלקי תוכן</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('cta')"><div class="bp-icon" style="color:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="8" rx="4"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div class="bp-info"><div class="bp-item-name">כפתור CTA</div><div class="bp-item-desc">כפתור פעולה עם לינק</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('image')"><div class="bp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><div class="bp-info"><div class="bp-item-name">תמונה / GIF</div><div class="bp-item-desc">תמונה, GIF או קובץ מדיה</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('iframe')"><div class="bp-icon" style="color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 10l-2 2 2 2M16 10l2 2-2 2"/></svg></div><div class="bp-info"><div class="bp-item-name">הטמעה / iFrame</div><div class="bp-item-desc">הטמעת אתר או כלי חיצוני</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+      </div>
+      <div class="bp-foot">
+        <button class="bp-vars-btn" id="varsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>הוסף משתנה אישי</button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- variables popover -->
+  <div class="vars-pop" id="varsPop">
+    <div class="vars-card">
+      <div class="vars-h"><div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div><div><h3>משתנים זמינים</h3><p>לחיצה מכניסה את המשתנה לבלוק שנערך</p></div><button class="x" id="varsClose" aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+      <div class="vars-list" id="varsList"></div>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+
+<script>
+  // theme
+  try{var t=localStorage.getItem("wb-admin-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}
+  document.getElementById("themeBtn").addEventListener("click",function(){var h=document.documentElement;var n=h.getAttribute("data-theme")==="dark"?"light":"dark";h.setAttribute("data-theme",n);try{localStorage.setItem("wb-admin-theme",n);}catch(e){}});
+  function toast(txt){var c=document.getElementById("toasts");var t=document.createElement("div");t.className="toast";t.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>'+txt;c.appendChild(t);setTimeout(function(){t.classList.add("out");setTimeout(function(){t.remove();},300);},2600);}
+
+  // Hebrew-labeled variables (label shown in Hebrew, token inserted)
+  var VARS=[
+    {he:"שם הנמען", token:"{{member_name}}"},
+    {he:"שם המועדון", token:"{{club_name}}"},
+    {he:"קישור כניסה", token:"{{login_url}}"},
+    {he:"כתובת אפליקציית המועדון", token:"{{club_app_url}}"},
+    {he:"מזהה המועדון", token:"{{club_slug}}"},
+  ];
+
+  var BLOCK_NAMES={h1:'כותרת ראשית',h2:'כותרת משנה',text:'גוף טקסט',quote:'ציטוט',divider:'מפריד',cta:'כפתור CTA',image:'תמונה / GIF',iframe:'הטמעה'};
+
+  function openBlockPicker(){document.querySelector('.side').style.display='flex';document.getElementById('bpList').scrollTop=0;}
+  function closeBlockPicker(){/* keep panel; on mobile could hide */}
+  document.getElementById('bpClose').addEventListener('click',function(){document.querySelector('.side').style.display='none';});
+
+  function makeToolbar(){return '<div class="block-toolbar"><button class="block-tb-btn" title="הזז למעלה" onclick="moveBlock(this,-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button><button class="block-tb-btn" title="הזז למטה" onclick="moveBlock(this,1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button><button class="block-tb-btn del" title="מחק" onclick="deleteBlock(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div>';}
+
+  function addBlock(type){
+    var scroll=document.getElementById('scroll');
+    var addBtn=document.getElementById('addBtn');
+    var block=document.createElement('div');
+    block.className='content-block'; block.dataset.type=type;
+    var TB=makeToolbar();
+    var inner={
+      h1: TB+'<div class="block-h1" contenteditable="true" data-ph="כותרת ראשית..."></div>',
+      h2: TB+'<div class="block-h2" contenteditable="true" data-ph="כותרת משנה..."></div>',
+      text: TB+'<div class="block-text" contenteditable="true" data-ph="כתוב כאן..."></div>',
+      quote: TB+'<div class="block-quote-wrap"><div class="block-quote-bg">"</div><div class="block-quote-text" contenteditable="true" data-ph="הכנס ציטוט..."></div><div class="block-quote-attr" contenteditable="true" data-ph="— מקור (אופציונלי)"></div></div>',
+      divider: TB+'<div class="block-divider"><div class="block-divider-line"></div></div>',
+      cta: TB+'<div class="block-cta-wrap"><div class="block-cta-btn" contenteditable="true" spellcheck="false"></div><div class="block-cta-link-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><input class="block-cta-link-input" type="url" placeholder="הדבק קישור לכפתור..." dir="ltr"></div></div>',
+      image: TB+'<div class="block-image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>לחץ להעלאת תמונה / GIF</div>',
+      iframe: TB+'<div class="block-iframe-wrap"><div class="block-iframe-url-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><input class="block-iframe-url-input" type="url" placeholder="הדבק כתובת URL להטמעה..." dir="ltr"></div><div class="block-iframe-preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 10l-2 2 2 2M16 10l2 2-2 2"/></svg>הזן כתובת URL להצגת תוכן</div></div>'
+    }[type];
+    block.innerHTML=inner;
+    scroll.insertBefore(block,addBtn);
+    var ed=block.querySelector('[contenteditable="true"]')||block.querySelector('input');
+    if(ed)ed.focus();
+    lastEditable=block.querySelector('[contenteditable="true"]')||lastEditable;
+    toast('בלוק '+BLOCK_NAMES[type]+' נוסף');
+  }
+  function deleteBlock(btn){var b=btn.closest('.content-block');b.remove();toast('הבלוק נמחק');}
+  function moveBlock(btn,dir){var b=btn.closest('.content-block');if(dir<0){var p=b.previousElementSibling;if(p&&p.classList.contains('content-block'))b.parentNode.insertBefore(b,p);}else{var n=b.nextElementSibling;if(n&&n.classList.contains('content-block'))b.parentNode.insertBefore(n,b);}}
+
+  // attach toolbars to prefilled blocks
+  document.querySelectorAll('#scroll .content-block .block-toolbar').forEach(function(t){t.outerHTML=makeToolbar();});
+
+  // track last focused editable for variable insertion
+  var lastEditable=null;
+  document.addEventListener('focusin',function(e){if(e.target.closest&&e.target.closest('[contenteditable="true"]'))lastEditable=e.target.closest('[contenteditable="true"]');});
+
+  // variables popover
+  var varsList=document.getElementById('varsList');
+  VARS.forEach(function(v){var b=document.createElement('button');b.className='var-row';b.innerHTML='<span class="var-he">'+v.he+'</span><span class="var-token" dir="ltr">'+v.token+'</span>';b.addEventListener('click',function(){insertVar(v);});varsList.appendChild(b);});
+  function openVars(){document.getElementById('varsPop').classList.add('open');}
+  function closeVars(){document.getElementById('varsPop').classList.remove('open');}
+  document.getElementById('varsBtn').addEventListener('click',openVars);
+  document.getElementById('varsClose').addEventListener('click',closeVars);
+  document.getElementById('varsPop').addEventListener('click',function(e){if(e.target===this)closeVars();});
+  function insertVar(v){
+    closeVars();
+    var chip='<span class="e-var">'+v.he+'</span>&nbsp;';
+    if(lastEditable){lastEditable.focus();document.execCommand('insertHTML',false,chip);toast('הוכנס: '+v.he);}
+    else toast('בחר תחילה בלוק טקסט');
+  }
+
+  document.getElementById('saveBtn').addEventListener('click',function(){toast('המייל נשמר');});
+  document.getElementById('testBtn').addEventListener('click',function(){toast('נשלח מייל בדיקה אליך');});
+  document.getElementById('prevBtn').addEventListener('click',function(){toast('תצוגה מקדימה');});
+  document.getElementById('back').addEventListener('click',function(){toast('חזרה');});
+  document.getElementById('fileAdd').addEventListener('click',function(){toast('הוספת קובץ מצורף');});
+</script>
+</body>
+</html>
