@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מערכת דיוור — מדריך יישום CTO | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253E7A; --navy-dark:#1a2f5e; --navy-light:#3a5499;
+    --cyan:#38C4F2; --cyan-dark:#1db0d8; --cyan-light:rgba(56,196,242,0.12);
+    --light-blue:#E3F4FD; --pink:#F05680; --pink-light:rgba(240,86,128,0.12);
+    --yellow:#EAD654; --yellow-light:rgba(234,214,84,0.18);
+    --green:#7DC57A; --green-bright:#22c55e; --green-light:rgba(125,197,122,0.14);
+    --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#f5f8ff; --surface-3:#edf4ff;
+    --border:rgba(37,62,122,0.1); --border-hover:rgba(56,196,242,0.4);
+    --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.6); --text-light:rgba(37,62,122,0.4);
+    --code-bg:#0f1b33; --code-text:#dce6fb;
+    --font-he:'Heebo',sans-serif; --font-en:'Fredoka',sans-serif; --font-mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+    --r-sm:10px; --r-md:16px;
+    --sh-sm:0 2px 10px rgba(37,62,122,0.07); --sh-md:0 6px 24px rgba(37,62,122,0.1);
+  }
+  [data-theme="dark"]{
+    --cyan-light:rgba(56,196,242,0.14); --light-blue:rgba(56,196,242,0.1);
+    --pink-light:rgba(240,86,128,0.18); --yellow-light:rgba(234,214,84,0.18); --green-light:rgba(125,197,122,0.18);
+    --bg:#0c1424; --surface:#131e35; --surface-2:#1a2740; --surface-3:#1e2e48;
+    --border:rgba(255,255,255,0.08); --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.6); --text-light:rgba(221,229,245,0.34);
+    --code-bg:#0a1326; --sh-sm:0 2px 12px rgba(0,0,0,0.3); --sh-md:0 6px 28px rgba(0,0,0,0.4);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);display:flex;transition:background .3s,color .3s;}
+  ::-webkit-scrollbar{width:10px;height:10px;} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:6px;}
+  .side{width:268px;background:var(--surface);border-inline-start:1px solid var(--border);height:100vh;position:fixed;right:0;top:0;display:flex;flex-direction:column;padding:24px 0;overflow-y:auto;z-index:10;}
+  .side-logo{padding:0 22px 18px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+  .side-logo .brand{font-family:var(--font-en);font-weight:700;font-size:19px;color:var(--navy);display:flex;align-items:center;gap:8px;} [data-theme="dark"] .side-logo .brand{color:var(--cyan);}
+  .side-logo .logosq{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--cyan),var(--navy));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;}
+  .side-logo .sub{font-size:12px;color:var(--text-sub);margin-top:4px;}
+  .side a{display:block;padding:9px 22px;font-size:13.5px;color:var(--text-sub);text-decoration:none;border-inline-end:3px solid transparent;transition:all .15s;}
+  .side a:hover{background:var(--surface-2);color:var(--text-main);}
+  .side a.active{color:var(--cyan);border-inline-end-color:var(--cyan);background:var(--cyan-light);font-weight:700;}
+  .side a .n{font-family:var(--font-en);color:var(--text-light);margin-inline-end:8px;font-size:12px;}
+  .main{margin-inline-end:268px;flex:1;max-width:1000px;padding:46px 56px 120px;}
+  .topbtns{position:fixed;top:22px;left:28px;z-index:20;}
+  .tbtn{width:40px;height:40px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);box-shadow:var(--sh-sm);}
+  .tbtn:hover{color:var(--cyan);border-color:var(--cyan);} .tbtn svg{width:19px;height:19px;}
+  .icon-sun{display:none;} [data-theme="dark"] .icon-sun{display:block;} [data-theme="dark"] .icon-moon{display:none;}
+  .doc-head{margin-bottom:36px;}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--cyan);font-family:var(--font-en);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);}
+  h1{font-size:38px;font-weight:900;line-height:1.12;margin-bottom:14px;}
+  .lead{font-size:16px;color:var(--text-sub);line-height:1.65;max-width:720px;}
+  section{margin-bottom:50px;scroll-margin-top:30px;}
+  h2{font-size:25px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+  h2 .h2num{font-family:var(--font-en);font-size:15px;font-weight:700;color:#fff;background:var(--navy);width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;} [data-theme="dark"] h2 .h2num{background:var(--cyan);color:var(--navy-dark);}
+  h3{font-size:17px;font-weight:800;margin:24px 0 10px;}
+  .sec-sub{font-size:14.5px;color:var(--text-sub);line-height:1.65;margin-bottom:18px;max-width:740px;}
+  p{line-height:1.7;color:var(--text-main);font-size:14.5px;margin-bottom:12px;}
+  ul{margin:0 18px 14px 0;padding-inline-start:4px;} li{line-height:1.75;font-size:14.5px;margin-bottom:5px;}
+  b{font-weight:700;} code.inl{font-family:var(--font-mono);background:var(--surface-3);padding:2px 7px;border-radius:5px;font-size:13px;direction:ltr;display:inline-block;}
+  .rules{background:linear-gradient(135deg,var(--navy),#2f4d96);border-radius:var(--r-md);padding:24px 26px;color:#fff;margin:24px 0;box-shadow:var(--sh-md);} [data-theme="dark"] .rules{background:linear-gradient(135deg,#0f1b3a,#1a2a55);border:1px solid rgba(56,196,242,0.2);}
+  .rules h3{color:#fff;margin:0 0 14px;font-size:16px;display:flex;align-items:center;gap:9px;} .rules h3 svg{width:18px;height:18px;color:var(--cyan);}
+  .rules ol{margin:0;padding-inline-start:20px;} .rules li{color:rgba(255,255,255,0.9);margin-bottom:8px;font-size:14px;} .rules li b{color:var(--cyan);}
+  pre{background:var(--code-bg);border-radius:var(--r-md);padding:20px 22px;overflow-x:auto;margin:14px 0;border:1px solid rgba(255,255,255,0.06);}
+  pre code{font-family:var(--font-mono);font-size:12.8px;line-height:1.65;color:var(--code-text);direction:ltr;display:block;white-space:pre;}
+  .cm{color:#6b86b8;} .kw{color:#5ad0f5;} .ty{color:#7DC57A;} .st{color:#EAD654;} .fn{color:#ff8ba8;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:20px 22px;box-shadow:var(--sh-sm);margin:14px 0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .callout{display:flex;gap:13px;padding:16px 18px;border-radius:var(--r-md);margin:16px 0;align-items:flex-start;}
+  .callout svg{width:20px;height:20px;flex-shrink:0;margin-top:2px;} .callout p{margin:0;font-size:14px;}
+  .callout.info{background:var(--cyan-light);border:1px solid rgba(56,196,242,0.25);} .callout.info svg{color:var(--cyan);}
+  .callout.warn{background:var(--yellow-light);border:1px solid rgba(234,214,84,0.4);} .callout.warn svg{color:#b89c00;} [data-theme="dark"] .callout.warn svg{color:var(--yellow);}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px;}
+  th{text-align:right;font-size:11.5px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.4px;padding:0 12px 10px;border-bottom:1px solid var(--border);}
+  td{padding:11px 12px;border-bottom:1px solid var(--border);color:var(--text-main);vertical-align:top;} td code{font-family:var(--font-mono);font-size:12.5px;color:var(--cyan);direction:ltr;}
+  .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px;} .pill.v1{background:var(--green-light);color:var(--green);} .pill.v2{background:var(--yellow-light);color:#b89c00;} [data-theme="dark"] .pill.v2{color:var(--yellow);}
+  @media (max-width:1000px){ .side{display:none;} .main{margin-inline-end:0;padding:30px 22px 80px;} .grid2{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="topbtns">
+  <button class="tbtn" id="themeBtn" aria-label="מצב תצוגה">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+  </button>
+</div>
+<aside class="side">
+  <div class="side-logo"><div class="brand"><span class="logosq">W</span> WHITEBOARD</div><div class="sub">מערכת דיוור · מדריך יישום CTO</div></div>
+  <a href="#overview" class="active"><span class="n">00</span>סקירה + כללי CTO</a>
+  <a href="#problem"><span class="n">01</span>מה תוקן ב‑UX</a>
+  <a href="#arch"><span class="n">02</span>ארכיטקטורה</a>
+  <a href="#blocks"><span class="n">03</span>מודל הבלוקים המשותף</a>
+  <a href="#render"><span class="n">04</span>רינדור למייל + משתנים</a>
+  <a href="#data"><span class="n">05</span>מודל הנתונים</a>
+  <a href="#types"><span class="n">06</span>קמפיין · סדרה · טריגר</a>
+  <a href="#jobs"><span class="n">07</span>שליחה (Trigger.dev)</a>
+  <a href="#components"><span class="n">08</span>רכיבי UI</a>
+  <a href="#roadmap"><span class="n">09</span>מפת דרכים + Stack</a>
+</aside>
+
+<main class="main">
+  <div class="doc-head">
+    <span class="eyebrow"><span class="dot"></span> מדריך יישום · CTO</span>
+    <h1>מערכת דיוור — עורך מייל מבוסס בלוקים</h1>
+    <p class="lead">איחוד פלואו יצירת המייל המבולגן (פופאפ הגדרות ← עורך נפרד ← ריבוי טאבים) ל<b>עורך אחוד אחד</b>: הגדרות + קנבס בלוקים + מאפיינים במסך אחד. ה<b>בלוק‑בילדר זהה לזה של הקורס</b> — אותו רג'יסטרי, אותם רכיבים — מה שמוריד תחזוקה ומאחד חוויה.</p>
+  </div>
+
+  <section id="overview">
+    <h2><span class="h2num">00</span>סקירה + כללי CTO</h2>
+    <p class="sec-sub">העורך משרת שלושה סוגים: קמפיין בודד, שלב בסדרת drip, ומייל מבוסס‑טריגר — כולם משתמשים באותו עורך ובאותו מודל בלוקים.</p>
+    <div class="rules">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>5 כללי הזהב (חובה)</h3>
+      <ol>
+        <li><b>React + Next.js</b> — העורך הוא Client Component (אינטראקטיבי); הרשימות/הגדרות כ‑Server Components.</li>
+        <li><b>TypeScript strict + Zod</b> — סכמת הבלוקים מאומתת ב‑Zod (אותה סכמה בקורס ובמייל).</li>
+        <li><b>Bunny CDN/Stream</b> — תמונות הבלוקים ווידאו דרך Bunny; אין העלאות לשרת.</li>
+        <li><b>Trigger.dev</b> — כל שליחה, סדרה והשהיה — דרך Trigger.dev (בלי cron/setTimeout).</li>
+        <li><b>Toast/Modal מעוצבים</b> — אין <code class="inl">alert/confirm</code>; שמירה אוטומטית + טוסט.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="problem">
+    <h2><span class="h2num">01</span>מה תוקן ב‑UX</h2>
+    <div class="grid2">
+      <div class="card"><h3 style="margin-top:0;color:var(--pink)">לפני</h3><ul style="margin-bottom:0">
+        <li>פופאפ הגדרות ואז קפיצה לעורך נפרד</li>
+        <li>5 טאבים תוכן (AI / HTML / ויזואלי / תצוגה / עורך HTML) — בלבול</li>
+        <li>אין באמת בונה‑בלוקים</li>
+        <li>אין ייצוג לסדרת מיילים / השהיות</li>
+        <li>סטטוסים לא ברורים (פעיל/מתוזמן/מתמשך)</li>
+      </ul></div>
+      <div class="card"><h3 style="margin-top:0;color:var(--green)">אחרי</h3><ul style="margin-bottom:0">
+        <li>מסך אחד: הגדרות (ימין) · קנבס (מרכז) · רכיבים/מאפיינים (שמאל)</li>
+        <li>טאב אחד = בונה בלוקים; AI ו‑HTML כפעולות משניות</li>
+        <li>בלוק‑בילדר זהה לקורס (גרירה, בחירה, מאפיינים)</li>
+        <li>ציר שלבים לסדרה עם השהיות + "הוסף שלב"</li>
+        <li>CTA ראשי יחיד (שמור) + תצוגת דסקטופ/מובייל</li>
+      </ul></div>
+    </div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p>עקרון מנחה (UI/UX Pro Max): <b>CTA ראשי יחיד</b> לכל מסך, <b>חשיפה הדרגתית</b> בפאנל המאפיינים, ומשוב מיידי (&lt;100ms) על כל גרירה/בחירה.</p></div>
+  </section>
+
+  <section id="arch">
+    <h2><span class="h2num">02</span>ארכיטקטורה</h2>
+    <pre><code><span class="cm">// מבנה</span>
+app/(app)/mailing/
+  page.tsx                  <span class="cm">// רשימת מיילים (טריגרים + טבלה)</span>
+  new/page.tsx              <span class="cm">// בורר סוג (modal)</span>
+  [id]/editor/page.tsx      <span class="cm">// העורך האחוד (Client)</span>
+lib/blocks/                 <span class="cm">// ← משותף עם הקורס</span>
+  registry.ts               <span class="cm">// BlockRegistry: type → {schema, Editor, Props, renderEmail}</span>
+  schema.ts                 <span class="cm">// Zod schema לכל בלוק</span>
+  render-email.ts           <span class="cm">// בלוקים → HTML תואם‑מייל</span>
+trigger/mailing/            <span class="cm">// עבודות שליחה</span></code></pre>
+    <p>העורך מורכב משלושה אזורים (RTL): <b>הגדרות</b> (ימין) · <b>קנבס בלוקים</b> (מרכז) · <b>רכיבים/מאפיינים/מותג</b> (שמאל). בחירת בלוק בקנבס מחליפה אוטומטית את הטאב השמאלי ל"מאפיינים".</p>
+  </section>
+
+  <section id="blocks">
+    <h2><span class="h2num">03</span>מודל הבלוקים המשותף</h2>
+    <p class="sec-sub">הלב של האיחוד: גוף המייל וגוף שיעור בקורס הם <b>אותו מבנה</b> — מערך בלוקים מסודר. רג'יסטרי אחד מגדיר כל סוג בלוק; הקשר (קורס/מייל) רק מסנן אילו בלוקים זמינים ואיך הם מרונדרים.</p>
+    <pre><code><span class="cm">// lib/blocks/registry.ts — מקור אמת אחד</span>
+<span class="kw">type</span> <span class="ty">BlockType</span> =
+  <span class="st">"heading"</span> | <span class="st">"text"</span> | <span class="st">"image"</span> | <span class="st">"button"</span> | <span class="st">"quote"</span>
+  | <span class="st">"divider"</span> | <span class="st">"spacer"</span>            <span class="cm">// משותפים לקורס+מייל</span>
+  | <span class="st">"header"</span> | <span class="st">"social"</span> | <span class="st">"video"</span> | <span class="st">"columns"</span>  <span class="cm">// ייעודיים למייל</span>
+  | <span class="st">"iframe"</span> | <span class="st">"lessonVideo"</span>;        <span class="cm">// ייעודיים לקורס</span>
+
+<span class="kw">interface</span> <span class="ty">BlockDef</span>&lt;P&gt; {
+  type: <span class="ty">BlockType</span>;
+  contexts: (<span class="st">"course"</span> | <span class="st">"email"</span>)[];   <span class="cm">// היכן זמין</span>
+  schema: <span class="ty">ZodSchema</span>&lt;P&gt;;                  <span class="cm">// ולידציית props</span>
+  defaults: P;
+  Editor: <span class="ty">FC</span>&lt;{props:P; onChange:(p:P)=&gt;void}&gt;;  <span class="cm">// תצוגה בקנבס</span>
+  Props:  <span class="ty">FC</span>&lt;{props:P; onChange:(p:P)=&gt;void}&gt;;  <span class="cm">// פאנל מאפיינים</span>
+  renderEmail?: (props:P, ctx:RenderCtx) =&gt; <span class="ty">string</span>; <span class="cm">// HTML תואם-מייל</span>
+}
+
+<span class="cm">// גוף המסמך (מייל או שיעור) — אותו טיפוס</span>
+<span class="kw">type</span> <span class="ty">BlockDoc</span> = { id:<span class="ty">string</span>; type:<span class="ty">BlockType</span>; props:<span class="ty">unknown</span> }[];</code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p>תוצאה: שיפור בבלוק (נגישות, עיצוב) מגיע <b>בו‑זמנית לקורס ולמייל</b>. תוספת בלוק = רישום אחד ב‑registry.</p></div>
+  </section>
+
+  <section id="render">
+    <h2><span class="h2num">04</span>רינדור למייל + משתנים</h2>
+    <p class="sec-sub">בקנבס הבלוקים מרונדרים כ‑React (תצוגה חיה). ל<b>שליחה</b> הם מתקמפלים ל‑HTML תואם‑מייל (טבלאות + CSS inline) — לקוחות מייל לא תומכים ב‑flex/grid. מומלץ MJML או רנדרר טבלאי פנימי.</p>
+    <pre><code><span class="cm">// בעת שליחה לכל נמען — אינטרפולציה של משתנים</span>
+<span class="kw">function</span> <span class="fn">compile</span>(doc: BlockDoc, recipient: Recipient): <span class="ty">string</span> {
+  <span class="kw">const</span> html = doc.map(b =&gt; registry[b.type].renderEmail!(b.props, ctx)).join(<span class="st">""</span>);
+  <span class="kw">return</span> <span class="fn">interpolate</span>(html, {
+    member_name: recipient.name,
+    club_name:   ctx.club.name,
+    login_url:   <span class="fn">signedLoginLink</span>(recipient),   <span class="cm">// קישור חתום פר נמען</span>
+    club_slug:   ctx.club.slug,
+  });
+}
+<span class="cm">// {{member_name}} → "מיכל" ; חסר ערך → fallback מוגדר</span></code></pre>
+    <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><p><b>תאימות מייל:</b> CSS inline, רוחב ≤600px, טבלאות לפריסה, alt לכל תמונה, ו‑fallback לכל משתנה. בלוקים כמו <code class="inl">columns</code> מתקמפלים לטבלה, לא ל‑flex.</p></div>
+  </section>
+
+  <section id="data">
+    <h2><span class="h2num">05</span>מודל הנתונים (Prisma)</h2>
+    <pre><code><span class="kw">model</span> <span class="ty">EmailTemplate</span> {
+  id        <span class="ty">String</span>  <span class="kw">@id @default</span>(cuid())
+  name      <span class="ty">String</span>          <span class="cm">// שם פנימי</span>
+  subject   <span class="ty">String</span>
+  preheader <span class="ty">String?</span>
+  fromName  <span class="ty">String</span>
+  doc       <span class="ty">Json</span>            <span class="cm">// BlockDoc — מערך הבלוקים</span>
+  brand     <span class="ty">Json</span>            <span class="cm">// רקע, צבע מותג, גופן, רוחב</span>
+  attachmentId <span class="ty">String?</span>
+  contextType  <span class="ty">String</span>       <span class="cm">// club | course | school</span>
+  contextId    <span class="ty">String</span>
+  createdAt <span class="ty">DateTime</span> <span class="kw">@default</span>(now())
+  updatedAt <span class="ty">DateTime</span> <span class="kw">@updatedAt</span>
+}
+
+<span class="kw">model</span> <span class="ty">Campaign</span> {       <span class="cm">// קמפיין בודד</span>
+  id         <span class="ty">String</span> <span class="kw">@id @default</span>(cuid())
+  templateId <span class="ty">String</span>
+  audience   <span class="ty">Json</span>           <span class="cm">// everyone | leads | customers | tag:... | filter</span>
+  sendMode   <span class="ty">SendMode</span>       <span class="cm">// NOW | SCHEDULED</span>
+  scheduledAt <span class="ty">DateTime?</span>
+  status     <span class="ty">CampaignStatus</span> <span class="cm">// DRAFT | SCHEDULED | SENDING | SENT</span>
+  stats      <span class="ty">Json?</span>          <span class="cm">// נשלח/נפתח/קליקים</span>
+}
+
+<span class="kw">model</span> <span class="ty">EmailSeries</span> {    <span class="cm">// סדרת drip</span>
+  id      <span class="ty">String</span> <span class="kw">@id @default</span>(cuid())
+  name    <span class="ty">String</span>
+  trigger <span class="ty">TriggerType?</span>   <span class="cm">// JOIN | CART_ABANDON | COMPLETE | INACTIVE | null(ידני)</span>
+  steps   <span class="ty">EmailStep</span>[]
+  active  <span class="ty">Boolean</span> <span class="kw">@default</span>(false)
+}
+<span class="kw">model</span> <span class="ty">EmailStep</span> {
+  id         <span class="ty">String</span> <span class="kw">@id @default</span>(cuid())
+  seriesId   <span class="ty">String</span>
+  templateId <span class="ty">String</span>
+  order      <span class="ty">Int</span>
+  delayHours <span class="ty">Int</span>            <span class="cm">// השהיה לפני שלב זה</span>
+  condition  <span class="ty">Json?</span>          <span class="cm">// אופציונלי: רק אם לא נפתח וכו'</span>
+}</code></pre>
+  </section>
+
+  <section id="types">
+    <h2><span class="h2num">06</span>קמפיין · סדרה · טריגר</h2>
+    <table>
+      <thead><tr><th>סוג</th><th>מודל</th><th>שליחה</th></tr></thead>
+      <tbody>
+        <tr><td><b>קמפיין בודד</b></td><td><code>Campaign</code> → <code>EmailTemplate</code></td><td>מיידי או מתוזמן, לכל הקהל/מסונן.</td></tr>
+        <tr><td><b>סדרת drip</b></td><td><code>EmailSeries</code> → <code>EmailStep[]</code></td><td>שלב‑אחר‑שלב עם <code>delayHours</code> בין שלבים.</td></tr>
+        <tr><td><b>מבוסס טריגר</b></td><td><code>EmailSeries</code> עם <code>trigger</code></td><td>אירוע (הצטרפות/נטישה/סיום/חוסר‑פעילות) מפעיל את הסדרה.</td></tr>
+      </tbody>
+    </table>
+    <p>שלושתם חולקים את <code class="inl">EmailTemplate</code> (אותו עורך). קהל היעד תומך: כולם · לידים · לקוחות · מיובאים · סינון לפי תגית — מתחבר ל‑CRM.</p>
+  </section>
+
+  <section id="jobs">
+    <h2><span class="h2num">07</span>שליחה (Trigger.dev)</h2>
+    <table>
+      <thead><tr><th>Job</th><th>טריגר</th><th>תפקיד</th></tr></thead>
+      <tbody>
+        <tr><td><code>send-campaign</code></td><td>ידני/מתוזמן</td><td>בונה רשימת נמענים, מקמפל פר נמען (משתנים), שולח ב‑batches.</td></tr>
+        <tr><td><code>enroll-series</code></td><td>טריגר/הרשמה</td><td>פותח ריצת סדרה למשתמש; מתזמן את כל השלבים לפי <code>delayHours</code>.</td></tr>
+        <tr><td><code>run-series-step</code></td><td>מושהה (delay)</td><td>שולח שלב; בודק תנאי (למשל "רק אם לא נפתח"); מתזמן את הבא.</td></tr>
+        <tr><td><code>collect-stats</code></td><td>webhook ספק</td><td>נפתח/קליק/באונס → <code>stats</code> ולוח הבקרה.</td></tr>
+      </tbody>
+    </table>
+    <pre><code><span class="cm">// trigger/mailing/enroll-series.ts</span>
+<span class="kw">export const</span> enrollSeries = <span class="fn">task</span>({
+  id: <span class="st">"enroll-series"</span>,
+  run: <span class="kw">async</span> ({ seriesId, userId }) =&gt; {
+    <span class="kw">const</span> steps = <span class="kw">await</span> <span class="fn">getSteps</span>(seriesId);
+    <span class="kw">let</span> delay = 0;
+    <span class="kw">for</span> (<span class="kw">const</span> s <span class="kw">of</span> steps) {
+      delay += s.delayHours;
+      <span class="kw">await</span> runSeriesStep.<span class="fn">trigger</span>({ stepId: s.id, userId }, { delay: <span class="st">`${delay}h`</span> });
+    }
+  },
+});</code></pre>
+  </section>
+
+  <section id="components">
+    <h2><span class="h2num">08</span>רכיבי UI</h2>
+    <div class="grid2">
+      <div class="card"><h3 style="margin-top:0">שלד העורך</h3><ul style="margin-bottom:0"><li><code class="inl">&lt;EmailEditor&gt;</code> — top bar + 3 פאנלים</li><li><code class="inl">&lt;SetupPanel&gt;</code> — נושא, preheader, מאת, משתנים, נספח</li><li><code class="inl">&lt;SeriesRail&gt;</code> — ציר שלבים + השהיות</li><li><code class="inl">&lt;DeviceToggle&gt;</code> — דסקטופ/מובייל</li></ul></div>
+      <div class="card"><h3 style="margin-top:0">בלוקים (משותף)</h3><ul style="margin-bottom:0"><li><code class="inl">&lt;BlockCanvas&gt;</code> — גרירה, בחירה, insert lines</li><li><code class="inl">&lt;BlockPalette&gt;</code> — מהרג'יסטרי, מסונן לפי context</li><li><code class="inl">&lt;BlockRenderer&gt;</code> — תצוגה חיה</li><li><code class="inl">&lt;PropertiesPanel&gt;</code> — לפי <code class="inl">BlockDef.Props</code></li></ul></div>
+    </div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p>נגישות: גרירה עם סף תזוזה + חלופת לחיצה (הוסף בסוף), aria-labels על כל כפתורי הבלוק, focus order תקין, ו‑<code class="inl">prefers-reduced-motion</code> לאנימציות.</p></div>
+  </section>
+
+  <section id="roadmap">
+    <h2><span class="h2num">09</span>מפת דרכים + Stack</h2>
+    <table>
+      <thead><tr><th>שלב</th><th>תכולה</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill v1">v1</span></td><td>BlockRegistry משותף · עורך אחוד · קמפיין בודד · רינדור מייל + משתנים · send-campaign.</td></tr>
+        <tr><td><span class="pill v2">v2</span></td><td>סדרות drip + טריגרים · enroll/run-series · תנאים · סטטיסטיקות (נפתח/קליק) · עריכת AI לבלוקים · A/B לנושא.</td></tr>
+      </tbody>
+    </table>
+    <table>
+      <thead><tr><th>שכבה</th><th>טכנולוגיה</th></tr></thead>
+      <tbody>
+        <tr><td>Frontend</td><td>React + Next.js (App Router); העורך כ‑Client Component</td></tr>
+        <tr><td>שפה</td><td>TypeScript strict + Zod (סכמת בלוקים)</td></tr>
+        <tr><td>רינדור מייל</td><td>MJML / רנדרר טבלאי inline-CSS</td></tr>
+        <tr><td>רקע ושליחה</td><td>Trigger.dev + ספק מייל (SES/Resend)</td></tr>
+        <tr><td>מדיה</td><td>Bunny CDN + Stream</td></tr>
+        <tr><td>DB</td><td>PostgreSQL + Prisma (doc כ‑Json)</td></tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+  try{var t=localStorage.getItem("wb-admin-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}
+  document.getElementById("themeBtn").addEventListener("click",function(){var h=document.documentElement;var n=h.getAttribute("data-theme")==="dark"?"light":"dark";h.setAttribute("data-theme",n);try{localStorage.setItem("wb-admin-theme",n);}catch(e){}});
+  var links=[].slice.call(document.querySelectorAll('.side a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  window.addEventListener('scroll',function(){var y=window.scrollY+90,idx=0;secs.forEach(function(s,i){if(s&&s.offsetTop<=y)idx=i;});links.forEach(function(l){l.classList.remove('active');});links[idx].classList.add('active');});
+</script>
+</body>
+</html>
