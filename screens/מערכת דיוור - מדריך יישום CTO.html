@@ -41,7 +41,7 @@
   .side a:hover{background:var(--surface-2);color:var(--text-main);}
   .side a.active{color:var(--cyan);border-inline-end-color:var(--cyan);background:var(--cyan-light);font-weight:700;}
   .side a .n{font-family:var(--font-en);color:var(--text-light);margin-inline-end:8px;font-size:12px;}
-  .main{margin-inline-end:268px;flex:1;max-width:1000px;padding:46px 56px 120px;}
+  .main{margin-inline-start:268px;flex:1;max-width:1000px;padding:46px 56px 120px;}
   .topbtns{position:fixed;top:22px;left:28px;z-index:20;}
   .tbtn{width:40px;height:40px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);box-shadow:var(--sh-sm);}
   .tbtn:hover{color:var(--cyan);border-color:var(--cyan);} .tbtn svg{width:19px;height:19px;}
@@ -75,7 +75,7 @@
   th{text-align:right;font-size:11.5px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.4px;padding:0 12px 10px;border-bottom:1px solid var(--border);}
   td{padding:11px 12px;border-bottom:1px solid var(--border);color:var(--text-main);vertical-align:top;} td code{font-family:var(--font-mono);font-size:12.5px;color:var(--cyan);direction:ltr;}
   .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px;} .pill.v1{background:var(--green-light);color:var(--green);} .pill.v2{background:var(--yellow-light);color:#b89c00;} [data-theme="dark"] .pill.v2{color:var(--yellow);}
-  @media (max-width:1000px){ .side{display:none;} .main{margin-inline-end:0;padding:30px 22px 80px;} .grid2{grid-template-columns:1fr;} }
+  @media (max-width:1000px){ .side{display:none;} .main{margin-inline-start:0;padding:30px 22px 80px;} .grid2{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
@@ -162,11 +162,16 @@ trigger/mailing/            <span class="cm">// עבודות שליחה</span></
     <h2><span class="h2num">03</span>מודל הבלוקים המשותף</h2>
     <p class="sec-sub">הלב של האיחוד: גוף המייל וגוף שיעור בקורס הם <b>אותו מבנה</b> — מערך בלוקים מסודר. רג'יסטרי אחד מגדיר כל סוג בלוק; הקשר (קורס/מייל) רק מסנן אילו בלוקים זמינים ואיך הם מרונדרים.</p>
     <pre><code><span class="cm">// lib/blocks/registry.ts — מקור אמת אחד</span>
-<span class="cm">// 8 הסוגים הקיימים במערכת (זהים לקורס) — אותם labels/אייקונים</span>
-<span class="kw">type</span> <span class="ty">BlockType</span> =
+<span class="cm">// בלוקי התוכן המשותפים עם הקורס — אותם labels/אייקונים</span>
+<span class="kw">type</span> <span class="ty">SharedBlock</span> =
   <span class="st">"h1"</span> | <span class="st">"h2"</span> | <span class="st">"text"</span> | <span class="st">"quote"</span>
-  | <span class="st">"divider"</span> | <span class="st">"cta"</span> | <span class="st">"image"</span> | <span class="st">"iframe"</span>;
-  <span class="cm">// תוספות ייעודיות-מייל (לוגו/רשתות) — אופציה עתידית, נכנסות לאותו picker</span>
+  | <span class="st">"divider"</span> | <span class="st">"cta"</span> | <span class="st">"image"</span>;
+<span class="cm">// "iframe" קיים בקורס אך מוסר במייל — לא נתמך בלקוחות דוא"ל (Gmail/Outlook)</span>
+<span class="cm">// תוספות ייעודיות-מייל שנכנסות לאותו picker:</span>
+<span class="kw">type</span> <span class="ty">EmailBlock</span> = <span class="ty">SharedBlock</span>
+  | <span class="st">"spacer"</span>   <span class="cm">// מרווח (רווח ריק, S/M/L)</span>
+  | <span class="st">"social"</span>  <span class="cm">// כפתורי רשתות חברתיות</span>
+  | <span class="st">"unsub"</span>;  <span class="cm">// הסרה מרשימת התפוצה — נוסף כברירת מחדל, חובה, לא נמחק</span>
 
 <span class="kw">interface</span> <span class="ty">BlockDef</span>&lt;P&gt; {
   type: <span class="ty">BlockType</span>;
@@ -286,7 +291,7 @@ trigger/mailing/            <span class="cm">// עבודות שליחה</span></
     <h2><span class="h2num">08</span>רכיבי UI</h2>
     <div class="grid2">
       <div class="card"><h3 style="margin-top:0">מסך פתיחה + שלד</h3><ul style="margin-bottom:0"><li><code class="inl">&lt;EmailSetup&gt;</code> — כותרת + Preheader + משתנים</li><li><code class="inl">&lt;EditorChoice&gt;</code> — ויזואלי / HTML</li><li><code class="inl">&lt;EmailEditor&gt;</code> — top bar + קנבס + block‑picker</li><li><code class="inl">&lt;VarsPopover&gt;</code> — משתנים בעברית → טוקן</li></ul></div>
-      <div class="card"><h3 style="margin-top:0">בלוקים (משותף עם הקורס)</h3><ul style="margin-bottom:0"><li><code class="inl">openBlockPicker()</code> → <code class="inl">.block-picker</code> (8 פריטי <code class="inl">.bp-item</code>)</li><li><code class="inl">addBlock(type)</code> — מכניס <code class="inl">.content-block</code> inline</li><li><code class="inl">.block-toolbar</code> — מעלה/מטה/מחק בלבד</li><li>עריכה <code class="inl">contenteditable</code> במקום — ללא PropertiesPanel</li></ul></div>
+      <div class="card"><h3 style="margin-top:0">בלוקים (משותף עם הקורס)</h3><ul style="margin-bottom:0"><li><code class="inl">openBlockPicker()</code> → <code class="inl">.block-picker</code> (7 בלוקי תוכן + מרווח + רשתות)</li><li><code class="inl">addBlock(type)</code> — מכניס <code class="inl">.content-block</code> inline</li><li><code class="inl">.block-toolbar</code> — מעלה/מטה/מחק בלבד</li><li>בלוק <code class="inl">unsub</code> (הסרה מרשימת תפוצה) — ברירת מחדל, חובה, לא נמחק</li><li>עריכה <code class="inl">contenteditable</code> במקום — ללא PropertiesPanel</li></ul></div>
     </div>
     <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p>נגישות: הוספה בלחיצה מה‑block‑picker (לא תלוי גרירה), הזזה דרך toolbar (מעלה/מטה), aria-labels על כל כפתורי הבלוק, focus עובר אוטומטית לבלוק החדש, ו‑<code class="inl">prefers-reduced-motion</code> לאנימציות.</p></div>
   </section>

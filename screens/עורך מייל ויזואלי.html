@@ -92,12 +92,24 @@
   .block-quote-attr:empty::before{content:attr(data-ph);color:var(--text-xs);}
   .block-image{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:24px;min-height:120px;cursor:pointer;background:var(--surface-2);color:var(--text-xs);font-size:12px;font-weight:600;border-radius:var(--r-md);}
   .block-image svg{width:28px;height:28px;opacity:.4;}
-  .block-iframe-wrap{display:flex;flex-direction:column;}
-  .block-iframe-url-row{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--surface-2);}
-  .block-iframe-url-row svg{width:13px;height:13px;color:var(--text-xs);}
-  .block-iframe-url-input{flex:1;border:none;background:transparent;font-family:var(--font);font-size:11.5px;color:var(--text-main);outline:none;direction:ltr;}
-  .block-iframe-preview{min-height:160px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--text-xs);font-size:12px;font-weight:600;}
-  .block-iframe-preview svg{width:28px;height:28px;opacity:.35;}
+  /* spacer (מרווח) */
+  .block-spacer-wrap{padding:10px 16px;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .block-spacer-gap{width:100%;border-radius:8px;border:1px dashed var(--border-mid);background:repeating-linear-gradient(45deg,transparent,transparent 6px,var(--surface-2) 6px,var(--surface-2) 12px);transition:height .15s;}
+  .block-spacer-ctl{display:flex;align-items:center;gap:5px;}
+  .block-spacer-ctl .lab{font-size:10.5px;font-weight:700;color:var(--text-xs);margin-inline-end:3px;}
+  .sp-pill{font-size:11px;font-weight:700;color:var(--text-sub);background:var(--surface-2);border:1px solid var(--border);border-radius:20px;padding:3px 11px;cursor:pointer;transition:all .13s;}
+  .sp-pill.on{background:var(--cyan);color:#fff;border-color:var(--cyan);}
+  /* social (רשתות חברתיות) */
+  .block-social-wrap{padding:16px;display:flex;flex-direction:column;align-items:center;gap:9px;}
+  .block-social-row{display:flex;align-items:center;gap:11px;}
+  .soc-ic{width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .13s;} .soc-ic:hover{transform:translateY(-2px);} .soc-ic svg{width:18px;height:18px;}
+  .block-social-hint{font-size:10.5px;color:var(--text-xs);font-weight:600;}
+  /* unsubscribe (הסרה מרשימת התפוצה) — default, required */
+  .content-block[data-type="unsub"]{background:var(--surface-2)!important;border-style:dashed!important;}
+  .block-unsub-wrap{padding:16px 18px;text-align:center;}
+  .block-unsub-wrap .req-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--amber);background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:20px;padding:3px 10px;margin-bottom:9px;} .block-unsub-wrap .req-badge svg{width:11px;height:11px;}
+  .block-unsub-line{font-size:11.5px;color:var(--text-xs);line-height:1.7;outline:none;}
+  .block-unsub-link{color:var(--text-sub);text-decoration:underline;font-weight:600;outline:none;}
   .e-var{color:var(--cyan);font-weight:700;}
 
   /* add block button */
@@ -183,6 +195,8 @@
           <div class="content-block" data-type="h1"><div class="block-toolbar"></div><div class="block-h1" contenteditable="true" data-ph="כותרת ראשית...">ברוכים הבאים!</div></div>
           <div class="content-block" data-type="text"><div class="block-toolbar"></div><div class="block-text" contenteditable="true" data-ph="כתוב כאן...">היי <span class="e-var">{{שם הנמען}}</span>, כאן ד״ר אבי ברקר. שמח שהצטרפת למועדון הראשון מסוגו בישראל להורות התפתחותית.</div></div>
           <div class="content-block" data-type="cta"><div class="block-toolbar"></div><div class="block-cta-wrap"><div class="block-cta-btn" contenteditable="true" spellcheck="false">כניסה למועדון</div><div class="block-cta-link-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><input class="block-cta-link-input" type="url" value="{{login_url}}" dir="ltr"></div></div></div>
+          <!-- default required unsubscribe block -->
+          <div class="content-block" data-type="unsub"><div class="block-toolbar"></div><div class="block-unsub-wrap"><span class="req-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>נדרש בכל מייל · לא נמחק</span><div class="block-unsub-line" contenteditable="true">קיבלת מייל זה מ־<span class="e-var">שם המועדון</span>. אם אינך מעוניין/ת לקבל עוד מיילים, <a class="block-unsub-link" contenteditable="true">להסרה מרשימת התפוצה</a> לחצו כאן.</div></div></div>
           <!-- add block -->
           <button class="add-block-btn" id="addBtn" onclick="openBlockPicker()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>הוסף בלוק תוכן</button>
         </div>
@@ -204,7 +218,8 @@
         <div class="bp-item" onclick="addBlock('divider')"><div class="bp-icon" style="color:var(--text-xs)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/></svg></div><div class="bp-info"><div class="bp-item-name">מפריד</div><div class="bp-item-desc">קו הפרדה בין חלקי תוכן</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
         <div class="bp-item" onclick="addBlock('cta')"><div class="bp-icon" style="color:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="8" rx="4"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div class="bp-info"><div class="bp-item-name">כפתור CTA</div><div class="bp-item-desc">כפתור פעולה עם לינק</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
         <div class="bp-item" onclick="addBlock('image')"><div class="bp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><div class="bp-info"><div class="bp-item-name">תמונה / GIF</div><div class="bp-item-desc">תמונה, GIF או קובץ מדיה</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
-        <div class="bp-item" onclick="addBlock('iframe')"><div class="bp-icon" style="color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 10l-2 2 2 2M16 10l2 2-2 2"/></svg></div><div class="bp-info"><div class="bp-item-name">הטמעה / iFrame</div><div class="bp-item-desc">הטמעת אתר או כלי חיצוני</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('spacer')"><div class="bp-icon" style="color:var(--text-xs)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 7 12 3 16 7"/><polyline points="8 17 12 21 16 17"/><line x1="12" y1="3" x2="12" y2="21" stroke-dasharray="2 3"/></svg></div><div class="bp-info"><div class="bp-item-name">מרווח</div><div class="bp-item-desc">רווח ריק בין בלוקים (S/M/L)</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('social')"><div class="bp-icon" style="color:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div><div class="bp-info"><div class="bp-item-name">רשתות חברתיות</div><div class="bp-item-desc">כפתורי קישור לרשתות שלך</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
       </div>
       <div class="bp-foot">
         <button class="bp-vars-btn" id="varsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>הוסף משתנה אישי</button>
@@ -237,7 +252,7 @@
     {he:"מזהה המועדון", token:"{{club_slug}}"},
   ];
 
-  var BLOCK_NAMES={h1:'כותרת ראשית',h2:'כותרת משנה',text:'גוף טקסט',quote:'ציטוט',divider:'מפריד',cta:'כפתור CTA',image:'תמונה / GIF',iframe:'הטמעה'};
+  var BLOCK_NAMES={h1:'כותרת ראשית',h2:'כותרת משנה',text:'גוף טקסט',quote:'ציטוט',divider:'מפריד',cta:'כפתור CTA',image:'תמונה / GIF',spacer:'מרווח',social:'רשתות חברתיות',unsub:'הסרה מרשימת התפוצה'};
 
   function openBlockPicker(){document.querySelector('.side').style.display='flex';document.getElementById('bpList').scrollTop=0;}
   function closeBlockPicker(){/* keep panel; on mobile could hide */}
@@ -245,8 +260,30 @@
 
   function makeToolbar(){return '<div class="block-toolbar"><button class="block-tb-btn" title="הזז למעלה" onclick="moveBlock(this,-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button><button class="block-tb-btn" title="הזז למטה" onclick="moveBlock(this,1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button><button class="block-tb-btn del" title="מחק" onclick="deleteBlock(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div>';}
 
+  // email-specific block markup
+  var SPACER_H={s:14,m:30,l:54};
+  function spacerInner(size){
+    return '<div class="block-spacer-wrap"><div class="block-spacer-gap" style="height:'+SPACER_H[size]+'px"></div>'
+      +'<div class="block-spacer-ctl"><span class="lab">גובה</span>'
+      +'<button class="sp-pill'+(size==="s"?" on":"")+'" onclick="setSpacer(this,\'s\')">קטן</button>'
+      +'<button class="sp-pill'+(size==="m"?" on":"")+'" onclick="setSpacer(this,\'m\')">בינוני</button>'
+      +'<button class="sp-pill'+(size==="l"?" on":"")+'" onclick="setSpacer(this,\'l\')">גדול</button></div></div>';
+  }
+  function setSpacer(btn,size){var w=btn.closest('.block-spacer-wrap');w.querySelector('.block-spacer-gap').style.height=SPACER_H[size]+'px';w.querySelectorAll('.sp-pill').forEach(function(p){p.classList.remove('on');});btn.classList.add('on');}
+  var SOC=[{n:'facebook',p:'M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z'},{n:'instagram',p:'M2 2h20v20H2z',r:1},{n:'youtube',p:'M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.42a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z'},{n:'whatsapp',p:'M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z'}];
+  function socialInner(){
+    var icons=SOC.map(function(s){return '<a class="soc-ic" title="'+s.n+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"'+(s.r?' ':'')+'><path d="'+s.p+'"/></svg></a>';}).join('');
+    return '<div class="block-social-wrap"><div class="block-social-row">'+icons+'</div><div class="block-social-hint">לחצו על אייקון כדי להגדיר את הקישור לרשת שלך</div></div>';
+  }
+  function unsubInner(){
+    return '<div class="block-unsub-wrap"><span class="req-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>נדרש בכל מייל · לא נמחק</span>'
+      +'<div class="block-unsub-line" contenteditable="true">קיבלת מייל זה מ־<span class="e-var">שם המועדון</span>. אם אינך מעוניין/ת לקבל עוד מיילים, '
+      +'<a class="block-unsub-link" contenteditable="true">להסרה מרשימת התפוצה</a> לחצו כאן.</div></div>';
+  }
+
   function addBlock(type){
     var scroll=document.getElementById('scroll');
+    if(type==='unsub'&&scroll.querySelector('.content-block[data-type="unsub"]')){toast('בלוק הסרה כבר קיים במייל');return;}
     var addBtn=document.getElementById('addBtn');
     var block=document.createElement('div');
     block.className='content-block'; block.dataset.type=type;
@@ -259,7 +296,9 @@
       divider: TB+'<div class="block-divider"><div class="block-divider-line"></div></div>',
       cta: TB+'<div class="block-cta-wrap"><div class="block-cta-btn" contenteditable="true" spellcheck="false"></div><div class="block-cta-link-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><input class="block-cta-link-input" type="url" placeholder="הדבק קישור לכפתור..." dir="ltr"></div></div>',
       image: TB+'<div class="block-image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>לחץ להעלאת תמונה / GIF</div>',
-      iframe: TB+'<div class="block-iframe-wrap"><div class="block-iframe-url-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><input class="block-iframe-url-input" type="url" placeholder="הדבק כתובת URL להטמעה..." dir="ltr"></div><div class="block-iframe-preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 10l-2 2 2 2M16 10l2 2-2 2"/></svg>הזן כתובת URL להצגת תוכן</div></div>'
+      spacer: TB+spacerInner('m'),
+      social: TB+socialInner(),
+      unsub: TB+unsubInner()
     }[type];
     block.innerHTML=inner;
     scroll.insertBefore(block,addBtn);
@@ -268,7 +307,7 @@
     lastEditable=block.querySelector('[contenteditable="true"]')||lastEditable;
     toast('בלוק '+BLOCK_NAMES[type]+' נוסף');
   }
-  function deleteBlock(btn){var b=btn.closest('.content-block');b.remove();toast('הבלוק נמחק');}
+  function deleteBlock(btn){var b=btn.closest('.content-block');if(b.dataset.type==='unsub'){toast('לא ניתן להסיר — בלוק חובה בכל מייל');return;}b.remove();toast('הבלוק נמחק');}
   function moveBlock(btn,dir){var b=btn.closest('.content-block');if(dir<0){var p=b.previousElementSibling;if(p&&p.classList.contains('content-block'))b.parentNode.insertBefore(b,p);}else{var n=b.nextElementSibling;if(n&&n.classList.contains('content-block'))b.parentNode.insertBefore(n,b);}}
 
   // attach toolbars to prefilled blocks
