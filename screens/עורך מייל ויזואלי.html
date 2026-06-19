@@ -117,11 +117,36 @@
   .add-block-btn:hover{background:rgba(245,158,11,.07);border-color:var(--amber);}
   .add-block-btn svg{width:16px;height:16px;}
 
-  /* attachment */
-  .files-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;margin-top:14px;}
-  .files-head{display:flex;align-items:center;justify-content:space-between;}
-  .files-head .t{font-size:13px;font-weight:800;display:flex;align-items:center;gap:7px;} .files-head .t svg{width:15px;height:15px;color:var(--cyan);}
-  .files-add{font-size:12px;font-weight:700;color:var(--cyan);display:flex;align-items:center;gap:5px;background:none;border:none;} .files-add svg{width:14px;height:14px;}
+  /* ===== preview modal (rendered email — continuous, no block chrome) ===== */
+  .pv-pop{position:fixed;inset:0;z-index:120;display:none;flex-direction:column;background:rgba(26,47,94,0.55);backdrop-filter:blur(4px);}
+  [data-theme="dark"] .pv-pop{background:rgba(0,0,0,0.66);}
+  .pv-pop.open{display:flex;animation:tin .2s ease;}
+  .pv-bar{flex-shrink:0;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:var(--surface);border-bottom:1px solid var(--border);}
+  .pv-bar .t{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:800;color:var(--text-main);} .pv-bar .t svg{width:18px;height:18px;color:var(--cyan);}
+  .pv-tools{display:flex;align-items:center;gap:12px;}
+  .pv-seg{display:flex;background:var(--surface-2);border:1px solid var(--border);border-radius:20px;padding:3px;gap:2px;}
+  .pv-seg button{border:none;background:none;font-family:var(--font);font-size:12px;font-weight:700;color:var(--text-sub);padding:5px 13px;border-radius:16px;cursor:pointer;display:flex;align-items:center;gap:5px;} .pv-seg button svg{width:13px;height:13px;}
+  .pv-seg button.on{background:var(--cyan);color:#fff;}
+  .pv-scroll{flex:1;overflow-y:auto;padding:26px 18px 60px;display:flex;justify-content:center;}
+  .pv-mail{width:600px;max-width:100%;align-self:flex-start;background:#fff;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.25);overflow:hidden;transition:width .25s;}
+  .pv-mail.mobile{width:380px;}
+  .pv-subj{padding:15px 28px;border-bottom:1px solid #eef2f7;background:#f9fbfe;}
+  .pv-subj .k{font-size:10px;font-weight:700;color:#9aa7bd;text-transform:uppercase;letter-spacing:.5px;font-family:var(--font-brand);}
+  .pv-subj .v{font-size:16px;font-weight:800;color:#1a2f5e;margin-top:3px;}
+  .pv-body{padding:30px 30px 26px;color:#2a3a5e;font-family:var(--font);}
+  .pv-body .pv-h1{font-family:var(--font-brand);font-size:27px;font-weight:800;color:#253E7A;margin:0 0 14px;line-height:1.2;}
+  .pv-body .pv-h2{font-family:var(--font-brand);font-size:20px;font-weight:700;color:#1db0d8;margin:18px 0 10px;}
+  .pv-body .pv-text{font-size:15px;line-height:1.8;margin:0 0 14px;}
+  .pv-body .pv-quote{border-right:4px solid #38C4F2;background:#f4fbfe;padding:14px 18px;margin:16px 0;font-family:Georgia,serif;font-style:italic;font-size:16px;color:#33405e;border-radius:0 8px 8px 0;}
+  .pv-body .pv-quote .pv-attr{display:block;margin-top:8px;font-style:normal;font-family:var(--font);font-size:12px;color:#8593ad;}
+  .pv-body .pv-divider{height:1px;background:#e6ebf3;margin:20px 0;}
+  .pv-body .pv-cta{text-align:center;margin:20px 0;}
+  .pv-body .pv-cta a{display:inline-block;background:#F05680;color:#fff;font-weight:700;font-size:15px;text-decoration:none;padding:13px 34px;border-radius:30px;}
+  .pv-body .pv-img{background:#eef3fa;border-radius:10px;min-height:150px;display:flex;align-items:center;justify-content:center;color:#9aa7bd;font-size:13px;font-weight:600;margin:14px 0;gap:8px;} .pv-body .pv-img svg{width:22px;height:22px;}
+  .pv-body .pv-social{display:flex;justify-content:center;gap:12px;margin:18px 0;}
+  .pv-body .pv-social a{width:38px;height:38px;border-radius:50%;background:#253E7A;color:#fff;display:flex;align-items:center;justify-content:center;} .pv-body .pv-social svg{width:18px;height:18px;}
+  .pv-body .pv-unsub{margin-top:24px;padding-top:18px;border-top:1px solid #eef2f7;text-align:center;font-size:11.5px;color:#9aa7bd;line-height:1.7;} .pv-body .pv-unsub a{color:#7a87a0;text-decoration:underline;}
+  .pv-var{background:rgba(56,196,242,.14);color:#1593c4;border-radius:5px;padding:0 5px;font-weight:600;}
 
   /* RIGHT: block picker panel */
   .side{width:330px;flex-shrink:0;background:var(--surface);border-inline-end:1px solid var(--border);display:flex;flex-direction:column;min-height:0;}
@@ -195,13 +220,10 @@
           <div class="content-block" data-type="h1"><div class="block-toolbar"></div><div class="block-h1" contenteditable="true" data-ph="כותרת ראשית...">ברוכים הבאים!</div></div>
           <div class="content-block" data-type="text"><div class="block-toolbar"></div><div class="block-text" contenteditable="true" data-ph="כתוב כאן...">היי <span class="e-var">{{שם הנמען}}</span>, כאן ד״ר אבי ברקר. שמח שהצטרפת למועדון הראשון מסוגו בישראל להורות התפתחותית.</div></div>
           <div class="content-block" data-type="cta"><div class="block-toolbar"></div><div class="block-cta-wrap"><div class="block-cta-btn" contenteditable="true" spellcheck="false">כניסה למועדון</div><div class="block-cta-link-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><input class="block-cta-link-input" type="url" value="{{login_url}}" dir="ltr"></div></div></div>
-          <!-- default required unsubscribe block -->
-          <div class="content-block" data-type="unsub"><div class="block-toolbar"></div><div class="block-unsub-wrap"><span class="req-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>נדרש בכל מייל · לא נמחק</span><div class="block-unsub-line" contenteditable="true">קיבלת מייל זה מ־<span class="e-var">שם המועדון</span>. אם אינך מעוניין/ת לקבל עוד מיילים, <a class="block-unsub-link" contenteditable="true">להסרה מרשימת התפוצה</a> לחצו כאן.</div></div></div>
-          <!-- add block -->
+          <!-- add block — always above the required unsubscribe footer -->
           <button class="add-block-btn" id="addBtn" onclick="openBlockPicker()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>הוסף בלוק תוכן</button>
-        </div>
-        <div class="files-card">
-          <div class="files-head"><span class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>קבצים נלווים</span><button class="files-add" id="fileAdd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>הוסף קובץ</button></div>
+          <!-- default required unsubscribe block — stays last -->
+          <div class="content-block" data-type="unsub"><div class="block-toolbar"></div><div class="block-unsub-wrap"><span class="req-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>נדרש בכל מייל · לא נמחק</span><div class="block-unsub-line" contenteditable="true">קיבלת מייל זה מ־<span class="e-var">שם המועדון</span>. אם אינך מעוניין/ת לקבל עוד מיילים, <a class="block-unsub-link" contenteditable="true">להסרה מרשימת התפוצה</a> לחצו כאן.</div></div></div>
         </div>
       </div>
     </main>
@@ -232,6 +254,26 @@
     <div class="vars-card">
       <div class="vars-h"><div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div><div><h3>משתנים זמינים</h3><p>לחיצה מכניסה את המשתנה לבלוק שנערך</p></div><button class="x" id="varsClose" aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
       <div class="vars-list" id="varsList"></div>
+    </div>
+  </div>
+
+  <!-- preview modal -->
+  <div class="pv-pop" id="pvPop">
+    <div class="pv-bar">
+      <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>תצוגה מקדימה — כך יראה המייל אצל הנמען</div>
+      <div class="pv-tools">
+        <div class="pv-seg">
+          <button id="pvDesk" class="on" onclick="pvDevice('desk')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>מחשב</button>
+          <button id="pvMob" onclick="pvDevice('mob')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>נייד</button>
+        </div>
+        <button class="iconbtn" id="pvClose" aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="pv-scroll">
+      <div class="pv-mail" id="pvMail">
+        <div class="pv-subj"><div class="k">נושא</div><div class="v" id="pvSubj"></div></div>
+        <div class="pv-body" id="pvBody"></div>
+      </div>
     </div>
   </div>
 
@@ -332,11 +374,46 @@
     else toast('בחר תחילה בלוק טקסט');
   }
 
+  // ===== preview — render blocks as one continuous email (no editor chrome) =====
+  var SAMPLE={'שם הנמען':'דנה לוי','שם המועדון':'מועדון להורות התפתחותית','קישור כניסה':'#','כתובת אפליקציית המועדון':'app.whiteboard.co.il','מזהה המועדון':'parenting-club'};
+  function sampleFor(label){var k=(label||'').replace(/[{}]/g,'').trim();return SAMPLE[k]!==undefined?SAMPLE[k]:k;}
+  function resolveNode(node){
+    if(!node)return '';
+    var clone=node.cloneNode(true);
+    clone.querySelectorAll('.e-var').forEach(function(s){var rep=document.createElement('span');rep.className='pv-var';rep.textContent=sampleFor(s.textContent);s.replaceWith(rep);});
+    return clone.innerHTML;
+  }
+  var IMG_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+  function buildPreview(){
+    var subj=document.querySelector('.paper-subject .subj');
+    document.getElementById('pvSubj').textContent=subj?subj.textContent:'';
+    var out='';
+    document.querySelectorAll('#scroll .content-block').forEach(function(b){
+      var t=b.dataset.type;
+      if(t==='h1') out+='<div class="pv-h1">'+resolveNode(b.querySelector('.block-h1'))+'</div>';
+      else if(t==='h2') out+='<div class="pv-h2">'+resolveNode(b.querySelector('.block-h2'))+'</div>';
+      else if(t==='text') out+='<div class="pv-text">'+resolveNode(b.querySelector('.block-text'))+'</div>';
+      else if(t==='quote'){var a=b.querySelector('.block-quote-attr');var at=(a&&a.textContent.trim())?'<span class="pv-attr">'+a.textContent+'</span>':'';out+='<div class="pv-quote">'+resolveNode(b.querySelector('.block-quote-text'))+at+'</div>';}
+      else if(t==='divider') out+='<div class="pv-divider"></div>';
+      else if(t==='cta'){var btn=b.querySelector('.block-cta-btn');var lk=b.querySelector('.block-cta-link-input');var href=(lk&&lk.value)?lk.value:'#';out+='<div class="pv-cta"><a href="'+href+'">'+(btn?btn.textContent:'')+'</a></div>';}
+      else if(t==='image') out+='<div class="pv-img">'+IMG_SVG+'תמונה / GIF</div>';
+      else if(t==='spacer'){var g=b.querySelector('.block-spacer-gap');var h=(g&&g.style.height)?g.style.height:'30px';out+='<div style="height:'+h+'"></div>';}
+      else if(t==='social'){var ic='';b.querySelectorAll('.soc-ic').forEach(function(s){ic+='<a>'+s.innerHTML+'</a>';});out+='<div class="pv-social">'+ic+'</div>';}
+      else if(t==='unsub') out+='<div class="pv-unsub">'+resolveNode(b.querySelector('.block-unsub-line'))+'</div>';
+    });
+    document.getElementById('pvBody').innerHTML=out;
+  }
+  function openPreview(){buildPreview();document.getElementById('pvPop').classList.add('open');}
+  function closePreview(){document.getElementById('pvPop').classList.remove('open');}
+  function pvDevice(m){document.getElementById('pvMail').classList.toggle('mobile',m==='mob');document.getElementById('pvMob').classList.toggle('on',m==='mob');document.getElementById('pvDesk').classList.toggle('on',m!=='mob');}
+  document.getElementById('pvClose').addEventListener('click',closePreview);
+  document.getElementById('pvPop').addEventListener('click',function(e){if(e.target===this)closePreview();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closePreview();});
+
   document.getElementById('saveBtn').addEventListener('click',function(){toast('המייל נשמר');});
   document.getElementById('testBtn').addEventListener('click',function(){toast('נשלח מייל בדיקה אליך');});
-  document.getElementById('prevBtn').addEventListener('click',function(){toast('תצוגה מקדימה');});
+  document.getElementById('prevBtn').addEventListener('click',openPreview);
   document.getElementById('back').addEventListener('click',function(){toast('חזרה');});
-  document.getElementById('fileAdd').addEventListener('click',function(){toast('הוספת קובץ מצורף');});
 </script>
 </body>
 </html>
