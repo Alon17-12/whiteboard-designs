@@ -50,8 +50,18 @@
   .btn-primary{background:linear-gradient(135deg,var(--navy),#2f4d96);color:#fff;} .btn-primary:hover{background:linear-gradient(135deg,var(--cyan),var(--cyan-dark));}
 
   /* workspace */
-  .work{flex:1;display:flex;min-height:0;}
-  .canvas{flex:1;overflow-y:auto;padding:30px 20px 80px;display:flex;justify-content:center;}
+  .work{flex:1;display:flex;min-height:0;position:relative;overflow:hidden;}
+  .canvas{flex:1;overflow-y:auto;padding:30px 20px 80px;display:flex;justify-content:center;transition:margin-left .34s cubic-bezier(.4,0,.2,1);}
+  .work.blocks-open .canvas{margin-left:330px;}
+
+  /* left-edge handle (shown when panel closed) */
+  .blocks-tab{position:absolute;top:50%;left:0;transform:translateY(-50%);z-index:18;display:flex;flex-direction:column;align-items:center;gap:7px;padding:15px 7px 15px 6px;background:var(--surface);border:1px solid var(--border);border-left:none;border-radius:0 16px 16px 0;box-shadow:4px 0 16px rgba(37,62,122,.12);color:var(--navy);cursor:pointer;transition:opacity .28s,transform .28s,padding .18s,color .18s,border-color .18s;}
+  [data-theme="dark"] .blocks-tab{color:var(--cyan);box-shadow:4px 0 16px rgba(0,0,0,.45);}
+  .blocks-tab:hover{padding-left:11px;color:var(--cyan);border-color:var(--cyan);}
+  .blocks-tab .ic{width:18px;height:18px;} .blocks-tab .chev{width:14px;height:14px;animation:tabnudge 1.8s ease-in-out infinite;}
+  @keyframes tabnudge{0%,100%{transform:translateX(0);}50%{transform:translateX(3px);}}
+  .blocks-tab .lbl{font-size:10.5px;font-weight:700;writing-mode:vertical-rl;letter-spacing:1px;color:var(--text-sub);}
+  .work.blocks-open .blocks-tab{opacity:0;pointer-events:none;transform:translateY(-50%) translateX(-10px);}
   .paper{width:640px;max-width:100%;display:flex;flex-direction:column;}
   .paper-subject{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:13px 18px;margin-bottom:14px;box-shadow:var(--sh-sm);}
   .paper-subject .lbl{font-size:10.5px;font-weight:700;color:var(--text-xs);text-transform:uppercase;letter-spacing:.5px;font-family:var(--font-brand);}
@@ -166,8 +176,10 @@
   .test-hint{font-size:11px;color:var(--text-xs);margin-top:7px;}
   .test-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
 
-  /* RIGHT: block picker panel */
-  .side{width:330px;flex-shrink:0;background:var(--surface);border-inline-end:1px solid var(--border);display:flex;flex-direction:column;min-height:0;}
+  /* LEFT: block picker panel — slides in/out from the left edge */
+  .side{position:absolute;top:0;bottom:0;left:0;width:330px;background:var(--surface);border-right:1px solid var(--border);box-shadow:8px 0 30px rgba(37,62,122,.12);display:flex;flex-direction:column;min-height:0;z-index:20;transform:translateX(-100%);transition:transform .34s cubic-bezier(.4,0,.2,1);}
+  [data-theme="dark"] .side{box-shadow:8px 0 30px rgba(0,0,0,.45);}
+  .work.blocks-open .side{transform:translateX(0);}
   .bp-head{display:flex;align-items:center;gap:8px;padding:16px 18px 10px;flex-shrink:0;}
   .bp-title{font-size:16px;font-weight:800;color:var(--text-main);font-family:var(--font-brand);flex:1;}
   .bp-close{background:none;border:none;cursor:pointer;color:var(--text-sub);display:flex;padding:5px;border-radius:var(--r-xs);transition:all .15s;} .bp-close:hover{background:var(--surface-2);color:var(--text-main);} .bp-close svg{width:15px;height:15px;}
@@ -206,7 +218,7 @@
   .toast.out{animation:tout .3s forwards;} @keyframes tout{to{opacity:0;transform:translateX(-26px);}}
   .toast svg{width:17px;height:17px;color:var(--green);}
 
-  @media (max-width:880px){ .side{display:none;} }
+  @media (max-width:880px){ .side{width:84%;max-width:330px;} .work.blocks-open .canvas{margin-left:0;} }
 </style>
 </head>
 <body>
@@ -217,7 +229,6 @@
       <span class="edit-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>מצב עריכה</span>
     </div>
     <div class="top-l">
-      <button class="iconbtn on" id="blocksToggle" aria-label="הצג/הסתר בלוקים" title="הצג/הסתר את פאנל הבלוקים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></button>
       <span class="autosave"><span class="dot"></span>שמור אוטומטי</span>
       <button class="iconbtn" id="themeBtn" aria-label="מצב תצוגה">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -229,7 +240,13 @@
     </div>
   </header>
 
-  <div class="work">
+  <div class="work blocks-open">
+    <!-- left-edge handle: opens the block panel -->
+    <button class="blocks-tab" id="blocksTab" title="פתח בלוקים" aria-label="פתח פאנל בלוקים">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="lbl">בלוקים</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
     <!-- CANVAS -->
     <main class="canvas">
       <div class="paper">
@@ -336,11 +353,11 @@
 
   var BLOCK_NAMES={h1:'כותרת ראשית',h2:'כותרת משנה',text:'גוף טקסט',quote:'ציטוט',divider:'מפריד',cta:'כפתור CTA',image:'תמונה / GIF',spacer:'מרווח',social:'רשתות חברתיות',unsub:'הסרה מרשימת התפוצה'};
 
-  function syncBlocksToggle(){var open=getComputedStyle(document.querySelector('.side')).display!=='none';document.getElementById('blocksToggle').classList.toggle('on',open);}
-  function openBlockPicker(){document.querySelector('.side').style.display='flex';document.getElementById('bpList').scrollTop=0;syncBlocksToggle();}
-  function closeBlockPicker(){document.querySelector('.side').style.display='none';syncBlocksToggle();}
+  var workEl=document.querySelector('.work');
+  function openBlockPicker(){workEl.classList.add('blocks-open');document.getElementById('bpList').scrollTop=0;}
+  function closeBlockPicker(){workEl.classList.remove('blocks-open');}
   document.getElementById('bpClose').addEventListener('click',closeBlockPicker);
-  document.getElementById('blocksToggle').addEventListener('click',function(){var s=document.querySelector('.side');if(getComputedStyle(s).display==='none')openBlockPicker();else closeBlockPicker();});
+  document.getElementById('blocksTab').addEventListener('click',openBlockPicker);
 
   function makeToolbar(){return '<div class="block-toolbar"><button class="block-tb-btn" title="הזז למעלה" onclick="moveBlock(this,-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button><button class="block-tb-btn" title="הזז למטה" onclick="moveBlock(this,1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button><button class="block-tb-btn del" title="מחק" onclick="deleteBlock(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div>';}
 
