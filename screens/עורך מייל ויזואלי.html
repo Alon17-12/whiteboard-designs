@@ -54,14 +54,14 @@
   .canvas{flex:1;overflow-y:auto;padding:30px 20px 80px;display:flex;justify-content:center;transition:margin-left .34s cubic-bezier(.4,0,.2,1);}
   .work.blocks-open .canvas{margin-left:330px;}
 
-  /* left-edge handle (shown when panel closed) */
-  .blocks-tab{position:absolute;top:50%;left:0;transform:translateY(-50%);z-index:18;display:flex;flex-direction:column;align-items:center;gap:7px;padding:15px 7px 15px 6px;background:var(--surface);border:1px solid var(--border);border-left:none;border-radius:0 16px 16px 0;box-shadow:4px 0 16px rgba(37,62,122,.12);color:var(--navy);cursor:pointer;transition:opacity .28s,transform .28s,padding .18s,color .18s,border-color .18s;}
-  [data-theme="dark"] .blocks-tab{color:var(--cyan);box-shadow:4px 0 16px rgba(0,0,0,.45);}
-  .blocks-tab:hover{padding-left:11px;color:var(--cyan);border-color:var(--cyan);}
-  .blocks-tab .ic{width:18px;height:18px;} .blocks-tab .chev{width:14px;height:14px;animation:tabnudge 1.8s ease-in-out infinite;}
-  @keyframes tabnudge{0%,100%{transform:translateX(0);}50%{transform:translateX(3px);}}
-  .blocks-tab .lbl{font-size:10.5px;font-weight:700;writing-mode:vertical-rl;letter-spacing:1px;color:var(--text-sub);}
-  .work.blocks-open .blocks-tab{opacity:0;pointer-events:none;transform:translateY(-50%) translateX(-10px);}
+  /* edge handle attached to the panel's right side — travels with the panel, toggles open/close */
+  .side-handle{position:absolute;top:50%;right:-27px;transform:translateY(-50%);width:27px;height:58px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);border-left:none;border-radius:0 14px 14px 0;box-shadow:4px 0 14px rgba(37,62,122,.12);color:var(--navy);cursor:pointer;z-index:21;transition:color .18s,border-color .18s,background .18s;}
+  [data-theme="dark"] .side-handle{color:var(--cyan);box-shadow:4px 0 14px rgba(0,0,0,.42);}
+  .side-handle:hover{color:var(--cyan);border-color:var(--cyan);background:var(--surface-2);}
+  .side-handle svg{width:15px;height:15px;transition:transform .34s cubic-bezier(.4,0,.2,1);}
+  .work.blocks-open .side-handle svg{transform:rotate(180deg);}
+  .work:not(.blocks-open) .side-handle{animation:handlepulse 1.9s ease-in-out infinite;}
+  @keyframes handlepulse{0%,100%{box-shadow:4px 0 14px rgba(37,62,122,.12);}50%{box-shadow:6px 0 20px rgba(56,196,242,.30);}}
   .paper{width:640px;max-width:100%;display:flex;flex-direction:column;}
   .paper-subject{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:13px 18px;margin-bottom:14px;box-shadow:var(--sh-sm);}
   .paper-subject .lbl{font-size:10.5px;font-weight:700;color:var(--text-xs);text-transform:uppercase;letter-spacing:.5px;font-family:var(--font-brand);}
@@ -241,12 +241,6 @@
   </header>
 
   <div class="work blocks-open">
-    <!-- left-edge handle: opens the block panel -->
-    <button class="blocks-tab" id="blocksTab" title="פתח בלוקים" aria-label="פתח פאנל בלוקים">
-      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-      <span class="lbl">בלוקים</span>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
     <!-- CANVAS -->
     <main class="canvas">
       <div class="paper">
@@ -264,9 +258,10 @@
       </div>
     </main>
 
-    <!-- RIGHT: block picker -->
+    <!-- LEFT: block picker (slides from left) -->
     <aside class="side">
-      <div class="bp-head"><span class="bp-title">הוסף בלוק</span><button class="bp-close" id="bpClose" aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+      <button class="side-handle" id="sideHandle" aria-label="פתח/סגור בלוקים" title="פתח/סגור בלוקים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <div class="bp-head"><span class="bp-title">הוסף בלוק</span></div>
       <p class="bp-subtitle">בחר סוג תוכן להוספה למייל</p>
       <div class="bp-list" id="bpList">
         <div class="bp-item" onclick="addBlock('h1')"><div class="bp-icon" style="color:var(--navy)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div><div class="bp-info"><div class="bp-item-name">כותרת ראשית H1</div><div class="bp-item-desc">כותרת גדולה — 26px, Fredoka</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
@@ -356,8 +351,8 @@
   var workEl=document.querySelector('.work');
   function openBlockPicker(){workEl.classList.add('blocks-open');document.getElementById('bpList').scrollTop=0;}
   function closeBlockPicker(){workEl.classList.remove('blocks-open');}
-  document.getElementById('bpClose').addEventListener('click',closeBlockPicker);
-  document.getElementById('blocksTab').addEventListener('click',openBlockPicker);
+  function toggleBlocks(){workEl.classList.contains('blocks-open')?closeBlockPicker():openBlockPicker();}
+  document.getElementById('sideHandle').addEventListener('click',toggleBlocks);
 
   function makeToolbar(){return '<div class="block-toolbar"><button class="block-tb-btn" title="הזז למעלה" onclick="moveBlock(this,-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button><button class="block-tb-btn" title="הזז למטה" onclick="moveBlock(this,1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button><button class="block-tb-btn del" title="מחק" onclick="deleteBlock(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div>';}
 
