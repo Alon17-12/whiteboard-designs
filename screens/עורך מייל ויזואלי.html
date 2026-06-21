@@ -157,7 +157,6 @@
   .pv-body .pv-social{display:flex;justify-content:center;gap:12px;margin:18px 0;}
   .pv-body .pv-social a{width:38px;height:38px;border-radius:50%;background:#253E7A;color:#fff;display:flex;align-items:center;justify-content:center;} .pv-body .pv-social svg{width:18px;height:18px;}
   .pv-body .pv-unsub{margin-top:24px;padding-top:18px;border-top:1px solid #eef2f7;text-align:center;font-size:11.5px;color:#9aa7bd;line-height:1.7;} .pv-body .pv-unsub a{color:#7a87a0;text-decoration:underline;}
-  .pv-var{background:rgba(56,196,242,.14);color:#1593c4;border-radius:5px;padding:0 5px;font-weight:600;}
 
   /* send-test popup */
   .test-pop{position:fixed;inset:0;z-index:130;display:none;align-items:center;justify-content:center;background:rgba(26,47,94,0.45);backdrop-filter:blur(3px);padding:18px;}
@@ -434,7 +433,8 @@
   function resolveNode(node){
     if(!node)return '';
     var clone=node.cloneNode(true);
-    clone.querySelectorAll('.e-var').forEach(function(s){var rep=document.createElement('span');rep.className='pv-var';rep.textContent=sampleFor(s.textContent);s.replaceWith(rep);});
+    // recipient view: variables become PLAIN text (no editor highlight)
+    clone.querySelectorAll('.e-var').forEach(function(s){s.replaceWith(document.createTextNode(sampleFor(s.textContent)));});
     return clone.innerHTML;
   }
   var IMG_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
