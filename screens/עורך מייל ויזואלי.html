@@ -72,10 +72,10 @@
   [data-mode="teacher"] .content-block{border:1.5px solid var(--border-mid);}
   [data-mode="teacher"] .content-block:hover{border-color:var(--amber);}
   [data-mode="teacher"] .content-block:hover .block-toolbar{opacity:1;pointer-events:auto;}
-  .block-toolbar{position:absolute;top:-13px;left:10px;display:flex;gap:3px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:5;}
-  .block-tb-btn{width:24px;height:24px;border-radius:6px;border:1px solid var(--border-mid);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .13s;}
+  .block-toolbar{position:absolute;top:-16px;left:10px;display:flex;gap:4px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:5;}
+  .block-tb-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border-mid);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .13s;box-shadow:var(--sh-sm);}
   .block-tb-btn:hover{background:var(--surface-2);color:var(--text-main);} .block-tb-btn.del:hover{color:#dc2626;}
-  .block-tb-btn svg{width:11px;height:11px;}
+  .block-tb-btn svg{width:14px;height:14px;}
   /* in-box "add variable" — appears in the focused block, inserts into that box */
   .block-varbtn{position:absolute;bottom:7px;left:8px;display:none;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--cyan);border-radius:14px;padding:3px 10px;font-family:var(--font);font-size:10.5px;font-weight:700;color:var(--cyan);cursor:pointer;z-index:7;box-shadow:var(--sh-sm);}
   .block-varbtn svg{width:12px;height:12px;}
@@ -91,10 +91,17 @@
   .content-block.dragging{opacity:.4;}
   .drop-ind{height:3px;background:var(--cyan);border-radius:2px;margin:4px 2px;box-shadow:0 0 8px rgba(56,196,242,.6);pointer-events:none;}
   .bp-item[draggable="true"]{cursor:grab;} .bp-item[draggable="true"]:active{cursor:grabbing;}
-  /* picker: saved/favorites library */
-  #libSection{margin:0 0 9px;padding:0 0 9px;border-bottom:1px dashed var(--border-mid);}
-  .lib-title{font-size:11px;font-weight:800;color:var(--text-sub);padding:2px 4px 8px;} .lib-title span{font-weight:600;color:var(--text-xs);}
-  .lib-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);cursor:pointer;margin-bottom:5px;transition:all .14s;}
+  /* picker tabs + panes */
+  .bp-tabs{display:flex;gap:4px;padding:2px 12px 9px;flex-shrink:0;}
+  .bp-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:8px 3px;border:1px solid transparent;background:var(--surface-2);border-radius:var(--r-sm);font-family:var(--font);font-size:11.5px;font-weight:700;color:var(--text-sub);cursor:pointer;transition:all .15s;}
+  .bp-tab svg{width:13px;height:13px;} .bp-tab[data-tab="liked"] svg{color:var(--pink);} .bp-tab[data-tab="saved"] svg{color:#c9a900;}
+  .bp-tab:hover{background:var(--surface-3);}
+  .bp-tab.on{background:var(--surface);border-color:var(--cyan);color:var(--navy);box-shadow:var(--sh-sm);} [data-theme="dark"] .bp-tab.on{color:var(--cyan);}
+  .bp-tab-c{font-size:10px;opacity:.85;}
+  .bp-pane{display:none;} .bp-pane.on{display:flex;flex-direction:column;flex:1;min-height:0;}
+  .lib-list{flex:1;overflow-y:auto;padding:6px 12px 16px;display:flex;flex-direction:column;gap:6px;}
+  .lib-empty{font-size:12px;color:var(--text-xs);text-align:center;line-height:1.8;padding:34px 20px;}
+  .lib-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);cursor:pointer;transition:all .14s;}
   .lib-item:hover{border-color:var(--cyan);background:var(--surface);transform:translateY(-1px);box-shadow:var(--sh-sm);}
   .lib-mark{display:flex;align-items:center;gap:3px;} .lib-mark svg{width:13px;height:13px;} .lm-fav{color:var(--pink);display:flex;} .lm-save{color:var(--yellow);display:flex;}
   .lib-name{flex:1;font-size:12.5px;font-weight:700;color:var(--text-main);}
@@ -342,7 +349,13 @@
     <aside class="side">
       <button class="side-handle" id="sideHandle" aria-label="פתח/סגור בלוקים" title="פתח/סגור בלוקים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
       <div class="bp-head"><span class="bp-title">הוסף בלוק</span></div>
-      <p class="bp-subtitle">בחר סוג תוכן להוספה למייל</p>
+      <div class="bp-tabs" id="bpTabs">
+        <button class="bp-tab on" data-tab="all" onclick="switchTab('all')">כל הבלוקים</button>
+        <button class="bp-tab" data-tab="liked" onclick="switchTab('liked')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>שאהבתי<span class="bp-tab-c" id="cntLiked"></span></button>
+        <button class="bp-tab" data-tab="saved" onclick="switchTab('saved')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>שלי<span class="bp-tab-c" id="cntSaved"></span></button>
+      </div>
+      <div class="bp-pane on" id="paneAll">
+      <p class="bp-subtitle">בחר סוג תוכן — לחיצה מוסיפה, או גררו למיקום במייל</p>
       <div class="bp-list" id="bpList">
         <div class="bp-item" onclick="addBlock('h1')"><div class="bp-icon" style="color:var(--navy)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div><div class="bp-info"><div class="bp-item-name">כותרת ראשית H1</div><div class="bp-item-desc">כותרת גדולה — 26px, Fredoka</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
         <div class="bp-item" onclick="addBlock('h2')"><div class="bp-icon" style="color:var(--cyan)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h6"/></svg></div><div class="bp-info"><div class="bp-item-name">כותרת משנה H2</div><div class="bp-item-desc">כותרת סעיף — 19px, תכלת</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
@@ -361,6 +374,9 @@
         <div class="bp-item" onclick="addBlock('countdown')"><div class="bp-icon" style="color:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="bp-info"><div class="bp-item-name">טיימר ספירה לאחור</div><div class="bp-item-desc">ספירה לתאריך יעד (GIF דינמי)</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
         <div class="bp-item" onclick="addBlock('addr')"><div class="bp-icon" style="color:var(--text-xs)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="bp-info"><div class="bp-item-name">פוטר כתובת ופרטי קשר</div><div class="bp-item-desc">שם העסק, כתובת ויצירת קשר</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
       </div>
+      </div>
+      <div class="bp-pane" id="paneLiked"><div class="lib-list" id="likedList"></div></div>
+      <div class="bp-pane" id="paneSaved"><div class="lib-list" id="savedList"></div></div>
     </aside>
   </div>
 
@@ -549,21 +565,24 @@
   function libPrune(e){if(!e.fav&&!e.saved){var i=savedLib.indexOf(e);if(i>-1)savedLib.splice(i,1);}}
   function toggleLike(btn){var b=btn.closest('.content-block');btn.classList.toggle('on');var on=btn.classList.contains('on');var e=libUpsert(b);e.fav=on;libPrune(e);renderLib();toast(on?'נוסף למועדפים ❤':'הוסר מהמועדפים');}
   function toggleSave(btn){var b=btn.closest('.content-block');btn.classList.toggle('on');var on=btn.classList.contains('on');var e=libUpsert(b);e.saved=on;libPrune(e);renderLib();toast(on?'הבלוק נשמר לשימוש חוזר':'הוסר מהשמורים');}
-  function renderLib(){
-    var sec=document.getElementById('libSection'); if(!sec)return;
-    if(!savedLib.length){sec.style.display='none';sec.innerHTML='';return;}
-    sec.style.display='block';
-    var html='<div class="lib-title">הבלוקים שלי <span>(בשליפה מהירה)</span></div>';
-    savedLib.forEach(function(e,i){
-      html+='<div class="lib-item" onclick="insertSaved('+i+')" title="הוסף עותק למייל">'
-        +'<span class="lib-mark">'+(e.fav?'<span class="lm-fav">'+HEART_S+'</span>':'')+(e.saved?'<span class="lm-save">'+BOOK_S+'</span>':'')+'</span>'
-        +'<span class="lib-name">'+e.name+'</span>'
-        +'<button class="lib-x" title="הסר מהרשימה" onclick="event.stopPropagation();removeLib('+i+')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>';
-    });
-    sec.innerHTML=html;
+  function libRow(e,i){
+    return '<div class="lib-item" onclick="insertSaved('+i+')" title="הוסף עותק למייל">'
+      +'<span class="lib-mark">'+(e.fav?'<span class="lm-fav">'+HEART_S+'</span>':'')+(e.saved?'<span class="lm-save">'+BOOK_S+'</span>':'')+'</span>'
+      +'<span class="lib-name">'+e.name+'</span>'
+      +'<button class="lib-x" title="הסר מהרשימה" onclick="event.stopPropagation();removeLib('+i+')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>';
   }
-  function insertSaved(i){var e=savedLib[i];if(!e)return;var block=buildBlockNode(e.type,e.inner);document.getElementById('scroll').insertBefore(block,document.getElementById('addBtn'));toast('בלוק שמור נוסף');}
-  function removeLib(i){savedLib.splice(i,1);renderLib();}
+  function renderLib(){
+    var likedEl=document.getElementById('likedList'), savedEl=document.getElementById('savedList');
+    var lh='',sh='',lc=0,sc=0;
+    savedLib.forEach(function(e,i){if(e.fav){lh+=libRow(e,i);lc++;}if(e.saved){sh+=libRow(e,i);sc++;}});
+    if(likedEl)likedEl.innerHTML=lc?lh:'<div class="lib-empty">עדיין אין בלוקים שאהבת.<br>לחצו על הלב ❤ בבלוק כדי שיופיע כאן.</div>';
+    if(savedEl)savedEl.innerHTML=sc?sh:'<div class="lib-empty">אין בלוקים שמורים.<br>לחצו על הסימנייה 🔖 בבלוק כדי לשמור אותו לשימוש חוזר.</div>';
+    var cl=document.getElementById('cntLiked'),cs=document.getElementById('cntSaved');
+    if(cl)cl.textContent=lc?('('+lc+')'):''; if(cs)cs.textContent=sc?('('+sc+')'):'';
+  }
+  function insertSaved(i){var e=savedLib[i];if(!e)return;var block=buildBlockNode(e.type,e.inner);document.getElementById('scroll').insertBefore(block,document.getElementById('addBtn'));toast('בלוק נוסף מהרשימה');}
+  function removeLib(i){var e=savedLib[i];if(e){var b=document.querySelector('.content-block[data-bid="'+e.key+'"]');if(b){var lk=b.querySelector('.block-tb-btn.like'),sv=b.querySelector('.block-tb-btn.save');if(lk)lk.classList.remove('on');if(sv)sv.classList.remove('on');}}savedLib.splice(i,1);renderLib();}
+  function switchTab(t){document.querySelectorAll('.bp-tab').forEach(function(x){x.classList.toggle('on',x.dataset.tab===t);});['all','liked','saved'].forEach(function(p){var el=document.getElementById('pane'+p.charAt(0).toUpperCase()+p.slice(1));if(el)el.classList.toggle('on',p===t);});}
 
   // ===== drag & drop: reorder blocks + drag from palette =====
   var dragSrc=null, dragType=null, dropInd=null;
@@ -586,14 +605,13 @@
     var bpList=document.getElementById('bpList');
     var items=Array.prototype.slice.call(bpList.querySelectorAll('.bp-item'));
     items.forEach(function(it){var m=(it.getAttribute('onclick')||'').match(/addBlock\('(\w+)'\)/);if(m){it.dataset.type=m[1];it.setAttribute('draggable','true');}});
-    var ORDER=['text','h1','image','cta','h2','divider','spacer','quote','imgtext','product','copybox','social','signature','gallery','countdown','addr'];
-    var lib=document.createElement('div'); lib.id='libSection'; lib.style.display='none';
-    bpList.insertBefore(lib,bpList.firstChild);
+    var ORDER=['h1','h2','text','cta','image','signature','divider','spacer','quote','imgtext','product','copybox','social','gallery','countdown','addr'];
     ORDER.forEach(function(tp){var it=items.find(function(x){return x.dataset.type===tp;});if(it)bpList.appendChild(it);});
     // palette drag
     bpList.addEventListener('dragstart',function(e){var it=e.target.closest('.bp-item');if(!it)return;dragType=it.dataset.type;dragSrc=null;e.dataTransfer.effectAllowed='copy';try{e.dataTransfer.setData('text/plain',dragType);}catch(_){}});
     bpList.addEventListener('dragend',function(){dragType=null;removeInd();});
   })();
+  renderLib();
 
   // ---- canvas drag wiring (reorder + palette drop) ----
   (function(){
