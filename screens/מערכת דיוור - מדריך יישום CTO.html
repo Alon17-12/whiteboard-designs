@@ -169,8 +169,11 @@ trigger/mailing/            <span class="cm">// עבודות שליחה</span></
 <span class="cm">// "iframe" קיים בקורס אך מוסר במייל — לא נתמך בלקוחות דוא"ל (Gmail/Outlook)</span>
 <span class="cm">// תוספות ייעודיות-מייל שנכנסות לאותו picker:</span>
 <span class="kw">type</span> <span class="ty">EmailBlock</span> = <span class="ty">SharedBlock</span>
-  | <span class="st">"spacer"</span>   <span class="cm">// מרווח (רווח ריק, S/M/L)</span>
-  | <span class="st">"social"</span>  <span class="cm">// כפתורי רשתות חברתיות</span>
+  | <span class="st">"spacer"</span> | <span class="st">"social"</span>          <span class="cm">// מרווח (S/M/L) · רשתות חברתיות</span>
+  | <span class="st">"signature"</span> | <span class="st">"product"</span>      <span class="cm">// חתימה אישית · כרטיס קורס/מוצר</span>
+  | <span class="st">"imgtext"</span> | <span class="st">"copybox"</span>        <span class="cm">// תמונה+טקסט זה-לצד-זה · תיבת העתקה/קופון</span>
+  | <span class="st">"gallery"</span> | <span class="st">"countdown"</span>      <span class="cm">// גלריית תמונות · ספירה לאחור (נרנדר כ-GIF בשרת)</span>
+  | <span class="st">"addr"</span>                       <span class="cm">// פוטר כתובת ופרטי קשר (משלים את unsub חוקית)</span>
   | <span class="st">"unsub"</span>;  <span class="cm">// הסרה מרשימת התפוצה — נוסף כברירת מחדל, חובה, לא נמחק</span>
 
 <span class="kw">interface</span> <span class="ty">BlockDef</span>&lt;P&gt; {

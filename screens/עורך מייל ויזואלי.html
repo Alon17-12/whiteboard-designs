@@ -121,6 +121,51 @@
   .block-unsub-wrap .req-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--amber);background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:20px;padding:3px 10px;margin-bottom:9px;} .block-unsub-wrap .req-badge svg{width:11px;height:11px;}
   .block-unsub-line{font-size:11.5px;color:var(--text-xs);line-height:1.7;outline:none;}
   .block-unsub-link{color:var(--text-sub);text-decoration:underline;font-weight:600;outline:none;}
+  /* ===== additional email blocks ===== */
+  /* personal signature */
+  .block-sig-wrap{display:flex;align-items:center;gap:14px;padding:16px;}
+  .block-sig-av{width:60px;height:60px;border-radius:50%;flex-shrink:0;background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-xs);cursor:pointer;} .block-sig-av svg{width:22px;height:22px;opacity:.5;}
+  .block-sig-info{flex:1;min-width:0;}
+  .block-sig-name{font-size:16px;font-weight:800;color:var(--text-main);outline:none;}
+  .block-sig-role{font-size:12.5px;color:var(--text-sub);outline:none;margin-top:1px;}
+  .block-sig-contact{font-size:11.5px;color:var(--cyan);outline:none;margin-top:3px;direction:ltr;text-align:right;}
+  /* product / course card */
+  .content-block[data-type="product"]{overflow:hidden;}
+  .block-prod-img{min-height:130px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:var(--text-xs);font-size:12px;font-weight:600;cursor:pointer;} .block-prod-img svg{width:26px;height:26px;opacity:.4;}
+  .block-prod-body{padding:14px 16px;}
+  .block-prod-title{font-size:16px;font-weight:800;color:var(--text-main);outline:none;}
+  .block-prod-desc{font-size:12.5px;color:var(--text-sub);line-height:1.55;outline:none;margin-top:4px;}
+  .block-prod-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;}
+  .block-prod-price{font-size:18px;font-weight:800;color:var(--navy);font-family:var(--font-brand);outline:none;} [data-theme="dark"] .block-prod-price{color:var(--cyan);}
+  .block-prod-btn{background:var(--pink);color:#fff;font-size:13px;font-weight:700;border-radius:var(--btn-radius-course);padding:9px 18px;outline:none;cursor:text;}
+  /* image + text side by side */
+  .block-imgtext{display:flex;gap:14px;padding:14px 16px;align-items:center;}
+  .block-imgtext-img{width:150px;flex-shrink:0;align-self:stretch;min-height:104px;background:var(--surface-2);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--text-xs);cursor:pointer;} .block-imgtext-img svg{width:24px;height:24px;opacity:.4;}
+  .block-imgtext-body{flex:1;min-width:0;}
+  .block-imgtext-title{font-size:15px;font-weight:800;color:var(--text-main);outline:none;}
+  .block-imgtext-text{font-size:12.5px;color:var(--text-sub);line-height:1.6;outline:none;margin-top:5px;}
+  /* copy box / coupon */
+  .block-copy-wrap{padding:16px;}
+  .block-copy-lbl{font-size:11px;font-weight:700;color:var(--text-xs);text-align:center;margin-bottom:8px;}
+  .block-copy-box{display:flex;align-items:center;gap:10px;border:2px dashed var(--border-mid);border-radius:12px;padding:10px 10px 10px 16px;background:var(--surface-2);}
+  .block-copy-code{flex:1;font-family:'SF Mono',Menlo,monospace;font-size:17px;font-weight:700;letter-spacing:1.5px;color:var(--text-main);text-align:center;outline:none;direction:ltr;}
+  .block-copy-btn{display:flex;align-items:center;gap:5px;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:8px 13px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;} .block-copy-btn svg{width:13px;height:13px;}
+  /* address footer */
+  .block-addr-wrap{padding:16px 18px;text-align:center;}
+  .block-addr-name{font-size:12.5px;font-weight:700;color:var(--text-sub);outline:none;}
+  .block-addr-line{font-size:11.5px;color:var(--text-xs);outline:none;margin-top:3px;line-height:1.6;}
+  /* gallery */
+  .block-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 16px;}
+  .block-gallery-cell{aspect-ratio:1/1;background:var(--surface-2);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-xs);cursor:pointer;} .block-gallery-cell svg{width:20px;height:20px;opacity:.4;}
+  /* countdown */
+  .block-cd-wrap{padding:16px;text-align:center;}
+  .block-cd-row{display:flex;justify-content:center;gap:9px;}
+  .block-cd-cell{background:var(--navy);color:#fff;border-radius:10px;padding:9px 0;min-width:56px;} [data-theme="dark"] .block-cd-cell{background:#1a2a55;border:1px solid rgba(56,196,242,.2);}
+  .block-cd-num{font-size:23px;font-weight:800;font-family:var(--font-brand);line-height:1;}
+  .block-cd-lab{font-size:9.5px;opacity:.8;margin-top:3px;}
+  .block-cd-meta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:11px;flex-wrap:wrap;}
+  .block-cd-date{font-size:11.5px;color:var(--text-sub);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;outline:none;direction:ltr;}
+  .block-cd-note{font-size:10px;color:var(--text-xs);display:flex;align-items:center;gap:4px;} .block-cd-note svg{width:11px;height:11px;}
   .e-var{color:var(--cyan);font-weight:700;}
 
   /* add block button */
@@ -157,6 +202,20 @@
   .pv-body .pv-social{display:flex;justify-content:center;gap:12px;margin:18px 0;}
   .pv-body .pv-social a{width:38px;height:38px;border-radius:50%;background:#253E7A;color:#fff;display:flex;align-items:center;justify-content:center;} .pv-body .pv-social svg{width:18px;height:18px;}
   .pv-body .pv-unsub{margin-top:24px;padding-top:18px;border-top:1px solid #eef2f7;text-align:center;font-size:11.5px;color:#9aa7bd;line-height:1.7;} .pv-body .pv-unsub a{color:#7a87a0;text-decoration:underline;}
+  /* preview — additional blocks */
+  .pv-body .pv-sig{display:flex;align-items:center;gap:13px;margin:16px 0;}
+  .pv-body .pv-sig .av{width:56px;height:56px;border-radius:50%;background:#eef3fa;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#9aa7bd;} .pv-body .pv-sig .av svg{width:22px;height:22px;}
+  .pv-body .pv-sig .nm{font-size:15px;font-weight:800;color:#1a2f5e;} .pv-body .pv-sig .ro{font-size:12.5px;color:#5a6a8a;} .pv-body .pv-sig .co{font-size:11.5px;color:#1593c4;direction:ltr;text-align:right;}
+  .pv-body .pv-prod{border:1px solid #e6ebf3;border-radius:12px;overflow:hidden;margin:16px 0;}
+  .pv-body .pv-prod .im{min-height:140px;background:#eef3fa;display:flex;align-items:center;justify-content:center;color:#9aa7bd;font-size:12px;}
+  .pv-body .pv-prod .bd{padding:14px 16px;} .pv-body .pv-prod .ti{font-size:16px;font-weight:800;color:#1a2f5e;} .pv-body .pv-prod .de{font-size:12.5px;color:#5a6a8a;margin-top:4px;line-height:1.5;}
+  .pv-body .pv-prod .ft{display:flex;align-items:center;justify-content:space-between;margin-top:12px;} .pv-body .pv-prod .pr{font-size:18px;font-weight:800;color:#253E7A;} .pv-body .pv-prod .bt{background:#F05680;color:#fff;font-size:13px;font-weight:700;border-radius:30px;padding:8px 18px;text-decoration:none;}
+  .pv-body .pv-imgtext{display:flex;gap:14px;align-items:center;margin:16px 0;} .pv-body .pv-imgtext .im{width:150px;align-self:stretch;min-height:100px;background:#eef3fa;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#9aa7bd;} .pv-body .pv-imgtext .im svg{width:24px;height:24px;}
+  .pv-body .pv-imgtext .ti{font-size:15px;font-weight:800;color:#1a2f5e;} .pv-body .pv-imgtext .tx{font-size:12.5px;color:#5a6a8a;margin-top:5px;line-height:1.6;}
+  .pv-body .pv-copy{margin:16px 0;text-align:center;} .pv-body .pv-copy .lb{font-size:11px;font-weight:700;color:#9aa7bd;margin-bottom:7px;} .pv-body .pv-copy .bx{display:inline-block;border:2px dashed #c3d0e3;border-radius:12px;padding:11px 30px;font-family:monospace;font-size:18px;font-weight:700;letter-spacing:1.5px;color:#1a2f5e;background:#f7fafe;direction:ltr;}
+  .pv-body .pv-addr{text-align:center;margin-top:20px;padding-top:14px;border-top:1px solid #eef2f7;} .pv-body .pv-addr .nm{font-size:12.5px;font-weight:700;color:#5a6a8a;} .pv-body .pv-addr .ln{font-size:11.5px;color:#9aa7bd;margin-top:3px;}
+  .pv-body .pv-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0;} .pv-body .pv-gallery .cl{aspect-ratio:1/1;background:#eef3fa;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#9aa7bd;} .pv-body .pv-gallery .cl svg{width:20px;height:20px;}
+  .pv-body .pv-cd{text-align:center;margin:18px 0;} .pv-body .pv-cd .rw{display:flex;justify-content:center;gap:9px;} .pv-body .pv-cd .ce{background:#253E7A;color:#fff;border-radius:10px;padding:10px 0;min-width:60px;} .pv-body .pv-cd .nu{font-size:24px;font-weight:800;line-height:1;} .pv-body .pv-cd .la{font-size:10px;opacity:.85;margin-top:3px;}
 
   /* send-test popup */
   .test-pop{position:fixed;inset:0;z-index:130;display:none;align-items:center;justify-content:center;background:rgba(26,47,94,0.45);backdrop-filter:blur(3px);padding:18px;}
@@ -272,6 +331,13 @@
         <div class="bp-item" onclick="addBlock('image')"><div class="bp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><div class="bp-info"><div class="bp-item-name">תמונה / GIF</div><div class="bp-item-desc">תמונה, GIF או קובץ מדיה</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
         <div class="bp-item" onclick="addBlock('spacer')"><div class="bp-icon" style="color:var(--text-xs)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 7 12 3 16 7"/><polyline points="8 17 12 21 16 17"/><line x1="12" y1="3" x2="12" y2="21" stroke-dasharray="2 3"/></svg></div><div class="bp-info"><div class="bp-item-name">מרווח</div><div class="bp-item-desc">רווח ריק בין בלוקים (S/M/L)</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
         <div class="bp-item" onclick="addBlock('social')"><div class="bp-icon" style="color:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div><div class="bp-info"><div class="bp-item-name">רשתות חברתיות</div><div class="bp-item-desc">כפתורי קישור לרשתות שלך</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('signature')"><div class="bp-icon" style="color:var(--navy)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="bp-info"><div class="bp-item-name">חתימה אישית</div><div class="bp-item-desc">תמונה + שם, תפקיד ופרטי קשר</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('product')"><div class="bp-icon" style="color:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div><div class="bp-info"><div class="bp-item-name">כרטיס קורס/מוצר</div><div class="bp-item-desc">תמונה, כותרת, מחיר וכפתור</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('imgtext')"><div class="bp-icon" style="color:var(--cyan)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="8" height="16" rx="1"/><line x1="14" y1="7" x2="21" y2="7"/><line x1="14" y1="12" x2="21" y2="12"/><line x1="14" y1="17" x2="19" y2="17"/></svg></div><div class="bp-info"><div class="bp-item-name">תמונה + טקסט</div><div class="bp-item-desc">תמונה וטקסט זה לצד זה</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('copybox')"><div class="bp-icon" style="color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></div><div class="bp-info"><div class="bp-item-name">תיבת העתקה / קופון</div><div class="bp-item-desc">קוד במסגרת מקווקוות + העתק</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('gallery')"><div class="bp-icon" style="color:var(--navy)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div><div class="bp-info"><div class="bp-item-name">גלריית תמונות</div><div class="bp-item-desc">רשת תמונות (3 בשורה)</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('countdown')"><div class="bp-icon" style="color:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="bp-info"><div class="bp-item-name">טיימר ספירה לאחור</div><div class="bp-item-desc">ספירה לתאריך יעד (GIF דינמי)</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
+        <div class="bp-item" onclick="addBlock('addr')"><div class="bp-icon" style="color:var(--text-xs)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="bp-info"><div class="bp-item-name">פוטר כתובת ופרטי קשר</div><div class="bp-item-desc">שם העסק, כתובת ויצירת קשר</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
       </div>
       <div class="bp-foot">
         <button class="bp-vars-btn" id="varsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>הוסף משתנה אישי</button>
@@ -345,7 +411,7 @@
     {he:"מזהה המועדון", token:"{{club_slug}}"},
   ];
 
-  var BLOCK_NAMES={h1:'כותרת ראשית',h2:'כותרת משנה',text:'גוף טקסט',quote:'ציטוט',divider:'מפריד',cta:'כפתור CTA',image:'תמונה / GIF',spacer:'מרווח',social:'רשתות חברתיות',unsub:'הסרה מרשימת התפוצה'};
+  var BLOCK_NAMES={h1:'כותרת ראשית',h2:'כותרת משנה',text:'גוף טקסט',quote:'ציטוט',divider:'מפריד',cta:'כפתור CTA',image:'תמונה / GIF',spacer:'מרווח',social:'רשתות חברתיות',signature:'חתימה אישית',product:'כרטיס קורס/מוצר',imgtext:'תמונה + טקסט',copybox:'תיבת העתקה',gallery:'גלריית תמונות',countdown:'טיימר ספירה לאחור',addr:'פוטר כתובת',unsub:'הסרה מרשימת התפוצה'};
 
   var workEl=document.querySelector('.work');
   function openBlockPicker(){workEl.classList.add('blocks-open');document.getElementById('bpList').scrollTop=0;}
@@ -375,6 +441,20 @@
       +'<div class="block-unsub-line" contenteditable="true">קיבלת מייל זה מ־<span class="e-var">שם המועדון</span>. אם אינך מעוניין/ת לקבל עוד מיילים, '
       +'<a class="block-unsub-link" contenteditable="true">להסרה מרשימת התפוצה</a> לחצו כאן.</div></div>';
   }
+  var SVG_IMG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+  function sigInner(){return '<div class="block-sig-wrap"><div class="block-sig-av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="block-sig-info"><div class="block-sig-name" contenteditable="true">ד״ר אבי ברקר</div><div class="block-sig-role" contenteditable="true">מייסד המועדון להורות התפתחותית</div><div class="block-sig-contact" contenteditable="true" dir="ltr">avi@club.co.il · 050-0000000</div></div></div>';}
+  function productInner(){return '<div class="block-prod-img">'+SVG_IMG+'תמונת הקורס</div><div class="block-prod-body"><div class="block-prod-title" contenteditable="true">שם הקורס</div><div class="block-prod-desc" contenteditable="true">תיאור קצר של מה הקורס כולל ולמי הוא מתאים.</div><div class="block-prod-foot"><div class="block-prod-price" contenteditable="true">₪349</div><div class="block-prod-btn" contenteditable="true" spellcheck="false">לפרטים</div></div></div>';}
+  function imgtextInner(){return '<div class="block-imgtext"><div class="block-imgtext-img">'+SVG_IMG+'</div><div class="block-imgtext-body"><div class="block-imgtext-title" contenteditable="true">כותרת המקטע</div><div class="block-imgtext-text" contenteditable="true">טקסט שמתאר את התמונה שלצידו — נהדר לניוזלטר ולעדכונים.</div></div></div>';}
+  function copyboxInner(){return '<div class="block-copy-wrap"><div class="block-copy-lbl" contenteditable="true">קוד קופון</div><div class="block-copy-box"><span class="block-copy-code" contenteditable="true" dir="ltr">WELCOME20</span><button class="block-copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>העתק</button></div></div>';}
+  function galleryInner(){var c='<div class="block-gallery-cell">'+SVG_IMG+'</div>';return '<div class="block-gallery">'+c+c+c+'</div>';}
+  function countdownInner(){
+    function cell(n,l){return '<div class="block-cd-cell"><div class="block-cd-num">'+n+'</div><div class="block-cd-lab">'+l+'</div></div>';}
+    return '<div class="block-cd-wrap"><div class="block-cd-row">'+cell('02','ימים')+cell('14','שעות')+cell('38','דקות')+cell('05','שניות')+'</div>'
+      +'<div class="block-cd-meta"><span class="block-cd-date" contenteditable="true" dir="ltr">2026-07-01 20:00</span>'
+      +'<span class="block-cd-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>נוצר כתמונת GIF דינמית בעת השליחה</span></div></div>';
+  }
+  function addrInner(){return '<div class="block-addr-wrap"><div class="block-addr-name" contenteditable="true">המועדון להורות התפתחותית בע״מ</div><div class="block-addr-line" contenteditable="true">רחוב הדוגמה 12, תל אביב · ח.פ. 000000000</div><div class="block-addr-line" contenteditable="true" dir="ltr">support@club.co.il · 03-0000000</div></div>';}
+  function copyCode(btn){var c=btn.closest('.block-copy-box').querySelector('.block-copy-code');var v=c.textContent.trim();try{navigator.clipboard.writeText(v);}catch(e){}toast('הקוד הועתק: '+v);}
 
   function addBlock(type){
     var scroll=document.getElementById('scroll');
@@ -393,6 +473,13 @@
       image: TB+'<div class="block-image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>לחץ להעלאת תמונה / GIF</div>',
       spacer: TB+spacerInner('m'),
       social: TB+socialInner(),
+      signature: TB+sigInner(),
+      product: TB+productInner(),
+      imgtext: TB+imgtextInner(),
+      copybox: TB+copyboxInner(),
+      gallery: TB+galleryInner(),
+      countdown: TB+countdownInner(),
+      addr: TB+addrInner(),
       unsub: TB+unsubInner()
     }[type];
     block.innerHTML=inner;
@@ -453,6 +540,13 @@
       else if(t==='image') out+='<div class="pv-img">'+IMG_SVG+'תמונה / GIF</div>';
       else if(t==='spacer'){var g=b.querySelector('.block-spacer-gap');var h=(g&&g.style.height)?g.style.height:'30px';out+='<div style="height:'+h+'"></div>';}
       else if(t==='social'){var ic='';b.querySelectorAll('.soc-ic').forEach(function(s){ic+='<a>'+s.innerHTML+'</a>';});out+='<div class="pv-social">'+ic+'</div>';}
+      else if(t==='signature'){out+='<div class="pv-sig"><div class="av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><div class="nm">'+resolveNode(b.querySelector('.block-sig-name'))+'</div><div class="ro">'+resolveNode(b.querySelector('.block-sig-role'))+'</div><div class="co">'+resolveNode(b.querySelector('.block-sig-contact'))+'</div></div></div>';}
+      else if(t==='product'){var pbt=b.querySelector('.block-prod-btn');out+='<div class="pv-prod"><div class="im">'+SVG_IMG+'</div><div class="bd"><div class="ti">'+resolveNode(b.querySelector('.block-prod-title'))+'</div><div class="de">'+resolveNode(b.querySelector('.block-prod-desc'))+'</div><div class="ft"><div class="pr">'+resolveNode(b.querySelector('.block-prod-price'))+'</div><a class="bt" href="#">'+(pbt?pbt.textContent:'')+'</a></div></div></div>';}
+      else if(t==='imgtext'){out+='<div class="pv-imgtext"><div class="im">'+SVG_IMG+'</div><div><div class="ti">'+resolveNode(b.querySelector('.block-imgtext-title'))+'</div><div class="tx">'+resolveNode(b.querySelector('.block-imgtext-text'))+'</div></div></div>';}
+      else if(t==='copybox'){var clb=b.querySelector('.block-copy-lbl');var ccd=b.querySelector('.block-copy-code');out+='<div class="pv-copy"><div class="lb">'+(clb?clb.textContent:'')+'</div><span class="bx">'+(ccd?ccd.textContent:'')+'</span></div>';}
+      else if(t==='gallery'){var gc='';b.querySelectorAll('.block-gallery-cell').forEach(function(){gc+='<div class="cl">'+SVG_IMG+'</div>';});out+='<div class="pv-gallery">'+gc+'</div>';}
+      else if(t==='countdown'){var cc='';b.querySelectorAll('.block-cd-cell').forEach(function(c){var n=c.querySelector('.block-cd-num');var l=c.querySelector('.block-cd-lab');cc+='<div class="ce"><div class="nu">'+(n?n.textContent:'')+'</div><div class="la">'+(l?l.textContent:'')+'</div></div>';});out+='<div class="pv-cd"><div class="rw">'+cc+'</div></div>';}
+      else if(t==='addr'){var al='';b.querySelectorAll('.block-addr-line').forEach(function(l){al+='<div class="ln">'+l.innerHTML+'</div>';});out+='<div class="pv-addr"><div class="nm">'+resolveNode(b.querySelector('.block-addr-name'))+'</div>'+al+'</div>';}
       else if(t==='unsub') out+='<div class="pv-unsub">'+resolveNode(b.querySelector('.block-unsub-line'))+'</div>';
     });
     document.getElementById('pvBody').innerHTML=out;
