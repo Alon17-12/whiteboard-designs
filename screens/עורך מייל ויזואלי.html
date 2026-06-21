@@ -76,6 +76,11 @@
   .block-tb-btn{width:24px;height:24px;border-radius:6px;border:1px solid var(--border-mid);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);transition:all .13s;}
   .block-tb-btn:hover{background:var(--surface-2);color:var(--text-main);} .block-tb-btn.del:hover{color:#dc2626;}
   .block-tb-btn svg{width:11px;height:11px;}
+  /* in-box "add variable" — appears in the focused block, inserts into that box */
+  .block-varbtn{position:absolute;bottom:7px;left:8px;display:none;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--cyan);border-radius:14px;padding:3px 10px;font-family:var(--font);font-size:10.5px;font-weight:700;color:var(--cyan);cursor:pointer;z-index:7;box-shadow:var(--sh-sm);}
+  .block-varbtn svg{width:12px;height:12px;}
+  .block-varbtn:hover{background:var(--cyan);color:#fff;}
+  [data-mode="teacher"] .content-block:focus-within > .block-varbtn{display:inline-flex;}
   .block-h1{padding:14px 16px;font-size:26px;font-weight:800;font-family:var(--font-h1);color:var(--navy);outline:none;min-height:52px;}
   [data-theme="dark"] .block-h1{color:var(--text-main);}
   .block-h1:empty::before{content:attr(data-ph);color:var(--text-xs);font-weight:400;font-family:var(--font);}
@@ -148,7 +153,7 @@
   .block-copy-wrap{padding:16px;}
   .block-copy-lbl{font-size:11px;font-weight:700;color:var(--text-xs);text-align:center;margin-bottom:8px;}
   .block-copy-box{display:flex;align-items:center;gap:10px;border:2px dashed var(--border-mid);border-radius:12px;padding:10px 10px 10px 16px;background:var(--surface-2);}
-  .block-copy-code{flex:1;font-family:'SF Mono',Menlo,monospace;font-size:17px;font-weight:700;letter-spacing:1.5px;color:var(--text-main);text-align:center;outline:none;direction:ltr;}
+  .block-copy-code{flex:1;font-family:var(--font-brand);font-size:18px;font-weight:600;letter-spacing:.5px;color:var(--navy);text-align:center;outline:none;} [data-theme="dark"] .block-copy-code{color:var(--cyan);}
   .block-copy-btn{display:flex;align-items:center;gap:5px;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:8px 13px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;} .block-copy-btn svg{width:13px;height:13px;}
   /* address footer */
   .block-addr-wrap{padding:16px 18px;text-align:center;}
@@ -212,7 +217,10 @@
   .pv-body .pv-prod .ft{display:flex;align-items:center;justify-content:space-between;margin-top:12px;} .pv-body .pv-prod .pr{font-size:18px;font-weight:800;color:#253E7A;} .pv-body .pv-prod .bt{background:#F05680;color:#fff;font-size:13px;font-weight:700;border-radius:30px;padding:8px 18px;text-decoration:none;}
   .pv-body .pv-imgtext{display:flex;gap:14px;align-items:center;margin:16px 0;} .pv-body .pv-imgtext .im{width:150px;align-self:stretch;min-height:100px;background:#eef3fa;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#9aa7bd;} .pv-body .pv-imgtext .im svg{width:24px;height:24px;}
   .pv-body .pv-imgtext .ti{font-size:15px;font-weight:800;color:#1a2f5e;} .pv-body .pv-imgtext .tx{font-size:12.5px;color:#5a6a8a;margin-top:5px;line-height:1.6;}
-  .pv-body .pv-copy{margin:16px 0;text-align:center;} .pv-body .pv-copy .lb{font-size:11px;font-weight:700;color:#9aa7bd;margin-bottom:7px;} .pv-body .pv-copy .bx{display:inline-block;border:2px dashed #c3d0e3;border-radius:12px;padding:11px 30px;font-family:monospace;font-size:18px;font-weight:700;letter-spacing:1.5px;color:#1a2f5e;background:#f7fafe;direction:ltr;}
+  .pv-body .pv-copy{margin:16px 0;text-align:center;} .pv-body .pv-copy .lb{font-size:11px;font-weight:700;color:#9aa7bd;margin-bottom:7px;}
+  .pv-body .pv-copy .bx{display:inline-flex;align-items:center;gap:12px;border:2px dashed #c3d0e3;border-radius:12px;padding:8px 8px 8px 22px;background:#f7fafe;}
+  .pv-body .pv-copy .cd{font-family:var(--font-brand);font-size:18px;font-weight:600;letter-spacing:.5px;color:#253E7A;}
+  .pv-body .pv-copy .cpy{display:inline-flex;align-items:center;gap:5px;background:#253E7A;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-family:var(--font);font-size:12.5px;font-weight:700;cursor:pointer;} .pv-body .pv-copy .cpy svg{width:13px;height:13px;}
   .pv-body .pv-addr{text-align:center;margin-top:20px;padding-top:14px;border-top:1px solid #eef2f7;} .pv-body .pv-addr .nm{font-size:12.5px;font-weight:700;color:#5a6a8a;} .pv-body .pv-addr .ln{font-size:11.5px;color:#9aa7bd;margin-top:3px;}
   .pv-body .pv-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0;} .pv-body .pv-gallery .cl{aspect-ratio:1/1;background:#eef3fa;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#9aa7bd;} .pv-body .pv-gallery .cl svg{width:20px;height:20px;}
   .pv-body .pv-cd{text-align:center;margin:18px 0;} .pv-body .pv-cd .rw{display:flex;justify-content:center;gap:9px;} .pv-body .pv-cd .ce{background:#253E7A;color:#fff;border-radius:10px;padding:10px 0;min-width:60px;} .pv-body .pv-cd .nu{font-size:24px;font-weight:800;line-height:1;} .pv-body .pv-cd .la{font-size:10px;opacity:.85;margin-top:3px;}
@@ -249,9 +257,6 @@
   .bp-icon svg{width:17px;height:17px;color:var(--navy);} [data-theme="dark"] .bp-icon svg{color:var(--cyan);}
   .bp-info{flex:1;} .bp-item-name{font-size:13.5px;font-weight:700;color:var(--text-main);} .bp-item-desc{font-size:10.5px;color:var(--text-xs);margin-top:2px;}
   .bp-arrow{color:var(--text-xs);} .bp-arrow svg{width:13px;height:13px;}
-  .bp-foot{padding:12px 16px;border-top:1px solid var(--border);}
-  .bp-vars-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:var(--r-sm);border:1px solid var(--border-mid);background:var(--surface-2);font-size:12.5px;font-weight:700;color:var(--text-main);transition:all .15s;}
-  .bp-vars-btn:hover{border-color:var(--cyan);color:var(--cyan);} .bp-vars-btn svg{width:15px;height:15px;}
 
   /* variables popover */
   .vars-pop{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(26,47,94,0.45);backdrop-filter:blur(3px);}
@@ -339,9 +344,6 @@
         <div class="bp-item" onclick="addBlock('countdown')"><div class="bp-icon" style="color:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="bp-info"><div class="bp-item-name">טיימר ספירה לאחור</div><div class="bp-item-desc">ספירה לתאריך יעד (GIF דינמי)</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
         <div class="bp-item" onclick="addBlock('addr')"><div class="bp-icon" style="color:var(--text-xs)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="bp-info"><div class="bp-item-name">פוטר כתובת ופרטי קשר</div><div class="bp-item-desc">שם העסק, כתובת ויצירת קשר</div></div><div class="bp-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></div></div>
       </div>
-      <div class="bp-foot">
-        <button class="bp-vars-btn" id="varsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>הוסף משתנה אישי</button>
-      </div>
     </aside>
   </div>
 
@@ -419,6 +421,8 @@
   function toggleBlocks(){workEl.classList.contains('blocks-open')?closeBlockPicker():openBlockPicker();}
   document.getElementById('sideHandle').addEventListener('click',toggleBlocks);
 
+  var NO_VAR=['divider','spacer','image','gallery','social','countdown'];
+  var VARBTN='<button class="block-varbtn" type="button" onclick="openVars()" title="הוסף משתנה אישי לתיבה זו"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/></svg>הוסף משתנה</button>';
   function makeToolbar(){return '<div class="block-toolbar"><button class="block-tb-btn" title="הזז למעלה" onclick="moveBlock(this,-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button><button class="block-tb-btn" title="הזז למטה" onclick="moveBlock(this,1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button><button class="block-tb-btn del" title="מחק" onclick="deleteBlock(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div>';}
 
   // email-specific block markup
@@ -455,6 +459,7 @@
   }
   function addrInner(){return '<div class="block-addr-wrap"><div class="block-addr-name" contenteditable="true">המועדון להורות התפתחותית בע״מ</div><div class="block-addr-line" contenteditable="true">רחוב הדוגמה 12, תל אביב · ח.פ. 000000000</div><div class="block-addr-line" contenteditable="true" dir="ltr">support@club.co.il · 03-0000000</div></div>';}
   function copyCode(btn){var c=btn.closest('.block-copy-box').querySelector('.block-copy-code');var v=c.textContent.trim();try{navigator.clipboard.writeText(v);}catch(e){}toast('הקוד הועתק: '+v);}
+  function pvCopy(btn){var c=btn.closest('.bx').querySelector('.cd');var v=c.textContent.trim();try{navigator.clipboard.writeText(v);}catch(e){}toast('הקוד הועתק: '+v);}
 
   function addBlock(type){
     var scroll=document.getElementById('scroll');
@@ -483,6 +488,7 @@
       unsub: TB+unsubInner()
     }[type];
     block.innerHTML=inner;
+    if(NO_VAR.indexOf(type)===-1) block.insertAdjacentHTML('beforeend',VARBTN);
     scroll.insertBefore(block,addBtn);
     var ed=block.querySelector('[contenteditable="true"]')||block.querySelector('input');
     if(ed)ed.focus();
@@ -494,6 +500,8 @@
 
   // attach toolbars to prefilled blocks
   document.querySelectorAll('#scroll .content-block .block-toolbar').forEach(function(t){t.outerHTML=makeToolbar();});
+  // attach the in-box "add variable" button to prefilled content blocks
+  document.querySelectorAll('#scroll .content-block').forEach(function(b){if(NO_VAR.indexOf(b.dataset.type)===-1)b.insertAdjacentHTML('beforeend',VARBTN);});
 
   // track last focused editable for variable insertion
   var lastEditable=null;
@@ -504,7 +512,6 @@
   VARS.forEach(function(v){var b=document.createElement('button');b.className='var-row';b.innerHTML='<span class="var-he">'+v.he+'</span><span class="var-token" dir="ltr">'+v.token+'</span>';b.addEventListener('click',function(){insertVar(v);});varsList.appendChild(b);});
   function openVars(){document.getElementById('varsPop').classList.add('open');}
   function closeVars(){document.getElementById('varsPop').classList.remove('open');}
-  document.getElementById('varsBtn').addEventListener('click',openVars);
   document.getElementById('varsClose').addEventListener('click',closeVars);
   document.getElementById('varsPop').addEventListener('click',function(e){if(e.target===this)closeVars();});
   function insertVar(v){
@@ -543,7 +550,7 @@
       else if(t==='signature'){out+='<div class="pv-sig"><div class="av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><div class="nm">'+resolveNode(b.querySelector('.block-sig-name'))+'</div><div class="ro">'+resolveNode(b.querySelector('.block-sig-role'))+'</div><div class="co">'+resolveNode(b.querySelector('.block-sig-contact'))+'</div></div></div>';}
       else if(t==='product'){var pbt=b.querySelector('.block-prod-btn');out+='<div class="pv-prod"><div class="im">'+SVG_IMG+'</div><div class="bd"><div class="ti">'+resolveNode(b.querySelector('.block-prod-title'))+'</div><div class="de">'+resolveNode(b.querySelector('.block-prod-desc'))+'</div><div class="ft"><div class="pr">'+resolveNode(b.querySelector('.block-prod-price'))+'</div><a class="bt" href="#">'+(pbt?pbt.textContent:'')+'</a></div></div></div>';}
       else if(t==='imgtext'){out+='<div class="pv-imgtext"><div class="im">'+SVG_IMG+'</div><div><div class="ti">'+resolveNode(b.querySelector('.block-imgtext-title'))+'</div><div class="tx">'+resolveNode(b.querySelector('.block-imgtext-text'))+'</div></div></div>';}
-      else if(t==='copybox'){var clb=b.querySelector('.block-copy-lbl');var ccd=b.querySelector('.block-copy-code');out+='<div class="pv-copy"><div class="lb">'+(clb?clb.textContent:'')+'</div><span class="bx">'+(ccd?ccd.textContent:'')+'</span></div>';}
+      else if(t==='copybox'){var clb=b.querySelector('.block-copy-lbl');var ccd=b.querySelector('.block-copy-code');var code=ccd?ccd.textContent:'';out+='<div class="pv-copy"><div class="lb">'+(clb?clb.textContent:'')+'</div><div class="bx"><span class="cd">'+code+'</span><button class="cpy" onclick="pvCopy(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>העתק</button></div></div>';}
       else if(t==='gallery'){var gc='';b.querySelectorAll('.block-gallery-cell').forEach(function(){gc+='<div class="cl">'+SVG_IMG+'</div>';});out+='<div class="pv-gallery">'+gc+'</div>';}
       else if(t==='countdown'){var cc='';b.querySelectorAll('.block-cd-cell').forEach(function(c){var n=c.querySelector('.block-cd-num');var l=c.querySelector('.block-cd-lab');cc+='<div class="ce"><div class="nu">'+(n?n.textContent:'')+'</div><div class="la">'+(l?l.textContent:'')+'</div></div>';});out+='<div class="pv-cd"><div class="rw">'+cc+'</div></div>';}
       else if(t==='addr'){var al='';b.querySelectorAll('.block-addr-line').forEach(function(l){al+='<div class="ln">'+l.innerHTML+'</div>';});out+='<div class="pv-addr"><div class="nm">'+resolveNode(b.querySelector('.block-addr-name'))+'</div>'+al+'</div>';}
