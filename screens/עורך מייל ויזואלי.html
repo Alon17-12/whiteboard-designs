@@ -258,21 +258,19 @@
   .bp-info{flex:1;} .bp-item-name{font-size:13.5px;font-weight:700;color:var(--text-main);} .bp-item-desc{font-size:10.5px;color:var(--text-xs);margin-top:2px;}
   .bp-arrow{color:var(--text-xs);} .bp-arrow svg{width:13px;height:13px;}
 
-  /* variables popover */
-  .vars-pop{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(26,47,94,0.45);backdrop-filter:blur(3px);}
-  [data-theme="dark"] .vars-pop{background:rgba(0,0,0,0.6);}
-  .vars-pop.open{display:flex;}
-  .vars-card{width:100%;max-width:420px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-lg);overflow:hidden;animation:pop .3s cubic-bezier(.4,.8,.3,1);}
   @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.96);}to{opacity:1;transform:none;}}
-  .vars-h{display:flex;align-items:center;gap:11px;padding:18px 20px 14px;border-bottom:1px solid var(--border);}
-  .vars-h .vi{width:38px;height:38px;border-radius:11px;background:rgba(56,196,242,0.13);color:var(--cyan);display:flex;align-items:center;justify-content:center;} .vars-h .vi svg{width:19px;height:19px;}
-  .vars-h h3{font-size:16px;font-weight:800;} .vars-h p{font-size:12px;color:var(--text-sub);margin-top:2px;}
-  .vars-h .x{margin-inline-start:auto;background:none;border:none;color:var(--text-sub);cursor:pointer;} .vars-h .x svg{width:18px;height:18px;}
-  .vars-list{padding:14px 16px;display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow-y:auto;}
-  .var-row{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--surface-2);cursor:pointer;transition:all .15s;text-align:start;}
-  .var-row:hover{border-color:var(--cyan);background:var(--surface);}
-  .var-he{font-size:13.5px;font-weight:700;color:var(--text-main);flex:1;}
-  .var-token{font-family:'SF Mono',Menlo,monospace;font-size:11px;color:var(--cyan);direction:ltr;background:var(--surface-3);padding:3px 8px;border-radius:6px;}
+  /* variables — anchored dropdown menu (no overlay, opens by the button) */
+  .vars-menu{position:fixed;z-index:140;width:262px;max-width:calc(100vw - 20px);background:var(--surface);border:1px solid var(--border-mid);border-radius:var(--r-md);box-shadow:var(--sh-lg);padding:7px;display:none;}
+  .vars-menu.open{display:block;animation:vmpop .15s ease;transform-origin:top;}
+  .vars-menu.up.open{animation:vmpopup .15s ease;transform-origin:bottom;}
+  @keyframes vmpop{from{opacity:0;transform:translateY(-6px) scale(.97);}to{opacity:1;transform:none;}}
+  @keyframes vmpopup{from{opacity:0;transform:translateY(6px) scale(.97);}to{opacity:1;transform:none;}}
+  .vars-menu-h{font-size:11px;font-weight:700;color:var(--text-xs);padding:5px 9px 7px;}
+  #varsList{display:flex;flex-direction:column;gap:2px;max-height:300px;overflow-y:auto;}
+  .var-row{display:flex;align-items:center;gap:10px;width:100%;padding:8px 9px;border:none;background:none;border-radius:var(--r-sm);cursor:pointer;transition:background .12s;text-align:start;font-family:var(--font);}
+  .var-row:hover{background:var(--surface-2);}
+  .var-he{font-size:13px;font-weight:600;color:var(--text-main);flex:1;}
+  .var-token{font-family:'SF Mono',Menlo,monospace;font-size:10px;color:var(--cyan);direction:ltr;background:var(--surface-3);padding:2px 7px;border-radius:6px;}
 
   /* toast */
   .toasts{position:fixed;bottom:22px;inset-inline-start:22px;z-index:200;display:flex;flex-direction:column;gap:10px;}
@@ -347,12 +345,10 @@
     </aside>
   </div>
 
-  <!-- variables popover -->
-  <div class="vars-pop" id="varsPop">
-    <div class="vars-card">
-      <div class="vars-h"><div class="vi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div><div><h3>משתנים זמינים</h3><p>לחיצה מכניסה את המשתנה לבלוק שנערך</p></div><button class="x" id="varsClose" aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
-      <div class="vars-list" id="varsList"></div>
-    </div>
+  <!-- variables — anchored dropdown menu -->
+  <div class="vars-menu" id="varsMenu">
+    <div class="vars-menu-h">בחר משתנה להוספה</div>
+    <div id="varsList"></div>
   </div>
 
   <!-- preview modal -->
@@ -422,7 +418,7 @@
   document.getElementById('sideHandle').addEventListener('click',toggleBlocks);
 
   var NO_VAR=['divider','spacer','image','gallery','social','countdown'];
-  var VARBTN='<button class="block-varbtn" type="button" onclick="openVars()" title="הוסף משתנה אישי לתיבה זו"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/></svg>הוסף משתנה</button>';
+  var VARBTN='<button class="block-varbtn" type="button" onclick="openVars(this)" title="הוסף משתנה אישי לתיבה זו"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2 2 2 0 0 0-2 2v5a2 2 0 0 1-2 2h-1"/></svg>הוסף משתנה</button>';
   function makeToolbar(){return '<div class="block-toolbar"><button class="block-tb-btn" title="הזז למעלה" onclick="moveBlock(this,-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg></button><button class="block-tb-btn" title="הזז למטה" onclick="moveBlock(this,1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button><button class="block-tb-btn del" title="מחק" onclick="deleteBlock(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div>';}
 
   // email-specific block markup
@@ -510,10 +506,22 @@
   // variables popover
   var varsList=document.getElementById('varsList');
   VARS.forEach(function(v){var b=document.createElement('button');b.className='var-row';b.innerHTML='<span class="var-he">'+v.he+'</span><span class="var-token" dir="ltr">'+v.token+'</span>';b.addEventListener('click',function(){insertVar(v);});varsList.appendChild(b);});
-  function openVars(){document.getElementById('varsPop').classList.add('open');}
-  function closeVars(){document.getElementById('varsPop').classList.remove('open');}
-  document.getElementById('varsClose').addEventListener('click',closeVars);
-  document.getElementById('varsPop').addEventListener('click',function(e){if(e.target===this)closeVars();});
+  function openVars(btn){
+    var m=document.getElementById('varsMenu');
+    m.classList.add('open');
+    var mw=m.offsetWidth, mh=m.offsetHeight;
+    var r=(btn&&btn.getBoundingClientRect)?btn.getBoundingClientRect():{right:window.innerWidth/2+131,left:window.innerWidth/2-131,top:120,bottom:150};
+    var left=Math.max(10,Math.min(r.right-mw,window.innerWidth-mw-10));
+    var up=false,top;
+    if(r.bottom+mh+10<=window.innerHeight){top=r.bottom+7;}
+    else if(r.top-mh-10>=0){top=r.top-mh-7;up=true;}
+    else{top=Math.max(10,window.innerHeight-mh-10);}
+    m.classList.toggle('up',up);
+    m.style.left=left+'px';m.style.top=top+'px';
+  }
+  function closeVars(){document.getElementById('varsMenu').classList.remove('open');}
+  document.addEventListener('mousedown',function(e){var m=document.getElementById('varsMenu');if(!m.classList.contains('open'))return;if(m.contains(e.target))return;if(e.target.closest&&e.target.closest('.block-varbtn'))return;closeVars();});
+  var canvasEl=document.querySelector('.canvas');if(canvasEl)canvasEl.addEventListener('scroll',closeVars);
   function insertVar(v){
     closeVars();
     var chip='<span class="e-var">'+v.he+'</span>&nbsp;';
@@ -577,7 +585,7 @@
   });
   document.getElementById('testEmail').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('testSend').click();});
 
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'){closePreview();closeTest();}});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){closePreview();closeTest();closeVars();}});
 
   document.getElementById('saveBtn').addEventListener('click',function(){toast('המייל נשמר');});
   document.getElementById('testBtn').addEventListener('click',openTest);
