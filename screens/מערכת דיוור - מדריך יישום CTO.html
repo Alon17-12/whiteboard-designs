@@ -210,6 +210,7 @@ trigger/mailing/            <span class="cm">// עבודות שליחה</span></
 
   <section id="data">
     <h2><span class="h2num">05</span>מודל הנתונים (Prisma)</h2>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.22-8.56"/><polyline points="22 4 12 14.01 9 11.01"/></svg><p><b>בינדינג אוטומטי לדאטה (חובה):</b> בלוקים שמושכים נתונים אמיתיים מתמלאים אוטומטית מהמערכת — <b>פרופיל המרצה</b> (חתימה: שם/תפקיד/אווטאר/קישורים), <b>הדר/מיתוג</b> (לוגו, צבע מותג, שם המועדון), ו<b>כרטיס קורס</b> (בחירת קורס מתוך הקטלוג → שם/תמונה/<b>מחיר</b> נטענים אוטומטית). בלוקי תמונה פותחים בורר מתוך <b>ספריית המדיה</b> של המשתמש. ה‑UI: כל אזור תמונה → <code class="inl">&lt;MediaPicker&gt;</code>; כרטיס קורס → <code class="inl">&lt;CoursePicker&gt;</code> (Server Component שמושך מ‑<code class="inl">Course</code> / <code class="inl">LecturerProfile</code> / <code class="inl">BrandKit</code>). בזמן שליחה הערכים מוקפאים ל‑snapshot כדי שמיילים ישנים לא ישתנו.</p></div>
     <pre><code><span class="kw">model</span> <span class="ty">EmailTemplate</span> {
   id        <span class="ty">String</span>  <span class="kw">@id @default</span>(cuid())
   name      <span class="ty">String</span>          <span class="cm">// שם פנימי</span>
