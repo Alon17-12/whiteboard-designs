@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>שיווק ומשפך | WHITEBOARD ניהול</title>
+<title>רשימות דיוור | WHITEBOARD ניהול</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
@@ -66,7 +66,7 @@
   .main { margin-right:230px; flex:1; display:flex; flex-direction:column; min-width:0; }
   .topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 30px; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:40; box-shadow:var(--shadow-sm); transition:background .3s; }
   .topbar-breadcrumb { display:flex; align-items:center; gap:8px; font-size:14px; }
-  .breadcrumb-link { color:var(--text-sub); cursor:pointer; transition:color .2s; }
+  .breadcrumb-link { color:var(--text-sub); cursor:pointer; transition:color .2s; text-decoration:none; }
   .breadcrumb-link:hover { color:var(--text-main); }
   .breadcrumb-sep svg { width:15px; height:15px; display:block; color:var(--text-light); }
   .breadcrumb-current { color:var(--text-main); font-weight:700; }
@@ -94,7 +94,7 @@
   .greeting-subtitle { font-size:14px; color:var(--text-sub); margin-top:6px; }
   .greeting-subtitle .dot { color:var(--text-light); margin:0 8px; }
   .header-actions { display:flex; gap:10px; align-items:center; flex-shrink:0; }
-  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:30px; font-family:var(--font-he); font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; border:none; white-space:nowrap; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:30px; font-family:var(--font-he); font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; border:none; white-space:nowrap; text-decoration:none; }
   .btn-primary { background:linear-gradient(135deg,var(--cyan),var(--cyan-dark)); color:#fff; box-shadow:0 4px 16px rgba(56,196,242,0.35); }
   [data-theme="dark"] .btn-primary { color:#0b1424; }
   .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(56,196,242,0.45); }
@@ -120,8 +120,7 @@
   .kpi-value { font-size:27px; font-weight:900; font-family:var(--font-en); color:var(--text-main); line-height:1; margin-bottom:4px; direction:ltr; text-align:right; }
   .kpi-label { font-size:13px; color:var(--text-sub); font-weight:500; }
 
-  /* ── GRID + CARDS ─────────────────────────── */
-  .dash-grid { display:grid; grid-template-columns:1.45fr 1fr; gap:20px; margin-bottom:22px; }
+  /* ── CARD ─────────────────────────── */
   .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:22px; box-shadow:var(--shadow-sm); transition:background .3s; }
   .card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:12px; }
   .card-title { font-size:16.5px; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:10px; }
@@ -133,40 +132,6 @@
   .card-link:hover { text-decoration:underline; }
   .card-link svg { width:13px; height:13px; }
 
-  /* ── BIG FUNNEL ─────────────────────────── */
-  .funnel-flow { display:flex; flex-direction:column; align-items:center; gap:0; padding-top:4px; }
-  .fstage { width:100%; border-radius:var(--r-md); padding:16px 22px; color:#fff; display:flex; align-items:center; justify-content:space-between; box-shadow:var(--shadow-sm); transition:transform .2s; cursor:pointer; }
-  .fstage:hover { transform:scale(1.015); }
-  .fstage.s1 { background:linear-gradient(135deg,#38C4F2,#5ad0f5); }
-  .fstage.s2 { background:linear-gradient(135deg,#3aa9d8,#2c4f96); width:78%; }
-  .fstage.s3 { background:linear-gradient(135deg,#7DC57A,#22c55e); width:56%; }
-  .fstage-left { display:flex; align-items:center; gap:12px; }
-  .fstage-ic { width:36px; height:36px; border-radius:10px; background:rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .fstage-ic svg { width:18px; height:18px; }
-  .fstage-label { font-size:14px; font-weight:700; }
-  .fstage-pct { font-size:11.5px; opacity:.8; font-family:var(--font-en); }
-  .fstage-val { font-size:26px; font-weight:900; font-family:var(--font-en); direction:ltr; }
-  .fconv { display:flex; align-items:center; gap:16px; padding:9px 0; }
-  .fconv-arrow { color:var(--text-light); }
-  .fconv-arrow svg { width:18px; height:18px; display:block; }
-  .fconv-tag { font-size:12px; font-weight:700; font-family:var(--font-he); display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:14px; }
-  .fconv-tag.ok { color:var(--green); background:var(--green-light); }
-  .fconv-tag.drop { color:var(--pink); background:var(--pink-light); }
-  .fconv-tag .n { font-family:var(--font-en); }
-
-  /* ── SOURCE BREAKDOWN ─────────────────────────── */
-  .src-list { display:flex; flex-direction:column; gap:16px; }
-  .src-row { display:flex; flex-direction:column; gap:7px; }
-  .src-head { display:flex; align-items:center; justify-content:space-between; }
-  .src-name { display:flex; align-items:center; gap:9px; font-size:13.5px; font-weight:700; color:var(--text-main); }
-  .src-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-  .src-meta { display:flex; align-items:center; gap:10px; }
-  .src-leads { font-family:var(--font-en); font-weight:800; color:var(--text-main); direction:ltr; font-size:14px; }
-  .src-conv { font-size:11px; font-weight:700; padding:2px 8px; border-radius:10px; background:var(--surface-2); color:var(--text-sub); font-family:var(--font-en); }
-  .src-conv.best { background:var(--green-light); color:var(--green); }
-  .src-track { height:8px; border-radius:4px; background:var(--surface-2); overflow:hidden; }
-  .src-fill { height:100%; border-radius:4px; transition:width 1.2s cubic-bezier(.4,.8,.3,1); }
-
   /* ── TABLE ─────────────────────────── */
   .table-wrap { overflow-x:auto; }
   table { width:100%; border-collapse:collapse; }
@@ -175,8 +140,6 @@
   tbody tr:last-child td { border-bottom:none; }
   tbody tr { transition:background .2s; }
   tbody tr:hover { background:var(--surface-2); }
-  .cust-cell { display:flex; align-items:center; gap:11px; }
-  .cust-av { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-en); font-weight:700; font-size:12.5px; flex-shrink:0; }
   .num { font-family:var(--font-en); font-weight:700; direction:ltr; }
   .amount { font-family:var(--font-en); font-weight:800; color:var(--text-main); direction:ltr; }
   .muted { color:var(--text-sub); font-size:12.5px; }
@@ -185,11 +148,11 @@
   .pill.viewed { background:var(--cyan-light); color:var(--cyan); }
   .pill.wait { background:var(--yellow-light); color:#b89c00; }
   [data-theme="dark"] .pill.wait { color:var(--yellow); }
+  .pill.draft { background:var(--surface-2); color:var(--text-sub); }
   .pill .pdot { width:6px; height:6px; border-radius:50%; background:currentColor; }
   .row-action { padding:7px 14px; border-radius:18px; background:var(--surface); border:1px solid var(--border); color:var(--navy); font-family:var(--font-he); font-size:12px; font-weight:700; cursor:pointer; transition:all .2s; }
   [data-theme="dark"] .row-action { color:var(--cyan); }
   .row-action:hover { background:var(--cyan); color:#fff; border-color:var(--cyan); }
-  .tag-src { font-size:11px; font-weight:600; padding:3px 9px; border-radius:12px; background:var(--surface-2); color:var(--text-sub); border:1px solid var(--border); }
 
   /* segmented filter */
   .seg { display:flex; background:var(--surface-2); border:1px solid var(--border); border-radius:20px; padding:3px; }
@@ -197,10 +160,11 @@
   .seg button.active { background:var(--cyan); color:#fff; }
   [data-theme="dark"] .seg button.active { color:var(--navy-dark); }
 
-  @media (max-width:1200px){ .kpi-strip{grid-template-columns:repeat(2,1fr);} .dash-grid{grid-template-columns:1fr;} .search-box{width:180px;} }
+  @media (max-width:1200px){ .kpi-strip{grid-template-columns:repeat(2,1fr);} .search-box{width:180px;} }
+  @media (max-width:860px){ .sidebar{transform:translateX(100%);} .main{margin-right:0;} }
 
   /* TOAST */
-  .toast-container { position:fixed; bottom:24px; left:24px; z-index:200; display:flex; flex-direction:column; gap:10px; }
+  .toast-container { position:fixed; bottom:24px; left:24px; z-index:2000; display:flex; flex-direction:column; gap:10px; }
   .toast { display:flex; align-items:center; gap:11px; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-sm); padding:13px 16px; box-shadow:var(--shadow-lg); min-width:280px; animation:toastIn .35s ease forwards; }
   @keyframes toastIn { from{opacity:0;transform:translateX(-30px);} to{opacity:1;transform:translateX(0);} }
   .toast.out { animation:toastOut .35s ease forwards; }
@@ -209,6 +173,78 @@
   .toast-icon svg { width:16px; height:16px; }
   .toast.success .toast-icon{background:var(--green-light);color:var(--green);} .toast.info .toast-icon{background:var(--cyan-light);color:var(--cyan);} .toast.warn .toast-icon{background:var(--yellow-light);color:#b89c00;}
   .toast-text { font-size:13.5px; font-weight:600; color:var(--text-main); }
+
+  /* ════════ PAGE CSS — רשימות דיוור ════════ */
+  .stack { display:flex; flex-direction:column; gap:22px; }
+
+  /* shared brand form controls */
+  .wb-input {
+    font-family:var(--font-he); font-size:13.5px; color:var(--text-main);
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--r-sm);
+    padding:9px 12px; min-height:44px; transition:border-color .2s, box-shadow .2s; outline:none;
+  }
+  .wb-input::placeholder { color:var(--text-light); }
+  .wb-input:focus { border-color:var(--cyan); box-shadow:0 0 0 3px rgba(56,196,242,0.14); }
+
+  /* ── lists grid ── */
+  .aud-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .aud-card { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-md); padding:18px; display:flex; flex-direction:column; gap:10px; transition:transform .2s, box-shadow .2s, border-color .2s; position:relative; overflow:hidden; }
+  .aud-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); border-color:var(--border-hover); }
+  .aud-card .aud-name { font-size:14.5px; font-weight:800; color:var(--text-main); }
+  .aud-card .aud-num { font-size:30px; font-weight:900; font-family:var(--font-en); color:var(--text-main); line-height:1; direction:ltr; }
+
+  /* stats row for tracking */
+  .aud-stats { display:flex; gap:8px; flex-wrap:wrap; padding:10px 0; border-top:1px dashed var(--border); border-bottom:1px dashed var(--border); }
+  .aud-stat { display:flex; flex-direction:column; gap:2px; flex:1; min-width:64px; }
+  .aud-stat .st-label { font-size:10.5px; font-weight:600; color:var(--text-light); white-space:nowrap; }
+  .aud-stat .st-val { font-size:13px; font-weight:800; color:var(--text-main); }
+
+  .aud-card .aud-actions { display:flex; gap:8px; margin-top:auto; padding-top:6px; }
+  .aud-card .aud-actions a { font-size:12.5px; font-weight:700; padding:7px 12px; border-radius:18px; cursor:pointer; transition:all .2s; text-decoration:none; }
+  .aud-card .aud-actions a.send { background:var(--cyan-light); color:var(--cyan); }
+  .aud-card .aud-actions a.send:hover { background:var(--cyan); color:#fff; }
+  [data-theme="dark"] .aud-card .aud-actions a.send:hover { color:var(--navy-dark); }
+  .aud-card .aud-actions a.edit { background:transparent; border:1px solid var(--border); color:var(--text-sub); }
+  .aud-card .aud-actions a.edit:hover { border-color:var(--border-hover); color:var(--text-main); }
+
+  /* new list (dashed) card */
+  .aud-new { align-items:center; justify-content:center; text-align:center; gap:8px; min-height:200px;
+    background:transparent; border:1.5px dashed var(--border-hover); cursor:pointer; font-family:var(--font-he); }
+  .aud-new:hover { background:var(--cyan-light); }
+  .aud-new-icon { width:44px; height:44px; border-radius:50%; background:var(--cyan-light); color:var(--cyan); display:flex; align-items:center; justify-content:center; }
+  .aud-new-icon svg { width:22px; height:22px; }
+  .aud-new-text { font-size:14.5px; font-weight:800; color:var(--cyan); }
+  .aud-new-sub { font-size:12px; color:var(--text-sub); }
+
+  /* ── manual list creator ── */
+  .creator-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:24px; }
+  .field { display:flex; flex-direction:column; gap:8px; }
+  .field-label { font-size:13px; font-weight:800; color:var(--text-main); }
+  .field-hint { font-size:12px; color:var(--text-sub); line-height:1.5; }
+  .field .wb-input { width:100%; }
+  .chips-wrap { display:flex; flex-wrap:wrap; gap:8px; }
+
+  .pick-chip { display:inline-flex; align-items:center; gap:6px; font-family:var(--font-he); font-size:12.5px; font-weight:700;
+    padding:8px 14px; min-height:36px; border-radius:20px; background:var(--surface-2); border:1px solid var(--border);
+    color:var(--text-sub); white-space:nowrap; cursor:pointer; transition:all .2s; }
+  .pick-chip:hover { border-color:var(--border-hover); color:var(--text-main); }
+  .pick-chip.on { background:var(--cyan-light); border-color:var(--cyan); color:var(--cyan); }
+  .pick-chip.on::before { content:'✓'; font-weight:900; }
+
+  .creator-count { display:flex; flex-direction:column; gap:2px; margin-top:4px;
+    background:linear-gradient(135deg,var(--cyan-light),transparent); border:1px solid var(--border-hover);
+    border-radius:var(--r-md); padding:14px 18px; }
+  .creator-count .cc-num { font-size:30px; font-weight:900; font-family:var(--font-en); color:var(--cyan); line-height:1; direction:ltr; }
+  .creator-count .cc-cap { font-size:13.5px; font-weight:700; color:var(--text-main); }
+  .creator-count .cc-note { font-size:11.5px; color:var(--text-sub); margin-top:2px; }
+
+  .creator-footer { display:flex; align-items:center; gap:12px; margin-top:22px; padding-top:20px; border-top:1px dashed var(--border); }
+
+  @media (max-width:1100px){ .aud-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:860px){
+    .aud-grid{grid-template-columns:1fr;}
+    .creator-grid{grid-template-columns:1fr;}
+  }
 </style>
 <script>try{var t=localStorage.getItem("wb-admin-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 </head>
@@ -226,8 +262,8 @@
   </div>
   <div class="nav-group-label">שיווק ומכירות</div>
   <div class="sidebar-section">
-    <a class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>שיווק ומשפך</a>
-    <a class="nav-item" href="דיוור הנהלה - דשבורד.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg>דיוור וקמפיינים</a>
+    <a class="nav-item" href="שיווק ומשפך.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>שיווק ומשפך</a>
+    <a class="nav-item active" href="דיוור הנהלה - דשבורד.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg>דיוור וקמפיינים</a>
     <a class="nav-item" href="לקוחות ומנויים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg>לקוחות ומנויים</a>
     <a class="nav-item" href="מכירות Enterprise.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v4H3zM3 10h18v11H3z"/><path d="M8 14h8"/></svg>מכירות Enterprise</a>
     <a class="nav-item" href="שותפים ועמלות.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>שותפים ועמלות</a>
@@ -249,12 +285,12 @@
 <div class="main">
   <header class="topbar">
     <div class="topbar-breadcrumb">
-      <span class="breadcrumb-link">ניהול</span>
+      <a class="breadcrumb-link" href="מרכז הבקרה - דשבורד ראשי.html">ניהול</a>
       <span class="breadcrumb-sep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></span>
-      <span class="breadcrumb-current">שיווק ומשפך</span>
+      <a class="breadcrumb-link" href="דיוור הנהלה - דשבורד.html">דיוור וקמפיינים</a><span class="breadcrumb-sep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></span><span class="breadcrumb-current">רשימות דיוור</span>
     </div>
     <div class="topbar-actions">
-      <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="חיפוש ליד…"></div>
+      <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="חיפוש…"></div>
       <button class="icon-btn" id="notifBtn" aria-label="התראות"><span class="notif-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
       <button class="icon-btn" id="themeBtn" aria-label="מצב תצוגה">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -264,87 +300,161 @@
   </header>
 
   <main class="page-body">
-    <!-- HEADER -->
+    <!-- GREETING -->
     <div class="greeting-row">
       <div class="greeting-wrap">
-        <img class="greeting-boardi" src="../BOARDi/SVG/2.svg" alt="BOARDi">
+        <img class="greeting-boardi" src="../BOARDi/SVG/12.svg" alt="BOARDi">
         <div>
-          <div class="greeting-title">שיווק ומשפך</div>
-          <div class="greeting-subtitle">מליד ללקוח משלם — כל שלב, כל מקור, וכל נוטש <span class="dot">•</span> יוני 2026</div>
+          <div class="greeting-title">רשימות דיוור</div>
+          <div class="greeting-subtitle">רשימות שאתה בונה ידנית — לשליחת קמפיינים ולמעקב נוח אחרי הביצועים</div>
         </div>
       </div>
       <div class="header-actions">
-        <button class="btn btn-secondary" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>ייצוא</button>
-        <button class="btn btn-primary" id="campaignBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>קמפיין חדש</button>
+        <a class="btn btn-primary" href="דיוור הנהלה - קמפיין.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          שלח קמפיין
+        </a>
       </div>
     </div>
 
-    <!-- KPI STRIP -->
-    <div class="kpi-strip">
-      <div class="kpi-card" style="--c:var(--yellow);--c-light:var(--yellow-light)">
-        <div class="kpi-top"><div class="kpi-icon" style="color:#b89c00"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></div><span class="kpi-delta up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>12%</span></div>
-        <div class="kpi-value">1,000</div><div class="kpi-label">לידים חדשים החודש</div>
-      </div>
-      <div class="kpi-card" style="--c:var(--cyan);--c-light:var(--cyan-light)">
-        <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><span class="kpi-delta up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>8%</span></div>
-        <div class="kpi-value">300</div><div class="kpi-label">התחילו תקופת ניסיון</div>
-      </div>
-      <div class="kpi-card" style="--c:var(--green);--c-light:var(--green-light)">
-        <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div><span class="kpi-delta up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>1.2%</span></div>
-        <div class="kpi-value">9%</div><div class="kpi-label">שיעור המרה כולל (ליד→לקוח)</div>
-      </div>
-      <div class="kpi-card" style="--c:var(--pink);--c-light:var(--pink-light)">
-        <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.6 13a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg></div><span class="kpi-delta down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>3</span></div>
-        <div class="kpi-value">47</div><div class="kpi-label">נוטשי עגלה (השבוע)</div>
-      </div>
-    </div>
+    <div class="stack">
 
-    <!-- FUNNEL + SOURCES -->
-    <div class="dash-grid">
-      <div class="card">
+      <!-- ════ 1. MAILING LISTS ════ -->
+      <section class="card">
         <div class="card-head">
-          <div><div class="card-title"><span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg></span>משפך ההמרה</div><div class="card-sub">איפה נושרים — וכמה זה שווה</div></div>
-          <div class="seg"><button class="active">החודש</button><button>רבעון</button></div>
+          <div>
+            <div class="card-title">
+              <span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              הרשימות שלי
+            </div>
+            <div class="card-sub">רשימות שבנית ידנית — לחץ "שלח קמפיין" כדי לדוור, או עקוב אחרי הביצועים</div>
+          </div>
         </div>
-        <div class="funnel-flow">
-          <div class="fstage s1"><div class="fstage-left"><div class="fstage-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg></div><div><div class="fstage-label">לידים — השאירו פרטים</div><div class="fstage-pct">100% מהמשפך</div></div></div><div class="fstage-val">1,000</div></div>
-          <div class="fconv"><span class="fconv-tag ok"><span class="n">30%</span> המשיכו</span><span class="fconv-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></span><span class="fconv-tag drop"><span class="n">700</span> נשרו</span></div>
-          <div class="fstage s2"><div class="fstage-left"><div class="fstage-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg></div><div><div class="fstage-label">התחילו תקופת ניסיון</div><div class="fstage-pct">30% מהלידים</div></div></div><div class="fstage-val">300</div></div>
-          <div class="fconv"><span class="fconv-tag ok"><span class="n">30%</span> המירו</span><span class="fconv-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></span><span class="fconv-tag drop"><span class="n">210</span> לא המירו</span></div>
-          <div class="fstage s3"><div class="fstage-left"><div class="fstage-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><div><div class="fstage-label">הומרו ללקוח משלם</div><div class="fstage-pct">9% מכלל הלידים</div></div></div><div class="fstage-val">90</div></div>
-        </div>
-      </div>
+        <div class="aud-grid">
 
-      <div class="card">
-        <div class="card-head"><div class="card-title"><span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></span>המרה לפי מקור</div></div>
-        <div class="src-list">
-          <div class="src-row"><div class="src-head"><div class="src-name"><span class="src-dot" style="background:var(--green)"></span>הפניות שותפים</div><div class="src-meta"><span class="src-leads">160</span><span class="src-conv best">14%</span></div></div><div class="src-track"><div class="src-fill" style="width:38%;background:linear-gradient(90deg,var(--green),var(--green-bright))"></div></div></div>
-          <div class="src-row"><div class="src-head"><div class="src-name"><span class="src-dot" style="background:var(--cyan)"></span>אורגני (SEO / ישיר)</div><div class="src-meta"><span class="src-leads">420</span><span class="src-conv">11%</span></div></div><div class="src-track"><div class="src-fill" style="width:100%;background:linear-gradient(90deg,var(--cyan),var(--cyan-dark))"></div></div></div>
-          <div class="src-row"><div class="src-head"><div class="src-name"><span class="src-dot" style="background:var(--navy-light)"></span>ממומן · Google</div><div class="src-meta"><span class="src-leads">240</span><span class="src-conv">8%</span></div></div><div class="src-track"><div class="src-fill" style="width:57%;background:linear-gradient(90deg,#3a5499,var(--navy))"></div></div></div>
-          <div class="src-row"><div class="src-head"><div class="src-name"><span class="src-dot" style="background:var(--pink)"></span>ממומן · Meta</div><div class="src-meta"><span class="src-leads">180</span><span class="src-conv">7%</span></div></div><div class="src-track"><div class="src-fill" style="width:43%;background:linear-gradient(90deg,var(--pink),#c03a6a)"></div></div></div>
-        </div>
-        <a class="card-link" style="margin-top:18px" data-toast="פותח דוח מקורות מלא">דוח מקורות מלא<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></a>
-      </div>
-    </div>
+          <div class="aud-card">
+            <div class="aud-name">לידים וובינר 10.2.25</div>
+            <div class="aud-num">842</div>
+            <div class="aud-stats">
+              <div class="aud-stat"><span class="st-label">קמפיין אחרון</span><span class="st-val">לפני 4 ימים</span></div>
+              <div class="aud-stat"><span class="st-label">שיעור פתיחה</span><span class="st-val">42%</span></div>
+              <div class="aud-stat"><span class="st-label">נשלחו</span><span class="st-val">820</span></div>
+            </div>
+            <div class="aud-actions"><a class="send" href="דיוור הנהלה - קמפיין.html">שלח קמפיין</a><a class="edit" data-toast="עריכת רשימה — בבנייה 🚧">ערוך</a></div>
+          </div>
 
-    <!-- CART ABANDONERS -->
-    <div class="card">
-      <div class="card-head">
-        <div><div class="card-title"><span class="card-title-icon" style="background:var(--yellow-light);color:#b89c00"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.6 13a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg></span>נוטשי עגלה — הזהב שלנו</div><div class="card-sub">הגיעו לתשלום ולא השלימו · פוטנציאל החזרה ₪18,400</div></div>
-        <button class="btn btn-primary" id="remindAll"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>שלח תזכורת לכולם</button>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>לקוח</th><th>מסלול שניסה</th><th>סכום</th><th>מקור</th><th>נטש לפני</th><th>תזכורת</th><th></th></tr></thead>
-          <tbody>
-            <tr><td><div class="cust-cell"><div class="cust-av" style="background:linear-gradient(135deg,#38C4F2,#3a5499)">מד</div>מיכל דהן</div></td><td>Pro · חודשי</td><td class="amount">₪149</td><td><span class="tag-src">אורגני</span></td><td class="muted">2 שעות</td><td><span class="pill sent"><span class="pdot"></span>נשלחה</span></td><td><button class="row-action" data-toast="פותח פרופיל · מיכל דהן">פרופיל</button></td></tr>
-            <tr><td><div class="cust-cell"><div class="cust-av" style="background:linear-gradient(135deg,#7DC57A,#4a9a47)">אש</div>אורי שלו</div></td><td>Growth · שנתי</td><td class="amount">₪1,290</td><td><span class="tag-src">Google</span></td><td class="muted">5 שעות</td><td><span class="pill wait"><span class="pdot"></span>ממתינה</span></td><td><button class="row-action" data-toast="נשלחה תזכורת · אורי שלו">שלח</button></td></tr>
-            <tr><td><div class="cust-cell"><div class="cust-av" style="background:linear-gradient(135deg,#F05680,#c03a6a)">נג</div>נועה גל</div></td><td>Pro · שנתי</td><td class="amount">₪1,490</td><td><span class="tag-src">הפניה</span></td><td class="muted">אתמול</td><td><span class="pill viewed"><span class="pdot"></span>נצפתה</span></td><td><button class="row-action" data-toast="פותח פרופיל · נועה גל">פרופיל</button></td></tr>
-            <tr><td><div class="cust-cell"><div class="cust-av" style="background:linear-gradient(135deg,#EAD654,#c2b045)">תב</div>תום בר</div></td><td>Starts · חודשי</td><td class="amount">₪59</td><td><span class="tag-src">Meta</span></td><td class="muted">אתמול</td><td><span class="pill wait"><span class="pdot"></span>ממתינה</span></td><td><button class="row-action" data-toast="נשלחה תזכורת · תום בר">שלח</button></td></tr>
-            <tr><td><div class="cust-cell"><div class="cust-av" style="background:linear-gradient(135deg,#3a5499,#253E7A)">רכ</div>רותם כץ</div></td><td>Growth · חודשי</td><td class="amount">₪99</td><td><span class="tag-src">אורגני</span></td><td class="muted">יומיים</td><td><span class="pill sent"><span class="pdot"></span>נשלחה</span></td><td><button class="row-action" data-toast="פותח פרופיל · רותם כץ">פרופיל</button></td></tr>
-          </tbody>
-        </table>
-      </div>
+          <div class="aud-card">
+            <div class="aud-name">נוטשי עגלה</div>
+            <div class="aud-num">47</div>
+            <div class="aud-stats">
+              <div class="aud-stat"><span class="st-label">קמפיין אחרון</span><span class="st-val">אתמול</span></div>
+              <div class="aud-stat"><span class="st-label">שיעור פתיחה</span><span class="st-val">51%</span></div>
+              <div class="aud-stat"><span class="st-label">נשלחו</span><span class="st-val">47</span></div>
+            </div>
+            <div class="aud-actions"><a class="send" href="דיוור הנהלה - קמפיין.html">שלח קמפיין</a><a class="edit" data-toast="עריכת רשימה — בבנייה 🚧">ערוך</a></div>
+          </div>
+
+          <div class="aud-card">
+            <div class="aud-name">לקוחות Pro</div>
+            <div class="aud-num">390</div>
+            <div class="aud-stats">
+              <div class="aud-stat"><span class="st-label">קמפיין אחרון</span><span class="st-val">לפני שבוע</span></div>
+              <div class="aud-stat"><span class="st-label">שיעור פתיחה</span><span class="st-val">38%</span></div>
+              <div class="aud-stat"><span class="st-label">נשלחו</span><span class="st-val">385</span></div>
+            </div>
+            <div class="aud-actions"><a class="send" href="דיוור הנהלה - קמפיין.html">שלח קמפיין</a><a class="edit" data-toast="עריכת רשימה — בבנייה 🚧">ערוך</a></div>
+          </div>
+
+          <div class="aud-card">
+            <div class="aud-name">לידים חמים</div>
+            <div class="aud-num">156</div>
+            <div class="aud-stats">
+              <div class="aud-stat"><span class="st-label">קמפיין אחרון</span><span class="st-val">לפני 3 ימים</span></div>
+              <div class="aud-stat"><span class="st-label">שיעור פתיחה</span><span class="st-val">47%</span></div>
+              <div class="aud-stat"><span class="st-label">נשלחו</span><span class="st-val">150</span></div>
+            </div>
+            <div class="aud-actions"><a class="send" href="דיוור הנהלה - קמפיין.html">שלח קמפיין</a><a class="edit" data-toast="עריכת רשימה — בבנייה 🚧">ערוך</a></div>
+          </div>
+
+          <div class="aud-card">
+            <div class="aud-name">ביטולי הרשמה — להחזרה</div>
+            <div class="aud-num">58</div>
+            <div class="aud-stats">
+              <div class="aud-stat"><span class="st-label">קמפיין אחרון</span><span class="st-val">לפני שבועיים</span></div>
+              <div class="aud-stat"><span class="st-label">שיעור פתיחה</span><span class="st-val">29%</span></div>
+              <div class="aud-stat"><span class="st-label">נשלחו</span><span class="st-val">58</span></div>
+            </div>
+            <div class="aud-actions"><a class="send" href="דיוור הנהלה - קמפיין.html">שלח קמפיין</a><a class="edit" data-toast="עריכת רשימה — בבנייה 🚧">ערוך</a></div>
+          </div>
+
+          <div class="aud-card">
+            <div class="aud-name">כל הלידים</div>
+            <div class="aud-num">3,420</div>
+            <div class="aud-stats">
+              <div class="aud-stat"><span class="st-label">קמפיין אחרון</span><span class="st-val">לפני 5 ימים</span></div>
+              <div class="aud-stat"><span class="st-label">שיעור פתיחה</span><span class="st-val">34%</span></div>
+              <div class="aud-stat"><span class="st-label">נשלחו</span><span class="st-val">3,380</span></div>
+            </div>
+            <div class="aud-actions"><a class="send" href="דיוור הנהלה - קמפיין.html">שלח קמפיין</a><a class="edit" data-toast="עריכת רשימה — בבנייה 🚧">ערוך</a></div>
+          </div>
+
+          <!-- new list card -->
+          <button type="button" class="aud-card aud-new" id="newListCard" aria-label="רשימה חדשה">
+            <span class="aud-new-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+            <span class="aud-new-text">רשימה חדשה</span>
+            <span class="aud-new-sub">בנה רשימה חדשה לדיוור</span>
+          </button>
+
+        </div>
+      </section>
+
+      <!-- ════ 2. MANUAL LIST CREATOR ════ -->
+      <section class="card" id="creatorCard">
+        <div class="card-head">
+          <div>
+            <div class="card-title">
+              <span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></span>
+              רשימה חדשה
+            </div>
+            <div class="card-sub">צור רשימה ידנית — תמונת מצב של אנשי קשר לשליחת קמפיין</div>
+          </div>
+        </div>
+
+        <div class="creator-grid">
+          <!-- name -->
+          <div class="field">
+            <label class="field-label" for="listName">שם הרשימה</label>
+            <input class="wb-input" id="listName" type="text" placeholder="למשל: לידים וובינר 10.2.25" aria-label="שם הרשימה">
+          </div>
+
+          <!-- contacts -->
+          <div class="field">
+            <label class="field-label">הוספת אנשי קשר לרשימה</label>
+            <div class="field-hint">בחר תויות כדי למשוך אנשי קשר מתאימים. אפשר גם להוסיף אנשי קשר ידנית מתוך ה-CRM.</div>
+            <div class="chips-wrap" id="filterChips">
+              <button type="button" class="pick-chip" data-count="842">וובינר</button>
+              <button type="button" class="pick-chip" data-count="156">חם</button>
+              <button type="button" class="pick-chip" data-count="320">קר</button>
+              <button type="button" class="pick-chip" data-count="210">VIP</button>
+              <button type="button" class="pick-chip" data-count="390">Pro</button>
+              <button type="button" class="pick-chip" data-count="47">נטישה</button>
+            </div>
+            <div class="creator-count">
+              <span class="cc-num" id="contactCount">0</span>
+              <span class="cc-cap">אנשי קשר ייכנסו לרשימה</span>
+              <span class="cc-note">רשימה ידנית — תמונת מצב, לא מתעדכנת לבד</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="creator-footer">
+          <button class="btn btn-primary" id="createListBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+            צור רשימה
+          </button>
+        </div>
+      </section>
+
     </div>
   </main>
 </div>
@@ -356,22 +466,52 @@
   themeBtn.addEventListener('click', () => {
     const html = document.documentElement;
     html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    try{localStorage.setItem("wb-admin-theme",html.getAttribute('data-theme'));}catch(e){}
   });
   function showToast(text, type='info') {
     const c = document.getElementById('toastContainer');
     const icons = { info:'<path d="M12 16v-4M12 8h.01"/><circle cx="12" cy="12" r="10"/>', success:'<path d="M20 6L9 17l-5-5"/>', warn:'<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/>' };
     const t = document.createElement('div'); t.className = 'toast ' + type;
-    t.innerHTML = '<div class="toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'+icons[type]+'</svg></div><div class="toast-text">'+text+'</div>';
+    t.innerHTML = '<div class="toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'+(icons[type]||icons.info)+'</svg></div><div class="toast-text">'+text+'</div>';
     c.appendChild(t); setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 350); }, 3000);
   }
-  document.querySelectorAll('[data-mod]').forEach(el => el.addEventListener('click', () => (el.dataset.mod==='הגדרות'?showToast('הגדרות — בבנייה 🚧','info'):window.location.href=el.dataset.mod+'.html')));
+  document.querySelectorAll('[data-mod]').forEach(el => el.addEventListener('click', () => showToast('הגדרות — בבנייה 🚧','info')));
   document.querySelectorAll('[data-toast]').forEach(el => el.addEventListener('click', (e) => { e.stopPropagation(); showToast(el.dataset.toast, 'success'); }));
   document.getElementById('notifBtn').addEventListener('click', () => showToast('יש לך 4 התראות חדשות', 'info'));
-  document.getElementById('exportBtn').addEventListener('click', () => showToast('הדוח מיוצא…', 'success'));
-  document.getElementById('campaignBtn').addEventListener('click', () => { window.location.href='דיוור הנהלה - קמפיין.html'; });
-  document.getElementById('remindAll').addEventListener('click', () => showToast('נשלחה תזכורת ל‑47 נוטשי עגלה', 'success'));
-  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => { b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); showToast('עודכן · ' + b.textContent, 'info'); }));
-  document.getElementById("themeBtn")&&document.getElementById("themeBtn").addEventListener("click",function(){try{localStorage.setItem("wb-admin-theme",document.documentElement.getAttribute("data-theme"));}catch(e){}});
+
+  /* ════════ PAGE JS — יצירת רשימה ידנית ════════ */
+  (function(){
+    const chips = document.querySelectorAll('#filterChips .pick-chip');
+    const countEl = document.getElementById('contactCount');
+
+    // Deterministic count — sum of selected chips' contacts. NO Math.random.
+    function recount(){
+      let total = 0;
+      chips.forEach(c => { if (c.classList.contains('on')) total += parseInt(c.dataset.count, 10) || 0; });
+      countEl.textContent = total.toLocaleString('en-US');
+    }
+
+    chips.forEach(c => c.addEventListener('click', () => {
+      c.classList.toggle('on');
+      c.setAttribute('aria-pressed', c.classList.contains('on') ? 'true' : 'false');
+      recount();
+    }));
+
+    const newCard = document.getElementById('newListCard');
+    const nameInput = document.getElementById('listName');
+    if (newCard) newCard.addEventListener('click', () => {
+      document.getElementById('creatorCard').scrollIntoView({ behavior:'smooth', block:'start' });
+      setTimeout(() => nameInput.focus(), 350);
+    });
+
+    document.getElementById('createListBtn').addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      if (!name) { showToast('יש להזין שם לרשימה', 'warn'); return; }
+      showToast('הרשימה נוצרה ✓', 'success');
+    });
+
+    recount();
+  })();
 </script>
 </body>
 </html>

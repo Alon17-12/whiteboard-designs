@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מערכת דיוור הנהלה — מדריך יישום CTO | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A; --navy-dark:#1a2f5e; --navy-light:#3a5499;
+    --cyan:#38C4F2; --cyan-dark:#1db0d8; --cyan-light:rgba(56,196,242,0.12);
+    --light-blue:#E3F4FD;
+    --pink:#F05680; --pink-light:rgba(240,86,128,0.12);
+    --yellow:#EAD654; --yellow-light:rgba(234,214,84,0.18);
+    --green:#7DC57A; --green-bright:#22c55e; --green-light:rgba(125,197,122,0.14);
+    --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#f5f8ff; --surface-3:#edf4ff;
+    --border:rgba(37,62,122,0.1); --border-hover:rgba(56,196,242,0.4);
+    --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.6); --text-light:rgba(37,62,122,0.4);
+    --code-bg:#0f1b33; --code-text:#dce6fb;
+    --font-he:'Heebo',sans-serif; --font-en:'Fredoka',sans-serif; --font-mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+    --r-sm:10px; --r-md:16px; --r-lg:18px;
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07); --shadow-md:0 6px 24px rgba(37,62,122,0.1);
+  }
+  [data-theme="dark"] {
+    --cyan-light:rgba(56,196,242,0.14); --light-blue:rgba(56,196,242,0.1);
+    --pink-light:rgba(240,86,128,0.18); --yellow-light:rgba(234,214,84,0.18); --green-light:rgba(125,197,122,0.18);
+    --bg:#0c1424; --surface:#131e35; --surface-2:#1a2740; --surface-3:#1e2e48;
+    --border:rgba(255,255,255,0.08); --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.6); --text-light:rgba(221,229,245,0.34);
+    --code-bg:#0a1326; --shadow-sm:0 2px 12px rgba(0,0,0,0.3); --shadow-md:0 6px 28px rgba(0,0,0,0.4);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:var(--font-he); background:var(--bg); color:var(--text-main); display:flex; transition:background .3s,color .3s; }
+  ::-webkit-scrollbar { width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:6px; }
+
+  /* SIDEBAR NAV */
+  .side { width:270px; background:var(--surface); border-left:1px solid var(--border); height:100vh; position:fixed; right:0; top:0; display:flex; flex-direction:column; padding:24px 0; overflow-y:auto; z-index:10; }
+  .side-logo { padding:0 22px 18px; border-bottom:1px solid var(--border); margin-bottom:14px; }
+  .side-logo .brand { font-family:var(--font-en); font-weight:700; font-size:19px; color:var(--navy); display:flex; align-items:center; gap:8px; }
+  [data-theme="dark"] .side-logo .brand { color:var(--cyan); }
+  .side-logo .sub { font-size:12px; color:var(--text-sub); margin-top:4px; }
+  .side-logo .logosq { width:26px; height:26px; border-radius:7px; background:linear-gradient(135deg,var(--cyan),var(--navy)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; }
+  .side a { display:block; padding:9px 22px; font-size:13.5px; color:var(--text-sub); text-decoration:none; border-right:3px solid transparent; transition:all .15s; }
+  .side a:hover { background:var(--surface-2); color:var(--text-main); }
+  .side a.active { color:var(--cyan); border-right-color:var(--cyan); background:var(--cyan-light); font-weight:700; }
+  .side a .n { font-family:var(--font-en); color:var(--text-light); margin-inline-end:8px; font-size:12px; }
+
+  .main { margin-right:270px; flex:1; max-width:1000px; padding:46px 56px 120px; }
+  .topbtns { position:fixed; top:22px; left:28px; z-index:20; display:flex; gap:10px; }
+  .tbtn { width:40px; height:40px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text-sub); box-shadow:var(--shadow-sm); }
+  .tbtn:hover { color:var(--cyan); border-color:var(--cyan); }
+  .tbtn svg { width:19px; height:19px; }
+  .icon-sun { display:none; } [data-theme="dark"] .icon-sun { display:block; } [data-theme="dark"] .icon-moon { display:none; }
+
+  .doc-head { margin-bottom:36px; }
+  .eyebrow { display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:var(--cyan); font-family:var(--font-en); letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; }
+  .eyebrow .dot { width:7px; height:7px; border-radius:50%; background:var(--cyan); }
+  h1 { font-size:38px; font-weight:900; line-height:1.12; margin-bottom:14px; }
+  .lead { font-size:16px; color:var(--text-sub); line-height:1.65; max-width:720px; }
+
+  section { margin-bottom:52px; scroll-margin-top:30px; }
+  h2 { font-size:25px; font-weight:800; margin-bottom:8px; display:flex; align-items:center; gap:12px; }
+  h2 .h2num { font-family:var(--font-en); font-size:15px; font-weight:700; color:#fff; background:var(--navy); width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  [data-theme="dark"] h2 .h2num { background:var(--cyan); color:var(--navy-dark); }
+  h3 { font-size:17px; font-weight:800; margin:24px 0 10px; }
+  .sec-sub { font-size:14.5px; color:var(--text-sub); line-height:1.65; margin-bottom:18px; max-width:740px; }
+  p { line-height:1.7; color:var(--text-main); font-size:14.5px; margin-bottom:12px; }
+  ul { margin:0 18px 14px 0; padding-inline-start:4px; }
+  li { line-height:1.75; font-size:14.5px; margin-bottom:5px; }
+  b { font-weight:700; }
+  code.inl { font-family:var(--font-mono); background:var(--surface-3); padding:2px 7px; border-radius:5px; font-size:13px; direction:ltr; display:inline-block; }
+
+  .rules { background:linear-gradient(135deg,var(--navy),#2f4d96); border-radius:var(--r-md); padding:24px 26px; color:#fff; margin:24px 0; box-shadow:var(--shadow-md); }
+  [data-theme="dark"] .rules { background:linear-gradient(135deg,#0f1b3a,#1a2a55); border:1px solid rgba(56,196,242,0.2); }
+  .rules h3 { color:#fff; margin:0 0 14px; font-size:16px; display:flex; align-items:center; gap:9px; }
+  .rules h3 svg { width:18px; height:18px; color:var(--cyan); }
+  .rules ol { margin:0; padding-inline-start:20px; }
+  .rules li { color:rgba(255,255,255,0.9); margin-bottom:8px; font-size:14px; }
+  .rules li b { color:var(--cyan); }
+
+  pre { background:var(--code-bg); border-radius:var(--r-md); padding:20px 22px; overflow-x:auto; margin:14px 0; border:1px solid rgba(255,255,255,0.06); }
+  pre code { font-family:var(--font-mono); font-size:12.8px; line-height:1.65; color:var(--code-text); direction:ltr; display:block; white-space:pre; }
+  .cm { color:#6b86b8; } .kw { color:#5ad0f5; } .ty { color:#7DC57A; } .st { color:#EAD654; } .fn { color:#ff8ba8; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:20px 22px; box-shadow:var(--shadow-sm); margin:14px 0; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .mod-card h4 { font-size:14.5px; font-weight:800; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+  .mod-card h4 .ic { width:28px; height:28px; border-radius:8px; background:var(--cyan-light); color:var(--cyan); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .mod-card h4 .ic svg { width:15px; height:15px; }
+  .mod-card p { font-size:13px; color:var(--text-sub); margin:0; }
+
+  .callout { display:flex; gap:13px; padding:16px 18px; border-radius:var(--r-md); margin:16px 0; align-items:flex-start; }
+  .callout svg { width:20px; height:20px; flex-shrink:0; margin-top:2px; }
+  .callout p { margin:0; font-size:14px; }
+  .callout.info { background:var(--cyan-light); border:1px solid rgba(56,196,242,0.25); } .callout.info svg { color:var(--cyan); }
+  .callout.warn { background:var(--yellow-light); border:1px solid rgba(234,214,84,0.4); } .callout.warn svg { color:#b89c00; }
+  [data-theme="dark"] .callout.warn svg { color:var(--yellow); }
+
+  table { width:100%; border-collapse:collapse; margin:14px 0; font-size:13.5px; }
+  th { text-align:right; font-size:11.5px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:.4px; padding:0 12px 10px; border-bottom:1px solid var(--border); }
+  td { padding:11px 12px; border-bottom:1px solid var(--border); color:var(--text-main); vertical-align:top; }
+  td code { font-family:var(--font-mono); font-size:12.5px; color:var(--cyan); direction:ltr; }
+  .pill { font-size:11px; font-weight:700; padding:3px 9px; border-radius:10px; }
+  .pill.v1 { background:var(--green-light); color:var(--green); }
+  .pill.v2 { background:var(--yellow-light); color:#b89c00; } [data-theme="dark"] .pill.v2 { color:var(--yellow); }
+  .pill.fut { background:var(--surface-2); color:var(--text-sub); border:1px solid var(--border); }
+
+  @media (max-width:1000px){ .side{display:none;} .main{margin-right:0;padding:30px 22px 80px;} .grid2,.grid3{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="topbtns">
+  <button class="tbtn" id="themeBtn" aria-label="מצב תצוגה">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+  </button>
+</div>
+
+<aside class="side">
+  <div class="side-logo">
+    <div class="brand"><span class="logosq">W</span> WHITEBOARD</div>
+    <div class="sub">מערכת דיוור הנהלה · מדריך יישום CTO</div>
+  </div>
+  <a href="#overview" class="active"><span class="n">01</span>סקירה ומבנה</a>
+  <a href="#data"><span class="n">02</span>מודל הנתונים (DB Schema)</a>
+  <a href="#tagging"><span class="n">03</span>מנוע התיוג (ידני + אוטומטי)</a>
+  <a href="#segments"><span class="n">04</span>סגמנטים וקהלים</a>
+  <a href="#campaign"><span class="n">05</span>שליחת קמפיין בודד</a>
+  <a href="#sequences"><span class="n">06</span>מנוע הסדרות (אוטומציה)</a>
+  <a href="#editor"><span class="n">07</span>שימוש חוזר בעורך + רינדור</a>
+  <a href="#screens"><span class="n">08</span>מפת מסכים וקישורים</a>
+  <a href="#roadmap"><span class="n">09</span>מפת דרכים</a>
+</aside>
+
+<main class="main">
+  <div class="doc-head">
+    <span class="eyebrow"><span class="dot"></span> WHITEBOARD · CTO GUIDE</span>
+    <h1>מערכת דיוור וקמפיינים<br>הנהלה</h1>
+    <p class="lead">זוהי מערכת הדיוור השיווקי <b>של WHITEBOARD עצמה</b> (ברמת ההנהלה) — לא מודול למרצים. מטרתה לטפח (nurture) ולהמיר את הלידים של הפלטפורמה: לסגמנט אותם לפי קבוצות ותגיות, לשלוח קמפיינים בודדים, ולבנות סדרות אוטומציה מבוססות טריגר. המערכת עושה <b>שימוש חוזר מלא בעורך המייל הויזואלי הקיים</b> (אותו עורך בלוקים של מודול הדיוור למרצים) — לא נבנה עורך שני.</p>
+  </div>
+
+  <div class="rules">
+    <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>כללי יסוד למימוש</h3>
+    <ol>
+      <li><b>שימוש חוזר מלא בעורך הבלוקים הקיים</b> (<code class="inl">עורך מייל ויזואלי</code>) — אותו מודל בלוקים, אותו registry. אסור לשכפל עורך.</li>
+      <li><b>Snapshot של משתנים בשליחה</b> — כל ערכי המשתנים (<code class="inl">{{first_name}}</code> וכו') נדגמים ברגע השליחה, לא בזמן העריכה.</li>
+      <li><b>בלוק הסרה מרשימת התפוצה חובה</b> — כל מייל חייב לכלול בלוק "הסרה מרשימת התפוצה" (חובה חוקית), מוזרק כברירת מחדל.</li>
+      <li><b>תיוג אוטומטי event-driven</b> — רץ על אירועים, לא polling.</li>
+      <li><b>סגמנט = שאילתה דינמית</b> (לא רשימה קפואה); קהל שמור יכול להיות דינמי או snapshot.</li>
+    </ol>
+  </div>
+
+  <section id="overview">
+    <h2><span class="h2num">01</span>סקירה ומבנה</h2>
+    <p class="sec-sub">המודול מאפשר להנהלה לסגמנט את הלידים לפי קבוצות חופשיות (free-form) ותגיות, לשלוח קמפיינים בודדים, ולבנות סדרות מבוססות טריגר. כל המסכים יושבים תחת <b>מרכז בקרה הנהלה → שיווק ומכירות</b>.</p>
+    <div class="grid3">
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>דשבורד דיוור</h4><p>שליחות, פתיחות, הקלקות, ביצועי קמפיינים וסדרות.</p></div>
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></span>קהלים וסגמנטים</h4><p>בניית סגמנטים דינמיים + קהלים שמורים בעלי שם.</p></div>
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></span>קמפיין בודד</h4><p>בחירת קהל → עריכת מייל → תזמון ושליחה.</p></div>
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><path d="M10 6.5h4M6.5 10v4"/></svg></span>בנאי סדרות</h4><p>טריגר + צעדים (מייל / המתנה / תנאי) באוטומציה.</p></div>
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>שיווק ומשפך <span class="pill v2" style="font-size:9.5px;padding:2px 6px">קיים</span></h4><p>מסך קיים שמוביל לפעולת "צור קמפיין" על סגמנט לידים.</p></div>
+    </div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>אינטגרציה:</b> מסך "שיווק ומשפך" הקיים אינו מוחלף — הוא מקבל פעולה חדשה "צור קמפיין" שפותחת את זרימת הקמפיין הבודד עם הסגמנט הנוכחי מוזרק כקהל.</p></div>
+  </section>
+
+  <section id="data">
+    <h2><span class="h2num">02</span>מודל הנתונים (DB Schema)</h2>
+    <p class="sec-sub">הסכמה מתבססת על <code class="inl">contacts</code> ו‑<code class="inl">tags</code> שכבר משותפים עם ה‑CRM ("כל אנשי הקשר") — מקור אמת אחד. מעליהם נבנים תיוג, סגמנטים, קהלים, קמפיינים, סדרות וטבלת השליחות.</p>
+    <pre><code><span class="cm">-- ── אנשי קשר ותגיות (משותף עם CRM — מקור אמת יחיד) ──</span>
+<span class="kw">CREATE TABLE</span> contacts (
+  id          <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  email       <span class="ty">text</span> <span class="kw">NOT NULL UNIQUE</span>,
+  first_name  <span class="ty">text</span>,
+  last_name   <span class="ty">text</span>,
+  phone       <span class="ty">text</span>,
+  source      <span class="ty">text</span>,                  <span class="cm">-- מאיפה הגיע הליד</span>
+  status      <span class="ty">text</span> <span class="kw">NOT NULL DEFAULT</span> <span class="st">'lead'</span>,  <span class="cm">-- lead | trial | customer | churned</span>
+  created_at  <span class="ty">timestamptz</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">now</span>()
+);
+
+<span class="kw">CREATE TABLE</span> tags (
+  id    <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  name  <span class="ty">text</span> <span class="kw">NOT NULL</span>,
+  kind  <span class="ty">text</span> <span class="kw">NOT NULL DEFAULT</span> <span class="st">'manual'</span>,  <span class="cm">-- 'manual' | 'auto'</span>
+  color <span class="ty">text</span>
+);
+
+<span class="kw">CREATE TABLE</span> contact_tags (
+  contact_id <span class="ty">uuid</span> <span class="kw">REFERENCES</span> contacts(id) <span class="kw">ON DELETE CASCADE</span>,
+  tag_id     <span class="ty">uuid</span> <span class="kw">REFERENCES</span> tags(id) <span class="kw">ON DELETE CASCADE</span>,
+  added_by   <span class="ty">text</span> <span class="kw">NOT NULL DEFAULT</span> <span class="st">'manual'</span>,  <span class="cm">-- 'manual' | 'rule'</span>
+  rule_id    <span class="ty">uuid</span>,                          <span class="cm">-- מי מה-tag_rules תייג</span>
+  created_at <span class="ty">timestamptz</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">now</span>(),
+  <span class="kw">PRIMARY KEY</span> (contact_id, tag_id)
+);
+
+<span class="cm">-- ── מנוע התיוג האוטומטי ──</span>
+<span class="kw">CREATE TABLE</span> tag_rules (
+  id              <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  name            <span class="ty">text</span> <span class="kw">NOT NULL</span>,
+  trigger_event   <span class="ty">text</span> <span class="kw">NOT NULL</span>,    <span class="cm">-- 'webinar_registered' → תייג 'וובינר'</span>
+  conditions_json <span class="ty">jsonb</span>,            <span class="cm">-- תנאים נוספים על האירוע/הקונטקט</span>
+  tag_id          <span class="ty">uuid</span> <span class="kw">REFERENCES</span> tags(id),
+  active          <span class="ty">boolean</span> <span class="kw">NOT NULL DEFAULT</span> <span class="kw">true</span>
+);
+
+<span class="cm">-- ── סגמנטים (הגדרת פילטר דינמי) וקהלים שמורים ──</span>
+<span class="kw">CREATE TABLE</span> segments (
+  id              <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  name            <span class="ty">text</span> <span class="kw">NOT NULL</span>,
+  logic           <span class="ty">text</span> <span class="kw">NOT NULL DEFAULT</span> <span class="st">'and'</span>,  <span class="cm">-- 'and' | 'or'</span>
+  conditions_json <span class="ty">jsonb</span> <span class="kw">NOT NULL</span>,
+  is_dynamic      <span class="ty">boolean</span> <span class="kw">NOT NULL DEFAULT</span> <span class="kw">true</span>
+);
+
+<span class="kw">CREATE TABLE</span> audiences (             <span class="cm">-- רשימות חופשיות בעלות שם: "לידים וובינר 10.2.25"</span>
+  id             <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  name           <span class="ty">text</span> <span class="kw">NOT NULL</span>,
+  type           <span class="ty">text</span> <span class="kw">NOT NULL</span>,           <span class="cm">-- 'segment' | 'static'</span>
+  segment_id     <span class="ty">uuid</span> <span class="kw">REFERENCES</span> segments(id),
+  snapshot_count <span class="ty">int</span>                     <span class="cm">-- ספירה ברגע השמירה (לקהל סטטי)</span>
+);
+
+<span class="cm">-- ── קמפיינים + מסמך המייל מהעורך הויזואלי ──</span>
+<span class="kw">CREATE TABLE</span> campaigns (
+  id           <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  name         <span class="ty">text</span> <span class="kw">NOT NULL</span>,
+  subject      <span class="ty">text</span> <span class="kw">NOT NULL</span>,
+  preheader    <span class="ty">text</span>,
+  audience_id  <span class="ty">uuid</span> <span class="kw">REFERENCES</span> audiences(id),
+  email_doc_id <span class="ty">uuid</span> <span class="kw">REFERENCES</span> email_docs(id),
+  status       <span class="ty">text</span> <span class="kw">NOT NULL DEFAULT</span> <span class="st">'draft'</span>,  <span class="cm">-- draft | scheduled | sent</span>
+  scheduled_at <span class="ty">timestamptz</span>,
+  sent_at      <span class="ty">timestamptz</span>,
+  sender_name  <span class="ty">text</span>,
+  sender_email <span class="ty">text</span>
+);
+
+<span class="kw">CREATE TABLE</span> email_docs (             <span class="cm">-- מסמך הבלוקים שיוצר העורך הויזואלי המשותף</span>
+  id          <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  blocks_json <span class="ty">jsonb</span> <span class="kw">NOT NULL</span>,          <span class="cm">-- אותו מודל בלוקים של עורך המרצים</span>
+  created_at  <span class="ty">timestamptz</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">now</span>()
+);
+
+<span class="cm">-- ── מנוע הסדרות (אוטומציה) ──</span>
+<span class="kw">CREATE TABLE</span> sequences (
+  id                  <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  name                <span class="ty">text</span> <span class="kw">NOT NULL</span>,
+  trigger_event       <span class="ty">text</span> <span class="kw">NOT NULL</span>,
+  trigger_config_json <span class="ty">jsonb</span>,
+  active              <span class="ty">boolean</span> <span class="kw">NOT NULL DEFAULT</span> <span class="kw">true</span>
+);
+
+<span class="kw">CREATE TABLE</span> sequence_steps (
+  id           <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  sequence_id  <span class="ty">uuid</span> <span class="kw">REFERENCES</span> sequences(id) <span class="kw">ON DELETE CASCADE</span>,
+  position     <span class="ty">int</span> <span class="kw">NOT NULL</span>,
+  type         <span class="ty">text</span> <span class="kw">NOT NULL</span>,           <span class="cm">-- 'email' | 'wait' | 'condition'</span>
+  email_doc_id <span class="ty">uuid</span> <span class="kw">REFERENCES</span> email_docs(id),
+  wait_amount  <span class="ty">int</span>,
+  wait_unit    <span class="ty">text</span>,                  <span class="cm">-- 'hours' | 'days'</span>
+  condition_json <span class="ty">jsonb</span>               <span class="cm">-- בדיקת open/click של צעד קודם</span>
+);
+
+<span class="kw">CREATE TABLE</span> sequence_enrollments (
+  id           <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  sequence_id  <span class="ty">uuid</span> <span class="kw">REFERENCES</span> sequences(id),
+  contact_id   <span class="ty">uuid</span> <span class="kw">REFERENCES</span> contacts(id),
+  current_step <span class="ty">int</span> <span class="kw">NOT NULL DEFAULT</span> <span class="st">0</span>,
+  status       <span class="ty">text</span> <span class="kw">NOT NULL DEFAULT</span> <span class="st">'active'</span>,  <span class="cm">-- active | done | exited</span>
+  next_run_at  <span class="ty">timestamptz</span>,
+  <span class="kw">UNIQUE</span> (sequence_id, contact_id)        <span class="cm">-- מונע הרשמה כפולה</span>
+);
+
+<span class="cm">-- ── יומן שליחות (אנליטיקה ומעקב) ──</span>
+<span class="kw">CREATE TABLE</span> email_sends (
+  id               <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  campaign_id      <span class="ty">uuid</span> <span class="kw">REFERENCES</span> campaigns(id),
+  sequence_step_id <span class="ty">uuid</span> <span class="kw">REFERENCES</span> sequence_steps(id),
+  contact_id       <span class="ty">uuid</span> <span class="kw">REFERENCES</span> contacts(id),
+  status           <span class="ty">text</span> <span class="kw">NOT NULL DEFAULT</span> <span class="st">'queued'</span>,
+  <span class="cm">-- queued | sent | opened | clicked | bounced | unsubscribed</span>
+  sent_at    <span class="ty">timestamptz</span>,
+  opened_at  <span class="ty">timestamptz</span>,
+  clicked_at <span class="ty">timestamptz</span>
+);</code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>מקור אמת יחיד:</b> <code class="inl">contacts</code> ו‑<code class="inl">tags</code> משותפים עם ה‑CRM הקיים ("כל אנשי הקשר"). מערכת הדיוור אינה מנהלת רשימת אנשי קשר נפרדת — היא קוראת וכותבת לאותן טבלאות. תיוג שנעשה ב‑CRM משפיע מיד על הסגמנטים בדיוור, ולהיפך.</p></div>
+  </section>
+
+  <section id="tagging">
+    <h2><span class="h2num">03</span>מנוע התיוג (ידני + אוטומטי)</h2>
+    <p class="sec-sub">לכל איש קשר יכולות להיות תגיות ידניות ותגיות אוטומטיות. שתי הדרכים נכתבות ל‑<code class="inl">contact_tags</code>, ונבדלות ב‑<code class="inl">added_by</code>.</p>
+    <h3>תיוג ידני</h3>
+    <p>מנהל בוחר איש קשר ב‑CRM ("כל אנשי הקשר") ומוסיף/מסיר תגיות. הרשומה נכתבת עם <code class="inl">added_by='manual'</code>. זהו תיוג נקודתי, לא חוזר.</p>
+    <h3>מנוע הכללים האוטומטי (event-driven)</h3>
+    <p>אירועים נפלטים מרחבי המערכת — <code class="inl">webinar_registered</code>, <code class="inl">cart_abandoned</code>, <code class="inl">lead_created</code>, <code class="inl">visited_n_times</code> ועוד — ונצרכים ע"י worker שמעריך את <code class="inl">tag_rules</code> הפעילים ומכניס <code class="inl">contact_tags(added_by='rule')</code>. אין polling: ה‑worker מאזין לתור אירועים.</p>
+    <pre><code><span class="cm">// worker: צריכת אירוע → הערכת כללים → תיוג</span>
+<span class="kw">async function</span> <span class="fn">onEvent</span>(evt: <span class="ty">DomainEvent</span>) {
+  <span class="kw">const</span> rules = <span class="kw">await</span> <span class="fn">getActiveRules</span>(evt.name);  <span class="cm">// trigger_event = evt.name</span>
+  <span class="kw">for</span> (<span class="kw">const</span> rule <span class="kw">of</span> rules) {
+    <span class="kw">if</span> (!<span class="fn">matches</span>(rule.conditionsJson, evt)) <span class="kw">continue</span>;
+    <span class="kw">await</span> <span class="fn">addContactTag</span>({
+      contactId: evt.contactId,
+      tagId:     rule.tagId,
+      addedBy:   <span class="st">'rule'</span>,
+      ruleId:    rule.id,
+    });  <span class="cm">// idempotent: PK (contact_id, tag_id)</span>
+  }
+}
+
+<span class="cm">// דוגמה: כלל "וובינר"</span>
+<span class="cm">// trigger_event: 'webinar_registered' → tag_id של 'וובינר'</span></code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><p><b>הבחנה ויזואלית:</b> תגיות אוטומטיות מסומנות בממשק באייקון ברק (<code class="inl">kind='auto'</code> / <code class="inl">added_by='rule'</code>) כדי להבדיל אותן מתגיות ידניות. מנהל לא יכול לערוך תגית אוטומטית ידנית — רק את הכלל שמייצר אותה.</p></div>
+  </section>
+
+  <section id="segments">
+    <h2><span class="h2num">04</span>סגמנטים וקהלים</h2>
+    <p class="sec-sub">סגמנט הוא <code class="inl">conditions_json</code> שמתקמפל ל‑SQL WHERE. הספירה החיה היא <code class="inl">SELECT count(*)</code> על אותו תנאי. קהל (audience) הוא רשימה שמורה בעלת שם, שיכולה להיות דינמית (סגמנט) או סטטית (snapshot).</p>
+    <pre><code><span class="cm">// conditions_json — מערך תנאים + לוגיקה</span>
+{
+  <span class="st">"logic"</span>: <span class="st">"and"</span>,
+  <span class="st">"conditions"</span>: [
+    { <span class="st">"field"</span>: <span class="st">"status"</span>,     <span class="st">"op"</span>: <span class="st">"eq"</span>,       <span class="st">"value"</span>: <span class="st">"lead"</span> },
+    { <span class="st">"field"</span>: <span class="st">"tag"</span>,        <span class="st">"op"</span>: <span class="st">"has"</span>,      <span class="st">"value"</span>: <span class="st">"וובינר"</span> },
+    { <span class="st">"field"</span>: <span class="st">"created_at"</span>, <span class="st">"op"</span>: <span class="st">"gte"</span>,      <span class="st">"value"</span>: <span class="st">"2026-02-01"</span> }
+  ]
+}
+
+<span class="cm">// קומפילציה → WHERE</span>
+<span class="cm">// status = 'lead' AND EXISTS (... tag 'וובינר') AND created_at >= '2026-02-01'</span>
+<span class="cm">// ספירה חיה:  SELECT count(*) FROM contacts c WHERE &lt;compiled&gt;</span></code></pre>
+    <h3>קהל סטטי מול דינמי</h3>
+    <ul>
+      <li><b>קהל סטטי (<code class="inl">type='static'</code>):</b> snapshot של מזהי אנשי הקשר ברגע השמירה. <code class="inl">snapshot_count</code> מקובע. שימושי ל"לידים וובינר 10.2.25" — רשימה קפואה שלא משתנה.</li>
+      <li><b>קהל דינמי (<code class="inl">type='segment'</code>):</b> מצביע ל‑<code class="inl">segment_id</code> ומחושב מחדש בכל פעם — כולל ברגע השליחה.</li>
+    </ul>
+    <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><p><b>שים לב:</b> קהלים דינמיים מוערכים <b>ברגע השליחה</b>, ולכן הספירה יכולה להשתנות בין רגע השמירה לרגע השליחה (אנשי קשר נכנסו/יצאו מהסגמנט). הצג למשתמש את הספירה המעודכנת לפני אישור סופי.</p></div>
+  </section>
+
+  <section id="campaign">
+    <h2><span class="h2num">05</span>שליחת קמפיין בודד (Trigger.dev)</h2>
+    <p class="sec-sub">הזרימה: בחירת קהל → בניית המייל בעורך המשותף (<code class="inl">email_docs</code>) → תזמון → עבודת <code class="inl">send-campaign</code> ב‑Trigger.dev מפענחת את הקהל, מרנדרת כל מייל עם snapshot משתנים פר‑איש‑קשר, מכניסה רשומות ל‑<code class="inl">email_sends</code> ושולחת דרך ה‑ESP (למשל Resend / SES).</p>
+    <pre><code><span class="cm">// trigger/admin/send-campaign.ts</span>
+<span class="kw">export const</span> sendCampaign = <span class="fn">task</span>({
+  id: <span class="st">"send-campaign"</span>,
+  run: <span class="kw">async</span> (payload: { campaignId: <span class="ty">string</span> }) => {
+    <span class="kw">const</span> c   = <span class="kw">await</span> <span class="fn">getCampaign</span>(payload.campaignId);
+    <span class="kw">const</span> doc = <span class="kw">await</span> <span class="fn">getEmailDoc</span>(c.emailDocId);
+    <span class="kw">const</span> contacts = <span class="kw">await</span> <span class="fn">resolveAudience</span>(c.audienceId);  <span class="cm">// דינמי → בזמן שליחה</span>
+
+    <span class="kw">for</span> (<span class="kw">const</span> batch <span class="kw">of</span> <span class="fn">chunk</span>(contacts, <span class="st">200</span>)) {       <span class="cm">// batching + rate-limit</span>
+      <span class="kw">await</span> <span class="fn">Promise</span>.<span class="fn">all</span>(batch.<span class="fn">map</span>(<span class="kw">async</span> (ct) => {
+        <span class="kw">const</span> vars = <span class="fn">snapshotVars</span>(ct);                 <span class="cm">// {{first_name}} → ערך כעת</span>
+        <span class="kw">const</span> html = <span class="fn">renderEmail</span>(doc.blocksJson, vars);  <span class="cm">// + בלוק הסרה חובה</span>
+        <span class="kw">await</span> <span class="fn">recordSend</span>({ campaignId: c.id, contactId: ct.id, status: <span class="st">"queued"</span> });
+        <span class="kw">await</span> <span class="fn">esp.send</span>({ to: ct.email, from: c.senderEmail, subject: c.subject, html });
+      }));
+      <span class="kw">await</span> <span class="fn">wait.for</span>({ seconds: <span class="st">1</span> });                  <span class="cm">// rate-limit מול ה-ESP</span>
+    }
+    <span class="kw">await</span> <span class="fn">markSent</span>(c.id);
+  },
+});</code></pre>
+    <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><p><b>חובה:</b> בלוק "הסרה מרשימת התפוצה" מוזרק לכל מייל ב‑<code class="inl">renderEmail</code> גם אם המנהל הסיר אותו בעורך. ה‑rate-limit מול ה‑ESP נשמר דרך batching + <code class="inl">wait.for</code>.</p></div>
+  </section>
+
+  <section id="sequences">
+    <h2><span class="h2num">06</span>מנוע הסדרות (אוטומציה)</h2>
+    <p class="sec-sub">סדרה = טריגר + צעדים מסודרים (<code class="inl">email</code> / <code class="inl">wait</code> / <code class="inl">condition</code>). כשהטריגר נורה עבור איש קשר → נוצר <code class="inl">sequence_enrollment</code>. עבודת Trigger.dev מתוזמנת מקדמת את ההרשמות צעד‑צעד.</p>
+    <pre><code><span class="cm">// trigger/admin/advance-enrollments.ts — רץ כל מספר דקות</span>
+<span class="kw">export const</span> advanceEnrollments = <span class="fn">schedules.task</span>({
+  id: <span class="st">"advance-enrollments"</span>,
+  cron: <span class="st">"*/5 * * * *"</span>,
+  run: <span class="kw">async</span> () => {
+    <span class="kw">const</span> due = <span class="kw">await</span> <span class="fn">getDueEnrollments</span>();  <span class="cm">// status='active' AND next_run_at &lt;= now()</span>
+    <span class="kw">for</span> (<span class="kw">const</span> e <span class="kw">of</span> due) {
+      <span class="kw">const</span> step = <span class="kw">await</span> <span class="fn">getStep</span>(e.sequenceId, e.currentStep);
+      <span class="kw">if</span> (!step) { <span class="kw">await</span> <span class="fn">finish</span>(e); <span class="kw">continue</span>; }
+
+      <span class="kw">switch</span> (step.type) {
+        <span class="kw">case</span> <span class="st">"email"</span>: {
+          <span class="kw">const</span> doc  = <span class="kw">await</span> <span class="fn">getEmailDoc</span>(step.emailDocId);
+          <span class="kw">const</span> vars = <span class="fn">snapshotVars</span>(e.contact);
+          <span class="kw">await</span> <span class="fn">esp.send</span>({ to: e.contact.email, html: <span class="fn">renderEmail</span>(doc.blocksJson, vars) });
+          <span class="kw">await</span> <span class="fn">advance</span>(e);  <span class="cm">// current_step++ ; next_run_at = now()</span>
+          <span class="kw">break</span>;
+        }
+        <span class="kw">case</span> <span class="st">"wait"</span>:
+          <span class="kw">await</span> <span class="fn">advance</span>(e, { nextRunAt: <span class="fn">addTime</span>(<span class="fn">now</span>(), step.waitAmount, step.waitUnit) });
+          <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="st">"condition"</span>: {                          <span class="cm">// בדיקת open/click של מייל קודם</span>
+          <span class="kw">const</span> ok = <span class="kw">await</span> <span class="fn">evalCondition</span>(step.conditionJson, e);
+          <span class="kw">await</span> <span class="fn">branch</span>(e, ok);  <span class="cm">// קפיצה לצעד מתאים</span>
+          <span class="kw">break</span>;
+        }
+      }
+    }
+  },
+});</code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>אידמפוטנטיות:</b> כל קידום מתבצע בטרנזקציה על <code class="inl">current_step</code> כדי שריצה כפולה לא תשלח פעמיים. ה‑<code class="inl">UNIQUE(sequence_id, contact_id)</code> מונע הרשמה כפולה של אותו איש קשר לאותה סדרה.</p></div>
+  </section>
+
+  <section id="editor">
+    <h2><span class="h2num">07</span>שימוש חוזר בעורך + רינדור</h2>
+    <p class="sec-sub">צעד התוכן של הקמפיין וכל מייל בסדרה ("ערוך מייל") פותחים את <code class="inl">עורך מייל ויזואלי.html</code> — אותו עורך בלוקים בדיוק שבו משתמשים המרצים. אין עורך שני, אין registry שני.</p>
+    <ul>
+      <li><b>registry משותף:</b> אותם סוגי בלוקים (טקסט, תמונה, כפתור CTA, מפריד, פוטר, הסרת תפוצה) — מוגדרים פעם אחת ומשמשים את שני המודולים.</li>
+      <li><b>מודל אחיד:</b> פלט העורך הוא <code class="inl">blocks_json</code> שנשמר ב‑<code class="inl">email_docs</code> — אותו מבנה למרצה ולהנהלה.</li>
+      <li><b>רינדור:</b> בעת שליחה, <code class="inl">blocks_json</code> מתורגם ל‑MJML/HTML עם styles inline; משתנים נפתרים פר‑נמען (snapshot); בלוקי הסרה וכתובת פיזית נאכפים.</li>
+    </ul>
+    <pre><code><span class="cm">// קישור "ערוך מייל" — אותו עורך של המרצים</span>
+<span class="kw">const</span> editorUrl = <span class="st">`עורך מייל ויזואלי.html?docId=</span>${emailDocId}<span class="st">`</span>;
+
+<span class="cm">// רינדור משותף: blocks_json → HTML email</span>
+<span class="kw">function</span> <span class="fn">renderEmail</span>(blocks: <span class="ty">Block</span>[], vars: <span class="ty">Vars</span>): <span class="ty">string</span> {
+  <span class="kw">const</span> withFooter = <span class="fn">ensureUnsubscribeBlock</span>(blocks);   <span class="cm">// חובה חוקית</span>
+  <span class="kw">const</span> mjml = <span class="fn">blocksToMjml</span>(withFooter, registry);
+  <span class="kw">return</span> <span class="fn">resolveVars</span>(<span class="fn">mjml2html</span>(mjml).html, vars); <span class="cm">// {{first_name}} → ערך הנמען</span>
+}</code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>Deliverability:</b> דומיין השולח חייב SPF / DKIM / DMARC מוגדרים נכון, וכל מייל יוצא עם <code class="inl">List-Unsubscribe</code> header (וגם הבלוק בגוף). זה מבטיח שהקמפיינים לא ינחתו בספאם ושומר על מוניטין הדומיין.</p></div>
+  </section>
+
+  <section id="screens">
+    <h2><span class="h2num">08</span>מפת מסכים וקישורים</h2>
+    <p class="sec-sub">5 מסכים חדשים תחת מרכז בקרה הנהלה → שיווק ומכירות, ומסך "שיווק ומשפך" הקיים שמתעדכן עם פעולת "צור קמפיין".</p>
+    <table>
+      <thead><tr><th>מסך</th><th>קובץ</th><th>תפקיד</th><th>סטטוס</th></tr></thead>
+      <tbody>
+        <tr><td>דשבורד דיוור</td><td><code>דשבורד דיוור.html</code></td><td>שליחות, פתיחות, הקלקות, ביצועי קמפיינים וסדרות.</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>קהלים וסגמנטים</td><td><code>קהלים וסגמנטים.html</code></td><td>בניית סגמנטים דינמיים + ניהול קהלים שמורים.</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>קמפיין בודד</td><td><code>קמפיין בודד.html</code></td><td>בחירת קהל → עריכת מייל → תזמון → שליחה.</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>בנאי סדרות</td><td><code>בנאי סדרות.html</code></td><td>טריגר + צעדים (מייל / המתנה / תנאי) באוטומציה.</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>עורך מייל ויזואלי</td><td><code>עורך מייל ויזואלי.html</code></td><td>העורך המשותף (קיים) — נפתח מקמפיין ומסדרות.</td><td><span class="pill v1">קיים</span></td></tr>
+        <tr><td>שיווק ומשפך (עדכון)</td><td><code>שיווק ומשפך.html</code></td><td>מסך קיים + פעולת "צור קמפיין" על סגמנט הלידים.</td><td><span class="pill v1">מאופיין</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="roadmap">
+    <h2><span class="h2num">09</span>מפת דרכים</h2>
+    <table>
+      <thead><tr><th>שלב</th><th>תכולה</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill v1">שלב 1</span></td><td>קהלים וסגמנטים · קמפיין בודד · עורך משותף · <code>email_sends</code> + מעקב פתיחות/הקלקות · בלוק הסרה חובה.</td></tr>
+        <tr><td><span class="pill v2">שלב 2</span></td><td>בנאי סדרות (טריגר/צעדים/תנאים) · מנוע התיוג האוטומטי (event-driven) · דשבורד דיוור מלא.</td></tr>
+        <tr><td><span class="pill fut">שלב 3</span></td><td>A/B testing · אנליטיקות מתקדמות · אופטימיזציית שעת שליחה (send-time optimization).</td></tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+  try{var t=localStorage.getItem("wb-mailing-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}
+  document.getElementById("themeBtn").addEventListener("click",function(){var h=document.documentElement;var n=h.getAttribute("data-theme")==="dark"?"light":"dark";h.setAttribute("data-theme",n);try{localStorage.setItem("wb-mailing-theme",n);}catch(e){}});
+  // scroll-spy
+  var links=[...document.querySelectorAll('.side a')];
+  var secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  window.addEventListener('scroll',function(){
+    var y=window.scrollY+90, idx=0;
+    secs.forEach((s,i)=>{ if(s && s.offsetTop<=y) idx=i; });
+    links.forEach(l=>l.classList.remove('active')); links[idx].classList.add('active');
+  });
+</script>
+</body>
+</html>
