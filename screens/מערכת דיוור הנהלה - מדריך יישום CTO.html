@@ -158,12 +158,13 @@
     <p class="sec-sub">המודול מאפשר להנהלה לסגמנט את הלידים לפי קבוצות חופשיות (free-form) ותגיות, לשלוח קמפיינים בודדים, ולבנות סדרות מבוססות טריגר. כל המסכים יושבים תחת <b>מרכז בקרה הנהלה → שיווק ומכירות</b>.</p>
     <div class="grid3">
       <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>דשבורד דיוור</h4><p>שליחות, פתיחות, הקלקות, ביצועי קמפיינים וסדרות.</p></div>
-      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></span>קהלים וסגמנטים</h4><p>בניית סגמנטים דינמיים + קהלים שמורים בעלי שם.</p></div>
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></span>רשימות דיוור</h4><p>רשימות ידניות (snapshot) בשמות חופשיים + יוצר רשימה לפי תויות. סגמנטים דינמיים — שלב 2.</p></div>
       <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></span>קמפיין בודד</h4><p>בחירת קהל → עריכת מייל → תזמון ושליחה.</p></div>
       <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><path d="M10 6.5h4M6.5 10v4"/></svg></span>בנאי סדרות</h4><p>טריגר + צעדים (מייל / המתנה / תנאי) באוטומציה.</p></div>
       <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>שיווק ומשפך <span class="pill v2" style="font-size:9.5px;padding:2px 6px">קיים</span></h4><p>מסך קיים שמוביל לפעולת "צור קמפיין" על סגמנט לידים.</p></div>
     </div>
-    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>אינטגרציה:</b> מסך "שיווק ומשפך" הקיים אינו מוחלף — הוא מקבל פעולה חדשה "צור קמפיין" שפותחת את זרימת הקמפיין הבודד עם הסגמנט הנוכחי מוזרק כקהל.</p></div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>אינטגרציה:</b> מסך "שיווק ומשפך" הקיים אינו מוחלף — הוא מקבל פריט ניווט "דיוור וקמפיינים" וכפתור "קמפיין חדש" שפותח את זרימת הקמפיין הבודד.</p></div>
+    <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><p><b>מה מאופיין בפועל (שלב 1) מול עתידי:</b> ה‑UID שנבנה כולל <b>רשימות דיוור ידניות (snapshot)</b>, קמפיין בודד (אשף 4 שלבים עם בחירת בלוקים/HTML), סדרות עם <b>פיצול‑תנאי לשני מסלולים</b> ואנליטיקת שלב. סעיפי <b>סגמנטים דינמיים</b> (סעיף 04) ו<b>מנוע התיוג האוטומטי</b> (סעיף 03) מתוארים כאן כ‑<b>שלב 2</b> — הם עדיין לא בממשק.</p></div>
   </section>
 
   <section id="data">
@@ -428,12 +429,12 @@
     <table>
       <thead><tr><th>מסך</th><th>קובץ</th><th>תפקיד</th><th>סטטוס</th></tr></thead>
       <tbody>
-        <tr><td>דשבורד דיוור</td><td><code>דשבורד דיוור.html</code></td><td>שליחות, פתיחות, הקלקות, ביצועי קמפיינים וסדרות.</td><td><span class="pill v1">מאופיין</span></td></tr>
-        <tr><td>קהלים וסגמנטים</td><td><code>קהלים וסגמנטים.html</code></td><td>בניית סגמנטים דינמיים + ניהול קהלים שמורים.</td><td><span class="pill v1">מאופיין</span></td></tr>
-        <tr><td>קמפיין בודד</td><td><code>קמפיין בודד.html</code></td><td>בחירת קהל → עריכת מייל → תזמון → שליחה.</td><td><span class="pill v1">מאופיין</span></td></tr>
-        <tr><td>בנאי סדרות</td><td><code>בנאי סדרות.html</code></td><td>טריגר + צעדים (מייל / המתנה / תנאי) באוטומציה.</td><td><span class="pill v1">מאופיין</span></td></tr>
-        <tr><td>עורך מייל ויזואלי</td><td><code>עורך מייל ויזואלי.html</code></td><td>העורך המשותף (קיים) — נפתח מקמפיין ומסדרות.</td><td><span class="pill v1">קיים</span></td></tr>
-        <tr><td>שיווק ומשפך (עדכון)</td><td><code>שיווק ומשפך.html</code></td><td>מסך קיים + פעולת "צור קמפיין" על סגמנט הלידים.</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>דשבורד דיוור</td><td><code>דיוור הנהלה - דשבורד.html</code></td><td>hub עם 3 טאבים (קמפיינים / סדרות מיילים / רשימות דיוור) + KPIs.</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>רשימות דיוור</td><td><code>דיוור הנהלה - קהלים.html</code></td><td>רשימות דיוור ידניות (snapshot) + יוצר רשימה לפי תויות + מעקב ביצועים.</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>קמפיין בודד</td><td><code>דיוור הנהלה - קמפיין.html</code></td><td>אשף 4 שלבים: קהל → פרטי המייל → בנייה (בלוקים/HTML) → תזמון ושליחה.</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>סדרת מיילים</td><td><code>דיוור הנהלה - סדרה.html</code></td><td>טריגר + צעדים (מייל / המתנה / תנאי‑פיצול לשני מסלולים) + אנליטיקת שלב.</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>עורך מייל ויזואלי</td><td><code>עורך מייל ויזואלי.html</code></td><td>העורך המשותף (קיים) — נפתח מהקמפיין עם <code>?from=campaign</code> וניווט אשף.</td><td><span class="pill v1">קיים</span></td></tr>
+        <tr><td>שיווק ומשפך (עדכון)</td><td><code>שיווק ומשפך.html</code></td><td>מסך קיים + פריט ניווט "דיוור וקמפיינים" + כפתור "קמפיין חדש".</td><td><span class="pill v1">מאופיין</span></td></tr>
       </tbody>
     </table>
   </section>
@@ -443,9 +444,9 @@
     <table>
       <thead><tr><th>שלב</th><th>תכולה</th></tr></thead>
       <tbody>
-        <tr><td><span class="pill v1">שלב 1</span></td><td>קהלים וסגמנטים · קמפיין בודד · עורך משותף · <code>email_sends</code> + מעקב פתיחות/הקלקות · בלוק הסרה חובה.</td></tr>
-        <tr><td><span class="pill v2">שלב 2</span></td><td>בנאי סדרות (טריגר/צעדים/תנאים) · מנוע התיוג האוטומטי (event-driven) · דשבורד דיוור מלא.</td></tr>
-        <tr><td><span class="pill fut">שלב 3</span></td><td>A/B testing · אנליטיקות מתקדמות · אופטימיזציית שעת שליחה (send-time optimization).</td></tr>
+        <tr><td><span class="pill v1">שלב 1 (מאופיין)</span></td><td><b>רשימות דיוור (snapshot ידני)</b> · קמפיין בודד (אשף 4 שלבים, בלוקים/HTML) · עורך משותף · <code>email_sends</code> + מעקב פתיחות/הקלקות · בלוק הסרה חובה.</td></tr>
+        <tr><td><span class="pill v2">שלב 2</span></td><td>סדרות מיילים (טריגר/צעדים/פיצול‑תנאי) · <b>סגמנטים דינמיים</b> (conditions_json) · מנוע התיוג האוטומטי (event-driven) · דה‑דופ נמענים בין רשימות.</td></tr>
+        <tr><td><span class="pill fut">שלב 3</span></td><td>דוח תוצאות קמפיין · A/B לשורת נושא · ייבוא CSV · זהויות שולח מאומתות · אופטימיזציית שעת שליחה · תנאי יעד/יציאה לסדרות.</td></tr>
       </tbody>
     </table>
   </section>
