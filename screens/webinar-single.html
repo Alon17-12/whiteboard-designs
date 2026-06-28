@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הורות רגועה — וובינר | WHITEBOARD ניהול</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A; --navy-dark:#1a2f5e; --navy-light:#3a5499;
+    --cyan:#38C4F2; --cyan-dark:#1db0d8; --cyan-light:rgba(56,196,242,0.12);
+    --light-blue:#E3F4FD;
+    --pink:#F05680; --pink-light:rgba(240,86,128,0.12);
+    --yellow:#EAD654; --yellow-light:rgba(234,214,84,0.18);
+    --green:#7DC57A; --green-bright:#22c55e; --green-light:rgba(125,197,122,0.14);
+    --white:#FFFFFF;
+    --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#f5f8ff; --surface-3:#edf4ff;
+    --border:rgba(37,62,122,0.1); --border-hover:rgba(56,196,242,0.4);
+    --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.55); --text-light:rgba(37,62,122,0.38);
+    --font-he:'Heebo',sans-serif; --font-en:'Fredoka',sans-serif;
+    --r-xs:6px; --r-sm:10px; --r-md:16px; --r-lg:18px; --r-xl:24px;
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:0 16px 48px rgba(37,62,122,0.14);
+    --sidebar-bg:var(--navy);
+  }
+  [data-theme="dark"] {
+    --cyan-light:rgba(56,196,242,0.14); --light-blue:rgba(56,196,242,0.1);
+    --pink-light:rgba(240,86,128,0.18); --yellow-light:rgba(234,214,84,0.18); --green-light:rgba(125,197,122,0.18);
+    --bg:#0c1424; --surface:#131e35; --surface-2:#1a2740; --surface-3:#1e2e48;
+    --border:rgba(255,255,255,0.07); --border-hover:rgba(56,196,242,0.4);
+    --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.55); --text-light:rgba(221,229,245,0.32);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3); --shadow-md:0 6px 28px rgba(0,0,0,0.4); --shadow-lg:0 16px 48px rgba(0,0,0,0.55);
+    --sidebar-bg:#0d1628;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:var(--font-he); background:var(--bg); color:var(--text-main); min-height:100vh; display:flex; transition:background .3s,color .3s; }
+  ::-webkit-scrollbar { width:9px; height:9px; }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:6px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--text-light); }
+
+  /* ── SIDEBAR ─────────────────────────── */
+  .sidebar { width:230px; background:var(--sidebar-bg); border-left:1px solid rgba(255,255,255,0.05); min-height:100vh; display:flex; flex-direction:column; padding:22px 0 16px; flex-shrink:0; position:fixed; right:0; top:0; bottom:0; z-index:50; transition:background .3s; overflow-y:auto; }
+  .sidebar::-webkit-scrollbar { width:0; }
+  .sidebar-logo { padding:4px 18px 18px; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:8px; display:flex; align-items:center; justify-content:center; }
+  .sidebar-logo img { width:148px; object-fit:contain; display:block; }
+  .admin-badge { display:flex; align-items:center; gap:7px; margin:0 14px 12px; padding:8px 12px; background:rgba(56,196,242,0.12); border:1px solid rgba(56,196,242,0.25); border-radius:var(--r-sm); }
+  .admin-badge svg { width:15px; height:15px; color:var(--cyan); flex-shrink:0; }
+  .admin-badge span { font-size:12px; font-weight:700; color:var(--cyan); font-family:var(--font-en); letter-spacing:.4px; }
+  .nav-group-label { font-size:10.5px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:rgba(255,255,255,0.32); padding:14px 20px 6px; font-family:var(--font-en); }
+  .sidebar-section { padding:0 12px; }
+  .nav-item { display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:var(--r-sm); cursor:pointer; transition:all .18s; text-decoration:none; color:rgba(255,255,255,0.65); font-size:13.5px; font-weight:500; position:relative; }
+  .nav-item:hover { background:rgba(255,255,255,0.08); color:#fff; }
+  .nav-item.active { background:rgba(56,196,242,0.2); color:var(--cyan); font-weight:700; }
+  .nav-item svg { width:18px; height:18px; flex-shrink:0; }
+  .nav-item .badge-count { margin-inline-start:auto; background:var(--pink); color:#fff; font-size:10.5px; font-weight:700; min-width:19px; height:19px; padding:0 5px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:var(--font-en); }
+  .sidebar-bottom { margin-top:auto; padding:14px 12px 0; border-top:1px solid rgba(255,255,255,0.1); }
+  .profile-mini { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--r-sm); cursor:pointer; transition:background .2s; }
+  .profile-mini:hover { background:rgba(255,255,255,0.08); }
+  .avatar-sm { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--cyan),var(--navy-light)); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#fff; flex-shrink:0; font-family:var(--font-en); }
+  .profile-mini-name { font-size:13px; font-weight:600; color:#fff; }
+  .profile-mini-role { font-size:11px; color:rgba(255,255,255,0.45); }
+
+  /* ── MAIN ─────────────────────────── */
+  .main { margin-right:230px; flex:1; display:flex; flex-direction:column; min-width:0; }
+  .topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 30px; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:40; box-shadow:var(--shadow-sm); transition:background .3s; }
+  .topbar-breadcrumb { display:flex; align-items:center; gap:8px; font-size:14px; }
+  .breadcrumb-link { color:var(--text-sub); cursor:pointer; transition:color .2s; text-decoration:none; }
+  .breadcrumb-link:hover { color:var(--text-main); }
+  .breadcrumb-sep svg { width:15px; height:15px; display:block; color:var(--text-light); }
+  .breadcrumb-current { color:var(--text-main); font-weight:700; }
+  .topbar-actions { display:flex; align-items:center; gap:12px; }
+  .search-box { display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-sm); padding:8px 14px; width:280px; transition:all .2s; }
+  .search-box:focus-within { border-color:var(--cyan); box-shadow:0 0 0 3px rgba(56,196,242,0.12); }
+  .search-box svg { width:16px; height:16px; color:var(--text-light); flex-shrink:0; }
+  .search-box input { border:none; background:transparent; outline:none; font-family:var(--font-he); font-size:13.5px; color:var(--text-main); width:100%; }
+  .search-box input::placeholder { color:var(--text-light); }
+  .icon-btn { width:40px; height:40px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; color:var(--text-sub); position:relative; }
+  .icon-btn:hover { background:var(--light-blue); color:var(--navy); border-color:var(--cyan); }
+  [data-theme="dark"] .icon-btn:hover { color:var(--cyan); border-color:var(--border-hover); }
+  .icon-btn svg { width:19px; height:19px; }
+  .icon-btn .notif-dot { position:absolute; top:8px; left:9px; width:8px; height:8px; border-radius:50%; background:var(--pink); border:2px solid var(--surface); }
+  .icon-sun { display:none; } .icon-moon { display:block; }
+  [data-theme="dark"] .icon-sun { display:block; } [data-theme="dark"] .icon-moon { display:none; }
+
+  .page-body { padding:30px; flex:1; max-width:1640px; width:100%; }
+
+  /* ── BUTTONS ── */
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:30px; font-family:var(--font-he); font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; border:none; white-space:nowrap; text-decoration:none; }
+  .btn-primary { background:linear-gradient(135deg,var(--cyan),var(--cyan-dark)); color:#fff; box-shadow:0 4px 16px rgba(56,196,242,0.35); }
+  [data-theme="dark"] .btn-primary { color:#0b1424; }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(56,196,242,0.45); }
+  .btn-secondary { background:var(--surface); color:var(--navy); border:1.5px solid var(--border); }
+  .btn-secondary:hover { background:var(--light-blue); border-color:var(--cyan); }
+  [data-theme="dark"] .btn-secondary { background:var(--surface-2); color:var(--text-main); }
+  [data-theme="dark"] .btn-secondary:hover { border-color:var(--border-hover); color:var(--cyan); }
+  .btn-danger { background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; box-shadow:0 4px 16px rgba(220,38,38,0.35); }
+  .btn-danger:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(220,38,38,0.45); }
+  .btn svg { width:16px; height:16px; }
+  .btn-sm { padding:8px 15px; font-size:13px; min-height:40px; }
+
+  /* ── CARD ── */
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:22px; box-shadow:var(--shadow-sm); transition:background .3s; }
+  .card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:12px; }
+  .card-title { font-size:16.5px; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:10px; }
+  .card-title-icon { width:30px; height:30px; border-radius:9px; background:var(--light-blue); display:flex; align-items:center; justify-content:center; color:var(--cyan); }
+  [data-theme="dark"] .card-title-icon { background:var(--cyan-light); }
+  .card-title-icon svg { width:15px; height:15px; }
+  .card-sub { font-size:12.5px; color:var(--text-sub); font-weight:500; margin-top:2px; }
+
+  .pill { font-size:11.5px; font-weight:700; padding:4px 11px; border-radius:20px; display:inline-flex; align-items:center; gap:5px; }
+  .pill.live { background:var(--pink-light); color:var(--pink); }
+  .pill.scheduled { background:var(--cyan-light); color:var(--cyan); }
+  .pill.draft { background:var(--surface-2); color:var(--text-sub); }
+  .pill.ended { background:var(--green-light); color:var(--green); }
+  .pill .pdot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .pill.live .pdot { animation:livepulse 1.4s infinite; }
+  @keyframes livepulse { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+  /* ── WEBINAR HEADER ── */
+  .web-header { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); box-shadow:var(--shadow-sm); padding:22px; margin-bottom:22px; display:flex; gap:22px; align-items:flex-start; flex-wrap:wrap; }
+  .web-cover { width:200px; height:124px; border-radius:var(--r-md); flex-shrink:0; position:relative; overflow:hidden; background:linear-gradient(135deg,#7DC57A 0%,#38C4F2 55%,#253E7A 100%); box-shadow:var(--shadow-md); display:flex; align-items:flex-end; padding:14px; }
+  .web-cover::after { content:''; position:absolute; inset:0; background:radial-gradient(circle at 80% 15%, rgba(255,255,255,0.35), transparent 45%); }
+  .web-cover .cover-tag { position:relative; z-index:1; font-size:11px; font-weight:800; color:#fff; background:rgba(0,0,0,0.22); padding:4px 11px; border-radius:14px; backdrop-filter:blur(3px); }
+  .web-cover .cover-play { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:48px; height:48px; border-radius:50%; background:rgba(255,255,255,0.92); display:flex; align-items:center; justify-content:center; z-index:1; box-shadow:0 6px 18px rgba(0,0,0,0.25); }
+  .web-cover .cover-play svg { width:20px; height:20px; color:var(--navy); margin-inline-start:2px; }
+  .web-head-main { flex:1; min-width:260px; }
+  .web-head-top { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:8px; }
+  .web-title { font-size:25px; font-weight:900; color:var(--text-main); line-height:1.15; }
+  .web-meta { display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-top:12px; }
+  .web-meta-item { display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--text-sub); font-weight:600; }
+  .web-meta-item svg { width:16px; height:16px; color:var(--cyan); flex-shrink:0; }
+  .web-meta-item b { color:var(--text-main); font-weight:700; }
+  .web-head-actions { display:flex; gap:10px; align-items:center; flex-shrink:0; flex-wrap:wrap; }
+
+  /* ── TAB BAR ── */
+  .tabbar { display:flex; gap:4px; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:6px; box-shadow:var(--shadow-sm); margin-bottom:22px; overflow-x:auto; }
+  .tabbar::-webkit-scrollbar { height:0; }
+  .tab-btn { display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border:none; background:transparent; color:var(--text-sub); font-family:var(--font-he); font-size:14px; font-weight:700; border-radius:var(--r-sm); cursor:pointer; transition:all .2s; white-space:nowrap; min-height:44px; }
+  .tab-btn svg { width:17px; height:17px; }
+  .tab-btn:hover { background:var(--surface-2); color:var(--text-main); }
+  .tab-btn.active { background:var(--cyan); color:#fff; box-shadow:0 4px 14px rgba(56,196,242,0.32); }
+  [data-theme="dark"] .tab-btn.active { color:var(--navy-dark); }
+  .tab-btn .tcount { font-family:var(--font-en); font-size:11.5px; font-weight:700; background:rgba(37,62,122,0.1); padding:1px 8px; border-radius:11px; }
+  .tab-btn.active .tcount { background:rgba(255,255,255,0.28); color:#fff; }
+  [data-theme="dark"] .tab-btn.active .tcount { background:rgba(26,47,94,0.22); color:var(--navy-dark); }
+
+  .tab-pane { display:none; }
+  .tab-pane.active { display:block; animation:fadeIn .28s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+
+  /* ════════ SETTINGS FORM (TAB 1) ════════ */
+  .settings-grid { display:grid; grid-template-columns:1.25fr 1fr; gap:22px; align-items:start; }
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .field { display:flex; flex-direction:column; gap:7px; }
+  .field.full { grid-column:1 / -1; }
+  .field label { font-size:12.5px; font-weight:700; color:var(--text-main); display:flex; align-items:center; gap:7px; }
+  .field label svg { width:14px; height:14px; color:var(--cyan); }
+  .field .hint { font-size:11.5px; color:var(--text-sub); font-weight:500; }
+  .inp { width:100%; font-family:var(--font-he); font-size:13.5px; color:var(--text-main); background:var(--surface-2); border:1.5px solid var(--border); border-radius:var(--r-sm); padding:11px 13px; outline:none; transition:all .2s; min-height:44px; }
+  .inp:focus { border-color:var(--cyan); box-shadow:0 0 0 3px rgba(56,196,242,0.12); }
+  .inp.ltr { direction:ltr; text-align:left; font-family:var(--font-en); }
+  select.inp { appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2338C4F2' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat:no-repeat; background-position:left 13px center; padding-left:38px; }
+  /* toggle */
+  .toggle-row { display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--surface-2); border:1.5px solid var(--border); border-radius:var(--r-sm); padding:12px 14px; min-height:44px; }
+  .toggle-row .tr-txt { font-size:13px; font-weight:700; color:var(--text-main); }
+  .toggle-row .tr-sub { font-size:11.5px; color:var(--text-sub); font-weight:500; margin-top:2px; }
+  .switch { position:relative; width:46px; height:26px; flex-shrink:0; }
+  .switch input { opacity:0; width:0; height:0; }
+  .switch .track { position:absolute; inset:0; border-radius:20px; background:var(--border); transition:background .2s; cursor:pointer; }
+  .switch .track::before { content:''; position:absolute; top:3px; right:3px; width:20px; height:20px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 4px rgba(0,0,0,0.25); }
+  .switch input:checked + .track { background:var(--green); }
+  .switch input:checked + .track::before { transform:translateX(-20px); }
+
+  /* auto-assets panel */
+  .asset-row { display:flex; align-items:center; gap:13px; padding:13px 14px; border-radius:var(--r-sm); background:var(--surface-2); border:1px solid var(--border); margin-bottom:10px; }
+  .asset-row:last-of-type { margin-bottom:0; }
+  .asset-ico { width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:var(--a-light,var(--cyan-light)); color:var(--a,var(--cyan)); }
+  .asset-ico svg { width:18px; height:18px; }
+  .asset-main { flex:1; min-width:0; }
+  .asset-name { font-size:13.5px; font-weight:800; color:var(--text-main); }
+  .asset-sub { font-size:11.5px; color:var(--text-sub); font-weight:500; margin-top:2px; }
+  .asset-link { display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700; color:var(--cyan); cursor:pointer; white-space:nowrap; background:none; border:none; font-family:var(--font-he); padding:8px 6px; min-height:40px; }
+  .asset-link:hover { text-decoration:underline; }
+  .asset-link svg { width:14px; height:14px; }
+  .asset-live { font-size:10.5px; font-weight:700; color:var(--green); background:var(--green-light); padding:3px 9px; border-radius:12px; font-family:var(--font-en); direction:ltr; }
+
+  .callout { margin-top:18px; background:var(--cyan-light); border:1px solid var(--border-hover); border-radius:var(--r-md); padding:18px 20px; display:flex; gap:14px; align-items:flex-start; }
+  .callout .co-ico { width:40px; height:40px; border-radius:11px; background:var(--cyan); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  [data-theme="dark"] .callout .co-ico { color:var(--navy-dark); }
+  .callout .co-ico svg { width:20px; height:20px; }
+  .callout .co-title { font-size:14px; font-weight:800; color:var(--text-main); margin-bottom:4px; }
+  .callout .co-text { font-size:13px; color:var(--text-sub); line-height:1.55; }
+  .callout .co-text b { color:var(--text-main); font-weight:700; }
+
+  /* ════════ DATA TAB (TAB 2) ════════ */
+  /* ── VIMEO-STYLE PLAYER ── */
+  .vplayer { position:relative; width:100%; aspect-ratio:16/9; border-radius:var(--r-md); overflow:hidden; background:linear-gradient(135deg,#1a2f5e 0%,#253E7A 45%,#1db0d8 130%); box-shadow:var(--shadow-md); direction:ltr; }
+  .vplayer::after { content:''; position:absolute; inset:0; background:radial-gradient(circle at 28% 22%, rgba(255,255,255,0.18), transparent 55%); pointer-events:none; }
+  .vplayer .video-tag { position:absolute; top:14px; right:14px; z-index:4; font-size:11px; font-weight:800; color:#fff; background:rgba(0,0,0,0.32); padding:5px 12px; border-radius:14px; backdrop-filter:blur(3px); display:inline-flex; align-items:center; gap:6px; direction:rtl; }
+  .vplayer .video-tag svg { width:13px; height:13px; }
+  .video-play { position:absolute; top:46%; left:50%; transform:translate(-50%,-50%); width:74px; height:74px; border-radius:50%; background:var(--cyan); display:flex; align-items:center; justify-content:center; z-index:3; box-shadow:0 8px 30px rgba(29,176,216,0.5); cursor:pointer; transition:transform .2s, box-shadow .2s; border:none; }
+  .video-play:hover { transform:translate(-50%,-50%) scale(1.07); box-shadow:0 10px 36px rgba(29,176,216,0.6); }
+  .video-play svg { width:30px; height:30px; color:#fff; margin-inline-start:4px; }
+
+  /* engagement overlay (retention) sits above the control bar */
+  .v-engage { position:absolute; left:0; right:0; bottom:46px; height:64px; z-index:2; pointer-events:none; opacity:.55; transition:opacity .25s; }
+  .vplayer:hover .v-engage { opacity:.95; }
+  .v-engage svg { width:100%; height:100%; display:block; overflow:visible; }
+  .v-engage .ret-line { fill:none; stroke:var(--cyan); stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 4px rgba(56,196,242,0.5)); }
+  .v-engage .ret-dot { position:absolute; width:9px; height:9px; border-radius:50%; background:#fff; border:2px solid var(--cyan); transform:translate(-50%,-50%); opacity:.6; cursor:pointer; pointer-events:auto; transition:opacity .2s, transform .15s; box-shadow:0 1px 4px rgba(0,0,0,0.25); }
+  .v-engage .ret-dot:hover { opacity:1; transform:translate(-50%,-50%) scale(1.25); }
+  .v-tip { position:absolute; z-index:6; transform:translate(-50%,-115%); background:var(--navy-dark); color:#fff; padding:7px 11px; border-radius:9px; font-size:11.5px; font-weight:700; white-space:nowrap; box-shadow:0 6px 18px rgba(0,0,0,0.4); pointer-events:none; opacity:0; transition:opacity .15s; direction:rtl; }
+  .v-tip::after { content:''; position:absolute; bottom:-5px; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:var(--navy-dark); border-bottom:none; }
+  .v-tip.show { opacity:1; }
+  .v-tip b { color:var(--cyan); font-family:var(--font-en); }
+
+  /* Vimeo-like bottom control bar */
+  .v-controls { position:absolute; left:0; right:0; bottom:0; z-index:5; padding:0 14px 10px; display:flex; flex-direction:column; gap:7px; background:linear-gradient(to top, rgba(10,18,36,0.72), transparent); direction:ltr; }
+  .v-scrub { position:relative; height:4px; border-radius:4px; background:rgba(255,255,255,0.25); cursor:pointer; transition:height .15s; }
+  .vplayer:hover .v-scrub { height:6px; }
+  .v-scrub-fill { position:absolute; inset:0 auto 0 0; width:47%; border-radius:4px; background:var(--cyan); }
+  .v-scrub-knob { position:absolute; top:50%; left:47%; transform:translate(-50%,-50%); width:13px; height:13px; border-radius:50%; background:#fff; box-shadow:0 1px 5px rgba(0,0,0,0.4); opacity:0; transition:opacity .15s; }
+  .vplayer:hover .v-scrub-knob { opacity:1; }
+  .v-bar { display:flex; align-items:center; gap:14px; height:30px; }
+  .v-btn { background:none; border:none; padding:0; width:30px; height:30px; min-height:30px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.78); cursor:pointer; transition:color .15s, transform .15s; }
+  .v-btn:hover { color:#fff; transform:scale(1.08); }
+  .v-btn svg { width:18px; height:18px; }
+  .v-time { font-family:var(--font-en); font-size:12px; font-weight:600; color:rgba(255,255,255,0.82); letter-spacing:.3px; }
+  .v-spacer { flex:1; }
+
+  .stat-chips { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:18px; }
+  .chip { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-sm); padding:13px 14px; position:relative; overflow:hidden; }
+  .chip::before { content:''; position:absolute; top:0; right:0; width:3px; height:100%; background:var(--c,var(--cyan)); }
+  .chip-val { font-size:22px; font-weight:900; font-family:var(--font-en); color:var(--text-main); line-height:1; direction:ltr; text-align:right; }
+  .chip-label { font-size:11.5px; color:var(--text-sub); font-weight:600; margin-top:5px; }
+
+  /* retention head (under player, axis hint only) */
+  .retention-wrap { margin-top:16px; }
+  .retention-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; flex-wrap:wrap; }
+  .retention-title { font-size:13px; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:8px; }
+  .retention-title svg { width:15px; height:15px; color:var(--cyan); }
+  .retention-legend { display:flex; align-items:center; gap:14px; font-size:11.5px; font-weight:600; color:var(--text-sub); }
+  .retention-legend span { display:inline-flex; align-items:center; gap:6px; }
+  .lg-dot { width:9px; height:9px; border-radius:50%; }
+  .ret-axis-x { display:flex; justify-content:space-between; margin-top:4px; font-size:11px; font-weight:600; color:var(--text-light); font-family:var(--font-en); direction:ltr; }
+
+  /* ── ENTRANCE ANIMATION (data tab) ── */
+  .anim-rise { opacity:0; transform:translateY(22px) scale(.985); }
+  #pane-data.run-anim .anim-rise { opacity:1; transform:translateY(0) scale(1); transition:opacity .55s cubic-bezier(.22,.61,.36,1), transform .55s cubic-bezier(.22,.61,.36,1); transition-delay:var(--d,0ms); }
+  /* retention line draws L→R, then area + dots fade up */
+  .v-engage .ret-line { stroke-dasharray:1200; stroke-dashoffset:1200; }
+  #pane-data.run-anim .v-engage .ret-line { animation:retDraw 1s ease-out .25s forwards; }
+  @keyframes retDraw { to { stroke-dashoffset:0; } }
+  #pane-data.run-anim .v-engage .ret-area { opacity:0; animation:areaFade .5s ease-out 1.1s forwards; }
+  /* dots reveal with a transition (no fill-mode) so :hover opacity still wins afterwards */
+  .v-engage .ret-dot { opacity:0; transition:opacity .35s ease-out, transform .15s; }
+  #pane-data.run-anim .v-engage .ret-dot { opacity:.6; transition-delay:1.2s; }
+  #pane-data.run-anim .v-engage .ret-dot:hover { opacity:1; transition-delay:0s; }
+  @keyframes areaFade { to { opacity:1; } }
+  @media (prefers-reduced-motion:reduce) {
+    .anim-rise, #pane-data.run-anim .anim-rise { opacity:1 !important; transform:none !important; transition:none !important; }
+    .v-engage .ret-line { stroke-dashoffset:0 !important; }
+    #pane-data.run-anim .v-engage .ret-line,
+    #pane-data.run-anim .v-engage .ret-area { animation:none !important; opacity:1 !important; }
+    .v-engage .ret-dot, #pane-data.run-anim .v-engage .ret-dot { opacity:.6 !important; transition-delay:0s !important; }
+    #pane-data.run-anim .v-engage .ret-dot:hover { opacity:1 !important; }
+  }
+
+  /* funnel — vertical narrowing */
+  .funnel { display:flex; flex-direction:column; align-items:center; padding:6px 0 2px; gap:0; }
+  .funnel-stage { position:relative; display:flex; align-items:center; justify-content:space-between; padding:16px 24px; color:#fff; transition:transform .2s; border-radius:8px; }
+  .funnel-stage:hover { transform:translateY(-2px); }
+  .funnel-stage .fs-left { display:flex; flex-direction:column; gap:3px; z-index:1; }
+  .funnel-stage .fs-name { font-size:14.5px; font-weight:800; }
+  .funnel-stage .fs-pct { font-size:12px; font-weight:600; opacity:.85; }
+  .funnel-stage .fs-count { font-size:30px; font-weight:900; font-family:var(--font-en); direction:ltr; z-index:1; line-height:1; }
+  .funnel-stage.f1 { width:100%; background:linear-gradient(135deg,var(--cyan),var(--cyan-dark)); border-radius:var(--r-md) var(--r-md) 8px 8px; }
+  .funnel-stage.f2 { width:82%; background:linear-gradient(135deg,var(--navy-light),var(--navy)); margin-top:7px; }
+  .funnel-stage.f3 { width:64%; background:linear-gradient(135deg,var(--yellow),#d4be3e); color:#5a4d00; margin-top:7px; }
+  [data-theme="dark"] .funnel-stage.f3 { color:#231e00; }
+  .funnel-stage.f4 { width:48%; background:linear-gradient(135deg,var(--pink),#d63d68); margin-top:7px; }
+  .funnel-stage.f4 .fs-count { font-size:26px; }
+  .funnel-stage.f5 { width:42%; background:linear-gradient(135deg,var(--green),#5fa85c); margin-top:7px; border-radius:8px 8px var(--r-md) var(--r-md); }
+  .funnel-drop { font-size:11px; font-weight:700; color:var(--text-sub); margin:6px 0; display:flex; align-items:center; gap:6px; }
+  .funnel-drop svg { width:13px; height:13px; }
+  .funnel-drop.warn { color:var(--pink); }
+
+  /* plans breakdown */
+  .plans-wrap { margin-top:20px; padding-top:18px; border-top:1px solid var(--border); }
+  .plans-title { font-size:13.5px; font-weight:800; color:var(--text-main); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .plans-title svg { width:15px; height:15px; color:var(--cyan); }
+  .plan-row { display:flex; align-items:center; gap:14px; margin-bottom:13px; }
+  .plan-row:last-child { margin-bottom:0; }
+  .plan-label { width:130px; flex-shrink:0; font-size:13.5px; font-weight:800; color:var(--text-main); display:flex; flex-direction:column; gap:2px; }
+  .plan-label .plan-price { font-size:11px; font-weight:600; color:var(--text-sub); font-family:var(--font-en); direction:ltr; }
+  .plan-bar-wrap { flex:1; height:30px; background:var(--surface-2); border-radius:var(--r-sm); position:relative; overflow:hidden; }
+  .plan-bar { height:100%; border-radius:var(--r-sm); display:flex; align-items:center; padding:0 12px; color:#fff; font-size:12px; font-weight:800; font-family:var(--font-en); direction:ltr; }
+  .plan-meta { flex-shrink:0; text-align:left; }
+  .plan-rev { font-size:14px; font-weight:900; font-family:var(--font-en); color:var(--text-main); direction:ltr; }
+  .plan-cnt { font-size:11px; color:var(--text-sub); font-weight:600; }
+
+  /* revenue summary block */
+  .rev-card { background:linear-gradient(135deg,var(--green) 0%,#5fa85c 100%); border:none; color:#fff; overflow:hidden; position:relative; }
+  .rev-card::after { content:''; position:absolute; top:-40px; left:-40px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.12); }
+  .rev-top { display:flex; align-items:center; gap:20px; position:relative; z-index:1; flex-wrap:wrap; }
+  .rev-big { display:flex; flex-direction:column; }
+  .rev-kicker { font-size:13px; font-weight:700; opacity:.85; }
+  .rev-val { font-size:54px; font-weight:900; font-family:var(--font-en); line-height:1; direction:ltr; letter-spacing:-1px; }
+  .rev-sub { font-size:13px; font-weight:600; opacity:.88; margin-top:8px; }
+  .rev-icon { width:64px; height:64px; border-radius:18px; background:rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-inline-start:auto; }
+  .rev-icon svg { width:32px; height:32px; }
+  .rev-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:20px; position:relative; z-index:1; }
+  .rev-stat { background:rgba(255,255,255,0.14); border-radius:var(--r-sm); padding:14px; }
+  .rev-stat-val { font-size:20px; font-weight:900; font-family:var(--font-en); line-height:1; direction:ltr; }
+  .rev-stat-label { font-size:11.5px; font-weight:600; opacity:.85; margin-top:6px; }
+
+  /* ════════ CONCLUSIONS (TAB 3) ════════ */
+  .exec-summary { display:flex; align-items:center; gap:16px; background:linear-gradient(135deg,var(--navy),var(--navy-light)); border-radius:var(--r-md); padding:20px 24px; color:#fff; box-shadow:var(--shadow-md); margin-bottom:22px; }
+  .exec-summary .es-ico { width:52px; height:52px; border-radius:15px; background:rgba(255,255,255,0.16); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .exec-summary .es-ico svg { width:26px; height:26px; }
+  .exec-summary .es-kicker { font-size:11.5px; font-weight:700; letter-spacing:.6px; opacity:.7; text-transform:uppercase; font-family:var(--font-en); }
+  .exec-summary .es-text { font-size:16px; font-weight:700; line-height:1.4; margin-top:4px; }
+  .exec-summary .es-text b { color:var(--cyan); }
+  [data-theme="dark"] .exec-summary .es-text b { color:#9be0fa; }
+
+  .insight-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+  .insight-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:20px; box-shadow:var(--shadow-sm); display:flex; gap:15px; align-items:flex-start; position:relative; overflow:hidden; transition:transform .2s,box-shadow .2s; }
+  .insight-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+  .insight-card::before { content:''; position:absolute; top:0; right:0; width:4px; height:100%; background:var(--ic,var(--cyan)); }
+  .insight-ico { width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:var(--ic-light,var(--cyan-light)); color:var(--ic,var(--cyan)); }
+  .insight-ico svg { width:22px; height:22px; }
+  .insight-body { flex:1; min-width:0; }
+  .insight-tag { display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:800; padding:3px 9px; border-radius:11px; margin-bottom:8px; background:var(--ic-light,var(--cyan-light)); color:var(--ic,var(--cyan)); }
+  .insight-find { font-size:14.5px; font-weight:800; color:var(--text-main); line-height:1.35; }
+  .insight-action { font-size:13px; color:var(--text-sub); line-height:1.5; margin-top:7px; display:flex; gap:7px; align-items:flex-start; }
+  .insight-action svg { width:14px; height:14px; color:var(--ic,var(--cyan)); flex-shrink:0; margin-top:2px; }
+  .insight-action b { color:var(--text-main); font-weight:700; }
+
+  .ic-good { --ic:var(--green); --ic-light:var(--green-light); }
+  [data-theme="dark"] .ic-good { --ic:var(--green-bright); }
+  .ic-warn { --ic:#c9a300; --ic-light:var(--yellow-light); }
+  [data-theme="dark"] .ic-warn { --ic:var(--yellow); }
+  .ic-opp { --ic:var(--cyan); --ic-light:var(--cyan-light); }
+
+  /* section label */
+  .section-label { font-size:13px; font-weight:800; color:var(--text-sub); margin:0 0 14px; display:flex; align-items:center; gap:9px; letter-spacing:.3px; }
+  .section-label svg { width:16px; height:16px; color:var(--cyan); }
+  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+  .stack-gap { display:flex; flex-direction:column; gap:22px; }
+
+  /* ── MODAL ── */
+  .overlay { position:fixed; inset:0; background:rgba(13,22,40,0.55); backdrop-filter:blur(2px); z-index:3000; display:none; align-items:center; justify-content:center; padding:24px; }
+  .overlay.open { display:flex; animation:fadeIn .2s ease; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); box-shadow:var(--shadow-lg); width:100%; max-width:460px; max-height:88vh; overflow-y:auto; animation:modalIn .25s ease; }
+  @keyframes modalIn { from{opacity:0;transform:translateY(14px) scale(.98);} to{opacity:1;transform:translateY(0) scale(1);} }
+  .modal-head { display:flex; align-items:center; gap:12px; padding:20px 22px 16px; border-bottom:1px solid var(--border); position:relative; }
+  .modal-head .mh-ico { width:38px; height:38px; border-radius:11px; background:var(--cyan-light); color:var(--cyan); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .modal-head .mh-ico svg { width:19px; height:19px; }
+  .modal-title { font-size:17px; font-weight:900; color:var(--text-main); }
+  .modal-close { position:absolute; top:16px; left:16px; width:34px; height:34px; min-height:34px; border-radius:9px; border:1px solid var(--border); background:var(--surface); color:var(--text-sub); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; }
+  .modal-close:hover { background:var(--pink-light); color:var(--pink); border-color:var(--pink); }
+  .modal-close svg { width:16px; height:16px; }
+  .modal-body { padding:20px 22px; }
+  .modal-body p { font-size:13.5px; color:var(--text-sub); line-height:1.6; }
+  .modal-foot { padding:16px 22px 20px; display:flex; gap:10px; justify-content:flex-end; }
+  .copy-link { display:flex; align-items:center; gap:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-sm); padding:11px 14px; margin-top:14px; }
+  .copy-link input { flex:1; border:none; background:transparent; outline:none; font-family:var(--font-en); font-size:13px; color:var(--text-main); direction:ltr; }
+
+  /* ── TOAST ── */
+  .toast-container { position:fixed; bottom:24px; left:24px; z-index:4000; display:flex; flex-direction:column; gap:10px; }
+  .toast { display:flex; align-items:center; gap:11px; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-sm); padding:13px 16px; box-shadow:var(--shadow-lg); min-width:280px; animation:toastIn .35s ease forwards; }
+  @keyframes toastIn { from{opacity:0;transform:translateX(-30px);} to{opacity:1;transform:translateX(0);} }
+  .toast.out { animation:toastOut .35s ease forwards; }
+  @keyframes toastOut { to{opacity:0;transform:translateX(-30px);} }
+  .toast-icon { width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .toast-icon svg { width:16px; height:16px; }
+  .toast.success .toast-icon{background:var(--green-light);color:var(--green);} .toast.info .toast-icon{background:var(--cyan-light);color:var(--cyan);} .toast.warn .toast-icon{background:var(--yellow-light);color:#b89c00;}
+  .toast-text { font-size:13.5px; font-weight:600; color:var(--text-main); }
+
+  @media (max-width:1200px){
+    .search-box{width:180px;}
+    .settings-grid{grid-template-columns:1fr;}
+    .stat-chips{grid-template-columns:repeat(2,1fr);}
+    .insight-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:960px){
+    .form-grid{grid-template-columns:1fr;}
+    .rev-stats{grid-template-columns:1fr;}
+    .rev-top{flex-direction:column;align-items:flex-start;}
+    .rev-icon{margin-inline-start:0;}
+    .plan-label{width:90px;}
+  }
+  @media (max-width:860px){ .sidebar{transform:translateX(100%);} .main{margin-right:0;} }
+</style>
+<script>try{var t=localStorage.getItem("wb-mailing-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo"><img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD"></div>
+  <div class="admin-badge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span>ADMIN · ניהול</span>
+  </div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="מרכז הבקרה - דשבורד ראשי.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>מרכז הבקרה</a>
+  </div>
+  <div class="nav-group-label">שיווק ומכירות</div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="שיווק ומשפך.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>שיווק ומשפך</a>
+    <a class="nav-item" href="דיוור הנהלה - דשבורד.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg>דיוור וקמפיינים</a>
+    <a class="nav-item active" href="וובינרים - ניהול.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>וובינרים</a>
+    <a class="nav-item" href="לקוחות ומנויים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg>לקוחות ומנויים</a>
+    <a class="nav-item" href="מכירות Enterprise.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v4H3zM3 10h18v11H3z"/><path d="M8 14h8"/></svg>מכירות Enterprise</a>
+    <a class="nav-item" href="שותפים ועמלות.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>שותפים ועמלות</a>
+  </div>
+  <div class="nav-group-label">תפעול ומוצר</div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="אנליטיקת מרצים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>אנליטיקת מרצים</a>
+    <a class="nav-item" href="מוצר ובאגים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="M12 6V3M5 9H2M22 9h-3M5 15H2M22 15h-3M7 4l-2-2M17 4l2-2"/></svg>מוצר ובאגים<span class="badge-count">7</span></a>
+    <a class="nav-item" href="שירות CS.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>שירות (CS)<span class="badge-count">12</span></a>
+  </div>
+  <div class="sidebar-bottom">
+    <a class="nav-item" data-mod="הגדרות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות</a>
+    <div class="profile-mini"><div class="avatar-sm">AG</div><div><div class="profile-mini-name">אלון גבאי</div><div class="profile-mini-role">מנכ״ל</div></div></div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <a class="breadcrumb-link" href="מרכז הבקרה - דשבורד ראשי.html">ניהול</a>
+      <span class="breadcrumb-sep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></span>
+      <a class="breadcrumb-link" href="וובינרים - ניהול.html">וובינרים</a>
+      <span class="breadcrumb-sep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></span>
+      <span class="breadcrumb-current">הורות רגועה</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="חיפוש…"></div>
+      <button class="icon-btn" id="notifBtn" aria-label="התראות"><span class="notif-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+      <button class="icon-btn" id="themeBtn" aria-label="מצב תצוגה">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="page-body">
+
+    <!-- ═══ WEBINAR HEADER ═══ -->
+    <div class="web-header">
+      <div class="web-cover">
+        <div class="cover-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+        <span class="cover-tag">וובינר חינמי</span>
+      </div>
+      <div class="web-head-main">
+        <div class="web-head-top">
+          <h1 class="web-title">הורות רגועה — וובינר חינמי</h1>
+          <span class="pill ended"><span class="pdot"></span>הסתיים</span>
+        </div>
+        <div class="web-meta">
+          <div class="web-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><b>14 ביולי 2026</b> · 20:30</div>
+          <div class="web-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>מנחה: <b>ד״ר נועה ברק</b></div>
+          <div class="web-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg>תגית: <b style="direction:ltr;font-family:var(--font-en)">webinar:horut-reguah</b></div>
+        </div>
+      </div>
+      <div class="web-head-actions">
+        <button class="btn btn-secondary btn-sm" data-mod="עריכת וובינר"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>עריכה</button>
+        <button class="btn btn-primary btn-sm" id="shareBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M16 6l-4-4-4 4M12 2v13"/></svg>שיתוף קישור הרשמה</button>
+      </div>
+    </div>
+
+    <!-- ═══ TABS ═══ -->
+    <div class="tabbar" id="tabbar">
+      <button class="tab-btn active" data-tab="setup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הקמה והגדרות</button>
+      <button class="tab-btn" data-tab="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>נתונים ודאטא</button>
+      <button class="tab-btn" data-tab="insights"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg>מסקנות <span class="tcount">5</span></button>
+    </div>
+
+    <!-- ════════ TAB 1 — SETUP & SETTINGS ════════ -->
+    <div class="tab-pane active" id="pane-setup">
+      <div class="settings-grid">
+
+        <!-- LEFT: settings -->
+        <div class="stack-gap">
+
+          <!-- BASIC SETTINGS -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">
+                <div class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
+                הגדרות הוובינר
+              </div>
+              <span class="card-sub">פרטי הבסיס</span>
+            </div>
+            <div class="form-grid">
+              <div class="field full">
+                <label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>שם הוובינר</label>
+                <input class="inp" type="text" value="הורות רגועה — וובינר חינמי">
+              </div>
+              <div class="field">
+                <label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>תאריך</label>
+                <input class="inp ltr" type="date" value="2026-07-14">
+              </div>
+              <div class="field">
+                <label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>שעה</label>
+                <input class="inp ltr" type="time" value="20:30">
+              </div>
+              <div class="field">
+                <label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>מנחה</label>
+                <input class="inp" type="text" value="ד״ר נועה ברק">
+              </div>
+              <div class="field">
+                <label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>סטטוס</label>
+                <select class="inp">
+                  <option>מתוזמן</option>
+                  <option selected>הסתיים</option>
+                  <option>טיוטה</option>
+                  <option>משודר עכשיו</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>קישור דף הנחיתה / הרשמה</label>
+                <input class="inp ltr" type="text" value="https://whiteboard.education/w/horut-reguah">
+              </div>
+              <div class="field full">
+                <label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>מקור הסרטון (Bunny CDN)</label>
+                <input class="inp ltr" type="text" value="https://vz-bunny.b-cdn.net/horut-reguah/play.m3u8" placeholder="https://…b-cdn.net/…">
+                <span class="hint">קובץ ההקלטה שמוצג בנגן בלשונית "נתונים ודאטא".</span>
+              </div>
+              <div class="field full">
+                <div class="toggle-row">
+                  <div>
+                    <div class="tr-txt">טופס הרשמה פעיל</div>
+                    <div class="tr-sub">כל נרשם מתויג אוטומטית ונכנס לרשימת הלידים.</div>
+                  </div>
+                  <label class="switch"><input type="checkbox" checked><span class="track"></span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: auto-generated assets -->
+        <div class="stack-gap">
+
+          <!-- AUTO-GENERATED ASSETS -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">
+                <div class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg></div>
+                נכסים שנוצרו אוטומטית
+              </div>
+              <span class="card-sub">קריאה בלבד</span>
+            </div>
+
+            <div class="asset-row" style="--a:var(--yellow);--a-light:var(--yellow-light)">
+              <div class="asset-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+              <div class="asset-main">
+                <div class="asset-name">רשימת לידים — הורות רגועה</div>
+                <div class="asset-sub">סגמנט דינמי · status = lead · 280 אנשים</div>
+              </div>
+              <button class="asset-link" data-asset="רשימת לידים">נהל במודול הדיוור <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+            </div>
+
+            <div class="asset-row" style="--a:var(--green);--a-light:var(--green-light)">
+              <div class="asset-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+              <div class="asset-main">
+                <div class="asset-name">רשימת לקוחות — הורות רגועה</div>
+                <div class="asset-sub">סגמנט דינמי · status = customer · 60 אנשים</div>
+              </div>
+              <button class="asset-link" data-asset="רשימת לקוחות">נהל במודול הדיוור <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+            </div>
+
+            <div class="asset-row" style="--a:var(--cyan);--a-light:var(--cyan-light)">
+              <div class="asset-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+              <div class="asset-main">
+                <div class="asset-name">חדר צ׳אט — מועדון</div>
+                <div class="asset-sub">לקוחות בלבד · 60 חברים</div>
+              </div>
+              <a class="asset-link" href="../מועדון/מועדון - וובינר (חדר).html">פתח את החדר <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3"/></svg></a>
+            </div>
+
+            <div class="asset-row" style="--a:var(--navy-light);--a-light:rgba(58,84,153,0.14)">
+              <div class="asset-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg></div>
+              <div class="asset-main">
+                <div class="asset-name">סדרת מיילים אוטומטית</div>
+                <div class="asset-sub">7 צעדים · מעוגנת למועד הוובינר</div>
+              </div>
+              <button class="asset-link" data-asset="סדרת המיילים">נהל במודול הדיוור <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+            </div>
+
+            <div class="callout">
+              <div class="co-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+              <div>
+                <div class="co-title">המסך הזה לא מנהל את מערך הדיוור</div>
+                <div class="co-text"><b>ניהול מערך הדיוור המלא</b> (קמפיינים, סדרות, עורך המייל ועריכת הרשימות) מתבצע <b>במודול הדיוור — לא כאן</b>. המסך הזה אחראי על הקמת הוובינר והצגת הנתונים בלבד.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ TAB 2 — DATA & ANALYTICS (HERO) ════════ -->
+    <div class="tab-pane" id="pane-data">
+      <div class="stack-gap">
+
+        <!-- (A) VIDEO + RETENTION -->
+        <div>
+          <div class="section-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>הצפייה בהקלטה</div>
+          <div class="card">
+            <!-- Vimeo-style player -->
+            <div class="vplayer anim-rise" id="vplayer">
+              <span class="video-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>הקלטת הוובינר · 47 דק׳</span>
+              <button class="video-play" id="videoPlay" aria-label="נגן"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+
+              <!-- engagement overlay (retention curve, shares time axis with scrubber) -->
+              <div class="v-engage" id="vEngage">
+                <svg viewBox="0 0 600 64" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="retFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stop-color="var(--cyan)" stop-opacity="0.34"/>
+                      <stop offset="1" stop-color="var(--cyan)" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- filled area -->
+                  <path class="ret-area" d="M0,8 L70,11 L150,16 L230,29 L300,32 L409,27 L470,33 L540,38 L600,42 L600,64 L0,64 Z" fill="url(#retFill)"/>
+                  <!-- clean line -->
+                  <path class="ret-line" d="M0,8 L70,11 L150,16 L230,29 L300,32 L409,27 L470,33 L540,38 L600,42"/>
+                </svg>
+                <!-- round, non-distorting key-moment dots (HTML, positioned by % so the stretching SVG can't squash them) -->
+                <span class="ret-dot" tabindex="0" role="button" style="left:0%;  top:12.5%" data-tip="פתיחה" data-pct="100%"></span>
+                <span class="ret-dot" tabindex="0" role="button" style="left:38.3%;top:45.3%" data-tip="צניחה בדקה 18" data-pct="72%"></span>
+                <span class="ret-dot" tabindex="0" role="button" style="left:68.2%;top:42.2%" data-tip="רגע ההצעה (32:00)" data-pct="64%"></span>
+                <span class="ret-dot" tabindex="0" role="button" style="left:100%; top:65.6%" data-tip="סיום" data-pct="41%"></span>
+              </div>
+              <div class="v-tip" id="vTip"></div>
+
+              <!-- bottom control bar -->
+              <div class="v-controls">
+                <div class="v-scrub" id="scrubTrack"><div class="v-scrub-fill" id="scrubFill"></div><div class="v-scrub-knob" id="scrubKnob"></div></div>
+                <div class="v-bar">
+                  <button class="v-btn" id="vToggle" aria-label="נגן/השהה"><svg id="vToggleIco" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+                  <span class="v-time" id="vTime">22:10 / 47:10</span>
+                  <button class="v-btn" aria-label="עוצמת קול"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg></button>
+                  <div class="v-spacer"></div>
+                  <button class="v-btn" aria-label="הגדרות / איכות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+                  <button class="v-btn" aria-label="מסך מלא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 stat chips -->
+            <div class="stat-chips anim-rise" style="--d:60ms">
+              <div class="chip" style="--c:var(--cyan)"><div class="chip-val">210</div><div class="chip-label">שיא צופים</div></div>
+              <div class="chip" style="--c:var(--navy-light)"><div class="chip-val">31:40</div><div class="chip-label">זמן צפייה ממוצע</div></div>
+              <div class="chip" style="--c:var(--yellow)"><div class="chip-val">64%</div><div class="chip-label">נשארו עד ההצעה</div></div>
+              <div class="chip" style="--c:var(--green)"><div class="chip-val">41%</div><div class="chip-label">% השלמה</div></div>
+            </div>
+
+            <!-- retention axis hint (curve itself lives in the player overlay above) -->
+            <div class="retention-wrap anim-rise" style="--d:120ms">
+              <div class="retention-head">
+                <div class="retention-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M3 15s4-8 9-8 9 4 9 4"/></svg>עקומת שימור — עוברים על העקומה בנגן לפירוט הרגעים</div>
+                <div class="retention-legend">
+                  <span><span class="lg-dot" style="background:var(--cyan)"></span>צופים פעילים</span>
+                </div>
+              </div>
+              <div class="ret-axis-x"><span>0′</span><span>8′</span><span>16′</span><span>24′</span><span>32′</span><span>40′</span><span>47′</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- (B) RESULTS FUNNEL -->
+        <div class="anim-rise" style="--d:200ms">
+          <div class="section-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>משפך תוצאות</div>
+          <div class="card">
+            <div class="funnel">
+              <div class="funnel-stage f1">
+                <div class="fs-left"><span class="fs-name">נרשמו</span><span class="fs-pct">100% — בסיס המשפך</span></div>
+                <span class="fs-count">340</span>
+              </div>
+              <div class="funnel-drop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>62% מהנרשמים צפו בוובינר</div>
+              <div class="funnel-stage f2">
+                <div class="fs-left"><span class="fs-name">צפו בוובינר</span><span class="fs-pct">62% מהנרשמים</span></div>
+                <span class="fs-count">210</span>
+              </div>
+              <div class="funnel-drop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>45% מהצופים נכנסו לעגלה</div>
+              <div class="funnel-stage f3">
+                <div class="fs-left"><span class="fs-name">נכנסו לעגלה</span><span class="fs-pct">45% מהצופים</span></div>
+                <span class="fs-count">95</span>
+              </div>
+              <div class="funnel-drop warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>37% נטשו את העגלה</div>
+              <div class="funnel-stage f4">
+                <div class="fs-left"><span class="fs-name">נטשו עגלה</span><span class="fs-pct">37% מהעגלות</span></div>
+                <span class="fs-count">35</span>
+              </div>
+              <div class="funnel-drop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>63% מהעגלות הושלמו לרכישה</div>
+              <div class="funnel-stage f5">
+                <div class="fs-left"><span class="fs-name">הפכו ללקוחות</span><span class="fs-pct">63% מהעגלות · 17.6% מהנרשמים</span></div>
+                <span class="fs-count">60</span>
+              </div>
+            </div>
+
+            <!-- plans breakdown -->
+            <div class="plans-wrap">
+              <div class="plans-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h6"/></svg>לקוחות לפי מסלול</div>
+              <div class="plan-row">
+                <div class="plan-label">מורה<span class="plan-price">₪149/חודש</span></div>
+                <div class="plan-bar-wrap"><div class="plan-bar" style="width:100%;background:linear-gradient(90deg,var(--cyan),var(--cyan-dark))">30</div></div>
+                <div class="plan-meta"><div class="plan-rev">₪4,470</div><div class="plan-cnt">30 לקוחות · MRR</div></div>
+              </div>
+              <div class="plan-row">
+                <div class="plan-label">מחנך<span class="plan-price">₪199/חודש</span></div>
+                <div class="plan-bar-wrap"><div class="plan-bar" style="width:73%;background:linear-gradient(90deg,var(--green),#5fa85c)">22</div></div>
+                <div class="plan-meta"><div class="plan-rev">₪4,378</div><div class="plan-cnt">22 לקוחות · MRR</div></div>
+              </div>
+              <div class="plan-row">
+                <div class="plan-label">מנהיג<span class="plan-price">₪399/חודש</span></div>
+                <div class="plan-bar-wrap"><div class="plan-bar" style="width:27%;background:linear-gradient(90deg,var(--navy-light),var(--navy))">8</div></div>
+                <div class="plan-meta"><div class="plan-rev">₪3,192</div><div class="plan-cnt">8 לקוחות · MRR</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- (C) REVENUE SUMMARY -->
+        <div class="anim-rise" style="--d:280ms">
+          <div class="section-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>סיכום הכנסה</div>
+          <div class="card rev-card">
+            <div class="rev-top">
+              <div class="rev-big">
+                <span class="rev-kicker">הכנסה חודשית מתחדשת (MRR)</span>
+                <span class="rev-val">₪12,040</span>
+                <span class="rev-sub">60 לקוחות חדשים מהוובינר · הכנסה ממוצעת ללקוח ₪201</span>
+              </div>
+              <div class="rev-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            </div>
+            <div class="rev-stats">
+              <div class="rev-stat"><div class="rev-stat-val">₪120,400</div><div class="rev-stat-label">שווי שנתי משוער (חיוב שנתי — שלם 10 קבל 12)</div></div>
+              <div class="rev-stat"><div class="rev-stat-val">60</div><div class="rev-stat-label">לקוחות חדשים</div></div>
+              <div class="rev-stat"><div class="rev-stat-val">₪201</div><div class="rev-stat-label">הכנסה ממוצעת ללקוח</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════ TAB 3 — CONCLUSIONS ════════ -->
+    <div class="tab-pane" id="pane-insights">
+
+      <!-- exec summary -->
+      <div class="exec-summary">
+        <div class="es-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg></div>
+        <div>
+          <div class="es-kicker">סיכום מנהלים</div>
+          <div class="es-text">וובינר <b>מוצלח</b> — 60 לקוחות חדשים, MRR ₪12,040 ושיעור המרה 17.6%. עיקר הפוטנציאל הלא-ממומש: <b>נטישת עגלה גבוהה</b> וצניחת צפייה בדקה 18.</div>
+        </div>
+      </div>
+
+      <div class="insight-grid">
+
+        <!-- good: offer timing -->
+        <div class="insight-card ic-good">
+          <div class="insight-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <div class="insight-body">
+            <span class="insight-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>תזמון מצוין</span>
+            <div class="insight-find">64% נשארו עד רגע ההצעה</div>
+            <div class="insight-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span>תזמון ההצעה טוב — <b>שמרו על אותו מבנה</b> בוובינרים הבאים.</span></div>
+          </div>
+        </div>
+
+        <!-- opportunity: plan upgrade -->
+        <div class="insight-card ic-opp">
+          <div class="insight-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 15 9l7 .5-5.5 4.5L18 21l-6-3.5L6 21l1.5-7L2 9.5 9 9z"/></svg></div>
+          <div class="insight-body">
+            <span class="insight-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg>הזדמנות שדרוג</span>
+            <div class="insight-find">רוב הלקוחות (30) בחרו במסלול מורה (₪149)</div>
+            <div class="insight-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span><b>שקלו הצעת שדרוג למחנך/מנהיג</b> — שדרוג של 10 לקוחות בלבד מ-מורה ל-מחנך מוסיף ~₪500 ל-MRR.</span></div>
+          </div>
+        </div>
+
+        <!-- warning: minute 18 drop -->
+        <div class="insight-card ic-warn">
+          <div class="insight-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></div>
+          <div class="insight-body">
+            <span class="insight-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>צריך תיקון</span>
+            <div class="insight-find">צניחת צפייה בדקה 18</div>
+            <div class="insight-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span>נקודת הנטישה הגדולה בפתיחה — <b>שקלו לקצר את ההקדמה</b> ולהגיע לערך מהר יותר.</span></div>
+          </div>
+        </div>
+
+        <!-- warning: cart abandon -->
+        <div class="insight-card ic-warn">
+          <div class="insight-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>
+          <div class="insight-body">
+            <span class="insight-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>הזדמנות אבודה</span>
+            <div class="insight-find">נטישת עגלה 37% (35 מתוך 95)</div>
+            <div class="insight-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span><b>הוסיפו תזכורת/הצעת ביניים</b> בצ׳קאאוט — אפילו שחזור של 30% = ~11 לקוחות נוספים.</span></div>
+          </div>
+        </div>
+
+        <!-- good: conversion rate -->
+        <div class="insight-card ic-good">
+          <div class="insight-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg></div>
+          <div class="insight-body">
+            <span class="insight-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>תוצאה חזקה</span>
+            <div class="insight-find">אחוז המרה 17.6% (60 מתוך 340)</div>
+            <div class="insight-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span>תוצאה <b>טובה לוובינר חינמי</b> — שמרו על אותו מבנה ומסר בוובינרים הבאים.</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══ MODAL ═══ -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="mh-ico" id="modalIco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg></div>
+      <div class="modal-title" id="modalTitle">כותרת</div>
+      <button class="modal-close" id="modalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  /* ── THEME ── */
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const html = document.documentElement;
+    html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    try{localStorage.setItem("wb-mailing-theme",html.getAttribute('data-theme'));}catch(e){}
+  });
+
+  /* ── TOAST ── */
+  function showToast(text, type='info') {
+    const c = document.getElementById('toastContainer');
+    const icons = { info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>', success:'<path d="M20 6L9 17l-5-5"/>', warn:'<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/>' };
+    const t = document.createElement('div'); t.className = 'toast ' + type;
+    t.innerHTML = '<div class="toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'+(icons[type]||icons.info)+'</svg></div><div class="toast-text">'+text+'</div>';
+    c.appendChild(t); setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 350); }, 3000);
+  }
+
+  /* ── TABS ── */
+  const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dataPane = document.getElementById('pane-data');
+  function runDataAnim() {
+    if (!dataPane) return;
+    dataPane.classList.remove('run-anim');
+    // force reflow so the animation restarts each time the tab is entered
+    void dataPane.offsetWidth;
+    requestAnimationFrame(() => dataPane.classList.add('run-anim'));
+  }
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  tabBtns.forEach(btn => btn.addEventListener('click', () => {
+    tabBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.getElementById('pane-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'data') runDataAnim();
+  }));
+
+  /* ── MODAL ── */
+  const overlay = document.getElementById('overlay');
+  function openModal({title, body, foot, icon}) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalBody').innerHTML = body || '';
+    document.getElementById('modalFoot').innerHTML = foot || '';
+    if (icon) document.getElementById('modalIco').innerHTML = icon;
+    overlay.classList.add('open');
+  }
+  function closeModal(){ overlay.classList.remove('open'); }
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  window.closeModal = closeModal;
+
+  /* ── SHARE REGISTRATION LINK ── */
+  document.getElementById('shareBtn').addEventListener('click', () => {
+    openModal({
+      title: 'שיתוף קישור הרשמה',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M16 6l-4-4-4 4M12 2v13"/></svg>',
+      body: '<p>שתפו את הקישור הציבורי. כל הרשמה מתייגת אוטומטית את הנרשם ב-<b>webinar:horut-reguah</b> ומכניסה אותו לרשימת הלידים ולסדרת המיילים.</p><div class="copy-link"><input id="shareInput" readonly value="https://whiteboard.education/w/horut-reguah"><button class="btn btn-secondary btn-sm" id="copyLinkBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>העתק</button></div>',
+      foot: '<button class="btn btn-secondary btn-sm" onclick="closeModal()">סגור</button>'
+    });
+    document.getElementById('copyLinkBtn').addEventListener('click', () => {
+      const inp = document.getElementById('shareInput'); inp.select();
+      try { navigator.clipboard.writeText(inp.value); } catch(e){}
+      closeModal(); showToast('הקישור הועתק', 'success');
+    });
+  });
+
+  /* ── AUTO-ASSETS → managed in mailing module ── */
+  document.querySelectorAll('[data-asset]').forEach(b => b.addEventListener('click', () => {
+    showToast('פותח את מודול הדיוור: ' + b.dataset.asset, 'info');
+  }));
+
+  /* ── VIMEO-STYLE PLAYER (demo) ── */
+  const fill = document.getElementById('scrubFill');
+  const knob = document.getElementById('scrubKnob');
+  const DURATION = 47 * 60 + 10; // 47:10
+  function fmtTime(sec){ const m=Math.floor(sec/60), s=Math.round(sec%60); return m+':'+String(s).padStart(2,'0'); }
+  function setScrub(pct){
+    pct = Math.max(0, Math.min(100, pct));
+    fill.style.width = pct + '%'; knob.style.left = pct + '%';
+    document.getElementById('vTime').textContent = fmtTime(DURATION * pct/100) + ' / ' + fmtTime(DURATION);
+  }
+  document.getElementById('scrubTrack').addEventListener('click', e => {
+    const r = e.currentTarget.getBoundingClientRect();
+    setScrub((e.clientX - r.left) / r.width * 100);
+  });
+  let playing = false;
+  function togglePlay(){
+    playing = !playing;
+    document.getElementById('vToggleIco').innerHTML = playing
+      ? '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>'
+      : '<path d="M8 5v14l11-7z"/>';
+    document.getElementById('videoPlay').style.display = playing ? 'none' : 'flex';
+    showToast(playing ? 'מנגן את הקלטת הוובינר (Bunny CDN)' : 'הושהה', 'info');
+  }
+  document.getElementById('videoPlay').addEventListener('click', togglePlay);
+  document.getElementById('vToggle').addEventListener('click', togglePlay);
+
+  /* retention dot tooltips (hover only) */
+  const vTip = document.getElementById('vTip');
+  const vplayer = document.getElementById('vplayer');
+  document.querySelectorAll('#vEngage .ret-dot').forEach(dot => {
+    function show(){
+      vTip.innerHTML = dot.dataset.tip + ' — <b>' + dot.dataset.pct + '</b>';
+      const pr = vplayer.getBoundingClientRect();
+      const dr = dot.getBoundingClientRect();
+      vTip.style.left = (dr.left + dr.width/2 - pr.left) + 'px';
+      vTip.style.top  = (dr.top  - pr.top) + 'px';
+      vTip.classList.add('show');
+    }
+    function hide(){ vTip.classList.remove('show'); }
+    dot.addEventListener('mouseenter', show);
+    dot.addEventListener('mouseleave', hide);
+    dot.addEventListener('focus', show);
+    dot.addEventListener('blur', hide);
+  });
+
+  /* prime entrance animation on load (visible if user lands on / switches to the data tab) */
+  if (REDUCE_MOTION) { dataPane.classList.add('run-anim'); }
+  else { requestAnimationFrame(() => dataPane.classList.add('run-anim')); }
+
+  /* misc */
+  document.querySelectorAll('[data-mod]').forEach(el => el.addEventListener('click', () => showToast(el.dataset.mod + ' — בקרוב', 'info')));
+  document.getElementById('notifBtn').addEventListener('click', () => showToast('יש לך 4 התראות חדשות', 'info'));
+</script>
+</body>
+</html>

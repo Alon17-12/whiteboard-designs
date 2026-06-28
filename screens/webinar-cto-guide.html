@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מערכת וובינרים — מדריך יישום CTO | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A; --navy-dark:#1a2f5e; --navy-light:#3a5499;
+    --cyan:#38C4F2; --cyan-dark:#1db0d8; --cyan-light:rgba(56,196,242,0.12);
+    --light-blue:#E3F4FD;
+    --pink:#F05680; --pink-light:rgba(240,86,128,0.12);
+    --yellow:#EAD654; --yellow-light:rgba(234,214,84,0.18);
+    --green:#7DC57A; --green-bright:#22c55e; --green-light:rgba(125,197,122,0.14);
+    --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#f5f8ff; --surface-3:#edf4ff;
+    --border:rgba(37,62,122,0.1); --border-hover:rgba(56,196,242,0.4);
+    --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.6); --text-light:rgba(37,62,122,0.4);
+    --code-bg:#0f1b33; --code-text:#dce6fb;
+    --font-he:'Heebo',sans-serif; --font-en:'Fredoka',sans-serif; --font-mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+    --r-sm:10px; --r-md:16px; --r-lg:18px;
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07); --shadow-md:0 6px 24px rgba(37,62,122,0.1);
+  }
+  [data-theme="dark"] {
+    --cyan-light:rgba(56,196,242,0.14); --light-blue:rgba(56,196,242,0.1);
+    --pink-light:rgba(240,86,128,0.18); --yellow-light:rgba(234,214,84,0.18); --green-light:rgba(125,197,122,0.18);
+    --bg:#0c1424; --surface:#131e35; --surface-2:#1a2740; --surface-3:#1e2e48;
+    --border:rgba(255,255,255,0.08); --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.6); --text-light:rgba(221,229,245,0.34);
+    --code-bg:#0a1326; --shadow-sm:0 2px 12px rgba(0,0,0,0.3); --shadow-md:0 6px 28px rgba(0,0,0,0.4);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:var(--font-he); background:var(--bg); color:var(--text-main); display:flex; transition:background .3s,color .3s; }
+  ::-webkit-scrollbar { width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:6px; }
+
+  /* SIDEBAR NAV */
+  .side { width:270px; background:var(--surface); border-left:1px solid var(--border); height:100vh; position:fixed; right:0; top:0; display:flex; flex-direction:column; padding:24px 0; overflow-y:auto; z-index:10; }
+  .side-logo { padding:0 22px 18px; border-bottom:1px solid var(--border); margin-bottom:14px; }
+  .side-logo .brand { font-family:var(--font-en); font-weight:700; font-size:19px; color:var(--navy); display:flex; align-items:center; gap:8px; }
+  [data-theme="dark"] .side-logo .brand { color:var(--cyan); }
+  .side-logo .sub { font-size:12px; color:var(--text-sub); margin-top:4px; }
+  .side-logo .logosq { width:26px; height:26px; border-radius:7px; background:linear-gradient(135deg,var(--cyan),var(--navy)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; }
+  .side a { display:block; padding:9px 22px; font-size:13.5px; color:var(--text-sub); text-decoration:none; border-right:3px solid transparent; transition:all .15s; }
+  .side a:hover { background:var(--surface-2); color:var(--text-main); }
+  .side a.active { color:var(--cyan); border-right-color:var(--cyan); background:var(--cyan-light); font-weight:700; }
+  .side a .n { font-family:var(--font-en); color:var(--text-light); margin-inline-end:8px; font-size:12px; }
+
+  .main { margin-right:270px; flex:1; max-width:1000px; padding:46px 56px 120px; }
+  .topbtns { position:fixed; top:22px; left:28px; z-index:20; display:flex; gap:10px; }
+  .tbtn { width:40px; height:40px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text-sub); box-shadow:var(--shadow-sm); }
+  .tbtn:hover { color:var(--cyan); border-color:var(--cyan); }
+  .tbtn svg { width:19px; height:19px; }
+  .icon-sun { display:none; } [data-theme="dark"] .icon-sun { display:block; } [data-theme="dark"] .icon-moon { display:none; }
+
+  .doc-head { margin-bottom:36px; }
+  .eyebrow { display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:var(--cyan); font-family:var(--font-en); letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; }
+  .eyebrow .dot { width:7px; height:7px; border-radius:50%; background:var(--cyan); }
+  h1 { font-size:38px; font-weight:900; line-height:1.12; margin-bottom:14px; }
+  .lead { font-size:16px; color:var(--text-sub); line-height:1.65; max-width:720px; }
+
+  section { margin-bottom:52px; scroll-margin-top:30px; }
+  h2 { font-size:25px; font-weight:800; margin-bottom:8px; display:flex; align-items:center; gap:12px; }
+  h2 .h2num { font-family:var(--font-en); font-size:15px; font-weight:700; color:#fff; background:var(--navy); width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  [data-theme="dark"] h2 .h2num { background:var(--cyan); color:var(--navy-dark); }
+  h3 { font-size:17px; font-weight:800; margin:24px 0 10px; }
+  .sec-sub { font-size:14.5px; color:var(--text-sub); line-height:1.65; margin-bottom:18px; max-width:740px; }
+  p { line-height:1.7; color:var(--text-main); font-size:14.5px; margin-bottom:12px; }
+  ul { margin:0 18px 14px 0; padding-inline-start:4px; }
+  li { line-height:1.75; font-size:14.5px; margin-bottom:5px; }
+  b { font-weight:700; }
+  code.inl { font-family:var(--font-mono); background:var(--surface-3); padding:2px 7px; border-radius:5px; font-size:13px; direction:ltr; display:inline-block; }
+
+  .rules { background:linear-gradient(135deg,var(--navy),#2f4d96); border-radius:var(--r-md); padding:24px 26px; color:#fff; margin:24px 0; box-shadow:var(--shadow-md); }
+  [data-theme="dark"] .rules { background:linear-gradient(135deg,#0f1b3a,#1a2a55); border:1px solid rgba(56,196,242,0.2); }
+  .rules h3 { color:#fff; margin:0 0 14px; font-size:16px; display:flex; align-items:center; gap:9px; }
+  .rules h3 svg { width:18px; height:18px; color:var(--cyan); }
+  .rules ol { margin:0; padding-inline-start:20px; }
+  .rules li { color:rgba(255,255,255,0.9); margin-bottom:8px; font-size:14px; }
+  .rules li b { color:var(--cyan); }
+
+  pre { background:var(--code-bg); border-radius:var(--r-md); padding:20px 22px; overflow-x:auto; margin:14px 0; border:1px solid rgba(255,255,255,0.06); }
+  pre code { font-family:var(--font-mono); font-size:12.8px; line-height:1.65; color:var(--code-text); direction:ltr; display:block; white-space:pre; }
+  .cm { color:#6b86b8; } .kw { color:#5ad0f5; } .ty { color:#7DC57A; } .st { color:#EAD654; } .fn { color:#ff8ba8; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:20px 22px; box-shadow:var(--shadow-sm); margin:14px 0; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .mod-card h4 { font-size:14.5px; font-weight:800; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+  .mod-card h4 .ic { width:28px; height:28px; border-radius:8px; background:var(--cyan-light); color:var(--cyan); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .mod-card h4 .ic svg { width:15px; height:15px; }
+  .mod-card p { font-size:13px; color:var(--text-sub); margin:0; }
+
+  .callout { display:flex; gap:13px; padding:16px 18px; border-radius:var(--r-md); margin:16px 0; align-items:flex-start; }
+  .callout svg { width:20px; height:20px; flex-shrink:0; margin-top:2px; }
+  .callout p { margin:0; font-size:14px; }
+  .callout.info { background:var(--cyan-light); border:1px solid rgba(56,196,242,0.25); } .callout.info svg { color:var(--cyan); }
+  .callout.warn { background:var(--yellow-light); border:1px solid rgba(234,214,84,0.4); } .callout.warn svg { color:#b89c00; }
+  [data-theme="dark"] .callout.warn svg { color:var(--yellow); }
+  .callout.ok { background:var(--green-light); border:1px solid rgba(125,197,122,0.4); } .callout.ok svg { color:var(--green-bright); }
+
+  table { width:100%; border-collapse:collapse; margin:14px 0; font-size:13.5px; }
+  th { text-align:right; font-size:11.5px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:.4px; padding:0 12px 10px; border-bottom:1px solid var(--border); }
+  td { padding:11px 12px; border-bottom:1px solid var(--border); color:var(--text-main); vertical-align:top; }
+  td code { font-family:var(--font-mono); font-size:12.5px; color:var(--cyan); direction:ltr; }
+  .pill { font-size:11px; font-weight:700; padding:3px 9px; border-radius:10px; }
+  .pill.v1 { background:var(--green-light); color:var(--green); }
+  .pill.v2 { background:var(--yellow-light); color:#b89c00; } [data-theme="dark"] .pill.v2 { color:var(--yellow); }
+  .pill.fut { background:var(--surface-2); color:var(--text-sub); border:1px solid var(--border); }
+
+  /* Flow diagram */
+  .flow { display:flex; flex-wrap:wrap; align-items:stretch; gap:10px; margin:18px 0; }
+  .flow-node { flex:1; min-width:150px; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:14px 16px; box-shadow:var(--shadow-sm); position:relative; }
+  .flow-node .fn-tag { font-size:10.5px; font-weight:800; color:var(--cyan); font-family:var(--font-en); text-transform:uppercase; letter-spacing:.6px; margin-bottom:6px; }
+  .flow-node .fn-title { font-size:14px; font-weight:800; margin-bottom:4px; }
+  .flow-node .fn-desc { font-size:12px; color:var(--text-sub); line-height:1.5; }
+  .flow-arrow { display:flex; align-items:center; color:var(--text-light); font-size:20px; }
+
+  @media (max-width:1000px){ .side{display:none;} .main{margin-right:0;padding:30px 22px 80px;} .grid2,.grid3{grid-template-columns:1fr;} .flow{flex-direction:column;} .flow-arrow{transform:rotate(90deg);justify-content:center;} }
+</style>
+</head>
+<body>
+<div class="topbtns">
+  <button class="tbtn" id="themeBtn" aria-label="מצב תצוגה">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+  </button>
+</div>
+
+<aside class="side">
+  <div class="side-logo">
+    <div class="brand"><span class="logosq">W</span> WHITEBOARD</div>
+    <div class="sub">מערכת וובינרים · מדריך יישום CTO</div>
+  </div>
+  <a href="#overview" class="active"><span class="n">01</span>סקירה ומבנה</a>
+  <a href="#arch"><span class="n">02</span>ארכיטקטורת האורקסטרציה</a>
+  <a href="#data"><span class="n">03</span>מודל הנתונים (DB Schema)</a>
+  <a href="#exclusivity"><span class="n">04</span>מנגנון הבלעדיות (סגמנטים דינמיים)</a>
+  <a href="#provision"><span class="n">05</span>אוטומציית היצירה</a>
+  <a href="#funnel"><span class="n">06</span>נתונים: משפך, Retention, הכנסה</a>
+  <a href="#templates"><span class="n">06b</span>טמפלייט וובינר + A/B</a>
+  <a href="#sequence"><span class="n">07</span>סדרת מיילים מעוגנת-מועד</a>
+  <a href="#chat"><span class="n">08</span>צ׳אט בזמן אמת + הרשאות</a>
+  <a href="#screens"><span class="n">09</span>מפת מסכים וקישורים</a>
+  <a href="#roadmap"><span class="n">10</span>מפת דרכים</a>
+</aside>
+
+<main class="main">
+  <div class="doc-head">
+    <span class="eyebrow"><span class="dot"></span> WHITEBOARD · CTO GUIDE</span>
+    <h1>מערכת וובינרים<br>כאירוע השקה לגיוס לידים</h1>
+    <p class="lead">האדמין יוצר <b>אירוע וובינר</b> ככלי לגיוס והמרת לידים. עצם היצירה פותחת אוטומטית 2 רשימות תפוצה (לידים/לקוחות), חדר צ׳אט ייעודי במועדון, ושלד סדרת מיילים מתוזמנת. הוובינר אינו מערכת עצמאית — הוא <b>שכבת אורקסטרציה דקה</b> מעל שלושה מודולים קיימים: מנוע הדיוור, המועדון, וסטטוס הלקוח ב‑CRM. מדריך זה מתאר את החיבור, ה‑schema, האוטומציה והצ׳אט בזמן אמת.</p>
+  </div>
+
+  <div class="rules">
+    <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>כללי יסוד למימוש</h3>
+    <ol>
+      <li><b>שכבת אורקסטרציה, לא מערכת חדשה</b> — חוזרים על מנוע הדיוור, המועדון וה‑CRM הקיימים. אסור לשכפל רשימות, עורך מיילים או טבלת אנשי קשר.</li>
+      <li><b>בלעדיות דרך סטטוס</b> — הרשימות הן <b>סגמנטים דינמיים</b> מעל <code>contacts.status</code>. ליד שמשלם יוצא מהלידים ונכנס ללקוחות מאליו — ללא "העברה" ידנית, ללא כפל מסרים.</li>
+      <li><b>אורקסטרציה אטומית ואידמפוטנטית</b> — יצירת הוובינר מבצעת את כל ה‑provisioning בטרנזקציה אחת עם rollback; ריצה חוזרת לא יוצרת כפילויות.</li>
+      <li><b>אירועים, לא polling</b> — <code>webinar_registered</code> / <code>payment.succeeded</code> מניעים תיוג, מעבר סטטוס וגישת צ׳אט דרך תור אירועים ו‑Trigger.dev.</li>
+      <li><b>חדר צ׳אט = לקוחות בלבד</b> — הרשאת הצטרפות לערוץ מונפקת רק כש‑<code>status='customer' AND has_tag(webinar)</code>. מקור אמת ב‑Postgres, שידור דרך שכבת pub/sub.</li>
+    </ol>
+  </div>
+
+  <section id="overview">
+    <h2><span class="h2num">01</span>סקירה ומבנה</h2>
+    <p class="sec-sub">המודול יושב תחת <b>מרכז בקרה הנהלה</b>. הוא מוסיף ישות אחת חדשה (<code class="inl">webinars</code>) ושלוש טבלאות צ׳אט, וקושר ביניהן לבין הטבלאות הקיימות של הדיוור וה‑CRM. כל היתר — תיוג, סגמנטים, סדרות, שליחות — הוא שימוש חוזר.</p>
+    <div class="grid3">
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>ניהול וובינרים</h4><p>רשימת אירועים, סטטוס, ומשפך-מיני (נרשמו/שילמו/%) לכל וובינר.</p></div>
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>יצירת וובינר</h4><p>טופס + פאנל "מה ייווצר אוטומטית": 2 רשימות, חדר צ׳אט, שלד סדרה.</p></div>
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>וובינר בודד</h4><p>משפך מלא, רשימות מקושרות, סדרת מיילים מעוגנת-מועד, חדר צ׳אט.</p></div>
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></span>רשימות דיוור <span class="pill v2" style="font-size:9.5px;padding:2px 6px">קיים</span></h4><p>מנוע הדיוור — סגמנטים, קהלים, קמפיינים, סדרות. נצרך כמו שהוא.</p></div>
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>חדר צ׳אט מועדון <span class="pill v2" style="font-size:9.5px;padding:2px 6px">קיים</span></h4><p>המועדון — מקבל סקשן "וובינרים" עם ערוץ לקוחות-בלבד פר-וובינר.</p></div>
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>סטטוס לקוח <span class="pill v2" style="font-size:9.5px;padding:2px 6px">קיים</span></h4><p>ה‑CRM/סליקה — <code class="inl">contacts.status</code> הוא ציר הבלעדיות.</p></div>
+    </div>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>מקור אמת יחיד:</b> <code class="inl">contacts</code> ו‑<code class="inl">tags</code> משותפים עם ה‑CRM ומנוע הדיוור (ראו "מערכת דיוור הנהלה — מדריך יישום CTO"). מערכת הוובינרים אינה מנהלת אנשי קשר נפרדים — היא מתייגת ומסנפת מעל אותן טבלאות.</p></div>
+  </section>
+
+  <section id="arch">
+    <h2><span class="h2num">02</span>ארכיטקטורת האורקסטרציה</h2>
+    <p class="sec-sub">מסע המשתמש חוצה שלושה מודולים. הוובינר הוא ה‑hub שמחבר ביניהם דרך תגית אחת (<code class="inl">webinar:&lt;slug&gt;</code>) וסטטוס איש הקשר.</p>
+    <div class="flow">
+      <div class="flow-node"><div class="fn-tag">הרשמה</div><div class="fn-title">נרשם לוובינר</div><div class="fn-desc">דף הרשמה פולט <code class="inl">webinar_registered</code> → תיוג <code class="inl">webinar:&lt;slug&gt;</code>, סטטוס נשאר <code class="inl">lead</code>.</div></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-node"><div class="fn-tag">רשימת לידים</div><div class="fn-title">סגמנט לידים</div><div class="fn-desc"><code class="inl">status='lead' AND tag</code> — נכנס לסדרת המיילים המתוזמנת לוובינר.</div></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-node"><div class="fn-tag">המרה</div><div class="fn-title">משלם → לקוח</div><div class="fn-desc"><code class="inl">payment.succeeded</code> → <code class="inl">status='customer'</code>. יוצא מהלידים מאליו.</div></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-node"><div class="fn-tag">מועדון + צ׳אט</div><div class="fn-title">חבר מועדון</div><div class="fn-desc">מצורף למועדון + <code class="inl">chat_channel_members</code> → גישה לחדר הוובינר.</div></div>
+    </div>
+    <div class="callout ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><p><b>נקודת המפתח:</b> מעבר הסטטוס הוא אירוע יחיד שמשנה <b>בו-זמנית</b> את שלוש התוצאות — יציאה מסגמנט הלידים, כניסה לסגמנט הלקוחות, וגישה לצ׳אט. אין שלוש פעולות שעלולות להתנתק זו מזו.</p></div>
+  </section>
+
+  <section id="data">
+    <h2><span class="h2num">03</span>מודל הנתונים (DB Schema)</h2>
+    <p class="sec-sub">חדש: <code class="inl">webinars</code> + 3 טבלאות צ׳אט + הרחבת <code class="inl">sequence_steps</code>. כל השאר (<code class="inl">contacts, tags, tag_rules, segments, audiences, sequences, email_docs, email_sends</code>) קיים ממנוע הדיוור.</p>
+    <pre><code><span class="cm">-- ── ⭐ טמפלייט וובינר — בלופרינט שמשוכפל לכל וובינר חדש ──</span>
+<span class="kw">CREATE TABLE</span> webinar_templates (
+  id             <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  name           <span class="ty">text</span> <span class="kw">NOT NULL</span>,
+  blueprint_json <span class="ty">jsonb</span> <span class="kw">NOT NULL</span>,   <span class="cm">-- סדרה, צ׳אט, נחיתה, הצעה+מסלולים</span>
+  is_canonical   <span class="ty">boolean</span> <span class="kw">NOT NULL DEFAULT</span> <span class="kw">true</span>,  <span class="cm">-- הגרסה המנצחת/הפעילה</span>
+  created_at     <span class="ty">timestamptz</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">now</span>()
+);
+
+<span class="cm">-- ── ישות הוובינר (ה-hub) ──</span>
+<span class="kw">CREATE TABLE</span> webinars (
+  id                   <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  name                 <span class="ty">text</span> <span class="kw">NOT NULL</span>,
+  slug                 <span class="ty">text</span> <span class="kw">NOT NULL UNIQUE</span>,
+  description          <span class="ty">text</span>,
+  scheduled_at         <span class="ty">timestamptz</span> <span class="kw">NOT NULL</span>,
+  status               <span class="ty">text</span> <span class="kw">NOT NULL DEFAULT</span> <span class="st">'draft'</span>,  <span class="cm">-- draft|published|live|ended</span>
+  host_name            <span class="ty">text</span>,
+  cover_image_url      <span class="ty">text</span>,                  <span class="cm">-- Bunny CDN</span>
+  registration_url     <span class="ty">text</span>,
+  video_asset_id       <span class="ty">text</span>,                  <span class="cm">-- Bunny Stream (לייב/הקלטה + retention)</span>
+  template_id          <span class="ty">uuid</span> <span class="kw">REFERENCES</span> webinar_templates(id), <span class="cm">-- מאיזה טמפלייט שוכפל</span>
+  variant_group        <span class="ty">text</span>,                  <span class="cm">-- מזהה קבוצת A/B (וריאנטים חולקים)</span>
+  variant_label        <span class="ty">text</span>,                  <span class="cm">-- 'A' | 'B' | ...</span>
+  <span class="cm">-- קישורי האורקסטרציה (נוצרים אוטומטית ביצירה):</span>
+  tag_id               <span class="ty">uuid</span> <span class="kw">REFERENCES</span> tags(id),
+  lead_audience_id     <span class="ty">uuid</span> <span class="kw">REFERENCES</span> audiences(id),
+  customer_audience_id <span class="ty">uuid</span> <span class="kw">REFERENCES</span> audiences(id),
+  chat_channel_id      <span class="ty">uuid</span> <span class="kw">REFERENCES</span> chat_channels(id),
+  sequence_id          <span class="ty">uuid</span> <span class="kw">REFERENCES</span> sequences(id),
+  created_at           <span class="ty">timestamptz</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">now</span>(),
+  updated_at           <span class="ty">timestamptz</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">now</span>()
+);
+
+<span class="cm">-- ── צ׳אט המועדון (מקור אמת; השידור החי מעל זה) ──</span>
+<span class="kw">CREATE TABLE</span> chat_channels (
+  id          <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  name        <span class="ty">text</span> <span class="kw">NOT NULL</span>,
+  section     <span class="ty">text</span> <span class="kw">NOT NULL</span>,            <span class="cm">-- 'general' | 'courses' | 'webinars'</span>
+  visibility  <span class="ty">text</span> <span class="kw">NOT NULL DEFAULT</span> <span class="st">'all'</span>,  <span class="cm">-- 'all' | 'customers'</span>
+  webinar_id  <span class="ty">uuid</span> <span class="kw">REFERENCES</span> webinars(id),
+  created_at  <span class="ty">timestamptz</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">now</span>()
+);
+
+<span class="kw">CREATE TABLE</span> chat_channel_members (
+  channel_id <span class="ty">uuid</span> <span class="kw">REFERENCES</span> chat_channels(id) <span class="kw">ON DELETE CASCADE</span>,
+  contact_id <span class="ty">uuid</span> <span class="kw">REFERENCES</span> contacts(id) <span class="kw">ON DELETE CASCADE</span>,
+  joined_at  <span class="ty">timestamptz</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">now</span>(),
+  <span class="kw">PRIMARY KEY</span> (channel_id, contact_id)
+);
+
+<span class="kw">CREATE TABLE</span> chat_messages (
+  id          <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  channel_id  <span class="ty">uuid</span> <span class="kw">REFERENCES</span> chat_channels(id) <span class="kw">ON DELETE CASCADE</span>,
+  contact_id  <span class="ty">uuid</span> <span class="kw">REFERENCES</span> contacts(id),
+  body        <span class="ty">text</span> <span class="kw">NOT NULL</span>,
+  created_at  <span class="ty">timestamptz</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">now</span>()
+);
+
+<span class="cm">-- ── Retention: חלון צפייה לכל צופה → עקומת צופים בו-זמנית ──</span>
+<span class="kw">CREATE TABLE</span> webinar_attendance (
+  id            <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  webinar_id    <span class="ty">uuid</span> <span class="kw">REFERENCES</span> webinars(id) <span class="kw">ON DELETE CASCADE</span>,
+  contact_id    <span class="ty">uuid</span> <span class="kw">REFERENCES</span> contacts(id),
+  joined_at     <span class="ty">timestamptz</span> <span class="kw">NOT NULL</span>,
+  left_at       <span class="ty">timestamptz</span>,
+  watch_seconds <span class="ty">int</span>
+);
+
+<span class="cm">-- ── אירועי עגלה והמרה (נכנסו/נטשו/לקוח + מסלול) ──</span>
+<span class="kw">CREATE TABLE</span> webinar_conversions (
+  id          <span class="ty">uuid</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  webinar_id  <span class="ty">uuid</span> <span class="kw">REFERENCES</span> webinars(id) <span class="kw">ON DELETE CASCADE</span>,
+  contact_id  <span class="ty">uuid</span> <span class="kw">REFERENCES</span> contacts(id),
+  stage       <span class="ty">text</span> <span class="kw">NOT NULL</span>,    <span class="cm">-- 'checkout_started'|'checkout_abandoned'|'purchased'</span>
+  plan        <span class="ty">text</span>,             <span class="cm">-- 'teacher'|'educator'|'leader'|'enterprise' (מסלול WHITEBOARD)</span>
+  amount      <span class="ty">numeric</span>,
+  created_at  <span class="ty">timestamptz</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">now</span>()
+);
+
+<span class="cm">-- ── הרחבת מנוע הסדרות: עיגון צעד למועד הוובינר ──</span>
+<span class="kw">ALTER TABLE</span> sequence_steps
+  <span class="kw">ADD COLUMN</span> anchor        <span class="ty">text</span> <span class="kw">DEFAULT</span> <span class="st">'enrollment'</span>,  <span class="cm">-- 'enrollment' | 'webinar_start'</span>
+  <span class="kw">ADD COLUMN</span> offset_amount <span class="ty">int</span>,
+  <span class="kw">ADD COLUMN</span> offset_unit   <span class="ty">text</span>;                       <span class="cm">-- 'hours' | 'days'  (שלילי = לפני)</span></code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>Prisma:</b> שמות מודלים PascalCase (<code class="inl">Webinar, ChatChannel, ChatMessage</code>), שדות camelCase (<code class="inl">scheduledAt, coverImageUrl</code>), enums UPPER_SNAKE (<code class="inl">DRAFT, PUBLISHED, LIVE, ENDED</code>). תמיד <code class="inl">createdAt</code>+<code class="inl">updatedAt</code>.</p></div>
+  </section>
+
+  <section id="exclusivity">
+    <h2><span class="h2num">04</span>מנגנון הבלעדיות (סגמנטים דינמיים)</h2>
+    <p class="sec-sub">הדרישה: ליד שהפך ללקוח <b>מפסיק מיידית</b> לקבל מסרים מרשימת הלידים. הפתרון אינו "להעביר" אותו בין רשימות — אלא להגדיר את שתי הרשימות כ‑<b>סגמנטים דינמיים</b> שתלויים ב‑<code class="inl">status</code>. החברות מחושבת מחדש בכל שליחה, ולכן המעבר אוטומטי לחלוטין.</p>
+    <pre><code><span class="cm">// סגמנט "לידים - הורות רגועה" — נשלף בזמן שליחה</span>
+{
+  <span class="st">"logic"</span>: <span class="st">"and"</span>,
+  <span class="st">"conditions"</span>: [
+    { <span class="st">"field"</span>: <span class="st">"status"</span>, <span class="st">"op"</span>: <span class="st">"eq"</span>,  <span class="st">"value"</span>: <span class="st">"lead"</span> },
+    { <span class="st">"field"</span>: <span class="st">"tag"</span>,    <span class="st">"op"</span>: <span class="st">"has"</span>, <span class="st">"value"</span>: <span class="st">"webinar:horut-reguah"</span> }
+  ]
+}
+
+<span class="cm">// סגמנט "לקוחות - הורות רגועה" — אותו tag, status שונה</span>
+{
+  <span class="st">"logic"</span>: <span class="st">"and"</span>,
+  <span class="st">"conditions"</span>: [
+    { <span class="st">"field"</span>: <span class="st">"status"</span>, <span class="st">"op"</span>: <span class="st">"eq"</span>,  <span class="st">"value"</span>: <span class="st">"customer"</span> },
+    { <span class="st">"field"</span>: <span class="st">"tag"</span>,    <span class="st">"op"</span>: <span class="st">"has"</span>, <span class="st">"value"</span>: <span class="st">"webinar:horut-reguah"</span> }
+  ]
+}
+
+<span class="cm">// מעבר סטטוס יחיד → שינוי חברות בשני הסגמנטים בו-זמנית:</span>
+<span class="kw">UPDATE</span> contacts <span class="kw">SET</span> status = <span class="st">'customer'</span> <span class="kw">WHERE</span> id = :contactId;
+<span class="cm">// מעכשיו: נופל מהסגמנט 'lead' ונכלל בסגמנט 'customer'. אין מסר נוסף כליד.</span></code></pre>
+    <div class="callout ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><p><b>למה לא רשימות סטטיות:</b> רשימה סטטית (snapshot) הייתה דורשת job שמסיר ידנית את הלקוח מרשימת הלידים — נקודת כשל (race / מסר שיוצא בין ההמרה להסרה). סגמנט דינמי מבטל את הבעיה בשורש: אין מצב ביניים.</p></div>
+    <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><p><b>סדרה פעילה:</b> אם ליד נמצא באמצע סדרת מיילים ומומר ללקוח, יש לסיים את ההרשמה לסדרת הלידים (<code class="inl">sequence_enrollments.status='exited'</code>) ביציאתו מהסגמנט — אחרת צעדים שנותרו עלולים להישלח. ה‑exit מופעל מאותו אירוע <code class="inl">payment.succeeded</code>.</p></div>
+  </section>
+
+  <section id="provision">
+    <h2><span class="h2num">05</span>אוטומציית היצירה (Trigger.dev)</h2>
+    <p class="sec-sub">שמירת וובינר חדש מפעילה עבודת <code class="inl">provision-webinar</code> — טרנזקציה אטומית ואידמפוטנטית שיוצרת את כל הקישורים. כשל בכל שלב מגלגל אחורה את כולם, כך שלעולם אין "וובינר בלי חדר" או "רשימה בלי כלל תיוג".</p>
+    <pre><code><span class="cm">// trigger/webinar/provision-webinar.ts</span>
+<span class="kw">export const</span> provisionWebinar = <span class="fn">task</span>({
+  id: <span class="st">"provision-webinar"</span>,
+  run: <span class="kw">async</span> (p: { webinarId: <span class="ty">string</span> }) => {
+    <span class="kw">await</span> <span class="fn">db.transaction</span>(<span class="kw">async</span> (tx) => {
+      <span class="kw">const</span> w = <span class="kw">await</span> <span class="fn">getWebinar</span>(tx, p.webinarId);
+      <span class="kw">const</span> slug = w.slug;                       <span class="cm">// webinar:&lt;slug&gt;</span>
+
+      <span class="cm">// 1) תגית + כלל תיוג אוטומטי (נרשם → מתויג)</span>
+      <span class="kw">const</span> tag = <span class="kw">await</span> <span class="fn">upsertTag</span>(tx, { name: <span class="st">`webinar:</span>${slug}<span class="st">`</span>, kind: <span class="st">"auto"</span> });
+      <span class="kw">await</span> <span class="fn">upsertTagRule</span>(tx, {
+        triggerEvent: <span class="st">"webinar_registered"</span>,
+        conditionsJson: { webinarId: w.id },
+        tagId: tag.id,
+      });
+
+      <span class="cm">// 2) שני סגמנטים דינמיים + שני קהלים</span>
+      <span class="kw">const</span> leadSeg = <span class="kw">await</span> <span class="fn">upsertSegment</span>(tx, <span class="fn">segDef</span>(<span class="st">"lead"</span>, slug));
+      <span class="kw">const</span> custSeg = <span class="kw">await</span> <span class="fn">upsertSegment</span>(tx, <span class="fn">segDef</span>(<span class="st">"customer"</span>, slug));
+      <span class="kw">const</span> leadAud = <span class="kw">await</span> <span class="fn">upsertAudience</span>(tx, { name: <span class="st">`לידים - </span>${w.name}<span class="st">`</span>, type: <span class="st">"segment"</span>, segmentId: leadSeg.id });
+      <span class="kw">const</span> custAud = <span class="kw">await</span> <span class="fn">upsertAudience</span>(tx, { name: <span class="st">`לקוחות - </span>${w.name}<span class="st">`</span>, type: <span class="st">"segment"</span>, segmentId: custSeg.id });
+
+      <span class="cm">// 3) חדר צ׳אט במועדון (לקוחות בלבד)</span>
+      <span class="kw">const</span> channel = <span class="kw">await</span> <span class="fn">upsertChannel</span>(tx, {
+        name: w.name, section: <span class="st">"webinars"</span>, visibility: <span class="st">"customers"</span>, webinarId: w.id,
+      });
+
+      <span class="cm">// 4) שלד סדרת מיילים (טריגר: נרשם לוובינר)</span>
+      <span class="kw">const</span> seq = <span class="kw">await</span> <span class="fn">upsertSequence</span>(tx, {
+        name: <span class="st">`סדרת וובינר - </span>${w.name}<span class="st">`</span>,
+        triggerEvent: <span class="st">"webinar_registered"</span>,
+        triggerConfigJson: { webinarId: w.id },
+      });
+
+      <span class="cm">// 5) קישור חזרה ל-webinars (אידמפוטנטי על ה-IDs)</span>
+      <span class="kw">await</span> <span class="fn">linkWebinar</span>(tx, w.id, {
+        tagId: tag.id, leadAudienceId: leadAud.id, customerAudienceId: custAud.id,
+        chatChannelId: channel.id, sequenceId: seq.id,
+      });
+    });
+  },
+});
+
+<span class="cm">// segDef("lead","horut-reguah") → conditions_json של הסגמנט</span>
+<span class="kw">function</span> <span class="fn">segDef</span>(status: <span class="ty">string</span>, slug: <span class="ty">string</span>) {
+  <span class="kw">return</span> { name: <span class="st">`</span>${status}<span class="st">:</span>${slug}<span class="st">`</span>, isDynamic: <span class="kw">true</span>, logic: <span class="st">"and"</span>,
+    conditionsJson: { conditions: [
+      { field: <span class="st">"status"</span>, op: <span class="st">"eq"</span>,  value: status },
+      { field: <span class="st">"tag"</span>,    op: <span class="st">"has"</span>, value: <span class="st">`webinar:</span>${slug}<span class="st">`</span> },
+    ] } };
+}</code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>אידמפוטנטיות:</b> כל ה‑<code class="inl">upsert*</code> מבוססי מפתח דטרמיניסטי (ה‑slug / webinarId). הרצה חוזרת של ה‑provision (deploy / retry) לא יוצרת כפילויות. <b>שינוי שם</b> וובינר מריץ <code class="inl">rename-webinar-links</code> שמעדכן שמות תצוגה בלבד — ה‑slug וה‑IDs קבועים.</p></div>
+  </section>
+
+  <section id="funnel">
+    <h2><span class="h2num">06</span>נתונים: משפך, Retention, הכנסה</h2>
+    <p class="sec-sub">מסך הוובינר ממוקד בדאטא ובמסקנות (לא בניהול דיוור). המדדים נגזרים מהתגית מול ה‑<code class="inl">status</code>; מעליהם נבנים משפך תוצאות מלא, עקומת Retention על הסרטון, וסיכום הכנסה — כולם נתונים מדויקים מהמערכת (ללא מדדי עלות/PPC).</p>
+    <pre><code><span class="cm">-- משפך וובינר בודד</span>
+<span class="kw">SELECT</span>
+  <span class="fn">count</span>(*)                                            <span class="kw">AS</span> registered,    <span class="cm">-- נרשמו</span>
+  <span class="fn">count</span>(*) <span class="kw">FILTER</span> (<span class="kw">WHERE</span> c.status = <span class="st">'lead'</span>)        <span class="kw">AS</span> still_lead,    <span class="cm">-- עדיין ליד</span>
+  <span class="fn">count</span>(*) <span class="kw">FILTER</span> (<span class="kw">WHERE</span> c.status = <span class="st">'customer'</span>)    <span class="kw">AS</span> converted,     <span class="cm">-- שילמו</span>
+  <span class="fn">round</span>(100.0 * <span class="fn">count</span>(*) <span class="kw">FILTER</span> (<span class="kw">WHERE</span> c.status=<span class="st">'customer'</span>)
+        / <span class="fn">nullif</span>(<span class="fn">count</span>(*),0), 1)               <span class="kw">AS</span> conversion_pct
+<span class="kw">FROM</span> contacts c
+<span class="kw">JOIN</span> contact_tags ct <span class="kw">ON</span> ct.contact_id = c.id
+<span class="kw">JOIN</span> tags t          <span class="kw">ON</span> t.id = ct.tag_id
+<span class="kw">WHERE</span> t.name = <span class="st">'webinar:horut-reguah'</span>;</code></pre>
+    <h3>משפך תוצאות מלא + מסלול לקוח</h3>
+    <pre><code><span class="cm">-- הרשמה → צפייה → עגלה → נטישה → לקוח, ופילוח לפי מסלול</span>
+<span class="kw">SELECT</span>
+  (<span class="kw">SELECT</span> <span class="fn">count</span>(*) <span class="kw">FROM</span> webinar_attendance     <span class="kw">WHERE</span> webinar_id = :w)                          <span class="kw">AS</span> viewed,
+  (<span class="kw">SELECT</span> <span class="fn">count</span>(*) <span class="kw">FROM</span> webinar_conversions wc <span class="kw">WHERE</span> wc.webinar_id=:w <span class="kw">AND</span> stage=<span class="st">'checkout_started'</span>)   <span class="kw">AS</span> cart,
+  (<span class="kw">SELECT</span> <span class="fn">count</span>(*) <span class="kw">FROM</span> webinar_conversions wc <span class="kw">WHERE</span> wc.webinar_id=:w <span class="kw">AND</span> stage=<span class="st">'checkout_abandoned'</span>) <span class="kw">AS</span> abandoned,
+  (<span class="kw">SELECT</span> <span class="fn">count</span>(*) <span class="kw">FROM</span> webinar_conversions wc <span class="kw">WHERE</span> wc.webinar_id=:w <span class="kw">AND</span> stage=<span class="st">'purchased'</span>)          <span class="kw">AS</span> customers;
+
+<span class="cm">-- לקוחות והכנסה לפי מסלול</span>
+<span class="kw">SELECT</span> plan, <span class="fn">count</span>(*) <span class="kw">AS</span> customers, <span class="fn">sum</span>(amount) <span class="kw">AS</span> revenue
+<span class="kw">FROM</span> webinar_conversions
+<span class="kw">WHERE</span> webinar_id = :w <span class="kw">AND</span> stage = <span class="st">'purchased'</span>
+<span class="kw">GROUP BY</span> plan;</code></pre>
+
+    <h3>Retention — עקומת צופים בו-זמנית</h3>
+    <p class="sec-sub">כל שורת נוכחות היא חלון <code class="inl">[joined_at, left_at]</code>. כדי לבנות עקומה לאורך דקות הוובינר, דוגמים את מספר הצופים הפעילים בכל "דקה" (bucket) — בסיס לגרף ה‑retention ולנקודות הצניחה.</p>
+    <pre><code><span class="cm">-- מספר צופים פעילים בכל דקה מתחילת הוובינר</span>
+<span class="kw">SELECT</span> m.minute,
+       <span class="fn">count</span>(a.*) <span class="kw">AS</span> concurrent_viewers
+<span class="kw">FROM</span> <span class="fn">generate_series</span>(0, 60) <span class="kw">AS</span> m(minute)
+<span class="kw">LEFT JOIN</span> webinar_attendance a
+  <span class="kw">ON</span> a.webinar_id = :w
+ <span class="kw">AND</span> a.joined_at &lt;= :start + (m.minute * <span class="kw">interval</span> <span class="st">'1 min'</span>)
+ <span class="kw">AND</span> <span class="fn">coalesce</span>(a.left_at, <span class="fn">now</span>()) &gt;= :start + (m.minute * <span class="kw">interval</span> <span class="st">'1 min'</span>)
+<span class="kw">GROUP BY</span> m.minute <span class="kw">ORDER BY</span> m.minute;</code></pre>
+
+    <h3>סיכום הכנסה</h3>
+    <pre><code><span class="cm">-- עובדות הכנסה בלבד (ללא עלות/ROI) מתוך רכישות אמיתיות</span>
+<span class="kw">SELECT</span>
+  <span class="fn">sum</span>(amount)                              <span class="kw">AS</span> mrr,          <span class="cm">-- הכנסה חודשית מתחדשת</span>
+  <span class="fn">sum</span>(amount) * 10                         <span class="kw">AS</span> annual_value, <span class="cm">-- שווי שנתי (שלם 10 קבל 12)</span>
+  <span class="fn">count</span>(*)                                 <span class="kw">AS</span> customers,
+  <span class="fn">round</span>(<span class="fn">sum</span>(amount) / <span class="fn">nullif</span>(<span class="fn">count</span>(*),0))   <span class="kw">AS</span> avg_per_customer
+<span class="kw">FROM</span> webinar_conversions
+<span class="kw">WHERE</span> webinar_id = :w <span class="kw">AND</span> stage = <span class="st">'purchased'</span>;</code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>מקורות:</b> <code class="inl">webinar_attendance</code> מוזן מהלייב/נגן הוידאו (heartbeat), ו‑<code class="inl">webinar_conversions</code> מהסליקה/עגלה. שאילתות אלו מזינות ישירות את לשונית "נתונים ודאטא" ואת "מסקנות".</p></div>
+    <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><p><b>הוסר במכוון:</b> מדדי PPC/ROI (עלות מדיה, CPL, CPA, החזר השקעה) ירדו מהמערכת — הם דרשו אינטגרציית Meta/Google מורכבת ושיוך לא-מדויק. המסך מתמקד בנתונים מדויקים: צפייה, המרה והכנסה.</p></div>
+  </section>
+
+  <section id="templates">
+    <h2><span class="h2num">06b</span>טמפלייט וובינר + שכפול + A/B</h2>
+    <p class="sec-sub">עיקרון מרכזי: מגדירים את הפלואו פעם אחת כ-<b>טמפלייט</b> (<code class="inl">webinar_templates.blueprint_json</code>), ומשכפלים אותו לכל וובינר חדש במקום לבנות מאפס. ה-blueprint מכיל את סדרת המיילים, הגדרות הצ׳אט/נחיתה, וההצעה והמסלולים.</p>
+    <pre><code><span class="cm">// trigger/webinar/clone-from-template.ts — יצירת וובינר/וריאנט מטמפלייט</span>
+<span class="kw">export const</span> cloneFromTemplate = <span class="fn">task</span>({
+  id: <span class="st">"clone-from-template"</span>,
+  run: <span class="kw">async</span> (p: { templateId: <span class="ty">string</span>, name: <span class="ty">string</span>, scheduledAt: <span class="ty">string</span>,
+                  variantGroup?: <span class="ty">string</span>, variantLabel?: <span class="ty">string</span> }) => {
+    <span class="kw">const</span> tpl = <span class="kw">await</span> <span class="fn">getTemplate</span>(p.templateId);
+    <span class="kw">const</span> w   = <span class="kw">await</span> <span class="fn">createWebinar</span>({                 <span class="cm">// מאוכלס מה-blueprint</span>
+      name: p.name, scheduledAt: p.scheduledAt, templateId: tpl.id,
+      variantGroup: p.variantGroup, variantLabel: p.variantLabel,
+      ...<span class="fn">materialize</span>(tpl.blueprintJson),            <span class="cm">// סדרה, צ׳אט, נחיתה, הצעה</span>
+    });
+    <span class="kw">await</span> <span class="fn">provisionWebinar.trigger</span>({ webinarId: w.id }); <span class="cm">// תגית/סגמנטים/חדר/סדרה משלו</span>
+    <span class="kw">return</span> w;
+  },
+});</code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg><p><b>A/B Test:</b> שני וובינרים עם אותו <code class="inl">variant_group</code> ו-<code class="inl">variant_label</code> שונה הם וריאנטים. התנועה מתפצלת, ומדד ההכרעה הוא אחוז ההמרה מאותו משפך (סעיף 06). הוריאנט המנצח מקודם ל-<code class="inl">is_canonical=true</code> בטמפלייט — וכל וובינר עתידי משוכפל ממנו. כך ההצלחה מצטברת.</p></div>
+    <div class="callout ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><p><b>"שכפל את ההצלחה":</b> אפשר גם לשכפל וובינר קיים מצליח ישירות לטמפלייט חדש (<code class="inl">is_canonical</code>) — בלי לבנות פלואו מאפס. השכפול הוא של ה<b>מבנה</b> בלבד; הדאטא (לידים/הודעות/שליחות) של כל וובינר נשאר נפרד.</p></div>
+  </section>
+
+  <section id="sequence">
+    <h2><span class="h2num">07</span>סדרת מיילים מעוגנת-מועד</h2>
+    <p class="sec-sub">מנוע הסדרות הקיים מקדם הרשמות לפי <code class="inl">next_run_at</code>. ההרחבה: כש‑<code class="inl">step.anchor='webinar_start'</code>, ה‑<code class="inl">next_run_at</code> מחושב מול <code class="inl">webinar.scheduled_at ± offset</code> במקום מול זמן ההרשמה. כך אפשר "יום לפני", "שעה לפני", "שעתיים אחרי" — כולם יחסית למועד האירוע, גם אם נרשמים בזמנים שונים.</p>
+    <pre><code><span class="cm">// חישוב מועד צעד בעת קידום הרשמה (advance-enrollments מורחב)</span>
+<span class="kw">function</span> <span class="fn">computeNextRun</span>(step: <span class="ty">SequenceStep</span>, enr: <span class="ty">Enrollment</span>, webinar: <span class="ty">Webinar</span>) {
+  <span class="kw">if</span> (step.anchor === <span class="st">"webinar_start"</span>) {
+    <span class="kw">return</span> <span class="fn">addTime</span>(webinar.scheduledAt, step.offsetAmount, step.offsetUnit);
+    <span class="cm">// offsetAmount שלילי = לפני הוובינר (-1 day / -1 hour)</span>
+  }
+  <span class="kw">return</span> <span class="fn">addTime</span>(enr.enrolledAt, step.waitAmount, step.waitUnit); <span class="cm">// התנהגות קיימת</span>
+}
+
+<span class="cm">// צעד תנאי: הסתעפות לפי משתנה נרשם / לא-נרשם (ובהמשך הגיע/לא-הגיע)</span>
+<span class="kw">function</span> <span class="fn">evalBranch</span>(step: <span class="ty">SequenceStep</span>, c: <span class="ty">Contact</span>): <span class="ty">"yes"</span> | <span class="ty">"no"</span> {
+  <span class="kw">switch</span> (step.conditionJson.variable) {
+    <span class="kw">case</span> <span class="st">"registered"</span>: <span class="kw">return</span> <span class="fn">hasTag</span>(c, step.conditionJson.webinarTag) ? <span class="st">"yes"</span> : <span class="st">"no"</span>;
+    <span class="kw">case</span> <span class="st">"attended"</span>:   <span class="kw">return</span> <span class="fn">hasTag</span>(c, <span class="st">"attended:"</span> + step.conditionJson.slug) ? <span class="st">"yes"</span> : <span class="st">"no"</span>;
+  }
+}</code></pre>
+    <p>דוגמת זרימה אופיינית (מוצגת כ‑timeline במסך "וובינר בודד"):</p>
+    <table>
+      <thead><tr><th>צעד</th><th>עיגון</th><th>מתי</th></tr></thead>
+      <tbody>
+        <tr><td>תודה על ההרשמה + פרטי התחברות</td><td><code>enrollment</code></td><td>מיד</td></tr>
+        <tr><td>תזכורת — מחר נפגשים</td><td><code>webinar_start</code></td><td>‎-1 יום</td></tr>
+        <tr><td>מתחילים בעוד שעה</td><td><code>webinar_start</code></td><td>‎-1 שעה</td></tr>
+        <tr><td>★ מועד הוובינר ★</td><td>—</td><td>עוגן</td></tr>
+        <tr><td>תנאי: נרשם / לא-נרשם</td><td><code>condition</code></td><td>פיצול 2 מסלולים</td></tr>
+        <tr><td>הגיע → "הצעה מיוחדת" · לא-הגיע → "הנה ההקלטה"</td><td><code>webinar_start</code></td><td>‎+2 שעות</td></tr>
+        <tr><td>הצעה אחרונה</td><td><code>webinar_start</code></td><td>‎+3 ימים</td></tr>
+      </tbody>
+    </table>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>שימוש חוזר בעורך:</b> כל צעד מייל פותח את <code class="inl">../דיוור/עורך מייל ויזואלי.html</code> — אותו עורך בלוקים של הדיוור. אין עורך שני. הרינדור (snapshot משתנים + בלוק הסרה חובה) זהה למתואר במדריך הדיוור.</p></div>
+  </section>
+
+  <section id="chat">
+    <h2><span class="h2num">08</span>צ׳אט בזמן אמת + הרשאות</h2>
+    <p class="sec-sub">מקור האמת להודעות הוא Postgres (<code class="inl">chat_messages</code>). השידור החי נעשה מעל שכבת pub/sub — Ably/Pusher כ‑MVP, או LiveKit data-channels הקיים בסטאק. ערוץ פר-וובינר: <code class="inl">webinar:&lt;id&gt;</code>.</p>
+    <h3>שרשרת הרשאות (customers-only)</h3>
+    <pre><code><span class="cm">// app/api/chat/[channelId]/token/route.ts — הנפקת טוקן הצטרפות</span>
+<span class="kw">export async function</span> <span class="fn">POST</span>(req, { params }) {
+  <span class="kw">const</span> contact = <span class="kw">await</span> <span class="fn">requireSession</span>(req);
+  <span class="kw">const</span> ch = <span class="kw">await</span> <span class="fn">getChannel</span>(params.channelId);
+
+  <span class="cm">// חדר וובינר = לקוחות בלבד עם תגית הוובינר</span>
+  <span class="kw">if</span> (ch.visibility === <span class="st">"customers"</span>) {
+    <span class="kw">const</span> ok = contact.status === <span class="st">"customer"</span>
+            &amp;&amp; <span class="kw">await</span> <span class="fn">hasTag</span>(contact.id, <span class="st">`webinar:</span>${ch.webinarSlug}<span class="st">`</span>);
+    <span class="kw">if</span> (!ok) <span class="kw">return</span> <span class="fn">json</span>({ error: <span class="st">"forbidden"</span>, code: <span class="st">"NOT_CUSTOMER"</span> }, 403);
+  }
+  <span class="kw">return</span> <span class="fn">json</span>({ token: <span class="fn">issueRealtimeToken</span>(contact.id, <span class="st">`webinar:</span>${ch.id}<span class="st">`</span>) });
+}
+
+<span class="cm">// שליחת הודעה: כותבים ל-Postgres (מקור אמת) ואז משדרים</span>
+<span class="kw">async function</span> <span class="fn">sendMessage</span>(channelId, contactId, body) {
+  <span class="kw">const</span> msg = <span class="kw">await</span> <span class="fn">db.chatMessage.create</span>({ data: { channelId, contactId, body } });
+  <span class="kw">await</span> <span class="fn">realtime.publish</span>(<span class="st">`webinar:</span>${channelId}<span class="st">`</span>, <span class="st">"message"</span>, <span class="fn">serialize</span>(msg));
+  <span class="kw">return</span> msg;
+}</code></pre>
+    <div class="callout ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><p><b>חברות ממומשת:</b> אירוע <code class="inl">payment.succeeded</code> מוסיף שורה ל‑<code class="inl">chat_channel_members</code> לכל וובינר שהלקוח מתויג אליו — כך אימות הטוקן והצגת רשימת החדרים מהירים (אינדקס) ולא דורשים חישוב סגמנט בכל בקשה.</p></div>
+    <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><p><b>אכיפה כפולה:</b> ההרשאה נבדקת גם בהנפקת הטוקן (כניסה) וגם בכתיבת הודעה (server-side), כדי שטוקן שדלף או חבר שירד מסטטוס לקוח לא יוכל לפרסם. ירידת סטטוס (<code class="inl">churned</code>) מסירה את החברות מהחדר.</p></div>
+  </section>
+
+  <section id="screens">
+    <h2><span class="h2num">09</span>מפת מסכים וקישורים</h2>
+    <p class="sec-sub">4 מסכים חדשים: 3 באדמין (מרכז בקרה הנהלה) + 1 במועדון. כולם מאופיינים ומעוצבים.</p>
+    <table>
+      <thead><tr><th>מסך</th><th>קובץ</th><th>תפקיד</th><th>סטטוס</th></tr></thead>
+      <tbody>
+        <tr><td>ניהול וובינרים</td><td><code>וובינרים - ניהול.html</code></td><td>רשימת אירועים + KPIs + משפך-מיני לכל וובינר + יצירה.</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>יצירת/עריכת וובינר</td><td><code>וובינרים - יצירה.html</code></td><td>טופס + פאנל "מה ייווצר אוטומטית" (2 רשימות, חדר, סדרה) חי.</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>וובינר בודד</td><td><code>וובינרים - וובינר בודד.html</code></td><td>3 לשוניות: הקמה והגדרות · נתונים ודאטא (Retention+משפך+הכנסה) · מסקנות. מקשר לדיוור, לא מנהל אותו.</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>חדר צ׳אט וובינר</td><td><code>../מועדון/מועדון - וובינר (חדר).html</code></td><td>ערוץ לקוחות-בלבד במועדון, real-time, סקשן "וובינרים".</td><td><span class="pill v1">מאופיין</span></td></tr>
+        <tr><td>עורך מייל ויזואלי</td><td><code>../דיוור/עורך מייל ויזואלי.html</code></td><td>העורך המשותף (קיים) — נפתח מצעד מייל בסדרה.</td><td><span class="pill v2">קיים</span></td></tr>
+        <tr><td>מנוע דיוור</td><td><code>דיוור הנהלה - *.html</code></td><td>סגמנטים/קהלים/קמפיינים/סדרות (קיים) — נצרך כמו שהוא.</td><td><span class="pill v2">קיים</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="roadmap">
+    <h2><span class="h2num">10</span>מפת דרכים</h2>
+    <table>
+      <thead><tr><th>שלב</th><th>תכולה</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill v1">שלב 1 (MVP)</span></td><td>יצירת וובינר + אורקסטרציה אטומית (תגית/כלל/2 סגמנטים/חדר/שלד סדרה) · <b>טמפלייט וובינר + שכפול</b> · בלעדיות דרך סטטוס · משפך פר-וובינר · Retention + סיכום הכנסה · חדר צ׳אט real-time לקוחות-בלבד · סדרה מעוגנת-מועד עם הסתעפות נרשם/לא-נרשם.</td></tr>
+        <tr><td><span class="pill v2">שלב 2</span></td><td><b>A/B Test על טמפלייט</b> (וריאנטים + הכרעת מנצח → <code class="inl">is_canonical</code>) · הגיע/לא-הגיע (<code class="inl">attended</code>) · סנכרון נוכחות מהלייב · התראות פוש על הודעות צ׳אט · יציאה אוטומטית מסדרת לידים בהמרה.</td></tr>
+        <tr><td><span class="pill fut">שלב 3</span></td><td>אנליטיקת השוואת וובינרים · אוטומציית "וובינר חוזר" · אינטגרציית לייב/זום מלאה · מודרציית צ׳אט מתקדמת.</td></tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+  try{var t=localStorage.getItem("wb-mailing-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}
+  document.getElementById("themeBtn").addEventListener("click",function(){var h=document.documentElement;var n=h.getAttribute("data-theme")==="dark"?"light":"dark";h.setAttribute("data-theme",n);try{localStorage.setItem("wb-mailing-theme",n);}catch(e){}});
+  var links=[...document.querySelectorAll('.side a')];
+  var secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  window.addEventListener('scroll',function(){
+    var y=window.scrollY+90, idx=0;
+    secs.forEach((s,i)=>{ if(s && s.offsetTop<=y) idx=i; });
+    links.forEach(l=>l.classList.remove('active')); links[idx].classList.add('active');
+  });
+</script>
+</body>
+</html>
