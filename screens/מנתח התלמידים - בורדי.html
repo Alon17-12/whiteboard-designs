@@ -180,7 +180,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .rail{width:312px;flex:0 0 312px;border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;min-height:0}
 .rhead{padding:18px 18px 14px;border-bottom:1px solid var(--border)}
 .rhead .rtitle{display:flex;align-items:center;gap:9px}
-.rhead .rtitle .bmark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--navy),var(--cyan));color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;font-size:13px}
+.rhead .rtitle .bmark{width:48px;height:48px;background:none;border:none;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.rhead .rtitle .bmark img{width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(37,62,122,.22))}
 .rhead h2{font-family:'Fredoka';font-size:16px;font-weight:700;flex:1}
 .rhead .live{font-size:9.5px;font-weight:700;color:var(--green-bright);display:flex;align-items:center;gap:4px}
 .rhead .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green-bright);animation:pulse 1.6s infinite}
@@ -281,7 +282,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
       <aside class="rail">
         <div class="rhead">
-          <div class="rtitle"><div class="bmark">DB</div><h2>DATA Board</h2><span class="live">חי</span></div>
+          <div class="rtitle"><div class="bmark"><img src="../BOARDi/SVG/12.svg" alt="בורדי" onerror="this.parentNode.textContent='DB'"></div><h2>DATA Board</h2><span class="live">חי</span></div>
           <div class="rsub">נעץ תובנות מהשיחה — בורדי מרכיב מהן דוח חכם ומעוצב.</div>
           <button class="dlbtn" id="dlbtn" onclick="downloadReport()" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> הורד דוח מעוצב</button>
         </div>
@@ -289,6 +290,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
           <div class="sectlabel">📌 נעוץ <span class="cnt" id="pincount">0</span></div>
           <div id="board"></div>
           <div class="sectlabel" style="margin-top:16px">⚡ בורדי ממליץ לנעוץ</div>
+          <!-- ⚠️ DEMO ONLY: the recommendations below (and every "המלצת בורדי" card) are HARD-CODED placeholder text for DESIGN purposes.
+               In production BOARDi must generate REAL recommendations from the teacher's ACTUAL data (Metrics Layer) — never invented.
+               This feed shares the same source as the dashboard's "התובנות של בורדי" (BOARDi's Insights) on לוח הבקרה: one insight engine,
+               surfaced both on the dashboard and here in the DATA Board. See references/data-viz.md + spec §14.5. -->
           <div id="feed"></div>
         </div>
       </aside>

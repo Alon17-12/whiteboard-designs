@@ -104,9 +104,9 @@ a{text-decoration:none;color:inherit}
 .fhead p{font-size:13.5px;color:var(--text-sub);margin-top:3px;line-height:1.5}
 
 /* ===== CARD GRID ===== */
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.grid.c2{grid-template-columns:1fr 1fr;max-width:720px}
-.grid.c4{grid-template-columns:repeat(2,1fr);max-width:780px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:780px;margin-inline:auto}
+.grid.c2{grid-template-columns:1fr 1fr;max-width:720px;margin-inline:auto}
+.grid.c4{grid-template-columns:repeat(2,1fr);max-width:780px;margin-inline:auto}
 .card{position:relative;text-align:right;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:18px 18px 16px;transition:.16s;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);cursor:pointer;animation:pop .34s ease}
 @keyframes pop{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
 .card:hover{border-color:var(--cyan);transform:translateY(-3px);box-shadow:var(--shadow)}
@@ -123,6 +123,19 @@ a{text-decoration:none;color:inherit}
 .badge.soon{background:color-mix(in srgb,var(--yellow) 22%,var(--surface));color:#9a8600;border:1px solid color-mix(in srgb,var(--yellow) 55%,transparent)}
 .badge.branch{background:var(--surface-3);color:var(--text-sub);border:1px solid var(--border)}
 [data-theme="dark"] .badge.soon{color:var(--yellow)}
+
+/* ===== recent chats — continue where you left off ===== */
+#recent{max-width:780px;margin-inline:auto;width:100%}
+.recent{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.rrow{display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:11px 15px;transition:.15s;cursor:pointer}
+.rrow:hover{border-color:var(--cyan);background:var(--surface-2)}
+.rrow .ri{width:36px;height:36px;border-radius:10px;color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.rrow .ri svg{width:18px;height:18px}
+.rrow .rt{flex:1;min-width:0}
+.rrow .rt b{font-size:13.5px;font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rrow .rt span{font-size:11.5px;color:var(--text-xs)}
+.rrow .rc{font-size:11px;color:var(--text-sub);background:var(--surface-3);padding:3px 9px;border-radius:100px;flex:0 0 auto}
+.rrow .rgo{color:var(--text-xs);flex:0 0 auto}.rrow .rgo svg{width:16px;height:16px}
 
 /* toast */
 .toast{position:fixed;bottom:22px;left:22px;background:var(--navy);color:#fff;padding:13px 18px;border-radius:12px;font-size:13.5px;font-weight:500;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;transform:translateX(-120%);transition:.32s cubic-bezier(.2,.9,.3,1);z-index:60;max-width:340px}
@@ -208,6 +221,31 @@ a{text-decoration:none;color:inherit}
         <!-- CARD GRID (shared, rendered per level) -->
         <div class="grid" id="grid"></div>
 
+        <!-- CONTINUE WHERE YOU LEFT OFF (root only — from previous chats) -->
+        <div id="recent">
+          <div class="sec-lbl" style="margin-top:26px">המשך מאיפה שהפסקת</div>
+          <div class="recent">
+            <div class="rrow" onclick="go('בונה הקורסים - בורדי.html')">
+              <div class="ri" style="background:linear-gradient(135deg,#38C4F2,#2497c9)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20l9-5-9-5-9 5 9 5z"/></svg></div>
+              <div class="rt"><b>קורס: צילום מוצר למתחילים</b><span>בונה הקורסים · נערך אתמול 21:40 · רמת ודאות 78%</span></div>
+              <div class="rc">טיוטה</div>
+              <div class="rgo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div>
+            </div>
+            <div class="rrow" onclick="go('ניתוח מכירות - בורדי.html')">
+              <div class="ri" style="background:linear-gradient(135deg,#9B6BF2,#7c4dd6)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+              <div class="rt"><b>סקירת מכירות · יוני</b><span>ניתוח מכירות · נערך לפני 3 ימים · 4 תובנות נעוצות ל-DATA Board</span></div>
+              <div class="rc">DATA Board</div>
+              <div class="rgo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div>
+            </div>
+            <div class="rrow" onclick="go('בורדי שיעורים.html')">
+              <div class="ri" style="background:linear-gradient(135deg,#253E7A,#3552a0)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+              <div class="rt"><b>הוספת פרק: עריכה מתקדמת</b><span>בורדי שיעורים · נערך לפני שבוע · ממתין לאישור</span></div>
+              <div class="rc">בתהליך</div>
+              <div class="rgo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -272,14 +310,16 @@ let path=['root'];
 const grid=document.getElementById('grid'), roothead=document.getElementById('roothead'),
       fnav=document.getElementById('fnav'), crumb=document.getElementById('crumb'),
       fheadIcon=document.getElementById('fheadIcon'), fheadT=document.getElementById('fheadT'),
-      fheadS=document.getElementById('fheadS'), hub=document.getElementById('hub');
+      fheadS=document.getElementById('fheadS'), hub=document.getElementById('hub'),
+      recent=document.getElementById('recent');
 const cur=()=>path[path.length-1];
+function go(file){ location.href=file; }
 const chevL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>';
 const clock='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 
 function cardHTML(id){
   const n=NODES[id], branch=!!n.kids;
-  const badge = branch? `<span class="badge branch">${n.kids.length} אפשרויות</span>`
+  const badge = branch? ``
               : n.soon? `<span class="badge soon">בקרוב</span>`
               : `<span class="badge live">מוכן</span>`;
   const foot = branch?'בחר':(n.soon?'בקרוב':'פתח');
@@ -296,6 +336,7 @@ function cardHTML(id){
 function render(){
   const id=cur(), n=NODES[id], atRoot=(id==='root');
   roothead.style.display=atRoot?'':'none';
+  recent.style.display=atRoot?'':'none';
   fnav.style.display=atRoot?'none':'';
   const kids=n.kids||[];
   grid.className='grid c'+kids.length;
