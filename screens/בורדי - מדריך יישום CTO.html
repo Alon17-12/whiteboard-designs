@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHITEBOARD · בורדי (BOARDi) — מדריך יישום CTO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green:#7DC57A;--green-bright:#22c55e;--yellow:#EAD654;--purple:#9B6BF2;
+  --bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.18);
+  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);
+  --r-sm:10px;--r-md:16px;--shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);
+  --code-bg:#0f1b33;--code-text:#cfe3f7;
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.52);--text-xs:rgba(221,229,245,0.3);--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);
+  --code-bg:#060d1a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:var(--cyan);text-decoration:none}
+.shell{display:flex;min-height:100vh}
+.side{width:248px;flex:0 0 248px;background:var(--navy);color:#fff;position:sticky;top:0;height:100vh;overflow-y:auto;padding:22px 16px}
+.side .brand{display:flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:700;font-size:17px;margin-bottom:6px}
+.side .brand .lg{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),#fff3);display:flex;align-items:center;justify-content:center;font-weight:700}
+.side .sub{font-size:12px;color:#ffffff88;margin-bottom:22px;padding-right:2px}
+.side nav a{display:block;color:#dbe6ff;font-size:13.5px;padding:9px 12px;border-radius:8px;margin-bottom:2px;transition:.15s;border-right:3px solid transparent}
+.side nav a:hover{background:#ffffff12}
+.side nav a.on{background:#ffffff18;color:#fff;font-weight:600;border-right-color:var(--cyan)}
+.side .tag{font-size:10.5px;color:#ffffff66;text-transform:uppercase;letter-spacing:1px;margin:18px 12px 6px;display:block}
+.main{flex:1;min-width:0;padding:48px clamp(24px,5vw,72px);max-width:1000px}
+.toprow{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.5px;color:var(--cyan);background:color-mix(in srgb,var(--cyan) 14%,transparent);padding:6px 14px;border-radius:100px;border:1px solid color-mix(in srgb,var(--cyan) 26%,transparent)}
+.iconbtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--text-main);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm)}
+h1{font-family:'Fredoka';font-weight:700;font-size:clamp(30px,4.5vw,46px);line-height:1.1;letter-spacing:-.4px;margin:14px 0 10px}
+h2{font-family:'Fredoka';font-weight:700;font-size:clamp(22px,2.6vw,30px);margin:0 0 14px;letter-spacing:-.2px}
+h3{font-family:'Fredoka';font-weight:600;font-size:18px;margin:22px 0 8px}
+p{color:var(--text-sub);margin-bottom:12px}
+.lead{font-size:18px;color:var(--text-sub);max-width:70ch;margin-bottom:10px}
+section{padding:38px 0;border-top:1px solid var(--border);scroll-margin-top:20px}
+section:first-of-type{border-top:none}
+b,strong{color:var(--text-main);font-weight:700}
+ul{margin:0 22px 14px 0;color:var(--text-sub)}li{margin-bottom:7px}
+.hl{color:var(--cyan);font-weight:700}.hl-g{color:var(--green-bright);font-weight:700}.hl-p{color:var(--pink);font-weight:700}
+.rules{background:linear-gradient(135deg,var(--navy),var(--navy-dark));color:#fff;border-radius:var(--r-md);padding:24px 26px;margin:22px 0;box-shadow:var(--shadow)}
+.rules h3{color:#fff;margin:0 0 14px;font-size:16px;display:flex;align-items:center;gap:9px}
+.rules .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.rules .r{background:#ffffff12;border:1px solid #ffffff20;border-radius:10px;padding:13px 15px}
+.rules .r .n{font-family:'Fredoka';font-weight:600;color:var(--cyan);font-size:12.5px;margin-bottom:4px}
+.rules .r .t{font-size:12.5px;color:#e7eeff;line-height:1.45}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:18px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:18px 20px;box-shadow:var(--shadow-sm)}
+.card h3{margin:0 0 7px;font-size:16px}
+.card p{font-size:13.5px;margin:0}
+.ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:11px;background:color-mix(in srgb,var(--cyan) 15%,transparent);color:var(--cyan)}
+pre{background:var(--code-bg);color:var(--code-text);border-radius:var(--r-md);padding:18px 20px;overflow-x:auto;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.8px;line-height:1.65;margin:14px 0;direction:ltr;text-align:left;border:1px solid #ffffff14}
+pre .c{color:#6b88b0}pre .k{color:#7cc7ff}pre .s{color:#9ae6a4}pre .f{color:#f7a3be}
+code.inl{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:var(--surface-3);color:#1769a3;padding:2px 7px;border-radius:6px;direction:ltr;display:inline-block}
+[data-theme="dark"] code.inl{color:var(--cyan)}
+.flow{display:flex;flex-direction:column;gap:9px;margin:16px 0}
+.fstep{display:flex;gap:13px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 16px;box-shadow:var(--shadow-sm)}
+.fstep .n{flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;font-size:13px}
+[data-theme="dark"] .fstep .n{background:var(--cyan);color:var(--navy-dark)}
+.fstep div{font-size:14px;color:var(--text-main)}
+.tbl{border:1px solid var(--border);border-radius:var(--r-md);overflow:auto;margin:16px 0;box-shadow:var(--shadow-sm);background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th,td{padding:11px 14px;text-align:right;border-bottom:1px solid var(--border)}
+thead th{background:var(--navy);color:#fff;font-family:'Fredoka';font-weight:500;font-size:13px}
+tbody tr:last-child td{border-bottom:none}tbody td:first-child{font-weight:700}
+.note{display:flex;gap:13px;align-items:flex-start;border-radius:var(--r-md);padding:16px 18px;margin:16px 0;font-size:14px;line-height:1.55}
+.note.cy{background:color-mix(in srgb,var(--cyan) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--cyan) 35%,transparent)}
+.note.y{background:color-mix(in srgb,var(--yellow) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--yellow) 50%,transparent)}
+.note.g{background:color-mix(in srgb,var(--green-bright) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--green-bright) 38%,transparent)}
+.note.p{background:color-mix(in srgb,var(--purple) 12%,var(--surface));border:1px solid color-mix(in srgb,var(--purple) 40%,transparent)}
+.note b{font-weight:700}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:100px;background:color-mix(in srgb,var(--cyan) 16%,transparent);color:var(--cyan)}
+.pill.g{background:color-mix(in srgb,var(--green-bright) 16%,transparent);color:var(--green-bright)}
+.pill.y{background:color-mix(in srgb,var(--yellow) 22%,transparent);color:#a8971a}
+.pill.pu{background:color-mix(in srgb,var(--purple) 18%,transparent);color:var(--purple)}
+.diagram{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:22px;margin:16px 0;box-shadow:var(--shadow-sm);overflow-x:auto}
+.diagram pre{background:transparent;color:var(--text-main);border:none;padding:0;font-size:12px;direction:ltr}
+[data-theme="dark"] .diagram pre{color:var(--text-sub)}
+@media (max-width:820px){.side{display:none}.main{padding:28px 20px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><span class="lg">B</span> BOARDi</div>
+    <div class="sub">מדריך יישום CTO · עוזר ה‑AI של WHITEBOARD</div>
+    <nav id="nav">
+      <span class="tag">המוצר</span>
+      <a href="#overview" class="on">סקירה והחלטות מפתח</a>
+      <a href="#hub">מודל ה‑Hub</a>
+      <a href="#architecture">ארכיטקטורת ה‑Runtime</a>
+      <span class="tag">הליבה</span>
+      <a href="#loop">לולאת ה‑Orchestrator</a>
+      <a href="#rag">RAG ומקורות דאטא</a>
+      <a href="#datasources">מקורות נתונים</a>
+      <a href="#action">שכבת הפעולה (Action API)</a>
+      <a href="#certainty">רמת הוודאות</a>
+      <a href="#chat">ניהול צ'אטים</a>
+      <a href="#databoard">DATA Board</a>
+      <a href="#handoff">Handoff בין‑בורדי</a>
+      <a href="#integrations">אינטגרציות + LLM</a>
+      <span class="tag">בנייה</span>
+      <a href="#db">סכמת DB</a>
+      <a href="#jobs">משימות רקע</a>
+      <a href="#boardis">בורדי ה‑MVP</a>
+      <a href="#guardrails">גבולות ובטיחות</a>
+      <a href="#components">רכיבי UI</a>
+      <a href="#screens">מסכי עיצוב</a>
+      <span class="tag">תכנון</span>
+      <a href="#canvas">הקנבס הפעיל</a>
+      <a href="#roadmap">מפת דרכים</a>
+      <a href="#stack">סיכום טכנולוגי</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="toprow">
+      <span class="eyebrow"><span style="width:7px;height:7px;border-radius:50%;background:var(--cyan);display:inline-block"></span> מדריך יישום · CTO</span>
+      <button class="iconbtn" id="theme" aria-label="מצב תצוגה"><svg id="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section id="overview">
+      <h1>בורדי — עוזר ה‑AI שפועל במערכת</h1>
+      <p class="lead">מדריך יישום טכני להפיכת בורדי ממוקאפ למוצר פונקציונלי: משפחה של "בורדי‑משימה" הרצים על מעטפת ריצה אחת, מחוברים לדאטא של WHITEBOARD, שבונים תוכן ומבצעים פעולות אמיתיות במערכת — לא רק מחזירים טקסט.</p>
+
+      <div class="rules">
+        <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> כללי ה‑CTO — חובה</h3>
+        <div class="grid">
+          <div class="r"><div class="n">1 · Next.js</div><div class="t">App Router, Server Components כברירת מחדל</div></div>
+          <div class="r"><div class="n">2 · TypeScript</div><div class="t">strict, ללא any, Zod לכל סכמת כלי</div></div>
+          <div class="r"><div class="n">3 · Trigger.dev</div><div class="t">כל job ארוך (תמונות/מצגות) — אין setTimeout</div></div>
+          <div class="r"><div class="n">4 · LLM Adapter</div><div class="t">Claude ראשי, מאחורי ממשק ספק אחיד</div></div>
+          <div class="r"><div class="n">5 · Confirm‑before‑write</div><div class="t">כל פעולת כתיבה = preview → אישור מרצה</div></div>
+          <div class="r"><div class="n">6 · Tenancy</div><div class="t">RLS פר‑מרצה על כל שליפה/כתיבה</div></div>
+        </div>
+      </div>
+
+      <h3>ארבע החלטות המוצר</h3>
+      <div class="cards">
+        <div class="card"><div class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div><h3>Hub, לא נתב</h3><p>המרצה בוחר את הבורדי הרלוונטי מראש. אין שלב סיווג‑כוונה → <b>אפס latency‑נתב, אפס טעויות ניתוב</b>.</p></div>
+        <div class="card"><div class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.2 4.2l4.3 4.3M15.5 15.5l4.3 4.3M1 12h6M17 12h6"/></svg></div><h3>מעטפת אחת</h3><p>ליבה משותפת (Runtime); לכל בורדי סקילים, scope דאטא וכלים משלו. גישה A — מודל אחד + כלים.</p></div>
+        <div class="card"><div class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div><h3>בורדי פועל</h3><p>בונה‑הקורס משנה את המערכת בפועל: ליי‑אאוט, פרקים, שיעורים, קבצים, הערות. דרך <b>Action API</b>.</p></div>
+        <div class="card"><div class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>Thread לפי פרויקט</h3><p>שיחה נשמרת וקשורה לישות (קורס/קמפיין) — אפשר לחזור ולהמשיך לבנות אותו קורס מחר.</p></div>
+      </div>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div><b>MVP:</b> צד המרצה. בורדי‑דגל = <b>בונה הקורסים</b> (פעיל), אחריו <b>יוצר הדיוור</b>. <b>מנתח תלמידים</b> ו‑<b>עדכון קורס קיים</b> נכנסים מיד אחרי על אותה מעטפת. <b>בורדי‑תלמיד</b> (RAG על תמלולי שיעורים) = שלב 2.</div></div>
+    </section>
+
+    <!-- HUB -->
+    <section id="hub">
+      <h2>מודל ה‑Hub</h2>
+      <p>מסך הבית של בורדי מציג כרטיסי משימה ("מה תרצה לעשות היום?"). המרצה בוחר → נכנס לבורדי ממוקד. אין ניתוב אוטומטי — הבחירה היא ה"ניתוב".</p>
+      <div class="tbl"><table>
+        <thead><tr><th>בורדי</th><th>סטטוס</th><th>סקופ דאטא</th><th>תפקיד</th></tr></thead>
+        <tbody>
+          <tr><td>בונה הקורסים</td><td><span class="pill g">MVP · דגל</span></td><td>קורסים, ליי‑אאוט, ערכת מותג</td><td>בונה ליי‑אאוט, פרקים, שיעורים; פועל אקטיבית במערכת</td></tr>
+          <tr><td>יוצר הדיוור</td><td><span class="pill g">MVP</span></td><td>קהלים, קמפיינים, ערכת מותג</td><td>מייל/סדרה ב‑HTML או בונה‑בלוקים; מחובר למערכת הדיוור</td></tr>
+          <tr><td>מנתח התלמידים</td><td><span class="pill y">Next</span></td><td>אנליטיקס, התקדמות, נטישה</td><td>read‑only: תובנות והמלצות פעולה</td></tr>
+          <tr><td>עדכון קורס קיים</td><td><span class="pill y">Next</span></td><td>קורס קיים</td><td>עריכה/הוספת תוכן לקורס קיים</td></tr>
+          <tr><td>בורדי‑תלמיד</td><td><span class="pill pu">חזון</span></td><td>תמלולי שיעורים</td><td>RAG על תמלולים, מענה לשאלות התלמיד</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note g"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>עיקרון מודולריות שמתבגרת:</b> כל בורדי הוא רשומה ב‑<code class="inl">BoardiRegistry</code> (system‑prompt + כלים + scope). היום כולם רצים על מודל אחד (גישה A). מחר אפשר לעטוף בורדי בסוכן ייעודי (גישה B) — בלי לגעת בבורדים האחרים.</div></div>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section id="architecture">
+      <h2>ארכיטקטורת ה‑Runtime</h2>
+      <p>רכיב שרת אחד שכל בורדי רץ עליו. הבורדי הנבחר טוען את המעטפת שלו (Skill Registry), והלולאה מריצה מודל שיחה אחד עם tool‑calling.</p>
+      <div class="diagram"><pre>
+  המרצה ──▶ בוחר בורדי‑משימה (Hub)
+                │
+                ▼
+   ┌───────────────────────────────────────────────┐
+   │                BOARDi Runtime                  │
+   │                                                │
+   │   Session/Chat Mgr        Skill Registry       │
+   │   (threads + history)     (per‑boardi prompt   │
+   │        │                   + allowed tools)     │
+   │        ▼                        │              │
+   │   ┌──────────────┐   ┌──────────▼───────────┐  │
+   │   │ Orchestrator │◀─▶│    Tool Executor     │  │
+   │   │  loop (LLM)  │   │  • RAG retrieve      │  │
+   │   └──────────────┘   │  • Action API (write)│  │
+   │        │             │  • Web research      │  │
+   │        ▼             │  • Image generation  │  │
+   │   ┌──────────────┐   │  • Brand kit         │  │
+   │   │  Guardrails  │   └──────────────────────┘  │
+   │   │ confirm +    │        Handoff Bus          │
+   │   │ tenancy      │                             │
+   │   └──────────────┘     LLM Abstraction         │
+   └───────────────────────┬───────────────────────┘
+                           ▼
+     WHITEBOARD DB + Services  (courses · layouts ·
+     lessons · students · mailing · brand · files)
+      </pre></div>
+      <div class="cards">
+        <div class="card"><span class="pill">Registry</span><h3>Skill Registry</h3><p>לכל בורדי: system‑prompt, רשימת כלים מותרים, scope דאטא. נטען לפי הבורדי הנבחר.</p></div>
+        <div class="card"><span class="pill">Loop</span><h3>Orchestrator</h3><p>לולאת LLM אחת: הודעה → tool‑calls → תוצאות → תשובה. Streaming ל‑UI.</p></div>
+        <div class="card"><span class="pill">Executor</span><h3>Tool Executor</h3><p>מריץ כלי read/write/external, אוכף tenancy, מחזיר preview לכלי כתיבה.</p></div>
+        <div class="card"><span class="pill">Adapter</span><h3>LLM Abstraction</h3><p>ממשק ספק אחיד. Claude ברירת מחדל; GPT/Gemini = מימוש חלופי.</p></div>
+      </div>
+    </section>
+
+    <!-- LOOP -->
+    <section id="loop">
+      <h2>לולאת ה‑Orchestrator</h2>
+      <p>הלב של גישה A: מודל אחד עם כלים. הבורדי הנבחר קובע את ה‑system‑prompt ואת סט הכלים; הלולאה רצה עד שהמודל מסיים או מגיע לגבול צעדים.</p>
+      <pre><span class="c">// lib/boardi/run.ts — לולאת ריצה אחת של בורדי</span>
+<span class="k">export async function</span> <span class="f">runBoardi</span>(threadId: string, userMsg: string) {
+  <span class="k">const</span> thread = <span class="k">await</span> <span class="f">loadThread</span>(threadId);          <span class="c">// כולל tenancy</span>
+  <span class="k">const</span> boardi = boardiRegistry[thread.boardiType];  <span class="c">// prompt + tools + scope</span>
+  <span class="k">const</span> context = <span class="k">await</span> rag.<span class="f">retrieve</span>(boardi.scope, thread, userMsg);
+
+  <span class="k">let</span> messages = [<span class="f">systemPrompt</span>(boardi, context), ...thread.history, <span class="f">user</span>(userMsg)];
+  <span class="k">for</span> (<span class="k">let</span> step = 0; step &lt; MAX_STEPS; step++) {
+    <span class="k">const</span> res = <span class="k">await</span> llm.<span class="f">chat</span>({ messages, tools: boardi.tools }); <span class="c">// Adapter</span>
+    <span class="k">if</span> (!res.toolCalls?.length) <span class="k">return</span> <span class="f">finalize</span>(thread, res);   <span class="c">// תשובה סופית</span>
+
+    <span class="k">for</span> (<span class="k">const</span> call <span class="k">of</span> res.toolCalls) {
+      <span class="k">if</span> (tools[call.name].kind === <span class="s">"write"</span>)
+        <span class="k">await</span> <span class="f">requireConfirmation</span>(thread, call);  <span class="c">// preview → אישור מרצה</span>
+      <span class="k">const</span> out = <span class="k">await</span> executor.<span class="f">run</span>(call, thread.teacherId);
+      messages.<span class="f">push</span>(<span class="f">toolResult</span>(call, out));
+    }
+  }
+}</pre>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div>כלי <b>write</b> אינו מבוצע בזרימה הרגילה — הוא מוחזר ל‑UI כ‑preview, המרצה מאשר, ורק אז ה‑executor מריץ אותו. פעולות ארוכות (תמונות/מצגות) נדחפות ל‑Trigger.dev ומעדכנות את ה‑thread כשמסתיימות.</div></div>
+    </section>
+
+    <!-- RAG -->
+    <section id="rag">
+      <h2>RAG ומקורות דאטא</h2>
+      <p>בורדי לא "יודע" את הדאטא — הוא <b>שולף</b> אותו בזמן ריצה לפי scope הבורדי, תמיד מסונן ב‑<code class="inl">teacherId</code>. שילוב של שליפה וקטורית (תוכן טקסטואלי) ושליפה מובנית (SQL לנתונים כמותיים).</p>
+      <div class="tbl"><table>
+        <thead><tr><th>מקור</th><th>סוג שליפה</th><th>נצרך על‑ידי</th></tr></thead>
+        <tbody>
+          <tr><td>תוכן קורסים (ליי‑אאוט, פרקים, שיעורים)</td><td>וקטורי + SQL</td><td>בונה קורסים, עדכון קורס</td></tr>
+          <tr><td>ערכת מותג (צבעים, לוגו, פונטים, טון)</td><td>SQL</td><td>כל הבורדים</td></tr>
+          <tr><td>נתוני תלמידים ואנליטיקס</td><td>SQL</td><td>מנתח תלמידים, דיוור</td></tr>
+          <tr><td>קהלים וקמפיינים</td><td>SQL</td><td>יוצר דיוור</td></tr>
+          <tr><td>קבצים ונכסים</td><td>מטא‑דאטה</td><td>בונה קורסים</td></tr>
+          <tr><td>תמלולי שיעורים <span class="pill pu">שלב 2</span></td><td>וקטורי</td><td>בורדי‑תלמיד</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note y"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span><div><b>מנוע וקטורי:</b> ברירת מחדל <code class="inl">pgvector</code> על אותו Postgres (פשטות תפעולית). אינדוקס תוכן הקורסים ב‑upsert בכל שינוי; אינדוקס תמלולים (שלב 2) כ‑job רקע לאחר תמלול.</div></div>
+    </section>
+
+    <!-- DATA SOURCES -->
+    <section id="datasources">
+      <h2>מקורות נתונים וחיבורים</h2>
+      <p>האנליטיקס של בורדי מבוסס על <b>מודל דאטא מעשי</b>: בורדי לא מחווט APIs חיצוניים בכל בקשה, והמרצה לא מחבר עשרות אינטגרציות. בורדי קורא משכבת <b>Metrics Layer</b> פנימית ומאוחדת ש‑WHITEBOARD ממלאת. כלי השליפה של מנתח‑התלמידים (<code class="inl">query_analytics</code>) מדבר <b>רק</b> מול החוזה הפנימי הזה — לעולם לא מול Meta/Google בזמן שאילתה.</p>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div><b>העיקרון:</b> <b>שכבת סנכרון</b> (קונקטורים native + Make.com — כבר בסטאק של WHITEBOARD) מושכת את המקורות החיצוניים <b>בתזמון</b> אל <b>Metrics Store</b> פנימי. בורדי קורא מה‑Store בלבד → אפס קריאות API בזמן שאילתה, ביצועים יציבים, ואין תלות בזמינות ספק חיצוני בזמן אמת. <b>זה מה שהופך את זה למעשי.</b></div></div>
+      <h3>שלוש שכבות מקורות</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>שכבה</th><th>מקורות</th><th>מה הלקוח עושה</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill g">Tier 1 · Native</span></td><td>תלמידים, הרשמות, התקדמות, זמן‑צפייה (Bunny Stream), שיעור השלמה, דירוגים/NPS, <b>מכירות והכנסות (CardCom)</b>, דיוור/CRM, קהלים, קמפיינים, תוכן/ליי‑אאוטים, ערכת מותג</td><td><b>כלום</b> — כבר במערכת, עובד מהיום הראשון</td></tr>
+          <tr><td><span class="pill">Tier 2 · אינטגרציות מובנות</span></td><td>Google Analytics (תנועה, מקורות, sessions) · <b>חשבון מטא</b> — Pixel (המרות) + נתונים אורגניים מ‑Facebook ומ‑Instagram (עוקבים, reach, ביצועי פוסטים/רילז)</td><td>חיבור OAuth <b>חד‑פעמי</b> במסך ההגדרות</td></tr>
+          <tr><td><span class="pill y">Tier 3 · חשבונות פרסום</span></td><td>מטא (Ads) · Google Ads → חשיפות, CTR, עלות‑לליד, ROAS. <b>אצל מטא זה חלק מאותו חיבור</b> — נבחר בזמן בחירת הנכסים.</td><td>חיבור OAuth <b>אופציונלי</b> — רק אם רוצים מדדי הוצאה/ROAS</td></tr>
+        </tbody>
+      </table></div>
+      <h3>מטריקה → מקור (לפי עמוד אנליטיקס)</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>עמוד</th><th>מטריקה</th><th>מקור</th><th>שכבה</th></tr></thead>
+        <tbody>
+          <tr><td>סקירה כללית</td><td>תלמידים / % פעילים / התקדמות ממוצעת / שביעות רצון</td><td>WHITEBOARD native</td><td><span class="pill g">Tier 1</span></td></tr>
+          <tr><td>שיווק</td><td>מקורות תנועה, sessions</td><td>Google Analytics</td><td><span class="pill">Tier 2</span></td></tr>
+          <tr><td>שיווק</td><td>המרות מפרסום</td><td>Meta Pixel (חיבור מטא)</td><td><span class="pill">Tier 2</span></td></tr>
+          <tr><td>שיווק</td><td>אורגני: עוקבים / reach / ביצועי פוסטים ורילז</td><td>Instagram + Facebook (חיבור מטא)</td><td><span class="pill">Tier 2</span></td></tr>
+          <tr><td>שיווק</td><td>חשיפות / CTR / עלות‑לליד / ROAS</td><td>מטא (Ads) / Google Ads</td><td><span class="pill y">Tier 3</span></td></tr>
+          <tr><td>מכירות</td><td>הכנסה / מכירות / AOV / החזרים / קורסים מובילים</td><td>CardCom (native)</td><td><span class="pill g">Tier 1</span></td></tr>
+          <tr><td>שירות · איכות</td><td>השלמה / דירוג / NPS / נקודות נטישה / שאלות פתוחות</td><td>WHITEBOARD native</td><td><span class="pill g">Tier 1</span></td></tr>
+        </tbody>
+      </table></div>
+      <div class="note g"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><div>עמודי <b>סקירה</b>, <b>מכירות</b> ו<b>שירות</b> מונעים <b>לגמרי מ‑Tier 1 native</b> — ללא שום אינטגרציה. רק עמוד ה<b>שיווק</b> נשען על Tier 2/3, ואף הוא מוצג חלקית מ‑native (מקורות הגעה) עד שמחברים.</div></div>
+      <h3>זרימת חיבור (OAuth, ללא מפתחות)</h3>
+      <div class="flow">
+        <div class="fstep"><span class="n">1</span><div>Tier 1: <b>שום פעולה</b> — הדאטא ה‑native זמין מהיום הראשון.</div></div>
+        <div class="fstep"><span class="n">2</span><div>המרצה נכנס למסך <b>"חיבורים / מקורות נתונים"</b> בהגדרות ומחבר GA / Pixel / חשבון פרסום ב‑<b>OAuth חד‑פעמי</b>. <b>אין API keys, אין קוד.</b></div></div>
+        <div class="fstep"><span class="n">3</span><div>הטוקנים נשמרים <b>מוצפנים</b> (RLS פר‑מרצה); job <code class="inl">sync-integrations</code> (Trigger.dev, cron) מושך את המקור אל ה‑Metrics Store.</div></div>
+        <div class="fstep"><span class="n">4</span><div><code class="inl">query_analytics</code> קורא מה‑Store הפנימי. native = realtime; אינטגרציות = סנכרון מתוזמן, מוצג כ‑<b>"עודכן לפני X"</b>.</div></div>
+      </div>
+
+      <h3>חיבור מטא — איך זה עובד בפועל</h3>
+      <p>מטא הוא <b>לא "כפתור אחד"</b>. מאחוריו זרימת <b>Facebook Login for Business</b> על אפליקציית מטא של WHITEBOARD. חיבור <b>אחד</b> פותח את כל נכסי מטא — עמוד פייסבוק, אינסטגרם, חשבון מודעות ו‑Pixel — ולכן במסך החיבורים זה כרטיס <b>אחד</b> ("מטא · Facebook &amp; Instagram"), לא ארבעה.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>מי</th><th>מה קורה</th></tr></thead>
+        <tbody>
+          <tr><td><b>WHITEBOARD · פעם אחת</b></td><td>רישום <b>Meta App</b> עם <b>Business Login configuration</b>, ומעבר <b>App Review</b> של מטא לקבלת גישה מתקדמת ל‑scopes. תהליך פיתוח חד‑פעמי — <b>לא</b> של הלקוח.</td></tr>
+          <tr><td><b>המרצה · 1</b></td><td>לוחץ "חבר" → נפתחת חלונית מאובטחת של Facebook ומתחבר לחשבון שלו.</td></tr>
+          <tr><td><b>המרצה · 2</b></td><td><b>בחירת נכסים</b> — מטא מציגה אילו נכסים לחשוף: עמוד, אינסטגרם, חשבון מודעות, Pixel/Dataset. אפשר לבחור חלק.</td></tr>
+          <tr><td><b>המרצה · 3</b></td><td><b>אישור הרשאות</b> (scopes, קריאה בלבד) → חוזרים למערכת.</td></tr>
+          <tr><td><b>WHITEBOARD · מאחורי הקלעים</b></td><td>short‑lived token → החלפה ל‑<b>long‑lived / System‑User token</b> דרך ה‑Business Manager; נשמר <b>מוצפן</b> ומרוענן אוטומטית. <code class="inl">sync-integrations</code> מושך דרך <b>Graph API / Marketing API</b> אל ה‑Metrics Store.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>הרשאות (scopes) מול מטא</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Scope</th><th>למה</th><th>מותנה בנכס</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inl">business_management</code></td><td>קריאת מבנה החשבון העסקי</td><td>תמיד</td></tr>
+          <tr><td><code class="inl">ads_read</code></td><td>ביצועי מודעות: חשיפות, CTR, עלות‑לליד, ROAS (Insights)</td><td>חשבון מודעות</td></tr>
+          <tr><td><code class="inl">pages_read_engagement</code></td><td>נתוני עמוד פייסבוק ומעורבות</td><td>עמוד</td></tr>
+          <tr><td><code class="inl">instagram_basic</code> + <code class="inl">instagram_manage_insights</code></td><td>תובנות אינסטגרם: עוקבים, reach, ביצועי פוסטים/רילז</td><td>חשבון אינסטגרם</td></tr>
+          <tr><td>קריאת אירועי <b>Dataset</b></td><td>המרות מהפיקסל</td><td>Pixel / Dataset</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="var(--cyan)"/></svg></span><div><b>אינסטגרם כמקור נתונים:</b> נמשך דרך <b>Instagram Graph API</b> — <b>באותו חיבור מטא</b>, לא כחיבור נפרד. תנאי: חשבון ה‑IG חייב להיות <b>Business/Creator ומקושר לעמוד פייסבוק</b>. זה מזין את פילר השיווק מהצד <b>האורגני</b> (עוקבים, reach, ביצועי רילז) — לא רק מהצד הממומן.</div></div>
+
+      <h3>הטמעה — מדריך מודרך ומחולל קודים (MVP)</h3>
+      <p>שני מודלים: <b>(A) Platform App</b> — WHITEBOARD כאפליקציית מטא/גוגל אחת שעברה App Review, המרצה רק עושה OAuth; <b>(B) Bring‑Your‑Own App</b> — המרצה יוצר אפליקציה משלו ומדביק App ID/Secret, ו‑WHITEBOARD מייצר עבורו את הערכים להחזיר לקונסולה. <b>ל‑MVP יוצאים עם B</b> (לא תלוי ב‑App Review) ומהגרים ל‑A מאוחר יותר — החוזה הפנימי לא משתנה. מסך <b>"מדריך חיבורים — מטא וגוגל"</b> מפרק כל שלב עם צילום מסך מדומה, ריחוף‑הסבר, שדות למילוי ו<b>מחולל קודים</b>. הערכים שהמערכת מייצרת והמרצה מדביק אצל הספק:</p>
+      <div class="tbl"><table>
+        <thead><tr><th>ערך</th><th>לאן מדביקים</th><th>איך נוצר</th></tr></thead>
+        <tbody>
+          <tr><td>OAuth Redirect URI</td><td>מטא: Facebook Login → Valid OAuth Redirect URIs · גוגל: OAuth client → Authorized redirect URIs</td><td>דטרמיניסטי: <code class="inl">app.whiteboard.education/connect/{provider}/callback</code></td></tr>
+          <tr><td>JavaScript origin (גוגל)</td><td>OAuth client → Authorized JavaScript origins</td><td><code class="inl">https://app.whiteboard.education</code></td></tr>
+          <tr><td>תגית אימות דומיין (מטא)</td><td>ה‑<code class="inl">&lt;head&gt;</code> של אתר הקורסים (WHITEBOARD מזריקה) → אימות ב‑Business Settings → Domains</td><td><code class="inl">&lt;meta name="facebook-domain-verification" content="{token}"&gt;</code> · token אקראי פר‑tenant</td></tr>
+          <tr><td>Webhook Callback URL (מטא)</td><td>מטא → Webhooks → Page</td><td><code class="inl">app.whiteboard.education/connect/meta/{tenant}/webhook</code></td></tr>
+          <tr><td>Webhook Verify Token (מטא)</td><td>מטא → Webhooks → Verify Token</td><td>מחרוזת אקראית <code class="inl">wbv_…</code>, נשמרת מוצפנת, נבדקת ב‑handshake</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note g"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><div>שרת: טבלת <code class="inl">connection</code> (<code class="inl">teacherId, provider, appId, appSecretEnc, tokensEnc, domainToken, webhookVerifyToken, assets[], status, lastSyncAt</code>, RLS פר‑מרצה) · נתיבי OAuth callback + שדרוג ל‑long‑lived/System‑User (מטא) · handler ל‑Webhook · <code class="inl">sync-integrations</code> cron. מסך המדריך: <code class="inl">הגדרות ומערכת/מדריך חיבורים - מטא וגוגל.html</code>.</div></div>
+
+      <div class="note y"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span><div><b>Graceful degradation:</b> <b>בורדי לעולם לא מבקש מהמרצה API key.</b> אם מקור לא מחובר — בורדי מציג את מה ש<b>כן</b> זמין, ומנדנד inline: <b>"כדי לראות עלות‑לליד, חבר את חשבון הפרסום שלך →"</b>. כל מרצה מחבר את <b>חשבונותיו שלו</b> (בידוד פר‑tenant). מסך החיבורים: <code class="inl">מסכים מחודשים/הגדרות ומערכת/חיבורים - מקורות נתונים.html</code>.</div></div>
+    </section>
+
+    <!-- ACTION API -->
+    <section id="action">
+      <h2>שכבת הפעולה — Action API</h2>
+      <p>כדי שבורדי "יפעל במערכת", ה‑Tool Executor קורא ל‑API פנימי. כל כלי מוגדר בסכמה מלאה (Zod), עם סוג (<span class="pill">read</span> <span class="pill">write</span> <span class="pill">external</span>), הרשאות, ותבנית preview לכלי כתיבה.</p>
+      <h3>בונה הקורסים</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>כלי</th><th>סוג</th><th>תיאור</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inl">get_course</code></td><td>read</td><td>שליפת מצב קורס נוכחי</td></tr>
+          <tr><td><code class="inl">create_layout</code></td><td>write</td><td>יצירת ליי‑אאוט קורס עם מבנה פרקים</td></tr>
+          <tr><td><code class="inl">rename_chapter</code></td><td>write</td><td>הגדרת/שינוי שם פרק</td></tr>
+          <tr><td><code class="inl">add_lesson</code></td><td>write</td><td>הוספת שיעור עם שם ותיאור</td></tr>
+          <tr><td><code class="inl">reorder_items</code></td><td>write</td><td>סידור מחדש של פרקים/שיעורים</td></tr>
+          <tr><td><code class="inl">attach_file</code></td><td>write</td><td>שיוך קובץ נלווה לשיעור</td></tr>
+          <tr><td><code class="inl">add_internal_note</code></td><td>write</td><td>הערה פנימית (לא נראית לתלמיד)</td></tr>
+          <tr><td><code class="inl">generate_course_map_deck</code></td><td>write</td><td>מצגת מיפוי הקורס (HTML, צבעי מותג הקורס, מסונכרנת לליי-אאוט) — job רקע</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note p"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><div><b>מצגת מיפוי הקורס:</b> תוצר HTML שעוזר למרצה לכסות את הנושאים המרכזיים — שקופית פתיחה, שקופית לכל פרק, נקודות מפתח לכל שיעור, סיכום. נבנית מ<b>צבעי המותג של הקורס</b> ו<b>מתעדכנת מול הליי-אאוט</b> (הליי-אאוט = מקור האמת).</div></div>
+      <h3>יוצר הדיוור</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>כלי</th><th>סוג</th><th>תיאור</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inl">list_audiences</code></td><td>read</td><td>קהלים זמינים + גדלים</td></tr>
+          <tr><td><code class="inl">get_brand_kit</code></td><td>read</td><td>ערכת מותג לעיצוב</td></tr>
+          <tr><td><code class="inl">upsert_email</code></td><td>write</td><td>יצירת/עדכון מייל — HTML או מבנה בלוקים</td></tr>
+          <tr><td><code class="inl">upsert_email_series</code></td><td>write</td><td>יצירת/עדכון סדרת מיילים אוטומטית</td></tr>
+          <tr><td><code class="inl">send_or_schedule</code></td><td>write</td><td>שליחה/תזמון (אישור מרצה מחייב)</td></tr>
+        </tbody>
+      </table></div>
+      <h3>בורדי שיעורים — ישויות תוכן (פוסט‑השקה)</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>כלי</th><th>סוג</th><th>תיאור</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inl">analyze_lessons</code></td><td>read</td><td>ביצועי שיעורים (השלמה/צפייה/נטישה/דירוג) + תובנת שיפור</td></tr>
+          <tr><td><code class="inl">add_chapter</code></td><td>write</td><td>הוספת פרק לקורס קיים</td></tr>
+          <tr><td><code class="inl">update_layout</code></td><td>write</td><td>עדכון ליי‑אאוט (סדר/שמות/מבנה) — הליי‑אאוט = מקור האמת</td></tr>
+          <tr><td><code class="inl">create_program</code> / <code class="inl">update_program</code></td><td>write</td><td>הקמה/עדכון <b>תכנית הכשרה</b> (רצף קורסים)</td></tr>
+          <tr><td><code class="inl">create_club</code> / <code class="inl">update_club</code></td><td>write</td><td>הקמה/עדכון <b>מועדון</b> (תוכן מתחדש + קהילה)</td></tr>
+          <tr><td><code class="inl">create_school</code> / <code class="inl">update_school</code></td><td>write</td><td>הקמה/עדכון <b>בית ספר</b> (מטרייה מרובת‑קורסים)</td></tr>
+          <tr><td><code class="inl">generate_deck</code></td><td>write</td><td>מצגת HTML בערכת המותג (job רקע)</td></tr>
+          <tr><td><code class="inl">web_search</code></td><td>external</td><td>מחקר ברשת להעשרת תוכן</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div>לכל ישות (קורס / תכנית הכשרה / מועדון / בית ספר) זוג <code class="inl">create/update</code> סימטרי. עדכון תמיד: <code class="inl">get_*</code> (read) → <code class="inl">preview</code> → אישור מרצה → <code class="inl">wbApi</code>. אלה תואמים את משפך <b>בורדי שיעורים</b> (יצירה/עדכון × ישות → פעולה).</div></div>
+      <pre><span class="c">// lib/boardi/tools/course.ts — הגדרת כלי כתיבה עם preview</span>
+<span class="k">export const</span> createLayout = <span class="f">defineTool</span>({
+  name: <span class="s">"create_layout"</span>,
+  kind: <span class="s">"write"</span>,
+  schema: z.<span class="f">object</span>({
+    title: z.<span class="f">string</span>(),
+    chapters: z.<span class="f">array</span>(z.<span class="f">object</span>({
+      name: z.<span class="f">string</span>(),
+      lessons: z.<span class="f">array</span>(z.<span class="f">object</span>({ name: z.<span class="f">string</span>(), summary: z.<span class="f">string</span>().optional() })),
+    })),
+  }),
+  <span class="f">preview</span>: (args) => <span class="f">renderLayoutPreview</span>(args),   <span class="c">// מה עומד להיווצר</span>
+  <span class="f">execute</span>: <span class="k">async</span> (args, ctx) => {              <span class="c">// ctx.teacherId — tenancy</span>
+    <span class="k">return</span> wbApi.courses.<span class="f">createLayout</span>(ctx.teacherId, args);
+  },
+});</pre>
+      <div class="note g"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>חוזה מול צוות הפלטפורמה:</b> <code class="inl">wbApi</code> הוא ה‑API הפנימי שצוות WHITEBOARD חושף. הכלים של בורדי הם עטיפה דקה מעליו — כל הלוגיקה העסקית (ולידציה, הרשאות מסלול) נשארת בפלטפורמה.</div></div>
+    </section>
+
+    <!-- CERTAINTY -->
+    <section id="certainty">
+      <h2>רמת הוודאות — Course Understanding Meter</h2>
+      <p>כשבונה‑הקורס עובד עם מרצה, הוא <b>שואל שאלות</b> עד שהוא מבין את הקורס והמטרות. "רמת הוודאות" היא מדד חי שעולה והופך לירוק ככל שההבנה מתגבשת — ומשמש <b>שער</b>: בורדי לא בונה ליי‑אאוט מתחת לסף.</p>
+      <div class="note p"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg></span><div><b>סטטוס:</b> את <b>סקיל השאלות</b> (ניהול האינטייק החכם) נבנה בהמשך — הוא לא ב‑MVP הראשון. מה שמאופיין כאן ומעוצב עכשיו הוא <b>מנגנון רמת הוודאות</b> וה‑UI שלו, כדי שיהיה מוכן כשנחבר את הסקיל.</div></div>
+      <h3>איך הוודאות מחושבת</h3>
+      <p>הוודאות נגזרת מ‑<b>שדות‑ליבה</b> שבורדי צריך למלא בביטחון כדי לתאר קורס. כל שדה שנתפס בביטחון מעלה את הציון ומדליק "ממד" ירוק ברייל:</p>
+      <div class="tbl"><table>
+        <thead><tr><th>ממד (core field)</th><th>מה נלכד</th><th>משקל</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inl">domain</code> · תחום הקורס</td><td>נושא/תחום התוכן</td><td>~15%</td></tr>
+          <tr><td><code class="inl">audience</code> · קהל יעד</td><td>רמה (מתחילים/מקצוענים) + הקשר</td><td>~20%</td></tr>
+          <tr><td><code class="inl">goal</code> · מטרת הבוגר</td><td>התוצאה שהבוגר משיג</td><td>~25%</td></tr>
+          <tr><td><code class="inl">scope</code> · היקף ותכולה</td><td>מס' פרקים/שיעורים, עומק</td><td>~20%</td></tr>
+          <tr><td><code class="inl">style</code> · סגנון למידה</td><td>תיאוריה+תרגול / פרויקט / מיקרו</td><td>~20%</td></tr>
+        </tbody>
+      </table></div>
+      <pre><span class="c">// lib/boardi/certainty.ts — ציון וודאות + שער בנייה</span>
+<span class="k">const</span> WEIGHTS = { domain: 15, audience: 20, goal: 25, scope: 20, style: 20 };
+<span class="k">const</span> BUILD_THRESHOLD = 85; <span class="c">// מתחת לזה — ממשיכים לשאול</span>
+
+<span class="k">export function</span> <span class="f">certainty</span>(fields: Record&lt;string, { value?: string; confidence: number }&gt;) {
+  <span class="k">let</span> score = 0;
+  <span class="k">for</span> (<span class="k">const</span> [k, w] <span class="k">of</span> Object.<span class="f">entries</span>(WEIGHTS))
+    score += (fields[k]?.confidence ?? 0) * w;   <span class="c">// confidence 0..1</span>
+  <span class="k">return</span> Math.<span class="f">round</span>(score);
+}
+<span class="k">export const</span> <span class="f">canBuildLayout</span> = (s: number) =&gt; s &gt;= BUILD_THRESHOLD;</pre>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span><div><b>הערכת confidence:</b> אחרי כל תשובה, בורדי (ה‑LLM) מחזיר לכל שדה <code class="inl">value + confidence 0..1</code> כפלט מובנה (StructuredOutput). ה‑UI ממפה את הציון לצבע (ורוד→צהוב→ירוק) ולגרף העולה, ומדליק את הממד המתאים.</div></div>
+      <h3>עיצוב (UI) — לפי מערכת WHITEBOARD</h3>
+      <ul>
+        <li><b>רייל ימני "רמת הבנת הקורס":</b> מד אחוזים גדול (Fredoka, tabular‑nums) + גרף שטח עולה שצבעו מתחלף ורוד→צהוב→ירוק, וצ'קליסט 5 הממדים שמתמלאים ירוק.</li>
+        <li><b>תוויות מצב:</b> "מתחיל להכיר…" → "אוסף את התמונה" → "מבין את הכיוון" → "מוכן לבנות ליי‑אאוט 🎉".</li>
+        <li><b>שער חזותי:</b> כפתור "בנה ליי‑אאוט" מושבת עד חציית הסף; הרייל מסביר למרצה מה עוד חסר.</li>
+        <li>כל הטוקנים במערכת WHITEBOARD (navy/cyan/pink/green, Heebo+Fredoka, RTL, מצב כהה). ראה <code class="inl">מסכים מחודשים/בורדי/</code>.</li>
+      </ul>
+    </section>
+
+    <!-- CHAT -->
+    <section id="chat">
+      <h2>ניהול צ'אטים — Thread לפי פרויקט</h2>
+      <p>שיחה נשמרת ב‑DB ומאורגנת לפי <b>פרויקט</b> (ישות יעד), לא רק לפי בורדי. כך המרצה חוזר וממשיך לבנות את אותו קורס. תוצרים (ליי‑אאוט, מייל) נשמרים כ‑artifacts שמצביעים לישות שנוצרה במערכת.</p>
+      <pre><span class="k">model</span> BoardiThread {
+  id          String   @id @default(cuid())
+  teacherId   String                <span class="c">// tenancy (RLS)</span>
+  boardiType  BoardiType            <span class="c">// COURSE_BUILDER | MAILING | ANALYTICS ...</span>
+  targetType  TargetType?           <span class="c">// COURSE | CAMPAIGN | null</span>
+  targetId    String?               <span class="c">// הישות שהשיחה עוסקת בה</span>
+  title       String                <span class="c">// נגזר אוטומטית ("קורס עיצוב UX")</span>
+  messages    BoardiMessage[]
+  artifacts   BoardiArtifact[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+<span class="k">model</span> BoardiMessage {
+  id          String   @id @default(cuid())
+  threadId    String
+  role        Role                  <span class="c">// USER | ASSISTANT | TOOL</span>
+  content     Json                  <span class="c">// טקסט / tool_call / tool_result</span>
+  createdAt   DateTime @default(now())
+}
+
+<span class="k">model</span> BoardiArtifact {
+  id          String   @id @default(cuid())
+  threadId    String
+  kind        ArtifactKind          <span class="c">// LAYOUT | EMAIL | ANALYSIS | IMAGE</span>
+  refId       String                <span class="c">// מצביע לישות במערכת</span>
+  createdAt   DateTime @default(now())
+}</pre>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div><b>ניהול context window:</b> כשה‑thread גדל, הודעות ישנות עוברות summarization ל‑memory תמציתי; artifacts נשמרים כהפניות (refId) ולא כטקסט גולמי בפרומפט. בכל בורדי מוצגת רשימת "שיחות אחרונות" → "המשך מאיפה שהפסקת".</div></div>
+    </section>
+
+    <!-- DATABOARD -->
+    <section id="databoard">
+      <h2>DATA Board — לוח הנתונים החכם</h2>
+      <p>ברייל האנליטיקס אין פאנל מסננים — יש <b>DATA Board</b>: לוח נעיצה של דוחות חכמים. כל כרטיס נתונים או תובנה שבורדי שולח בצ'אט נושא כפתור נעיצה (<code class="inl">📌</code>); לחיצה נועצת אותו ל‑DATA Board עם <b>חותמת תאריך/שעה</b>. המודל המנטלי: המרצה הוא כמו מנכ"ל שמשוחח עם אנליסט ו<b>מרכיב לעצמו דוח סיכום חכם ומעוצב מראש</b>.</p>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div><b>הורד דוח מעוצב:</b> כפתור ב‑DATA Board מרכיב <b>דוח HTML עצמאי ואלגנטי</b> מכל הפריטים הנעוצים — במותג WHITEBOARD, עם כותרת navy (לוגו + "דוח DATA Board · בורדי" + תאריך), כל גרף/תובנה שנעצה מרונדרת, וסיומת. ניתן להדפסה ל‑PDF. הרכבה = compose צד‑לקוח של ה‑artifacts הנעוצים, או job <code class="inl">generate_report</code> (Trigger.dev) לרינדור PDF בשרת. הדוח משתמש מחדש במערכת העיצוב של המותג.</div></div>
+      <h3>מודל הנתונים</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>שדה</th><th>תפקיד</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inl">teacher_id</code></td><td>tenancy — הלוח שייך למרצה המחובר (RLS)</td></tr>
+          <tr><td><code class="inl">title</code></td><td>כותרת הפריט הנעוץ (נגזרת מהכרטיס/התובנה)</td></tr>
+          <tr><td><code class="inl">artifact_ref</code></td><td>הפניה ל‑artifact (הגרף/התובנה) — לא טקסט גולמי</td></tr>
+          <tr><td><code class="inl">kind</code></td><td>סוג הפריט (kpi | chart | insight | funnel)</td></tr>
+          <tr><td><code class="inl">pinned_at</code></td><td>חותמת תאריך/שעה של הנעיצה</td></tr>
+        </tbody>
+      </table></div>
+      <pre><span class="c">// lib/boardi/data-board.ts — נעיצה + הרכבת דוח מעוצב</span>
+<span class="k">export async function</span> <span class="f">pinItem</span>(teacherId: string, item: { title: string; artifactRef: string; kind: PinKind }) {
+  <span class="k">return</span> db.boardiDataBoard.<span class="f">create</span>({
+    data: { teacherId, ...item, pinnedAt: <span class="k">new</span> <span class="f">Date</span>() },  <span class="c">// חותמת זמן</span>
+  });
+}
+
+<span class="k">export async function</span> <span class="f">generateReport</span>(teacherId: string) {
+  <span class="k">const</span> pins = <span class="k">await</span> db.boardiDataBoard.<span class="f">findMany</span>({ where: { teacherId }, orderBy: { pinnedAt: <span class="s">"asc"</span> } });
+  <span class="k">const</span> brand = <span class="k">await</span> wbApi.brand.<span class="f">get</span>(teacherId);
+  <span class="k">return</span> <span class="f">renderDataBoardReport</span>(pins, brand);  <span class="c">// HTML במותג · Trigger.dev ל‑PDF</span>
+}</pre>
+      <div class="note g"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>בורדי ממליץ לנעוץ:</b> פיד הצעות יזום <b>חי</b> בתוך הרייל — התראות (תלמידים בסיכון, נקודות נטישה, זינוק בעלות‑לליד, אבני דרך במכירות) שמחליקות פנימה תוך כדי שימוש. כל הצעה בלחיצה <b>פותחת את הניתוח בשיחה</b>.</div></div>
+      <h3>ארבעת עמודי האנליטיקס</h3>
+      <p>מנתח התלמידים מאורגן בארבעה תחומי‑על, וכל אחד מסתעף למדדים פנימיים; כל ניתוח מסתיים בהמלצה של בורדי (insight) ויכול לבצע handoff (למשל ליוצר‑הדיוור לקמפיין החזרה):</p>
+      <ul>
+        <li><b>סקירה כללית (Overview)</b> — סה"כ תלמידים, % פעילים, התקדמות ממוצעת, שביעות רצון; דונאט סטטוס; גרף מגמת מעורבות.</li>
+        <li><b>שיווק (Marketing)</b> — חשיפות, CTR, המרה לליד, עלות‑לליד; משפך שיווקי (חשיפות→קליקים→לידים→הרשמות); מקורות תנועה.</li>
+        <li><b>מכירות (Sales)</b> — הכנסה, מס' מכירות, AOV, החזרים; מגמת הכנסה; קורסים נמכרים ביותר.</li>
+        <li><b>שירות · איכות הקורסים (Service)</b> — שיעור השלמה, דירוג ממוצע, NPS, שאלות פתוחות; משפך התקדמות/נטישה; תלמידים בסיכון.</li>
+      </ul>
+    </section>
+
+    <!-- HANDOFF -->
+    <section id="handoff">
+      <h2>Handoff בין‑בורדי</h2>
+      <p>בורדי שסיים משימה מציע מעבר לבורדי אחר עם הקשר טעון. לחיצה פותחת thread חדש בבורדי‑היעד שבו ה‑context כבר מוזרק כהודעת מערכת ראשונה.</p>
+      <div class="flow">
+        <div class="fstep"><span class="n">1</span><div>בונה‑הקורס מסיים ליי‑אאוט → מציג הצעה: "רוצה שאכין מייל השקה לקורס?"</div></div>
+        <div class="fstep"><span class="n">2</span><div>המרצה לוחץ → נוצר <code class="inl">HandoffRequest</code> עם <code class="inl">{ from, to: "MAILING", context: { targetType: "COURSE", targetId, summary } }</code>.</div></div>
+        <div class="fstep"><span class="n">3</span><div>נפתח thread חדש ביוצר‑הדיוור; ה‑context מוזרק כ‑system message → הבורדי כבר "מכיר" את הקורס.</div></div>
+      </div>
+      <div class="note p"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><path d="M4 12h16M14 6l6 6-6 6"/></svg></span><div><b>דוגמאות נוספות:</b> מנתח‑תלמידים → יוצר‑דיוור (קמפיין החזרת נוטשים) · בונה‑קורס → יצירת‑תמונות (קאבר) · מנתח‑תלמידים → עדכון‑קורס (פיצול שיעור עם נטישה גבוהה).</div></div>
+    </section>
+
+    <!-- INTEGRATIONS -->
+    <section id="integrations">
+      <h2>אינטגרציות חיצוניות + שכבת LLM</h2>
+      <h3>כלים חיצוניים (ב‑MVP)</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>אינטגרציה</th><th>שימוש</th><th>מימוש</th></tr></thead>
+        <tbody>
+          <tr><td>מחקר באינטרנט</td><td>העשרת תוכן קורסים/מצגות</td><td>כלי <code class="inl">web_search</code>, מקורות מצוטטים בתשובה</td></tr>
+          <tr><td>יצירת תמונות</td><td>דימויים למצגות, קאברים, באנרים</td><td>Adapter → FLUX / Seedream / Higgsfield / inference.sh</td></tr>
+        </tbody>
+      </table></div>
+      <h3>שכבת ה‑LLM — ספק‑אגנוסטי</h3>
+      <p>Claude כברירת מחדל (הכי טוב ל‑tool‑use ולעברית), מאחורי ממשק אחיד שמאפשר החלפה ל‑GPT/Gemini בלי לגעת בבורדים.</p>
+      <pre><span class="k">interface</span> LLMProvider {
+  <span class="f">chat</span>(p: { messages: Msg[]; tools: ToolDef[]; stream?: boolean }): Promise&lt;LLMResult&gt;;
+}
+<span class="c">// מימוש ראשון: ClaudeProvider · חלופות: OpenAIProvider, GeminiProvider</span>
+<span class="k">const</span> llm: LLMProvider = <span class="f">providerFromEnv</span>(); <span class="c">// BOARDI_LLM=claude|openai|gemini</span></pre>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div>ה‑Adapter מנרמל הבדלי tool‑calling בין הספקים (schema, streaming, מבנה תשובה). הבורדים מדברים רק מול <code class="inl">LLMProvider</code>.</div></div>
+    </section>
+
+    <!-- DB -->
+    <section id="db">
+      <h2>סכמת DB — סיכום</h2>
+      <p>ליבת בורדי מוסיפה מעט טבלאות; כל השאר נשען על ה‑DB הקיים של הפלטפורמה דרך ה‑Action API.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>טבלה</th><th>תפקיד</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inl">BoardiThread</code></td><td>שיחה לפי פרויקט (teacher × boardi × target)</td></tr>
+          <tr><td><code class="inl">BoardiMessage</code></td><td>הודעות + tool calls/results</td></tr>
+          <tr><td><code class="inl">BoardiArtifact</code></td><td>תוצרים (layout/email/analysis/image) → refId לישות</td></tr>
+          <tr><td><code class="inl">BoardiHandoff</code></td><td>בקשות מעבר בין בורדים</td></tr>
+          <tr><td><code class="inl">ContentEmbedding</code></td><td>וקטורי pgvector לתוכן קורסים (RAG)</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note g"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><div>כל טבלת בורדי נושאת <code class="inl">teacherId</code> עם <b>RLS</b> — בידוד דאטא ברמת ה‑DB, לא רק באפליקציה.</div></div>
+    </section>
+
+    <!-- JOBS -->
+    <section id="jobs">
+      <h2>משימות רקע (Trigger.dev)</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>Job</th><th>טריגר</th><th>תפקיד</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inl">generate-image</code></td><td>קריאת כלי image‑gen</td><td>יצירת דימוי (ספק חיצוני) + שמירה כ‑artifact, עדכון ה‑thread בסיום</td></tr>
+          <tr><td><code class="inl">build-presentation</code></td><td>בקשת מצגת מיפוי</td><td>מרכיב "מצגת מיפוי הקורס" (HTML + תמונות בצבעי מותג הקורס, נגזרת מהליי-אאוט) — פעולה ארוכה, מדווחת התקדמות</td></tr>
+          <tr><td><code class="inl">generate-report</code></td><td>לחיצת "הורד דוח"</td><td>מרכיב דוח HTML/PDF מעוצב מפריטי ה‑DATA Board (מותג הקורס)</td></tr>
+          <tr><td><code class="inl">sync-integrations</code></td><td>תזמון (cron)</td><td>מושך נתונים מ‑GA / Pixel / חשבונות פרסום אל ה‑Metrics Store הפנימי (native = realtime)</td></tr>
+          <tr><td><code class="inl">index-content</code></td><td>על שינוי קורס</td><td>upsert embeddings ל‑pgvector (RAG)</td></tr>
+          <tr><td><code class="inl">index-transcripts</code> <span class="pill pu">שלב 2</span></td><td>אחרי תמלול</td><td>אינדוקס תמלולי שיעורים לבורדי‑תלמיד</td></tr>
+          <tr><td><code class="inl">summarize-thread</code></td><td>thread גדול מסף</td><td>summarization של הודעות ישנות לניהול context window</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note y"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/></svg></span><div>פעולות ארוכות (תמונות, מצגות) לעולם לא חוסמות את לולאת השיחה — הן נדחפות ל‑Trigger.dev, והבורדי ממשיך; כשה‑job מסתיים הוא מעדכן את ה‑thread וה‑UI (SSE/realtime).</div></div>
+    </section>
+
+    <!-- BOARDIS -->
+    <section id="boardis">
+      <h2>בורדי ה‑MVP — זרימות</h2>
+      <h3>בונה הקורסים <span class="pill g">דגל</span></h3>
+      <div class="flow">
+        <div class="fstep"><span class="n">1</span><div>מרצה: "צור קורס על עיצוב UX למתחילים".</div></div>
+        <div class="fstep"><span class="n">2</span><div>בורדי שולף ערכת מותג (RAG), אולי מחקר אינטרנט, ומציג <b>preview</b> של ליי‑אאוט (פרקים + שיעורים).</div></div>
+        <div class="fstep"><span class="n">3</span><div>מרצה מאשר/מתקן בשיחה.</div></div>
+        <div class="fstep"><span class="n">4</span><div>בורדי מריץ <code class="inl">create_layout</code> + <code class="inl">add_lesson</code>… → הקורס נוצר <b>בפועל</b> ונראה במסך הקורסים.</div></div>
+        <div class="fstep"><span class="n">5</span><div>בורדי מציע: קאבר (image‑gen) / מייל השקה (handoff ליוצר‑הדיוור).</div></div>
+      </div>
+      <h3>יוצר הדיוור</h3>
+      <div class="flow">
+        <div class="fstep"><span class="n">1</span><div>בחירת קהל (<code class="inl">list_audiences</code>) → סוג (מייל בודד / סדרה).</div></div>
+        <div class="fstep"><span class="n">2</span><div>בורדי מייצר תוכן בערכת המותג (<code class="inl">upsert_email</code>) — HTML או בונה‑בלוקים — עם preview.</div></div>
+        <div class="fstep"><span class="n">3</span><div>מרצה מאשר → <code class="inl">send_or_schedule</code> מול מערכת הדיוור.</div></div>
+      </div>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div><b>מיפוי בונה‑הבלוקים:</b> יוצר‑הדיוור מייצר את אותו מבנה בלוקים שהעורך הקיים משתמש בו (JSON blocks), כך שהתוצר ניתן לעריכה ידנית אחרי הבורדי. פורמט הבלוקים = פער פתוח למיפוי מול הצוות.</div></div>
+    </section>
+
+    <!-- GUARDRAILS -->
+    <section id="guardrails">
+      <h2>גבולות ובטיחות</h2>
+      <ul>
+        <li><b>אישור לכל כתיבה</b> — כלי write מחזיר preview; ביצוע רק אחרי אישור מרצה מפורש.</li>
+        <li><b>Tenancy מוחלט</b> — כל שליפה/כתיבה מסוננת ב‑<code class="inl">teacherId</code> (RLS + ctx בכל כלי). בורדי לא ניגש לדאטא של מרצה אחר.</li>
+        <li><b>הרשאות לפי מסלול</b> — יכולות בורדי נגזרות ממסלול המרצה, <b>נאכף בשרת</b> (לא רק ב‑UI); ראה טבלת הגייטינג למטה.</li>
+        <li><b>Rate / cost guardrails</b> — תקרות על קריאות LLM, מחקר ויצירת תמונות פר‑מרצה/פר‑חודש, נגזרות מהמסלול.</li>
+        <li><b>שקיפות + Audit log</b> — בורדי מציג אילו פעולות ביצע ואילו מקורות שלף; כל כתיבה נרשמת ל‑<code class="inl">boardi_audit</code> (teacherId, tool, entity, before/after, ts).</li>
+      </ul>
+      <h3>גייטינג לפי מסלול</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>יכולת בורדי</th><th>מסלול מינימלי</th><th>תקרה</th></tr></thead>
+        <tbody>
+          <tr><td>בורדי בכלל (צ'אט + מנתח/ניתוח מכירות read‑only)</td><td><b>מורה</b></td><td>מכסת הודעות בסיסית</td></tr>
+          <tr><td>בונה הקורסים (יצירת קורס דרך בורדי)</td><td><b>מחנך</b></td><td>מס' בנייות/חודש</td></tr>
+          <tr><td>בורדי שיעורים (תכניות/מועדונים/בתי ספר) + יוצר הדיוור</td><td><b>מחנך</b></td><td>מכסה חודשית</td></tr>
+          <tr><td>בורדי ללא הגבלה (מצגות, image‑gen, מחקר, קנבס פעיל מלא)</td><td><b>מנהיג</b></td><td>ללא הגבלה מעשית</td></tr>
+          <tr><td>ניסיון</td><td>דמו — כתיבות חסומות</td><td>—</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div>מרצה שמנסה יכולת מעל מסלולו — בורדי לא נכשל בשקט אלא <b>מסביר ומציע שדרוג inline</b> ("בניית קורס דרך בורדי זמינה במסלול מחנך ומעלה →"). ה‑gate נאכף ב‑<code class="inl">wbApi</code>, כך שגם קריאה ישירה חסומה.</div></div>
+      <div class="note y"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span><div>כלי write שנכשל באמצע רצף (למשל 3 מתוך 5 שיעורים נוצרו) חייב להיות <b>idempotent</b> / ניתן להמשך — ה‑executor שומר את מצב הביצוע על ה‑thread כדי לא ליצור כפילויות.</div></div>
+    </section>
+
+    <!-- COMPONENTS -->
+    <section id="components">
+      <h2>רכיבי UI</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>רכיב</th><th>היכן</th><th>תיאור</th></tr></thead>
+        <tbody>
+          <tr><td>Hub בורדי</td><td>ניווט ראשי</td><td>כרטיסי משימה ("מה תרצה לעשות היום?") + מצב פעיל/בקרוב</td></tr>
+          <tr><td>חלון שיחה</td><td>בורדי נבחר</td><td>הודעות, streaming, כרטיסי בחירה מובנים (בחר קורס/קהל)</td></tr>
+          <tr><td>כרטיס Preview + אישור</td><td>בתוך השיחה</td><td>תצוגה מקדימה של ליי‑אאוט/מייל + "אשר" / "תקן" (Modal, לא confirm)</td></tr>
+          <tr><td>רשימת שיחות אחרונות</td><td>סרגל בורדי</td><td>"המשך מאיפה שהפסקת" לפי פרויקט</td></tr>
+          <tr><td>הצעת Handoff</td><td>סוף משימה</td><td>כפתור מעבר לבורדי אחר עם הקשר</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note g"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><div>כל המסכים בשפת WHITEBOARD (navy/cyan, Fredoka+Heebo, RTL, מצב כהה). הודעות = Toast; אישורים = Modal. הדמות BOARDi בזמן טעינה/הצלחה. ללא <code class="inl">alert/confirm</code>.</div></div>
+    </section>
+
+    <!-- SCREENS -->
+    <section id="screens">
+      <h2>מסכי עיצוב</h2>
+      <p>אפיון עיצובי אינטראקטיבי מלא לפי מערכת WHITEBOARD, בתיקייה <code class="inl">מסכים מחודשים/בורדי/</code>.</p>
+      <div class="cards">
+        <div class="card"><span class="pill g">Flagship</span><h3>בונה הקורסים — צ'אט חי</h3><p>מסך דמו אינטראקטיבי שמדגים את כל המצבים: מודל הצ'אט, בורדי כותב, שאלות אמריקאיות, רמת הוודאות (גרף עולה→ירוק), מסך טעינה, תמונת קאבר שנוצרה, וליי‑אאוט מוכן עם אישור ובנייה במערכת.</p></div>
+        <div class="card"><span class="pill">מצבים</span><h3>מצבי מפתח מודגמים</h3><p>הקלדה (typing), כרטיסי שאלה 2–4 אופציות, כרטיס Preview+אישור, רייל "רמת הבנת הקורס" עם 5 ממדים, פופאפ "תקן" מטושטש, כרטיס Handoff לבורדי הדיוור, Toast הצלחה.</p></div>
+        <div class="card"><span class="pill g">Analytics</span><h3>מנתח התלמידים — נתונים מעוצבים</h3><p>מסך דמו שני, בנוי סביב <b>4 עמודי אנליטיקס</b> (סקירה כללית · שיווק · מכירות · שירות ואיכות), שכל אחד מסתעף למדדים פנימיים: כרטיסי KPI עם דלתות, דונאט פילוח סטטוס, גרף מגמה רב-סדרתי, עמודות לפי קורס, משפך התקדמות עם נקודת נטישה מודגשת, רשימת תלמידים בסיכון, והמלצות פעולה. במקום מסננים — <b>רייל "DATA Board"</b>: לוח נתונים חכם שאליו נועצים כל כרטיס/תובנה שבורדי שולח (כפתור 📌 + חותמת זמן), עם כפתור <b>"הורד דוח מעוצב"</b> שמרכיב דוח HTML עצמאי במותג הקורס. הרייל כולל גם פיד יזום <b>"בורדי ממליץ לנעוץ"</b> — התראות חיות (סיכון, נטישה, אבני דרך) שכל לחיצה עליו <b>פותחת אותן בשיחה</b> (הצ'אט הוא ה-scope, לא פילטר גלובלי). Handoff לקמפיין החזרה.</p></div>
+      </div>
+      <div class="note cy"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></span><div>המסכים מדגימים UX/מצבים בלבד (demo mode). ה‑<b>סקיל של שאלות האינטייק</b> וה‑<b>יצירת התמונות/מצגות האמיתית</b> ייבנו בשלבי ה‑roadmap; ה‑UI כבר מוכן לחבר אליהם.</div></div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section id="canvas">
+      <h2>הקנבס הפעיל (Active Canvas)</h2>
+      <p>במקום שהצ'אט <b>יתאר</b> מה יעשה — בורדי <b>עושה מול העיניים של המרצה והוא מאשר</b>. הצ'אט נעגן לצד שמאל כחלון צף נפרד, והאזור המרכזי הוא <b>מסך המערכת</b>. בורדי מנווט לעמוד הנכון, מדגיש את השדה, ממלא ערך <b>ממתין</b> (צהוב), מציג <code class="inl">preview</code>, ורק אחרי <b>אישור</b> הערך נטמע (הבזק ירוק). שינוי הגדרות, בניית מייל בבלוקים, הוספת תלמיד לקורס, שינוי צבעי מותג — הכל דרך אותו חלון.</p>
+      <div class="note y" style="border-width:2px"><span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span><div><b>קריטי — הקנבס חייב לרוץ על המסכים האמיתיים שלנו.</b> מסך הדמו (<code class="inl">בורדי - קנבס פעיל.html</code>) בונה מסכי הגדרות/דיוור/תלמידים <b>מדומים</b> כדי להמחיש את האינטראקציה בלבד — <b>אלה אינם מסכי WHITEBOARD האמיתיים</b>. במימוש בפועל הקנבס מרנדר את <b>מסכי הפרודקשן הקיימים של WHITEBOARD</b> (מסך ההגדרות האמיתי, עורך הדיוור האמיתי, מסך התלמידים האמיתי), ובורדי פועל <b>עליהם</b> — לא על שכפול. אין לבנות מסכים חדשים לקנבס; יש לחבר אליו את הקיימים.</div></div>
+      <p style="margin-top:16px"><b>איך זה מתחבר למסכים האמיתיים (שכבת UI-Driver):</b></p>
+      <div class="tbl"><table>
+        <thead><tr><th>שכבה</th><th>תפקיד</th></tr></thead>
+        <tbody>
+          <tr><td><b>Canvas Host</b></td><td>עוטף את מסכי המערכת הקיימים (route/רכיב React אמיתי) בתוך אזור הקנבס — <b>אותו קוד</b> שהמרצה רואה בניווט הרגיל, לא רכיב מוקאפ.</td></tr>
+          <tr><td><b>UI-Driver</b></td><td>גשר בין פקודות בורדי לרכיבי המסך: <code class="inl">navigate(screen)</code>, <code class="inl">highlight(field)</code>, <code class="inl">setPending(field,value)</code>, <code class="inl">flash(field)</code>. מזהה שדות דרך <code class="inl">data-boardi-field</code> על הרכיבים האמיתיים — מוסיפים תגיות זיהוי למסכים הקיימים, לא בונים חדשים.</td></tr>
+          <tr><td><b>Action API</b></td><td>ה<b>אישור</b> מפעיל בדיוק את אותו <code class="inl">wbApi</code> שהמסך עצמו קורא לו בעריכה ידנית — כך הוולידציה, ההרשאות והתנאים זהים בין "בורדי מילא" ל"המרצה מילא".</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note cy" style="margin-top:16px"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div>הקנבס משנה את <b>חוויית</b> הביצוע — לא את חוזה הבטיחות. כל פעולה עדיין עוברת <code class="inl">preview→confirm</code> + guardrails (tenancy, הרשאות מסלול, cost caps). מסך הדמו: <code class="inl">מסכים מחודשים/בורדי/בורדי - קנבס פעיל.html</code> (להמחשת אינטראקציה בלבד).</div></div>
+
+      <h3>פערים פתוחים להחלטה</h3>
+      <div class="note y"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span><div>שלושה נושאים שטרם הוכרעו וצריכים החלטה לפני מימוש הקנבס:
+      <ul style="margin:8px 0 0">
+        <li><b>Undo / rollback.</b> יש <code class="inl">preview→confirm</code>, אבל אין עדיין "בטל פעולה אחרונה" אחרי שהערך נטמע. בעולם שבו בורדי כותב לשדות אמיתיים — צריך undo לכל כתיבה (snapshot של before מה‑audit log, או פעולת reverse ב‑<code class="inl">wbApi</code>).</li>
+        <li><b>כשל אחרי אישור.</b> מה קורה כש‑<code class="inl">wbApi</code> נכשל <b>אחרי</b> שהמרצה אישר (ולידציה, הרשאת מסלול, קונפליקט עריכה בו‑זמנית)? הקנבס צריך להחזיר את השדה למצב קודם ולהציג שגיאה ברורה — לא להשאיר ערך "ממתין" תקוע. (קשור ל‑optimistic locking אם המרצה עורך במקביל.)</li>
+        <li><b>מובייל.</b> "צ'אט‑שמאל + מסך‑מערכת" הוא דפוס דסקטופ. במסך צר צריך להחליט: צ'אט מלא‑מסך עם מעבר לקנבס, או קנבס עם צ'אט מגירה. לא מוגדר עדיין.</li>
+      </ul></div></div>
+    </section>
+
+    <section id="roadmap">
+      <h2>מפת דרכים</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>שלב</th><th>תוצרים</th></tr></thead>
+        <tbody>
+          <tr><td>1 · מעטפת + חוזה (שבועות 1–3)</td><td>BOARDi Runtime, LLM Adapter (Claude), Skill Registry, סכמת threads, חוזה Action API מול הצוות</td></tr>
+          <tr><td>2 · בונה הקורסים (3–7)</td><td>כלי בנייה (create_layout…), RAG על תוכן, preview+אישור, יצירת קורס מקצה‑לקצה</td></tr>
+          <tr><td>3 · אינטגרציות + דיוור (6–10)</td><td>מחקר אינטרנט, image‑gen (Trigger.dev), יוצר‑הדיוור, Handoff קורס→מייל</td></tr>
+          <tr><td>4 · הרחבה (10–14)</td><td>מנתח תלמידים, עדכון קורס קיים, guardrails עלות, פיילוט מרצים</td></tr>
+          <tr><td>5 · חזון <span class="pill pu">שלב 2</span></td><td>בורדי‑תלמיד (RAG תמלולים), מעבר הדרגתי ל‑multi‑agent (גישה B)</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack">
+      <h2>סיכום טכנולוגי</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>שכבה</th><th>טכנולוגיה</th></tr></thead>
+        <tbody>
+          <tr><td>Frontend</td><td>React + Next.js (App Router), TypeScript strict, streaming UI</td></tr>
+          <tr><td>LLM</td><td>LLMProvider Adapter → Claude (ברירת מחדל) / GPT / Gemini</td></tr>
+          <tr><td>DB</td><td>PostgreSQL + Prisma, RLS פר‑מרצה</td></tr>
+          <tr><td>RAG</td><td>pgvector (embeddings לתוכן קורסים ותמלולים)</td></tr>
+          <tr><td>רקע</td><td>Trigger.dev (תמונות, מצגות, אינדוקס, summarization)</td></tr>
+          <tr><td>כלים חיצוניים</td><td>web_search + image‑gen Adapter (FLUX/Seedream/Higgsfield)</td></tr>
+          <tr><td>Action API</td><td>wbApi — חוזה פנימי מול פלטפורמת WHITEBOARD</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note cy" style="margin-top:22px"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span><div>מסמך נלווה לאפיון המוצר (<code class="inl">אפיון-בורדי-2026-07.md</code>). שם — מה בורדי עושה ולמה; כאן — איך בונים. נקודות ההחלפה היחידות: <b>LLM Adapter</b>, <b>image‑gen Adapter</b>, ו‑<b>Action API</b> מול הפלטפורמה.</div></div>
+    </section>
+  </main>
+</div>
+
+<script>
+const links=[...document.querySelectorAll('#nav a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const obs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')===id));}});},{rootMargin:'-20% 0px -70% 0px'});
+secs.forEach(s=>s&&obs.observe(s));
+const root=document.documentElement,tb=document.getElementById('theme');
+tb.onclick=()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');
+  tb.querySelector('svg').innerHTML=d?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';};
+</script>
+</body>
+</html>

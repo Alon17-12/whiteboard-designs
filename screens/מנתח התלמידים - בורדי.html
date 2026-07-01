@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בורדי · מנתח התלמידים — WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green:#7DC57A;--green-bright:#22c55e;--yellow:#EAD654;--purple:#9B6BF2;--orange:#F5A65B;
+  --bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);
+  --r-xs:6px;--r-sm:10px;--r-md:16px;--r-lg:18px;
+  --shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.3);--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
+.shell{display:flex;height:100vh}
+
+/* SIDEBAR */
+.side{width:220px;flex:0 0 220px;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:18px 14px}
+.logo{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0 14px}
+.logo .mk{width:46px;height:46px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center}
+.logo .mk svg{width:30px;height:30px}
+.logo .wm{font-family:'Fredoka';font-weight:700;font-size:15px;letter-spacing:.5px}
+.logo .wm small{display:block;font-size:8px;letter-spacing:3px;color:#ffffff88;text-align:center;font-family:'Heebo';font-weight:500}
+.nav-tag{font-size:10px;color:#ffffff55;letter-spacing:1px;margin:12px 10px 6px}
+.side nav a{display:flex;align-items:center;gap:11px;color:#dbe6ff;font-size:13.5px;padding:10px 12px;border-radius:9px;margin-bottom:2px;transition:.15s}
+.side nav a svg{width:17px;height:17px;flex:0 0 auto;opacity:.85}
+.side nav a:hover{background:#ffffff10}
+.side nav a.on{background:linear-gradient(90deg,#ffffff22,#ffffff10);color:#fff;font-weight:600}
+.side nav a.on svg{opacity:1;color:var(--cyan)}
+.side .spacer{flex:1}
+.mode-tog{display:flex;background:#ffffff14;border-radius:10px;padding:3px;margin:4px 4px 12px}
+.mode-tog button{flex:1;font-size:12px;padding:7px;border-radius:8px;color:#cdd9f5;display:flex;align-items:center;justify-content:center;gap:5px}
+.mode-tog button.on{background:#fff;color:var(--navy);font-weight:700}
+.mode-tog button svg{width:14px;height:14px}
+.prof{display:flex;align-items:center;gap:10px;padding:8px 6px;border-top:1px solid #ffffff1a}
+.prof .av{width:34px;height:34px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Fredoka'}
+.prof .nm{font-size:13px;font-weight:600}.prof .em{font-size:10.5px;color:#ffffff77}
+
+/* TOPBAR */
+.wrap{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{height:60px;flex:0 0 60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.top .crumb{display:flex;align-items:center;gap:10px}
+.top .back{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-sub)}
+.top h1{font-family:'Fredoka';font-size:18px;font-weight:600}
+.top h1 span{color:var(--text-xs);font-weight:400;font-size:14px}
+.top .acts{display:flex;gap:8px}
+.iconbtn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.iconbtn:hover{color:var(--cyan);border-color:var(--cyan)}
+.iconbtn svg{width:17px;height:17px}
+
+.body{flex:1;display:flex;min-height:0}
+.chat{flex:1;display:flex;flex-direction:column;min-width:0}
+.stream{flex:1;overflow-y:auto;padding:26px clamp(18px,4vw,48px);display:flex;flex-direction:column;gap:16px}
+.stream .day{align-self:center;font-size:11px;color:var(--text-xs);background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:100px}
+
+/* message rows */
+.row{display:flex;gap:12px;max-width:820px;align-items:flex-end;align-self:flex-start;animation:pop .35s ease}
+.row.me{align-self:flex-end;flex-direction:row-reverse}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.av-b{width:54px;height:54px;flex:0 0 auto;display:flex;align-items:flex-end;justify-content:center}
+.av-b img{width:54px;height:54px;object-fit:contain;filter:drop-shadow(0 5px 12px rgba(37,62,122,.20))}
+.av-me{width:38px;height:38px;flex:0 0 auto;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;box-shadow:var(--shadow-sm);align-self:flex-end;margin-bottom:2px}
+.bub{background:var(--surface);border:1px solid var(--border);border-radius:16px 4px 16px 16px;padding:13px 16px;font-size:14.5px;line-height:1.6;box-shadow:var(--shadow-sm);color:var(--text-main)}
+.bub.bare{background:none;border:none;box-shadow:none;padding:0}
+.row.me .bub{background:var(--navy);color:#eaf1ff;border-radius:4px 16px 16px 16px;border-color:transparent}
+.bub .who{font-size:11px;color:var(--cyan);font-weight:700;margin-bottom:4px;font-family:'Fredoka'}
+.time{font-size:10px;color:var(--text-xs);margin-top:6px}
+.typing{display:flex;gap:5px;align-items:center;padding:15px 18px}
+.typing i{width:8px;height:8px;border-radius:50%;background:var(--cyan);animation:bounce 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
+.typing-lbl{font-size:11px;color:var(--text-xs);margin-right:2px}
+
+/* pillar quick actions */
+.qa{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;max-width:580px}
+.qacard{text-align:right;background:var(--surface-2);border:1.5px solid var(--border);border-radius:14px;padding:15px;transition:.15s}
+.qacard:hover{border-color:var(--cyan);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.qacard .qi{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.qacard .qi svg{width:20px;height:20px}
+.qacard h4{font-size:14.5px;font-weight:700;margin-bottom:3px}
+.qacard p{font-size:12px;color:var(--text-sub);line-height:1.4}
+.mc .q{font-size:14.5px;font-weight:600;margin-bottom:11px}
+.mc .opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.opt{text-align:right;background:var(--surface-2);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;transition:.15s}
+.opt:hover{border-color:var(--cyan);transform:translateY(-1px)}
+.opt .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border-strong);flex:0 0 auto}
+.opt.pick{border-color:var(--green-bright);background:color-mix(in srgb,var(--green-bright) 10%,var(--surface));pointer-events:none}
+.opt.dim{opacity:.4}
+
+/* DATA CARD */
+.dcard{background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;max-width:660px;position:relative}
+.dh{padding:15px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.dh .di{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.dh h3{font-family:'Fredoka';font-size:16px;font-weight:600;flex:1}
+.dh .tag{font-size:10.5px;font-weight:700;color:var(--text-xs);background:var(--surface-3);padding:3px 9px;border-radius:100px}
+.db{padding:16px 18px}
+/* pin button */
+.pin{width:30px;height:30px;border-radius:9px;border:1px solid var(--border);color:var(--text-sub);display:flex;align-items:center;justify-content:center;flex:0 0 auto;transition:.15s}
+.pin svg{width:15px;height:15px}
+.pin:hover{border-color:var(--cyan);color:var(--cyan);background:color-mix(in srgb,var(--cyan) 8%,transparent)}
+.pin.done{border-color:var(--green-bright);color:#fff;background:var(--green-bright)}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:13px 14px}
+.kpi .ki{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:9px}
+.kpi .num{font-family:'Fredoka';font-size:23px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.kpi .lbl{font-size:11px;color:var(--text-sub);margin-top:3px}
+.kpi .delta{font-size:10.5px;font-weight:700;margin-top:5px;display:inline-flex;align-items:center;gap:3px}
+.delta.up{color:var(--green-bright)}.delta.down{color:var(--pink)}
+
+.donut-wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.dcenter{font-family:'Fredoka';font-weight:700}
+.legend{display:flex;flex-direction:column;gap:9px;flex:1;min-width:150px}
+.lg{display:flex;align-items:center;gap:9px;font-size:13px}
+.lg .sw{width:12px;height:12px;border-radius:4px;flex:0 0 auto}
+.lg .lv{margin-right:auto;font-weight:700;font-family:'Fredoka'}
+.lg .lp{font-size:11px;color:var(--text-xs)}
+
+.trend{direction:ltr}
+.trend svg{width:100%;height:150px;overflow:visible}
+.axis{stroke:var(--border);stroke-width:1}
+.tlabels{display:flex;justify-content:space-between;direction:ltr;margin-top:6px;font-size:10.5px;color:var(--text-xs)}
+.tleg{display:flex;gap:16px;margin-top:12px;direction:rtl}
+.tleg .i{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-sub)}
+.tleg .i b{width:14px;height:3px;border-radius:2px;display:inline-block}
+
+.bars{display:flex;flex-direction:column;gap:11px}
+.brow{display:grid;grid-template-columns:140px 1fr 52px;align-items:center;gap:10px}
+.brow .bl{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btrack{height:13px;background:var(--surface-3);border-radius:10px;overflow:hidden}
+.bfill{height:100%;border-radius:10px;transition:width 1s ease}
+.brow .bv{font-size:12px;font-weight:700;font-family:'Fredoka';text-align:left;font-variant-numeric:tabular-nums}
+
+.funnel{display:flex;flex-direction:column;gap:8px}
+.frow{display:grid;grid-template-columns:150px 1fr;align-items:center;gap:10px}
+.frow .fl{font-size:12.5px;font-weight:600}
+.fbar{height:34px;border-radius:9px;display:flex;align-items:center;padding:0 12px;color:#fff;font-weight:700;font-size:12.5px;font-family:'Fredoka';min-width:52px;transition:width 1s ease}
+.fdrop{font-size:11px;font-weight:700;color:var(--pink);margin-right:8px}
+
+.risk{display:flex;flex-direction:column;gap:9px}
+.rrow{display:flex;align-items:center;gap:11px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:10px 13px}
+.rrow .ra{width:34px;height:34px;border-radius:50%;color:#fff;font-family:'Fredoka';font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto}
+.rrow .rn{font-size:13.5px;font-weight:600}.rrow .rd{font-size:11px;color:var(--text-xs)}
+.rrow .rb{margin-right:auto;font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px}
+.rb.hi{background:color-mix(in srgb,var(--pink) 15%,transparent);color:var(--pink)}
+.rb.mid{background:color-mix(in srgb,var(--yellow) 22%,transparent);color:#a8971a}
+
+.insight{position:relative;display:flex;gap:12px;align-items:flex-start;background:linear-gradient(135deg,color-mix(in srgb,var(--cyan) 12%,var(--surface)),var(--surface));border:1px solid color-mix(in srgb,var(--cyan) 32%,transparent);border-radius:14px;padding:15px 17px;max-width:660px}
+.insight .ii{width:38px;height:38px;border-radius:11px;background:color-mix(in srgb,var(--cyan) 18%,transparent);color:var(--cyan);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.insight .itx{flex:1}.insight b{font-size:14px}.insight p{font-size:13px;color:var(--text-sub);margin:3px 0 0}
+.insight .pin{position:static}
+
+.handoff{max-width:560px;background:linear-gradient(135deg,color-mix(in srgb,var(--purple) 14%,var(--surface)),var(--surface));border:1px solid color-mix(in srgb,var(--purple) 35%,transparent);border-radius:16px;padding:16px 18px;display:flex;gap:13px;align-items:center}
+.handoff .hi{width:42px;height:42px;border-radius:11px;background:color-mix(in srgb,var(--purple) 20%,transparent);color:var(--purple);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.handoff .ht{flex:1}.handoff .ht b{font-size:14px}.handoff .ht p{font-size:12.5px;margin:2px 0 0;color:var(--text-sub)}
+.handoff .hb{background:var(--purple);color:#fff;font-size:12.5px;font-weight:700;padding:9px 14px;border-radius:10px;white-space:nowrap}
+
+.composer{flex:0 0 auto;padding:14px clamp(18px,4vw,48px) 18px;border-top:1px solid var(--border);background:var(--surface)}
+.cbox{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:14px;padding:7px 8px 7px 16px}
+.cbox:focus-within{border-color:var(--cyan)}
+.cbox input{flex:1;background:none;border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text-main)}
+.cbox input::placeholder{color:var(--text-xs)}
+.cbox .snd{width:40px;height:40px;border-radius:11px;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.cbox .snd svg{width:18px;height:18px}
+.cbox .attach{color:var(--text-xs);display:flex;align-items:center;justify-content:center;width:32px;height:32px}
+
+/* ===== DATA BOARD RAIL ===== */
+.rail{width:312px;flex:0 0 312px;border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;min-height:0}
+.rhead{padding:18px 18px 14px;border-bottom:1px solid var(--border)}
+.rhead .rtitle{display:flex;align-items:center;gap:9px}
+.rhead .rtitle .bmark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--navy),var(--cyan));color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;font-size:13px}
+.rhead h2{font-family:'Fredoka';font-size:16px;font-weight:700;flex:1}
+.rhead .live{font-size:9.5px;font-weight:700;color:var(--green-bright);display:flex;align-items:center;gap:4px}
+.rhead .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green-bright);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.rhead .rsub{font-size:11.5px;color:var(--text-xs);margin:4px 0 12px}
+.dlbtn{width:100%;background:var(--navy);color:#fff;font-weight:700;font-size:13.5px;padding:11px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s}
+.dlbtn svg{width:16px;height:16px}
+.dlbtn:hover{background:var(--navy-dark)}
+.dlbtn:disabled{opacity:.45;cursor:not-allowed}
+.rbody{flex:1;overflow-y:auto;padding:14px 16px}
+.sectlabel{font-size:10.5px;color:var(--text-xs);letter-spacing:.5px;font-weight:700;margin:4px 2px 9px;display:flex;align-items:center;gap:6px}
+.sectlabel .cnt{background:var(--surface-3);color:var(--text-sub);border-radius:100px;padding:1px 7px;font-size:10px}
+/* pinned rows */
+.pinrow{display:flex;align-items:flex-start;gap:10px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px;animation:pinin .35s ease}
+@keyframes pinin{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:none}}
+.pinrow .pk{width:28px;height:28px;border-radius:8px;background:color-mix(in srgb,var(--cyan) 15%,transparent);color:var(--cyan);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.pinrow .pk svg{width:15px;height:15px}
+.pinrow .pt{font-size:12.5px;font-weight:700;line-height:1.3}
+.pinrow .ptime{font-size:10.5px;color:var(--text-xs);margin-top:2px;display:flex;align-items:center;gap:4px}
+.pinrow .prem{width:24px;height:24px;border-radius:7px;color:var(--text-xs);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.pinrow .prem:hover{background:color-mix(in srgb,var(--pink) 14%,transparent);color:var(--pink)}
+.empty{text-align:center;color:var(--text-xs);font-size:12px;padding:18px 10px;border:1.5px dashed var(--border-strong);border-radius:12px;line-height:1.6}
+.empty svg{width:26px;height:26px;color:var(--border-strong);margin-bottom:6px}
+/* suggestions (reuse alert look) */
+.alert{text-align:right;width:100%;display:flex;gap:10px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--border);border-right:3px solid var(--sev,var(--cyan));border-radius:12px;padding:10px 11px;transition:.16s;margin-bottom:8px}
+.alert:hover{transform:translateX(-3px);box-shadow:var(--shadow-sm)}
+.alert .ai{width:28px;height:28px;border-radius:8px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--sev) 16%,transparent);color:var(--sev)}
+.alert .ai svg{width:15px;height:15px}
+.alert .at{font-size:12px;font-weight:700;line-height:1.3}
+.alert .ad{font-size:10.5px;color:var(--text-sub);margin-top:2px;line-height:1.4}
+.alert .ask{font-size:10px;color:var(--cyan);font-weight:700;margin-top:6px;display:flex;align-items:center;gap:4px}
+.alert.hi{--sev:var(--pink)}.alert.mid{--sev:var(--orange)}.alert.ok{--sev:var(--green-bright)}.alert.info{--sev:var(--cyan)}
+.alert .nb{font-size:8.5px;font-weight:800;color:#fff;background:var(--pink);border-radius:100px;padding:1px 6px;margin-right:auto}
+
+.ctrl{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;background:var(--navy);color:#fff;border-radius:100px;padding:8px 10px 8px 18px;box-shadow:var(--shadow);z-index:60}
+.ctrl .lbl{font-size:12px;font-weight:600}
+.ctrl button{background:#ffffff1a;border-radius:100px;padding:8px 15px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px}
+.ctrl button.play{background:var(--cyan);color:var(--navy)}
+.ctrl button:hover{filter:brightness(1.08)}.ctrl .rst{background:transparent;padding:8px}
+.ctrl button svg{width:15px;height:15px}
+.toasts{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:10px;z-index:80}
+.toast{background:var(--surface);border:1px solid var(--border);border-right:4px solid var(--green-bright);border-radius:12px;padding:13px 16px;box-shadow:var(--shadow);display:flex;gap:11px;align-items:center;min-width:250px;animation:slidein .3s ease}
+@keyframes slidein{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+.toast .ti{width:30px;height:30px;border-radius:8px;background:color-mix(in srgb,var(--green-bright) 15%,transparent);color:var(--green-bright);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.toast .tx b{font-size:13.5px}.toast .tx p{font-size:11.5px;color:var(--text-sub);margin:0}
+@media (max-width:1180px){.rail{display:none}}
+@media (max-width:760px){.side{display:none}.kpis{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="logo">
+      <div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="#253E7A" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M8 20h8M12 18v2"/><circle cx="9.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><circle cx="14.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><path d="M9.5 13.5c1.5 1.2 3.5 1.2 5 0"/></svg></div>
+      <div class="wm">WHITEBOARD<small>LEARN · CREATE · GROW</small></div>
+    </div>
+    <span class="nav-tag">ניווט ראשי</span>
+    <nav>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> לוח בקרה</a>
+      <a href="#" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg> בורדי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21V12h6v9"/></svg> מרכזי הידע שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> אנשי הקשר שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/></svg> ניוזלטרים</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> הספרייה שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.2A1.6 1.6 0 0 0 7 19.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1-2.7H3a2 2 0 0 1 0-4h.2a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H10a1.6 1.6 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.2a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V10a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1z"/></svg> הגדרות</a>
+    </nav>
+    <div class="spacer"></div>
+    <div class="mode-tog">
+      <button class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M6 12v5c3 3 9 3 12 0v-5"/><path d="M2 10l10-5 10 5-10 5z"/></svg> מורה</button>
+      <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> תלמיד</button>
+    </div>
+    <div class="prof"><div class="av">א</div><div><div class="nm">אלון גבאי</div><div class="em">alon@…</div></div></div>
+  </aside>
+
+  <div class="wrap">
+    <div class="top">
+      <div class="crumb">
+        <div class="back"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        <h1>מנתח התלמידים <span>· בורדי</span></h1>
+      </div>
+      <div class="acts">
+        <button class="iconbtn" id="theme" title="מצב תצוגה"><svg id="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+        <button class="iconbtn" title="שפה">🇮🇱</button>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="chat">
+        <div class="stream" id="stream"><div class="day">היום · 14:40</div></div>
+        <div class="composer">
+          <div class="cbox">
+            <input id="inp" placeholder="שאל את בורדי על התלמידים, השיווק, המכירות…" />
+            <button class="attach"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.4 11.05 12.25 20.2a5 5 0 0 1-7.07-7.07l9.19-9.19a3 3 0 0 1 4.24 4.24l-9.2 9.19a1 1 0 0 1-1.41-1.41l8.48-8.49"/></svg></button>
+            <button class="snd" id="sendbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="rail">
+        <div class="rhead">
+          <div class="rtitle"><div class="bmark">DB</div><h2>DATA Board</h2><span class="live">חי</span></div>
+          <div class="rsub">נעץ תובנות מהשיחה — בורדי מרכיב מהן דוח חכם ומעוצב.</div>
+          <button class="dlbtn" id="dlbtn" onclick="downloadReport()" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> הורד דוח מעוצב</button>
+        </div>
+        <div class="rbody">
+          <div class="sectlabel">📌 נעוץ <span class="cnt" id="pincount">0</span></div>
+          <div id="board"></div>
+          <div class="sectlabel" style="margin-top:16px">⚡ בורדי ממליץ לנעוץ</div>
+          <div id="feed"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div class="ctrl">
+  <span class="lbl">דמו · מנתח התלמידים</span>
+  <button class="play" id="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> נגן</button>
+  <button class="rst" id="reset" title="התחל מחדש"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.3 2.6L3 8"/><path d="M3 3v5h5"/></svg></button>
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+const M="../BOARDi/SVG/";
+const stream=document.getElementById('stream'), inp=document.getElementById('inp');
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function scrollDown(){stream.scrollTop=stream.scrollHeight}
+const pinSVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l-1 6 3 3v2H7v-2l3-3z"/><path d="M12 16v4"/></svg>';
+const pinnedSVG='<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 4h6l-1 6 3 3v2h-4v5h-2v-5H7v-2l3-3z"/></svg>';
+
+function boardi(html,bare){
+  const r=document.createElement('div');r.className='row';
+  r.innerHTML=`<div class="av-b"><img src="${M}12.svg" alt="בורדי" onerror="this.style.display='none';this.parentNode.textContent='🤖'"></div>
+  <div class="bub ${bare?'bare':''}">${bare?'':'<div class="who">בורדי</div>'}${html}${bare?'':'<div class="time">14:40</div>'}</div>`;
+  stream.appendChild(r);scrollDown();return r;
+}
+function me(text){
+  const r=document.createElement('div');r.className='row me';
+  r.innerHTML=`<div class="av-me">א</div><div class="bub">${text}<div class="time" style="color:#ffffff88">14:41</div></div>`;
+  stream.appendChild(r);scrollDown();return r;
+}
+let typingRow=null;
+function showTyping(lbl){typingRow=document.createElement('div');typingRow.className='row';
+  typingRow.innerHTML=`<div class="av-b"><img src="${M}7.svg" onerror="this.parentNode.textContent='✍️'"></div>
+  <div class="bub" style="display:flex;align-items:center"><div class="typing"><i></i><i></i><i></i></div><span class="typing-lbl">${lbl||'בורדי מנתח…'}</span></div>`;
+  stream.appendChild(typingRow);scrollDown();}
+function hideTyping(){if(typingRow){typingRow.remove();typingRow=null}}
+function dataMsg(html){return boardi(html,true)}
+
+/* ---------- data-viz builders ---------- */
+function kpiRow(items){
+  return `<div class="kpis">${items.map(k=>`<div class="kpi"><div class="ki" style="background:color-mix(in srgb,${k.c} 16%,transparent);color:${k.c}">${k.icon}</div>
+    <div class="num" style="color:${k.c}">${k.num}</div><div class="lbl">${k.lbl}</div>
+    ${k.delta?`<div class="delta ${k.dir}">${k.dir==='up'?'▲':'▼'} ${k.delta}</div>`:''}</div>`).join('')}</div>`;
+}
+function donutSVG(segs,centerNum,centerLbl){
+  const R=52,C=2*Math.PI*R,total=segs.reduce((s,x)=>s+x.value,0);let off=0,arcs='';
+  segs.forEach(s=>{const len=C*s.value/total;arcs+=`<circle r="${R}" cx="70" cy="70" fill="none" stroke="${s.color}" stroke-width="17" stroke-dasharray="${len.toFixed(2)} ${(C-len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 70 70)"/>`;off+=len;});
+  return `<svg width="140" height="140" viewBox="0 0 140 140"><circle r="${R}" cx="70" cy="70" fill="none" stroke="var(--surface-3)" stroke-width="17"/>${arcs}
+    <text x="70" y="66" text-anchor="middle" class="dcenter" font-size="26" fill="var(--text-main)">${centerNum}</text>
+    <text x="70" y="86" text-anchor="middle" font-size="11" fill="var(--text-sub)">${centerLbl}</text></svg>`;
+}
+function donutCard(title,segs,centerLbl){
+  const total=segs.reduce((s,x)=>s+x.value,0);
+  const leg=segs.map(s=>`<div class="lg"><span class="sw" style="background:${s.color}"></span>${s.label}<span class="lp">${Math.round(s.value/total*100)}%</span><span class="lv">${s.value}</span></div>`).join('');
+  return dcard(title,'var(--purple)',pieIcon,`<div class="donut-wrap"><div class="donut">${donutSVG(segs,total,centerLbl||'')}</div><div class="legend">${leg}</div></div>`);
+}
+function trendCard(title,months,s1,s2,leg1,leg2,c1,c2){
+  c1=c1||'var(--cyan)';c2=c2||'var(--purple)';
+  const W=600,H=140,pad=8,xs=i=>pad+i*(W-2*pad)/(months.length-1),ys=v=>H-8-(v/100)*(H-20);
+  const path=a=>a.map((v,i)=>(i?'L':'M')+xs(i).toFixed(1)+' '+ys(v).toFixed(1)).join(' ');
+  const area=a=>path(a)+` L ${xs(a.length-1).toFixed(1)} ${H} L ${xs(0).toFixed(1)} ${H} Z`;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><line class="axis" x1="0" y1="${ys(50)}" x2="${W}" y2="${ys(50)}"/>
+    <defs><linearGradient id="tg${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${c1}" stop-opacity=".28"/><stop offset="100%" stop-color="${c1}" stop-opacity="0"/></linearGradient></defs>
+    <path d="${area(s1)}" fill="url(#tg${gid})"/><path d="${path(s1)}" fill="none" stroke="${c1}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+  if(s2)svg+=`<path d="${path(s2)}" fill="none" stroke="${c2}" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  svg+=s1.map((v,i)=>`<circle cx="${xs(i)}" cy="${ys(v)}" r="3.5" fill="var(--surface)" stroke="${c1}" stroke-width="2.5"/>`).join('')+`</svg>`;
+  gid++;
+  const labels=`<div class="tlabels">${months.map(m=>`<span>${m}</span>`).join('')}</div>`;
+  const leg=`<div class="tleg"><div class="i"><b style="background:${c1}"></b> ${leg1}</div>${s2?`<div class="i"><b style="background:${c2}"></b> ${leg2}</div>`:''}</div>`;
+  return dcard(title,'var(--cyan)',trendIcon,`<div class="trend">${svg}${labels}</div>${leg}`);
+}
+let gid=0;
+function barsCard(title,rows,color){
+  const max=Math.max(...rows.map(r=>r.v));
+  const body=rows.map(r=>`<div class="brow"><span class="bl">${r.l}</span><div class="btrack"><div class="bfill" style="width:${Math.round(r.v/max*100)}%;background:${r.c||color}"></div></div><span class="bv">${r.suf?r.v+r.suf:r.v}</span></div>`).join('');
+  return dcard(title,color||'var(--cyan)',barIcon,`<div class="bars">${body}</div>`);
+}
+function funnelCard(title,steps,color){
+  const body=steps.map(s=>`<div class="frow"><span class="fl">${s.l} ${s.drop?`<span class="fdrop">${s.drop}</span>`:''}</span>
+    <div class="fbar" style="width:${s.pct}%;background:${s.c}">${s.v}</div></div>`).join('');
+  return dcard(title,color||'var(--pink)',funnelIcon,`<div class="funnel">${body}</div>`);
+}
+function riskCard(){
+  const list=[
+    {n:'דניאל כהן',d:'לא נכנס 21 יום · נתקע בשיעור 7',lvl:'hi',c:'var(--pink)',i:'ד'},
+    {n:'מיכל לוי',d:'צפייה 12% · ללא פעילות 14 יום',lvl:'hi',c:'var(--orange)',i:'מ'},
+    {n:'יוסי אברהם',d:'האטה בקצב · 3 שיעורים בפיגור',lvl:'mid',c:'var(--purple)',i:'י'},
+    {n:'נועה שרון',d:'החמיצה 2 מפגשים אחרונים',lvl:'mid',c:'var(--cyan)',i:'נ'}];
+  const body=list.map(r=>`<div class="rrow"><div class="ra" style="background:${r.c}">${r.i}</div>
+    <div><div class="rn">${r.n}</div><div class="rd">${r.d}</div></div>
+    <span class="rb ${r.lvl}">${r.lvl==='hi'?'סיכון גבוה':'סיכון בינוני'}</span></div>`).join('');
+  return dcard('תלמידים בסיכון נטישה','var(--pink)',riskIcon,`<div class="risk">${body}</div>`);
+}
+function insightCard(txt){
+  return `<div class="insight" data-title="המלצת בורדי"><div class="ii"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg></div>
+    <div class="itx"><b>המלצת בורדי</b><p>${txt}</p></div><button class="pin" title="נעץ ל-DATA Board" onclick="pinFromEl(this)">${pinSVG}</button></div>`;
+}
+const pieIcon='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.2 15.9A10 10 0 1 1 8 2.8"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>';
+const trendIcon='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>';
+const barIcon='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>';
+const funnelIcon='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></svg>';
+const riskIcon='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>';
+const megaIcon='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11v2a1 1 0 0 0 1 1h2l4 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 8a4 4 0 0 1 0 8"/></svg>';
+const salesIcon='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4v11a3 3 0 0 0 3 3h9"/><path d="M18 20V9a3 3 0 0 0-3-3H6"/></svg>';
+const heartIcon='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg>';
+function dcard(title,color,icon,body){
+  return `<div class="dcard" data-title="${title}"><div class="dh"><div class="di" style="background:color-mix(in srgb,${color} 15%,transparent);color:${color}">${icon}</div><h3>${title}</h3><span class="tag">נתונים חיים</span><button class="pin" title="נעץ ל-DATA Board" onclick="pinFromEl(this)">${pinSVG}</button></div><div class="db">${body}</div></div>`;
+}
+
+/* ---------- DATA Board (pin + report) ---------- */
+const PINS=[];
+function pinFromEl(btn){
+  if(btn.classList.contains('done'))return;
+  const card=btn.closest('.dcard,.insight');
+  const title=card.dataset.title||card.querySelector('h3,b')?.textContent||'תובנה';
+  const clone=card.cloneNode(true);clone.querySelectorAll('.pin').forEach(x=>x.remove());
+  const time=new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
+  PINS.push({title,time,html:clone.outerHTML});
+  btn.classList.add('done');btn.innerHTML=pinnedSVG;
+  renderBoard();toast('נעוץ ל-DATA Board',title+' · '+time);
+}
+function unpin(i){PINS.splice(i,1);renderBoard()}
+function renderBoard(){
+  const b=document.getElementById('board');
+  document.getElementById('pincount').textContent=PINS.length;
+  document.getElementById('dlbtn').disabled=PINS.length===0;
+  if(!PINS.length){b.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l-1 6 3 3v2H7v-2l3-3z"/><path d="M12 16v4"/></svg><br>עדיין לא נעצת כלום.<br>לחץ 📌 על כל תובנה כדי לבנות דוח.</div>`;return}
+  b.innerHTML=PINS.map((p,i)=>`<div class="pinrow"><div class="pk">${pinnedSVG}</div>
+    <div style="flex:1"><div class="pt">${p.title}</div><div class="ptime"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> נעוץ ${p.time}</div></div>
+    <button class="prem" onclick="unpin(${i})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>`).join('');
+}
+function downloadReport(){
+  if(!PINS.length)return;
+  const css=document.querySelector('style').innerHTML;
+  const today=new Date().toLocaleDateString('he-IL',{day:'numeric',month:'long',year:'numeric'});
+  const items=PINS.map((p,i)=>`<div class="rep-item"><div class="rep-meta"><span class="rep-n">${i+1}</span> ${p.title} <span class="rep-time">· נעוץ ${p.time}</span></div>${p.html}</div>`).join('');
+  const doc=`<!DOCTYPE html><html lang="he" dir="rtl" data-theme="light"><head><meta charset="utf-8"><title>דוח DATA Board · בורדי</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>${css}
+body{overflow:auto !important}
+.rep-page{max-width:840px;margin:0 auto;padding:44px 30px 60px}
+.rep-head{background:linear-gradient(135deg,var(--navy),var(--navy-dark));color:#fff;border-radius:20px;padding:30px 34px;margin-bottom:30px;display:flex;align-items:center;gap:18px}
+.rep-head .rb{width:56px;height:56px;border-radius:14px;background:#ffffff18;border:1px solid #ffffff30;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;font-size:18px}
+.rep-head h1{font-family:'Fredoka';font-size:26px;font-weight:700}
+.rep-head .sub{font-size:13px;color:#cfe0ff;margin-top:4px}
+.rep-head .date{margin-right:auto;text-align:left;font-size:12px;color:#cfe0ff}
+.rep-head .date b{display:block;font-family:'Fredoka';font-size:16px;color:#fff}
+.rep-item{margin-bottom:26px}
+.rep-meta{font-family:'Fredoka';font-weight:600;font-size:15px;color:var(--text-main);margin-bottom:11px;display:flex;align-items:center;gap:9px}
+.rep-meta .rep-n{width:24px;height:24px;border-radius:7px;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px}
+.rep-meta .rep-time{color:var(--text-xs);font-weight:400;font-size:12px}
+.rep-item .dcard,.rep-item .insight{max-width:100%}
+.rep-foot{margin-top:34px;padding-top:18px;border-top:1px solid var(--border);text-align:center;color:var(--text-xs);font-size:12px}
+@media print{.rep-page{padding:10px}}
+</style></head><body class="rep-body"><div class="rep-page">
+<div class="rep-head"><div class="rb">DB</div><div><h1>דוח DATA Board</h1><div class="sub">סיכום תובנות שהוכן על ידי בורדי · WHITEBOARD</div></div><div class="date">הופק בתאריך<b>${today}</b></div></div>
+${items}
+<div class="rep-foot">הופק אוטומטית על ידי בורדי · מנתח התלמידים · WHITEBOARD · ${PINS.length} תובנות</div>
+</div></body></html>`;
+  const blob=new Blob([doc],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='דוח-DATA-Board-בורדי.html';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast('הדוח הורד ✓','דוח DATA Board מעוצב עם '+PINS.length+' תובנות');
+}
+renderBoard();
+
+/* ---------- pillars (סקירה כללית ← שיווק ← מכירות ← שירות) ---------- */
+function icoUsers(){return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/></svg>'}
+const PILLARS={
+  overview:{name:'סקירה כללית',intro:'הנה <b>תמונת מצב כללית</b> ל-30 הימים האחרונים:',render:()=>{
+    dataMsg(kpiRow([
+      {num:'342',lbl:'סה״כ תלמידים',c:'var(--navy)',delta:'8%',dir:'up',icon:icoUsers()},
+      {num:'63.7%',lbl:'פעילים (30 יום)',c:'var(--green-bright)',delta:'5%',dir:'up',icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>'},
+      {num:'64%',lbl:'התקדמות ממוצעת',c:'var(--cyan)',delta:'3%',dir:'up',icon:trendIcon},
+      {num:'4.7',lbl:'שביעות רצון',c:'var(--yellow)',delta:'0.2',dir:'up',icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>'}]));
+    dataMsg(donutCard('פילוח סטטוס תלמידים',[{label:'פעילים',value:218,color:'var(--green-bright)'},{label:'לא פעילים',value:89,color:'var(--yellow)'},{label:'נטשו',value:35,color:'var(--pink)'}],'תלמידים'));
+    dataMsg(trendCard('מגמת מעורבות · 6 חודשים',['ינו','פבר','מרץ','אפר','מאי','יונ'],[42,48,55,53,61,68],[30,33,38,44,52,58],'צפיות בשיעורים','השלמות קורס'));
+  }},
+  marketing:{name:'שיווק',intro:'עברתי על <b>נתוני השיווק</b>. הנה איך התנועה הופכת לתלמידים:',render:()=>{
+    dataMsg(kpiRow([
+      {num:'24.5K',lbl:'חשיפות',c:'var(--purple)',delta:'15%',dir:'up',icon:megaIcon},
+      {num:'7.4%',lbl:'CTR',c:'var(--cyan)',delta:'1.1%',dir:'up',icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>'},
+      {num:'5.3%',lbl:'המרה לליד',c:'var(--green-bright)',delta:'0.4%',dir:'up',icon:funnelIcon},
+      {num:'₪18',lbl:'עלות לליד',c:'var(--orange)',delta:'₪3',dir:'down',icon:salesIcon}]));
+    dataMsg(funnelCard('משפך שיווקי · חשיפה ← הרשמה',[
+      {l:'חשיפות',v:'24,500',pct:100,c:'var(--purple)'},
+      {l:'קליקים',v:'1,820',pct:74,c:'var(--cyan)'},
+      {l:'לידים',v:'410',pct:40,c:'var(--cyan)'},
+      {l:'נרשמו',v:'96',pct:24,c:'var(--green-bright)'}],'var(--purple)'));
+    dataMsg(barsCard('מקורות תנועה',[
+      {l:'אינסטגרם',v:38,suf:'%',c:'var(--pink)'},
+      {l:'פייסבוק',v:27,suf:'%',c:'var(--cyan)'},
+      {l:'אורגני / SEO',v:21,suf:'%',c:'var(--green-bright)'},
+      {l:'מייל וניוזלטר',v:14,suf:'%',c:'var(--purple)'}]));
+  }},
+  sales:{name:'מכירות',intro:'הנה תמונת ה<b>מכירות וההכנסות</b> החודש:',render:()=>{
+    dataMsg(kpiRow([
+      {num:'₪42.8K',lbl:'הכנסה החודש',c:'var(--green-bright)',delta:'12%',dir:'up',icon:salesIcon},
+      {num:'96',lbl:'מכירות',c:'var(--navy)',delta:'9',dir:'up',icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>'},
+      {num:'₪446',lbl:'עסקה ממוצעת',c:'var(--cyan)',delta:'4%',dir:'up',icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>'},
+      {num:'3.1%',lbl:'החזרים',c:'var(--pink)',delta:'0.5%',dir:'down',icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.3 2.6L3 8"/><path d="M3 3v5h5"/></svg>'}]));
+    dataMsg(trendCard('מגמת הכנסות · 6 חודשים',['ינו','פבר','מרץ','אפר','מאי','יונ'],[48,52,58,55,66,74],null,'הכנסה (₪ אלף)','','var(--green-bright)'));
+    dataMsg(barsCard('הקורסים הנמכרים ביותר',[
+      {l:'עיצוב UX/UI מתקדם',v:'₪14.2K',c:'var(--cyan)'},
+      {l:'AI לעסקים קטנים',v:'₪11.8K',c:'var(--purple)'},
+      {l:'שיווק במדיה',v:'₪9.4K',c:'var(--green-bright)'},
+      {l:'בניית דף נחיתה',v:'₪7.4K',c:'var(--pink)'}]));
+  }},
+  service:{name:'שירות · איכות הקורסים',intro:'בדקתי את <b>איכות הקורסים והשירות</b>. הנה נקודות התורפה:',render:()=>{
+    dataMsg(kpiRow([
+      {num:'54%',lbl:'שיעור השלמה',c:'var(--cyan)',delta:'2%',dir:'up',icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4 12 14.01l-3-3"/></svg>'},
+      {num:'4.5',lbl:'דירוג ממוצע',c:'var(--yellow)',delta:'0.1',dir:'down',icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>'},
+      {num:'32',lbl:'NPS',c:'var(--green-bright)',delta:'5',dir:'up',icon:heartIcon},
+      {num:'18',lbl:'שאלות פתוחות',c:'var(--orange)',icon:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'}]));
+    dataMsg(funnelCard('משפך התקדמות · נקודת נטישה',[
+      {l:'נרשמו',v:87,pct:100,c:'var(--navy)'},
+      {l:'התחילו פרק 1',v:81,pct:93,c:'var(--cyan)'},
+      {l:'סיימו פרק 1',v:74,pct:85,c:'var(--cyan)'},
+      {l:'שיעור 7',v:60,pct:69,c:'var(--pink)',drop:'−18%'},
+      {l:'סיימו הקורס',v:47,pct:54,c:'var(--green-bright)'}]));
+    dataMsg(riskCard());
+  }}
+};
+const PILLAR_INSIGHT={
+  overview:'המעורבות במגמת עלייה, אבל קורס "בניית דף נחיתה" מושך למטה — שווה להיכנס ל"שירות" ולבדוק את נקודות הנטישה.',
+  marketing:'אינסטגרם מביא הכי הרבה תנועה (38%) אבל האורגני ממיר הכי טוב. שווה להשקיע בתוכן SEO — עלות לליד נמוכה משמעותית.',
+  sales:'עיצוב UX/UI מוביל במכירות (₪14.2K). ההחזרים ירדו — סימן טוב לאיכות. הזדמנות: חבילת אפסייל לבוגרי UX.',
+  service:'שיעור 7 מאבד 18% מהתלמידים. ההמלצה: לפצל אותו לשניים ולהוסיף תרגיל מעשי קצר באמצע.'
+};
+async function runPillar(key){
+  const p=PILLARS[key];
+  showTyping('בורדי מנתח '+p.name+'…');await sleep(950);hideTyping();
+  boardi(p.intro);await sleep(200);
+  p.render();await sleep(150);
+  boardi(insightCard(PILLAR_INSIGHT[key]),true);
+  scrollDown();
+}
+
+/* pillar picker + follow-up */
+function showPillars(){
+  const r=boardi(`<div class="qa">
+    <button class="qacard" data-k="overview"><div class="qi" style="background:color-mix(in srgb,var(--cyan) 15%,transparent);color:var(--cyan)">${trendIcon}</div><h4>סקירה כללית</h4><p>תמונת מצב של התלמידים והקורסים</p></button>
+    <button class="qacard" data-k="marketing"><div class="qi" style="background:color-mix(in srgb,var(--purple) 15%,transparent);color:var(--purple)">${megaIcon}</div><h4>שיווק</h4><p>חשיפות, לידים, מקורות תנועה והמרה</p></button>
+    <button class="qacard" data-k="sales"><div class="qi" style="background:color-mix(in srgb,var(--green-bright) 15%,transparent);color:var(--green-bright)">${salesIcon}</div><h4>מכירות</h4><p>הכנסות, עסקאות וקורסים מובילים</p></button>
+    <button class="qacard" data-k="service"><div class="qi" style="background:color-mix(in srgb,var(--pink) 15%,transparent);color:var(--pink)">${heartIcon}</div><h4>שירות · איכות</h4><p>השלמה, שביעות רצון ונקודות נטישה</p></button>
+  </div>`);
+  r.querySelectorAll('.qacard').forEach(b=>b.onclick=()=>{stopPlay();me('נתח לי '+PILLARS[b.dataset.k].name);runPillar(b.dataset.k)});
+  return r;
+}
+
+/* ---------- proactive suggestions feed ---------- */
+const megaAlert=megaIcon.replace('width="20" height="20"','');
+function askFromAlert(q,respond){stopPlay();me(q);showTyping('בורדי מנתח…');setTimeout(()=>{hideTyping();respond()},950)}
+const ALERTS=[
+  {sev:'hi',icon:riskIcon,title:'3 תלמידים בסיכון נטישה',detail:'לא נכנסו 14+ יום',q:'מי בסיכון נטישה עכשיו?',respond:()=>{boardi('הנה מי שדורש התערבות:');dataMsg(riskCard())}},
+  {sev:'hi',icon:funnelIcon,title:'נקודת נטישה: שיעור 7',detail:'"עיצוב UX" מאבד 18% החודש',q:'למה שיעור 7 מאבד תלמידים?',respond:()=>{boardi('שיעור 7 הוא צוואר הבקבוק:');dataMsg(PILLARS.service.render_funnel?'':funnelCard('משפך התקדמות · נקודת נטישה',[{l:'נרשמו',v:87,pct:100,c:'var(--navy)'},{l:'סיימו פרק 1',v:74,pct:85,c:'var(--cyan)'},{l:'שיעור 7',v:60,pct:69,c:'var(--pink)',drop:'−18%'},{l:'סיימו',v:47,pct:54,c:'var(--green-bright)'}]));boardi(insightCard('לפצל את שיעור 7 ולהוסיף תרגיל מעשי באמצע.'),true)}},
+  {sev:'mid',icon:megaIcon,title:'עלות לליד עלתה בפייסבוק',detail:'₪15 ← ₪21 השבוע',q:'מה קורה עם עלות הליד בפייסבוק?',respond:()=>{boardi(insightCard('עלות הליד בפייסבוק עלתה 40% — הקריאייטיב "התעייף". שווה לרענן מודעה או להסיט תקציב לאינסטגרם שממיר טוב יותר.'),true)}},
+  {sev:'ok',icon:salesIcon,title:'יום שיא מכירות 🎉',detail:'₪4,200 אתמול — שיא חודשי',q:'ספר לי על יום שיא המכירות',respond:()=>{boardi(insightCard('אתמול נמכרו 9 קורסים (₪4,200) — 80% מהם UX/UI מתקדם, בעקבות הפוסט באינסטגרם. שווה להריץ שוב את אותו קריאייטיב.'),true)}}
+];
+function alertHTML(a,i,isNew){return `<button class="alert ${a.sev}" data-i="${i}"><div class="ai">${a.icon}</div>
+  <div style="flex:1"><div class="at">${a.title} ${isNew?'<span class="nb">חדש</span>':''}</div><div class="ad">${a.detail}</div>
+  <div class="ask">שאל את בורדי <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div></div></button>`}
+function bindAlerts(){document.querySelectorAll('#feed .alert').forEach(b=>b.onclick=()=>{const a=ALERTS[b.dataset.i];askFromAlert(a.q,a.respond)})}
+function renderFeed(){document.getElementById('feed').innerHTML=ALERTS.map((a,i)=>alertHTML(a,i)).join('');bindAlerts()}
+renderFeed();
+/* live update: a new suggestion arrives after a bit */
+setTimeout(()=>{
+  ALERTS.push({sev:'hi',icon:megaIcon,title:'קפיצת ביקוש: AI לעסקים',detail:'+40% פניות ב-48 שעות',q:'למה יש קפיצה בביקוש לקורס AI?',respond:()=>{boardi(insightCard('הקורס "AI לעסקים" קיבל +40% פניות אחרי שאוזכר בפודקאסט. הברזל חם — שווה קמפיין ממוקד + הרחבת המקומות.'),true)}});
+  const i=ALERTS.length-1;const f=document.getElementById('feed');
+  f.insertAdjacentHTML('afterbegin',alertHTML(ALERTS[i],i,true));bindAlerts();
+  toast('התראה חדשה ב-DATA Board','קפיצת ביקוש בקורס AI · +40%');
+},9000);
+
+/* ---------- handoff + toast ---------- */
+function handoffCard(){
+  const r=document.createElement('div');r.className='row';
+  r.innerHTML=`<div class="av-b"><img src="${M}5.svg" onerror="this.parentNode.textContent='🎉'"></div>
+  <div class="handoff"><div class="hi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
+    <div class="ht"><b>נזהה 14 תלמידים לא-פעילים — נחזיר אותם?</b><p>אעביר לבורדי הדיוור ואכין קמפיין החזרה ממוקד.</p></div>
+    <button class="hb" onclick="toast('מעבר לבורדי דיוור','14 נמענים + הקשר הועברו');this.closest('.row').remove()">כן, בנה קמפיין →</button></div>`;
+  stream.appendChild(r);scrollDown();
+}
+function toast(t,p){const el=document.createElement('div');el.className='toast';
+  el.innerHTML=`<div class="ti"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></div><div class="tx"><b>${t}</b><p>${p}</p></div>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>{el.style.opacity=0;el.style.transform='translateX(-30px)';el.style.transition='.3s';setTimeout(()=>el.remove(),300)},3600);}
+
+/* ---------- tour / controls ---------- */
+let playing=false;
+function stopPlay(){playing=false;document.getElementById('play').innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> נגן'}
+let started=false;
+async function tour(){
+  if(started)return;started=true;playing=true;
+  boardi(`שלום אלון 👋 אני בורדי, האנליסט שלך. אני בודק ארבעה תחומים: <b>סקירה כללית</b>, <b>שיווק</b>, <b>מכירות</b> ו<b>שירות (איכות הקורסים)</b> — ומכאן צוללים לכל ענף.<br>במה נתחיל?`);
+  await sleep(1300);if(!playing)return;
+  showPillars();await sleep(1500);if(!playing)return;
+  me('נתח לי סקירה כללית');await runPillar('overview');await sleep(900);if(!playing)return;
+  const mc=boardi(`<div class="mc"><div class="q">רוצה שאעמיק בתחום מסוים?</div><div class="opts">
+    <button class="opt" data-k="marketing"><span class="dot"></span>שיווק</button>
+    <button class="opt" data-k="sales"><span class="dot"></span>מכירות</button>
+    <button class="opt" data-k="service"><span class="dot"></span>שירות · איכות</button>
+    <button class="opt" data-k="none"><span class="dot"></span>תודה, זה מספיק</button></div></div>`);
+  mc.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{mc.querySelectorAll('.opt').forEach(x=>x.classList.add('dim'));b.classList.remove('dim');b.classList.add('pick');stopPlay();if(b.dataset.k!=='none'){me('נעמיק ב'+PILLARS[b.dataset.k].name);runPillar(b.dataset.k)}else me('תודה!')});
+  await sleep(1600);if(!playing)return;
+  const first=mc.querySelector('.opt');if(first&&playing)first.click();
+}
+document.getElementById('play').onclick=function(){
+  if(started){stopPlay();return}
+  this.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg> רץ…';tour();
+};
+document.getElementById('reset').onclick=()=>location.reload();
+document.getElementById('sendbtn').onclick=()=>{if(inp.value.trim()){me(inp.value.trim());inp.value=''}};
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&inp.value.trim()){me(inp.value.trim());inp.value=''}});
+
+const root=document.documentElement,tb=document.getElementById('theme');
+tb.onclick=()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');
+  tb.querySelector('svg').innerHTML=d?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';};
+
+/* opening greeting (static, before play) */
+boardi(`שלום אלון 👋 אני <b>בורדי</b>, האנליסט שלך. לחץ <b>נגן</b> לסיור, או שאל אותי כל דבר — ונעץ 📌 כל תובנה ל-<b>DATA Board</b> כדי לבנות דוח.`);
+</script>
+</body>
+</html>

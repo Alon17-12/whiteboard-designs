@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בורדי · מרכז המשימות — WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green:#7DC57A;--green-bright:#22c55e;--yellow:#EAD654;--purple:#9B6BF2;--orange:#F5A65B;
+  --bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);
+  --r-xs:6px;--r-sm:10px;--r-md:16px;--r-lg:18px;
+  --shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.3);--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{text-decoration:none;color:inherit}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
+
+.shell{display:flex;height:100vh}
+
+/* ===== SIDEBAR ===== */
+.side{width:220px;flex:0 0 220px;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:18px 14px}
+.logo{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0 14px}
+.logo .mk{width:46px;height:46px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center}
+.logo .mk svg{width:30px;height:30px}
+.logo .wm{font-family:'Fredoka';font-weight:700;font-size:15px;letter-spacing:.5px}
+.logo .wm small{display:block;font-size:8px;letter-spacing:3px;color:#ffffff88;text-align:center;font-family:'Heebo';font-weight:500}
+.nav-tag{font-size:10px;color:#ffffff55;letter-spacing:1px;margin:12px 10px 6px}
+.side nav a{display:flex;align-items:center;gap:11px;color:#dbe6ff;font-size:13.5px;padding:10px 12px;border-radius:9px;margin-bottom:2px;transition:.15s}
+.side nav a svg{width:17px;height:17px;flex:0 0 auto;opacity:.85}
+.side nav a:hover{background:#ffffff10}
+.side nav a.on{background:linear-gradient(90deg,#ffffff22,#ffffff10);color:#fff;font-weight:600}
+.side nav a.on svg{opacity:1;color:var(--cyan)}
+.side .spacer{flex:1}
+.mode-tog{display:flex;background:#ffffff14;border-radius:10px;padding:3px;margin:4px 4px 12px}
+.mode-tog button{flex:1;font-size:12px;padding:7px;border-radius:8px;color:#cdd9f5;display:flex;align-items:center;justify-content:center;gap:5px}
+.mode-tog button.on{background:#fff;color:var(--navy);font-weight:700}
+.mode-tog button svg{width:14px;height:14px}
+.prof{display:flex;align-items:center;gap:10px;padding:8px 6px;border-top:1px solid #ffffff1a}
+.prof .av{width:34px;height:34px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Fredoka'}
+.prof .nm{font-size:13px;font-weight:600}.prof .em{font-size:10.5px;color:#ffffff77}
+
+/* ===== TOPBAR ===== */
+.wrap{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{height:60px;flex:0 0 60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.top .crumb{display:flex;align-items:center;gap:10px}
+.top h1{font-family:'Fredoka';font-size:18px;font-weight:600}
+.top h1 span{color:var(--text-xs);font-weight:400;font-size:14px}
+.top .acts{display:flex;gap:8px;align-items:center}
+.iconbtn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.iconbtn:hover{color:var(--cyan);border-color:var(--cyan)}
+.iconbtn svg{width:17px;height:17px}
+
+/* ===== HUB BODY ===== */
+.hub{flex:1;overflow-y:auto;padding:0}
+.hubinner{max-width:1000px;margin:0 auto;padding:34px clamp(20px,5vw,48px) 52px;display:flex;flex-direction:column;gap:20px}
+
+/* hero */
+.hero{display:flex;align-items:center;gap:20px}
+.hero .m{width:100px;height:100px;flex:0 0 auto;object-fit:contain;filter:drop-shadow(0 12px 24px rgba(37,62,122,.22));animation:float 3.2s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px)}}
+.hero h2{font-family:'Fredoka';font-size:26px;font-weight:700;line-height:1.15}
+.hero h2 em{font-style:normal;color:var(--cyan)}
+.hero p{font-size:13.5px;color:var(--text-sub);margin-top:5px;max-width:560px;line-height:1.55}
+
+/* free-type ask box */
+.ask{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--border-strong);border-radius:14px;padding:6px 6px 6px 16px;box-shadow:var(--shadow-sm)}
+.ask:focus-within{border-color:var(--cyan)}
+.ask>svg{width:19px;height:19px;color:var(--text-sub);flex:0 0 auto}
+.ask input{flex:1;border:none;outline:none;background:none;font-family:inherit;font-size:14px;color:var(--text-main);padding:9px 0}
+.ask input::placeholder{color:var(--text-xs)}
+.ask .send{width:40px;height:40px;border-radius:10px;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto;transition:.15s}
+.ask .send:hover{background:#2497c9}
+.ask .send svg{width:18px;height:18px;color:#fff}
+
+.sec-lbl{font-size:12px;font-weight:700;color:var(--text-xs);letter-spacing:.5px;margin:6px 2px -4px;display:flex;align-items:center;gap:8px}
+.sec-lbl::after{content:"";height:1px;background:var(--border);flex:1}
+
+/* ===== FUNNEL NAV (depth > 0) ===== */
+.fbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.fback{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--navy);background:var(--surface);border:1px solid var(--border-strong);padding:8px 14px;border-radius:100px;transition:.15s}
+.fback:hover{border-color:var(--cyan);color:var(--cyan)}
+[data-theme="dark"] .fback{color:var(--text-main)}
+.fback svg{width:15px;height:15px}
+.fcrumb{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-sub);flex-wrap:wrap}
+.fcrumb .cx{cursor:pointer;transition:.15s}
+.fcrumb .cx:hover{color:var(--cyan)}
+.fcrumb .cx.last{color:var(--text-main);font-weight:700;pointer-events:none}
+.fcrumb i{color:var(--text-xs);font-style:normal}
+.fhead{display:flex;align-items:center;gap:15px;margin:18px 0 0}
+.fhead .ci{width:56px;height:56px;border-radius:15px;display:flex;align-items:center;justify-content:center;color:#fff;flex:0 0 auto;box-shadow:var(--shadow-sm)}
+.fhead .ci svg{width:28px;height:28px}
+.fhead h2{font-family:'Fredoka';font-size:22px;font-weight:700}
+.fhead p{font-size:13.5px;color:var(--text-sub);margin-top:3px;line-height:1.5}
+
+/* ===== CARD GRID ===== */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid.c2{grid-template-columns:1fr 1fr;max-width:720px}
+.grid.c4{grid-template-columns:repeat(2,1fr);max-width:780px}
+.card{position:relative;text-align:right;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:18px 18px 16px;transition:.16s;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);cursor:pointer;animation:pop .34s ease}
+@keyframes pop{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.card:hover{border-color:var(--cyan);transform:translateY(-3px);box-shadow:var(--shadow)}
+.card.soon{cursor:default;opacity:.72}
+.card.soon:hover{border-color:var(--border);transform:none;box-shadow:var(--shadow-sm)}
+.card .ci{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;color:#fff;flex:0 0 auto}
+.card .ci svg{width:23px;height:23px}
+.card h4{font-family:'Fredoka';font-size:16.5px;font-weight:600}
+.card p{font-size:12.5px;color:var(--text-sub);line-height:1.5;flex:1}
+.card .go{margin-top:2px;font-size:12.5px;font-weight:700;color:var(--cyan);display:flex;align-items:center;gap:5px}
+.card .go svg{width:14px;height:14px}
+.badge{position:absolute;top:14px;left:14px;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:100px}
+.badge.live{background:color-mix(in srgb,var(--green-bright) 15%,var(--surface));color:#16a34a;border:1px solid color-mix(in srgb,var(--green-bright) 35%,transparent)}
+.badge.soon{background:color-mix(in srgb,var(--yellow) 22%,var(--surface));color:#9a8600;border:1px solid color-mix(in srgb,var(--yellow) 55%,transparent)}
+.badge.branch{background:var(--surface-3);color:var(--text-sub);border:1px solid var(--border)}
+[data-theme="dark"] .badge.soon{color:var(--yellow)}
+
+/* toast */
+.toast{position:fixed;bottom:22px;left:22px;background:var(--navy);color:#fff;padding:13px 18px;border-radius:12px;font-size:13.5px;font-weight:500;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;transform:translateX(-120%);transition:.32s cubic-bezier(.2,.9,.3,1);z-index:60;max-width:340px}
+.toast.show{transform:none}
+.toast svg{width:18px;height:18px;flex:0 0 auto}
+.toast.ok{background:var(--green-bright)}.toast.info{background:var(--cyan);color:var(--navy)}
+
+@media(max-width:900px){.grid,.grid.c2,.grid.c4{grid-template-columns:1fr 1fr}.hero .m{width:80px;height:80px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <div class="logo">
+      <div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="#253E7A" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M8 20h8M12 18v2"/><circle cx="9.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><circle cx="14.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><path d="M9.5 13.5c1.5 1.2 3.5 1.2 5 0"/></svg></div>
+      <div class="wm">WHITEBOARD<small>LEARN · CREATE · GROW</small></div>
+    </div>
+    <span class="nav-tag">ניווט ראשי</span>
+    <nav>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> לוח בקרה</a>
+      <a href="#" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg> בורדי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21V12h6v9"/></svg> מרכזי הידע שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg> אנשי הקשר שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/></svg> ניוזלטרים</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> הספרייה שלי</a>
+      <a href="הגדרות - אינטגרציות.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.2A1.6 1.6 0 0 0 7 19.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1-2.7H3a2 2 0 0 1 0-4h.2a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H10a1.6 1.6 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.2a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V10a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1z"/></svg> הגדרות</a>
+    </nav>
+    <div class="spacer"></div>
+    <div class="mode-tog">
+      <button class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M6 12v5c3 3 9 3 12 0v-5"/><path d="M2 10l10-5 10 5-10 5z"/></svg> מורה</button>
+      <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> תלמיד</button>
+    </div>
+    <div class="prof"><div class="av">א</div><div><div class="nm">אלון גבאי</div><div class="em">alon@…</div></div></div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="wrap">
+    <div class="top">
+      <div class="crumb">
+        <h1>בורדי <span>· מרכז המשימות</span></h1>
+      </div>
+      <div class="acts">
+        <button class="iconbtn" title="שיחות אחרונות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+        <button class="iconbtn" id="theme" title="מצב תצוגה"><svg id="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+        <button class="iconbtn" title="שפה">🇮🇱</button>
+      </div>
+    </div>
+
+    <div class="hub" id="hub">
+      <div class="hubinner">
+
+        <!-- ROOT HEADER (shown only at level 0) -->
+        <div id="roothead">
+          <div class="hero">
+            <img class="m" src="../BOARDi/SVG/12.svg" alt="בורדי" onerror="this.style.display='none'">
+            <div>
+              <h2>שלום אלון 👋 <em>מה תרצה לעשות היום?</em></h2>
+              <p>אני בורדי. בחרתי לך <b>ארבע דרכים ממוקדות להתחיל</b> — לחץ אחת ואני אצלול איתך פנימה שלב־שלב, או פשוט תכתוב לי במילים שלך.</p>
+            </div>
+          </div>
+          <div class="ask" style="margin-top:18px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10c0-1.5-.3-2.9-.9-4.1"/><path d="M8 12h8M12 8v8" opacity=".5"/></svg>
+            <input id="ask" placeholder="לדוגמה: ״מה שלום העסק השבוע?״ · ״תבנה קורס על צילום״ · ״תוסיף מייל לסדרת האונבורדינג״" autocomplete="off">
+            <button class="send" id="send" title="שלח"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+          </div>
+          <div class="sec-lbl" style="margin-top:22px">ארבע דרכים להתחיל</div>
+        </div>
+
+        <!-- FUNNEL NAV (shown at depth > 0) -->
+        <div id="fnav" style="display:none">
+          <div class="fbar">
+            <button class="fback" onclick="back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg> חזרה</button>
+            <div class="fcrumb" id="crumb"></div>
+          </div>
+          <div class="fhead">
+            <div class="ci" id="fheadIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"></svg></div>
+            <div><h2 id="fheadT"></h2><p id="fheadS"></p></div>
+          </div>
+        </div>
+
+        <!-- CARD GRID (shared, rendered per level) -->
+        <div class="grid" id="grid"></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span id="toast-t"></span></div>
+
+<script>
+/* ===== icon library (inner SVG paths) ===== */
+const IC={
+  report:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  layers:'<path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>',
+  blocks:'<path d="M12 20l9-5-9-5-9 5 9 5z" opacity=".5"/><path d="M12 12l9-5-9-5-9 5 9 5z"/>',
+  heart:'<path d="M20.8 5.6a5.5 5.5 0 0 0-7.8 0L12 6.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 22l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/>',
+  users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/>',
+  mega:'<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+  dollar:'<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',
+  plus:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 8v8M8 12h8"/>',
+  pencil:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  list:'<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>',
+  present:'<path d="M2 3h20"/><path d="M3 3v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3"/><path d="m12 16-3 5M12 16l3 5"/>',
+  quiz:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  game:'<rect x="2" y="6" width="20" height="12" rx="5"/><path d="M7 12h3M8.5 10.5v3"/><circle cx="16" cy="11" r="1"/><circle cx="18.5" cy="13.5" r="1"/>',
+  film:'<rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 3v18M17 3v18M2 8h5M2 16h5M17 8h5M17 16h5"/>',
+  mailplus:'<path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9"/><path d="m22 6-10 6L2 6"/><path d="M19 16v6M16 19h6"/>',
+  mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>'
+};
+
+/* ===== the task tree ===== */
+const NODES={
+  root:{t:'מרכז המשימות', kids:['overview','data','builder','retention']},
+
+  overview:{t:'סקירה כללית', d:'דוח מצב על השבוע האחרון (ברירת מחדל) — עם השוואה לתקופות אחרות ולמדדים ספציפיים.', link:'מנתח התלמידים - בורדי.html', c:['#38C4F2','#2497c9'], icon:IC.report},
+  data:{t:'נתונים', d:'צלילה לנתוני תלמידים, שיווק ומכירות.', sub:'אילו נתונים לפתוח?', kids:['d_students','d_mkt','d_sales'], c:['#22c55e','#16a34a'], icon:IC.layers},
+  builder:{t:'בונה הקורסים', d:'בניית קורס מאפס או עדכון קיים — ליי־אאוט, מחקר ומערכי שיעור.', sub:'ליצור קורס חדש או לעדכן קיים?', kids:['b_new','b_edit'], c:['#38C4F2','#3552a0'], icon:IC.blocks},
+  retention:{t:'שימור ודיוור', d:'מיילים שמחזירים ומשמרים — סדרות אוטומטיות וקמפיינים.', sub:'מה נעשה עם הדיוור?', kids:['r_add','r_new','r_edit'], c:['#F5A65B','#e08636'], icon:IC.heart},
+
+  d_students:{t:'נתוני תלמידים', d:'התקדמות, מעורבות, שיעור נטישה ושביעות רצון.', link:'מנתח התלמידים - בורדי.html', c:['#22c55e','#16a34a'], icon:IC.users},
+  d_mkt:{t:'נתוני שיווק', d:'חשיפות, לידים, עלות־לליד ומקורות תנועה.', link:'מנתח התלמידים - בורדי.html', c:['#9B6BF2','#7c4dd6'], icon:IC.mega},
+  d_sales:{t:'נתוני מכירות', d:'הכנסות, עסקאות, החזרים ו־LTV (native מ־CardCom).', link:'ניתוח מכירות - בורדי.html', c:['#F05680','#d63d68'], icon:IC.dollar},
+
+  b_new:{t:'צור קורס חדש', d:'מתחילים מדף חלק — בורדי שואל שאלות עומק ובונה.', sub:'קורס חדש — במה נתחיל?', kids:['s_layout','s_research','s_plans'], c:['#38C4F2','#2497c9'], icon:IC.plus},
+  b_edit:{t:'עדכן קורס קיים', d:'בוחרים קורס קיים וממשיכים לפתח אותו.', sub:'עדכון קורס — במה נתחיל?', kids:['s_layout','s_research','s_plans'], c:['#5b8def','#3552a0'], icon:IC.pencil},
+
+  s_layout:{t:'בונה הליי־אאוט', d:'מבנה הקורס — פרקים, שיעורים וקבצים.', link:'בונה הקורסים - בורדי.html', c:['#38C4F2','#2497c9'], icon:IC.blocks},
+  s_research:{t:'מחקר', d:'מחקר רשת שמעשיר את התוכן והזוויות.', link:'בונה הקורסים - בורדי.html', c:['#22c55e','#16a34a'], icon:IC.search},
+  s_plans:{t:'בונה מערכי שיעור', d:'מערך לכל שיעור — ומשם מצגת, מבחן, משחק או תסריט לסרטון.', sub:'מה לייצר מהמערך?', kids:['p_deck','p_quiz','p_game','p_script'], c:['#9B6BF2','#7c4dd6'], icon:IC.list},
+
+  p_deck:{t:'בניית מצגת', d:'מצגת HTML בערכת המותג, מסונכרנת לליי־אאוט.', link:'בורדי שיעורים.html', c:['#F5A65B','#e08636'], icon:IC.present},
+  p_quiz:{t:'מבחן', d:'שאלות לבדיקת הבנה בסוף השיעור.', soon:1, c:['#38C4F2','#2497c9'], icon:IC.quiz},
+  p_game:{t:'משחק', d:'משחק אינטראקטיבי שמחזק את החומר.', soon:1, c:['#22c55e','#16a34a'], icon:IC.game},
+  p_script:{t:'תסריט לסרטון', d:'תסריט מסודר לצילום שיעור וידאו.', soon:1, c:['#F05680','#d63d68'], icon:IC.film},
+
+  r_add:{t:'הוסף מייל לסדרה', d:'הוסף מייל לנקודה בסדרה אוטומטית קיימת.', link:'בורדי - קנבס פעיל.html', c:['#F5A65B','#e08636'], icon:IC.mailplus},
+  r_new:{t:'צור קמפיין מייל חדש', d:'מייל חד־פעמי לקהל שתבחר, בערכת המותג.', link:'בורדי - קנבס פעיל.html', c:['#38C4F2','#2497c9'], icon:IC.mail},
+  r_edit:{t:'ערוך סדרת מיילים קיימת', d:'עריכת רצף מיילים קיים והתזמונים שלו.', soon:1, c:['#9B6BF2','#7c4dd6'], icon:IC.pencil}
+};
+
+/* ===== renderer ===== */
+let path=['root'];
+const grid=document.getElementById('grid'), roothead=document.getElementById('roothead'),
+      fnav=document.getElementById('fnav'), crumb=document.getElementById('crumb'),
+      fheadIcon=document.getElementById('fheadIcon'), fheadT=document.getElementById('fheadT'),
+      fheadS=document.getElementById('fheadS'), hub=document.getElementById('hub');
+const cur=()=>path[path.length-1];
+const chevL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>';
+const clock='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+
+function cardHTML(id){
+  const n=NODES[id], branch=!!n.kids;
+  const badge = branch? `<span class="badge branch">${n.kids.length} אפשרויות</span>`
+              : n.soon? `<span class="badge soon">בקרוב</span>`
+              : `<span class="badge live">מוכן</span>`;
+  const foot = branch?'בחר':(n.soon?'בקרוב':'פתח');
+  const fico = n.soon?clock:chevL;
+  return `<div class="card${n.soon?' soon':''}" onclick="pick('${id}')">
+    ${badge}
+    <div class="ci" style="background:linear-gradient(135deg,${n.c[0]},${n.c[1]})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${n.icon}</svg></div>
+    <h4>${n.t}</h4>
+    <p>${n.d}</p>
+    <div class="go"${n.soon?' style="color:var(--text-xs)"':''}>${foot} ${fico}</div>
+  </div>`;
+}
+
+function render(){
+  const id=cur(), n=NODES[id], atRoot=(id==='root');
+  roothead.style.display=atRoot?'':'none';
+  fnav.style.display=atRoot?'none':'';
+  const kids=n.kids||[];
+  grid.className='grid c'+kids.length;
+  grid.innerHTML=kids.map(cardHTML).join('');
+  if(!atRoot){
+    crumb.innerHTML=path.map((p,i)=>{
+      const label=(p==='root')?'מרכז המשימות':NODES[p].t;
+      const last=(i===path.length-1);
+      return `<span class="cx${last?' last':''}" onclick="jump(${i})">${label}</span>`;
+    }).join('<i>‹</i>');
+    fheadIcon.style.background=`linear-gradient(135deg,${n.c[0]},${n.c[1]})`;
+    fheadIcon.querySelector('svg').innerHTML=n.icon;
+    fheadT.textContent=n.t;
+    fheadS.textContent=n.sub||n.d;
+  }
+  hub.scrollTop=0;
+}
+
+function pick(id){
+  const n=NODES[id];
+  if(n.kids){ path.push(id); render(); }
+  else if(n.link){ toast('פותח: '+n.t+' …','ok'); setTimeout(()=>location.href=n.link,650); }
+  else if(n.soon){ soon(n.t); }
+}
+function back(){ if(path.length>1){ path.pop(); render(); } }
+function jump(i){ path=path.slice(0,i+1); render(); }
+
+/* ===== toast ===== */
+const toastEl=document.getElementById('toast'), toastT=document.getElementById('toast-t');
+let tTimer;
+function toast(msg,kind){ toastT.textContent=msg; toastEl.className='toast show'+(kind?(' '+kind):''); clearTimeout(tTimer); tTimer=setTimeout(()=>toastEl.className='toast',3200); }
+function soon(name){ toast(name+' עוד לא פעיל — הוא בדרך 🛠️','info'); }
+
+/* ===== free-type routing → sends the teacher to the right place ===== */
+const ROUTES=[
+  {re:/(שלום העסק|מה נשמע|סקיר|דוח|השבוע|מצב כללי|סיכום)/i, jump:'overview'},
+  {re:/(מכיר|הכנס|revenue|עסקאות|החזר|cardcom|כסף|רווח)/i, jump:'d_sales'},
+  {re:/(שיווק|לידים|חשיפ|עלות.?לליד|קמפיין פרסום|טראפיק)/i, jump:'d_mkt'},
+  {re:/(תלמיד|נטיש|שביעות|התקדמות|מעורב|בסיכון)/i, jump:'d_students'},
+  {re:/(קורס חדש|תבנה|בנה לי|צור קורס|להקים קורס|קורס על)/i, jump:'b_new'},
+  {re:/(פרק|שיעור|עדכן|קורס קיים|ליי.?אאוט|מערך|מצגת|משחק|מבחן|תסריט)/i, jump:'b_edit'},
+  {re:/(דיוור|מייל|ניוזלטר|סדר.?ת מייל|שימור|רשימת תפוצה|email)/i, jump:'retention'},
+];
+function ask(){
+  const q=document.getElementById('ask').value.trim();
+  if(!q){ document.getElementById('ask').focus(); return; }
+  for(const r of ROUTES){
+    if(r.re.test(q)){
+      const n=NODES[r.jump];
+      if(n.kids){ path=['root',...bubblePath(r.jump)]; toast('הבנתי — ניקח אותך לשם 👇','ok'); render(); }
+      else if(n.link){ toast('פותח: '+n.t+' …','ok'); setTimeout(()=>location.href=n.link,700); }
+      else { soon(n.t); }
+      return;
+    }
+  }
+  toast('הבנתי — בוא נבחר יחד את המשימה המתאימה 👇','info');
+}
+/* build the drill path from root to a target id (so breadcrumb is correct) */
+function bubblePath(target){
+  const parents={};
+  for(const id in NODES){ (NODES[id].kids||[]).forEach(k=>parents[k]=id); }
+  const chain=[]; let n=target;
+  while(n && n!=='root'){ chain.unshift(n); n=parents[n]; }
+  return chain;
+}
+document.getElementById('send').onclick=ask;
+document.getElementById('ask').addEventListener('keydown',e=>{ if(e.key==='Enter') ask(); });
+
+/* ===== theme toggle ===== */
+const root=document.documentElement,tb=document.getElementById('theme');
+tb.onclick=()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');
+  tb.querySelector('svg').innerHTML=d?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';};
+
+render();
+</script>
+</body>
+</html>

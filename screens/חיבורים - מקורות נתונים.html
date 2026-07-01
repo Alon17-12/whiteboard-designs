@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>חיבורים · מקורות נתונים — WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green:#7DC57A;--green-bright:#22c55e;--yellow:#EAD654;--purple:#9B6BF2;--orange:#F5A65B;
+  --bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);
+  --r-sm:10px;--r-md:16px;--r-lg:18px;--shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.3);--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
+.shell{display:flex;height:100vh}
+
+/* SIDEBAR */
+.side{width:220px;flex:0 0 220px;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:18px 14px}
+.logo{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0 14px}
+.logo .mk{width:46px;height:46px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center}
+.logo .mk svg{width:30px;height:30px}
+.logo .wm{font-family:'Fredoka';font-weight:700;font-size:15px;letter-spacing:.5px}
+.logo .wm small{display:block;font-size:8px;letter-spacing:3px;color:#ffffff88;text-align:center;font-family:'Heebo';font-weight:500}
+.nav-tag{font-size:10px;color:#ffffff55;letter-spacing:1px;margin:12px 10px 6px}
+.side nav a{display:flex;align-items:center;gap:11px;color:#dbe6ff;font-size:13.5px;padding:10px 12px;border-radius:9px;margin-bottom:2px;transition:.15s}
+.side nav a svg{width:17px;height:17px;flex:0 0 auto;opacity:.85}
+.side nav a:hover{background:#ffffff10}
+.side nav a.on{background:linear-gradient(90deg,#ffffff22,#ffffff10);color:#fff;font-weight:600}
+.side nav a.on svg{opacity:1;color:var(--cyan)}
+.side .spacer{flex:1}
+.prof{display:flex;align-items:center;gap:10px;padding:8px 6px;border-top:1px solid #ffffff1a}
+.prof .av{width:34px;height:34px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Fredoka'}
+.prof .nm{font-size:13px;font-weight:600}.prof .em{font-size:10.5px;color:#ffffff77}
+
+/* MAIN */
+.wrap{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{height:60px;flex:0 0 60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.top .crumb{display:flex;align-items:center;gap:10px}
+.top .back{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-sub)}
+.top h1{font-family:'Fredoka';font-size:18px;font-weight:600}
+.top h1 span{color:var(--text-xs);font-weight:400;font-size:14px}
+.iconbtn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.iconbtn:hover{color:var(--cyan);border-color:var(--cyan)}.iconbtn svg{width:17px;height:17px}
+
+.scroll{flex:1;overflow-y:auto;padding:26px clamp(20px,5vw,60px) 60px}
+.page{max-width:1000px;margin:0 auto}
+
+/* hero explainer + coverage */
+.hero{background:linear-gradient(135deg,var(--navy),var(--navy-dark));color:#fff;border-radius:20px;padding:24px 26px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow);margin-bottom:14px}
+.hero .bmark{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--cyan),#7fdcff);color:var(--navy);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.hero .bmark img{width:40px;height:40px}
+.hero h2{font-family:'Fredoka';font-size:21px;font-weight:700;margin-bottom:5px}
+.hero p{font-size:13.5px;color:#cfe0ff;line-height:1.55;max-width:60ch}
+.hero .cov{margin-right:auto;text-align:center;min-width:150px}
+.hero .cov .ring{position:relative;width:96px;height:96px;margin:0 auto 4px}
+.hero .cov .ring svg{transform:rotate(-90deg)}
+.hero .cov .ring .n{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Fredoka'}
+.hero .cov .ring .n b{font-size:24px;font-weight:700;line-height:1}
+.hero .cov .ring .n small{font-size:9px;color:#bcd0f5}
+.hero .cov .lbl{font-size:11.5px;color:#cfe0ff}
+
+.seclabel{display:flex;align-items:center;gap:9px;margin:24px 4px 12px}
+.seclabel h3{font-family:'Fredoka';font-size:16px;font-weight:600}
+.seclabel .badge{font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:100px}
+.badge.on{background:color-mix(in srgb,var(--green-bright) 15%,transparent);color:var(--green-bright)}
+.badge.opt{background:color-mix(in srgb,var(--cyan) 15%,transparent);color:var(--cyan)}
+.seclabel p{font-size:12px;color:var(--text-xs);margin-right:auto}
+
+/* native grid */
+.native{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:11px}
+.nat{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:13px 15px;display:flex;align-items:center;gap:11px;box-shadow:var(--shadow-sm)}
+.nat .ni{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:color-mix(in srgb,var(--green-bright) 13%,transparent);color:var(--green-bright)}
+.nat .ni svg{width:18px;height:18px}
+.nat .nt{font-size:13px;font-weight:600}
+.nat .ns{font-size:10.5px;color:var(--text-xs);display:flex;align-items:center;gap:4px;margin-top:2px}
+.nat .ns::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green-bright)}
+
+/* connection cards */
+.conns{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.conn{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;transition:.2s}
+.conn.connected{border-color:color-mix(in srgb,var(--green-bright) 30%,transparent)}
+.conn .ctop{display:flex;align-items:flex-start;gap:12px}
+.conn .lg{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-family:'Fredoka';font-weight:700;font-size:18px;color:#fff}
+.conn .nm{font-family:'Fredoka';font-size:15.5px;font-weight:600}
+.conn .desc{font-size:12px;color:var(--text-sub);margin-top:2px;line-height:1.4}
+.conn .st{margin-right:auto;font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.st.yes{background:color-mix(in srgb,var(--green-bright) 14%,transparent);color:var(--green-bright)}
+.st.yes::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green-bright)}
+.st.no{background:var(--surface-3);color:var(--text-sub)}
+.conn .unlocks{margin:14px 0;padding:12px;background:var(--surface-2);border-radius:11px}
+.conn .unlocks .u-h{font-size:10.5px;color:var(--text-xs);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.conn .unlocks .u-h svg{width:13px;height:13px;color:var(--cyan)}
+.conn .chips{display:flex;flex-wrap:wrap;gap:6px}
+.conn .chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:100px;background:var(--surface);border:1px solid var(--border);color:var(--text-sub)}
+.conn .foot{display:flex;align-items:center;gap:10px;margin-top:auto}
+.conn .sync{font-size:11px;color:var(--text-xs);display:flex;align-items:center;gap:5px}
+.conn .sync svg{width:12px;height:12px}
+.conn .btn{padding:9px 16px;border-radius:10px;font-weight:700;font-size:13px;display:flex;align-items:center;gap:7px}
+.conn .btn svg{width:15px;height:15px}
+.btn-connect{background:var(--cyan);color:#fff;box-shadow:0 6px 16px -8px var(--cyan)}
+.btn-connect:hover{filter:brightness(1.05)}
+.btn-dis{border:1px solid var(--border);color:var(--text-sub)}.btn-dis:hover{border-color:var(--pink);color:var(--pink)}
+.conn .pillsrc{font-size:9.5px;font-weight:700;color:var(--text-xs);margin-right:auto}
+
+.note{display:flex;gap:12px;align-items:flex-start;border-radius:14px;padding:15px 17px;margin:18px 0 4px;font-size:13.5px;line-height:1.55}
+.note.y{background:color-mix(in srgb,var(--yellow) 15%,var(--surface));border:1px solid color-mix(in srgb,var(--yellow) 45%,transparent)}
+.note svg{flex:0 0 auto}.note b{font-weight:700}
+
+/* OAuth modal */
+.modal-bg{position:fixed;inset:0;background:rgba(12,20,34,.55);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);display:flex;align-items:center;justify-content:center;padding:30px;z-index:90;opacity:0;pointer-events:none;transition:.28s}
+.modal-bg.show{opacity:1;pointer-events:all}
+.modal{width:min(440px,100%);background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:0 40px 90px -30px rgba(0,0,0,.55);padding:26px;text-align:center;transform:translateY(14px) scale(.98);transition:.28s}
+.modal-bg.show .modal{transform:none}
+.modal .mlg{width:64px;height:64px;border-radius:16px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Fredoka';font-weight:700;font-size:26px}
+.modal h3{font-family:'Fredoka';font-size:19px;font-weight:700;margin-bottom:8px}
+.modal p{font-size:13px;color:var(--text-sub);line-height:1.55;margin-bottom:8px}
+.modal .perms{text-align:right;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:13px 15px;margin:14px 0;font-size:12.5px}
+.modal .perms .p{display:flex;align-items:center;gap:9px;margin:7px 0;color:var(--text-sub)}
+.modal .perms .p svg{width:15px;height:15px;color:var(--green-bright);flex:0 0 auto}
+.modal .mrow{display:flex;gap:10px;margin-top:16px}
+.modal .mrow button{flex:1;padding:12px;border-radius:11px;font-weight:700;font-size:14px}
+.modal .approve{background:var(--green-bright);color:#fff}
+.modal .cancel{border:1px solid var(--border);color:var(--text-sub)}
+.modal .safe{font-size:11px;color:var(--text-xs);margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px}
+.modal .safe svg{width:13px;height:13px;color:var(--green-bright)}
+/* multi-step meta flow */
+.modal .msteps{display:flex;gap:7px;justify-content:center;margin-bottom:16px}
+.modal .msteps i{width:26px;height:5px;border-radius:100px;background:var(--surface-3);transition:.25s}
+.modal .msteps i.on{background:var(--cyan);width:32px}
+.modal .msteps i.done{background:var(--green-bright)}
+.modal .msub{font-size:12.5px;color:var(--text-sub);margin-bottom:12px;line-height:1.5}
+.modal .assets{display:flex;flex-direction:column;gap:9px;text-align:right;margin:6px 0 2px}
+.modal .asset{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:.15s;background:var(--surface)}
+.modal .asset.on{border-color:color-mix(in srgb,var(--green-bright) 55%,transparent);background:color-mix(in srgb,var(--green-bright) 7%,var(--surface))}
+.modal .asset:hover{border-color:var(--border-strong)}
+.modal .asset .aic{width:34px;height:34px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.modal .asset .aic svg{width:19px;height:19px}
+.modal .asset .atx{flex:1;min-width:0}
+.modal .asset .atx b{font-size:13.5px;font-weight:600;display:block}
+.modal .asset .atx span{font-size:11px;color:var(--text-xs)}
+.modal .asset .achk{width:24px;height:24px;border-radius:50%;border:2px solid var(--border-strong);display:flex;align-items:center;justify-content:center;flex:0 0 auto;color:transparent;transition:.15s}
+.modal .asset.on .achk{background:var(--green-bright);border-color:var(--green-bright);color:#fff}
+.modal .asset .achk svg{width:14px;height:14px}
+.modal .approve svg{width:16px;height:16px;margin-left:-2px}
+.conn .linked{display:flex;flex-wrap:wrap;gap:6px;margin-top:-4px;margin-bottom:12px}
+.conn .linked .la{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 9px;border-radius:100px;background:color-mix(in srgb,var(--green-bright) 12%,transparent);color:var(--green-bright)}
+.conn .linked .la svg{width:12px;height:12px}
+
+.toasts{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:10px;z-index:95}
+.toast{background:var(--surface);border:1px solid var(--border);border-right:4px solid var(--green-bright);border-radius:12px;padding:13px 16px;box-shadow:var(--shadow);display:flex;gap:11px;align-items:center;min-width:270px;animation:si .3s ease}
+@keyframes si{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+.toast .ti{width:30px;height:30px;border-radius:8px;background:color-mix(in srgb,var(--green-bright) 15%,transparent);color:var(--green-bright);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.toast .tx b{font-size:13.5px}.toast .tx p{font-size:11.5px;color:var(--text-sub);margin:0}
+@media (max-width:760px){.side{display:none}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="logo">
+      <div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="#253E7A" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M8 20h8M12 18v2"/><circle cx="9.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><circle cx="14.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><path d="M9.5 13.5c1.5 1.2 3.5 1.2 5 0"/></svg></div>
+      <div class="wm">WHITEBOARD<small>LEARN · CREATE · GROW</small></div>
+    </div>
+    <span class="nav-tag">ניווט ראשי</span>
+    <nav>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> לוח בקרה</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg> בורדי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21V12h6v9"/></svg> מרכזי הידע שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> אנשי הקשר שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/></svg> ניוזלטרים</a>
+      <a href="#" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.2A1.6 1.6 0 0 0 7 19.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1-2.7H3a2 2 0 0 1 0-4h.2a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H10a1.6 1.6 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.2a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V10a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1z"/></svg> הגדרות</a>
+    </nav>
+    <div class="spacer"></div>
+    <div class="prof"><div class="av">א</div><div><div class="nm">אלון גבאי</div><div class="em">alon@…</div></div></div>
+  </aside>
+
+  <div class="wrap">
+    <div class="top">
+      <div class="crumb">
+        <div class="back"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        <h1>חיבורים <span>· מקורות נתונים</span></h1>
+      </div>
+      <button class="iconbtn" id="theme" title="מצב תצוגה"><svg id="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+    </div>
+
+    <div class="scroll">
+      <div class="page">
+
+        <!-- HERO -->
+        <div class="hero">
+          <div class="bmark"><img src="../BOARDi/SVG/12.svg" alt="בורדי" onerror="this.style.display='none';this.parentNode.textContent='🤖'"></div>
+          <div>
+            <h2>מאיפה בורדי מקבל את הנתונים</h2>
+            <p>בורדי מציג לך תובנות מהנתונים שלך. רובם <b>זמינים מהרגע הראשון</b> — מכירות, תלמידים, צפייה ודירוגים כבר במערכת. חלק מנתוני השיווק דורשים <b>חיבור חד-פעמי בלחיצה</b> — בלי מפתחות API ובלי קוד.</p>
+          </div>
+          <div class="cov">
+            <div class="ring">
+              <svg width="96" height="96" viewBox="0 0 96 96">
+                <circle cx="48" cy="48" r="40" fill="none" stroke="#ffffff22" stroke-width="9"/>
+                <circle id="covArc" cx="48" cy="48" r="40" fill="none" stroke="#38C4F2" stroke-width="9" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="38"/>
+              </svg>
+              <div class="n"><b id="covPct">85%</b><small>מהתמונה</small></div>
+            </div>
+            <div class="lbl">בורדי רואה כרגע</div>
+          </div>
+        </div>
+
+        <!-- TIER 1 — NATIVE -->
+        <div class="seclabel"><h3>מובנה במערכת</h3><span class="badge on">פעיל תמיד</span><p>זמין מהרגע הראשון · הלקוח לא עושה כלום</p></div>
+        <div class="native">
+          <div class="nat"><div class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/></svg></div><div><div class="nt">תלמידים והתקדמות</div><div class="ns">פעיל</div></div></div>
+          <div class="nat"><div class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="nt">מכירות והכנסות</div><div class="ns">CardCom · פעיל</div></div></div>
+          <div class="nat"><div class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5zM1 5h15v14H1z"/></svg></div><div><div class="nt">זמן צפייה</div><div class="ns">Bunny Stream · פעיל</div></div></div>
+          <div class="nat"><div class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/></svg></div><div><div class="nt">דיוור ו-CRM</div><div class="ns">פעיל</div></div></div>
+          <div class="nat"><div class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg></div><div><div class="nt">דירוגים ושביעות רצון</div><div class="ns">פעיל</div></div></div>
+          <div class="nat"><div class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v4H4zM4 12h10v8H4zM17 12h3v8h-3z"/></svg></div><div><div class="nt">תוכן הקורסים</div><div class="ns">פעיל</div></div></div>
+        </div>
+
+        <!-- TIER 2/3 — CONNECTIONS -->
+        <div class="seclabel"><h3>חיבורים חיצוניים</h3><span class="badge opt">חיבור חד-פעמי</span><p>מרחיב את מה שבורדי רואה בשיווק</p></div>
+        <div class="conns" id="conns"></div>
+
+        <div class="note y">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          <div><b>מה קורה אם לא מחברים?</b> בורדי פשוט מציג את מה שיש, ומנחה אותך בעדינות בתוך השיחה: "כדי לראות עלות-לליד, חבר את חשבון הפרסום שלך →". שום דבר לא נשבר — פשוט רואים חלק קטן יותר מהתמונה.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OAUTH MODAL (multi-step) -->
+<div class="modal-bg" id="oauth">
+  <div class="modal">
+    <div class="msteps" id="oaSteps"></div>
+    <div class="mlg" id="oaLg"></div>
+    <h3 id="oaTitle">התחברות</h3>
+    <div id="oaBody"></div>
+    <div class="mrow" id="oaFoot"></div>
+    <div class="safe" id="oaSafe"></div>
+  </div>
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+const IC={
+  fb:'<svg viewBox="0 0 24 24" fill="#1877F2"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.75-1.6 1.5V12h2.7l-.43 2.9h-2.27v7A10 10 0 0 0 22 12z"/></svg>',
+  ig:'<svg viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#E1306C" stroke="none"/></svg>',
+  ads:'<svg viewBox="0 0 24 24" fill="none" stroke="#0668E1" stroke-width="2"><path d="M3 11l16-5v12L3 13z"/><path d="M11 15.5a2.6 2.6 0 0 1-5 -.8V13"/></svg>',
+  pixel:'<svg viewBox="0 0 24 24" fill="none" stroke="#7DC57A" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="#7DC57A" stroke="none"/></svg>'
+};
+const LOCK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+const CHK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>';
+
+const CONNS=[
+  {id:'ga',name:'Google Analytics',color:'#E8710A',mono:'GA',kind:'simple',connected:true,sync:'עודכן לפני 12 דק׳',
+    desc:'תנועה, מקורות ביקור וסשנים לאתר הקורסים.',pillar:'מזין: שיווק',unlocks:['מקורות תנועה','סשנים','אחוז המרה']},
+  {id:'meta',name:'מטא · Facebook & Instagram',color:'#0668E1',mono:'∞',kind:'meta',connected:false,sync:'',
+    desc:'חיבור אחד לחשבון מטא — פותח פרסום, המרות ונתונים אורגניים מפייסבוק ומאינסטגרם.',pillar:'מזין: שיווק',
+    assets:[
+      {id:'page',name:'עמוד פייסבוק',sub:'Nova Academy',icon:IC.fb,on:true},
+      {id:'ig',name:'חשבון אינסטגרם',sub:'@nova.academy · Business',icon:IC.ig,on:true},
+      {id:'adacct',name:'חשבון מודעות',sub:'Meta Ads · act_10293…',icon:IC.ads,on:true},
+      {id:'pixel',name:'Pixel / Dataset',sub:'Nova Pixel',icon:IC.pixel,on:true}
+    ],
+    unlocks:['חשיפות','CTR','עלות לליד','ROAS','המרות פיקסל','עוקבי אינסטגרם','reach אורגני']},
+  {id:'gads',name:'Google Ads',color:'#4285F4',mono:'Ads',kind:'simple',connected:false,sync:'',
+    desc:'ביצועי קמפיינים בגוגל — עלות ותשואה.',pillar:'מזין: שיווק',unlocks:['חשיפות','עלות לליד','המרות חיפוש']}
+];
+const uHead='<div class="u-h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg> מה זה פותח בבורדי</div>';
+function assetChips(c){
+  if(c.kind!=='meta'||!c.connected) return '';
+  return `<div class="linked">`+c.assets.filter(a=>a.on).map(a=>`<span class="la">${CHK}${a.name}</span>`).join('')+`</div>`;
+}
+function render(){
+  document.getElementById('conns').innerHTML=CONNS.map(c=>`
+    <div class="conn ${c.connected?'connected':''}" data-id="${c.id}">
+      <div class="ctop">
+        <div class="lg" style="background:${c.color}">${c.mono}</div>
+        <div><div class="nm">${c.name}</div><div class="desc">${c.desc}</div></div>
+        <span class="st ${c.connected?'yes':'no'}">${c.connected?'מחובר':'לא מחובר'}</span>
+      </div>
+      <div class="unlocks">${uHead}<div class="chips">${c.unlocks.map(u=>`<span class="chip">${u}</span>`).join('')}</div></div>
+      ${assetChips(c)}
+      <div class="foot">
+        ${c.connected
+          ? `<span class="sync"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 6.3 2.6L21 8"/><path d="M21 3v5h-5"/></svg> ${c.sync}</span>
+             <span class="pillsrc">${c.pillar}</span>
+             <button class="btn btn-dis" onclick="disconnect('${c.id}')">נתק</button>`
+          : `<span class="pillsrc">${c.pillar}</span>
+             <button class="btn btn-connect" onclick="openOauth('${c.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 12h6M12 9v6"/><circle cx="12" cy="12" r="9"/></svg> חבר</button>`}
+      </div>
+    </div>`).join('');
+  updateCoverage();
+}
+function updateCoverage(){
+  // native = 70% baseline; each connected marketing source adds a share of the remaining 30%
+  const total=CONNS.length, on=CONNS.filter(c=>c.connected).length;
+  const pct=Math.round(70+ (on/total)*30);
+  document.getElementById('covPct').textContent=pct+'%';
+  const R=40,C=2*Math.PI*R;
+  document.getElementById('covArc').setAttribute('stroke-dashoffset', (C*(1-pct/100)).toFixed(0));
+}
+
+/* ---- multi-step OAuth ---- */
+let pending=null, step=1;
+function openOauth(id){
+  pending=id; step=1;
+  const c=CONNS.find(x=>x.id===id);
+  document.getElementById('oaLg').style.background=c.color;
+  document.getElementById('oaLg').textContent=c.mono;
+  drawStep();
+  document.getElementById('oauth').classList.add('show');
+}
+function metaScopes(c){
+  const on=c.assets.filter(a=>a.on);
+  const s=['ניהול עסקי — קריאה (business_management)'];
+  if(on.find(a=>a.id==='adacct')) s.push('קריאת ביצועי מודעות (ads_read)');
+  if(on.find(a=>a.id==='pixel'))  s.push('אירועי המרה מהפיקסל (Dataset)');
+  if(on.find(a=>a.id==='page'))   s.push('נתוני עמוד ומעורבות (pages_read_engagement)');
+  if(on.find(a=>a.id==='ig'))     s.push('תובנות אינסטגרם (instagram_manage_insights)');
+  return s;
+}
+function drawStep(){
+  const c=CONNS.find(x=>x.id===pending);
+  const steps=document.getElementById('oaSteps'), title=document.getElementById('oaTitle');
+  const body=document.getElementById('oaBody'), foot=document.getElementById('oaFoot'), safe=document.getElementById('oaSafe');
+  if(c.kind==='meta'){
+    steps.style.display='flex';
+    steps.innerHTML=[1,2,3].map(n=>`<i class="${n===step?'on':(n<step?'done':'')}"></i>`).join('');
+    if(step===1){
+      title.textContent='התחברות לחשבון מטא';
+      body.innerHTML=`<p class="msub">תיפתח חלונית מאובטחת של <b>Facebook Login</b> להתחברות. WHITEBOARD היא אפליקציית מטא מאושרת — הנכסים נשארים בבעלותך, וניתן לנתק בכל רגע.</p>`;
+      foot.innerHTML=`<button class="cancel" onclick="closeOauth()">ביטול</button><button class="approve" onclick="step=2;drawStep()">${IC.fb}&nbsp;המשך עם Facebook</button>`;
+      safe.innerHTML=LOCK+' מאובטח דרך Facebook Login for Business';
+    } else if(step===2){
+      title.textContent='בחר אילו נכסים לחבר';
+      body.innerHTML=`<p class="msub">מטא מבקשת לבחור אילו נכסים לחשוף ל-WHITEBOARD. אפשר לבחור רק חלק — בורדי יציג את מה שחיברת.</p>
+        <div class="assets">`+c.assets.map((a,i)=>`
+          <div class="asset ${a.on?'on':''}" onclick="toggleAsset(${i})">
+            <div class="aic">${a.icon}</div>
+            <div class="atx"><b>${a.name}</b><span>${a.sub}</span></div>
+            <div class="achk">${CHK}</div>
+          </div>`).join('')+`</div>`;
+      foot.innerHTML=`<button class="cancel" onclick="step=1;drawStep()">חזור</button><button class="approve" onclick="step=3;drawStep()">המשך</button>`;
+      safe.innerHTML=LOCK+' אתה בוחר מה לשתף · קריאה בלבד';
+    } else {
+      title.textContent='אישור הרשאות';
+      body.innerHTML=`<p class="msub">בורדי יקבל גישת <b>קריאה בלבד</b> להרשאות הבאות:</p>
+        <div class="perms">`+metaScopes(c).map(s=>`<div class="p">${CHK} ${s}</div>`).join('')+`</div>`;
+      foot.innerHTML=`<button class="cancel" onclick="step=2;drawStep()">חזור</button><button class="approve" id="oaGo">אשר וחבר</button>`;
+      document.getElementById('oaGo').onclick=finishConnect;
+      safe.innerHTML=LOCK+' קריאה בלבד · ניתן לנתק בכל רגע';
+    }
+  } else {
+    steps.style.display='none';
+    title.textContent='התחברות ל-'+c.name;
+    body.innerHTML=`<p class="msub">בורדי יקבל גישת <b>קריאה בלבד</b> לנתוני הביצועים ב-${c.name}, כדי להציג ${c.unlocks.slice(0,2).join(' ו-')} ועוד.</p>
+      <div class="perms">
+        <div class="p">${CHK} קריאת נתוני ביצועים (קריאה בלבד)</div>
+        <div class="p">${CHK} סנכרון אוטומטי ל-WHITEBOARD</div>
+        <div class="p">${CHK} ניתן לנתק בכל רגע</div>
+      </div>`;
+    foot.innerHTML=`<button class="cancel" onclick="closeOauth()">ביטול</button><button class="approve" id="oaGo">אשר וחבר</button>`;
+    document.getElementById('oaGo').onclick=finishConnect;
+    safe.innerHTML=LOCK+' חיבור מאובטח דרך OAuth · בלי מפתחות API';
+  }
+}
+function toggleAsset(i){
+  const c=CONNS.find(x=>x.id===pending);
+  const onCount=c.assets.filter(a=>a.on).length;
+  if(c.assets[i].on && onCount<=1){toast('צריך לפחות נכס אחד','בחר נכס אחד לפחות כדי לחבר');return;}
+  c.assets[i].on=!c.assets[i].on;drawStep();
+}
+function finishConnect(){
+  const c=CONNS.find(x=>x.id===pending);
+  const btn=document.getElementById('oaGo');btn.textContent='מתחבר…';
+  setTimeout(()=>{
+    c.connected=true;c.sync='עודכן זה עתה';closeOauth();render();
+    if(c.kind==='meta'){
+      const on=c.assets.filter(a=>a.on).map(a=>a.name).join(' · ');
+      toast('מטא חובר ✓','נכסים מחוברים: '+on);
+    } else {
+      toast(c.name+' חובר ✓','בורדי כעת רואה '+c.unlocks.join(', '));
+    }
+  },850);
+}
+function closeOauth(){document.getElementById('oauth').classList.remove('show');pending=null;step=1}
+document.getElementById('oauth').addEventListener('click',e=>{if(e.target.id==='oauth')closeOauth()});
+function disconnect(id){
+  const c=CONNS.find(x=>x.id===id);c.connected=false;c.sync='';render();
+  toast(c.name+' נותק','בורדי יציג את מה שזמין ממקורות אחרים');
+}
+function toast(t,p){
+  const el=document.createElement('div');el.className='toast';
+  el.innerHTML=`<div class="ti"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></div><div class="tx"><b>${t}</b><p>${p}</p></div>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>{el.style.opacity=0;el.style.transform='translateX(-30px)';el.style.transition='.3s';setTimeout(()=>el.remove(),300)},3600);
+}
+render();
+
+const root=document.documentElement,tb=document.getElementById('theme');
+tb.onclick=()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');
+  tb.querySelector('svg').innerHTML=d?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';};
+</script>
+</body>
+</html>

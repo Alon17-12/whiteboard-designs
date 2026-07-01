@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בורדי · שיעורים — WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green:#7DC57A;--green-bright:#22c55e;--yellow:#EAD654;--purple:#9B6BF2;--orange:#F5A65B;
+  --bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);
+  --r-xs:6px;--r-sm:10px;--r-md:16px;--r-lg:18px;
+  --shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.3);--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
+
+.shell{display:flex;height:100vh}
+
+/* ===== SIDEBAR (BOARDi hub) ===== */
+.side{width:220px;flex:0 0 220px;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:18px 14px}
+.logo{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0 14px}
+.logo .mk{width:46px;height:46px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center}
+.logo .mk svg{width:30px;height:30px}
+.logo .wm{font-family:'Fredoka';font-weight:700;font-size:15px;letter-spacing:.5px}
+.logo .wm small{display:block;font-size:8px;letter-spacing:3px;color:#ffffff88;text-align:center;font-family:'Heebo';font-weight:500}
+.nav-tag{font-size:10px;color:#ffffff55;letter-spacing:1px;margin:12px 10px 6px}
+.side nav a{display:flex;align-items:center;gap:11px;color:#dbe6ff;font-size:13.5px;padding:10px 12px;border-radius:9px;margin-bottom:2px;transition:.15s}
+.side nav a svg{width:17px;height:17px;flex:0 0 auto;opacity:.85}
+.side nav a:hover{background:#ffffff10}
+.side nav a.on{background:linear-gradient(90deg,#ffffff22,#ffffff10);color:#fff;font-weight:600}
+.side nav a.on svg{opacity:1;color:var(--cyan)}
+.side .spacer{flex:1}
+.mode-tog{display:flex;background:#ffffff14;border-radius:10px;padding:3px;margin:4px 4px 12px}
+.mode-tog button{flex:1;font-size:12px;padding:7px;border-radius:8px;color:#cdd9f5;display:flex;align-items:center;justify-content:center;gap:5px}
+.mode-tog button.on{background:#fff;color:var(--navy);font-weight:700}
+.mode-tog button svg{width:14px;height:14px}
+.prof{display:flex;align-items:center;gap:10px;padding:8px 6px;border-top:1px solid #ffffff1a}
+.prof .av{width:34px;height:34px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Fredoka'}
+.prof .nm{font-size:13px;font-weight:600}.prof .em{font-size:10.5px;color:#ffffff77}
+
+/* ===== TOPBAR ===== */
+.wrap{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{height:60px;flex:0 0 60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.top .crumb{display:flex;align-items:center;gap:10px}
+.top .back{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-sub)}
+.top h1{font-family:'Fredoka';font-size:18px;font-weight:600}
+.top h1 span{color:var(--text-xs);font-weight:400;font-size:14px}
+.top .acts{display:flex;gap:8px;align-items:center}
+.iconbtn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.iconbtn:hover{color:var(--cyan);border-color:var(--cyan)}
+.iconbtn svg{width:17px;height:17px}
+/* "new task" chip in topbar */
+.newtask{display:none;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--navy);background:color-mix(in srgb,var(--cyan) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--cyan) 40%,transparent);padding:8px 13px;border-radius:100px}
+.newtask.show{display:flex}
+.newtask svg{width:15px;height:15px}
+[data-theme="dark"] .newtask{color:var(--cyan)}
+
+/* ===== BODY: chat + rail ===== */
+.body{flex:1;display:flex;min-height:0}
+.chat{flex:1;display:flex;flex-direction:column;min-width:0}
+.stream{flex:1;overflow-y:auto;padding:26px clamp(18px,4vw,54px);display:flex;flex-direction:column;gap:16px}
+.stream .day{align-self:center;font-size:11px;color:var(--text-xs);background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:100px}
+
+/* message rows — בורדי on the RIGHT, מרצה on the LEFT */
+.row{display:flex;gap:12px;max-width:760px;align-items:flex-end;align-self:flex-start;animation:pop .35s ease}
+.row.me{align-self:flex-end;flex-direction:row-reverse}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.av-b{width:56px;height:56px;flex:0 0 auto;display:flex;align-items:flex-end;justify-content:center;transition:.4s}
+.av-b img{width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 5px 12px rgba(37,62,122,.20))}
+.av-me{width:38px;height:38px;flex:0 0 auto;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;box-shadow:var(--shadow-sm);align-self:flex-end;margin-bottom:2px}
+.bub{background:var(--surface);border:1px solid var(--border);border-radius:16px 4px 16px 16px;padding:13px 16px;font-size:14.5px;line-height:1.6;box-shadow:var(--shadow-sm);color:var(--text-main)}
+.bub.bare{background:none;border:none;box-shadow:none;padding:0}
+.row.me .bub{background:var(--navy);color:#eaf1ff;border-radius:4px 16px 16px 16px;border-color:transparent}
+.bub .who{font-size:11px;color:var(--cyan);font-weight:700;margin-bottom:4px;font-family:'Fredoka'}
+.bub b{color:inherit;font-weight:700}
+.time{font-size:10px;color:var(--text-xs);margin-top:6px}
+
+/* typing */
+.typing{display:flex;gap:5px;align-items:center;padding:15px 18px}
+.typing i{width:8px;height:8px;border-radius:50%;background:var(--cyan);animation:bounce 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
+.typing-lbl{font-size:11px;color:var(--text-xs);margin-right:2px}
+
+/* ===== CAPABILITY PICKER (opening state) ===== */
+.picker{align-self:stretch;max-width:900px;margin:6px auto 0;display:flex;flex-direction:column;align-items:center;gap:6px;animation:pop .4s ease}
+.picker .pm{width:120px;height:120px;object-fit:contain;filter:drop-shadow(0 10px 22px rgba(37,62,122,.22));animation:float 3s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px)}}
+.picker h2{font-family:'Fredoka';font-size:24px;font-weight:700;text-align:center;margin-top:4px}
+.picker .ps{font-size:13.5px;color:var(--text-sub);text-align:center;max-width:520px;line-height:1.55;margin-bottom:8px}
+.caps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;margin-top:6px}
+.cap{text-align:right;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:16px 16px 15px;transition:.16s;display:flex;flex-direction:column;gap:9px;box-shadow:var(--shadow-sm)}
+.cap:hover{border-color:var(--cyan);transform:translateY(-3px);box-shadow:var(--shadow)}
+.cap .ci{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;flex:0 0 auto}
+.cap .ci svg{width:21px;height:21px}
+.cap h4{font-family:'Fredoka';font-size:15.5px;font-weight:600}
+.cap p{font-size:12px;color:var(--text-sub);line-height:1.45}
+.cap .go{margin-top:auto;font-size:12px;font-weight:700;color:var(--cyan);display:flex;align-items:center;gap:5px}
+.cap .go svg{width:14px;height:14px}
+.c1 .ci{background:linear-gradient(135deg,var(--cyan),#2497c9)}
+.c2 .ci{background:linear-gradient(135deg,var(--green-bright),#16a34a)}
+.c3 .ci{background:linear-gradient(135deg,var(--navy),#3552a0)}
+.c4 .ci{background:linear-gradient(135deg,var(--pink),#d63d68)}
+.c5 .ci{background:linear-gradient(135deg,var(--purple),#7c4dd6)}
+.c6 .ci{background:linear-gradient(135deg,var(--orange),#e08636)}
+.caps.two{grid-template-columns:1fr 1fr;max-width:600px;margin-inline:auto}
+.caps.four{grid-template-columns:repeat(2,1fr);max-width:600px;margin-inline:auto}
+.cap.big{padding:22px 20px 20px}
+.cap.big .ci{width:52px;height:52px}.cap.big .ci svg{width:26px;height:26px}
+.cap.big h4{font-size:17px}
+.fback{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--text-sub);background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:7px 13px;cursor:pointer;margin:2px 0 4px}
+.fback:hover{border-color:var(--cyan);color:var(--cyan)}
+.fback svg{width:13px;height:13px}
+.fcrumb{font-size:12px;color:var(--text-xs);font-weight:600;margin-bottom:-2px;letter-spacing:.2px}
+.fcrumb b{color:var(--cyan)}
+
+/* ===== generic artifact card frame ===== */
+.card{max-width:600px;background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.card .lh{padding:16px 20px;background:linear-gradient(135deg,var(--surface-2),var(--surface));border-bottom:1px solid var(--border)}
+.card .lh .tagr{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--purple);font-weight:700;margin-bottom:8px}
+.card .lh h3{font-family:'Fredoka';font-size:20px;font-weight:700}
+.card .lh .sub{font-size:12.5px;color:var(--text-sub);margin-top:4px}
+.card .lb{padding:14px 18px}
+.card .lf{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tagr svg{width:14px;height:14px}
+.btn{padding:11px 18px;border-radius:11px;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+.btn svg{width:16px;height:16px}
+.btn-g{background:var(--green-bright);color:#fff;box-shadow:0 8px 20px -8px var(--green-bright)}
+.btn-g:hover{filter:brightness(1.05)}
+.btn-o{border:1px solid var(--border);color:var(--text-sub)}.btn-o:hover{border-color:var(--navy);color:var(--navy)}
+.lf .grow{flex:1}
+
+/* ===== lesson performance panel (cap 1) ===== */
+.perf{max-width:640px}
+.perf .lh h3{margin-bottom:0}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.kpi{background:var(--surface-2);border:1px solid var(--border);border-radius:13px;padding:12px 13px}
+.kpi .kv{font-family:'Fredoka';font-weight:700;font-size:23px;font-variant-numeric:tabular-nums}
+.kpi .kl{font-size:11px;color:var(--text-sub);margin-top:2px}
+.ltable{border:1px solid var(--border);border-radius:13px;overflow:hidden}
+.ltr{display:grid;grid-template-columns:1.6fr .8fr .9fr .9fr;gap:6px;align-items:center;padding:11px 13px;font-size:12.5px;border-top:1px dashed var(--border)}
+.ltr:first-child{border-top:none;background:var(--surface-2);font-weight:700;color:var(--text-sub);font-size:11px}
+.ltr .ln{font-weight:600;color:var(--text-main);display:flex;align-items:center;gap:7px}
+.ltr .ln .dotm{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.ltr.weak{background:color-mix(in srgb,var(--pink) 8%,var(--surface))}
+.ltr.weak .ln{color:var(--pink)}
+.progc{height:7px;border-radius:6px;background:var(--surface-3);overflow:hidden}
+.progc i{display:block;height:100%;border-radius:6px}
+.rate{display:flex;gap:2px;color:var(--yellow)}
+.rate svg{width:12px;height:12px}
+.insight{margin-top:14px;background:color-mix(in srgb,var(--pink) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--pink) 32%,transparent);border-radius:13px;padding:13px 15px;display:flex;gap:11px;align-items:flex-start}
+.insight .ii{width:34px;height:34px;border-radius:10px;background:color-mix(in srgb,var(--pink) 20%,transparent);color:var(--pink);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.insight .ii svg{width:18px;height:18px}
+.insight b{font-size:13.5px}.insight p{font-size:12.5px;color:var(--text-sub);margin-top:2px;line-height:1.5}
+
+/* ===== MC / preview list ===== */
+.mc{margin-top:4px}
+.mc .q{font-size:14.5px;font-weight:600;margin-bottom:11px}
+.mc .opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.mc.single .opts{grid-template-columns:1fr}
+.opt{text-align:right;background:var(--surface-2);border:1.5px solid var(--border);border-radius:12px;padding:13px 15px;font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;transition:.15s}
+.opt:hover{border-color:var(--cyan);background:color-mix(in srgb,var(--cyan) 8%,var(--surface));transform:translateY(-1px)}
+.opt .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--border-strong);flex:0 0 auto}
+.opt.pick{border-color:var(--green-bright);background:color-mix(in srgb,var(--green-bright) 10%,var(--surface));pointer-events:none}
+.opt.pick .dot{border-color:var(--green-bright);background:var(--green-bright);position:relative}
+.opt.pick .dot::after{content:"";position:absolute;inset:3px 5px;border-left:2px solid #fff;border-bottom:2px solid #fff;width:6px;height:9px;transform:rotate(-45deg) translate(1px,-1px)}
+.opt.dim{opacity:.4}
+
+/* ===== loading card ===== */
+.loadc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;max-width:340px}
+.loadc .m{width:74px;height:74px;animation:float 2.4s ease-in-out infinite}
+.loadc .vid{width:180px;height:auto;border-radius:14px;box-shadow:var(--shadow-sm);background:#0c1422}
+.loadc .st{font-size:14px;font-weight:600;min-height:20px}
+.loadc .bar{width:100%;height:7px;background:var(--surface-3);border-radius:10px;overflow:hidden}
+.loadc .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green-bright));border-radius:10px;transition:width .8s ease}
+.loadc .sub{font-size:11.5px;color:var(--text-xs)}
+
+/* ===== layout preview (chapters -> lessons columns) ===== */
+.lay{max-width:600px;background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.lay .lh{padding:16px 20px;background:linear-gradient(135deg,var(--surface-2),var(--surface));border-bottom:1px solid var(--border)}
+.lay .lh .tagr{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--purple);font-weight:700;margin-bottom:9px}
+.lay .lh h3{font-family:'Fredoka';font-size:20px;font-weight:700;margin-bottom:8px}
+.lay .lh .meta{display:flex;gap:8px;flex-wrap:wrap}
+.lay .lh .meta span{font-size:11.5px;background:var(--surface-3);color:var(--text-sub);padding:4px 11px;border-radius:100px;font-weight:600;display:flex;gap:5px;align-items:center}
+.lay .lb{padding:8px 12px 12px;max-height:300px;overflow-y:auto}
+.chap{border:1px solid var(--border);border-radius:12px;margin:8px 4px;overflow:hidden;background:var(--surface)}
+.chap.nu{border-color:color-mix(in srgb,var(--green-bright) 45%,transparent);background:color-mix(in srgb,var(--green-bright) 6%,var(--surface))}
+.chap .ch{display:flex;align-items:center;gap:11px;padding:12px 14px;cursor:pointer}
+.chap .ch .idx{width:26px;height:26px;border-radius:8px;background:var(--navy);color:#fff;font-family:'Fredoka';font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.chap.nu .ch .idx{background:var(--green-bright)}
+.chap .ch .nm{flex:1;font-weight:600;font-size:14px}
+.chap .ch .newpill{font-size:10px;font-weight:700;color:#fff;background:var(--green-bright);padding:2px 8px;border-radius:100px}
+.chap .ch .cnt{font-size:11px;color:var(--text-xs)}
+.chap .ch .chev{width:16px;height:16px;color:var(--text-sub);transition:.2s}
+.chap.open .ch .chev{transform:rotate(180deg)}
+.chap .les{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.chap.open .les{max-height:340px}
+.les .l{display:flex;align-items:center;gap:10px;padding:9px 14px 9px 16px;border-top:1px dashed var(--border);font-size:13px;color:var(--text-sub)}
+.les .l .pl{width:16px;height:16px;color:var(--cyan);flex:0 0 auto}
+.les .l .n{color:var(--text-main)}
+.lay .lf{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* ===== club config card (cap 4) ===== */
+.club .row-k{display:flex;align-items:center;gap:12px;padding:12px 13px;border:1px solid var(--border);border-radius:12px;margin-bottom:9px;background:var(--surface-2)}
+.club .row-k .ki{width:36px;height:36px;border-radius:10px;background:color-mix(in srgb,var(--pink) 16%,transparent);color:var(--pink);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.club .row-k .ki svg{width:18px;height:18px}
+.club .row-k .kk{font-size:11px;color:var(--text-xs);font-weight:600}
+.club .row-k .kv{font-size:14px;font-weight:600;margin-top:1px}
+
+/* ===== deck preview (cap 5) ===== */
+.deck{max-width:520px}
+.deck .thumb{aspect-ratio:16/9;border-radius:14px;overflow:hidden;position:relative;box-shadow:var(--shadow);background:linear-gradient(135deg,#253E7A,#3a2a6e 55%,#0e2a4a);border:1px solid var(--border)}
+.deck .thumb .blob{position:absolute;border-radius:50%;filter:blur(2px)}
+.deck .thumb .b1{width:170px;height:170px;background:radial-gradient(circle,#38C4F2,transparent 70%);top:-40px;left:-30px;opacity:.85}
+.deck .thumb .b2{width:150px;height:150px;background:radial-gradient(circle,#9B6BF2,transparent 70%);bottom:-40px;right:20px;opacity:.7}
+.deck .thumb .grid{position:absolute;inset:0;background-image:linear-gradient(#ffffff10 1px,transparent 1px),linear-gradient(90deg,#ffffff10 1px,transparent 1px);background-size:34px 34px;mask:radial-gradient(circle at 70% 40%,#000,transparent 75%)}
+.deck .thumb .ct{position:absolute;inset:0;padding:22px 26px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;text-align:right}
+.deck .thumb .kick{font-size:11px;letter-spacing:2px;color:#bfe7ff;font-weight:600;margin-bottom:5px}
+.deck .thumb .tt{font-family:'Fredoka';font-weight:700;font-size:26px;line-height:1.05}
+.deck .thumb .wbm{position:absolute;top:18px;right:24px;font-family:'Fredoka';font-weight:700;font-size:12px;color:#fff;opacity:.9;letter-spacing:1px}
+.deck .thumb .slides{position:absolute;top:18px;left:20px;background:#ffffff20;backdrop-filter:blur(6px);border:1px solid #ffffff30;border-radius:100px;padding:4px 11px;font-size:11px;color:#fff}
+
+/* ===== research result card (cap 6) ===== */
+.src{display:flex;gap:12px;padding:12px 13px;border:1px solid var(--border);border-radius:12px;margin-bottom:9px;background:var(--surface-2)}
+.src .sn{width:30px;height:30px;border-radius:9px;background:color-mix(in srgb,var(--cyan) 16%,transparent);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;font-size:13px;flex:0 0 auto}
+.src .st b{font-size:13.5px}
+.src .st .u{font-size:11px;color:var(--cyan);margin:2px 0}
+.src .st p{font-size:12px;color:var(--text-sub);line-height:1.45}
+
+/* handoff */
+.handoff{max-width:520px;background:linear-gradient(135deg,color-mix(in srgb,var(--purple) 14%,var(--surface)),var(--surface));border:1px solid color-mix(in srgb,var(--purple) 35%,transparent);border-radius:16px;padding:16px 18px;display:flex;gap:13px;align-items:center}
+.handoff .hi{width:42px;height:42px;border-radius:11px;background:color-mix(in srgb,var(--purple) 20%,transparent);color:var(--purple);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.handoff .ht{flex:1}.handoff .ht b{font-size:14px}.handoff .ht p{font-size:12.5px;margin:2px 0 0}
+.handoff .hb{background:var(--purple);color:#fff;font-size:12.5px;font-weight:700;padding:9px 14px;border-radius:10px;white-space:nowrap}
+
+/* composer */
+.composer{flex:0 0 auto;padding:14px clamp(18px,4vw,54px) 18px;border-top:1px solid var(--border);background:var(--surface)}
+.cbox{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:14px;padding:7px 8px 7px 16px}
+.cbox:focus-within{border-color:var(--cyan)}
+.cbox input{flex:1;background:none;border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text-main)}
+.cbox input::placeholder{color:var(--text-xs)}
+.cbox .snd{width:40px;height:40px;border-radius:11px;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.cbox .snd svg{width:18px;height:18px}
+.cbox .attach{color:var(--text-xs);display:flex;align-items:center;justify-content:center;width:32px;height:32px}
+
+/* ===== RIGHT RAIL — content ops ===== */
+.rail{width:312px;flex:0 0 312px;border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;padding:20px 18px;overflow-y:auto}
+.rail h2{font-family:'Fredoka';font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.rail h2 svg{width:17px;height:17px;color:var(--cyan)}
+.rail .desc{font-size:11.5px;color:var(--text-xs);line-height:1.5;margin-bottom:14px}
+.crumbcard{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px}
+.crumbcard .ct{font-size:11px;color:var(--text-xs);letter-spacing:.5px;margin-bottom:8px}
+.crumbcard .cn{font-family:'Fredoka';font-weight:600;font-size:16px}
+.crumbcard .cm{font-size:12px;color:var(--text-sub);margin-top:3px}
+.rsteps{position:relative}
+.rstep{display:flex;gap:11px;align-items:center;padding:7px 4px;font-size:12.5px;position:relative}
+.rstep .rk{width:24px;height:24px;border-radius:50%;background:var(--surface-3);color:var(--text-xs);flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;font-size:12px;z-index:1;transition:.3s}
+.rstep .rk .chk{width:12px;height:12px;color:#fff;display:none}
+.rstep .rn{flex:1;font-weight:600;color:var(--text-sub);transition:.3s}
+.rstep:not(:last-child)::before{content:"";position:absolute;top:30px;right:14px;width:2px;height:calc(100% - 12px);background:var(--border);z-index:0}
+.rstep.done{}
+.rstep.done .rk{background:var(--green-bright);color:#fff}
+.rstep.done .rk .num{display:none}
+.rstep.done .rk .chk{display:block}
+.rstep.done .rn{color:var(--text-main)}
+.rstep.done:not(:last-child)::before{background:color-mix(in srgb,var(--green-bright) 40%,transparent)}
+.rstep.active .rk{background:var(--cyan);color:#fff;box-shadow:0 0 0 4px color-mix(in srgb,var(--cyan) 16%,transparent)}
+.rstep.active .rn{color:var(--text-main);font-weight:700}
+.railnote{margin-top:auto;font-size:11px;color:var(--text-xs);background:var(--surface-2);border:1px dashed var(--border-strong);border-radius:11px;padding:11px 13px;line-height:1.5}
+
+/* ===== demo controller ===== */
+.ctrl{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;background:var(--navy);color:#fff;border-radius:100px;padding:8px 10px 8px 18px;box-shadow:var(--shadow);z-index:60}
+.ctrl .lbl{font-size:12px;font-weight:600}
+.ctrl button{background:#ffffff1a;border-radius:100px;padding:8px 15px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px}
+.ctrl button.play{background:var(--cyan);color:var(--navy)}
+.ctrl button:hover{filter:brightness(1.08)}
+.ctrl button svg{width:15px;height:15px}
+.ctrl .rst{background:transparent;padding:8px}
+
+/* toast */
+.toasts{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:10px;z-index:80}
+.toast{background:var(--surface);border:1px solid var(--border);border-right:4px solid var(--green-bright);border-radius:12px;padding:13px 16px;box-shadow:var(--shadow);display:flex;gap:11px;align-items:center;min-width:260px;animation:slidein .3s ease}
+@keyframes slidein{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+.toast .ti{width:30px;height:30px;border-radius:8px;background:color-mix(in srgb,var(--green-bright) 15%,transparent);color:var(--green-bright);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.toast .tx b{font-size:13.5px}.toast .tx p{font-size:11.5px;color:var(--text-sub);margin:0}
+
+/* fix modal */
+.modal-bg{position:fixed;inset:0;background:rgba(12,20,34,.55);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);display:flex;align-items:center;justify-content:center;padding:30px;z-index:90;opacity:0;pointer-events:none;transition:.28s}
+.modal-bg.show{opacity:1;pointer-events:all}
+.modal{width:min(620px,100%);max-height:88vh;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:0 40px 90px -30px rgba(0,0,0,.55);display:flex;flex-direction:column;transform:translateY(14px) scale(.98);transition:.28s;overflow:hidden}
+.modal-bg.show .modal{transform:none}
+.modal .mh{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.modal .mh .mi{width:40px;height:40px;border-radius:11px;background:color-mix(in srgb,var(--cyan) 15%,transparent);color:var(--cyan);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.modal .mh h3{font-family:'Fredoka';font-size:18px;font-weight:600;flex:1}
+.modal .mh p{font-size:12px;color:var(--text-xs);margin:2px 0 0}
+.modal .mx{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.modal .mx:hover{border-color:var(--pink);color:var(--pink)}
+.modal .mb{padding:10px 14px;overflow-y:auto}
+.modal .mf{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-start}
+.edit-row{display:flex;align-items:center;gap:9px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;margin:6px 4px;background:var(--surface-2)}
+.edit-row input{flex:1;background:none;border:none;outline:none;font-family:inherit;font-size:13.5px;color:var(--text-main)}
+.edit-row .gr{width:16px;height:16px;color:var(--text-xs);cursor:grab}
+.edit-row.chap-r{background:color-mix(in srgb,var(--navy) 8%,var(--surface));border-color:var(--border-strong);font-weight:700}
+.edit-row.chap-r input{font-weight:700}
+.addbtn{width:100%;border:1.5px dashed var(--border-strong);border-radius:10px;padding:9px;font-size:12.5px;font-weight:600;color:var(--text-sub);margin:6px 4px;display:flex;align-items:center;justify-content:center;gap:7px}
+.addbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+
+@media (max-width:1180px){.rail{display:none}}
+@media (max-width:820px){.caps{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){.side{display:none}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <div class="logo">
+      <div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="#253E7A" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M8 20h8M12 18v2"/><circle cx="9.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><circle cx="14.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><path d="M9.5 13.5c1.5 1.2 3.5 1.2 5 0"/></svg></div>
+      <div class="wm">WHITEBOARD<small>LEARN · CREATE · GROW</small></div>
+    </div>
+    <span class="nav-tag">ניווט ראשי</span>
+    <nav>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> לוח בקרה</a>
+      <a href="#" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg> בורדי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21V12h6v9"/></svg> מרכזי הידע שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg> אנשי הקשר שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/></svg> ניוזלטרים</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> הספרייה שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.2A1.6 1.6 0 0 0 7 19.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1-2.7H3a2 2 0 0 1 0-4h.2a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H10a1.6 1.6 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.2a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V10a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1z"/></svg> הגדרות</a>
+    </nav>
+    <div class="spacer"></div>
+    <div class="mode-tog">
+      <button class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M6 12v5c3 3 9 3 12 0v-5"/><path d="M2 10l10-5 10 5-10 5z"/></svg> מורה</button>
+      <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> תלמיד</button>
+    </div>
+    <div class="prof"><div class="av">א</div><div><div class="nm">אלון גבאי</div><div class="em">alon@…</div></div></div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="wrap">
+    <div class="top">
+      <div class="crumb">
+        <div class="back"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        <h1>בורדי שיעורים <span>· בורדי</span></h1>
+      </div>
+      <div class="acts">
+        <button class="newtask" id="newtask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg> משימה חדשה</button>
+        <button class="iconbtn" title="שיחות אחרונות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+        <button class="iconbtn" id="theme" title="מצב תצוגה"><svg id="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+        <button class="iconbtn" title="שפה">🇮🇱</button>
+      </div>
+    </div>
+
+    <div class="body">
+      <!-- CHAT -->
+      <div class="chat">
+        <div class="stream" id="stream">
+          <div class="day">היום · 09:14</div>
+        </div>
+        <div class="composer">
+          <div class="cbox">
+            <input id="inp" placeholder="כתוב לבורדי…" />
+            <button class="attach"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.4 11.05 12.25 20.2a5 5 0 0 1-7.07-7.07l9.19-9.19a3 3 0 0 1 4.24 4.24l-9.2 9.19a1 1 0 0 1-1.41-1.41l8.48-8.49"/></svg></button>
+            <button class="snd" id="sendbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT RAIL -->
+      <aside class="rail">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/></svg> תפעול תוכן</h2>
+        <p class="desc">בורדי שיעורים מחובר לקורס החי שלך — ומטפל בכל מה שקורה אחרי ההשקה: ניתוח שיעורים, בניית תוכן, ליי-אאוט, מועדון ומצגות.</p>
+
+        <div class="crumbcard">
+          <div class="ct">הקורס הפעיל</div>
+          <div class="cn" id="railCourse">עיצוב UX/UI למתחילים</div>
+          <div class="cm" id="railMeta">4 פרקים · 18 שיעורים · 214 תלמידים פעילים</div>
+        </div>
+
+        <div class="dt" style="font-size:11px;color:var(--text-xs);letter-spacing:.5px;margin:2px 2px 9px">שלבי המשימה · <span style="color:var(--text-sub)">מתעדכן לבד תוך כדי</span></div>
+        <div id="railSteps" class="rsteps">
+          <div class="rstep" data-k="pick"><div class="rk"><span class="num">1</span><svg class="chk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="rn">בחירת משימה</div></div>
+          <div class="rstep" data-k="collect"><div class="rk"><span class="num">2</span><svg class="chk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="rn">איסוף פרטים</div></div>
+          <div class="rstep" data-k="preview"><div class="rk"><span class="num">3</span><svg class="chk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="rn">תצוגה מקדימה</div></div>
+          <div class="rstep" data-k="done"><div class="rk"><span class="num">4</span><svg class="chk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="rn">אישור והטמעה</div></div>
+        </div>
+
+        <div class="railnote">💡 <b>הערה לאפיון:</b> כל פעולת <b>כתיבה</b> (הוספת פרק/שיעור, שינוי ליי-אאוט, מועדון, מצגת) עוברת דרך ה-Action API בתצוגה-מקדימה→אישור. ניתוח וחיפוש הם קריאה בלבד.</div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- FIX / EDIT LAYOUT MODAL -->
+<div class="modal-bg" id="fixModal">
+  <div class="modal">
+    <div class="mh">
+      <div class="mi"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
+      <div style="flex:1"><h3 id="fixTitle">עריכת הליי-אאוט</h3><p id="fixSub">ערוך שמות פרקים ושיעורים · בורדי יעדכן את ההצעה</p></div>
+      <button class="mx" onclick="closeFix()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="mb" id="fixBody"></div>
+    <div class="mf">
+      <button class="btn btn-g" onclick="closeFix();toast('התיקונים נשמרו','בורדי הטמיע את השינויים בהצעה')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> שמור תיקונים</button>
+      <button class="btn btn-o" onclick="closeFix()">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEMO CONTROLLER -->
+<div class="ctrl">
+  <span class="lbl">דמו · בורדי שיעורים</span>
+  <button class="rst" id="reset" title="חזרה לבחירת משימה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.3 2.6L3 8"/><path d="M3 3v5h5"/></svg></button>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+const M = "../BOARDi/SVG/";                 // mascot path
+const VID = "../BOARDi/BOARDi%20Coding.mp4"; // "בורדי כותב קוד"
+const stream = document.getElementById('stream');
+const inp = document.getElementById('inp');
+function scrollDown(){stream.scrollTop=stream.scrollHeight}
+
+/* mascot by state — set directly per flow step */
+let curMascot = '2.svg';
+function setMascot(s){ curMascot = s; }
+function avatarHTML(){ return `<div class="av-b"><img src="${M}${curMascot}" alt="בורדי" onerror="this.style.display='none';this.parentNode.textContent='🤖'"></div>`; }
+
+/* ---------- chat primitives ---------- */
+function boardi(html,bare,time='09:14'){
+  const r=document.createElement('div');r.className='row';
+  r.innerHTML=`${avatarHTML()}<div class="bub ${bare?'bare':''}">${bare?'':'<div class="who">בורדי</div>'}${html}${bare?'':`<div class="time">${time}</div>`}</div>`;
+  stream.appendChild(r);scrollDown();return r;
+}
+function dataMsg(html){return boardi(html,true)}
+function me(text,time='09:15'){
+  const r=document.createElement('div');r.className='row me';
+  r.innerHTML=`<div class="av-me">א</div><div class="bub">${text}<div class="time" style="color:#ffffff88">${time}</div></div>`;
+  stream.appendChild(r);scrollDown();return r;
+}
+let typingRow=null;
+function showTyping(lbl){
+  setMascot('7.svg');
+  typingRow=document.createElement('div');typingRow.className='row';
+  typingRow.innerHTML=`<div class="av-b"><img src="${M}7.svg" alt="" onerror="this.parentNode.textContent='✍️'"></div>
+   <div class="bub" style="display:flex;align-items:center"><div class="typing"><i></i><i></i><i></i></div><span class="typing-lbl">${lbl||'בורדי כותב…'}</span></div>`;
+  stream.appendChild(typingRow);scrollDown();
+}
+function hideTyping(){if(typingRow){typingRow.remove();typingRow=null}}
+/* typing → callback after ~delay (used to chain a bot turn) */
+function typeThen(fn,ms,lbl){ showTyping(lbl); setTimeout(()=>{hideTyping();fn();}, ms||900); }
+
+/* MC question inside a boardi bubble */
+function mcQuestion(q,opts,onPick,single){
+  const r=boardi(`<div class="mc ${single?'single':''}"><div class="q">${q}</div><div class="opts"></div></div>`);
+  const box=r.querySelector('.opts');
+  opts.forEach(o=>{
+    const b=document.createElement('button');b.className='opt';
+    b.innerHTML=`<span class="dot"></span><span>${o}</span>`;
+    b.onclick=()=>{ box.querySelectorAll('.opt').forEach(x=>x.classList.add('dim'));
+      b.classList.remove('dim');b.classList.add('pick'); me(o); onPick(o); };
+    box.appendChild(b);
+  });
+  scrollDown();return r;
+}
+
+/* loading card */
+function loadingCard(stages,done,subtxt){
+  setMascot('7.svg');
+  const r=boardi(`<div class="loadc"><video class="vid" src="${VID}" autoplay loop muted playsinline onerror="this.replaceWith(Object.assign(document.createElement('img'),{className:'m',src:'${M}7.svg'}))"></video>
+    <div class="st">מתחיל…</div><div class="bar"><i></i></div><div class="sub">${subtxt||'בורדי עובד…'}</div></div>`,true);
+  const st=r.querySelector('.st'), bar=r.querySelector('.bar i'); let i=0;
+  (function next(){
+    if(i>=stages.length){setTimeout(()=>{r.remove();done&&done()},350);return}
+    st.textContent=stages[i]; bar.style.width=Math.round(((i+1)/stages.length)*100)+'%';
+    i++;scrollDown();setTimeout(next,950);
+  })();
+}
+
+/* toast */
+function toast(t,p){
+  const el=document.createElement('div');el.className='toast';
+  el.innerHTML=`<div class="ti"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></div><div class="tx"><b>${t}</b><p>${p}</p></div>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>{el.style.opacity=0;el.style.transform='translateX(-30px)';el.style.transition='.3s';setTimeout(()=>el.remove(),300)},3600);
+}
+
+/* ---------- rail step tracker ---------- */
+function railStep(key,state){ // state: 'active' | 'done'
+  const el=document.querySelector(`.rstep[data-k="${key}"]`); if(!el)return;
+  document.querySelectorAll('.rstep.active').forEach(x=>x.classList.remove('active'));
+  if(state==='done') el.classList.add('done');
+  else el.classList.add('active');
+}
+function railReset(){ document.querySelectorAll('.rstep').forEach(x=>x.classList.remove('active','done')); }
+
+/* ===================================================================
+   COURSE DATA (shared source of truth — mirrors course-builder layout)
+=================================================================== */
+const COURSE_TITLE='עיצוב UX/UI למתחילים';
+const LAYOUT=[
+  {n:'מבוא לעולם ה-UX',les:['מה זה בעצם UX ולמה אכפת','ההבדל בין UX ל-UI','5 עקרונות חוויית משתמש','כלים שנעבוד איתם']},
+  {n:'מחקר משתמשים',les:['למה מתחילים ממחקר','ראיונות משתמשים בפועל','בניית פרסונה','מיפוי מסע לקוח (Journey Map)','ניתוח מתחרים']},
+  {n:'Wireframing ו-Prototyping',les:['סקיצות ידניות מהירות','Low-fidelity wireframes','מעבר ל-Figma','בניית פרוטוטייפ לחיץ','היררכיה ויזואלית']},
+  {n:'בדיקות ושיפור',les:['בדיקת שמישות (Usability)','איסוף פידבק ואיטרציה','מדדי הצלחה','הכנת התיק לראיון עבודה']}
+];
+
+/* lesson-performance rows (cap 1) */
+const PERF=[
+  {n:'מה זה בעצם UX ולמה אכפת', comp:91, watch:'8:20', drop:'—', rate:5, sev:'ok'},
+  {n:'ההבדל בין UX ל-UI',        comp:84, watch:'6:55', drop:'—', rate:5, sev:'ok'},
+  {n:'ראיונות משתמשים בפועל',    comp:71, watch:'7:10', drop:"'דק' 5", rate:4, sev:'mid'},
+  {n:'מיפוי מסע לקוח (Journey)',  comp:62, watch:'5:40', drop:"'דק' 6", rate:3, sev:'mid'},
+  {n:'מעבר ל-Figma (שיעור 4)',    comp:53, watch:'4:05', drop:"'דק' 6", rate:3, sev:'hi'}
+];
+
+/* ===================================================================
+   CAPABILITY PICKER (opening — user-driven)
+=================================================================== */
+const CAPS=[
+  {id:'analyze',cls:'c1',title:'ניתוח ביצועי שיעורים',desc:'צפייה, השלמה, נקודות נטישה ודירוג לכל שיעור — עם תובנה לשיפור.',
+   ic:'<path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/>'},
+  {id:'build',cls:'c2',title:'בניית שיעור / פרק חדש',desc:'שאלות קצרות → תצוגה מקדימה של פרק ושיעורים → אישור והטמעה בקורס.',
+   ic:'<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M12 8v6M9 11h6"/>'},
+  {id:'layout',cls:'c3',title:'עדכון ליי-אאוט',desc:'שינוי שם, סדר וארגון של הפרקים והשיעורים בקורס הקיים.',
+   ic:'<rect x="3" y="3" width="7" height="18" rx="1"/><rect x="12" y="3" width="9" height="8" rx="1"/><rect x="12" y="13" width="9" height="8" rx="1"/>'},
+  {id:'club',cls:'c4',title:'בניית מועדון',desc:'הקמת מועדון תלמידים: שם, גישה והודעת פתיחה — מוכן להפעלה.',
+   ic:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>'},
+  {id:'deck',cls:'c5',title:'ייצור מצגת',desc:'מצגת HTML ממותגת לשיעור או לפרק — מסונכרנת לליי-אאוט של הקורס.',
+   ic:'<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>'},
+  {id:'research',cls:'c6',title:'מחקר',desc:'חיפוש חי ברשת למקורות עדכניים — עם ציטוטים והוספה לתוכן.',
+   ic:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>'}
+];
+
+/* ---- funnel metadata: mode → entity → action (progressive disclosure) ---- */
+const MODES=[
+  {id:'create',cls:'c2',title:'ליצור משהו חדש',desc:'קורס, תכנית הכשרה, מועדון או בית ספר — מאפס.',
+   ic:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>'},
+  {id:'update',cls:'c1',title:'לעדכן משהו קיים',desc:'לנתח, לשפר ולעדכן תוכן שכבר חי במערכת.',
+   ic:'<path d="M3 3v6h6"/><path d="M21 21v-6h-6"/><path d="M21 8A9 9 0 0 0 6 5L3 8M3 16a9 9 0 0 0 15 3l3-3"/>'}
+];
+const ENTITIES=[
+  {id:'course',cls:'c1',title:'קורס',desc:'שיעורים ופרקים',
+   ic:'<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8M12 18v2"/>'},
+  {id:'program',cls:'c3',title:'תכנית הכשרה',desc:'מסלול של כמה קורסים',
+   ic:'<path d="M4 6h16M4 12h16M4 18h10"/>'},
+  {id:'club',cls:'c4',title:'מועדון',desc:'קהילת תלמידים',
+   ic:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/>'},
+  {id:'school',cls:'c5',title:'בית ספר',desc:'אתר קורסים / מותג',
+   ic:'<path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21V12h6v9"/>'}
+];
+const EXTRA={
+  handoff_builder:{cls:'c2',title:'פתח את בונה הקורסים',desc:'יצירת קורס מאפס — אינטייק חכם עם שאלות עומק ומד ודאות.',ic:'<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M12 8v6M9 11h6"/>'},
+  program_build:{cls:'c3',title:'בניית תכנית הכשרה',desc:'שרשור קורסים למסלול עם רצף והתקדמות.',ic:'<path d="M4 6h16M4 12h16M4 18h10"/>'},
+  program_update:{cls:'c3',title:'עדכון תכנית הכשרה',desc:'הוספת וסידור קורסים במסלול קיים.',ic:'<path d="M4 6h16M4 12h10M4 18h13"/>'},
+  club_manage:{cls:'c4',title:'ניהול המועדון',desc:'גישה, חברים והודעות במועדון קיים.',ic:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>'},
+  school_build:{cls:'c5',title:'הקמת בית ספר',desc:'אתר קורסים חדש עם מיתוג ודומיין.',ic:'<path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'},
+  school_update:{cls:'c5',title:'עדכון בית הספר',desc:'מיתוג, עמודים והגדרות של אתר קיים.',ic:'<path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21V12h6v9"/>'}
+};
+const ACTMETA=Object.assign({}, EXTRA, Object.fromEntries(CAPS.map(c=>[c.id,c])));
+const ACTIONS={
+  'create:course':['handoff_builder'],
+  'update:course':['analyze','build','layout','deck','research'],
+  'create:program':['program_build'],
+  'update:program':['program_update'],
+  'create:club':['club'],
+  'update:club':['club_manage'],
+  'create:school':['school_build'],
+  'update:school':['school_update']
+};
+const CHV='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg>';
+
+let funnel={mode:null,entity:null};
+function showPicker(){
+  stream.innerHTML=`<div class="day">היום · 09:14</div>`;
+  railReset(); railStep('pick','active');
+  document.getElementById('newtask').classList.remove('show');
+  setMascot('2.svg'); funnel={mode:null,entity:null};
+  renderFunnel();
+}
+function capCard(m){
+  return `<button class="cap ${m.cls} big" data-id="${m.id}">
+    <div class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${m.ic}</svg></div>
+    <h4>${m.title}</h4><p>${m.desc}</p>
+    <span class="go">בחר <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+  </button>`;
+}
+function renderFunnel(){
+  const old=stream.querySelector('.picker'); if(old)old.remove();
+  const r=document.createElement('div'); r.className='picker';
+  let inner=`<img class="pm" src="${M}${curMascot}" alt="בורדי" onerror="this.style.display='none'">`;
+  if(!funnel.mode){
+    inner+=`<h2>מה תרצה לעשות?</h2>
+      <p class="ps">אני עוזר התוכן שלך. נתחיל בגדול — ליצור משהו חדש, או לעדכן משהו קיים? נצלול פנימה צעד-צעד.</p>
+      <div class="caps two">${MODES.map(capCard).join('')}</div>`;
+  } else if(!funnel.entity){
+    inner+=`<div class="fcrumb">${funnel.mode==='create'?'יצירה':'עדכון'} · <b>על מה נעבוד?</b></div>
+      <h2>על מה נעבוד?</h2>
+      <p class="ps">בחר את סוג הפריט. לכל אחד יש זרימה מותאמת.</p>
+      <button class="fback" data-back="mode">${CHV} חזרה</button>
+      <div class="caps four">${ENTITIES.map(capCard).join('')}</div>`;
+  } else {
+    const key=funnel.mode+':'+funnel.entity;
+    const acts=(ACTIONS[key]||[]).map(id=>ACTMETA[id]).filter(Boolean);
+    const eLabel=ENTITIES.find(e=>e.id===funnel.entity).title;
+    inner+=`<div class="fcrumb">${funnel.mode==='create'?'יצירה':'עדכון'} · ${eLabel} · <b>מה נעשה?</b></div>
+      <h2>${funnel.mode==='create'?'ליצור':'לעדכן'} — ${eLabel}</h2>
+      <p class="ps">${acts.length>1?'בחר משימה ונתחיל.':'נתחיל —'} כל פעולת כתיבה תעבור אישור לפני שאטמיע אותה במערכת.</p>
+      <button class="fback" data-back="entity">${CHV} חזרה</button>
+      <div class="caps ${acts.length<=2?'two':''}">${acts.map(capCard).join('')}</div>`;
+  }
+  r.innerHTML=inner; stream.appendChild(r);
+  r.querySelectorAll('.fback').forEach(b=>b.onclick=()=>{ if(b.dataset.back==='mode'){funnel.mode=null;funnel.entity=null;} else {funnel.entity=null;} renderFunnel(); });
+  r.querySelectorAll('.cap').forEach(b=>b.onclick=()=>onPick(b.dataset.id));
+  scrollDown();
+}
+function onPick(id){
+  if(!funnel.mode){ funnel.mode=id; setMascot('4.svg'); renderFunnel(); return; }
+  if(!funnel.entity){ funnel.entity=id; setMascot('12.svg'); renderFunnel(); return; }
+  startFlow(id);
+}
+/* remove the picker + greet, then run the chosen flow */
+function startFlow(id){
+  const p=stream.querySelector('.picker'); if(p)p.remove();
+  document.getElementById('newtask').classList.add('show');
+  railStep('pick','done'); railStep('collect','active');
+  const cap=ACTMETA[id];
+  me('אני רוצה: '+(cap?cap.title:id));
+  (FLOWS[id]||function(){boardi('בקרוב 🙂');})();
+}
+
+/* ===================================================================
+   CAP 1 — ניתוח ביצועי שיעורים (FULL)
+=================================================================== */
+function flowAnalyze(){
+  setMascot('12.svg');
+  typeThen(()=>{
+    boardi(`בכיף 📊 מריץ עכשיו <b>analyze_lessons</b> על הקורס — צפייה, אחוזי השלמה, נקודת נטישה ודירוג לכל שיעור. זה קריאה בלבד, לא משנה שום דבר בקורס.`);
+    railStep('collect','done'); railStep('preview','active');
+    loadingCard(['שולף נתוני צפייה מכל השיעורים…','מחשב אחוזי השלמה וזמן צפייה…','מזהה נקודות נטישה…','מדרג ומאתר את השיעור החלש…'],()=>{
+      setMascot('12.svg');
+      perfPanel();
+      typeThen(()=>{ setMascot('13.svg'); boardi(`שים לב ל<b>שיעור 4 — "מעבר ל-Figma"</b>: כאן הנטישה הכי גבוהה. אני ממליץ לפעול עליו קודם 👇`); analyzeInsightActions(); }, 1000, 'בורדי מנתח…');
+    }, 'בורדי מנתח את השיעורים…');
+  }, 900, 'בורדי מנתח…');
+}
+function ratingStars(n){ let s=''; for(let i=0;i<5;i++){ s+=`<svg viewBox="0 0 24 24" fill="${i<n?'currentColor':'none'}" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7-6.3-4.6L5.7 21l2.3-7-6-4.6h7.6z"/></svg>`; } return `<span class="rate">${s}</span>`; }
+function sevColor(s){ return s==='hi'?'var(--pink)':s==='mid'?'var(--orange)':'var(--green-bright)'; }
+function perfPanel(){
+  let rows=`<div class="ltr"><span>שיעור</span><span>השלמה</span><span>זמן צפייה</span><span>דירוג</span></div>`;
+  PERF.forEach((p,i)=>{
+    rows+=`<div class="ltr ${p.sev==='hi'?'weak':''}">
+      <span class="ln"><span class="dotm" style="background:${sevColor(p.sev)}"></span>${p.n}</span>
+      <span><b>${p.comp}%</b><div class="progc"><i style="width:${p.comp}%;background:${sevColor(p.sev)}"></i></div></span>
+      <span>${p.watch}<div style="font-size:10px;color:var(--text-xs)">${p.drop!=='—'?'נטישה '+p.drop:'ללא נטישה'}</div></span>
+      <span>${ratingStars(p.rate)}</span></div>`;
+  });
+  dataMsg(`<div class="card perf">
+    <div class="lh"><div class="tagr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg> נוצר על ידי בורדי · ניתוח ביצועי שיעורים</div>
+      <h3>${COURSE_TITLE}</h3><div class="sub">18 שיעורים · 214 תלמידים · 30 הימים האחרונים</div></div>
+    <div class="lb">
+      <div class="kpis">
+        <div class="kpi"><div class="kv">73%</div><div class="kl">השלמה ממוצעת</div></div>
+        <div class="kpi"><div class="kv">6:26</div><div class="kl">זמן צפייה ממוצע</div></div>
+        <div class="kpi"><div class="kv" style="color:var(--pink)">38%</div><div class="kl">נטישה · שיעור 4</div></div>
+      </div>
+      <div class="ltable">${rows}</div>
+      <div class="insight"><div class="ii"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2zM9 21h6M10 23h4"/></svg></div>
+        <div><b>שיעור 4 — 38% נטישה בדקה 6</b><p>הצפייה צונחת אחרי מעבר מהיר מדי ל-Figma. שקול לקצר את השיעור, לפצל אותו לשניים, או להוסיף תרגול מודרך אחרי דקה 5.</p></div></div>
+    </div></div>`);
+}
+function analyzeInsightActions(){
+  const r=dataMsg(`<div class="card" style="max-width:520px"><div class="lb" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <button class="btn btn-g" id="aFix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg> שפר את שיעור 4</button>
+    <button class="btn btn-o" id="aPin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17v5M9 10.8V4h6v6.8l2 2.2H7z"/></svg> נעץ ל-DATA Board</button>
+  </div></div>`);
+  r.querySelector('#aFix').onclick=()=>{ railStep('preview','done'); railStep('done','active'); me('בוא נשפר את שיעור 4'); setMascot('7.svg');
+    typeThen(()=>{ boardi(`מעולה — אעביר אותך לזרימת <b>בניית שיעור</b> כדי לפצל את שיעור 4 לשני חלקים קצרים יותר.`); setTimeout(()=>{ railStep('collect','active'); flowBuild(true); }, 700); },900,'בורדי כותב…'); };
+  r.querySelector('#aPin').onclick=()=>{ toast('נעוץ ל-DATA Board','תובנת "שיעור 4 · 38% נטישה" נשמרה לדוח'); railStep('done','done'); };
+}
+
+/* ===================================================================
+   CAP 2 — בניית שיעור / פרק חדש (FULL)
+=================================================================== */
+let buildData={topic:null,count:null,style:null,fromFix:false};
+function flowBuild(fromFix){
+  buildData={topic:null,count:null,style:null,fromFix:!!fromFix};
+  setMascot('4.svg');
+  typeThen(()=>{
+    boardi(`יאללה, בונים תוכן חדש 🚀 כמה שאלות קצרות ואכין לך פרק שלם עם שיעורים — תראה תצוגה מקדימה לפני שאטמיע.`);
+    typeThen(()=>{ setMascot('7.svg'); mcQuestion('מה נושא הפרק החדש?',['הנגשת עיצוב (Accessibility)','עיצוב למובייל','Design Systems','פורטפוליו וראיון עבודה'],o=>{ buildData.topic=o; buildStep2(); }); },800,'בורדי כותב…');
+  }, 900, 'בורדי מתחיל…');
+}
+function buildStep2(){
+  setMascot('12.svg');
+  typeThen(()=>{ mcQuestion(`נושא נהדר — <b>${buildData.topic}</b>. כמה שיעורים בפרק?`,['2 שיעורים','3 שיעורים','4 שיעורים'],o=>{ buildData.count=parseInt(o); buildStep3(); }); },850,'בורדי כותב…');
+}
+function buildStep3(){
+  typeThen(()=>{ mcQuestion('איזה אופי לתת לשיעורים?',['תיאוריה + דוגמאות','תרגול מודרך צעד-אחר-צעד','פרויקט קצר לביצוע'],o=>{ buildData.style=o; railStep('collect','done'); railStep('preview','active'); buildPreview(); },true); },850,'בורדי כותב…');
+}
+/* generated lessons per topic */
+function lessonsFor(topic,count){
+  const bank={
+    'הנגשת עיצוב (Accessibility)':['למה נגישות היא לא רשות','ניגודיות צבע וקריאוּת','ניווט במקלדת וקורא מסך','בדיקת נגישות בפועל'],
+    'עיצוב למובייל':['חשיבה Mobile-First','אזורי מגע ו-Thumb Zone','טפסים במובייל','בדיקה על מכשירים אמיתיים'],
+    'Design Systems':['מה זה Design System','אסימוני עיצוב (Tokens)','ספריית קומפוננטות','תיעוד ותחזוקה'],
+    'פורטפוליו וראיון עבודה':['בחירת פרויקטים לתיק','סיפור Case Study','הצגה בראיון','משא ומתן על שכר'],
+    'מעבר ל-Figma':['היכרות עם ה-Canvas','Frames ו-Auto Layout','קומפוננטות ו-Variants','פרוטוטייפ לחיץ']
+  };
+  const src=bank[topic]||['מבוא לנושא','עקרונות מרכזיים','תרגול מעשי','סיכום ותובנות'];
+  return src.slice(0,count);
+}
+function buildPreview(){
+  setMascot('7.svg');
+  loadingCard(['מנסח מבנה פרק…','כותב כותרות שיעורים…','מתאים סגנון: '+buildData.style+'…','מרכיב תצוגה מקדימה…'],()=>{
+    setMascot('2.svg');
+    const les=lessonsFor(buildData.topic,buildData.count);
+    let lrows=les.map((l,j)=>`<div class="l"><svg class="pl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none"/></svg><span>שיעור ${LAYOUT.length+1}.${j+1} · <span class="n">${l}</span></span></div>`).join('');
+    const r=dataMsg(`<div class="lay">
+      <div class="lh"><div class="tagr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M12 8v6M9 11h6"/></svg> נוצר על ידי בורדי · הצעה: פרק חדש</div>
+        <h3>${buildData.topic}</h3>
+        <div class="meta"><span>📗 פרק ${LAYOUT.length+1}</span><span>🎬 ${buildData.count} שיעורים</span><span>🎨 ${buildData.style}</span><span>➕ תוספת לקורס</span></div></div>
+      <div class="lb"><div class="chap nu open"><div class="ch" onclick="this.parentNode.classList.toggle('open')">
+        <span class="idx">${LAYOUT.length+1}</span><span class="nm">${buildData.topic}</span><span class="newpill">חדש</span><span class="cnt">${buildData.count} שיעורים</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="les">${lrows}</div></div></div>
+      <div class="lf"><button class="btn btn-g" id="bConfirm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> אשר והוסף לקורס</button>
+        <button class="btn btn-o" onclick="openFix('build')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg> תקן</button>
+        <span class="grow"></span></div></div>`);
+    typeThen(()=>{ boardi(`הנה ההצעה 👆 <b>add_chapter</b> + ${buildData.count}× <b>add_lesson</b>. עבור עליה — אם מדויק, אאשר ואטמיע בקורס.`); },700,'בורדי כותב…');
+    r.querySelector('#bConfirm').onclick=()=>buildConfirm(r);
+  }, 'בורדי כותב את הפרק…');
+}
+function buildConfirm(card){
+  card.querySelector('.lf').innerHTML=`<span style="color:var(--green-bright);font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> הפרק נוסף לקורס · הליי-אאוט עודכן</span>`;
+  railStep('preview','done'); railStep('done','done');
+  toast('הפרק נוסף לקורס',`"${buildData.topic}" · ${buildData.count} שיעורים נכתבו למערכת`);
+  setMascot('5.svg');
+  document.getElementById('railMeta').textContent=`${LAYOUT.length+1} פרקים · ${18+buildData.count} שיעורים · 214 תלמידים פעילים`;
+  typeThen(()=>{
+    boardi(`בוצע! 🎉 הוספתי את הפרק והליי-אאוט המעודכן נראה כך:`);
+    updatedLayoutCard();
+    setTimeout(buildHandoff,600);
+  },900,'בורדי מטמיע…');
+}
+function updatedLayoutCard(){
+  const full=LAYOUT.concat([{n:buildData.topic,les:lessonsFor(buildData.topic,buildData.count),nu:true}]);
+  const total=full.reduce((s,c)=>s+c.les.length,0);
+  let body='';
+  full.forEach((c,i)=>{
+    let les=c.les.map((l,j)=>`<div class="l"><svg class="pl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none"/></svg><span>שיעור ${i+1}.${j+1} · <span class="n">${l}</span></span></div>`).join('');
+    body+=`<div class="chap ${c.nu?'nu':''} ${c.nu||i===0?'open':''}"><div class="ch" onclick="this.parentNode.classList.toggle('open')">
+      <span class="idx">${i+1}</span><span class="nm">${c.n}</span>${c.nu?'<span class="newpill">חדש</span>':''}<span class="cnt">${c.les.length} שיעורים</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="les">${les}</div></div>`;
+  });
+  dataMsg(`<div class="lay">
+    <div class="lh"><div class="tagr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v4H4zM4 12h10v8H4zM17 12h3v8h-3z"/></svg> ליי-אאוט מעודכן · ${full.length} פרקים</div>
+      <h3>${COURSE_TITLE}</h3>
+      <div class="meta"><span>📚 ${full.length} פרקים</span><span>🎬 ${total} שיעורים</span><span>🆕 פרק אחרון חדש</span></div></div>
+    <div class="lb">${body}</div></div>`);
+}
+function buildHandoff(){
+  setMascot('5.svg');
+  const r=document.createElement('div');r.className='row';
+  r.innerHTML=`<div class="av-b"><img src="${M}5.svg" onerror="this.parentNode.innerHTML='🎉'"></div>
+   <div class="handoff"><div class="hi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
+    <div class="ht"><b>לספר לתלמידים על הפרק החדש?</b><p>אעביר את הקשר לבורדי הדיוור ואכין מייל עדכון "פרק חדש עלה" לתלמידים הפעילים.</p></div>
+    <button class="hb" onclick="toast('מעבר לבורדי דיוור','הקשר הפרק הועבר — פותח את יוצר הדיוור');this.closest('.row').remove();">כן, העבר לדיוור →</button></div>`;
+  stream.appendChild(r);scrollDown();
+}
+
+/* ===================================================================
+   CAP 3 — עדכון ליי-אאוט (single representative flow)
+=================================================================== */
+function flowLayout(){
+  setMascot('12.svg');
+  typeThen(()=>{
+    boardi(`בטח 🗂️ הנה הליי-אאוט הנוכחי של <b>${COURSE_TITLE}</b> — עמודות של פרקים→שיעורים. אפשר לשנות שמות ולשנות סדר, ואני אכין לך <b>update_layout</b> לאישור.`);
+    railStep('collect','done'); railStep('preview','active');
+    let body='';
+    LAYOUT.forEach((c,i)=>{
+      let les=c.les.map((l,j)=>`<div class="l"><svg class="pl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none"/></svg><span>שיעור ${i+1}.${j+1} · <span class="n">${l}</span></span></div>`).join('');
+      body+=`<div class="chap ${i===0?'open':''}"><div class="ch" onclick="this.parentNode.classList.toggle('open')">
+        <span class="idx">${i+1}</span><span class="nm">${c.n}</span><span class="cnt">${c.les.length} שיעורים</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="les">${les}</div></div>`;
+    });
+    const r=dataMsg(`<div class="lay">
+      <div class="lh"><div class="tagr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="12" y="3" width="9" height="8" rx="1"/><rect x="12" y="13" width="9" height="8" rx="1"/></svg> ליי-אאוט נוכחי · לעריכה</div>
+        <h3>${COURSE_TITLE}</h3><div class="meta"><span>📚 ${LAYOUT.length} פרקים</span><span>🎬 18 שיעורים</span></div></div>
+      <div class="lb">${body}</div>
+      <div class="lf"><button class="btn btn-g" onclick="openFix('layout')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg> ערוך שמות וסדר</button>
+        <span class="grow"></span></div></div>`);
+    setMascot('2.svg');
+  },900,'בורדי טוען ליי-אאוט…');
+}
+
+/* ===================================================================
+   CAP 4 — בניית מועדון (single flow: intake → club config card)
+=================================================================== */
+let clubData={name:null,access:null};
+function flowClub(){
+  setMascot('4.svg');
+  typeThen(()=>{
+    boardi(`אשמח 👥 מועדון תלמידים הוא מרחב קהילה סביב הקורס. שתי שאלות ואכין תצורת מועדון לאישור.`);
+    typeThen(()=>{ setMascot('7.svg'); mcQuestion('מי יקבל גישה למועדון?',['כל תלמידי הקורס','רק בוגרים שסיימו','רק לקוחות משלמים'],o=>{ clubData.access=o; clubStep2(); }); },800,'בורדי כותב…');
+  },900,'בורדי מתחיל…');
+}
+function clubStep2(){
+  setMascot('12.svg');
+  typeThen(()=>{ mcQuestion('איזה שם למועדון?',['חדר עיצוב · UX/UI','קהילת המעצבים','מועדון הבוגרים'],o=>{ clubData.name=o; railStep('collect','done'); railStep('preview','active'); clubPreview(); },true); },850,'בורדי כותב…');
+}
+function clubPreview(){
+  setMascot('2.svg');
+  const r=dataMsg(`<div class="card club" style="max-width:520px">
+    <div class="lh"><div class="tagr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> נוצר על ידי בורדי · תצורת מועדון</div>
+      <h3>${clubData.name}</h3><div class="sub">מרחב קהילה סביב הקורס · צ'אט + עדכונים</div></div>
+    <div class="lb">
+      <div class="row-k"><div class="ki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></div><div><div class="kk">שם המועדון</div><div class="kv">${clubData.name}</div></div></div>
+      <div class="row-k"><div class="ki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div><div class="kk">גישה</div><div class="kv">${clubData.access}</div></div></div>
+      <div class="row-k"><div class="ki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><div class="kk">הודעת פתיחה</div><div class="kv" style="font-weight:500;font-size:13px;line-height:1.5">"ברוכים הבאים ל${clubData.name} 🎨 כאן נשתף עבודות, נשאל שאלות ונקבל פידבק. שמחים שהצטרפתם!"</div></div></div>
+    </div>
+    <div class="lf"><button class="btn btn-g" id="clubConfirm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> צור מועדון</button>
+      <button class="btn btn-o" onclick="toast('נשמר לעריכה','אפשר לשנות שם / גישה / הודעה')">תקן</button><span class="grow"></span></div></div>`);
+  typeThen(()=>{ boardi(`הנה תצורת המועדון 👆 <b>create_club</b>. מאשר?`); },700,'בורדי כותב…');
+  r.querySelector('#clubConfirm').onclick=()=>{
+    r.querySelector('.lf').innerHTML=`<span style="color:var(--green-bright);font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> המועדון נוצר · פתוח ל${clubData.access}</span>`;
+    railStep('preview','done'); railStep('done','done'); setMascot('5.svg');
+    toast('המועדון נוצר',`"${clubData.name}" פעיל — ${clubData.access}`);
+  };
+}
+
+/* ===================================================================
+   CAP 5 — ייצור מצגת (single flow: loading video → deck preview)
+=================================================================== */
+function flowDeck(){
+  setMascot('12.svg');
+  typeThen(()=>{ mcQuestion('לאיזה פרק לייצר מצגת?',LAYOUT.map((c,i)=>`פרק ${i+1} · ${c.n}`),o=>{ deckBuild(o); }); },850,'בורדי כותב…');
+}
+function deckBuild(chapter){
+  railStep('collect','done'); railStep('preview','active');
+  setMascot('7.svg');
+  typeThen(()=>{
+    boardi(`מייצר מצגת HTML ממותגת ל<b>${chapter}</b> — <b>generate_deck</b>, מסונכרנת לליי-אאוט ובצבעי המותג של הקורס.`);
+    loadingCard(['שולף שיעורי הפרק מהליי-אאוט…','מנסח נקודות מפתח לכל שיעור…','מעצב שקופיות בערכת המותג…','מרכיב תצוגה מקדימה…'],()=>{
+      setMascot('2.svg');
+      const short=chapter.replace(/^פרק \d+ · /,'');
+      const r=dataMsg(`<div class="deck">
+        <div class="tagr" style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--purple);font-weight:700;margin-bottom:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> נוצר על ידי בורדי · מצגת פרק</div>
+        <div class="thumb"><div class="blob b1"></div><div class="blob b2"></div><div class="grid"></div>
+          <div class="wbm">WHITEBOARD</div><div class="slides">12 שקופיות</div>
+          <div class="ct"><div class="kick">מצגת פרק · UX/UI</div><div class="tt">${short}</div></div></div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <button class="btn btn-g" id="deckOpen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg> פתח מצגת</button>
+          <button class="btn btn-o" onclick="toast('גרסה נוספת','בורדי מכין וריאציה חדשה של המצגת')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg> גרסה נוספת</button>
+        </div></div>`);
+      typeThen(()=>{ boardi(`המצגת מוכנה 🎬 12 שקופיות: פתיחה, שקופית לכל שיעור עם נקודות מפתח, וסיכום. לחץ "פתח מצגת".`); },700,'בורדי כותב…');
+      r.querySelector('#deckOpen').onclick=()=>{ railStep('preview','done'); railStep('done','done'); setMascot('5.svg'); toast('המצגת נפתחת','מצגת HTML ניתנת לניווט · צבעי מותג הקורס'); };
+    }, 'בורדי מייצר מצגת…');
+  },900,'בורדי כותב…');
+}
+
+/* ===================================================================
+   CAP 6 — מחקר (single flow: web_search → cited sources)
+=================================================================== */
+function flowResearch(){
+  setMascot('12.svg');
+  typeThen(()=>{ mcQuestion('על מה לחקור ברשת?',['מגמות UX ל-2026','נגישות דיגיטלית — תקנים','כלי AI לעיצוב','מיקרו-אינטראקציות'],o=>{ researchRun(o); }); },850,'בורדי כותב…');
+}
+function researchRun(topic){
+  railStep('collect','done'); railStep('preview','active');
+  setMascot('7.svg');
+  typeThen(()=>{
+    boardi(`מריץ <b>web_search</b> על "<b>${topic}</b>" ומביא מקורות עדכניים עם ציטוטים 🔎`);
+    loadingCard(['מחפש מקורות ברשת…','מסנן ומדרג אמינות…','מסכם ומצטט…'],()=>{
+      setMascot('12.svg');
+      const r=dataMsg(`<div class="card" style="max-width:560px">
+        <div class="lh"><div class="tagr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg> נוצר על ידי בורדי · תוצאות מחקר</div>
+          <h3>${topic}</h3><div class="sub">3 מקורות · עודכן לאחרונה 2026</div></div>
+        <div class="lb">
+          <div class="src"><div class="sn">1</div><div class="st"><b>Nielsen Norman Group — UX Trends</b><div class="u">nngroup.com/articles/ux-trends</div><p>מגמות מפתח: עיצוב מונחה-AI, נגישות כברירת מחדל, וממשקים המבוססי כוונה.</p></div></div>
+          <div class="src"><div class="sn">2</div><div class="st"><b>Smashing Magazine — Design Systems 2026</b><div class="u">smashingmagazine.com/design</div><p>סקירת שיטות עבודה מומלצות בעיצוב מודרני, כולל אסימונים ורכיבים נגישים.</p></div></div>
+          <div class="src"><div class="sn">3</div><div class="st"><b>W3C WAI — Accessibility Guidelines</b><div class="u">w3.org/WAI/standards-guidelines</div><p>התקן הרשמי (WCAG) לנגישות דיגיטלית — הבסיס לכל שיעור נגישות בקורס.</p></div></div>
+        </div>
+        <div class="lf"><button class="btn btn-g" id="rAdd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg> הוסף לתוכן</button>
+          <button class="btn btn-o" onclick="toast('נשמר לספרייה','המקורות נשמרו למרכז הידע')">שמור מקורות</button><span class="grow"></span></div></div>`);
+      typeThen(()=>{ boardi(`הנה 3 מקורות מצוטטים 👆 אפשר לצרף אותם כחומר לשיעור קיים או לפרק חדש.`); },700,'בורדי כותב…');
+      r.querySelector('#rAdd').onclick=()=>{ railStep('preview','done'); railStep('done','done'); setMascot('2.svg'); toast('נוסף לתוכן','3 מקורות צורפו כחומר עזר לקורס'); };
+    }, 'בורדי חוקר…');
+  },900,'בורדי כותב…');
+}
+
+/* flow router */
+/* ---- representative flows for the other entities (concise, coherent) ---- */
+const TAGIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M12 8v6M9 11h6"/></svg>';
+function confirmCard(o){
+  railStep('collect','done'); railStep('preview','active');
+  const r=dataMsg(`<div class="lay">
+    <div class="lh"><div class="tagr">${TAGIC} ${o.tag}</div>
+      <h3>${o.title}</h3>
+      <div class="meta">${o.meta.map(m=>`<span>${m}</span>`).join('')}</div></div>
+    <div class="lf"><button class="btn btn-g" id="repC"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> ${o.confirm}</button><span class="grow"></span></div></div>`);
+  setMascot('2.svg');
+  r.querySelector('#repC').onclick=()=>{
+    r.querySelector('.lf').innerHTML=`<span style="color:var(--green-bright);font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> ${o.done||'בוצע · נשמר במערכת'}</span>`;
+    railStep('preview','done'); railStep('done','done'); setMascot('5.svg');
+    toast(o.toastT,o.toastP);
+  };
+}
+function flowHandoffBuilder(){ setMascot('12.svg'); typeThen(()=>{
+  boardi(`מעולה 🚀 קורס חדש נבנה ב<b>בונה הקורסים</b> — שם אני שואל <b>שאלות עומק</b> (תחום, קהל, מטרה, היקף, סגנון) ומד הוודאות עולה עד שאני מבין בדיוק מה לבנות.`);
+  railStep('collect','done'); railStep('done','active');
+  const r=document.createElement('div');r.className='row';
+  r.innerHTML=`<div class="av-b"><img src="${M}12.svg" onerror="this.parentNode.innerHTML='📘'"></div>
+    <div class="handoff"><div class="hi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
+    <div class="ht"><b>לפתוח את בונה הקורסים?</b><p>שם נתחיל אינטייק חכם לקורס החדש.</p></div>
+    <button class="hb" onclick="window.open('בונה הקורסים - בורדי.html','_blank');toast('פותח את בונה הקורסים','אינטייק חכם לקורס חדש');">פתח את בונה הקורסים →</button></div>`;
+  stream.appendChild(r);scrollDown();
+},900,'בורדי מכין…'); }
+function flowProgramBuild(){ setMascot('4.svg'); typeThen(()=>{
+  boardi(`בגדול 🎓 תכנית הכשרה משרשרת כמה קורסים למסלול אחד עם רצף והתקדמות. שאלה אחת ואכין תצורה לאישור.`);
+  typeThen(()=>{ setMascot('7.svg'); mcQuestion('אילו קורסים לכלול במסלול?',['UX/UI למתחילים + Figma','יסודות + מתקדמים + פורטפוליו','מסלול מלא · 4 קורסים'],o=>{
+    confirmCard({tag:'נוצר על ידי בורדי · תכנית הכשרה',title:'מסלול: '+o,meta:['🎓 תכנית הכשרה','🔗 רצף קורסים','📈 מעקב התקדמות'],confirm:'אשר וצור מסלול',done:'המסלול נוצר',toastT:'מסלול נוצר',toastP:o+' — נשמר כתכנית הכשרה'});
+  },true); },800,'בורדי כותב…');
+},900,'בורדי מתחיל…'); }
+function flowProgramUpdate(){ setMascot('12.svg'); typeThen(()=>{
+  boardi(`בטח 🎓 אפשר להוסיף קורס או לשנות סדר במסלול הקיים — אכין <b>update_program</b> לאישור.`);
+  confirmCard({tag:'עדכון · תכנית הכשרה',title:'הוספת "פורטפוליו וראיון עבודה" למסלול',meta:['➕ קורס חדש במסלול','🔗 אחרי "מתקדמים"','📈 רצף מעודכן'],confirm:'אשר ועדכן מסלול',done:'המסלול עודכן',toastT:'המסלול עודכן',toastP:'קורס נוסף לתכנית ההכשרה'});
+},900,'בורדי טוען…'); }
+function flowClubManage(){ setMascot('4.svg'); typeThen(()=>{
+  boardi(`בכיף 👥 מה לעדכן במועדון הקיים?`);
+  typeThen(()=>{ setMascot('7.svg'); mcQuestion('מה לעדכן?',['לפתוח גישה לכל התלמידים','לשלוח הודעת מועדון','לצרף בוגרים חדשים'],o=>{
+    confirmCard({tag:'עדכון · מועדון',title:o,meta:['👥 מועדון קיים','🔔 עדכון גישה/תוכן'],confirm:'אשר ועדכן מועדון',done:'המועדון עודכן',toastT:'המועדון עודכן',toastP:o});
+  },true); },800,'בורדי כותב…');
+},900,'בורדי מתחיל…'); }
+function flowSchoolBuild(){ setMascot('4.svg'); typeThen(()=>{
+  boardi(`נהדר 🏫 בית ספר הוא אתר הקורסים והמותג שלך. שאלה אחת ואכין תצורה לאישור.`);
+  typeThen(()=>{ setMascot('7.svg'); mcQuestion('איזה מיתוג לאתר?',['נקי ומינימלי','צבעוני ואנרגטי','יוקרתי וכהה'],o=>{
+    confirmCard({tag:'נוצר על ידי בורדי · בית ספר',title:'אתר קורסים · '+o,meta:['🏫 אתר קורסים','🎨 '+o,'🌐 דומיין מותאם'],confirm:'אשר והקם בית ספר',done:'בית הספר הוקם',toastT:'בית ספר הוקם',toastP:'אתר קורסים חדש · '+o});
+  },true); },800,'בורדי כותב…');
+},900,'בורדי מתחיל…'); }
+function flowSchoolUpdate(){ setMascot('12.svg'); typeThen(()=>{
+  boardi(`בטח 🏫 מה לעדכן בבית הספר הקיים?`);
+  confirmCard({tag:'עדכון · בית ספר',title:'רענון מותג + עמוד "אודות"',meta:['🎨 עדכון צבעי מותג','📄 עמוד אודות חדש'],confirm:'אשר ועדכן אתר',done:'האתר עודכן',toastT:'האתר עודכן',toastP:'מותג ועמוד אודות עודכנו'});
+},900,'בורדי טוען…'); }
+
+const FLOWS={ analyze:flowAnalyze, build:flowBuild, layout:flowLayout, club:flowClub, deck:flowDeck, research:flowResearch,
+  handoff_builder:flowHandoffBuilder, program_build:flowProgramBuild, program_update:flowProgramUpdate,
+  club_manage:flowClubManage, school_build:flowSchoolBuild, school_update:flowSchoolUpdate };
+
+/* ===================================================================
+   FIX MODAL (edit layout / build preview)
+=================================================================== */
+function openFix(mode){
+  const src = mode==='build'
+    ? [{n:buildData.topic,les:lessonsFor(buildData.topic,buildData.count),idx:LAYOUT.length+1}]
+    : LAYOUT.map((c,i)=>({n:c.n,les:c.les,idx:i+1}));
+  document.getElementById('fixTitle').textContent = mode==='build'?'עריכת הפרק החדש':'עריכת הליי-אאוט';
+  document.getElementById('fixSub').textContent = 'ערוך שמות פרקים ושיעורים · בורדי יעדכן את ההצעה';
+  let body='';
+  src.forEach(c=>{
+    body+=`<div class="edit-row chap-r"><svg class="gr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg><span style="width:24px;height:24px;border-radius:7px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:Fredoka;font-weight:700;font-size:12px">${c.idx}</span><input value="${c.n}"></div>`;
+    c.les.forEach((l,j)=>{
+      body+=`<div class="edit-row" style="margin-right:22px"><svg class="gr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="m10 9 5 3-5 3z" fill="var(--cyan)" stroke="none"/></svg><input value="${l}"><span style="font-size:11px;color:var(--text-xs)">${c.idx}.${j+1}</span></div>`;
+    });
+    body+=`<button class="addbtn" style="margin-right:22px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> הוסף שיעור לפרק</button>`;
+  });
+  if(mode!=='build') body+=`<button class="addbtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> הוסף פרק חדש</button>`;
+  document.getElementById('fixBody').innerHTML=body;
+  document.getElementById('fixModal').classList.add('show');
+}
+function closeFix(){document.getElementById('fixModal').classList.remove('show')}
+document.getElementById('fixModal').addEventListener('click',e=>{if(e.target.id==='fixModal')closeFix()});
+
+/* ===================================================================
+   controls · composer · theme
+=================================================================== */
+document.getElementById('newtask').onclick=showPicker;
+document.getElementById('reset').onclick=()=>location.reload();
+document.getElementById('sendbtn').onclick=()=>{ if(inp.value.trim()){me(inp.value.trim());inp.value='';} };
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&inp.value.trim()){me(inp.value.trim());inp.value=''}});
+
+const root=document.documentElement,tb=document.getElementById('theme');
+tb.onclick=()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');
+  tb.querySelector('svg').innerHTML=d?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';};
+
+/* kick off: show the capability picker (user-driven, nothing auto-plays) */
+showPicker();
+</script>
+</body>
+</html>

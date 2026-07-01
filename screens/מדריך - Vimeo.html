@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מדריך הטמעה · Vimeo — WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green:#7DC57A;--green-bright:#22c55e;--yellow:#EAD654;--purple:#9B6BF2;--orange:#F5A65B;
+  --bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);
+  --r-sm:10px;--r-md:16px;--r-lg:18px;--shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);
+  --code-bg:#0f1b30;--code-text:#dbe7ff;
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.3);--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);--code-bg:#0a1120;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font-family:inherit}
+::-webkit-scrollbar{width:9px}::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
+.shell{display:flex;height:100vh}
+
+/* SIDEBAR */
+.side{width:220px;flex:0 0 220px;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:18px 14px}
+.logo{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0 14px}
+.logo .mk{width:46px;height:46px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center}
+.logo .mk svg{width:30px;height:30px}
+.logo .wm{font-family:'Fredoka';font-weight:700;font-size:15px;letter-spacing:.5px}
+.logo .wm small{display:block;font-size:8px;letter-spacing:3px;color:#ffffff88;text-align:center;font-family:'Heebo';font-weight:500}
+.nav-tag{font-size:10px;color:#ffffff55;letter-spacing:1px;margin:12px 10px 6px}
+.side nav a{display:flex;align-items:center;gap:11px;color:#dbe6ff;font-size:13.5px;padding:10px 12px;border-radius:9px;margin-bottom:2px;transition:.15s;text-decoration:none}
+.side nav a svg{width:17px;height:17px;flex:0 0 auto;opacity:.85}
+.side nav a:hover{background:#ffffff10}
+.side nav a.on{background:linear-gradient(90deg,#ffffff22,#ffffff10);color:#fff;font-weight:600}
+.side nav a.on svg{opacity:1;color:var(--cyan)}
+.side .spacer{flex:1}
+.prof{display:flex;align-items:center;gap:10px;padding:8px 6px;border-top:1px solid #ffffff1a}
+.prof .av{width:34px;height:34px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Fredoka'}
+.prof .nm{font-size:13px;font-weight:600}.prof .em{font-size:10.5px;color:#ffffff77}
+
+/* MAIN */
+.wrap{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{height:60px;flex:0 0 60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.top .crumb{display:flex;align-items:center;gap:10px}
+.top .back{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-sub)}
+.top h1{font-family:'Fredoka';font-size:18px;font-weight:600}
+.top h1 span{color:var(--text-xs);font-weight:400;font-size:14px}
+.iconbtn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.iconbtn:hover{color:var(--cyan);border-color:var(--cyan)}.iconbtn svg{width:17px;height:17px}
+
+.scroll{flex:1;overflow-y:auto;padding:24px clamp(18px,4vw,44px) 70px}
+.page{max-width:1160px;margin:0 auto}
+
+/* hero */
+.hero{background:linear-gradient(135deg,var(--navy),var(--navy-dark));color:#fff;border-radius:20px;padding:22px 26px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow);margin-bottom:16px}
+.hero .bmark{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--cyan),#7fdcff);color:var(--navy);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.hero .bmark img{width:38px;height:38px}
+.hero h2{font-family:'Fredoka';font-size:20px;font-weight:700;margin-bottom:4px}
+.hero p{font-size:13px;color:#cfe0ff;line-height:1.55;max-width:64ch}
+.hero .meta{margin-right:auto;display:flex;gap:18px;flex-wrap:wrap}
+.hero .meta .m{text-align:center}
+.hero .meta .m b{font-family:'Fredoka';font-size:19px;display:block}
+.hero .meta .m small{font-size:10.5px;color:#bcd0f5}
+
+.layout{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
+@media (max-width:960px){.layout{grid-template-columns:1fr}.panel{position:static!important}}
+
+/* steps */
+.steps{display:flex;flex-direction:column;gap:14px}
+.step{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow-sm);transition:.2s}
+.step.done{border-color:color-mix(in srgb,var(--green-bright) 32%,transparent)}
+.step .sh{display:flex;align-items:flex-start;gap:13px}
+.step .n{width:30px;height:30px;border-radius:9px;background:var(--navy);color:#fff;font-family:'Fredoka';font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-size:15px}
+.step.done .n{background:var(--green-bright)}
+.step .stt{font-family:'Fredoka';font-size:15.5px;font-weight:600}
+.step .sbody{font-size:13px;color:var(--text-sub);line-height:1.6;margin-top:3px}
+.step .sbody b{color:var(--text-main);font-weight:600}
+.step .hactions{margin-right:auto;display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.step .openlink{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--cyan);border:1px solid var(--border);border-radius:9px;padding:7px 11px;text-decoration:none;white-space:nowrap;transition:.15s}
+.step .openlink:hover{border-color:var(--cyan);background:color-mix(in srgb,var(--cyan) 9%,transparent)}
+.step .openlink svg{width:13px;height:13px}
+.step .chk{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--text-xs);cursor:pointer;white-space:nowrap;flex:0 0 auto}
+.step .chk .box{width:22px;height:22px;border-radius:7px;border:2px solid var(--border-strong);display:flex;align-items:center;justify-content:center;color:transparent;transition:.15s}
+.step.done .chk .box{background:var(--green-bright);border-color:var(--green-bright);color:#fff}
+.step .chk .box svg{width:13px;height:13px}
+.step .inner{margin:14px 0 2px;padding-right:43px}
+
+/* hover tip */
+.tip{border-bottom:1.5px dashed var(--cyan);cursor:help;position:relative;font-weight:600;color:var(--text-main)}
+.tip:hover::after{content:attr(data-tip);position:absolute;bottom:150%;right:-6px;background:var(--navy);color:#fff;padding:9px 12px;border-radius:10px;font-size:11.5px;font-weight:500;width:250px;line-height:1.5;z-index:40;box-shadow:var(--shadow);text-align:right;pointer-events:none}
+.tip:hover::before{content:"";position:absolute;bottom:138%;right:8px;border:6px solid transparent;border-top-color:var(--navy);z-index:40}
+
+/* mock screenshot */
+.shot{border:1px solid var(--border-strong);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);margin-top:6px;background:#fff;max-width:520px}
+[data-theme="dark"] .shot{background:#0f1830}
+.shot .bar{height:32px;background:linear-gradient(var(--surface-2),var(--surface-3));display:flex;align-items:center;gap:6px;padding:0 12px;border-bottom:1px solid var(--border)}
+.shot .dot{width:9px;height:9px;border-radius:50%}.shot .dot.r{background:#ff5f57}.shot .dot.y{background:#febc2e}.shot .dot.g{background:#28c840}
+.shot .url{margin-right:10px;flex:1;background:var(--surface);border:1px solid var(--border);border-radius:7px;font-size:10.5px;color:var(--text-sub);padding:3px 10px;font-family:ui-monospace,monospace;direction:ltr;text-align:left;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.shot .win{padding:14px 16px;background:var(--surface)}
+.shot .wtop{height:8px;width:120px;border-radius:4px;background:var(--pv,#00ADEF);margin-bottom:12px;opacity:.9}
+.shot .wtitle{font-size:12.5px;font-weight:700;margin-bottom:10px;color:var(--text-main)}
+.shot .wrow{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;font-size:11.5px;color:var(--text-sub);position:relative;background:var(--surface-2)}
+.shot .wrow .ic{width:16px;height:16px;border-radius:5px;background:var(--surface-3);flex:0 0 auto}
+.shot .wrow.hi{border-color:var(--cyan);box-shadow:0 0 0 3px color-mix(in srgb,var(--cyan) 26%,transparent);background:color-mix(in srgb,var(--cyan) 8%,var(--surface));color:var(--text-main);font-weight:600;animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px color-mix(in srgb,var(--cyan) 26%,transparent)}50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--cyan) 10%,transparent)}}
+.shot .wrow .ptr{position:absolute;left:11px;background:var(--cyan);color:#fff;font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:100px;font-family:'Fredoka'}
+.shot .wchk{display:flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid var(--border);border-radius:8px;margin-bottom:7px;font-size:11.5px;color:var(--text-sub);background:var(--surface-2)}
+.shot .wchk .bx{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border-strong);flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.shot .wchk.ck .bx{background:var(--cyan);border-color:var(--cyan);color:#fff}
+.shot .wchk.ck{color:var(--text-main);font-weight:600;border-color:color-mix(in srgb,var(--cyan) 40%,transparent)}
+.shot .wchk .bx svg{width:10px;height:10px}
+.shot .wbtn{display:inline-flex;align-items:center;gap:6px;background:var(--pv,#00ADEF);color:#fff;font-size:11px;font-weight:600;padding:6px 14px;border-radius:7px}
+
+/* copy code inline in step */
+.copyline{display:flex;align-items:center;gap:8px;margin-top:11px;max-width:520px}
+.copyline .cd{flex:1;background:var(--code-bg);color:var(--code-text);border-radius:9px;padding:9px 12px;font-family:ui-monospace,'SF Mono',monospace;font-size:11.5px;direction:ltr;text-align:left;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.copyline .cb{flex:0 0 auto;padding:9px 12px;border-radius:9px;background:var(--cyan);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;gap:6px}
+.copyline .cb svg{width:13px;height:13px}
+.copyline .cb:hover{filter:brightness(1.06)}
+
+/* right panel */
+.panel{position:sticky;top:8px;background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.panel .ph{padding:16px 18px;background:linear-gradient(135deg,var(--navy),var(--navy-dark));color:#fff}
+.panel .ph b{font-family:'Fredoka';font-size:15px;font-weight:600;display:block}
+.panel .ph small{font-size:11px;color:#bcd0f5}
+.panel .pbody{padding:16px 18px;max-height:calc(100vh - 210px);overflow-y:auto}
+.fld{margin-bottom:13px}
+.fld label{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.fld label .req{color:var(--pink)}
+.fld input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:9px 11px;font-size:12.5px;background:var(--surface-2);color:var(--text-main);direction:ltr;text-align:left}
+.fld input:focus{outline:none;border-color:var(--cyan);background:var(--surface)}
+.fld input::placeholder{color:var(--text-xs)}
+.gen-h{font-size:11px;font-weight:700;color:var(--text-xs);letter-spacing:.3px;margin:16px 0 9px;display:flex;align-items:center;gap:7px}
+.gen-h svg{width:14px;height:14px;color:var(--cyan)}
+.gen{background:var(--surface-2);border:1px solid var(--border);border-radius:11px;padding:11px 12px;margin-bottom:9px}
+.gen .gl{font-size:11px;font-weight:600;color:var(--text-sub);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.gen .gl .tip{font-weight:600}
+.gen .gv{display:flex;align-items:center;gap:7px}
+.gen .gv code{flex:1;background:var(--code-bg);color:var(--code-text);border-radius:7px;padding:7px 9px;font-family:ui-monospace,monospace;font-size:10.5px;direction:ltr;text-align:left;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.gen .gv button{flex:0 0 auto;width:32px;height:30px;border-radius:7px;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center}
+.gen .gv button svg{width:13px;height:13px}
+.gen .gv button:hover{filter:brightness(1.07)}
+.scopes{background:var(--surface-2);border:1px solid var(--border);border-radius:11px;padding:11px 12px;margin-bottom:9px}
+.scopes .sl{font-size:11px;font-weight:700;color:var(--text-xs);margin-bottom:8px}
+.scopes .sc{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:600;color:var(--text-main);padding:6px 0}
+.scopes .sc .b2{width:17px;height:17px;border-radius:5px;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.scopes .sc .b2 svg{width:11px;height:11px}
+.scopes .sc code{font-family:ui-monospace,monospace;font-size:11px;direction:ltr}
+.pverify{width:100%;padding:12px;border-radius:11px;background:var(--green-bright);color:#fff;font-weight:700;font-size:14px;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px}
+.pverify:hover{filter:brightness(1.05)}
+.pverify svg{width:16px;height:16px}
+.pnote{font-size:10.5px;color:var(--text-xs);margin-top:10px;line-height:1.5;display:flex;gap:6px}
+.pnote svg{width:13px;height:13px;flex:0 0 auto;color:var(--green-bright);margin-top:1px}
+
+.note{display:flex;gap:12px;align-items:flex-start;border-radius:14px;padding:14px 16px;margin:16px 0 2px;font-size:13px;line-height:1.55}
+.note.cy{background:color-mix(in srgb,var(--cyan) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--cyan) 38%,transparent)}
+.note.g{background:color-mix(in srgb,var(--green-bright) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--green-bright) 38%,transparent)}
+.note svg{flex:0 0 auto}.note b{font-weight:700}
+
+.finish{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px 20px;margin-top:16px;box-shadow:var(--shadow-sm)}
+.finish .fi{width:44px;height:44px;border-radius:12px;background:color-mix(in srgb,var(--green-bright) 14%,transparent);color:var(--green-bright);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.finish b{font-family:'Fredoka';font-size:15px}
+.finish p{font-size:12px;color:var(--text-sub);margin-top:2px}
+.finish a{margin-right:auto;padding:11px 18px;border-radius:11px;background:var(--cyan);color:#fff;font-weight:700;font-size:13.5px;text-decoration:none;white-space:nowrap}
+
+.toasts{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:10px;z-index:95}
+.toast{background:var(--surface);border:1px solid var(--border);border-right:4px solid var(--green-bright);border-radius:12px;padding:13px 16px;box-shadow:var(--shadow);display:flex;gap:11px;align-items:center;min-width:250px;animation:si .3s ease}
+@keyframes si{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+.toast .ti2{width:30px;height:30px;border-radius:8px;background:color-mix(in srgb,var(--green-bright) 15%,transparent);color:var(--green-bright);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.toast .tx b{font-size:13px}.toast .tx p{font-size:11px;color:var(--text-sub);margin:0}
+@media (max-width:760px){.side{display:none}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="logo">
+      <div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="#253E7A" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M8 20h8M12 18v2"/><circle cx="9.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><circle cx="14.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><path d="M9.5 13.5c1.5 1.2 3.5 1.2 5 0"/></svg></div>
+      <div class="wm">WHITEBOARD<small>LEARN · CREATE · GROW</small></div>
+    </div>
+    <span class="nav-tag">ניווט ראשי</span>
+    <nav>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> לוח בקרה</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg> בורדי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21V12h6v9"/></svg> מרכזי הידע שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> אנשי הקשר שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/></svg> ניוזלטרים</a>
+      <a href="#" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.2A1.6 1.6 0 0 0 7 19.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1-2.7H3a2 2 0 0 1 0-4h.2a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H10a1.6 1.6 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.2a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V10a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1z"/></svg> הגדרות</a>
+    </nav>
+    <div class="spacer"></div>
+    <div class="prof"><div class="av">א</div><div><div class="nm">אלון גבאי</div><div class="em">alon@…</div></div></div>
+  </aside>
+
+  <div class="wrap">
+    <div class="top">
+      <div class="crumb">
+        <div class="back"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        <h1>מדריך הטמעה <span>· Vimeo</span></h1>
+      </div>
+      <button class="iconbtn" id="theme" title="מצב תצוגה"><svg id="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+    </div>
+
+    <div class="scroll">
+      <div class="page">
+        <div class="hero">
+          <div class="bmark"><img src="../BOARDi/SVG/12.svg" alt="בורדי" onerror="this.style.display='none';this.parentNode.textContent='🎬'"></div>
+          <div>
+            <h2>מייבאים את הסרטונים הקיימים שלך מ-Vimeo</h2>
+            <p>יש לך כבר ספריית סרטונים ב-Vimeo? חיבור חד-פעמי מאפשר ל-WHITEBOARD למשוך אותם ישירות לתוך הקורסים — בלי להעלות שוב. המדריך מפרק כל שלב עם צילום מסך, ואתה רק מעתיק ומדביק את הטוקן.</p>
+          </div>
+          <div class="meta">
+            <div class="m"><b>~5 דק׳</b><small>הגדרה חד-פעמית</small></div>
+            <div class="m"><b>0</b><small>שורות קוד לכתוב</small></div>
+          </div>
+        </div>
+
+        <div class="note cy">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div>מנוע הווידאו הראשי של WHITEBOARD הוא <b>Bunny Stream</b> — כל סרטון חדש שתעלה נשמר ומוגש דרכו אוטומטית. חיבור <b>Vimeo הוא אופציונלי</b> ומיועד רק כדי לייבא תוכן קיים שכבר יש לך ב-Vimeo. אם אתה מתחיל מאפס, אפשר לדלג על המדריך הזה.</div>
+        </div>
+
+        <div class="layout">
+          <div class="steps" id="steps"></div>
+
+          <div class="panel">
+            <div class="ph"><b id="panTitle">פרטי החיבור שלך</b><small id="panSub">הדבק את הטוקן — נשמר מוצפן</small></div>
+            <div class="pbody" id="panBody"></div>
+          </div>
+        </div>
+
+        <div class="finish">
+          <div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div>
+            <b>סיימת את ההגדרה?</b>
+            <p>עכשיו אפשר לבחור אילו סרטונים לייבא מ-Vimeo אל תוך הקורסים שלך.</p>
+          </div>
+          <a href="#" onclick="toast('פותח את מסך הייבוא','בחר אילו סרטונים למשוך מ-Vimeo');return false;">למסך הייבוא ←</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+function hex(n){const a=new Uint8Array(n);(crypto&&crypto.getRandomValues)?crypto.getRandomValues(a):a.forEach((_,i)=>a[i]=(i*73+29)%256);return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,n);}
+const GEN={
+  appName:'WHITEBOARD Import',
+  fields:{appName:'',appDesc:'',token:''},
+  get demoToken(){return this._t||(this._t='vim_'+hex(40));}
+};
+
+const ICN={
+  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+  ext:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5z"/></svg>',
+  chk:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>'
+};
+function wrow(txt,hi){return `<div class="wrow ${hi?'hi':''}"><span class="ic"></span>${txt}${hi?'<span class="ptr">כאן</span>':''}</div>`;}
+function wchk(txt,ck){return `<div class="wchk ${ck?'ck':''}"><span class="bx">${ck?ICN.chk:''}</span>${txt}</div>`;}
+function shot(url,title,pv,rows){return `<div class="shot"><div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><div class="url">${url}</div></div><div class="win" style="--pv:${pv}"><div class="wtitle">${title}</div>${rows}</div></div>`;}
+function copyline(getter){return `<div class="copyline"><div class="cd" data-code="${getter}"></div><button class="cb" data-copy="${getter}">${ICN.copy} העתק</button></div>`;}
+
+const VPV='#00ADEF';
+const STEPS=[
+  {t:'צור אפליקציה ב-Vimeo Developer',
+    b:`היכנס ל-<b>developer.vimeo.com</b> ← <b>My Apps</b> ← <b>Create App</b>. זו <span class="tip" data-tip="אפליקציית מפתחים שדרכה WHITEBOARD מקבל גישה לקרוא את הסרטונים שלך. נוצרת פעם אחת ונשארת בחשבון שלך.">אפליקציית המפתחים</span> שדרכה WHITEBOARD יקרא את הסרטונים — נוצרת פעם אחת.`,
+    mock:shot('developer.vimeo.com/apps','My Apps',VPV,wrow('My Apps',0)+wrow('Create App',1)+wrow('Documentation',0))},
+  {t:'מלא שם ותיאור לאפליקציה',
+    b:`הזן <b>App name</b> (למשל "WHITEBOARD Import") ו-<b>App description</b> קצר, אשר את התנאים ולחץ <b>Create</b>. השם הוא לזיהוי פנימי בלבד ואפשר לכתוב מה שנוח לך.`,
+    mock:shot('developer.vimeo.com/apps/new','Create a new app',VPV,wrow('App name · WHITEBOARD Import',1)+wrow('App description · ייבוא סרטונים',1)+wrow('Create',0))},
+  {t:'צור Access Token עם ההרשאות הנכונות',
+    b:`בעמוד האפליקציה ← לשונית <b>Authentication</b> ← מקטע <b>Generate an Access Token</b> ← בחר <span class="tip" data-tip="ההרשאות קובעות מה הטוקן מורשה לעשות. אלה מספיקות כדי לראות את הסרטונים שלך ולמשוך את קובצי הווידאו — בלי הרשאת עריכה או מחיקה.">Scopes</span> את שלושת אלה בלבד: <code style="direction:ltr;font-family:ui-monospace,monospace;background:var(--surface-3);padding:1px 5px;border-radius:5px">public private video_files</code>, ולחץ <b>Generate</b>.`,
+    mock:shot('developer.vimeo.com/apps/•/authentication','Generate an Access Token',VPV,wchk('public',1)+wchk('private',1)+wchk('video_files',1)+wchk('edit',0)+wchk('delete',0))},
+  {t:'העתק את ה-Access Token',
+    b:`הטוקן מוצג <b>פעם אחת בלבד</b> מיד אחרי היצירה. העתק אותו עכשיו — זהו ה<span class="tip" data-tip="מפתח סודי שמעניק גישה לחשבון ה-Vimeo שלך. אל תשתף אותו ואל תשלח בצ׳אט. מדביקים אותו רק כאן, והוא נשמר מוצפן.">מפתח הסודי</span> שתדביק ב-WHITEBOARD. אם איבדת אותו, פשוט צור טוקן חדש.`,
+    code:'demoToken',
+    mock:shot('developer.vimeo.com/apps/•/authentication','Your new Access Token',VPV,wrow('Access Token · vim_••••••••',1)+wrow('Copy',1)+wrow('This token is shown once',0))},
+  {t:'הדבק את הטוקן ב-WHITEBOARD ושמור',
+    b:`חזור ל-WHITEBOARD ← <b>הגדרות ← אינטגרציות ← Vimeo</b> ← הדבק את ה-Access Token בשדה, ולחץ <b>שמור</b>. WHITEBOARD יאמת את החיבור ותוכל להתחיל לייבא סרטונים.`,
+    mock:shot('app.whiteboard.education/settings/integrations','WHITEBOARD · אינטגרציות','#38C4F2',wrow('Vimeo · Access Token',1)+wrow('שמור',0)+wrow('Bunny Stream · מחובר',0))}
+];
+
+const LINKS=[
+  'https://developer.vimeo.com/apps',
+  'https://developer.vimeo.com/apps/new',
+  'https://developer.vimeo.com/apps',
+  'https://developer.vimeo.com/apps',
+  '#'
+];
+const LINKLBL=['developer.vimeo.com','developer.vimeo.com','developer.vimeo.com','developer.vimeo.com','WHITEBOARD'];
+const done=new Set();
+
+function renderSteps(){
+  document.getElementById('steps').innerHTML=STEPS.map((s,i)=>{
+    const isDone=done.has(i);
+    let inner='';
+    if(s.mock) inner+=s.mock;
+    if(s.code) inner+=copyline(s.code);
+    const linkHtml = LINKS[i]==='#'
+      ? ''
+      : `<a class="openlink" href="${LINKS[i]}" target="_blank" rel="noopener" title="${LINKLBL[i]}">${ICN.ext} פתח בחלון חדש</a>`;
+    return `<div class="step ${isDone?'done':''}">
+      <div class="sh">
+        <div class="n">${isDone?ICN.chk:(i+1)}</div>
+        <div style="flex:1"><div class="stt">${s.t}</div><div class="sbody">${s.b}</div></div>
+        <div class="hactions">
+          ${linkHtml}
+          <div class="chk" onclick="toggleDone(${i})"><span class="box">${ICN.chk}</span>בוצע</div>
+        </div>
+      </div>
+      ${inner?`<div class="inner">${inner}</div>`:''}
+    </div>`;
+  }).join('');
+  fillCodes();
+}
+function panel(){
+  document.getElementById('panBody').innerHTML=`
+    <div class="fld"><label>App name <span style="color:var(--text-xs);font-weight:500">(רשות)</span></label><input id="f_appName" value="${GEN.fields.appName}" placeholder="WHITEBOARD Import"></div>
+    <div class="scopes">
+      <div class="sl">SCOPES לבחירה בזמן יצירת הטוקן</div>
+      <div class="sc"><span class="b2">${ICN.chk}</span><code>public</code></div>
+      <div class="sc"><span class="b2">${ICN.chk}</span><code>private</code></div>
+      <div class="sc"><span class="b2">${ICN.chk}</span><code>video_files</code></div>
+    </div>
+    <div class="gen-h">${ICN.bolt} Access Token לדוגמה</div>
+    ${genBlock('Access Token','demoToken','המפתח שמדביקים ב-WHITEBOARD → הגדרות → אינטגרציות → Vimeo')}
+    <div class="fld" style="margin-top:13px"><label>הדבק כאן את הטוקן שלך <span class="req">*</span></label><input id="f_token" type="password" value="${GEN.fields.token}" placeholder="vim_••••••••••••"></div>
+    <button class="pverify" onclick="verify()">${ICN.shield} בדוק ושמור חיבור</button>
+    <div class="pnote">${ICN.chk}<span>הטוקן נשמר <b>מוצפן</b> בצד השרת. WHITEBOARD אף פעם לא מבקש להדביק אותו בצ׳אט — רק כאן, בהגדרות.</span></div>`;
+  bindFields();
+  fillCodes();
+}
+function genBlock(label,getter,tip){
+  return `<div class="gen"><div class="gl"><span class="tip" data-tip="${tip}">${label}</span></div><div class="gv"><code data-code="${getter}"></code><button data-copy="${getter}">${ICN.copy}</button></div></div>`;
+}
+function codeValue(k){return GEN[k];}
+function fillCodes(){
+  document.querySelectorAll('[data-code]').forEach(el=>{el.textContent=codeValue(el.getAttribute('data-code'));});
+  document.querySelectorAll('[data-copy]').forEach(b=>{b.onclick=()=>{copy(codeValue(b.getAttribute('data-copy')));};});
+}
+function bindFields(){
+  const a=document.getElementById('f_appName');if(a)a.oninput=e=>GEN.fields.appName=e.target.value;
+  const t=document.getElementById('f_token');if(t)t.oninput=e=>GEN.fields.token=e.target.value;
+}
+function toggleDone(i){done.has(i)?done.delete(i):done.add(i);renderSteps();}
+function verify(){
+  const el=document.getElementById('f_token');
+  if(!(el&&el.value.trim())){toast('חסר טוקן','הדבק את ה-Access Token שיצרת ב-Vimeo',true);return;}
+  toast('נשמר ✓ Vimeo מחובר','החיבור אומת. אפשר לייבא סרטונים לתוך הקורסים.');
+}
+function copy(txt){
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).catch(()=>{});}
+  toast('הועתק ✓', txt.length>42?txt.slice(0,42)+'…':txt);
+}
+function toast(t,p,warn){
+  const el=document.createElement('div');el.className='toast';
+  if(warn)el.style.borderRightColor='var(--pink)';
+  el.innerHTML=`<div class="ti2" ${warn?'style="background:color-mix(in srgb,var(--pink) 15%,transparent);color:var(--pink)"':''}>${ICN.chk}</div><div class="tx"><b>${t}</b><p>${p}</p></div>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>{el.style.opacity=0;el.style.transform='translateX(-30px)';el.style.transition='.3s';setTimeout(()=>el.remove(),300);},3800);
+}
+
+renderSteps();panel();
+
+const root=document.documentElement,tb=document.getElementById('theme');
+tb.onclick=()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');
+  tb.querySelector('svg').innerHTML=d?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';};
+</script>
+</body>
+</html>

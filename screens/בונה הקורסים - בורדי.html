@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בורדי · בונה הקורסים — WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green:#7DC57A;--green-bright:#22c55e;--yellow:#EAD654;--purple:#9B6BF2;
+  --bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);
+  --r-xs:6px;--r-sm:10px;--r-md:16px;--r-lg:18px;
+  --shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.3);--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
+
+.shell{display:flex;height:100vh}
+
+/* ===== SIDEBAR (BOARDi hub) ===== */
+.side{width:220px;flex:0 0 220px;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:18px 14px}
+.logo{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0 14px}
+.logo .mk{width:46px;height:46px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center}
+.logo .mk svg{width:30px;height:30px}
+.logo .wm{font-family:'Fredoka';font-weight:700;font-size:15px;letter-spacing:.5px}
+.logo .wm small{display:block;font-size:8px;letter-spacing:3px;color:#ffffff88;text-align:center;font-family:'Heebo';font-weight:500}
+.nav-tag{font-size:10px;color:#ffffff55;letter-spacing:1px;margin:12px 10px 6px}
+.side nav a{display:flex;align-items:center;gap:11px;color:#dbe6ff;font-size:13.5px;padding:10px 12px;border-radius:9px;margin-bottom:2px;transition:.15s}
+.side nav a svg{width:17px;height:17px;flex:0 0 auto;opacity:.85}
+.side nav a:hover{background:#ffffff10}
+.side nav a.on{background:linear-gradient(90deg,#ffffff22,#ffffff10);color:#fff;font-weight:600}
+.side nav a.on svg{opacity:1;color:var(--cyan)}
+.side .spacer{flex:1}
+.mode-tog{display:flex;background:#ffffff14;border-radius:10px;padding:3px;margin:4px 4px 12px}
+.mode-tog button{flex:1;font-size:12px;padding:7px;border-radius:8px;color:#cdd9f5;display:flex;align-items:center;justify-content:center;gap:5px}
+.mode-tog button.on{background:#fff;color:var(--navy);font-weight:700}
+.mode-tog button svg{width:14px;height:14px}
+.prof{display:flex;align-items:center;gap:10px;padding:8px 6px;border-top:1px solid #ffffff1a}
+.prof .av{width:34px;height:34px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Fredoka'}
+.prof .nm{font-size:13px;font-weight:600}.prof .em{font-size:10.5px;color:#ffffff77}
+
+/* ===== TOPBAR ===== */
+.wrap{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{height:60px;flex:0 0 60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.top .crumb{display:flex;align-items:center;gap:10px}
+.top .back{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-sub)}
+.top h1{font-family:'Fredoka';font-size:18px;font-weight:600}
+.top h1 span{color:var(--text-xs);font-weight:400;font-size:14px}
+.top .acts{display:flex;gap:8px}
+.iconbtn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.iconbtn:hover{color:var(--cyan);border-color:var(--cyan)}
+.iconbtn svg{width:17px;height:17px}
+
+/* ===== BODY: chat + certainty rail ===== */
+.body{flex:1;display:flex;min-height:0}
+.chat{flex:1;display:flex;flex-direction:column;min-width:0}
+.stream{flex:1;overflow-y:auto;padding:26px clamp(18px,4vw,54px);display:flex;flex-direction:column;gap:16px}
+.stream .day{align-self:center;font-size:11px;color:var(--text-xs);background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:100px}
+
+/* message rows — בורדי on the RIGHT, מרצה on the LEFT */
+.row{display:flex;gap:12px;max-width:720px;align-items:flex-end;align-self:flex-start;animation:pop .35s ease}
+.row.me{align-self:flex-end;flex-direction:row-reverse}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* BOARDi avatar — large, no background, mascot reflects understanding level */
+.av-b{width:56px;height:56px;flex:0 0 auto;display:flex;align-items:flex-end;justify-content:center;transition:.4s}
+.av-b img{width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 5px 12px rgba(37,62,122,.20))}
+.av-me{width:38px;height:38px;flex:0 0 auto;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;box-shadow:var(--shadow-sm);align-self:flex-end;margin-bottom:2px}
+.bub{background:var(--surface);border:1px solid var(--border);border-radius:16px 4px 16px 16px;padding:13px 16px;font-size:14.5px;line-height:1.6;box-shadow:var(--shadow-sm);color:var(--text-main)}
+.row.me .bub{background:var(--navy);color:#eaf1ff;border-radius:4px 16px 16px 16px;border-color:transparent}
+.bub .who{font-size:11px;color:var(--cyan);font-weight:700;margin-bottom:4px;font-family:'Fredoka'}
+.bub b{color:inherit;font-weight:700}
+.time{font-size:10px;color:var(--text-xs);margin-top:6px}
+
+/* typing */
+.typing{display:flex;gap:5px;align-items:center;padding:15px 18px}
+.typing i{width:8px;height:8px;border-radius:50%;background:var(--cyan);animation:bounce 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
+.typing-lbl{font-size:11px;color:var(--text-xs);margin-right:2px}
+
+/* MC question card */
+.mc{margin-top:4px}
+.mc .q{font-size:14.5px;font-weight:600;margin-bottom:11px}
+.mc .opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.mc.single .opts{grid-template-columns:1fr}
+.opt{text-align:right;background:var(--surface-2);border:1.5px solid var(--border);border-radius:12px;padding:13px 15px;font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;transition:.15s}
+.opt:hover{border-color:var(--cyan);background:color-mix(in srgb,var(--cyan) 8%,var(--surface));transform:translateY(-1px)}
+.opt .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--border-strong);flex:0 0 auto}
+.opt.pick{border-color:var(--green-bright);background:color-mix(in srgb,var(--green-bright) 10%,var(--surface));pointer-events:none}
+.opt.pick .dot{border-color:var(--green-bright);background:var(--green-bright);position:relative}
+.opt.pick .dot::after{content:"";position:absolute;inset:3px 5px;border-left:2px solid #fff;border-bottom:2px solid #fff;width:6px;height:9px;transform:rotate(-45deg) translate(1px,-1px)}
+.opt.dim{opacity:.4}
+
+/* loading card */
+.loadc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;max-width:340px}
+.loadc .m{width:74px;height:74px;animation:float 2.4s ease-in-out infinite}
+.loadc .vid{width:180px;height:auto;border-radius:14px;box-shadow:var(--shadow-sm);background:#0c1422}
+@keyframes float{50%{transform:translateY(-8px)}}
+.loadc .st{font-size:14px;font-weight:600;min-height:20px}
+.loadc .bar{width:100%;height:7px;background:var(--surface-3);border-radius:10px;overflow:hidden}
+.loadc .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green-bright));border-radius:10px;transition:width .8s ease}
+.loadc .sub{font-size:11.5px;color:var(--text-xs)}
+
+/* generated image (cover) */
+.imgc{max-width:520px}
+.imgc .tagr{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--purple);font-weight:700;margin-bottom:8px}
+.cover{aspect-ratio:16/9;border-radius:16px;overflow:hidden;position:relative;box-shadow:var(--shadow);background:linear-gradient(135deg,#253E7A,#3a2a6e 55%,#0e2a4a);border:1px solid var(--border)}
+.cover .blob{position:absolute;border-radius:50%;filter:blur(2px);opacity:.85}
+.cover .b1{width:180px;height:180px;background:radial-gradient(circle,#38C4F2,transparent 70%);top:-40px;left:-30px}
+.cover .b2{width:150px;height:150px;background:radial-gradient(circle,#F05680,transparent 70%);bottom:-40px;right:20px;opacity:.7}
+.cover .grid{position:absolute;inset:0;background-image:linear-gradient(#ffffff10 1px,transparent 1px),linear-gradient(90deg,#ffffff10 1px,transparent 1px);background-size:34px 34px;mask:radial-gradient(circle at 70% 40%,#000,transparent 75%)}
+.cover .ct{position:absolute;inset:0;padding:26px 30px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;text-align:right}
+.cover .kick{font-size:12px;letter-spacing:2px;color:#bfe7ff;font-weight:600;margin-bottom:6px}
+.cover .tt{font-family:'Fredoka';font-weight:700;font-size:34px;line-height:1.05;text-shadow:0 4px 20px rgba(0,0,0,.35)}
+.cover .tt em{color:var(--cyan);font-style:normal}
+.cover .wbm{position:absolute;top:22px;right:30px;font-family:'Fredoka';font-weight:700;font-size:13px;color:#fff;opacity:.9;letter-spacing:1px}
+.cover .badge{position:absolute;top:22px;left:22px;background:#ffffff20;backdrop-filter:blur(6px);border:1px solid #ffffff30;border-radius:100px;padding:5px 12px;font-size:11px;color:#fff;display:flex;gap:6px;align-items:center}
+.imgc .imgacts{display:flex;gap:8px;margin-top:10px}
+.chipbtn{font-size:12px;font-weight:600;padding:8px 13px;border-radius:9px;border:1px solid var(--border);color:var(--text-sub);display:flex;gap:6px;align-items:center}
+.chipbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.chipbtn svg{width:14px;height:14px}
+
+/* layout artifact card */
+.lay{max-width:600px;background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.lay .lh{padding:18px 20px;background:linear-gradient(135deg,var(--surface-2),var(--surface));border-bottom:1px solid var(--border)}
+.lay .lh .tagr{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--purple);font-weight:700;margin-bottom:9px}
+.lay .lh h3{font-family:'Fredoka';font-size:21px;font-weight:700;margin-bottom:8px}
+.lay .lh .meta{display:flex;gap:8px;flex-wrap:wrap}
+.lay .lh .meta span{font-size:11.5px;background:var(--surface-3);color:var(--text-sub);padding:4px 11px;border-radius:100px;font-weight:600;display:flex;gap:5px;align-items:center}
+.lay .lb{padding:8px 12px 12px;max-height:290px;overflow-y:auto}
+.chap{border:1px solid var(--border);border-radius:12px;margin:8px 4px;overflow:hidden;background:var(--surface)}
+.chap .ch{display:flex;align-items:center;gap:11px;padding:12px 14px;cursor:pointer}
+.chap .ch .idx{width:26px;height:26px;border-radius:8px;background:var(--navy);color:#fff;font-family:'Fredoka';font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.chap .ch .nm{flex:1;font-weight:600;font-size:14px}
+.chap .ch .cnt{font-size:11px;color:var(--text-xs)}
+.chap .ch .chev{width:16px;height:16px;color:var(--text-sub);transition:.2s}
+.chap.open .ch .chev{transform:rotate(180deg)}
+.chap .les{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.chap.open .les{max-height:340px}
+.les .l{display:flex;align-items:center;gap:10px;padding:9px 14px 9px 16px;border-top:1px dashed var(--border);font-size:13px;color:var(--text-sub)}
+.les .l .pl{width:16px;height:16px;color:var(--cyan);flex:0 0 auto}
+.les .l .n{color:var(--text-main)}
+.lay .lf{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center}
+.btn{padding:11px 18px;border-radius:11px;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+.btn svg{width:16px;height:16px}
+.btn-g{background:var(--green-bright);color:#fff;box-shadow:0 8px 20px -8px var(--green-bright)}
+.btn-g:hover{filter:brightness(1.05)}
+.btn-o{border:1px solid var(--border);color:var(--text-sub)}.btn-o:hover{border-color:var(--navy);color:var(--navy)}
+.lf .grow{flex:1}
+
+/* handoff */
+.handoff{max-width:520px;background:linear-gradient(135deg,color-mix(in srgb,var(--purple) 14%,var(--surface)),var(--surface));border:1px solid color-mix(in srgb,var(--purple) 35%,transparent);border-radius:16px;padding:16px 18px;display:flex;gap:13px;align-items:center}
+.handoff .hi{width:42px;height:42px;border-radius:11px;background:color-mix(in srgb,var(--purple) 20%,transparent);color:var(--purple);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.handoff .ht{flex:1}.handoff .ht b{font-size:14px}.handoff .ht p{font-size:12.5px;margin:2px 0 0}
+.handoff .hb{background:var(--purple);color:#fff;font-size:12.5px;font-weight:700;padding:9px 14px;border-radius:10px;white-space:nowrap}
+
+/* composer */
+.composer{flex:0 0 auto;padding:14px clamp(18px,4vw,54px) 18px;border-top:1px solid var(--border);background:var(--surface)}
+.cbox{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:14px;padding:7px 8px 7px 16px}
+.cbox:focus-within{border-color:var(--cyan)}
+.cbox input{flex:1;background:none;border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text-main)}
+.cbox input::placeholder{color:var(--text-xs)}
+.cbox .snd{width:40px;height:40px;border-radius:11px;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.cbox .snd svg{width:18px;height:18px}
+.cbox .attach{color:var(--text-xs);display:flex;align-items:center;justify-content:center;width:32px;height:32px}
+
+/* ===== CERTAINTY RAIL ===== */
+.rail{width:320px;flex:0 0 320px;border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;padding:22px 20px;overflow-y:auto}
+.rail h2{font-family:'Fredoka';font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.rail h2 svg{width:17px;height:17px;color:var(--cyan)}
+.rail .desc{font-size:11.5px;color:var(--text-xs);line-height:1.5;margin-bottom:16px}
+.gauge{background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:18px;text-align:center;margin-bottom:14px}
+.gauge .big{font-family:'Fredoka';font-weight:700;font-size:46px;line-height:1;font-variant-numeric:tabular-nums;transition:color .5s}
+.gauge .lvl{font-size:12.5px;font-weight:700;margin-top:4px;transition:color .5s}
+.chart{margin-top:14px;direction:ltr}
+.chart svg{width:100%;height:96px;overflow:visible}
+.gridln{stroke:var(--border);stroke-width:1}
+.area{transition:fill .6s}
+.line{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;transition:stroke .6s;stroke-dasharray:1000;stroke-dashoffset:0}
+.pt{transition:.4s}
+.dims{margin-top:4px}
+.dims .dt{font-size:11px;color:var(--text-xs);letter-spacing:.5px;margin:6px 2px 9px}
+.dim{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:11px;border:1px solid var(--border);margin-bottom:8px;background:var(--surface);transition:.35s}
+.dim .ck{width:22px;height:22px;border-radius:7px;border:2px solid var(--border-strong);flex:0 0 auto;display:flex;align-items:center;justify-content:center;transition:.35s}
+.dim .ck svg{width:12px;height:12px;color:#fff;opacity:0;transition:.3s}
+.dim .info{flex:1}
+.dim .info .k{font-size:13px;font-weight:600}
+.dim .info .v{font-size:11px;color:var(--text-xs);transition:.3s}
+.dim.done{border-color:color-mix(in srgb,var(--green-bright) 45%,transparent);background:color-mix(in srgb,var(--green-bright) 7%,var(--surface))}
+.dim.done .ck{background:var(--green-bright);border-color:var(--green-bright)}
+.dim.done .ck svg{opacity:1}
+.dim.done .info .v{color:var(--green-bright);font-weight:600}
+.dim.active{border-color:var(--cyan);box-shadow:0 0 0 3px color-mix(in srgb,var(--cyan) 14%,transparent)}
+.railnote{margin-top:auto;font-size:11px;color:var(--text-xs);background:var(--surface-2);border:1px dashed var(--border-strong);border-radius:11px;padding:11px 13px;line-height:1.5}
+
+/* ===== demo controller ===== */
+.ctrl{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;background:var(--navy);color:#fff;border-radius:100px;padding:8px 10px 8px 18px;box-shadow:var(--shadow);z-index:60}
+.ctrl .lbl{font-size:12px;font-weight:600}
+.ctrl button{background:#ffffff1a;border-radius:100px;padding:8px 15px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px}
+.ctrl button.play{background:var(--cyan);color:var(--navy)}
+.ctrl button:hover{filter:brightness(1.08)}
+.ctrl button svg{width:15px;height:15px}
+.ctrl .rst{background:transparent;padding:8px}
+
+/* toast */
+.toasts{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:10px;z-index:80}
+.toast{background:var(--surface);border:1px solid var(--border);border-right:4px solid var(--green-bright);border-radius:12px;padding:13px 16px;box-shadow:var(--shadow);display:flex;gap:11px;align-items:center;min-width:260px;animation:slidein .3s ease}
+@keyframes slidein{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+.toast .ti{width:30px;height:30px;border-radius:8px;background:color-mix(in srgb,var(--green-bright) 15%,transparent);color:var(--green-bright);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.toast .tx b{font-size:13.5px}.toast .tx p{font-size:11.5px;color:var(--text-sub);margin:0}
+
+/* fix modal (edit layout) */
+.modal-bg{position:fixed;inset:0;background:rgba(12,20,34,.55);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);display:flex;align-items:center;justify-content:center;padding:30px;z-index:90;opacity:0;pointer-events:none;transition:.28s}
+.modal-bg.show{opacity:1;pointer-events:all}
+.modal{width:min(620px,100%);max-height:88vh;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:0 40px 90px -30px rgba(0,0,0,.55);display:flex;flex-direction:column;transform:translateY(14px) scale(.98);transition:.28s;overflow:hidden}
+.modal-bg.show .modal{transform:none}
+.modal .mh{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.modal .mh .mi{width:40px;height:40px;border-radius:11px;background:color-mix(in srgb,var(--cyan) 15%,transparent);color:var(--cyan);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.modal .mh h3{font-family:'Fredoka';font-size:18px;font-weight:600;flex:1}
+.modal .mh p{font-size:12px;color:var(--text-xs);margin:2px 0 0}
+.modal .mx{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.modal .mx:hover{border-color:var(--pink);color:var(--pink)}
+.modal .mb{padding:10px 14px;overflow-y:auto}
+.modal .mf{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-start}
+.edit-row{display:flex;align-items:center;gap:9px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;margin:6px 4px;background:var(--surface-2)}
+.edit-row input{flex:1;background:none;border:none;outline:none;font-family:inherit;font-size:13.5px;color:var(--text-main)}
+.edit-row .gr{width:16px;height:16px;color:var(--text-xs);cursor:grab}
+.edit-row.chap-r{background:color-mix(in srgb,var(--navy) 8%,var(--surface));border-color:var(--border-strong);font-weight:700}
+.edit-row.chap-r input{font-weight:700}
+.addbtn{width:100%;border:1.5px dashed var(--border-strong);border-radius:10px;padding:9px;font-size:12.5px;font-weight:600;color:var(--text-sub);margin:6px 4px;display:flex;align-items:center;justify-content:center;gap:7px}
+.addbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+
+@media (max-width:1100px){.rail{display:none}}
+@media (max-width:760px){.side{display:none}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <div class="logo">
+      <div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="#253E7A" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M8 20h8M12 18v2"/><circle cx="9.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><circle cx="14.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><path d="M9.5 13.5c1.5 1.2 3.5 1.2 5 0"/></svg></div>
+      <div class="wm">WHITEBOARD<small>LEARN · CREATE · GROW</small></div>
+    </div>
+    <span class="nav-tag">ניווט ראשי</span>
+    <nav>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> לוח בקרה</a>
+      <a href="#" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg> בורדי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21V12h6v9"/></svg> מרכזי הידע שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg> אנשי הקשר שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/></svg> ניוזלטרים</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> הספרייה שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.2A1.6 1.6 0 0 0 7 19.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1-2.7H3a2 2 0 0 1 0-4h.2a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H10a1.6 1.6 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.2a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V10a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1z"/></svg> הגדרות</a>
+    </nav>
+    <div class="spacer"></div>
+    <div class="mode-tog">
+      <button class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M6 12v5c3 3 9 3 12 0v-5"/><path d="M2 10l10-5 10 5-10 5z"/></svg> מורה</button>
+      <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> תלמיד</button>
+    </div>
+    <div class="prof"><div class="av">א</div><div><div class="nm">אלון גבאי</div><div class="em">alon@…</div></div></div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="wrap">
+    <div class="top">
+      <div class="crumb">
+        <div class="back"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        <h1>בונה הקורסים <span>· בורדי</span></h1>
+      </div>
+      <div class="acts">
+        <button class="iconbtn" title="שיחות אחרונות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+        <button class="iconbtn" id="theme" title="מצב תצוגה"><svg id="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+        <button class="iconbtn" title="שפה">🇮🇱</button>
+      </div>
+    </div>
+
+    <div class="body">
+      <!-- CHAT -->
+      <div class="chat">
+        <div class="stream" id="stream">
+          <div class="day">היום · 14:32</div>
+        </div>
+        <div class="composer">
+          <div class="cbox">
+            <input id="inp" placeholder="כתוב לבורדי…" />
+            <button class="attach"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.4 11.05 12.25 20.2a5 5 0 0 1-7.07-7.07l9.19-9.19a3 3 0 0 1 4.24 4.24l-9.2 9.19a1 1 0 0 1-1.41-1.41l8.48-8.49"/></svg></button>
+            <button class="snd" id="sendbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CERTAINTY RAIL -->
+      <aside class="rail">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg> רמת הבנת הקורס</h2>
+        <p class="desc">ככל שבורדי מבין טוב יותר את הקורס והמטרות שלו — הוודאות עולה והופכת ירוקה. בהבנה מלאה הוא בונה את הליי-אאוט.</p>
+
+        <div class="gauge">
+          <div class="big" id="pct" style="color:var(--pink)">8%</div>
+          <div class="lvl" id="lvl" style="color:var(--pink)">מתחיל להכיר את הקורס…</div>
+          <div class="chart">
+            <svg viewBox="0 0 260 96" preserveAspectRatio="none">
+              <line class="gridln" x1="0" y1="24" x2="260" y2="24"/>
+              <line class="gridln" x1="0" y1="60" x2="260" y2="60"/>
+              <defs>
+                <linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
+                  <stop id="ag0" offset="0%" stop-color="#F05680" stop-opacity="0.35"/>
+                  <stop id="ag1" offset="100%" stop-color="#F05680" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path class="area" id="area" d="" fill="url(#ag)"/>
+              <path class="line" id="line" d="" stroke="#F05680"/>
+              <circle class="pt" id="pt" r="4.5" fill="#fff" stroke="#F05680" stroke-width="3" cx="6" cy="90"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="dims">
+          <div class="dt">מה בורדי כבר הבין</div>
+          <div class="dim" data-k="domain"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="info"><div class="k">תחום הקורס</div><div class="v">ממתין…</div></div></div>
+          <div class="dim" data-k="audience"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="info"><div class="k">קהל יעד</div><div class="v">ממתין…</div></div></div>
+          <div class="dim" data-k="goal"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="info"><div class="k">מטרת הבוגר</div><div class="v">ממתין…</div></div></div>
+          <div class="dim" data-k="scope"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="info"><div class="k">היקף ותכולה</div><div class="v">ממתין…</div></div></div>
+          <div class="dim" data-k="style"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="info"><div class="k">סגנון למידה</div><div class="v">ממתין…</div></div></div>
+        </div>
+
+        <div class="railnote">💡 <b>הערה לאפיון:</b> "רמת הוודאות" נגזרת מכמה שדות-ליבה בורדי מילא בביטחון. בונה-הקורסים לא יבנה ליי-אאוט מתחת לסף (~85%) — במקום זאת ימשיך לשאול.</div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- FIX / EDIT LAYOUT MODAL -->
+<div class="modal-bg" id="fixModal">
+  <div class="modal">
+    <div class="mh">
+      <div class="mi"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
+      <div style="flex:1"><h3>עריכת הליי-אאוט</h3><p>ערוך שמות פרקים ושיעורים · בורדי יעדכן את ההצעה</p></div>
+      <button class="mx" onclick="closeFix()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="mb" id="fixBody"></div>
+    <div class="mf">
+      <button class="btn btn-g" onclick="closeFix();toast('הליי-אאוט עודכן','בורדי הטמיע את התיקונים בהצעה')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> שמור תיקונים</button>
+      <button class="btn btn-o" onclick="closeFix()">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEMO CONTROLLER -->
+<div class="ctrl">
+  <span class="lbl">דמו · בונה הקורסים</span>
+  <button class="play" id="play"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg> נגן</button>
+  <button id="step">צעד ▶</button>
+  <button class="rst" id="reset" title="התחל מחדש"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.3 2.6L3 8"/><path d="M3 3v5h5"/></svg></button>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+const M = "../BOARDi/SVG/"; // mascot path
+const VID = "../BOARDi/BOARDi%20Coding.mp4"; // "בורדי כותב קוד"
+const stream = document.getElementById('stream');
+const inp = document.getElementById('inp');
+
+/* BOARDi mascot reflects his level of understanding */
+let curLevel = 8;
+function mascotFor(c){
+  if(c>=90) return '5.svg';   // נלהב — הבין הכל
+  if(c>=72) return '2.svg';   // שמח — תמונה טובה
+  if(c>=48) return '12.svg';  // מציג — מבין את הכיוון
+  if(c>=24) return '7.svg';   // כותב — אוסף פרטים
+  return '4.svg';             // חושב — רק מתחיל
+}
+function avatarHTML(){
+  return `<div class="av-b"><img src="${M}${mascotFor(curLevel)}" alt="בורדי" onerror="this.style.display='none';this.parentNode.textContent='🤖'"></div>`;
+}
+
+/* ---------- certainty rail ---------- */
+const pctEl=document.getElementById('pct'), lvlEl=document.getElementById('lvl');
+const lineEl=document.getElementById('line'), areaEl=document.getElementById('area'), ptEl=document.getElementById('pt');
+const ag0=document.getElementById('ag0'), ag1=document.getElementById('ag1');
+let series=[8];
+function lerp(a,b,t){return a+(b-a)*t}
+function hex(a,b,t){const p=x=>parseInt(x,16);const r=Math.round(lerp(p(a.slice(1,3)),p(b.slice(1,3)),t)),g=Math.round(lerp(p(a.slice(3,5)),p(b.slice(3,5)),t)),bl=Math.round(lerp(p(a.slice(5,7)),p(b.slice(5,7)),t));return'#'+[r,g,bl].map(v=>v.toString(16).padStart(2,'0')).join('')}
+function colorFor(v){ // pink -> yellow -> green
+  if(v<50) return hex('#F05680','#EAD654', v/50);
+  return hex('#EAD654','#22c55e',(v-50)/50);
+}
+function levelText(v){
+  if(v<20)return'מתחיל להכיר את הקורס…';
+  if(v<45)return'אוסף את התמונה…';
+  if(v<70)return'מבין את הכיוון';
+  if(v<85)return'כמעט שם — עוד פרט או שניים';
+  return'מוכן לבנות ליי-אאוט 🎉';
+}
+function drawChart(){
+  const W=260,H=96,pad=6, n=series.length;
+  const xs=i=> n<=1?pad : pad + i*(W-2*pad)/(n-1);
+  const ys=v=> H-6 - (v/100)*(H-16);
+  let d=''; series.forEach((v,i)=>{d+=(i?'L':'M')+xs(i).toFixed(1)+' '+ys(v).toFixed(1)+' '});
+  lineEl.setAttribute('d',d.trim());
+  areaEl.setAttribute('d', (d+`L ${xs(n-1).toFixed(1)} ${H} L ${xs(0).toFixed(1)} ${H} Z`).trim());
+  const last=series[n-1], c=colorFor(last);
+  lineEl.setAttribute('stroke',c); ptEl.setAttribute('stroke',c);
+  ptEl.setAttribute('cx',xs(n-1)); ptEl.setAttribute('cy',ys(last));
+  ag0.setAttribute('stop-color',c); ag1.setAttribute('stop-color',c);
+}
+let pctAnim=null, pctCur=8;
+function setCertainty(v){
+  v=Math.max(0,Math.min(100,v)); curLevel=v;
+  series.push(v); if(series.length>14)series.shift();
+  const c=colorFor(v);
+  pctEl.style.color=c; lvlEl.style.color=c; lvlEl.textContent=levelText(v);
+  // animate number (cancel any prior animation to avoid drift)
+  if(pctAnim)cancelAnimationFrame(pctAnim);
+  const from=pctCur, t0=performance.now();
+  (function tick(now){const k=Math.min(1,(now-t0)/500);pctCur=lerp(from,v,k);pctEl.textContent=Math.round(pctCur)+'%';if(k<1)pctAnim=requestAnimationFrame(tick);else{pctCur=v;pctAnim=null}})(t0);
+  drawChart();
+}
+function fillDim(key,val){
+  const d=document.querySelector(`.dim[data-k="${key}"]`); if(!d)return;
+  document.querySelectorAll('.dim.active').forEach(x=>x.classList.remove('active'));
+  d.classList.add('done'); d.querySelector('.v').textContent=val;
+}
+function activeDim(key){document.querySelectorAll('.dim.active').forEach(x=>x.classList.remove('active'));const d=document.querySelector(`.dim[data-k="${key}"]`);if(d&&!d.classList.contains('done'))d.classList.add('active')}
+drawChart();
+
+/* ---------- chat primitives ---------- */
+function scrollDown(){stream.scrollTop=stream.scrollHeight}
+function boardi(html,time='14:32'){
+  const r=document.createElement('div');r.className='row';
+  r.innerHTML=`${avatarHTML()}
+  <div class="bub"><div class="who">בורדי</div>${html}<div class="time">${time}</div></div>`;
+  stream.appendChild(r);scrollDown();return r;
+}
+function me(text,time='14:33'){
+  const r=document.createElement('div');r.className='row me';
+  r.innerHTML=`<div class="av-me">א</div>
+  <div class="bub">${text}<div class="time" style="color:#ffffff88">${time}</div></div>`;
+  stream.appendChild(r);scrollDown();return r;
+}
+let typingRow=null;
+function showTyping(){
+  typingRow=document.createElement('div');typingRow.className='row';
+  typingRow.innerHTML=`<div class="av-b"><img src="${M}7.svg" alt="" onerror="this.parentNode.textContent='✍️'"></div>
+  <div class="bub" style="display:flex;align-items:center"><div class="typing"><i></i><i></i><i></i></div><span class="typing-lbl">בורדי כותב…</span></div>`;
+  stream.appendChild(typingRow);scrollDown();
+}
+function hideTyping(){if(typingRow){typingRow.remove();typingRow=null}}
+
+/* MC question inside a boardi bubble */
+function mcQuestion(q,opts,onPick,single){
+  const r=boardi(`<div class="mc ${single?'single':''}"><div class="q">${q}</div><div class="opts"></div></div>`);
+  const box=r.querySelector('.opts');
+  opts.forEach(o=>{
+    const b=document.createElement('button');b.className='opt';
+    b.innerHTML=`<span class="dot"></span><span>${o}</span>`;
+    b.onclick=()=>{
+      box.querySelectorAll('.opt').forEach(x=>{x.classList.add('dim');});
+      b.classList.remove('dim');b.classList.add('pick');
+      me(o); onPick(o);
+    };
+    box.appendChild(b);
+  });
+  scrollDown();return r;
+}
+
+/* loading card */
+function loadingCard(stages,done){
+  const r=boardi(`<div class="loadc"><video class="vid" src="${VID}" autoplay loop muted playsinline onerror="this.replaceWith(Object.assign(document.createElement('img'),{className:'m',src:'${M}7.svg'}))"></video>
+    <div class="st">מתחיל…</div><div class="bar"><i></i></div><div class="sub">בורדי כותב את הקורס שלך…</div></div>`);
+  const st=r.querySelector('.st'), bar=r.querySelector('.bar i');
+  let i=0;
+  (function next(){
+    if(i>=stages.length){setTimeout(()=>{r.remove();done&&done()},350);return}
+    st.textContent=stages[i]; bar.style.width=Math.round(((i+1)/stages.length)*100)+'%';
+    i++;scrollDown();setTimeout(next,1050);
+  })();
+}
+
+/* generated cover image */
+function coverCard(){
+  const r=boardi(`<div class="imgc">
+    <div class="tagr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> נוצר על ידי בורדי · תמונת קאבר</div>
+    <div class="cover">
+      <div class="blob b1"></div><div class="blob b2"></div><div class="grid"></div>
+      <div class="wbm">WHITEBOARD</div>
+      <div class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7-6.3-4.6L5.7 21l2.3-7-6-4.6h7.6z"/></svg> AI · ערכת מותג</div>
+      <div class="ct"><div class="kick">קורס דיגיטלי</div><div class="tt">עיצוב <em>UX/UI</em><br>למתחילים</div></div>
+    </div>
+    <div class="imgacts">
+      <button class="chipbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.3 2.6L3 8"/><path d="M3 3v5h5"/></svg> גרסה נוספת</button>
+      <button class="chipbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg> ערוך פרומפט</button>
+      <button class="chipbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> הורד</button>
+    </div></div>`);
+  return r;
+}
+
+/* shared layout data — matches WHITEBOARD structure: פרקים → שיעורים */
+const COURSE_TITLE='עיצוב UX/UI למתחילים';
+const LAYOUT=[
+  {n:'מבוא לעולם ה-UX',les:['מה זה בעצם UX ולמה אכפת','ההבדל בין UX ל-UI','5 עקרונות חוויית משתמש','כלים שנעבוד איתם']},
+  {n:'מחקר משתמשים',les:['למה מתחילים ממחקר','ראיונות משתמשים בפועל','בניית פרסונה','מיפוי מסע לקוח (Journey Map)','ניתוח מתחרים']},
+  {n:'Wireframing ו-Prototyping',les:['סקיצות ידניות מהירות','Low-fidelity wireframes','מעבר ל-Figma','בניית פרוטוטייפ לחיץ','היררכיה ויזואלית']},
+  {n:'בדיקות ושיפור',les:['בדיקת שמישות (Usability)','איסוף פידבק ואיטרציה','מדדי הצלחה','הכנת התיק לראיון עבודה']}
+];
+const LAY_TOTAL=LAYOUT.reduce((s,c)=>s+c.les.length,0);
+const SETTINGS_URL='../קורס/הגדרות קורס.html'; // מסך הגדרות הקורס · טאב ליי-אאוט
+
+/* generated layout card */
+function layoutCard(){
+  let body='';
+  LAYOUT.forEach((c,i)=>{
+    let les=c.les.map((l,j)=>`<div class="l"><svg class="pl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none"/></svg><span>שיעור ${i+1}.${j+1} · <span class="n">${l}</span></span></div>`).join('');
+    body+=`<div class="chap ${i===0?'open':''}"><div class="ch" onclick="this.parentNode.classList.toggle('open')">
+      <span class="idx">${i+1}</span><span class="nm">${c.n}</span><span class="cnt">${c.les.length} שיעורים</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="les">${les}</div></div>`;
+  });
+  const r=boardi(`<div class="lay">
+    <div class="lh"><div class="tagr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v4H4zM4 12h10v8H4zM17 12h3v8h-3z"/></svg> נוצר על ידי בורדי · ליי-אאוט מוצע</div>
+      <h3>${COURSE_TITLE}</h3>
+      <div class="meta"><span>📚 ${LAYOUT.length} פרקים</span><span>🎬 ${LAY_TOTAL} שיעורים</span><span>👥 מתחילים</span><span>🎯 עבודה ראשונה</span><span>🧩 פרויקט מלווה</span></div></div>
+    <div class="lb">${body}</div>
+    <div class="lf"><button class="btn btn-g" id="continueBuild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg> המשך בנייה</button>
+      <button class="btn btn-o" onclick="openFix()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg> תקן</button>
+      <span class="grow"></span></div></div>`);
+  r.querySelector('#continueBuild').onclick=()=>{
+    r.querySelector('.lf').innerHTML=`<span style="color:var(--green-bright);font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> נבנה במערכת · עובר להגדרות הקורס…</span>`;
+    toast('הקורס נבנה במערכת','פותח את מסך הגדרות הקורס · טאב ליי-אאוט');
+    setTimeout(handoffCard,650);
+    setTimeout(()=>window.open(SETTINGS_URL,'_blank'),900);
+  };
+  return r;
+}
+
+/* "תקן" — elegant blurred popup to edit the layout */
+function openFix(){
+  let body='';
+  LAYOUT.forEach((c,i)=>{
+    body+=`<div class="edit-row chap-r"><svg class="gr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg><span class="idx" style="width:24px;height:24px;border-radius:7px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:Fredoka;font-weight:700;font-size:12px">${i+1}</span><input value="${c.n}"></div>`;
+    c.les.forEach((l,j)=>{
+      body+=`<div class="edit-row" style="margin-right:22px"><svg class="gr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="m10 9 5 3-5 3z" fill="var(--cyan)" stroke="none"/></svg><input value="${l}"><span style="font-size:11px;color:var(--text-xs)">${i+1}.${j+1}</span></div>`;
+    });
+    body+=`<button class="addbtn" style="margin-right:22px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> הוסף שיעור לפרק</button>`;
+  });
+  body+=`<button class="addbtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> הוסף פרק חדש</button>`;
+  document.getElementById('fixBody').innerHTML=body;
+  document.getElementById('fixModal').classList.add('show');
+}
+function closeFix(){document.getElementById('fixModal').classList.remove('show')}
+document.getElementById('fixModal').addEventListener('click',e=>{if(e.target.id==='fixModal')closeFix()});
+
+function handoffCard(){
+  const r=document.createElement('div');r.className='row';
+  r.innerHTML=`<div class="av-b"><img src="${M}5.svg" onerror="this.parentNode.innerHTML='🎉'"></div>
+  <div class="handoff"><div class="hi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
+    <div class="ht"><b>הקורס מוכן — נמשיך להשקה?</b><p>אעביר את הקשר הקורס לבורדי הדיוור ואכין מייל השקה לקהל שלך.</p></div>
+    <button class="hb" onclick="toast('מעבר לבורדי דיוור','הקשר הקורס הועבר — פותח את יוצר הדיוור');this.closest('.row').remove();">כן, העבר לדיוור →</button></div>`;
+  stream.appendChild(r);scrollDown();
+}
+
+/* toast */
+function toast(t,p){
+  const el=document.createElement('div');el.className='toast';
+  el.innerHTML=`<div class="ti"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></div><div class="tx"><b>${t}</b><p>${p}</p></div>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>{el.style.opacity=0;el.style.transform='translateX(-30px)';el.style.transition='.3s';setTimeout(()=>el.remove(),300)},3600);
+}
+
+/* ---------- scripted flow ---------- */
+const beats=[
+  {t:'boardi',run:()=>boardi(`שלום אלון 👋 אני <b>בורדי</b>. בוא נבנה יחד את הקורס החדש שלך.<br>אשאל אותך כמה שאלות קצרות — ככל שאבין טוב יותר את הקורס והמטרות, כך הליי-אאוט שאבנה יהיה מדויק יותר. מוכן? 🚀`)},
+  {t:'typing'},
+  {t:'mc',run:next=>{activeDim('domain');mcQuestion('מה תחום הקורס?',['עיצוב UX/UI','שיווק דיגיטלי','פיתוח תוכנה','צילום ועריכה'],o=>{setCertainty(22);fillDim('domain',o);next()})}},
+  {t:'typing'},
+  {t:'boardi',run:()=>boardi(`מגניב — <b>עיצוב UX/UI</b> 🎨 תחום מבוקש.<br>עכשיו, למי הקורס מיועד?`)},
+  {t:'mc',run:next=>{activeDim('audience');mcQuestion('מהי רמת הקהל?',['מתחילים מוחלטים','בעלי רקע בסיסי','מקצוענים שרוצים לשדרג'],o=>{setCertainty(40);fillDim('audience',o);next()})}},
+  {t:'typing'},
+  {t:'boardi',run:()=>boardi(`הבנתי — <b>מתחילים מוחלטים</b>. אתאים את הקצב, השפה וכמות הדוגמאות.<br>מה המטרה המרכזית של הבוגר בסיום?`)},
+  {t:'mc',run:next=>{activeDim('goal');mcQuestion('מטרת הבוגר:',['להשיג עבודה ראשונה בתחום','לשדרג בקריירה הנוכחית','להקים פרויקט / עסק אישי'],o=>{setCertainty(58);fillDim('goal',o);next()},true)}},
+  {t:'typing'},
+  {t:'boardi',run:()=>boardi(`מצוין — נבנה קורס תכליתי שמוביל ל<b>עבודה ראשונה</b>, עם תיק עבודות בסוף.<br>כמה תוכן אתה מדמיין? (אפשר גם להשאיר לי להציע)`)},
+  {t:'user',run:()=>me('נשמע טוב שתציע, בגדול משהו כמו 4 פרקים 🙂')},
+  {t:'after-user',run:()=>{setCertainty(70);fillDim('scope','4 פרקים · ~18 שיעורים')}},
+  {t:'typing'},
+  {t:'boardi',run:()=>boardi(`מעולה, 4 פרקים ו-18 שיעורים בערך — מאוזן למתחילים.<br>שאלה אחרונה: איזה סגנון למידה מתאים לקהל הזה?`)},
+  {t:'mc',run:next=>{activeDim('style');mcQuestion('סגנון הקורס:',['תיאוריה + תרגול מודרך','פרויקט מלווה מתחילתו לסופו','מיקרו-לרנינג קצר'],o=>{setCertainty(88);fillDim('style',o);next()})}},
+  {t:'typing'},
+  {t:'boardi',run:()=>{setCertainty(97);return boardi(`יש לי תמונה מלאה 🎯 רמת הוודאות שלי גבוהה מאוד.<br>אני בונה עכשיו <b>מבנה קורס מלא</b> ו<b>תמונת קאבר</b> תואמת-מותג. שנייה…`)}},
+  {t:'loading',run:next=>loadingCard(['מנתח את הצרכים שאספתי…','מגבש מבנה פרקים ושיעורים…','מייצר תמונת קאבר בערכת המותג…','מרכיב ליי-אאוט לתצוגה…'],next)},
+  {t:'boardi',run:()=>boardi(`הנה הצעה ראשונית — קאבר וליי-אאוט מלא 👇`)},
+  {t:'image',run:()=>coverCard()},
+  {t:'boardi',run:()=>boardi(`עברי על המבנה. אם הוא מדויק — אבנה אותו <b>ישירות במערכת</b> (פרקים, שיעורים ושמות). אם משהו לא יושב, תקן ואעדכן.`)},
+  {t:'layout',run:()=>layoutCard()}
+];
+
+let idx=0, playing=false, playTimer=null;
+function runBeat(afterInteractive){
+  if(idx>=beats.length)return;
+  const b=beats[idx]; idx++;
+  if(b.t==='typing'){showTyping();return schedule(700,()=>{hideTyping();runBeat()})}
+  if(b.t==='mc'){ hideTyping(); b.run(()=>{ if(playing)schedule(600,()=>runBeat()); }); return; } // waits for click
+  if(b.t==='loading'){ b.run(()=>{ if(playing)schedule(400,()=>runBeat()); else {} }); return; }
+  // simple render beats
+  b.run&&b.run();
+  if(b.t==='layout')return; // final interactive
+  if(playing)schedule(beatDelay(b),()=>runBeat());
+}
+function beatDelay(b){return b.t==='user'||b.t==='after-user'?650:900}
+function schedule(ms,fn){clearTimeout(playTimer);playTimer=setTimeout(fn,ms)}
+
+/* controls: "צעד" renders one beat and stops (runBeat only auto-chains typing) */
+function stepOnce(){ playing=false; clearTimeout(playTimer); runBeat(); }
+document.getElementById('step').onclick=stepOnce;
+document.getElementById('play').onclick=function(){
+  playing=!playing;
+  this.innerHTML= playing? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg> השהה' : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> נגן';
+  if(playing)runBeat();else clearTimeout(playTimer);
+};
+document.getElementById('reset').onclick=()=>location.reload();
+document.getElementById('sendbtn').onclick=()=>{ if(inp.value.trim()){me(inp.value.trim());inp.value='';} };
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&inp.value.trim()){me(inp.value.trim());inp.value=''}});
+
+/* theme */
+const root=document.documentElement,tb=document.getElementById('theme');
+tb.onclick=()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');
+  tb.querySelector('svg').innerHTML=d?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';};
+
+/* kick off: first message visible */
+runBeat();
+</script>
+</body>
+</html>
