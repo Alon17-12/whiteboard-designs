@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walk Me 2.0 — סיור היכרות למרצה חדש · WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ============ WHITEBOARD tokens ============ */
+:root{
+  --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --pink:#F05680;
+  --green:#7DC57A; --green-bright:#22c55e; --yellow:#EAD654;
+  --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+  --border:rgba(37,62,122,0.1);
+  --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.52); --text-xs:rgba(37,62,122,0.35);
+  --r-xs:6px; --r-sm:10px; --r-md:16px; --r-lg:18px;
+  --veil:rgba(10,17,38,0.66);
+  --glass:rgba(255,255,255,0.985); --glass-border:rgba(37,62,122,0.14);
+  --hud:#38C4F2;
+}
+[data-theme="dark"]{
+  --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+  --border:rgba(255,255,255,0.07);
+  --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.48); --text-xs:rgba(221,229,245,0.28);
+  --veil:rgba(4,8,20,0.74);
+  --glass:rgba(19,30,53,0.96); --glass-border:rgba(56,196,242,0.30);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  font-family:'Heebo',sans-serif; background:var(--bg); color:var(--text-main);
+  height:100dvh; overflow:hidden; direction:rtl;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+img{user-select:none;-webkit-user-drag:none;}
+
+/* ============ ambient futuristic backdrop ============ */
+.orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.35;animation:drift 26s ease-in-out infinite alternate;}
+.orb.a{width:520px;height:520px;background:radial-gradient(circle,#38C4F2 0%,transparent 70%);top:-180px;right:-140px;}
+.orb.b{width:460px;height:460px;background:radial-gradient(circle,#F05680 0%,transparent 70%);bottom:-200px;left:-120px;animation-delay:-13s;}
+@keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(-60px,50px) scale(1.12);}}
+.dotgrid{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(56,196,242,0.14) 1px,transparent 1px);
+  background-size:26px 26px;mask-image:radial-gradient(ellipse at 50% 40%,black 0%,transparent 75%);}
+
+/* ============ stage: the real screen ============ */
+#stageWrap{position:fixed;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;}
+#stage{position:relative;overflow:hidden;border-radius:14px;
+  box-shadow:0 30px 90px rgba(10,20,50,.45),0 0 0 1px rgba(56,196,242,.18);
+  background:#0c1422;}
+#shot{display:block;width:100%;height:100%;object-fit:cover;transition:opacity .28s ease;}
+#shot.dimmed{filter:brightness(.82) saturate(.9);}
+#stage .frame-glow{position:absolute;inset:0;border-radius:14px;pointer-events:none;
+  box-shadow:inset 0 0 60px rgba(56,196,242,.06);}
+
+/* ============ spotlight ============ */
+#hole{position:absolute;border-radius:12px;pointer-events:none;z-index:4;
+  box-shadow:0 0 0 200vmax var(--veil), 0 0 34px rgba(56,196,242,.55), inset 0 0 0 2px var(--hud);
+  transition:all .5s cubic-bezier(.6,.05,.2,1);}
+#hole .pulse{position:absolute;inset:-7px;border-radius:16px;border:1.5px solid rgba(56,196,242,.8);
+  animation:sonar 1.9s ease-out infinite;pointer-events:none;}
+@keyframes sonar{0%{transform:scale(1);opacity:.85;}75%{transform:scale(1.075);opacity:0;}100%{opacity:0;}}
+#hole .scan{position:absolute;left:0;right:0;height:34%;top:-40%;pointer-events:none;border-radius:10px;
+  background:linear-gradient(180deg,transparent,rgba(56,196,242,.20),transparent);}
+#hole.scanning .scan{animation:scan .9s ease-out 1;}
+@keyframes scan{from{top:-40%;}to{top:110%;}}
+/* HUD corner brackets */
+.brk{position:absolute;width:16px;height:16px;pointer-events:none;
+  border:2.5px solid var(--hud);filter:drop-shadow(0 0 6px rgba(56,196,242,.9));}
+.brk.tl{top:-5px;right:-5px;border-left:none;border-bottom:none;border-radius:0 8px 0 0;}
+.brk.tr{top:-5px;left:-5px;border-right:none;border-bottom:none;border-radius:8px 0 0 0;}
+.brk.bl{bottom:-5px;right:-5px;border-left:none;border-top:none;border-radius:0 0 8px 0;}
+.brk.br{bottom:-5px;left:-5px;border-right:none;border-top:none;border-radius:0 0 0 8px;}
+#hole.warn{--hud:#F05680;box-shadow:0 0 0 200vmax var(--veil),0 0 34px rgba(240,86,128,.55),inset 0 0 0 2px #F05680;}
+#hole.warn .pulse{border-color:rgba(240,86,128,.8);}
+
+/* secondary soft highlight (no veil punch) */
+#soft{position:absolute;border-radius:12px;pointer-events:none;z-index:5;
+  outline:1.5px dashed rgba(56,196,242,.65);outline-offset:3px;transition:all .5s cubic-bezier(.6,.05,.2,1);}
+
+/* hotspot */
+#hotspot{position:absolute;z-index:6;border-radius:12px;cursor:pointer;background:transparent;transition:all .5s cubic-bezier(.6,.05,.2,1);}
+#hotspot:hover{background:rgba(56,196,242,.10);}
+#hotspot:focus-visible{outline:2px solid var(--cyan);outline-offset:4px;}
+.ripple{position:absolute;border-radius:50%;background:rgba(56,196,242,.45);transform:scale(0);animation:rip .5s ease-out forwards;pointer-events:none;}
+@keyframes rip{to{transform:scale(3.2);opacity:0;}}
+
+/* ============ top HUD bar ============ */
+#hud{position:fixed;top:14px;right:16px;left:16px;z-index:20;display:flex;align-items:center;gap:14px;
+  pointer-events:none;}
+#hud>*{pointer-events:auto;}
+.hud-chip{display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(14px);
+  border:1px solid var(--glass-border);border-radius:100px;padding:7px 14px 7px 16px;
+  box-shadow:0 8px 26px rgba(10,20,50,.22);}
+.hud-chip img{width:26px;height:26px;}
+.hud-chip .t{font-family:'Fredoka';font-weight:600;font-size:13px;letter-spacing:.2px;}
+.hud-chip .c{font-size:11.5px;color:var(--text-sub);border-right:1px solid var(--border);padding-right:9px;}
+#segs{flex:1;display:flex;gap:5px;max-width:520px;margin:0 auto;}
+.seg{flex:1;height:5px;border-radius:4px;background:rgba(56,196,242,.16);overflow:hidden;position:relative;}
+.seg i{position:absolute;inset:0;border-radius:4px;background:linear-gradient(90deg,var(--cyan),#6ad8ff);
+  transform-origin:right;transform:scaleX(0);transition:transform .45s ease;}
+.seg.done i{transform:scaleX(1);}
+.seg.half i{transform:scaleX(.5);}
+.hud-btn{width:38px;height:38px;min-width:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--glass-border);
+  box-shadow:0 8px 26px rgba(10,20,50,.22);transition:.18s;color:var(--text-main);}
+.hud-btn:hover{transform:translateY(-1px);border-color:var(--cyan);color:var(--cyan);}
+.hud-btn svg{width:17px;height:17px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+[data-theme="light"] .icon-sun{display:none;} [data-theme="dark"] .icon-moon{display:none;}
+
+/* ============ tooltip / guide card ============ */
+#tip{position:fixed;z-index:22;width:352px;max-width:calc(100vw - 28px);
+  background:var(--glass);backdrop-filter:blur(18px);border:1px solid var(--glass-border);
+  border-radius:var(--r-lg);box-shadow:0 24px 70px rgba(10,20,50,.35),0 0 0 1px rgba(255,255,255,.04) inset;
+  padding:18px 18px 14px;transition:opacity .25s ease,transform .35s cubic-bezier(.5,.1,.2,1.2);}
+#tip.hidden,#hud.hidden{opacity:0 !important;pointer-events:none !important;}
+#tip::before{content:'';position:absolute;inset:0 0 auto 0;height:2px;border-radius:2px 2px 0 0;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.8;}
+#tip .arrow{position:absolute;width:14px;height:14px;background:var(--glass);
+  border:1px solid var(--glass-border);transform:rotate(45deg);border-radius:3px;}
+#tip .arrow.up{top:-8px;border-bottom:none;border-left:none;}
+#tip .arrow.down{bottom:-8px;border-top:none;border-right:none;}
+.tip-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:8px;}
+.tip-mascot{width:54px;height:54px;flex-shrink:0;animation:floaty 3.2s ease-in-out infinite;filter:drop-shadow(0 6px 14px rgba(37,62,122,.25));}
+@keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+.tip-chapter{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--cyan);
+  background:rgba(56,196,242,.12);border:1px solid rgba(56,196,242,.25);border-radius:100px;padding:2.5px 9px;margin-bottom:5px;letter-spacing:.3px;}
+.tip-chapter.warn{color:var(--pink);background:rgba(240,86,128,.10);border-color:rgba(240,86,128,.3);}
+.tip-title{font-family:'Fredoka';font-weight:600;font-size:17.5px;line-height:1.25;}
+.tip-body{font-size:13.5px;line-height:1.65;color:var(--text-main);opacity:.88;margin-bottom:11px;}
+.tip-body b{color:var(--cyan);font-weight:700;}
+.tip-legend{display:flex;flex-direction:column;gap:7px;margin:2px 0 12px;}
+.leg{display:flex;gap:9px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:8px 10px;}
+.leg .ic{width:28px;height:28px;min-width:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.leg .ic svg{width:15px;height:15px;stroke:#fff;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.leg .tx{font-size:12px;line-height:1.5;}
+.leg .tx b{display:block;font-size:12.5px;}
+.tip-action{display:flex;align-items:center;gap:9px;background:rgba(56,196,242,.10);
+  border:1px dashed rgba(56,196,242,.5);border-radius:var(--r-sm);padding:9px 12px;margin-bottom:12px;
+  font-size:12.5px;font-weight:700;color:var(--cyan);}
+.tip-action.warn{color:var(--pink);background:rgba(240,86,128,.08);border-color:rgba(240,86,128,.45);}
+.tip-action svg{width:16px;height:16px;min-width:16px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;animation:tap 1.6s ease-in-out infinite;}
+@keyframes tap{0%,100%{transform:translateY(0);}50%{transform:translateY(3px);}}
+.tip-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:11px;}
+.tip-count{font-family:'Fredoka';font-size:11.5px;color:var(--text-xs);font-variant-numeric:tabular-nums;letter-spacing:.5px;direction:ltr;}
+.tip-nav{display:flex;gap:8px;align-items:center;}
+.btn{border-radius:var(--r-sm);font-weight:700;font-size:13px;padding:9px 16px;transition:.18s;display:inline-flex;align-items:center;gap:7px;}
+.btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.btn-next{background:linear-gradient(135deg,var(--cyan),#25a8d6);color:#fff;box-shadow:0 6px 18px rgba(56,196,242,.4);}
+.btn-next:hover{transform:translateY(-1px);box-shadow:0 9px 24px rgba(56,196,242,.5);}
+.btn-ghost{color:var(--text-sub);padding:9px 10px;}
+.btn-ghost:hover{color:var(--text-main);}
+.btn-pink{background:linear-gradient(135deg,var(--pink),#d63d68);color:#fff;box-shadow:0 6px 18px rgba(240,86,128,.35);}
+.btn-pink:hover{transform:translateY(-1px);}
+
+/* ============ centered dialogs (intro / questions / exit / finish) ============ */
+.dialog-veil{position:fixed;inset:0;z-index:30;background:var(--veil);backdrop-filter:blur(7px);
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+.dialog-veil.open{opacity:1;pointer-events:auto;}
+.dialog{width:520px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 48px);overflow:auto;
+  background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);
+  border-radius:22px;box-shadow:0 30px 90px rgba(5,10,30,.5);padding:30px 30px 24px;position:relative;
+  transform:translateY(14px) scale(.98);transition:transform .35s cubic-bezier(.5,.1,.2,1.25);text-align:center;}
+.dialog-veil.open .dialog{transform:translateY(0) scale(1);}
+.dialog::before{content:'';position:absolute;inset:0 0 auto 0;height:2.5px;border-radius:22px 22px 0 0;
+  background:linear-gradient(90deg,var(--pink),var(--cyan),var(--green));opacity:.85;}
+.dlg-mascot{width:96px;height:96px;margin:0 auto 12px;animation:floaty 3.2s ease-in-out infinite;filter:drop-shadow(0 10px 22px rgba(37,62,122,.3));}
+.dlg-kicker{font-size:11px;font-weight:800;color:var(--cyan);letter-spacing:2.5px;margin-bottom:6px;}
+.dlg-title{font-family:'Fredoka';font-weight:600;font-size:24px;margin-bottom:10px;line-height:1.25;}
+.dlg-body{font-size:14px;line-height:1.75;color:var(--text-sub);margin-bottom:20px;}
+.dlg-body b{color:var(--text-main);}
+.chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-bottom:8px;}
+.chip{border:1.5px solid var(--border);background:var(--surface);border-radius:100px;padding:10px 18px;
+  font-size:13.5px;font-weight:600;color:var(--text-main);transition:.18s;min-height:44px;}
+.chip:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-1px);box-shadow:0 6px 16px rgba(56,196,242,.18);}
+.chip.sel{background:rgba(56,196,242,.14);border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,.12);}
+.q-sub{font-size:12px;font-weight:800;color:var(--text-xs);letter-spacing:.6px;margin:16px 0 9px;}
+.dlg-actions{display:flex;gap:10px;justify-content:center;margin-top:18px;}
+.btn-big{padding:12px 26px;font-size:14.5px;border-radius:12px;}
+.dlg-back{position:absolute;top:16px;right:16px;color:var(--text-xs);font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px;}
+.dlg-back:hover{color:var(--cyan);}
+.dlg-back svg{width:13px;height:13px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.qdots{display:flex;gap:6px;justify-content:center;margin-bottom:16px;}
+.qdot{width:7px;height:7px;border-radius:50%;background:rgba(56,196,242,.22);transition:.25s;}
+.qdot.on{background:var(--cyan);width:20px;border-radius:4px;}
+
+/* loader */
+.loader-video{width:190px;height:190px;border-radius:26px;object-fit:cover;margin:0 auto 14px;
+  box-shadow:0 16px 40px rgba(37,62,122,.3);border:1px solid var(--glass-border);}
+.loader-line{font-family:'Fredoka';font-size:15px;color:var(--text-main);display:flex;align-items:center;justify-content:center;gap:4px;}
+.loader-line .dots i{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--cyan);margin-right:3px;animation:blink 1.2s infinite;}
+.loader-line .dots i:nth-child(2){animation-delay:.2s;}.loader-line .dots i:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,100%{opacity:.2;transform:translateY(0);}50%{opacity:1;transform:translateY(-3px);}}
+
+/* finish checklist + confetti */
+.done-list{display:grid;grid-template-columns:1fr 1fr;gap:7px;text-align:right;margin:4px 0 16px;}
+.done-item{display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:8px 11px;font-size:12px;font-weight:600;}
+.done-item svg{width:15px;height:15px;min-width:15px;stroke:var(--green-bright);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.confetti{position:absolute;top:-10px;width:8px;height:13px;border-radius:2px;opacity:0;animation:fall 2.8s ease-in forwards;}
+@keyframes fall{0%{opacity:1;transform:translateY(0) rotate(0);}100%{opacity:0;transform:translateY(72vh) rotate(560deg);}}
+
+/* relaunch lifebuoy (composited over the real header) */
+#relaunch{position:absolute;z-index:7;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:var(--surface);border:1.5px solid rgba(56,196,242,.55);color:var(--cyan);
+  box-shadow:0 0 0 0 rgba(56,196,242,.5);animation:halo 2.2s ease-out infinite;transition:.2s;}
+#relaunch:hover{transform:scale(1.08);}
+#relaunch img{width:86%;height:86%;object-fit:contain;}
+@keyframes halo{0%{box-shadow:0 0 0 0 rgba(56,196,242,.5);}80%{box-shadow:0 0 0 12px rgba(56,196,242,0);}100%{box-shadow:0 0 0 0 rgba(56,196,242,0);}}
+#relaunch .newtag{position:absolute;top:-9px;left:-9px;background:var(--pink);color:#fff;font-size:8.5px;font-weight:900;
+  border-radius:100px;padding:2px 6px;letter-spacing:.5px;box-shadow:0 3px 8px rgba(240,86,128,.4);}
+
+/* guides menu (opens from BOARDi 6) */
+#guideMenu{position:fixed;z-index:27;width:250px;background:var(--glass);backdrop-filter:blur(18px);
+  border:1px solid var(--glass-border);border-radius:var(--r-md);box-shadow:0 24px 60px rgba(10,20,50,.35);
+  padding:10px;display:none;}
+#guideMenu.open{display:block;animation:gmpop .22s cubic-bezier(.5,.1,.2,1.3);}
+@keyframes gmpop{from{opacity:0;transform:translateY(-6px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+.gm-title{font-size:10.5px;font-weight:800;color:var(--text-xs);letter-spacing:1.5px;padding:4px 10px 7px;}
+.gm-item{display:flex;align-items:center;gap:9px;width:100%;text-align:right;padding:9px 10px;border-radius:var(--r-sm);
+  font-size:13px;font-weight:600;color:var(--text-main);text-decoration:none;transition:.15s;}
+.gm-item:hover{background:var(--surface-2);color:var(--cyan);}
+.gm-item .dot{width:9px;height:9px;min-width:9px;border-radius:50%;}
+.gm-sep{height:1px;background:var(--border);margin:6px 4px;}
+
+/* toast */
+#toast{position:fixed;bottom:22px;left:22px;z-index:50;display:flex;flex-direction:column;gap:8px;}
+.toast{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--border);
+  border-right:3px solid var(--cyan);border-radius:var(--r-sm);padding:11px 16px;font-size:13px;font-weight:600;
+  box-shadow:0 12px 34px rgba(10,20,50,.25);animation:slidein .3s ease;}
+.toast.success{border-right-color:var(--green-bright);}
+@keyframes slidein{from{transform:translateX(-24px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+
+@media (max-width:760px){
+  #tip{width:calc(100vw - 24px);}
+  .done-list{grid-template-columns:1fr;}
+  .hud-chip .c{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="orbs"><div class="orb a"></div><div class="orb b"></div></div>
+<div class="dotgrid"></div>
+
+<!-- the real screen under tour -->
+<div id="stageWrap">
+  <div id="stage">
+    <img id="shot" alt="מסך המערכת">
+    <div class="frame-glow"></div>
+    <div id="soft" style="display:none"></div>
+    <div id="hole" style="display:none">
+      <span class="pulse"></span><span class="scan"></span>
+      <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
+    </div>
+    <button id="hotspot" style="display:none" aria-label="בצע את הפעולה המסומנת"></button>
+    <button id="relaunch" style="display:none" aria-label="פתיחת המדריכים" title="המדריכים שלי">
+      <span class="newtag">חדש</span>
+      <img src="../BOARDi/SVG/6.svg" alt="בורדי" onerror="this.style.display='none'">
+    </button>
+  </div>
+</div>
+
+<!-- תפריט המדריכים — נפתח מבורדי 6 -->
+<div id="guideMenu">
+  <div class="gm-title">המדריכים שלי</div>
+  <button class="gm-item" id="gmRestart"><span class="dot" style="background:#38C4F2"></span>הסיור המלא מההתחלה</button>
+  <div class="gm-sep"></div>
+  <a class="gm-item" href="walkme-guide-school.html"><span class="dot" style="background:#7DC57A"></span>מדריך בית הספר</a>
+  <a class="gm-item" href="walkme-guide-club.html"><span class="dot" style="background:#F05680"></span>מדריך המועדון</a>
+  <a class="gm-item" href="walkme-guide-program.html"><span class="dot" style="background:#EAD654"></span>מדריך תכנית ההכשרה</a>
+</div>
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+  <div class="hud-chip">
+    <img src="../BOARDi/SVG/12.svg" alt="בורדי" onerror="this.style.display='none'">
+    <span class="t">סיור היכרות</span>
+    <span class="c" id="hudChapter">התמצאות</span>
+  </div>
+  <div id="segs" role="progressbar" aria-label="התקדמות הסיור"></div>
+  <button class="hud-btn" id="themeBtn" aria-label="מצב כהה / בהיר">
+    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2.4M12 19.6V22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M2 12h2.4M19.6 12H22M4.9 19.1l1.7-1.7M17.4 6.6l1.7-1.7"/></svg>
+  </button>
+  <button class="hud-btn" id="exitBtn" aria-label="יציאה מהסיור">
+    <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+</div>
+
+<!-- guide card -->
+<div id="tip" class="hidden" role="dialog" aria-live="polite">
+  <span class="arrow" id="tipArrow" style="display:none"></span>
+  <div class="tip-head">
+    <img class="tip-mascot" id="tipMascot" src="../BOARDi/SVG/12.svg" alt="" onerror="this.style.display='none'">
+    <div>
+      <span class="tip-chapter" id="tipChapter">התמצאות</span>
+      <div class="tip-title" id="tipTitle"></div>
+    </div>
+  </div>
+  <div class="tip-body" id="tipBody"></div>
+  <div class="tip-legend" id="tipLegend" style="display:none"></div>
+  <div class="tip-action" id="tipAction" style="display:none">
+    <svg viewBox="0 0 24 24"><path d="M9 11.5V5.8a1.8 1.8 0 0 1 3.6 0v4.9l3.8.9a2.4 2.4 0 0 1 1.8 2.6l-.5 4a3 3 0 0 1-3 2.6h-3.4a3 3 0 0 1-2.3-1.1L5.4 15a1.7 1.7 0 0 1 2.4-2.4l1.2 1"/></svg>
+    <span id="tipActionText"></span>
+  </div>
+  <div class="tip-foot">
+    <span class="tip-count" id="tipCount"></span>
+    <div class="tip-nav">
+      <button class="btn btn-ghost" id="btnBack">
+        <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg> הקודם
+      </button>
+      <button class="btn btn-next" id="btnNext">הבא
+        <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- centered dialog (intro / Q&A / loader / exit / finish) -->
+<div class="dialog-veil" id="dlgVeil">
+  <div class="dialog" id="dlg"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   Walk Me 2.0 — config-driven tour over REAL system screens
+   (בפרודקשן: אותו קונפיג בדיוק, רק שה-target הוא סלקטור חי
+   וה-advance מאזין לאירוע האמיתי במקום ל-hotspot)
+========================================================= */
+
+/* ---- measured boxes of REAL elements (fractions of 1600×900, Playwright-measured) ---- */
+const BOX = {
+ dash:{ createCourse:{x:.02,y:.1272,w:.0931,h:.0456}, sidebar:{x:.8625,y:0,w:.1375,h:1},
+   topbarActions:{x:.02,y:.0122,w:.1175,h:.0456}, boardiNav:{x:.8706,y:.3042,w:.1219,h:.0456},
+   libraryNav:{x:.8706,y:.3498,w:.1219,h:.0456}, modeSwitch:{x:.8706,y:.8378,w:.1219,h:.0422},
+   knowledgeNav:{x:.8706,y:.1622,w:.1219,h:.0456} },
+ hubs:{ hubCards:{x:.02,y:.2378,w:.8225,h:.1389}, createCourse:{x:.02,y:.1067,w:.0931,h:.0456} },
+ course_teacher:{ addChapter:{x:.8031,y:.8756,w:.1644,h:.0433}, addLesson:{x:.8031,y:.5222,w:.1644,h:.0356},
+   syllabus:{x:.8031,y:.3556,w:.1644,h:.6444}, modePills:{x:.0112,y:.0078,w:.1205,h:.0367} },
+ course_upload:{ uploadCta:{x:.3358,y:.5392,w:.131,h:.0722}, video:{x:.0144,y:.1611,w:.7738,h:.7738} },
+ course_student:{ modePills:{x:.0112,y:.0078,w:.1205,h:.0367}, notesBtn:{x:.9719,y:.8178,w:.0238,h:.0422},
+   video:{x:.0144,y:.1122,w:.7738,h:.7738}, syllabus:{x:.8031,y:.31,w:.1644,h:.69} },
+ course_notes:{ notesPanel:{x:.8031,y:.31,w:.1644,h:.69}, notesArea:{x:.8106,y:.3722,w:.1494,h:.57},
+   notesSave:{x:.8106,y:.9511,w:.1494,h:.0356} },
+ course_block:{ addBlock:{x:.0138,y:.8649,w:.775,h:.0467}, filesCard:{x:.0138,y:.6193,w:.775,h:.2344} },
+ library:{ upload:{x:.0512,y:.0144,w:.0847,h:.0411}, grid:{x:.025,y:.1689,w:.8125,h:.2111} },
+ notes_screen:{ firstNote:{x:.575,y:.2756,w:.2675,h:.4801}, tsLink:{x:.7916,y:.6135,w:.039,h:.0211} },
+ settings:{ pricing:{x:.1563,y:.4205,w:.3625,h:.1589}, priceInput:{x:.1569,y:.6227,w:.3356,h:.0467},
+   saveBtn:{x:.02,y:.0133,w:.1125,h:.0433} },
+ catalog_student:{ continueSec:{x:.02,y:.3578,w:.8225,h:.2099}, teacherBtn:{x:.88,y:.8344,w:.0509,h:.0333} },
+ mail_start:{ subject:{x:.4928,y:.4644,w:.2891,h:.0444}, choices:{x:.2181,y:.3356,w:.2428,h:.1815},
+   vars:{x:.2181,y:.7056,w:.5637,h:.0778}, continueBtn:{x:.2062,y:.8178,w:.0872,h:.0422} },
+ mail_editor:{ canvas:{x:.2062,y:.0644,w:.7937,h:.9356}, palette:{x:0,y:.0644,w:.2062,h:.9356} },
+ boardi_hub:{ cards:{x:.1875,y:.3578,w:.4875,h:.4158}, ask:{x:.1487,y:.2356,w:.565,h:.06} },
+ mail_sys:{ triggers:{x:.02,y:.25,w:.8225,h:.1561}, table:{x:.0206,y:.4994,w:.8213,h:.1111}, addEmail:{x:.0331,y:.445,w:.0626,h:.0378} },
+ crm_contacts:{ filterTabs:{x:.4485,y:.3884,w:.3784,h:.0433}, statsRow:{x:.02,y:.2451,w:.8225,h:.0911}, addContact:{x:.02,y:.1078,w:.0962,h:.0456}, table:{x:.02,y:.3673,w:.8225,h:.8244} },
+ crm_detail:{ timeline:{x:.0356,y:.4,w:.5637,h:.6722}, profile:{x:.63,y:.1811,w:.2125,h:.8889}, kpis:{x:.02,y:.1811,w:.595,h:.1122} },
+ analytics:{ statsRow:{x:.02,y:.25,w:.8225,h:.1339}, chart:{x:.2425,y:.4061,w:.6,h:.3433} },
+ brand:{ panel:{x:.6375,y:.2189,w:.225,h:1.1978}, preview:{x:0,y:.2189,w:.6375,h:1.1978} },
+};
+const DARKLESS = new Set(['hubs']); // מסכים שקיימים רק ב-light
+
+/* ---- intake answers ---- */
+const A = { who:null, sizeNow:null, sizeGoal:null, imports:null, built:null };
+
+/* ---- copy helpers (מותאם אישית לפי התשובות) ---- */
+const isEdu = () => A.who === 'edu';
+const isBiz = () => A.who === 'biz';
+const firstTime = () => A.built === 'no';
+const hasContent = () => A.imports === 'yes' || A.imports === 'some';
+const bigGoal = () => A.sizeGoal === 'thousands' || A.sizeGoal === 'tens';
+
+function hubPersonalLine(){
+  if (isEdu())  return 'בתור מוסד חינוכי, שווה לך להסתכל טוב על <b>בית הספר</b> — הוא נבנה בדיוק לזה.';
+  if (isBiz() && bigGoal()) return 'עם היעדים שסימנת, כנראה שתגיע די מהר גם ל<b>מועדון</b> — קהילה משלמת זה המנוע הכי חזק כאן.';
+  if (isBiz())  return 'בתור עסק, רוב הסיכויים שתתחיל מקורס אחד טוב — ומשם <b>תכנית הכשרה</b> זו הדרך למכור מסלול שלם.';
+  return 'אין תשובה נכונה — מתחילים מקורס אחד, ואפשר לעטוף אותו במרכז ידע בכל שלב.';
+}
+function libraryPersonalLine(){
+  if (hasContent()) return ' אמרת שיש לך כבר תכנים — זה הבית שלהם. מעלים פעם אחת, ומשתמשים בכל קורס.';
+  return ' גם כשעוד אין כלום — כל מה שתעלה מהיום יחכה לך כאן, מסודר לפי קורסים.';
+}
+function boardiPersonalLine(){
+  if (firstTime()) return ' ובגלל שזה הקורס הדיגיטלי הראשון שלך — <b>בונה הקורסים</b> שלי יעשה איתך את הדרך: כמה שאלות, ויוצא ליי-אאוט שלם.';
+  return ' כבר בנית קורסים? מעולה. תן לי את הכבדים — ניתוח נתונים, טיוטות דיוור, ליי-אאוטים חדשים.';
+}
+function finishPersonalLine(){
+  if (isEdu()) return 'הצעד הטבעי הבא בשבילך: לפתוח בית ספר ולהעביר אליו את הקורס הראשון.';
+  if (hasContent()) return 'הצעד הטבעי הבא בשבילך: להעלות לספרייה את התכנים הקיימים — משם הכול זורם.';
+  if (firstTime()) return 'הצעד הטבעי הבא בשבילך: לפתוח את בונה הקורסים שלי ולצאת יחד לדרך.';
+  return 'הצעד הטבעי הבא בשבילך: קורס ראשון באוויר, אפילו קטן. משם הכול צומח.';
+}
+
+/* ---- SVG icon snippets for legends ---- */
+const IC = {
+  school:'<svg viewBox="0 0 24 24"><path d="M3 10.5 12 5l9 5.5M5 9.8V19h14V9.8M9 19v-5h6v5"/></svg>',
+  program:'<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h13"/><circle cx="19" cy="12" r="1.6"/></svg>',
+  club:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5M16.5 4.9a3.2 3.2 0 0 1 0 6.2M17.8 14.3c1.9.7 3 2.3 3.4 4.7"/></svg>',
+};
+
+/* ---- the tour itself ---- */
+const CHAPTERS = ['התמצאות','מרכזי הידע','בניית הקורס','חוויית התלמיד','מחיר והגדרות','מצב תלמיד','דיוור','CRM','נתונים ומותג','בורדי'];
+const STEPS = [
+ { ch:0, shot:'dash', target:'knowledgeNav', mascot:'12',
+   title:'זה לוח הבקרה. הבנייה קורית שם.',
+   body:()=>'כאן תראה כל בוקר מה קורה אצלך — הכנסות, תלמידים, תובנות. אבל בשביל לבנות, הולכים ל<b>מרכזי הידע</b>.',
+   action:'לחץ על "מרכזי הידע שלי" בתפריט' },
+ { ch:1, shot:'hubs', target:'hubCards', mascot:'12',
+   title:'שלושה סוגים של מרכזי ידע',
+   body:()=>hubPersonalLine(),
+   legend:[
+     {ic:IC.school, bg:'#7DC57A', b:'בית ספר', t:'אתר קורסים שלם — חנות, דפי תוכן, תלמידים במקום אחד.'},
+     {ic:IC.program, bg:'#EAD654', b:'תכנית הכשרה', t:'מסלול מובנה בשלבים — שיעורים, מבחנים, תעודה בסוף.'},
+     {ic:IC.club, bg:'#F05680', b:'מועדון', t:'קהילה חיה — פיד, צ׳אט, אירועים, וקורסים לחברים.'},
+   ],
+   action:'המשך — ניצור עכשיו קורס' , advanceOnHole:false },
+ { ch:1, shot:'hubs', target:'createCourse', mascot:'7',
+   title:'והכול מתחיל מקורס אחד',
+   body:()=>'לא צריך להחליט עכשיו על אימפריה. קורס אחד, שם זמני, ורצים. את הכול אפשר לשנות אחר-כך.',
+   action:'לחץ על "צור קורס חדש"' },
+ { ch:2, shot:'course_teacher', target:'addChapter', soft:'syllabus', mascot:'7',
+   title:'פרקים — השלד של הקורס',
+   body:()=>'זה הליי-אאוט: כל הקורס במבט אחד, בצד. מוסיפים פרק, גוררים לשנות סדר, והכול נשמר לבד.',
+   action:'לחץ על "הוסף פרק חדש"' },
+ { ch:2, shot:'course_teacher', target:'addLesson', soft:'syllabus', mascot:'7',
+   title:'שיעורים — וכל אחד יכול להיות אחר',
+   body:()=>'שיעור זה לא רק וידאו: <b>וידאו, טקסט, קובץ, מבחן, משחק</b> או אתר מוטמע. מערבבים סוגים באותו פרק, וזה מה ששומר תלמידים ערים.',
+   action:'לחץ על "הוסף שיעור לפרק"' },
+ { ch:2, shot:'course_upload', target:'uploadCta', soft:'video', mascot:'7',
+   title:'מעלים וידאו ישר מתוך השיעור',
+   body:()=>'נכנסת לשיעור ריק? מעלים את הסרטון כאן, בלי לצאת לשום מקום. הווידאו רץ על שרתים מאובטחים עם חסימת הורדות.',
+   action:'לחץ על אזור ההעלאה' },
+ { ch:2, shot:'library', target:'upload', soft:'grid', mascot:'7',
+   title:'...או דרך "הספריה שלי"',
+   body:()=>'כל מדיה שהעלית פעם — מחכה כאן.' + libraryPersonalLine(),
+   action:'לחץ על "העלה לספריה"' },
+ { ch:2, shot:'course_block', target:'addBlock', soft:'filesCard', mascot:'7',
+   title:'מתחת לכל שיעור יש דף שלם',
+   body:()=>'גוללים מתחת לסרטון — ובונים: טקסט, קבצים מצורפים, כפתורים, הטמעות. בלוק אחר בלוק, כמו לגו.',
+   action:'לחץ על "הוסף בלוק תוכן"' },
+ { ch:3, shot:'course_student', target:'modePills', soft:'video', mascot:'4',
+   title:'רגע — איך זה נראה לתלמיד?',
+   body:()=>'שני המצבים האלה תמיד איתך: <b>מצב עריכה</b> לבנות, <b>מצב תלמיד</b> לבדוק שהכול נראה כמו שדמיינת. טיוטות? התלמיד לא רואה אותן בכלל.',
+   action:'לחץ על "מצב תלמיד"' },
+ { ch:3, shot:'course_notes', target:'notesArea', soft:'notesSave', mascot:'2',
+   title:'תלמידים כותבים פתקים תוך כדי צפייה',
+   body:()=>'הפאנל הזה נפתח לצד כל שיעור. תלמיד כותב מחשבה — והפתק נשמר עם <b>נקודת הזמן המדויקת</b> בסרטון.',
+   action:'כתוב פתק ולחץ "שמור פתק"' },
+ { ch:3, shot:'notes_screen', target:'tsLink', soft:'firstNote', mascot:'2',
+   title:'וכל פתק זוכר את הרגע שלו',
+   body:()=>'זה מסך "הפתקים שלי" של התלמיד. לחיצה על חותמת הזמן — והנגן קופץ בדיוק לשנייה שבה הפתק נכתב. ככה חוזרים לחומר.',
+   action:'לחץ על חותמת הזמן שבפתק' },
+ { ch:4, shot:'settings', target:'pricing', soft:'saveBtn', mascot:'4',
+   title:'כמה זה עולה? אתה מחליט.',
+   body:()=>'חינם או בתשלום, במחיר שתקבע — <b>בלי עמלות על המכירות</b>. כאן גם שם הקורס, הכתובת, תעודות והרשאות. השמירה מחכה למעלה.',
+   action:'בחר "בתשלום" וקבע מחיר' },
+ { ch:5, shot:'dash', target:'modeSwitch', mascot:'12',
+   title:'בוא נחליף כובע לרגע',
+   body:()=>'המתג הזה יושב תמיד בתחתית התפריט. לחיצה אחת — ואתה רואה את המערכת בדיוק כמו שהתלמידים שלך רואים אותה.',
+   action:'לחץ על "תלמיד"' },
+ { ch:5, shot:'catalog_student', target:'continueSec', mascot:'12',
+   title:'ככה זה נראה אצל התלמידים שלך',
+   body:()=>'זה מאגר הקורסים שלהם: המשך צפייה, התקדמות, הכול נקי ומזמין. שווה להציץ לכאן אחרי כל שינוי גדול.',
+   action:'המשך' , advanceOnHole:false },
+ { ch:5, shot:'catalog_student', target:'teacherBtn', mascot:'13', warn:true,
+   title:'חשוב: לחזור למצב מרצה',
+   body:()=>'קל לשכוח את זה. כל עוד אתה במצב תלמיד — אין עריכה ואין לוח בקרה. המתג מחכה בתחתית התפריט.',
+   action:'לחץ על "מרצה" כדי לחזור' },
+ { ch:6, shot:'mail_sys', target:'triggers', soft:'table', mascot:'12',
+   title:'סדרות מיילים שעובדות בשבילך',
+   body:()=>'לא רק מייל בודד: עגלה נטושה, תלמיד שנעלם, סיום קורס — לכל טריגר מחברים סדרה שנשלחת לבד. מגדירים פעם אחת, והיא רצה.',
+   action:'בחר טריגר לסדרה' },
+ { ch:6, shot:'mail_start', target:'choices', soft:'continueBtn', mascot:'12',
+   title:'וכשרוצים לכתוב — בוחרים עורך',
+   body:()=>'עדכון על שיעור חדש, קמפיין השקה, ניוזלטר. עורך <b>ויזואלי</b> או HTML — וכותבים פעם אחת לכולם.',
+   action:'לחץ על "המשך לעורך"' },
+ { ch:6, shot:'mail_editor', target:'palette', soft:'canvas', mascot:'7',
+   title:'אותם בלוקים, הפעם במייל',
+   body:()=>'אם בנית שיעור — אתה כבר יודע לבנות מייל: גוררים בלוקים מהצד, והמייל מקבל צורה. יש גם תבניות מוכנות למי שממהר.',
+   action:'המשך', advanceOnHole:false },
+ { ch:7, shot:'crm_contacts', target:'filterTabs', soft:'statsRow', mascot:'4',
+   title:'כל אנשי הקשר שלך, במקום אחד',
+   body:()=>'לידים, תלמידים, חברי מועדון ומי שנטש — מסוננים בלחיצה אחת. ' + (isBiz()
+     ? 'בתור עסק, זה המסך שתפתח כל בוקר מיד אחרי לוח הבקרה.'
+     : 'מכאן עוקבים אחרי כל מי שמתעניין ולומד אצלך.'),
+   action:'לחץ על אחד הסגמנטים' },
+ { ch:7, shot:'crm_detail', target:'timeline', soft:'profile', mascot:'4',
+   title:'וכל איש קשר — סיפור שלם',
+   body:()=>'ציר זמן של הכול: הצטרפות, התקדמות, רכישות, מיילים שנפתחו. כשמדברים עם תלמיד — יודעים בדיוק איפה הוא עומד.',
+   action:'המשך', advanceOnHole:false },
+ { ch:8, shot:'analytics', target:'statsRow', soft:'chart', mascot:'4',
+   title:'הנתונים מספרים מה עובד',
+   body:()=>'צפיות, השלמות, שיעורים חזקים ושיעורים שמפילים — הכול ברמת הקורס. ' + (bigGoal()
+     ? 'עם היעדים שסימנת, זה המסך שיגיד לך מה לשכפל.'
+     : 'לא צריך להיות אנליסט — הגרפים עושים את העבודה.'),
+   action:'המשך', advanceOnHole:false },
+ { ch:8, shot:'brand', target:'panel', soft:'preview', mascot:'7',
+   title:'ערכת המותג — שהכול ייראה שלך',
+   body:()=>'לוגו, צבעים ופונטים במקום אחד — והם מתלבשים לבד על דפי הקורס, המיילים ודפי הנחיתה. מגדירים פעם אחת ושוכחים.',
+   action:'המשך', advanceOnHole:false },
+ { ch:9, shot:'boardi_hub', target:'cards', soft:'ask', mascot:'5',
+   title:'ולכל אורך הדרך — אני כאן',
+   body:()=>'זה הבית שלי: סקירה על העסק, ניתוח נתונים, בניית קורסים ודיוור.' + boardiPersonalLine(),
+   action:'סיימנו כמעט — עוד צעד אחד', advanceOnHole:false },
+];
+
+/* =========================================================
+   engine
+========================================================= */
+const $ = s => document.querySelector(s);
+const stage = $('#stage'), shot = $('#shot'), hole = $('#hole'), soft = $('#soft'),
+      hotspot = $('#hotspot'), tip = $('#tip'), hud = $('#hud'), relaunch = $('#relaunch');
+const IMG_W = 1600, IMG_H = 900;
+let idx = -1, phase = 'intro'; // intro | q1 | q2 | q3 | loading | tour | finish
+let qIdx = 0;
+
+function store(k,v){ try{ localStorage.setItem('wm2_'+k, JSON.stringify(v)); }catch(e){} }
+function load(k){ try{ return JSON.parse(localStorage.getItem('wm2_'+k)); }catch(e){ return null; } }
+
+/* ---- stage sizing: contain 16:9 ---- */
+function layoutStage(){
+  const vw = innerWidth, vh = innerHeight;
+  const s = Math.min(vw / IMG_W, vh / IMG_H) * 0.995;
+  const w = IMG_W * s, h = IMG_H * s;
+  stage.style.width = w + 'px'; stage.style.height = h + 'px';
+  if (idx >= 0 && phase === 'tour') placeStep(false);
+  if (phase === 'finish') placeRelaunch();
+}
+addEventListener('resize', layoutStage);
+
+function theme(){ return document.documentElement.getAttribute('data-theme'); }
+function shotSrc(name){
+  const t = DARKLESS.has(name) ? 'light' : theme();
+  return `walkme-assets/${name}__${t}.png`;
+}
+function setShot(name){
+  const next = shotSrc(name);
+  if (shot.getAttribute('src') !== next){
+    shot.style.opacity = 0;
+    setTimeout(()=>{ shot.src = next; shot.onload = ()=> shot.style.opacity = 1; }, 160);
+  }
+  shot.classList.toggle('dimmed', DARKLESS.has(name) && theme()==='dark');
+}
+function rectFor(box){
+  const W = stage.clientWidth, H = stage.clientHeight, PAD = 6;
+  const x = Math.max(0, box.x*W - PAD), y = Math.max(0, box.y*H - PAD);
+  return { x, y,
+    w: Math.min(W - x, box.w*W + PAD*2),
+    h: Math.min(H - y, box.h*H + PAD*2) };
+}
+function place(el, r){ el.style.left=r.x+'px'; el.style.top=r.y+'px'; el.style.width=r.w+'px'; el.style.height=r.h+'px'; }
+
+/* ---- tooltip positioning: pick the side with room ---- */
+function placeTip(r){
+  const sr = stage.getBoundingClientRect();
+  const hx = sr.left + r.x, hy = sr.top + r.y;
+  const tw = tip.offsetWidth, th = tip.offsetHeight, M = 14;
+  const arrow = $('#tipArrow'); arrow.style.display='none'; arrow.className='arrow';
+  let left, top;
+  const fitsBelow = hy + r.h + M + th < innerHeight - 10;
+  const fitsAbove = hy - M - th > 68;
+  const fitsRight = hx + r.w + M + tw < innerWidth - 10;  // visually-left in RTL page but px-wise right
+  const fitsLeft  = hx - M - tw > 10;
+  if (fitsLeft && r.h > th * .5){ left = hx - M - tw; top = clamp(hy + r.h/2 - th/2, 70, innerHeight - th - 12); }
+  else if (fitsRight && r.h > th * .5){ left = hx + r.w + M; top = clamp(hy + r.h/2 - th/2, 70, innerHeight - th - 12); }
+  else if (fitsBelow){ top = hy + r.h + M; left = clamp(hx + r.w/2 - tw/2, 12, innerWidth - tw - 12);
+    arrow.style.display='block'; arrow.classList.add('up'); arrow.style.left = clamp(hx + r.w/2 - left - 7, 18, tw-30) + 'px'; arrow.style.top='-8px'; }
+  else if (fitsAbove){ top = hy - M - th; left = clamp(hx + r.w/2 - tw/2, 12, innerWidth - tw - 12);
+    arrow.style.display='block'; arrow.classList.add('down'); arrow.style.left = clamp(hx + r.w/2 - left - 7, 18, tw-30) + 'px'; arrow.style.bottom='-8px'; }
+  else { left = clamp(hx + r.w/2 - tw/2, 12, innerWidth - tw - 12); top = innerHeight - th - 18; }
+  tip.style.left = left + 'px'; tip.style.top = top + 'px';
+}
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+
+/* ---- render one step ---- */
+function placeStep(animateScan = true){
+  const st = STEPS[idx];
+  const r = rectFor(BOX[st.shot][st.target]);
+  place(hole, r); place(hotspot, r);
+  hole.style.display = hotspot.style.display = 'block';
+  hole.classList.toggle('warn', !!st.warn);
+  if (animateScan){ hole.classList.remove('scanning'); void hole.offsetWidth; hole.classList.add('scanning'); }
+  if (st.soft && BOX[st.shot][st.soft]){ soft.style.display='block'; place(soft, rectFor(BOX[st.shot][st.soft])); }
+  else soft.style.display='none';
+  placeTip(r);
+}
+function showStep(i){
+  idx = i; phase = 'tour'; store('step', i);
+  const st = STEPS[i];
+  setShot(st.shot);
+  $('#tipChapter').textContent = CHAPTERS[st.ch];
+  $('#tipChapter').classList.toggle('warn', !!st.warn);
+  $('#hudChapter').textContent = CHAPTERS[st.ch];
+  $('#tipTitle').textContent = st.title;
+  $('#tipBody').innerHTML = typeof st.body === 'function' ? st.body() : st.body;
+  $('#tipMascot').src = `../BOARDi/SVG/${st.mascot||'12'}.svg`;
+  const leg = $('#tipLegend');
+  if (st.legend){ leg.style.display='flex';
+    leg.innerHTML = st.legend.map(l=>`<div class="leg"><span class="ic" style="background:${l.bg}">${l.ic}</span><span class="tx"><b>${l.b}</b>${l.t}</span></div>`).join('');
+  } else { leg.style.display='none'; leg.innerHTML=''; }
+  const act = $('#tipAction');
+  act.style.display='flex'; act.classList.toggle('warn', !!st.warn);
+  $('#tipActionText').textContent = st.action;
+  $('#tipCount').textContent = `${i+1} / ${STEPS.length}`;
+  $('#btnBack').style.visibility = i === 0 ? 'hidden' : 'visible';
+  $('#btnNext').innerHTML = (i === STEPS.length-1 ? 'לסיום ' : 'הבא ') +
+    '<svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>';
+  hud.classList.remove('hidden'); tip.classList.remove('hidden');
+  relaunch.style.display = 'none';
+  // segments: chapters done / current half
+  document.querySelectorAll('.seg').forEach((s,ci)=>{
+    s.className = 'seg' + (ci < st.ch ? ' done' : ci === st.ch ? ' half' : '');
+  });
+  tip.style.opacity = 0; tip.style.transform = 'translateY(8px)';
+  requestAnimationFrame(()=>{ setTimeout(()=>{ placeStep(); tip.style.opacity=1; tip.style.transform='translateY(0)'; }, 190); });
+}
+function next(){ idx < STEPS.length - 1 ? showStep(idx+1) : finish(); }
+function back(){ if (idx > 0) showStep(idx-1); }
+
+/* auto-advance: המרצה לחץ על הפעולה האמיתית */
+hotspot.addEventListener('click', e => {
+  const rc = hotspot.getBoundingClientRect();
+  const rip = document.createElement('span'); rip.className='ripple';
+  const d = Math.max(rc.width, rc.height) * .6;
+  rip.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX-rc.left-d/2}px;top:${e.clientY-rc.top-d/2}px`;
+  hotspot.appendChild(rip); setTimeout(()=>rip.remove(), 520);
+  const st = STEPS[idx];
+  if (st.advanceOnHole === false){ setTimeout(next, 300); }
+  else setTimeout(next, 340);
+});
+$('#btnNext').addEventListener('click', next);
+$('#btnBack').addEventListener('click', back);
+
+/* ---- HUD segments ---- */
+$('#segs').innerHTML = CHAPTERS.map(()=>'<span class="seg"><i></i></span>').join('');
+
+/* ---- theme ---- */
+$('#themeBtn').addEventListener('click', ()=>{
+  const t = theme()==='light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t); store('theme', t);
+  if (phase==='tour' && idx>=0) setShot(STEPS[idx].shot);
+  if (phase==='finish' || phase==='done') setShot('dash');
+});
+const savedTheme = load('theme'); if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+/* ---- keyboard (RTL: ← קדימה, → אחורה) ---- */
+addEventListener('keydown', e=>{
+  if (phase !== 'tour') { if (e.key==='Escape' && phase!=='intro') openExit(); return; }
+  if (e.key === 'ArrowLeft') next();
+  else if (e.key === 'ArrowRight') back();
+  else if (e.key === 'Escape') openExit();
+  else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); next(); }
+});
+
+/* =========================================================
+   dialogs: intro → Q&A → loader → tour ; exit ; finish
+========================================================= */
+const dlgVeil = $('#dlgVeil'), dlg = $('#dlg');
+function openDlg(html){ dlg.innerHTML = html; dlgVeil.classList.add('open'); }
+function closeDlg(){ dlgVeil.classList.remove('open'); }
+
+function intro(){
+  phase='intro'; setShot('dash'); shot.classList.add('dimmed');
+  const saved = load('answers');
+  if (saved && saved.who){       // כבר עשה היכרות — לא שואלים שוב
+    Object.assign(A, saved);
+    openDlg(`
+      <img class="dlg-mascot" src="../BOARDi/SVG/2.svg" alt="בורדי" onerror="this.style.display='none'">
+      <div class="dlg-kicker">WALK ME · סיור היכרות</div>
+      <div class="dlg-title">טוב לראות אותך שוב.</div>
+      <div class="dlg-body">אני זוכר את התשובות שלך מהפעם הקודמת — אז מדלגים על השאלות ויוצאים ישר לדרך.</div>
+      <div class="dlg-actions">
+        <button class="btn btn-next btn-big" onclick="beginTour()">צא לדרך</button>
+        <button class="btn btn-ghost btn-big" onclick="startQ()">עדכן את התשובות</button>
+      </div>`);
+    return;
+  }
+  openDlg(`
+    <img class="dlg-mascot" src="../BOARDi/SVG/12.svg" alt="בורדי" onerror="this.style.display='none'">
+    <div class="dlg-kicker">WALK ME · סיור היכרות</div>
+    <div class="dlg-title">היי, אני בורדי. נעים מאוד.</div>
+    <div class="dlg-body">אני לא הולך להרצות לך — פשוט נעבור יחד, לחיצה-לחיצה, על הדברים שבאמת חשובים כאן.<br>
+    <b>שלוש שאלות קצרות</b> לפני שיוצאים, כדי שהמסלול יתאים לך ולא למרצה גנרי.</div>
+    <div class="dlg-actions">
+      <button class="btn btn-next btn-big" onclick="startQ()">יאללה, מתחילים</button>
+      <button class="btn btn-ghost btn-big" onclick="skipAll()">אסתדר לבד</button>
+    </div>`);
+}
+
+const Q = [
+ { title:'מה הכי מתאר אותך?', sub:null, key:'who', chips:[
+   ['biz','עסק שמוכר ידע'], ['edu','מוסד חינוכי'], ['creator','משהו אחר לגמרי']] },
+ { title:'כמה אנשים יש סביבך היום?', sub:'ולאן היית רוצה להגיע?', key:'sizeNow', key2:'sizeGoal',
+   chips:[['none','עוד אין קהילה'],['s','עד 100'],['m','100–1,000'],['l','1,000+']],
+   chips2:[['hundreds','כמה מאות'],['thousands','אלפים'],['tens','עשרות אלפים'],['chill','בקצב שלי, בלי לחץ']] },
+ { title:'יש לך כבר תכנים קיימים?', sub:'ובנית פעם קורס דיגיטלי?', key:'imports', key2:'built',
+   chips:[['yes','כן, קורסים מוקלטים'],['some','יש חומרים חלקיים'],['no','מתחיל מאפס']],
+   chips2:[['yes','כן, לא פעם ראשונה'],['no','זו הפעם הראשונה']] },
+];
+function startQ(){ qIdx = 0; renderQ(); }
+function renderQ(){
+  phase = 'q'+(qIdx+1);
+  const q = Q[qIdx];
+  const chips = (arr,key)=> `<div class="chips">${arr.map(([v,l])=>
+    `<button class="chip${A[key]===v?' sel':''}" onclick="pick('${key}','${v}',${q.key2?`'${key}'==='${q.key2}'`:'true'})">${l}</button>`).join('')}</div>`;
+  openDlg(`
+    ${qIdx>0?`<button class="dlg-back" onclick="qBack()"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg> חזרה</button>`:''}
+    <img class="dlg-mascot" src="../BOARDi/SVG/4.svg" alt="" onerror="this.style.display='none'">
+    <div class="qdots">${Q.map((_,i)=>`<span class="qdot${i===qIdx?' on':''}"></span>`).join('')}</div>
+    <div class="dlg-title">${q.title}</div>
+    ${chips(q.chips, q.key)}
+    ${q.key2 ? `<div class="q-sub">${q.sub}</div>${chips(q.chips2, q.key2)}` : ''}
+  `);
+}
+function pick(key, val, isLast){
+  A[key] = val; store('answers', A);
+  // re-render for selection feedback, advance when the card is complete
+  const q = Q[qIdx];
+  const complete = A[q.key] && (!q.key2 || A[q.key2]);
+  renderQ();
+  if (complete) setTimeout(()=> qIdx < Q.length-1 ? (qIdx++, renderQ()) : buildRoute(), 420);
+}
+function qBack(){ if (qIdx>0){ qIdx--; renderQ(); } }
+
+function buildRoute(){
+  phase='loading';
+  openDlg(`
+    <video class="loader-video" autoplay muted loop playsinline
+      onerror="this.outerHTML='&lt;img class=&quot;dlg-mascot&quot; src=&quot;../BOARDi/SVG/7.svg&quot;&gt;'">
+      <source src="../BOARDi/BOARDi Coding.mp4" type="video/mp4">
+    </video>
+    <div class="loader-line">בונה לך מסלול מותאם <span class="dots"><i></i><i></i><i></i></span></div>`);
+  setTimeout(()=>{
+    const open = {
+      biz:'מעולה. עסק שמוכר ידע — אז נשים דגש על קורס שנראה שווה כסף, מחיר, ודיוור שמוכר.',
+      edu:'מעולה. מוסד חינוכי — נעבור על הכול, ושים לב במיוחד לבית הספר הדיגיטלי ולחוויית התלמיד.',
+      creator:'מעולה. נבנה את זה צעד-צעד — קורס ראשון, חוויית תלמיד, וכל הכלים שמסביב.',
+    }[A.who || 'creator'];
+    openDlg(`
+      <img class="dlg-mascot" src="../BOARDi/SVG/2.svg" alt="" onerror="this.style.display='none'">
+      <div class="dlg-kicker">המסלול שלך מוכן</div>
+      <div class="dlg-title">${open}</div>
+      <div class="dlg-body">עשרה פרקים קצרים. בכל תחנה — פעולה אחת אמיתית במערכת. <b>ברגע שתלחץ עליה, נתקדם לבד.</b><br>אפשר לצאת בכל רגע, ולחזור מאייקון הסיור שבכותרת.</div>
+      <div class="dlg-actions"><button class="btn btn-next btn-big" onclick="beginTour()">צא לדרך</button></div>`);
+  }, 1500);
+}
+function beginTour(){ closeDlg(); shot.classList.remove('dimmed'); showStep(0); }
+
+/* ---- exit ---- */
+function openExit(){
+  openDlg(`
+    <img class="dlg-mascot" src="../BOARDi/SVG/13.svg" alt="" onerror="this.style.display='none'">
+    <div class="dlg-title">לעצור את הסיור?</div>
+    <div class="dlg-body">אין לחץ — שמרתי איפה היינו. אפשר לחזור בכל רגע דרך <b>אייקון הסיור</b> שבכותרת המערכת.</div>
+    <div class="dlg-actions">
+      <button class="btn btn-pink btn-big" onclick="exitTour()">צא מהסיור</button>
+      <button class="btn btn-next btn-big" onclick="closeDlg()">ממשיכים</button>
+    </div>`);
+}
+$('#exitBtn').addEventListener('click', openExit);
+function exitTour(){ closeDlg(); endToDashboard('הסיור נעצר. האייקון בכותרת מחזיר אותי לכאן.'); }
+function skipAll(){ closeDlg(); endToDashboard('כשתרצה אותי — אני באייקון הסיור שבכותרת.'); }
+
+/* ---- finish ---- */
+function finish(){
+  phase='finish'; store('done', true);
+  hud.classList.add('hidden'); tip.classList.add('hidden');
+  hole.style.display = soft.style.display = hotspot.style.display = 'none';
+  setShot('dash'); shot.classList.add('dimmed');
+  const seen = ['יצירת קורס ומרכזי ידע','פרקים ושיעורים מכל הסוגים','העלאת וידאו + הספריה שלי','בלוקים של תוכן בשיעור','מצב תלמיד ופתקים עם זמן','מחיר והגדרות קורס','מאגר הקורסים של התלמיד','סדרות מיילים ודיוור','CRM — כל אנשי הקשר','נתונים, ערכת מותג + בורדי'];
+  openDlg(`
+    <img class="dlg-mascot" src="../BOARDi/SVG/5.svg" alt="" onerror="this.style.display='none'">
+    <div class="dlg-kicker">זהו. עברת את זה.</div>
+    <div class="dlg-title">המערכת שלך. ברצינות — שלך.</div>
+    <div class="done-list">${seen.map(s=>`<div class="done-item"><svg viewBox="0 0 24 24"><path d="M4.5 12.5l4.6 4.6L19.5 6.7"/></svg>${s}</div>`).join('')}</div>
+    <div class="dlg-body"><b>${finishPersonalLine()}</b><br>ואם בא לך את הסיבוב הזה שוב — תכף אראה לך איפה אני גר.</div>
+    <div class="dlg-actions"><button class="btn btn-next btn-big" onclick="revealRelaunch()">סיימנו — לעבודה</button></div>`);
+  confetti();
+}
+function confetti(){
+  const colors=['#38C4F2','#F05680','#7DC57A','#EAD654','#253E7A'];
+  for(let i=0;i<44;i++){
+    const c=document.createElement('span'); c.className='confetti';
+    c.style.cssText=`right:${5+Math.random()*90}vw;background:${colors[i%5]};animation-delay:${Math.random()*0.9}s;animation-duration:${2.2+Math.random()*1.4}s`;
+    dlg.appendChild(c);
+  }
+}
+/* the composited relaunch icon — pinned to the REAL topbar coordinates */
+function placeRelaunch(){
+  const b = BOX.dash.topbarActions, W = stage.clientWidth, H = stage.clientHeight;
+  const size = b.h * H; // אותו גובה כמו כפתורי ה-topbar האמיתיים
+  relaunch.style.width = relaunch.style.height = size + 'px';
+  relaunch.style.left = (b.x + b.w) * W + 8 + 'px'; // צמוד לקבוצת הכפתורים הקיימת
+  relaunch.style.top = b.y * H + 'px';
+}
+function endToDashboard(msg){
+  phase='done'; hud.classList.add('hidden'); tip.classList.add('hidden');
+  hole.style.display = soft.style.display = hotspot.style.display = 'none';
+  setShot('dash'); shot.classList.remove('dimmed');
+  placeRelaunch(); relaunch.style.display='flex';
+  if (msg) toast(msg);
+}
+function revealRelaunch(){
+  closeDlg(); shot.classList.remove('dimmed');
+  endToDashboard(null);
+  setTimeout(()=>{
+    const rr = relaunch.getBoundingClientRect(), sr = stage.getBoundingClientRect();
+    const r = { x: rr.left - sr.left - 6, y: rr.top - sr.top - 6, w: rr.width + 12, h: rr.height + 12 };
+    place(hole, r); hole.style.display='block'; hole.classList.remove('warn');
+    hole.classList.remove('scanning'); void hole.offsetWidth; hole.classList.add('scanning');
+    toast('זה אני. מכאן חוזרים לכל מדריך — הסיור המלא וגם מדריכי בית הספר, המועדון והתכנית.');
+    setTimeout(()=>{ hole.style.display='none'; }, 4200);
+  }, 350);
+}
+/* בורדי 6 = הדרך חזרה לכל המדריכים */
+const guideMenu = $('#guideMenu');
+relaunch.addEventListener('click', e=>{
+  e.stopPropagation();
+  const r = relaunch.getBoundingClientRect();
+  guideMenu.style.top = (r.bottom + 10) + 'px';
+  guideMenu.style.left = Math.max(12, Math.min(r.left, innerWidth - 262)) + 'px';
+  guideMenu.classList.toggle('open');
+});
+$('#gmRestart').addEventListener('click', ()=>{
+  guideMenu.classList.remove('open');
+  hole.style.display='none'; relaunch.style.display='none'; qIdx=0; intro();
+});
+document.addEventListener('click', e=>{
+  if (!guideMenu.contains(e.target) && !relaunch.contains(e.target)) guideMenu.classList.remove('open');
+});
+
+/* ---- toast ---- */
+function toast(msg, type='info'){
+  const t=document.createElement('div'); t.className='toast'+(type==='success'?' success':'');
+  t.textContent=msg; $('#toast').appendChild(t);
+  setTimeout(()=>{ t.style.opacity=0; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),320); }, 3200);
+}
+
+/* ---- boot ---- */
+layoutStage();
+shot.src = shotSrc('dash');
+shot.onload = ()=> shot.style.opacity = 1;
+setTimeout(intro, 350);
+</script>
+</body>
+</html>
