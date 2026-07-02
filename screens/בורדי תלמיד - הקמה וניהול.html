@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<!--
+  WHITEBOARD LMS · בורדי תלמיד — הקמה וניהול (Teacher-facing)
+  Self-contained demo screen. RTL Hebrew. No backend.
+  STATE TOGGLES (top of screen):
+    · מצב הקמה / מצב עריכה  → create (empty) vs edit (active) state
+    · תצוגת מסלול: מנהיג (enabled, default) / נעול (locked overlay preview for non-מנהיג)
+  Plan gate: creating a Student BOARDi is available ONLY on the "מנהיג" plan.
+  One BOARDi per account, bound to ONE course. Manual create / edit / delete.
+-->
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בורדי תלמיד · הקמה וניהול · WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green-bright:#22c55e;--yellow:#EAD654;--purple:#9B6BF2;--orange:#F5A65B;
+--bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.16);
+--text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);--r-sm:10px;--r-md:16px;--r-lg:18px;--shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);}
+[data-theme="dark"]{--bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);--text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.3);--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);display:flex;overflow:hidden;transition:background .3s}
+h1,h2,h3,h4,.fk{font-family:'Fredoka',sans-serif}
+svg{display:block}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:8px}
+
+/* ============ SIDEBAR ============ */
+.sidebar{width:220px;flex:0 0 220px;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:18px 14px;height:100vh}
+.logo{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0 16px}
+.logo .mk{width:46px;height:46px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center}
+.logo .mk svg{width:28px;height:28px}
+.logo .wm{font-family:'Fredoka';font-weight:700;font-size:15px;letter-spacing:.5px;text-align:center}
+.logo .wm small{display:block;font-size:8px;letter-spacing:3px;color:#ffffff88;text-align:center;font-family:'Heebo';font-weight:500;margin-top:2px}
+.nav{display:flex;flex-direction:column;gap:3px;margin-top:8px;flex:1}
+.nav-lbl{font-size:10px;letter-spacing:1px;color:#ffffff55;padding:10px 12px 4px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:11px;color:#ffffffcc;font-size:13.5px;font-weight:500;min-height:44px;transition:background .15s,color .15s}
+.nav-item svg{width:19px;height:19px;stroke:currentColor;stroke-width:2;fill:none;flex:0 0 19px}
+.nav-item:hover{background:#ffffff14;color:#fff}
+.nav-item.active{background:#fff;color:var(--navy);font-weight:600}
+.side-bottom{display:flex;flex-direction:column;gap:12px;padding-top:12px;border-top:1px solid #ffffff1f}
+.mode-tg{display:flex;background:#ffffff14;border-radius:11px;padding:4px;gap:4px}
+.mode-tg button{flex:1;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:600;color:#ffffffb0;min-height:40px}
+.mode-tg button.on{background:#fff;color:var(--navy)}
+.prof{display:flex;align-items:center;gap:10px;padding:4px 2px}
+.prof .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Fredoka';color:#fff;flex:0 0 38px}
+.prof .nm{font-size:13px;font-weight:600}
+.prof .em{font-size:10px;color:#ffffff7a}
+
+/* ============ MAIN ============ */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;min-width:0}
+.topbar{height:60px;flex:0 0 60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;gap:16px}
+.crumb{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--text-sub);font-weight:500}
+.crumb b{color:var(--text-main);font-weight:600}
+.crumb .dot{width:5px;height:5px;border-radius:50%;background:var(--border-strong)}
+.crumb svg{width:16px;height:16px;stroke:var(--cyan);stroke-width:2;fill:none}
+.tb-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:11px;border:1px solid var(--border);background:var(--surface-2);display:flex;align-items:center;justify-content:center}
+.icon-btn svg{width:19px;height:19px;stroke:var(--text-sub);stroke-width:2;fill:none}
+.icon-btn:hover{border-color:var(--border-strong)}
+
+.demo-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:6px 12px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;font-size:12px;color:var(--text-sub)}
+.demo-bar .seg{display:flex;background:var(--surface-3);border-radius:9px;padding:3px;gap:3px}
+.demo-bar .seg button{padding:6px 12px;border-radius:7px;font-size:12px;font-weight:600;color:var(--text-sub);min-height:34px}
+.demo-bar .seg button.on{background:var(--surface);color:var(--text-main);box-shadow:var(--shadow-sm)}
+.demo-bar .dlab{font-weight:600;color:var(--text-xs);letter-spacing:.3px}
+
+.scroll{flex:1;overflow-y:auto;padding:22px 26px 60px}
+.wrap{max-width:1180px;margin:0 auto;position:relative}
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.page-head .ttl{display:flex;align-items:center;gap:14px}
+.page-head .mascot{width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;flex:0 0 52px;box-shadow:var(--shadow-sm)}
+.page-head .mascot img{width:38px;height:38px}
+.page-head h1{font-size:23px;font-weight:600;letter-spacing:.2px}
+.page-head p{font-size:13.5px;color:var(--text-sub);margin-top:3px;max-width:560px;line-height:1.5}
+.status-pill{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;font-size:12.5px;font-weight:600;background:rgba(34,197,94,.12);color:#16a34a;border:1px solid rgba(34,197,94,.28)}
+[data-theme="dark"] .status-pill{color:#4ade80}
+.status-pill .live{width:8px;height:8px;border-radius:50%;background:var(--green-bright);box-shadow:0 0 0 0 rgba(34,197,94,.5);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}70%{box-shadow:0 0 0 7px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;box-shadow:var(--shadow-sm);margin-bottom:16px}
+.card-head{display:flex;align-items:center;gap:11px;margin-bottom:4px}
+.card-head .ci{width:36px;height:36px;border-radius:11px;background:var(--surface-3);display:flex;align-items:center;justify-content:center;flex:0 0 36px}
+.card-head .ci svg{width:19px;height:19px;stroke:var(--navy);stroke-width:2;fill:none}
+[data-theme="dark"] .card-head .ci svg{stroke:var(--cyan)}
+.card-head h2{font-size:16.5px;font-weight:600}
+.card-head .step{margin-inline-start:auto;font-size:11px;font-weight:700;color:var(--text-xs);letter-spacing:.5px}
+.card-sub{font-size:12.5px;color:var(--text-sub);line-height:1.55;margin-bottom:16px}
+.card-sub b{color:var(--text-main);font-weight:600}
+
+/* plan banner */
+.plan-banner{display:flex;align-items:center;gap:14px;padding:15px 18px;border-radius:var(--r-md);background:linear-gradient(90deg,rgba(34,197,94,.12),rgba(56,196,242,.08));border:1px solid rgba(34,197,94,.28);margin-bottom:16px}
+.plan-banner .badge{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;background:var(--green-bright);color:#fff;font-weight:700;font-size:12.5px;flex:0 0 auto}
+.plan-banner .badge svg{width:15px;height:15px;stroke:#fff;stroke-width:2.4;fill:none}
+.plan-banner .pt{flex:1;min-width:0}
+.plan-banner .pt strong{font-size:14px;font-weight:600;display:block}
+.plan-banner .pt span{font-size:12px;color:var(--text-sub)}
+
+/* course select */
+.course-row{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface-2)}
+.course-row .thumb{width:70px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--pink),var(--orange));flex:0 0 70px;display:flex;align-items:center;justify-content:center}
+.course-row .thumb svg{width:22px;height:22px;stroke:#fff;stroke-width:2;fill:none}
+.course-row .ci-txt{flex:1;min-width:0}
+.course-row .ci-txt .cn{font-size:15px;font-weight:600}
+.course-row .ci-txt .cm{font-size:12px;color:var(--text-sub);margin-top:2px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--surface-3);font-size:11px;font-weight:600;color:var(--navy)}
+[data-theme="dark"] .chip{color:var(--cyan)}
+.btn-ghost{padding:9px 16px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface);font-size:13px;font-weight:600;color:var(--text-main);min-height:44px;display:inline-flex;align-items:center;gap:7px}
+.btn-ghost svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none}
+.btn-ghost:hover{background:var(--surface-3)}
+
+/* transcription */
+.tr-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.tr-progress{flex:1;min-width:220px}
+.tr-progress .lbl{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:7px}
+.tr-progress .lbl b{font-weight:600}
+.tr-progress .lbl .pct{color:var(--text-sub);font-weight:600}
+.bar{height:9px;border-radius:99px;background:var(--surface-3);overflow:hidden}
+.bar > i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--purple));transition:width .5s ease}
+.lesson-list{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+.lesson{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);background:var(--surface)}
+.lesson:last-child{border-bottom:none}
+.lesson .num{width:26px;height:26px;border-radius:8px;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-sub);flex:0 0 26px}
+.lesson .ltxt{flex:1;min-width:0}
+.lesson .ltxt .ln{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lesson .ltxt .lm{font-size:11px;color:var(--text-xs);margin-top:1px}
+.tr-stat{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;flex:0 0 auto;min-width:104px;justify-content:center}
+.tr-stat svg{width:14px;height:14px;stroke-width:2.2;fill:none}
+.tr-stat.done{background:rgba(34,197,94,.13);color:#16a34a}
+[data-theme="dark"] .tr-stat.done{color:#4ade80}
+.tr-stat.done svg{stroke:currentColor}
+.tr-stat.wait{background:rgba(37,62,122,.08);color:var(--text-sub)}
+[data-theme="dark"] .tr-stat.wait{background:rgba(255,255,255,.06)}
+.tr-stat.prog{background:rgba(234,214,84,.18);color:#a88700}
+[data-theme="dark"] .tr-stat.prog{color:var(--yellow)}
+.tr-stat.prog .spin{width:13px;height:13px;border:2px solid rgba(168,135,0,.3);border-top-color:#a88700;border-radius:50%;animation:spin .7s linear infinite}
+[data-theme="dark"] .tr-stat.prog .spin{border-color:rgba(234,214,84,.3);border-top-color:var(--yellow)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* buttons */
+.btn-primary{padding:11px 20px;border-radius:12px;background:var(--pink);color:#fff;font-size:13.5px;font-weight:700;min-height:44px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 10px 24px -12px rgba(240,86,128,.8)}
+.btn-primary svg{width:17px;height:17px;stroke:#fff;stroke-width:2.2;fill:none}
+.btn-primary:hover{filter:brightness(1.05)}
+.btn-primary:disabled{opacity:.5;cursor:default;box-shadow:none}
+.btn-primary.navy{background:var(--navy);box-shadow:0 10px 24px -12px rgba(37,62,122,.7)}
+.btn-danger{padding:11px 20px;border-radius:12px;background:transparent;color:var(--pink);font-size:13.5px;font-weight:700;min-height:44px;display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(240,86,128,.35)}
+.btn-danger svg{width:17px;height:17px;stroke:currentColor;stroke-width:2.2;fill:none}
+.btn-danger:hover{background:rgba(240,86,128,.08)}
+
+/* toggle rows */
+.toggle-row{display:flex;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid var(--border)}
+.toggle-row:last-of-type{border-bottom:none}
+.toggle-row .tri{width:34px;height:34px;border-radius:10px;background:var(--surface-3);display:flex;align-items:center;justify-content:center;flex:0 0 34px}
+.toggle-row .tri svg{width:17px;height:17px;stroke:var(--navy);stroke-width:2;fill:none}
+[data-theme="dark"] .toggle-row .tri svg{stroke:var(--cyan)}
+.toggle-row .tt{flex:1;min-width:0}
+.toggle-row .tt .n{font-size:13.5px;font-weight:600}
+.toggle-row .tt .d{font-size:11.5px;color:var(--text-sub);margin-top:1px}
+.switch{width:46px;height:27px;border-radius:99px;background:var(--border-strong);position:relative;flex:0 0 46px;transition:background .2s;cursor:pointer}
+.switch::after{content:"";position:absolute;top:3px;inset-inline-end:3px;width:21px;height:21px;border-radius:50%;background:#fff;transition:inset-inline-end .2s;box-shadow:0 2px 5px rgba(0,0,0,.2)}
+.switch.on{background:var(--green-bright)}
+.switch.on::after{inset-inline-end:22px}
+.switch.locked{opacity:.75;cursor:not-allowed}
+.lock-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--text-xs);background:var(--surface-3);padding:3px 8px;border-radius:99px;flex:0 0 auto}
+.lock-tag svg{width:11px;height:11px;stroke:currentColor;stroke-width:2.2;fill:none}
+
+/* upload */
+.subhead{font-size:13px;font-weight:700;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.subhead svg{width:16px;height:16px;stroke:var(--text-sub);stroke-width:2;fill:none}
+.dropzone{border:2px dashed var(--border-strong);border-radius:var(--r-md);padding:24px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:var(--surface-2)}
+.dropzone:hover{border-color:var(--cyan);background:var(--surface-3)}
+.dropzone .du{width:44px;height:44px;border-radius:12px;background:var(--surface-3);display:inline-flex;align-items:center;justify-content:center;margin-bottom:9px}
+.dropzone .du svg{width:22px;height:22px;stroke:var(--cyan);stroke-width:2;fill:none}
+.dropzone .dt{font-size:13.5px;font-weight:600}
+.dropzone .ds{font-size:11.5px;color:var(--text-sub);margin-top:3px}
+.file-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.file-item{display:flex;align-items:center;gap:11px;padding:11px 13px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2)}
+.file-item .fi{width:32px;height:32px;border-radius:9px;background:rgba(56,196,242,.14);display:flex;align-items:center;justify-content:center;flex:0 0 32px}
+.file-item .fi svg{width:16px;height:16px;stroke:var(--cyan);stroke-width:2;fill:none}
+.file-item .ff{flex:1;min-width:0}
+.file-item .ff .fn{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-item .ff .fs{font-size:11px;color:var(--text-xs)}
+.rm-btn{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 32px;color:var(--text-sub)}
+.rm-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none}
+.rm-btn:hover{background:rgba(240,86,128,.1);color:var(--pink)}
+
+/* custom tests */
+.test-item{display:flex;align-items:center;gap:11px;padding:11px 13px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2);margin-bottom:8px}
+.test-item .ti{width:32px;height:32px;border-radius:9px;background:rgba(155,107,242,.15);display:flex;align-items:center;justify-content:center;flex:0 0 32px}
+.test-item .ti svg{width:16px;height:16px;stroke:var(--purple);stroke-width:2;fill:none}
+.test-item .tf{flex:1;min-width:0}
+.test-item .tf .tn{font-size:13px;font-weight:600}
+.test-item .tf .ts{font-size:11px;color:var(--text-xs)}
+
+/* persona */
+.field{margin-bottom:18px}
+.field:last-child{margin-bottom:0}
+.field > label{font-size:13px;font-weight:600;display:block;margin-bottom:9px}
+.field > label .hint{font-weight:400;color:var(--text-sub);font-size:11.5px}
+.segmented{display:inline-flex;background:var(--surface-3);border-radius:12px;padding:4px;gap:4px;flex-wrap:wrap}
+.segmented button{padding:9px 16px;border-radius:9px;font-size:13px;font-weight:600;color:var(--text-sub);min-height:40px}
+.segmented button.on{background:var(--surface);color:var(--text-main);box-shadow:var(--shadow-sm)}
+.segmented.strict button.on{color:var(--navy)}
+[data-theme="dark"] .segmented.strict button.on{color:var(--cyan)}
+.txt-field{width:100%;padding:12px 14px;border:1px solid var(--border-strong);border-radius:12px;background:var(--surface-2);font-family:inherit;font-size:13.5px;color:var(--text-main);resize:vertical;line-height:1.5}
+.txt-field:focus{outline:none;border-color:var(--cyan)}
+.guard-note{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:11.5px;color:var(--text-sub);background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:9px 12px}
+.guard-note svg{width:15px;height:15px;stroke:var(--cyan);stroke-width:2;fill:none;flex:0 0 15px}
+
+/* preview chat */
+.preview-card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;display:flex;flex-direction:column;gap:12px}
+.pv-head{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.pv-head .pav{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;flex:0 0 34px}
+.pv-head .pav img{width:24px;height:24px}
+.pv-head .pn{font-size:13px;font-weight:600}
+.pv-head .pd{font-size:11px;color:var(--text-sub)}
+.bubble{max-width:80%;padding:11px 14px;border-radius:14px;font-size:13px;line-height:1.55}
+.bubble.q{align-self:flex-start;background:var(--surface-3);border-bottom-right-radius:4px}
+.bubble.a{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-left-radius:4px}
+[data-theme="dark"] .bubble.a{background:linear-gradient(135deg,var(--navy),#2f4d94)}
+.cite{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,.14);font-size:11px;font-weight:600}
+.cite svg{width:12px;height:12px;stroke:currentColor;stroke-width:2;fill:none}
+
+/* lifecycle actions */
+.actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.actions .spacer{flex:1}
+
+/* locked overlay */
+.lock-overlay{position:absolute;inset:0;background:rgba(235,243,251,.72);backdrop-filter:blur(4px);border-radius:var(--r-lg);display:none;align-items:flex-start;justify-content:center;z-index:40;padding:40px}
+[data-theme="dark"] .lock-overlay{background:rgba(12,20,34,.78)}
+body.locked .lock-overlay{display:flex}
+.lock-overlay .lock-card{position:sticky;top:120px}
+.lock-card{background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:34px;text-align:center;max-width:420px}
+.lock-card .li{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--navy),var(--purple));display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px}
+.lock-card .li svg{width:32px;height:32px;stroke:#fff;stroke-width:2;fill:none}
+.lock-card h3{font-size:20px;font-weight:600;margin-bottom:8px}
+.lock-card p{font-size:13.5px;color:var(--text-sub);line-height:1.6;margin-bottom:20px}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(15,25,50,.55);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:200;padding:24px}
+.modal-bg.open{display:flex}
+.modal{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow);max-width:440px;width:100%;padding:28px;text-align:center;transform:translateY(10px) scale(.97);opacity:0;transition:.22s}
+.modal-bg.open .modal{transform:none;opacity:1}
+.modal .mi{width:60px;height:60px;border-radius:16px;background:rgba(240,86,128,.13);display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px}
+.modal .mi svg{width:30px;height:30px;stroke:var(--pink);stroke-width:2;fill:none}
+.modal h3{font-size:19px;font-weight:600;margin-bottom:9px}
+.modal p{font-size:13.5px;color:var(--text-sub);line-height:1.6;margin-bottom:22px}
+.modal .mact{display:flex;gap:10px}
+.modal .mact button{flex:1;min-height:46px;border-radius:12px;font-size:14px;font-weight:700}
+.modal .mact .cancel{background:var(--surface-3);color:var(--text-main)}
+.modal .mact .confirm{background:var(--pink);color:#fff}
+
+/* toasts */
+.toasts{position:fixed;bottom:20px;inset-inline-start:20px;display:flex;flex-direction:column;gap:10px;z-index:300}
+.toast{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--border-strong);border-radius:13px;padding:13px 16px;box-shadow:var(--shadow);min-width:270px;transform:translateX(-120%);opacity:0;transition:.32s cubic-bezier(.2,.9,.3,1.2)}
+[dir="rtl"] .toast{transform:translateX(120%)}
+.toast.show{transform:none;opacity:1}
+.toast .tk{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:0 0 34px}
+.toast .tk svg{width:18px;height:18px;stroke:#fff;stroke-width:2.2;fill:none}
+.toast.ok .tk{background:var(--green-bright)}
+.toast.del .tk{background:var(--pink)}
+.toast .tx{font-size:13.5px;font-weight:600}
+
+/* create-state hint on config cards */
+body.create .edit-only{display:none}
+body:not(.create) .create-only{display:none}
+
+/* course-settings tab strip — this screen IS the "בורדי" tab of course settings */
+.ctabs{display:flex;gap:4px;align-items:center;padding:0 24px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;flex:0 0 auto}
+.ctab{display:flex;align-items:center;gap:6px;padding:11px 15px;font-size:13px;font-weight:600;color:var(--text-sub);cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;text-decoration:none;transition:.2s}
+.ctab svg{width:15px;height:15px;opacity:.6}
+.ctab:hover{color:var(--text-main)}
+.ctab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.ctab.active svg{opacity:1}
+.ctab .tab-plan{display:inline-flex;align-items:center;font-size:9.5px;font-weight:800;line-height:1;padding:3px 7px;border-radius:999px;color:var(--green-bright);background:color-mix(in srgb,var(--green-bright) 14%,transparent);border:1px solid color-mix(in srgb,var(--green-bright) 34%,transparent)}
+@media(max-width:820px){.sidebar{display:none}.scroll{padding:16px}}
+</style>
+</head>
+<body class="edit">
+
+<!-- ============ SIDEBAR ============ -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="mk">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="13" rx="2" stroke="#253E7A" stroke-width="2"/><path d="M8 20h8M12 17v3" stroke="#253E7A" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+    <div class="wm">WHITEBOARD<small>EDUCATION</small></div>
+  </div>
+  <nav class="nav">
+    <div class="nav-lbl">ראשי</div>
+    <a class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>לוח בקרה</a>
+    <a class="nav-item"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>הקורסים שלי</a>
+    <a class="nav-item active"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg>בורדי</a>
+    <a class="nav-item"><svg viewBox="0 0 24 24"><path d="M9 3h6M12 3v4"/><rect x="4" y="7" width="16" height="14" rx="2"/></svg>מבחנים</a>
+    <a class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/></svg>מועדון</a>
+    <div class="nav-lbl">מערכת</div>
+    <a class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>הגדרות</a>
+  </nav>
+  <div class="side-bottom">
+    <div class="mode-tg">
+      <button class="on">מורה</button>
+      <button>תלמיד</button>
+    </div>
+    <div class="prof">
+      <div class="av">א</div>
+      <div><div class="nm">אלון גבאי</div><div class="em">alon@whiteboard</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ============ MAIN ============ -->
+<div class="main">
+  <div class="topbar">
+    <div class="crumb">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg>
+      <span>הגדרות הקורס</span><span class="dot"></span><b>בורדי</b>
+    </div>
+    <div class="tb-right">
+      <button class="icon-btn" id="themeBtn" title="מצב כהה">
+        <svg id="themeIcon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- course-settings tabs — "בורדי" is the active tab (מנהיג feature) -->
+  <nav class="ctabs">
+    <a class="ctab" href="הגדרות קורס.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>ליי-אאוט</a>
+    <a class="ctab" href="הגדרות קורס.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות</a>
+    <a class="ctab" href="הגדרות קורס.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>התלמידים שלי</a>
+    <span class="ctab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 8V4M9 3h6"/><circle cx="9" cy="14" r="1.2" fill="currentColor" stroke="none"/><circle cx="15" cy="14" r="1.2" fill="currentColor" stroke="none"/></svg>בורדי<span class="tab-plan">מנהיג</span></span>
+  </nav>
+
+  <div class="scroll">
+    <div class="wrap">
+
+      <!-- LOCKED OVERLAY (preview for non-מנהיג) -->
+      <div class="lock-overlay">
+        <div class="lock-card">
+          <div class="li"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></div>
+          <h3>בורדי תלמיד נעול</h3>
+          <p>יצירת בורדי תלמיד זמינה במסלול <b>מנהיג</b> בלבד. שדרג את המסלול כדי לאמן עוזר קורס חכם על השיעורים שלך.</p>
+          <a class="btn-primary navy" style="margin:0 auto;text-decoration:none" href="בורדי תלמיד - אפסייל מנהיג.html">שדרג למסלול מנהיג כדי להפעיל</a>
+        </div>
+      </div>
+
+      <!-- DEMO STATE BAR -->
+      <div class="demo-bar" style="margin-bottom:16px">
+        <span class="dlab">תצוגת דמו</span>
+        <div class="seg" id="stateSeg">
+          <button data-state="create">מצב הקמה</button>
+          <button data-state="edit" class="on">מצב עריכה</button>
+        </div>
+        <div class="seg" id="planSeg">
+          <button data-plan="on" class="on">מסלול מנהיג</button>
+          <button data-plan="locked">תצוגת נעול</button>
+        </div>
+      </div>
+
+      <!-- PAGE HEAD -->
+      <div class="page-head">
+        <div class="ttl">
+          <div class="mascot"><img src="../BOARDi/SVG/12.svg" alt="בורדי" onerror="this.style.display='none'"></div>
+          <div>
+            <h1>בורדי תלמיד <span class="create-only" style="font-size:14px;color:var(--text-sub);font-weight:400">· הקמה חדשה</span></h1>
+            <p>עוזר הקורס החכם של התלמידים. לומד מתמלולי השיעורים ועונה אך ורק מתוך חומרי הקורס שלך.</p>
+          </div>
+        </div>
+        <div class="edit-only"><span class="status-pill"><span class="live"></span>פעיל · זמין לתלמידים בקורס</span></div>
+      </div>
+
+      <!-- 1 · PLAN BANNER -->
+      <div class="plan-banner">
+        <span class="badge"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>זמין במסלול שלך · מנהיג</span>
+        <div class="pt">
+          <strong>יצירת בורדי תלמיד מופעלת</strong>
+          <span>בכל חשבון ניתן ליצור בורדי תלמיד אחד, המחובר לקורס אחד. רוצה בורדי על עוד קורסים? <a href="בורדי תלמיד - אפסייל ארגוני.html" style="color:var(--cyan);font-weight:600;text-decoration:none">מסלול ארגוני ›</a></span>
+        </div>
+      </div>
+
+      <!-- 2 · COURSE SELECT -->
+      <div class="card">
+        <div class="card-head">
+          <div class="ci"><svg viewBox="0 0 24 24"><path d="M4 5h13a2 2 0 012 2v11a2 2 0 00-2-2H4z"/><path d="M4 5v11a2 2 0 002 2h11"/></svg></div>
+          <h2>בחירת קורס</h2>
+          <span class="step">שלב 1</span>
+        </div>
+        <p class="card-sub">בורדי מחובר ל<b>קורס אחד</b>. כל התשובות יתבססו על חומרי הקורס הזה בלבד. <span class="chip" style="margin-inline-start:4px">בורדי אחד · קורס אחד</span></p>
+        <div class="course-row">
+          <div class="thumb"><svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+          <div class="ci-txt">
+            <div class="cn">כריזמה מול המצלמה</div>
+            <div class="cm">11 שיעורים · 4 שעות וידאו · 128 תלמידים רשומים</div>
+          </div>
+          <button class="btn-ghost"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 019-9 9 9 0 016.7 3M21 12a9 9 0 01-9 9 9 9 0 01-6.7-3"/><path d="M18 3v3h-3M6 21v-3h3"/></svg>החלף קורס</button>
+        </div>
+      </div>
+
+      <!-- 3 · TRANSCRIPTION (knowledge base) -->
+      <div class="card">
+        <div class="card-head">
+          <div class="ci"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 013 3v6a3 3 0 01-6 0V5a3 3 0 013-3z"/><path d="M19 10a7 7 0 01-14 0M12 17v4M8 21h8"/></svg></div>
+          <h2>תמלול השיעורים</h2>
+          <span class="step">בסיס הידע</span>
+        </div>
+        <p class="card-sub">בורדי לומד מ<b>תמלול הווידאו של כל שיעור</b> בקורס. שיעורים שלא תומללו אינם נכללים במאגר התשובות — תמלל את כולם כדי לכסות את הקורס במלואו.</p>
+
+        <div class="tr-head">
+          <div class="tr-progress">
+            <div class="lbl"><b id="trCount">8 מתוך 11 שיעורים תומללו</b><span class="pct" id="trPct">73%</span></div>
+            <div class="bar"><i id="trBar" style="width:73%"></i></div>
+          </div>
+          <button class="btn-primary navy" id="transcribeAll"><svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>תמלל את כל השיעורים</button>
+        </div>
+
+        <div class="lesson-list" id="lessonList">
+          <!-- rows injected by JS -->
+        </div>
+      </div>
+
+      <!-- 4 · KNOWLEDGE SOURCES -->
+      <div class="card">
+        <div class="card-head">
+          <div class="ci"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+          <h2>מקורות ידע נוספים</h2>
+          <span class="step">שלב 2</span>
+        </div>
+        <p class="card-sub">מלבד התמלולים, אפשר לאפשר לבורדי להיעזר בקבצים ובקישורים מהקורס, ולהוסיף חומרים משלך.</p>
+
+        <div class="toggle-row">
+          <div class="tri"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 013 3v6a3 3 0 01-6 0V5a3 3 0 013-3z"/><path d="M19 10a7 7 0 01-14 0"/></svg></div>
+          <div class="tt"><div class="n">תמלולי שיעורים</div><div class="d">בסיס הידע העיקרי — לא ניתן לכיבוי</div></div>
+          <span class="lock-tag"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>קבוע</span>
+          <div class="switch on locked"></div>
+        </div>
+        <div class="toggle-row">
+          <div class="tri"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+          <div class="tt"><div class="n">קבצים נלווים לשיעורים</div><div class="d">מצגות ומסמכים שצורפו לשיעורי הקורס</div></div>
+          <div class="switch on" data-toggle></div>
+        </div>
+        <div class="toggle-row">
+          <div class="tri"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></svg></div>
+          <div class="tt"><div class="n">קישורים פנימיים</div><div class="d">קישורים שהוטמעו בתוך שיעורי הקורס</div></div>
+          <div class="switch on" data-toggle></div>
+        </div>
+
+        <!-- uploads -->
+        <div class="subhead"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5-5 5 5M12 5v13"/></svg>העלאת חומרים של המרצה</div>
+        <div class="dropzone" id="dropzone">
+          <div class="du"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5-5 5 5M12 5v13"/></svg></div>
+          <div class="dt">גרור לכאן קבצים או לחץ להעלאה</div>
+          <div class="ds">PDF · DOCX · PPTX · TXT · עד 25MB לקובץ</div>
+        </div>
+        <div class="file-list" id="fileList">
+          <div class="file-item">
+            <div class="fi"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+            <div class="ff"><div class="fn">מדריך בונוס.pdf</div><div class="fs">2.1MB · נוסף ידנית</div></div>
+            <button class="rm-btn" data-remove><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          </div>
+          <div class="file-item">
+            <div class="fi"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+            <div class="ff"><div class="fn">מונחון.docx</div><div class="fs">340KB · נוסף ידנית</div></div>
+            <button class="rm-btn" data-remove><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+
+        <!-- custom tests -->
+        <div class="subhead"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>מבחנים מותאמים אישית</div>
+        <p class="card-sub" style="margin-bottom:12px">שאלונים שבורדי יכול להשתמש בהם כדי לתרגל את התלמידים ולבדוק הבנה.</p>
+        <div id="testList">
+          <div class="test-item">
+            <div class="ti"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+            <div class="tf"><div class="tn">מבחן פתיחה — יסודות שפת הגוף</div><div class="ts">8 שאלות · שיעורים 1–3</div></div>
+            <button class="rm-btn" data-remove><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          </div>
+          <div class="test-item">
+            <div class="ti"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+            <div class="tf"><div class="tn">תרגול סיכום קורס</div><div class="ts">12 שאלות · כל השיעורים</div></div>
+            <button class="rm-btn" data-remove><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+        <button class="btn-ghost" id="addTest" style="margin-top:6px"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>הוסף מבחן מותאם</button>
+      </div>
+
+      <!-- 5 · PERSONA & BEHAVIOR -->
+      <div class="card">
+        <div class="card-head">
+          <div class="ci"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+          <h2>אישיות והתנהגות</h2>
+          <span class="step">שלב 3</span>
+        </div>
+        <p class="card-sub">קבע איך בורדי מדבר עם התלמידים ועד כמה הוא נצמד לחומר הקורס.</p>
+
+        <div class="field">
+          <label>סגנון דיבור</label>
+          <div class="segmented" data-seg="tone">
+            <button class="on">ידידותי</button>
+            <button>ענייני</button>
+            <button>מקצועי</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>נצמדות לחומר הקורס <span class="hint">— עד כמה בורדי נצמד לחומר הקורס</span></label>
+          <div class="segmented strict" data-seg="strict">
+            <button class="on">רק מהקורס</button>
+            <button>מהקורס + ידע כללי בזהירות</button>
+          </div>
+          <div class="guard-note"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>ברירת מחדל: בורדי עונה רק ממה שנלמד בקורס. אם התשובה לא נמצאת בחומר — הוא יאמר זאת בכנות במקום להמציא.</div>
+        </div>
+
+        <div class="field">
+          <label>הודעת פתיחה לתלמיד</label>
+          <textarea class="txt-field" rows="2">היי! אני עוזר הקורס של "כריזמה מול המצלמה". שאלו אותי כל דבר מתוך השיעורים ואשמח לעזור.</textarea>
+        </div>
+      </div>
+
+      <!-- 6 · PREVIEW -->
+      <div class="card">
+        <div class="card-head">
+          <div class="ci"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3-6.7"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h2>תצוגה מקדימה</h2>
+          <span class="step">כך זה ייראה לתלמיד</span>
+        </div>
+        <div class="preview-card">
+          <div class="pv-head">
+            <div class="pav"><img src="../BOARDi/SVG/12.svg" alt="" onerror="this.style.display='none'"></div>
+            <div><div class="pn">בורדי · עוזר הקורס</div><div class="pd">כריזמה מול המצלמה</div></div>
+          </div>
+          <div class="bubble q">מה הכלל הראשון לשמירה על קשר עין עם המצלמה?</div>
+          <div class="bubble a">
+            הכלל הראשון הוא לדבר אל העדשה כאילו היא אדם יחיד מולך — לא אל כל הקהל. זה יוצר תחושת שיחה אישית ומחזק אמון.
+            <div class="cite"><svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>שיעור 3 · קשר עין ונוכחות · 04:12</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7 · LIFECYCLE ACTIONS -->
+      <div class="card">
+        <div class="actions">
+          <button class="btn-primary create-only" id="createBtn"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>צור בורדי תלמיד</button>
+          <button class="btn-primary edit-only" id="saveBtn"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>שמור שינויים</button>
+          <div class="spacer"></div>
+          <button class="btn-danger edit-only" id="deleteBtn"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>מחק בורדי</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="mi"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg></div>
+    <h3>למחוק את בורדי התלמיד?</h3>
+    <p>פעולה זו תמחק את בורדי התלמיד ואת האינדקס שלו. התלמידים לא יוכלו יותר לשאול. להמשיך?</p>
+    <div class="mact">
+      <button class="cancel" id="modalCancel">ביטול</button>
+      <button class="confirm" id="modalConfirm">כן, מחק</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+(function(){
+  const body = document.body;
+
+  /* ---------- THEME ---------- */
+  const themeBtn = document.getElementById('themeBtn');
+  const themeIcon = document.getElementById('themeIcon');
+  themeBtn.addEventListener('click', ()=>{
+    const dark = document.documentElement.getAttribute('data-theme')==='dark';
+    document.documentElement.setAttribute('data-theme', dark?'light':'dark');
+    themeIcon.innerHTML = dark
+      ? '<path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/>'
+      : '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/>';
+  });
+
+  /* ---------- STATE SEG (create/edit) ---------- */
+  document.querySelectorAll('#stateSeg button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      document.querySelectorAll('#stateSeg button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      const s = b.dataset.state;
+      body.classList.toggle('create', s==='create');
+      body.classList.toggle('edit', s==='edit');
+    });
+  });
+
+  /* ---------- PLAN SEG (enabled/locked) ---------- */
+  document.querySelectorAll('#planSeg button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      document.querySelectorAll('#planSeg button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      body.classList.toggle('locked', b.dataset.plan==='locked');
+    });
+  });
+
+  /* ---------- LESSONS ---------- */
+  const lessons = [
+    {n:'פתיחה: כוחה של נוכחות מול מצלמה', d:'06:42', st:'done'},
+    {n:'עמידה, יציבה ושפת גוף בסיסית', d:'11:18', st:'done'},
+    {n:'קשר עין ונוכחות', d:'09:05', st:'done'},
+    {n:'שליטה בקול והנשימה', d:'12:33', st:'done'},
+    {n:'הקצב של הדיבור', d:'08:20', st:'done'},
+    {n:'התגברות על חרדת מצלמה', d:'14:02', st:'done'},
+    {n:'מבנה מסר שנשאר בזיכרון', d:'10:47', st:'done'},
+    {n:'תאורה וזוויות מחמיאות', d:'07:55', st:'done'},
+    {n:'עריכה שמחזקת כריזמה', d:'13:10', st:'prog', pct:72},
+    {n:'קריאה לפעולה שעובדת', d:'09:38', st:'wait'},
+    {n:'סיכום ותכנית תרגול', d:'05:29', st:'wait'}
+  ];
+  const listEl = document.getElementById('lessonList');
+  function statHTML(st, pct){
+    if(st==='done') return '<span class="tr-stat done"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>מתומלל</span>';
+    if(st==='prog') return '<span class="tr-stat prog"><span class="spin"></span>בתהליך… '+(pct||0)+'%</span>';
+    return '<span class="tr-stat wait"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>ממתין</span>';
+  }
+  function render(){
+    listEl.innerHTML = lessons.map((l,i)=>`
+      <div class="lesson">
+        <div class="num">${i+1}</div>
+        <div class="ltxt"><div class="ln">${l.n}</div><div class="lm">שיעור וידאו · ${l.d}</div></div>
+        ${statHTML(l.st, l.pct)}
+      </div>`).join('');
+    updateCounter();
+  }
+  function updateCounter(){
+    const done = lessons.filter(l=>l.st==='done').length;
+    const pct = Math.round(done/lessons.length*100);
+    document.getElementById('trCount').textContent = done+' מתוך '+lessons.length+' שיעורים תומללו';
+    document.getElementById('trPct').textContent = pct+'%';
+    document.getElementById('trBar').style.width = pct+'%';
+  }
+  render();
+
+  /* transcribe all — animate waiting → prog → done */
+  const trBtn = document.getElementById('transcribeAll');
+  let running = false;
+  trBtn.addEventListener('click', ()=>{
+    if(running) return;
+    const pending = lessons.map((l,i)=>({l,i})).filter(o=>o.l.st!=='done');
+    if(!pending.length){ toast('כל השיעורים כבר תומללו','ok'); return; }
+    running = true;
+    trBtn.disabled = true;
+    trBtn.innerHTML = '<span class="spin" style="width:15px;height:15px;border:2px solid #ffffff55;border-top-color:#fff;border-radius:50%;display:inline-block;animation:spin .7s linear infinite"></span>מתמלל…';
+    let idx = 0;
+    function next(){
+      if(idx>=pending.length){
+        running=false; trBtn.disabled=false;
+        trBtn.innerHTML='<svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>תמלל את כל השיעורים';
+        toast('כל השיעורים תומללו בהצלחה','ok');
+        return;
+      }
+      const o = pending[idx];
+      lessons[o.i].st='prog'; lessons[o.i].pct = lessons[o.i].pct||10;
+      render();
+      let p = lessons[o.i].pct;
+      const iv = setInterval(()=>{
+        p += 18 + Math.random()*14;
+        if(p>=100){
+          clearInterval(iv);
+          lessons[o.i].st='done'; delete lessons[o.i].pct;
+          render(); idx++; setTimeout(next, 250);
+        } else { lessons[o.i].pct = Math.round(p); render(); }
+      }, 260);
+    }
+    next();
+  });
+
+  /* ---------- SWITCHES ---------- */
+  document.querySelectorAll('.switch[data-toggle]').forEach(s=>{
+    s.addEventListener('click', ()=> s.classList.toggle('on'));
+  });
+
+  /* ---------- SEGMENTED (tone/strict) ---------- */
+  document.querySelectorAll('[data-seg]').forEach(seg=>{
+    seg.querySelectorAll('button').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+        b.classList.add('on');
+      });
+    });
+  });
+
+  /* ---------- REMOVE (files + tests) ---------- */
+  function bindRemoves(){
+    document.querySelectorAll('[data-remove]').forEach(btn=>{
+      if(btn._bound) return; btn._bound=true;
+      btn.addEventListener('click', ()=>{
+        const item = btn.closest('.file-item, .test-item');
+        item.style.transition='.2s'; item.style.opacity='0'; item.style.transform='translateX(20px)';
+        setTimeout(()=>item.remove(), 200);
+      });
+    });
+  }
+  bindRemoves();
+
+  /* ---------- UPLOAD ---------- */
+  const dropzone = document.getElementById('dropzone');
+  const fileList = document.getElementById('fileList');
+  const mockFiles = [
+    {n:'סיכום שיעורים.pdf', s:'1.4MB'},
+    {n:'שאלות נפוצות.docx', s:'210KB'},
+    {n:'תבנית תסריט.pptx', s:'3.6MB'},
+    {n:'רשימת מקורות.txt', s:'12KB'}
+  ];
+  let fIdx = 0;
+  dropzone.addEventListener('click', ()=>{
+    const f = mockFiles[fIdx % mockFiles.length]; fIdx++;
+    const div = document.createElement('div');
+    div.className='file-item'; div.style.opacity='0';
+    div.innerHTML = `<div class="fi"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+      <div class="ff"><div class="fn">${f.n}</div><div class="fs">${f.s} · נוסף ידנית</div></div>
+      <button class="rm-btn" data-remove><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`;
+    fileList.appendChild(div);
+    requestAnimationFrame(()=>{ div.style.transition='.25s'; div.style.opacity='1'; });
+    bindRemoves();
+    toast('הקובץ הועלה לבורדי','ok');
+  });
+
+  /* ---------- ADD TEST ---------- */
+  const testList = document.getElementById('testList');
+  const mockTests = [
+    {n:'בוחן ביניים — שליטה בקול', d:'6 שאלות · שיעורים 4–5'},
+    {n:'תרגול תאורה וזוויות', d:'5 שאלות · שיעור 8'},
+    {n:'מבחן כריזמה מתקדם', d:'10 שאלות · כל השיעורים'}
+  ];
+  let tIdx = 0;
+  document.getElementById('addTest').addEventListener('click', ()=>{
+    const t = mockTests[tIdx % mockTests.length]; tIdx++;
+    const div = document.createElement('div');
+    div.className='test-item'; div.style.opacity='0';
+    div.innerHTML = `<div class="ti"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+      <div class="tf"><div class="tn">${t.n}</div><div class="ts">${t.d}</div></div>
+      <button class="rm-btn" data-remove><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`;
+    testList.appendChild(div);
+    requestAnimationFrame(()=>{ div.style.transition='.25s'; div.style.opacity='1'; });
+    bindRemoves();
+    toast('מבחן מותאם נוסף','ok');
+  });
+
+  /* ---------- CREATE / SAVE ---------- */
+  document.getElementById('createBtn').addEventListener('click', ()=>{
+    document.querySelectorAll('#stateSeg button').forEach(x=>x.classList.remove('on'));
+    document.querySelector('#stateSeg button[data-state="edit"]').classList.add('on');
+    body.classList.remove('create'); body.classList.add('edit');
+    toast('בורדי התלמיד נוצר ופעיל','ok');
+    document.querySelector('.scroll').scrollTo({top:0,behavior:'smooth'});
+  });
+  document.getElementById('saveBtn').addEventListener('click', ()=> toast('השינויים נשמרו','ok'));
+
+  /* ---------- DELETE MODAL ---------- */
+  const modalBg = document.getElementById('modalBg');
+  document.getElementById('deleteBtn').addEventListener('click', ()=> modalBg.classList.add('open'));
+  document.getElementById('modalCancel').addEventListener('click', ()=> modalBg.classList.remove('open'));
+  modalBg.addEventListener('click', e=>{ if(e.target===modalBg) modalBg.classList.remove('open'); });
+  document.getElementById('modalConfirm').addEventListener('click', ()=>{
+    modalBg.classList.remove('open');
+    toast('בורדי התלמיד נמחק','del');
+    document.querySelectorAll('#stateSeg button').forEach(x=>x.classList.remove('on'));
+    document.querySelector('#stateSeg button[data-state="create"]').classList.add('on');
+    body.classList.remove('edit'); body.classList.add('create');
+    document.querySelector('.scroll').scrollTo({top:0,behavior:'smooth'});
+  });
+
+  /* ---------- TOASTS ---------- */
+  const toastsEl = document.getElementById('toasts');
+  function toast(msg, kind){
+    const t = document.createElement('div');
+    t.className='toast '+(kind||'ok');
+    const icon = kind==='del'
+      ? '<path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>'
+      : '<path d="M20 6L9 17l-5-5"/>';
+    t.innerHTML = '<div class="tk"><svg viewBox="0 0 24 24">'+icon+'</svg></div><div class="tx">'+msg+'</div>';
+    toastsEl.appendChild(t);
+    requestAnimationFrame(()=> t.classList.add('show'));
+    setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(), 350); }, 3200);
+  }
+})();
+</script>
+</body>
+</html>

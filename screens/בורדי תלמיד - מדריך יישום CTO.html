@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בורדי תלמיד — מדריך יישום CTO · WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green-bright:#22c55e;--yellow:#EAD654;--purple:#9B6BF2;--orange:#F5A65B;
+--bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.16);
+--text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);--r-sm:10px;--r-md:16px;--r-lg:18px;
+--shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);--code:#0f2447;--codebg:#f2f7ff;}
+[data-theme="dark"]{--bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+--text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.3);--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);--code:#bfe0ff;--codebg:#0e1a30;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:inherit}
+.wrap{display:flex;min-height:100vh}
+/* nav */
+aside.side{width:250px;flex:0 0 250px;background:var(--navy);color:#fff;position:sticky;top:0;height:100vh;overflow-y:auto;padding:20px 14px}
+.brand{display:flex;align-items:center;gap:10px;padding:6px 8px 16px}
+.brand .mk{width:40px;height:40px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center}
+.brand .mk svg{width:26px;height:26px}
+.brand b{font-family:'Fredoka';font-size:15px}
+.brand small{display:block;font-size:9px;letter-spacing:2px;color:#ffffff77}
+#nav{display:flex;flex-direction:column;gap:1px}
+#nav .tag{font-size:10px;color:#ffffff55;letter-spacing:1px;margin:14px 10px 5px}
+#nav a{color:#dbe6ff;font-size:13px;padding:8px 12px;border-radius:8px;transition:.15s;text-decoration:none}
+#nav a:hover{background:#ffffff10}
+#nav a.on{background:linear-gradient(90deg,#ffffff22,#ffffff10);color:#fff;font-weight:600}
+/* main */
+.main{flex:1;min-width:0;padding:34px clamp(20px,4vw,60px) 80px;max-width:1000px}
+.toprow{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.kick{font-family:'Fredoka';color:var(--cyan);font-weight:600;font-size:13px;letter-spacing:.5px}
+h1{font-family:'Fredoka';font-size:30px;font-weight:700;margin:2px 0 6px}
+.lead{font-size:15px;color:var(--text-sub);max-width:720px;margin-bottom:10px}
+.iconbtn{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text-sub);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.iconbtn svg{width:18px;height:18px}
+section{padding-top:30px;scroll-margin-top:20px}
+h2{font-family:'Fredoka';font-size:21px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+h2 .n{width:26px;height:26px;border-radius:8px;background:var(--cyan);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto}
+h3{font-family:'Fredoka';font-size:16px;font-weight:600;margin:18px 0 8px}
+p{margin-bottom:10px;font-size:14.5px}
+ul{margin:0 22px 12px}li{margin-bottom:5px;font-size:14px}
+code.inl{background:var(--codebg);color:var(--code);padding:1px 6px;border-radius:5px;font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
+pre{background:var(--codebg);color:var(--code);border:1px solid var(--border);border-radius:12px;padding:15px 17px;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.7;margin:6px 0 14px;direction:ltr;text-align:left}
+pre .c{color:#7a95c2}pre .k{color:var(--pink)}pre .f{color:var(--cyan)}pre .s{color:var(--green-bright)}
+.note{display:flex;gap:12px;padding:13px 16px;border-radius:12px;margin:12px 0;font-size:13.5px}
+.note span{flex:0 0 auto}.note svg{width:20px;height:20px}
+.note.cy{background:color-mix(in srgb,var(--cyan) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--cyan) 35%,transparent)}
+.note.y{background:color-mix(in srgb,var(--yellow) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--yellow) 50%,transparent)}
+.note.g{background:color-mix(in srgb,var(--green-bright) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--green-bright) 38%,transparent)}
+.note.pk{background:color-mix(in srgb,var(--pink) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--pink) 38%,transparent)}
+.tbl{overflow-x:auto;margin:8px 0 14px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--surface);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm)}
+th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--border)}
+th{background:var(--surface-3);font-family:'Fredoka';font-weight:600;font-size:12.5px}
+tr:last-child td{border-bottom:none}
+.pill{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:100px;background:color-mix(in srgb,var(--purple) 15%,var(--surface));color:var(--purple);border:1px solid color-mix(in srgb,var(--purple) 35%,transparent)}
+/* flow diagram */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 16px}
+.flow .fx{background:var(--surface);border:1.5px solid var(--border-strong);border-radius:12px;padding:10px 13px;font-size:12.5px;font-weight:600;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:2px;min-width:96px}
+.flow .fx small{font-weight:400;color:var(--text-xs);font-size:10.5px}
+.flow .ar{color:var(--cyan);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="side">
+    <div class="brand">
+      <div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="#253E7A" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M8 20h8M12 18v2"/><circle cx="9.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><circle cx="14.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><path d="M9.5 13.5c1.5 1.2 3.5 1.2 5 0"/></svg></div>
+      <div><b>בורדי תלמיד</b><small>CTO · WHITEBOARD</small></div>
+    </div>
+    <nav id="nav">
+      <span class="tag">המוצר</span>
+      <a href="#overview" class="on">סקירה והחלטות מפתח</a>
+      <a href="#experience">חוויית התלמיד</a>
+      <a href="#gating">גייטינג ומגבלות</a>
+      <span class="tag">הליבה הטכנית</span>
+      <a href="#pipeline">צנרת התמלול</a>
+      <a href="#rag">אחזור מודע-זמן + חוזה תשובה</a>
+      <a href="#sources">מקורות ידע</a>
+      <a href="#db">מודל נתונים</a>
+      <a href="#tools">Action API / כלים</a>
+      <span class="tag">תפעול</span>
+      <a href="#lifecycle">מחזור חיים</a>
+      <a href="#guardrails">גבולות, פרטיות ועלות</a>
+      <a href="#jobs">משימות רקע</a>
+      <span class="tag">מסירה</span>
+      <a href="#screens">מסכי עיצוב</a>
+      <a href="#impact">השלכות פיתוח + מפת דרכים</a>
+      <a href="#stack">סיכום טכנולוגי</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="toprow">
+      <div><div class="kick">מדריך יישום · Student BOARDi</div></div>
+      <button class="iconbtn" id="theme" aria-label="מצב תצוגה"><svg id="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+    </div>
+    <h1>בורדי תלמיד</h1>
+    <p class="lead">עוזר ה-AI היחיד שמשרת את <b>התלמיד</b>: צ'אט פנימי בתוך נגן הקורס, מיומן על תמלולי הווידאו של השיעורים, מודע למיקום התלמיד על ציר הזמן, ועונה <b>אך ורק לפי חומר הקורס</b>. מדריך זה נלווה לאפיון (§18) — שם <i>מה ולמה</i>, כאן <i>איך בונים</i>.</p>
+
+    <section id="overview">
+      <h2><span class="n">1</span> סקירה והחלטות מפתח</h2>
+      <p>בורדי תלמיד רץ על <b>אותו Runtime משותף</b> של שאר הבורדים (Claude מאחורי <code class="inl">LLMProvider</code> + tool-calling + RAG). מה שחדש כאן הוא <b>קהל היעד (תלמיד)</b>, <b>הסקופ (קורס בודד)</b>, ו<b>מקור הידע (תמלולי וידאו)</b> — שדורש <b>צנרת תמלול חדשה</b>.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>החלטה</th><th>הכרעה</th></tr></thead>
+        <tbody>
+          <tr><td>קהל</td><td>התלמיד הרשום לקורס (לא המרצה)</td></tr>
+          <tr><td>סקופ ידע</td><td><b>קורס אחד בלבד</b> — namespace וקטורי פר-קורס, סינון קשיח</td></tr>
+          <tr><td>מקור ליבה</td><td>תמלולי הווידאו של כל השיעורים (+ קבצים/קישורים/חומרי מרצה)</td></tr>
+          <tr><td>מודעות</td><td>יודע את מיקום התלמיד (<code class="inl">lesson_id</code> + <code class="inl">t</code>) ומשקלל אותו באחזור</td></tr>
+          <tr><td>חוזה תשובה</td><td><b>course-only</b> — עונה רק מקטעים שאוחזרו; מחוץ לסילבוס → מסרב בנימוס</td></tr>
+          <tr><td>מנגנון UI</td><td>פאנל צ'אט בנגן, זהה למנגנון "הפתקים שלי" (<code class="inl">togglePanel</code>)</td></tr>
+          <tr><td>גייטינג</td><td>מסלול <b>מנהיג</b> · בורדי אחד למרצה · קורס אחד · הקמה ידנית</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note cy"><span><svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div><b>עיקרון-על:</b> כמעט הכל נשען מחדש על הקיים (Runtime, pgvector RAG, Trigger.dev, מנגנון הפאנל בנגן). <b>החלק היחיד שבאמת חדש הוא צנרת התמלול והאינדוקס שלה</b> — עליה נתמקד.</div></div>
+    </section>
+
+    <section id="experience">
+      <h2><span class="n">2</span> חוויית התלמיד</h2>
+      <p>התלמיד צופה בשיעור. מהסטריפ הימני הוא פותח את פאנל בורדי (בדיוק כמו "הפתקים שלי"). הפאנל:</p>
+      <ul>
+        <li><b>Badge מודעות-מיקום</b> — "יודע איפה אתה: שיעור 12 · 14:32". זה מה שמאפשר תשובות בהקשר ("זה בדיוק מה שמוסבר עכשיו").</li>
+        <li><b>ציטוט מקורות</b> — כל תשובה נושאת שבבי מקור: <span class="pill">שיעור 11 · 08:20</span> לחיצים → קפיצה לנגן.</li>
+        <li><b>סירוב מחוץ-לסילבוס</b> — שאלה שלא נלמדה → "אני עונה רק לפי החומר של הקורס הזה" + הפניה למה שכן נלמד.</li>
+        <li><b>שאלות מוצעות</b> — "סכם לי עד כאן", "תן דוגמה", "מה כדאי לחזור עליו".</li>
+      </ul>
+      <div class="note g"><span><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><div>המסך: <code class="inl">מסכים מחודשים/בורדי/בורדי תלמיד - שיחה בקורס.html</code>. הפאנל נבנה כרכיב בתוך נגן הקורס הקיים (<code class="inl">צפייה בקורס.html</code>), על אותו דפוס <code class="inl">.sb-panel</code> / <code class="inl">togglePanel('boardi')</code> שכבר קיים שם כ-stub.</div></div>
+    </section>
+
+    <section id="gating">
+      <h2><span class="n">3</span> גייטינג ומגבלות</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>כלל</th><th>אכיפה</th></tr></thead>
+        <tbody>
+          <tr><td>מסלול <b>מנהיג</b> בלבד</td><td>נבדק ב-<code class="inl">wbApi</code> ביצירה — לא רק ב-UI</td></tr>
+          <tr><td><b>בורדי אחד</b> לכל מרצה</td><td>אילוץ ייחודיות על <code class="inl">student_boardi.teacher_id</code></td></tr>
+          <tr><td>מחובר ל<b>קורס אחד</b></td><td><code class="inl">course_id</code> יחיד; החלפת קורס = re-index</td></tr>
+          <tr><td>הקמה <b>ידנית</b></td><td>המרצה יוצר במפורש; לא נוצר אוטומטית</td></tr>
+          <tr><td>תלמיד שואל רק בקורס שהוא <b>רשום</b> אליו</td><td>בדיקת enrollment + RLS פר-thread</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note y"><span><svg viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span><div>המגבלה "אחד למרצה / קורס אחד" היא החלטת MVP. ההרחבה (מספר בורדים, פר-בית-ספר) לא דורשת שכתוב — רק הסרת האילוץ + תמחור. תוכנן כך מראש.</div></div>
+
+      <h3 style="margin:22px 0 8px;font-size:15px">מיקום ב-UI + מסכי האפסייל (שערי-מסלול)</h3>
+      <p>הקמת/ניהול בורדי תלמיד יושבים כ<b>טאב "בורדי"</b> בתוך <b>הגדרות הקורס</b> (לצד ליי-אאוט/הגדרות/התלמידים/אנליטיקס), עם תג קטן <b>מנהיג</b>. הטאב תמיד גלוי — מה שמשתנה הוא מה שקורה בלחיצה, לפי המסלול והמצב:</p>
+      <div class="tbl"><table>
+        <thead><tr><th>מצב המרצה</th><th>מה קורה בלחיצה על הטאב</th><th>מסך</th></tr></thead>
+        <tbody>
+          <tr><td>מסלול מנהיג · אין בורדי</td><td>מסך הקמה רגיל</td><td><code class="inl">בורדי תלמיד - הקמה וניהול.html</code> (מצב הקמה)</td></tr>
+          <tr><td>מסלול מנהיג · יש בורדי</td><td>מסך עריכה/ניהול. ניסיון ליצור <b>בורדי נוסף</b> → אפסייל <b>ארגוני</b></td><td><code class="inl">בורדי תלמיד - אפסייל ארגוני.html</code></td></tr>
+          <tr><td><b>לא</b> מסלול מנהיג (מורה/מחנך)</td><td>תצוגה נעולה + אפסייל <b>מנהיג</b></td><td><code class="inl">בורדי תלמיד - אפסייל מנהיג.html</code></td></tr>
+        </tbody>
+      </table></div>
+      <div class="note cy"><span><svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div><b>האפסיילים הם UI בלבד — האכיפה בשרת.</b> ה-gate האמיתי הוא ב-<code class="inl">wbApi.createStudentBoardi</code>: בודק <code class="inl">plan==='leader'</code> ואת אילוץ הייחודיות, ומחזיר שגיאת-מסלול מובנית (<code class="inl">PLAN_REQUIRED</code> / <code class="inl">LIMIT_REACHED</code>) שה-UI ממפה לפופאפ הנכון. אסור להסתמך על הסתרת הטאב.</div></div>
+
+      <h3 style="margin:22px 0 8px;font-size:15px">אפסייל ארגוני → ליד מכירות</h3>
+      <p>בפופאפ הארגוני, "דבר עם נציג מכירות" פותח <b>טופס לידים</b> (שם, טלפון, אימייל, מספר קורסים מבוקש, הערה). שליחה יוצרת ליד ב-CRM/אדמין דרך <code class="inl">POST /api/leads</code> עם:</p>
+      <pre><span class="k">lead</span> { name, phone, email, requested_courses, note,
+       source: <span class="s">'boardi_upsell'</span>, requested_plan: <span class="s">'enterprise'</span>,
+       teacher_id, current_plan: <span class="s">'leader'</span>, created_at }
+<span class="c">// מופיע במסך האדמין (CRM) עם תיוג "ליד ארגוני · מקור: אפסייל בורדי" + נותב לנציג מכירות</span></pre>
+      <div class="note g"><span><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><div>הטופס הוא הצד הלקוח; היעד הוא רשומת-ליד אמיתית ב-CRM/אדמין (לא רק טוסט). לאחר יצירה — אישור לתלמיד/מרצה "נציג יחזור תוך יום עסקים" + אירוע אנליטיקס <code class="inl">enterprise_lead_created</code>.</div></div>
+    </section>
+
+    <section id="pipeline">
+      <h2><span class="n">4</span> צנרת התמלול <span class="pill">חדש</span></h2>
+      <p>החלק היחיד שבאמת צריך לבנות. הופך וידאו → ידע בר-אחזור:</p>
+      <div class="flow">
+        <div class="fx">וידאו<small>Bunny Stream</small></div><span class="ar">←</span>
+        <div class="fx">transcribe-lessons<small>Whisper / Groq</small></div><span class="ar">←</span>
+        <div class="fx">תמלול + חותמות<small>words[] · segments</small></div><span class="ar">←</span>
+        <div class="fx">chunking<small>חלונות 30–60ש׳</small></div><span class="ar">←</span>
+        <div class="fx">embeddings<small>pgvector · namespace/קורס</small></div>
+      </div>
+      <pre><span class="c">// jobs/transcribe-lessons.ts — פר-שיעור, רקע (Trigger.dev)</span>
+<span class="k">export const</span> transcribeLessons = job(<span class="s">"transcribe-lessons"</span>, <span class="k">async</span>({courseId})=>{
+  <span class="k">for</span> (<span class="k">const</span> lesson <span class="k">of</span> <span class="f">getLessons</span>(courseId)) {
+    <span class="k">const</span> audio = <span class="k">await</span> bunny.<span class="f">pullAudio</span>(lesson.videoId);       <span class="c">// אודיו מה-Stream</span>
+    <span class="k">const</span> tr    = <span class="k">await</span> stt.<span class="f">transcribe</span>(audio, { timestamps: <span class="s">"word"</span> });
+    <span class="k">await</span> db.lesson_transcript.<span class="f">upsert</span>({ lessonId: lesson.id, courseId,
+      text: tr.text, words: tr.words, status: <span class="s">"done"</span> });
+    <span class="k">await</span> <span class="f">enqueue</span>(<span class="s">"index-transcripts"</span>, { lessonId: lesson.id });   <span class="c">// → אינדוקס</span>
+  }
+});</pre>
+      <pre><span class="c">// jobs/index-transcripts.ts — chunk + embed לתוך namespace הקורס</span>
+<span class="k">const</span> chunks = <span class="f">windowize</span>(transcript.words, { seconds: 45, overlap: 8 });  <span class="c">// שומר t_start/t_end</span>
+<span class="k">for</span> (<span class="k">const</span> c <span class="k">of</span> chunks) {
+  <span class="k">const</span> emb = <span class="k">await</span> embed(c.text);
+  <span class="k">await</span> db.transcript_chunk.<span class="f">insert</span>({ lessonId, courseId, t_start:c.a, t_end:c.b, text:c.text, embedding:emb });
+}</pre>
+      <div class="note cy"><span><svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div>המרצה רואה את הצנרת כ<b>סטטוס תמלול פר-שיעור</b> במסך ההקמה (מתומלל ✓ / בתהליך % / ממתין) + כפתור "תמלל את כל השיעורים". השאר קורה ברקע.</div></div>
+    </section>
+
+    <section id="rag">
+      <h2><span class="n">5</span> אחזור מודע-זמן + חוזה תשובה</h2>
+      <h3>אחזור (course-scoped + position-boost)</h3>
+      <pre><span class="c">// retrieve.ts — סינון קשיח לקורס + boost למיקום התלמיד</span>
+<span class="k">const</span> hits = <span class="k">await</span> db.<span class="f">sql</span>`
+  SELECT id, lesson_id, t_start, t_end, text,
+         embedding &lt;=&gt; ${qEmb} AS dist,
+         CASE WHEN lesson_id = ${cur.lessonId} THEN 0.15 ELSE 0 END AS pos_boost
+  FROM transcript_chunk
+  WHERE course_id = ${courseId}                    <span class="c">-- ← אף פעם לא חוצה קורס</span>
+  ORDER BY dist - pos_boost ASC LIMIT 8`;</pre>
+      <h3>חוזה תשובה — course-only</h3>
+      <div class="note pk"><span><svg viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span><div><b>שער האמון של הפיצ'ר.</b> ה-system prompt מחייב: "ענה <b>אך ורק</b> מהקטעים שסופקו. אם אין כיסוי — אמור שזה לא נלמד בקורס והצע מה כן. אל תשתמש בידע חיצוני." זה מה שמונע הזיות — והוא ההבדל בין "עוזר שסומכים עליו" ל"צ'אטבוט שממציא".</div></div>
+      <pre><span class="c">// system prompt (מקוצר)</span>
+אתה עוזר הקורס של WHITEBOARD. ענה בעברית, בהקשר למיקום התלמיד (${lessonTitle} · ${mmss}).
+השתמש <span class="k">אך ורק</span> במקורות המצורפים. אין כיסוי → "זה לא נלמד בקורס הזה" + הפניה למה שכן.
+ציין מקור לכל טענה: (שיעור N · mm:ss).  רמת היצמדות: ${strictness}.</pre>
+      <p>ברירת המחדל <code class="inl">strictness = "course_only"</code>. המרצה יכול לרכך ל-<code class="inl">"course_plus_general"</code> (ידע כללי בזהירות, עדיין מסמן מה מהקורס ומה לא).</p>
+    </section>
+
+    <section id="sources">
+      <h2><span class="n">6</span> מקורות ידע</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>מקור</th><th>איך נכנס לאינדקס</th></tr></thead>
+        <tbody>
+          <tr><td><b>תמלולי שיעורים</b> (ליבה)</td><td>צנרת התמלול (§4) → chunks וקטוריים</td></tr>
+          <tr><td>קבצים נלווים לשיעורים</td><td>חילוץ טקסט → chunk → embed (אותו namespace)</td></tr>
+          <tr><td>קישורים פנימיים</td><td>מטא-דאטה + טקסט יעד פנימי</td></tr>
+          <tr><td>חומרי מרצה (העלאה בהקמה)</td><td><code class="inl">student_boardi_material(kind:file)</code> → חילוץ → אינדוקס</td></tr>
+          <tr><td><b>מבחנים מותאמים</b></td><td><code class="inl">student_boardi_material(kind:test)</code> — בורדי יכול לתרגל/להסביר לפיהם</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="db">
+      <h2><span class="n">7</span> מודל נתונים</h2>
+      <pre><span class="k">table</span> student_boardi { id, teacher_id, course_id, status, persona, strictness, greeting, created_at }
+<span class="k">table</span> lesson_transcript { lesson_id, course_id, text, words:jsonb, status }        <span class="c">// status: pending|running|done</span>
+<span class="k">table</span> transcript_chunk { id, lesson_id, course_id, t_start, t_end, text, embedding:vector }  <span class="c">// pgvector</span>
+<span class="k">table</span> student_boardi_material { id, boardi_id, kind, ref, title }               <span class="c">// kind: file|test|link</span>
+<span class="k">table</span> student_boardi_thread { id, student_id, boardi_id, course_id, messages:jsonb, updated_at }</pre>
+      <div class="note cy"><span><svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span><div>הכל מסונן RLS: <code class="inl">student_boardi</code> פר-<code class="inl">teacher_id</code>; <code class="inl">student_boardi_thread</code> פר-<code class="inl">student_id</code>; אחזור פר-<code class="inl">course_id</code>. תלמיד ניגש רק לקורס שהוא רשום אליו.</div></div>
+    </section>
+
+    <section id="tools">
+      <h2><span class="n">8</span> Action API / כלים</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>כלי</th><th>סוג</th><th>תיאור</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inl">retrieve_course</code></td><td>read</td><td>אחזור מודע-זמן, course-scoped (§5)</td></tr>
+          <tr><td><code class="inl">jump_to_timecode</code></td><td>read/ui</td><td>קפיצת הנגן לשיעור+חותמת (ציטוט לחיץ)</td></tr>
+          <tr><td><code class="inl">create_student_boardi</code></td><td>write</td><td>מרצה — יצירה (gate: מנהיג, ייחודיות)</td></tr>
+          <tr><td><code class="inl">update_student_boardi</code></td><td>write</td><td>מרצה — persona/strictness/greeting/מקורות → re-index</td></tr>
+          <tr><td><code class="inl">delete_student_boardi</code></td><td>write</td><td>מרצה — מחיקה + ניקוי chunks/threads (מודאל אישור)</td></tr>
+          <tr><td><code class="inl">add_material</code></td><td>write</td><td>מרצה — קובץ/מבחן/קישור → אינדוקס</td></tr>
+        </tbody>
+      </table></div>
+      <p>כלי התלמיד (<code class="inl">retrieve_course</code>, <code class="inl">jump_to_timecode</code>) הם <b>read</b> — רצים חופשי. כלי המרצה הם <b>write</b> — preview→confirm, ומחיקה עוברת מודאל.</p>
+
+      <h3 style="margin:22px 0 8px;font-size:15px">כל פקד במסך ההקמה חייב להשפיע באמת (לא לקישוט)</h3>
+      <p>הפקדים שבמסך <code class="inl">בורדי תלמיד - הקמה וניהול.html</code> אינם דקורטיביים — כל אחד נשמר על <code class="inl">student_boardi</code> (או מפעיל job) ומשנה התנהגות בפועל של המנוע. מיפוי מחייב:</p>
+      <div class="tbl"><table>
+        <thead><tr><th>פקד ב-UI</th><th>שדה / פעולה</th><th>האפקט בפועל</th></tr></thead>
+        <tbody>
+          <tr><td>נימת אישיות (persona)</td><td><code class="inl">student_boardi.persona</code></td><td>מוזרק ל-system prompt של ה-Runtime → משנה טון התשובות</td></tr>
+          <tr><td>רמת היצמדות (strictness)</td><td><code class="inl">strictness: course_only | course_plus_general</code></td><td>קובע את חוזה התשובה (§5) — האם מותר ידע כללי מסומן</td></tr>
+          <tr><td>הודעת פתיחה</td><td><code class="inl">greeting</code></td><td>ההודעה הראשונה בפאנל התלמיד</td></tr>
+          <tr><td>מתגי מקורות ידע</td><td><code class="inl">sources[]</code> (תמלול/קבצים/קישורים)</td><td>מסנן namespace באחזור — מקור כבוי לא נאחזר</td></tr>
+          <tr><td>העלאת קובץ/מבחן מותאם</td><td><code class="inl">add_material</code> → <code class="inl">reindex-material</code></td><td>נכנס לאינדקס הקורס ומופיע כמקור בציטוטים</td></tr>
+          <tr><td>"תמלל את כל השיעורים"</td><td><code class="inl">transcribe-lessons</code> job</td><td>מריץ תמלול בפועל; הסטטוס פר-שיעור משקף מצב job אמיתי</td></tr>
+          <tr><td>שמירה / מחיקה</td><td><code class="inl">update_/delete_student_boardi</code></td><td>שמירה → re-index; מחיקה → הסרת boardi+chunks+threads, הפאנל נעלם לתלמידים</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note y"><span><svg viewBox="0 0 24 24" fill="none" stroke="#b8a517" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></span><div>כלל: כל toggle/שדה בהקמה חייב להיות מחובר ל-state נשמר ולהשפיע על אחזור/prompt/job. שינוי שמשפיע על תוכן (מקורות/strictness/חומר) <b>מפעיל re-index</b> ומראה סטטוס — אחרת המרצה חושב ששינה ובפועל לא.</div></div>
+    </section>
+
+    <section id="lifecycle">
+      <h2><span class="n">9</span> מחזור חיים</h2>
+      <div class="flow">
+        <div class="fx">יצירה ידנית<small>מרצה · מנהיג</small></div><span class="ar">→</span>
+        <div class="fx">תמלול + אינדוקס<small>jobs ברקע</small></div><span class="ar">→</span>
+        <div class="fx">פעיל<small>זמין לתלמידים</small></div><span class="ar">→</span>
+        <div class="fx">עריכה / חומר חדש<small>re-index</small></div><span class="ar">→</span>
+        <div class="fx">מחיקה<small>ניקוי chunks+threads</small></div>
+      </div>
+      <p>עריכת מקורות או שיעור שהשתנה → <b>re-index</b> אינקרמנטלי (רק ה-chunks המושפעים). מחיקה מסירה את הבורדי, האינדקס וה-threads — והפאנל נעלם אצל התלמידים.</p>
+    </section>
+
+    <section id="guardrails">
+      <h2><span class="n">10</span> גבולות, פרטיות ועלות</h2>
+      <ul>
+        <li><b>אנטי-הזיה</b> — course-only contract + ציטוט חובה; "לא יודע" עדיף על ניחוש.</li>
+        <li><b>Tenancy</b> — אחזור נעול ל-<code class="inl">course_id</code>; threads פר-תלמיד; בדיקת enrollment בכל שאלה.</li>
+        <li><b>פרטיות תלמיד</b> — שיחות התלמיד פרטיות; המרצה לא רואה שיחות פרטניות (אלא אגרגט/הסכמה — החלטת מוצר).</li>
+        <li><b>עלות</b> — תמלול (חד-פעמי/שיעור) + אינדוקס + inference; תקרות פר-בורדי/חודש במסלול מנהיג.</li>
+      </ul>
+    </section>
+
+    <section id="jobs">
+      <h2><span class="n">11</span> משימות רקע (Trigger.dev)</h2>
+      <p><code class="inl">transcribe-lessons</code> · <code class="inl">index-transcripts</code> · <code class="inl">reindex-material</code> (על שינוי חומר) · <code class="inl">purge-boardi</code> (מחיקה). כולם רקע, מדווחים סטטוס ל-UI ההקמה.</p>
+    </section>
+
+    <section id="screens">
+      <h2><span class="n">12</span> מסכי עיצוב</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>מסך</th><th>קובץ</th></tr></thead>
+        <tbody>
+          <tr><td>שיחה בתוך הקורס (תלמיד)</td><td><code class="inl">מסכים מחודשים/בורדי/בורדי תלמיד - שיחה בקורס.html</code></td></tr>
+          <tr><td>הקמה וניהול (מרצה) · טאב "בורדי" בהגדרות הקורס</td><td><code class="inl">מסכים מחודשים/בורדי/בורדי תלמיד - הקמה וניהול.html</code></td></tr>
+          <tr><td>אפסייל מנהיג (לא-מנהיג)</td><td><code class="inl">מסכים מחודשים/בורדי/בורדי תלמיד - אפסייל מנהיג.html</code></td></tr>
+          <tr><td>אפסייל ארגוני + טופס ליד מכירות (מנהיג עם בורדי קיים)</td><td><code class="inl">מסכים מחודשים/בורדי/בורדי תלמיד - אפסייל ארגוני.html</code></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="impact">
+      <h2><span class="n">13</span> השלכות פיתוח + מפת דרכים</h2>
+      <h3>מה חדש (לבנות)</h3>
+      <ul>
+        <li>צנרת תמלול (STT) + אחסון תמלולים עם חותמות זמן.</li>
+        <li>אינדוקס וקטורי לתמלולים ב-namespace פר-קורס.</li>
+        <li>אחזור course-scoped + position-boost.</li>
+        <li>פאנל צ'אט התלמיד בנגן + מסך הקמה/ניהול (מרצה).</li>
+        <li>גייטינג מנהיג + מגבלת 1/קורס + ניהול מחזור-חיים + תקרות עלות.</li>
+      </ul>
+      <h3>מה נשען מחדש</h3>
+      <p>Runtime משותף, <code class="inl">LLMProvider</code>, pgvector RAG, Trigger.dev, מנגנון הפאנל בנגן, מערכת העיצוב.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>שלב</th><th>תוצר</th></tr></thead>
+        <tbody>
+          <tr><td>1 · תמלול</td><td>צנרת <code class="inl">transcribe-lessons</code> + אחסון + סטטוס במסך המרצה</td></tr>
+          <tr><td>2 · אינדוקס + אחזור</td><td>chunks וקטוריים, course-scoped retrieval + position-boost</td></tr>
+          <tr><td>3 · פאנל התלמיד</td><td>צ'אט בנגן, ציטוטים לחיצים, guardrail course-only</td></tr>
+          <tr><td>4 · הקמה/ניהול</td><td>יצירה/עריכה/מחיקה, חומרי מרצה, persona, גייטינג</td></tr>
+          <tr><td>5 <span class="pill">עתיד</span></td><td>ריבוי בורדים/בית-ספר, סיכומי-הבנה למרצה (אגרגט), קול</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="stack">
+      <h2><span class="n">14</span> סיכום טכנולוגי</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>שכבה</th><th>טכנולוגיה</th></tr></thead>
+        <tbody>
+          <tr><td>LLM</td><td>Claude מאחורי <code class="inl">LLMProvider</code> adapter</td></tr>
+          <tr><td>STT (תמלול)</td><td>Whisper / Groq — עם חותמות זמן</td></tr>
+          <tr><td>וקטורים</td><td>pgvector · namespace פר-קורס</td></tr>
+          <tr><td>וידאו</td><td>Bunny Stream (מקור האודיו לתמלול)</td></tr>
+          <tr><td>רקע</td><td>Trigger.dev — תמלול, אינדוקס, re-index, purge</td></tr>
+          <tr><td>DB</td><td>Postgres + Prisma, RLS פר-מרצה/תלמיד</td></tr>
+          <tr><td>UI</td><td>נגן הקורס (פאנל תלמיד) + מסך הקמה (מרצה), מערכת העיצוב של WHITEBOARD</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note g" style="margin-top:16px"><span><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-bright)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span><div>מסמך נלווה לאפיון (<code class="inl">אפיון-בורדי-2026-07.md §18</code>) ולסקיל (<code class="inl">boardi-builder/references/student-boardi.md</code>). החלק החדש היחיד לבנייה: <b>צנרת התמלול והאינדוקס</b>; כל השאר הרחבה של הקיים.</div></div>
+    </section>
+  </main>
+</div>
+<script>
+const links=[...document.querySelectorAll('#nav a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const obs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')===id));}});},{rootMargin:'-20% 0px -70% 0px'});
+secs.forEach(s=>s&&obs.observe(s));
+const root=document.documentElement,tb=document.getElementById('theme');
+tb.onclick=()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');
+  tb.querySelector('svg').innerHTML=d?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';};
+</script>
+</body>
+</html>

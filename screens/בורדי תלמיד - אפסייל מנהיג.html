@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<!--
+  WHITEBOARD LMS · בורדי תלמיד — אפסייל למסלול מנהיג
+  Self-contained demo screen. RTL Hebrew. No backend.
+  Context: a teacher NOT on the "מנהיג" plan opens the "בורדי" tab / tries to create a
+  Student BOARDi. The setup screen sits behind (blurred, non-interactive) and an upsell
+  modal appears ON LOAD, upselling the "מנהיג" plan.
+-->
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בורדי תלמיד · אפסייל מנהיג · WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#253E7A;--navy-dark:#1a2e5e;--navy-light:#3a5499;--cyan:#38C4F2;--pink:#F05680;--pink-dark:#d63a66;--green-bright:#22c55e;--green:#7DC57A;--yellow:#EAD654;--purple:#9B6BF2;--orange:#F5A65B;
+--bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.16);
+--text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);
+--font-he:'Heebo',sans-serif;--font-en:'Fredoka',sans-serif;
+--r-sm:10px;--r-md:16px;--r-lg:18px;--radius-xs:6px;--radius-sm:10px;--radius-md:16px;--radius-lg:22px;
+--shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);
+--shadow-md:0 6px 24px rgba(37,62,122,0.1);--shadow-lg:0 16px 48px rgba(37,62,122,0.14);--shadow-xl:0 24px 64px rgba(37,62,122,0.18);}
+[data-theme="dark"]{--bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);--text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.3);
+--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);--shadow-md:0 6px 28px rgba(0,0,0,0.4);--shadow-lg:0 16px 48px rgba(0,0,0,0.5);--shadow-xl:0 24px 64px rgba(0,0,0,0.6);}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);display:flex;overflow:hidden;transition:background .3s}
+h1,h2,h3,h4,.fk{font-family:var(--font-en)}
+svg{display:block}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:8px}
+
+/* ============ SIDEBAR ============ */
+.sidebar{width:220px;flex:0 0 220px;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:18px 14px;height:100vh}
+.logo{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0 16px}
+.logo .mk{width:46px;height:46px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center}
+.logo .mk svg{width:28px;height:28px}
+.logo .wm{font-family:var(--font-en);font-weight:700;font-size:15px;letter-spacing:.5px;text-align:center}
+.logo .wm small{display:block;font-size:8px;letter-spacing:3px;color:#ffffff88;text-align:center;font-family:var(--font-he);font-weight:500;margin-top:2px}
+.nav{display:flex;flex-direction:column;gap:3px;margin-top:8px;flex:1}
+.nav-lbl{font-size:10px;letter-spacing:1px;color:#ffffff55;padding:10px 12px 4px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:11px;color:#ffffffcc;font-size:13.5px;font-weight:500;min-height:44px;transition:background .15s,color .15s}
+.nav-item svg{width:19px;height:19px;stroke:currentColor;stroke-width:2;fill:none;flex:0 0 19px}
+.nav-item:hover{background:#ffffff14;color:#fff}
+.nav-item.active{background:#fff;color:var(--navy);font-weight:600}
+.side-bottom{display:flex;flex-direction:column;gap:12px;padding-top:12px;border-top:1px solid #ffffff1f}
+.mode-tg{display:flex;background:#ffffff14;border-radius:11px;padding:4px;gap:4px}
+.mode-tg button{flex:1;padding:8px 4px;border-radius:8px;font-size:12px;font-weight:600;color:#ffffffb0;min-height:40px}
+.mode-tg button.on{background:#fff;color:var(--navy)}
+.prof{display:flex;align-items:center;gap:10px;padding:4px 2px}
+.prof .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--font-en);color:#fff;flex:0 0 38px}
+.prof .nm{font-size:13px;font-weight:600}
+.prof .em{font-size:10px;color:#ffffff7a}
+
+/* ============ MAIN ============ */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;min-width:0}
+.topbar{height:60px;flex:0 0 60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;gap:16px;position:relative;z-index:5}
+.crumb{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--text-sub);font-weight:500}
+.crumb b{color:var(--text-main);font-weight:600}
+.crumb .dot{width:5px;height:5px;border-radius:50%;background:var(--border-strong)}
+.crumb svg{width:16px;height:16px;stroke:var(--cyan);stroke-width:2;fill:none}
+.tb-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:11px;border:1px solid var(--border);background:var(--surface-2);display:flex;align-items:center;justify-content:center}
+.icon-btn svg{width:19px;height:19px;stroke:var(--text-sub);stroke-width:2;fill:none}
+.icon-btn:hover{border-color:var(--border-strong)}
+
+.scroll{flex:1;overflow-y:auto;padding:22px 26px 60px}
+.wrap{max-width:1180px;margin:0 auto;position:relative}
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.page-head .ttl{display:flex;align-items:center;gap:14px}
+.page-head .mascot{width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;flex:0 0 52px;box-shadow:var(--shadow-sm)}
+.page-head .mascot img{width:38px;height:38px}
+.page-head h1{font-size:23px;font-weight:600;letter-spacing:.2px}
+.page-head p{font-size:13.5px;color:var(--text-sub);margin-top:3px;max-width:560px;line-height:1.5}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 22px;box-shadow:var(--shadow-sm);margin-bottom:16px}
+.card-head{display:flex;align-items:center;gap:11px;margin-bottom:4px}
+.card-head .ci{width:36px;height:36px;border-radius:11px;background:var(--surface-3);display:flex;align-items:center;justify-content:center;flex:0 0 36px}
+.card-head .ci svg{width:19px;height:19px;stroke:var(--navy);stroke-width:2;fill:none}
+[data-theme="dark"] .card-head .ci svg{stroke:var(--cyan)}
+.card-head h2{font-size:16.5px;font-weight:600}
+.card-head .step{margin-inline-start:auto;font-size:11px;font-weight:700;color:var(--text-xs);letter-spacing:.5px}
+.card-sub{font-size:12.5px;color:var(--text-sub);line-height:1.55;margin-bottom:16px}
+.card-sub b{color:var(--text-main);font-weight:600}
+
+.course-row{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface-2)}
+.course-row .thumb{width:70px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--pink),var(--orange));flex:0 0 70px;display:flex;align-items:center;justify-content:center}
+.course-row .thumb svg{width:22px;height:22px;stroke:#fff;stroke-width:2;fill:none}
+.course-row .ci-txt{flex:1;min-width:0}
+.course-row .ci-txt .cn{font-size:15px;font-weight:600}
+.course-row .ci-txt .cm{font-size:12px;color:var(--text-sub);margin-top:2px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:var(--surface-3);font-size:11px;font-weight:600;color:var(--navy)}
+[data-theme="dark"] .chip{color:var(--cyan)}
+
+.subhead{font-size:13px;font-weight:700;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.subhead svg{width:16px;height:16px;stroke:var(--text-sub);stroke-width:2;fill:none}
+.dropzone{border:2px dashed var(--border-strong);border-radius:var(--r-md);padding:24px;text-align:center;background:var(--surface-2)}
+.dropzone .du{width:44px;height:44px;border-radius:12px;background:var(--surface-3);display:inline-flex;align-items:center;justify-content:center;margin-bottom:9px}
+.dropzone .du svg{width:22px;height:22px;stroke:var(--cyan);stroke-width:2;fill:none}
+.dropzone .dt{font-size:13.5px;font-weight:600}
+.dropzone .ds{font-size:11.5px;color:var(--text-sub);margin-top:3px}
+.field{margin-bottom:18px}
+.field > label{font-size:13px;font-weight:600;display:block;margin-bottom:9px}
+.segmented{display:inline-flex;background:var(--surface-3);border-radius:12px;padding:4px;gap:4px;flex-wrap:wrap}
+.segmented button{padding:9px 16px;border-radius:9px;font-size:13px;font-weight:600;color:var(--text-sub);min-height:40px}
+.segmented button.on{background:var(--surface);color:var(--text-main);box-shadow:var(--shadow-sm)}
+.btn-primary{padding:11px 20px;border-radius:12px;background:var(--pink);color:#fff;font-size:13.5px;font-weight:700;min-height:44px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 10px 24px -12px rgba(240,86,128,.8)}
+.btn-primary svg{width:17px;height:17px;stroke:#fff;stroke-width:2.2;fill:none}
+
+/* ============ BLURRED / LOCKED BACKGROUND STATE ============ */
+.locked-content{filter:blur(4px);pointer-events:none;opacity:.7;user-select:none}
+
+/* small "locked" hint that appears after the popup is dismissed */
+.locked-hint{position:fixed;top:74px;inset-inline-end:26px;z-index:60;display:none;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border-strong);border-radius:14px;padding:11px 15px;box-shadow:var(--shadow);max-width:340px}
+.locked-hint.show{display:flex}
+.locked-hint .lk{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--navy),var(--purple));display:flex;align-items:center;justify-content:center;flex:0 0 36px}
+.locked-hint .lk svg{width:18px;height:18px;stroke:#fff;stroke-width:2;fill:none}
+.locked-hint .lx{flex:1;min-width:0}
+.locked-hint .lx b{font-size:12.5px;font-weight:600;display:block}
+.locked-hint .lx span{font-size:11px;color:var(--text-sub)}
+.locked-hint .reopen{padding:8px 13px;border-radius:10px;background:var(--navy);color:#fff;font-size:12px;font-weight:700;min-height:40px;flex:0 0 auto}
+[data-theme="dark"] .locked-hint .reopen{background:linear-gradient(135deg,var(--navy),#2f4d94)}
+
+/* ============ UPSELL MODAL (mirrored from popup file) ============ */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,25,50,0.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity .3s}
+.modal-overlay.active{display:flex;opacity:1}
+
+.upsell-modal{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-xl);position:relative;width:100%;max-width:520px;animation:modalIn .4s cubic-bezier(0.16,1,0.3,1);overflow:hidden;max-height:94vh;overflow-y:auto}
+@keyframes modalIn{from{opacity:0;transform:scale(0.92) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+.upsell-header{position:relative;padding:34px 32px 28px;text-align:center;overflow:hidden}
+.upsell-header.gradient-cyan{background:linear-gradient(135deg,#253E7A 0%,#1a4a7a 40%,#38C4F2 100%)}
+.upsell-header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+
+.upsell-header-mascot{position:relative;height:70px;margin-bottom:10px;filter:drop-shadow(0 4px 14px rgba(0,0,0,0.28))}
+.upsell-header-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.18);backdrop-filter:blur(4px);color:#fff;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;margin-bottom:14px;letter-spacing:0.3px;position:relative}
+.upsell-header-badge svg{width:13px;height:13px}
+.upsell-header-title{font-family:var(--font-en);font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;position:relative}
+.upsell-header-subtitle{font-size:13px;color:rgba(255,255,255,0.85);line-height:1.6;position:relative;max-width:400px;margin:0 auto}
+
+.upsell-close{position:absolute;top:14px;left:14px;width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;transition:all .2s;z-index:2}
+.upsell-close:hover{background:rgba(255,255,255,0.28);transform:scale(1.05)}
+.upsell-close svg{width:16px;height:16px;stroke:currentColor;stroke-width:2.5;fill:none}
+
+.upsell-body{padding:26px 32px 30px}
+
+/* value bullets */
+.value-list{list-style:none;margin-bottom:22px}
+.value-list li{display:flex;align-items:flex-start;gap:11px;padding:8px 0;font-size:13.5px;color:var(--text-main);line-height:1.5;font-weight:500}
+.value-list li .vk{width:26px;height:26px;border-radius:8px;background:rgba(56,196,242,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.value-list li .vk svg{width:15px;height:15px;stroke:var(--cyan);stroke-width:2.4;fill:none}
+[data-theme="dark"] .value-list li .vk{background:rgba(56,196,242,0.16)}
+
+/* plan card */
+.plan-card{border:2px solid var(--cyan);border-radius:var(--radius-md);padding:20px;margin-bottom:6px;position:relative;background:rgba(56,196,242,0.04)}
+[data-theme="dark"] .plan-card{background:rgba(56,196,242,0.06)}
+.plan-card::after{content:'המסלול שפותח את בורדי תלמיד';position:absolute;top:-10px;right:20px;background:linear-gradient(135deg,var(--cyan),#2da8d4);color:#fff;font-size:10px;font-weight:700;padding:3px 12px;border-radius:10px;letter-spacing:0.2px}
+.plan-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.plan-name{font-family:var(--font-en);font-size:18px;font-weight:700}
+.plan-price{display:flex;align-items:baseline;gap:4px}
+.plan-price-amount{font-family:var(--font-en);font-size:30px;font-weight:700;color:var(--navy);line-height:1}
+[data-theme="dark"] .plan-price-amount{color:var(--cyan)}
+.plan-price-period{font-size:13px;color:var(--text-sub)}
+.plan-perks{display:flex;flex-wrap:wrap;gap:8px}
+.perk-chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border);border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600}
+.perk-chip svg{width:13px;height:13px;stroke:var(--green-bright);stroke-width:2.6;fill:none;flex:0 0 13px}
+
+.current-plan-note{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:12px;color:var(--text-sub);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 13px}
+.current-plan-note svg{width:15px;height:15px;stroke:var(--text-sub);stroke-width:2;fill:none;flex:0 0 15px}
+.current-plan-note b{color:var(--text-main);font-weight:700}
+
+.upsell-divider{height:1px;background:var(--border);margin:20px 0}
+
+.cta-primary{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 24px;border:none;border-radius:30px;font-family:var(--font-he);font-size:15px;font-weight:700;cursor:pointer;transition:all .25s;min-height:50px;position:relative;overflow:hidden;background:linear-gradient(135deg,var(--navy) 0%,#2f4d94 55%,var(--cyan) 130%);color:#fff;box-shadow:0 8px 24px -8px rgba(37,62,122,0.6)}
+.cta-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px -8px rgba(37,62,122,0.7)}
+.cta-primary svg{width:18px;height:18px;stroke:currentColor;stroke-width:2.2;fill:none}
+.cta-primary::after{content:'';position:absolute;top:0;right:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent);animation:shimmer 3s infinite}
+@keyframes shimmer{0%{right:-100%}30%{right:200%}100%{right:200%}}
+
+.cta-ghost{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px 24px;border:1.5px solid var(--border-strong);border-radius:30px;background:transparent;font-family:var(--font-he);font-size:13.5px;font-weight:600;color:var(--text-main);cursor:pointer;transition:all .2s;margin-top:10px;min-height:46px}
+.cta-ghost:hover{background:var(--surface-2);border-color:var(--cyan)}
+.cta-ghost svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none}
+
+.cta-text-link{display:block;width:100%;text-align:center;padding:12px;background:transparent;font-family:var(--font-he);font-size:12.5px;font-weight:500;color:var(--text-xs);cursor:pointer;transition:color .2s;margin-top:4px;min-height:44px}
+.cta-text-link:hover{color:var(--text-sub)}
+
+/* ============ TOASTS ============ */
+.toasts{position:fixed;bottom:20px;inset-inline-start:20px;display:flex;flex-direction:column;gap:10px;z-index:3000}
+.toast{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--border-strong);border-radius:13px;padding:13px 16px;box-shadow:var(--shadow);min-width:270px;transform:translateX(-120%);opacity:0;transition:.32s cubic-bezier(.2,.9,.3,1.2)}
+[dir="rtl"] .toast{transform:translateX(120%)}
+.toast.show{transform:none;opacity:1}
+.toast .tk{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:0 0 34px;background:var(--navy)}
+[data-theme="dark"] .toast .tk{background:linear-gradient(135deg,var(--navy),#2f4d94)}
+.toast .tk svg{width:18px;height:18px;stroke:#fff;stroke-width:2.2;fill:none}
+.toast .tx{font-size:13.5px;font-weight:600}
+
+@media(max-width:820px){.sidebar{display:none}.scroll{padding:16px}.locked-hint{inset-inline-end:12px;inset-inline-start:12px;max-width:none}}
+@media(max-width:600px){.upsell-modal{max-width:100%;margin:8px}.upsell-header{padding:28px 20px 22px}.upsell-body{padding:20px}}
+</style>
+</head>
+<body>
+
+<!-- ============ SIDEBAR (blurred) ============ -->
+<aside class="sidebar locked-content">
+  <div class="logo">
+    <div class="mk">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="13" rx="2" stroke="#253E7A" stroke-width="2"/><path d="M8 20h8M12 17v3" stroke="#253E7A" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+    <div class="wm">WHITEBOARD<small>EDUCATION</small></div>
+  </div>
+  <nav class="nav">
+    <div class="nav-lbl">ראשי</div>
+    <a class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>לוח בקרה</a>
+    <a class="nav-item"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>הקורסים שלי</a>
+    <a class="nav-item active"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg>בורדי</a>
+    <a class="nav-item"><svg viewBox="0 0 24 24"><path d="M9 3h6M12 3v4"/><rect x="4" y="7" width="16" height="14" rx="2"/></svg>מבחנים</a>
+    <a class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/></svg>מועדון</a>
+    <div class="nav-lbl">מערכת</div>
+    <a class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>הגדרות</a>
+  </nav>
+  <div class="side-bottom">
+    <div class="mode-tg">
+      <button class="on">מורה</button>
+      <button>תלמיד</button>
+    </div>
+    <div class="prof">
+      <div class="av">א</div>
+      <div><div class="nm">אלון גבאי</div><div class="em">alon@whiteboard</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ============ MAIN ============ -->
+<div class="main">
+  <div class="topbar">
+    <div class="crumb">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg>
+      <b>בורדי תלמיד</b><span class="dot"></span><span>הקמה וניהול</span>
+    </div>
+    <div class="tb-right">
+      <button class="icon-btn" id="themeBtn" title="מצב כהה">
+        <svg id="themeIcon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- locked hint shown after dismissing the popup -->
+  <div class="locked-hint" id="lockedHint">
+    <div class="lk"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></div>
+    <div class="lx"><b>בורדי תלמיד נעול</b><span>זמין במסלול מנהיג בלבד</span></div>
+    <button class="reopen" id="reopenBtn">שדרג</button>
+  </div>
+
+  <!-- BLURRED, NON-INTERACTIVE SETUP SCREEN BEHIND THE POPUP -->
+  <div class="scroll locked-content" aria-hidden="true">
+    <div class="wrap">
+
+      <div class="page-head">
+        <div class="ttl">
+          <div class="mascot"><img src="../BOARDi/SVG/12.svg" alt="בורדי" onerror="this.style.display='none'"></div>
+          <div>
+            <h1>בורדי תלמיד</h1>
+            <p>עוזר הקורס החכם של התלמידים. לומד מתמלולי השיעורים ועונה אך ורק מתוך חומרי הקורס שלך.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="ci"><svg viewBox="0 0 24 24"><path d="M4 5h13a2 2 0 012 2v11a2 2 0 00-2-2H4z"/><path d="M4 5v11a2 2 0 002 2h11"/></svg></div>
+          <h2>בחירת קורס</h2>
+          <span class="step">שלב 1</span>
+        </div>
+        <p class="card-sub">בורדי מחובר ל<b>קורס אחד</b>. כל התשובות יתבססו על חומרי הקורס הזה בלבד. <span class="chip" style="margin-inline-start:4px">בורדי אחד · קורס אחד</span></p>
+        <div class="course-row">
+          <div class="thumb"><svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+          <div class="ci-txt">
+            <div class="cn">כריזמה מול המצלמה</div>
+            <div class="cm">11 שיעורים · 4 שעות וידאו · 128 תלמידים רשומים</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="ci"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 013 3v6a3 3 0 01-6 0V5a3 3 0 013-3z"/><path d="M19 10a7 7 0 01-14 0M12 17v4M8 21h8"/></svg></div>
+          <h2>תמלול השיעורים</h2>
+          <span class="step">בסיס הידע</span>
+        </div>
+        <p class="card-sub">בורדי לומד מ<b>תמלול הווידאו של כל שיעור</b> בקורס. שיעורים שלא תומללו אינם נכללים במאגר התשובות.</p>
+        <div class="dropzone">
+          <div class="du"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5-5 5 5M12 5v13"/></svg></div>
+          <div class="dt">גרור לכאן קבצים או לחץ להעלאה</div>
+          <div class="ds">PDF · DOCX · PPTX · TXT · עד 25MB לקובץ</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="ci"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+          <h2>אישיות והתנהגות</h2>
+          <span class="step">שלב 3</span>
+        </div>
+        <div class="field">
+          <label>סגנון דיבור</label>
+          <div class="segmented">
+            <button class="on">ידידותי</button>
+            <button>ענייני</button>
+            <button>מקצועי</button>
+          </div>
+        </div>
+        <button class="btn-primary"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>צור בורדי תלמיד</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ UPSELL MODAL — ACTIVE ON LOAD ============ -->
+<div class="modal-overlay active" id="upsell-manhig" onclick="closeOnOverlay(event)">
+  <div class="upsell-modal" role="dialog" aria-modal="true" aria-labelledby="upsell-title">
+    <!-- Header -->
+    <div class="upsell-header gradient-cyan">
+      <button class="upsell-close" onclick="closeUpsell()" aria-label="סגור">
+        <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
+      </button>
+      <img class="upsell-header-mascot" src="../BOARDi/SVG/12.svg" alt="בורדי" onerror="this.style.display='none'">
+      <div class="upsell-header-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        פיצ'ר של מסלול מנהיג
+      </div>
+      <h2 class="upsell-header-title" id="upsell-title">בורדי תלמיד — עוזר קורס חכם לכל תלמיד</h2>
+      <p class="upsell-header-subtitle">עוזר AI שמאומן על תמלולי השיעורים שלך ועונה לתלמידים אך ורק מתוך חומרי הקורס — בזמן אמת, ולפי המיקום שלהם בשיעור.</p>
+    </div>
+
+    <!-- Body -->
+    <div class="upsell-body">
+      <!-- Value bullets -->
+      <ul class="value-list">
+        <li>
+          <span class="vk"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 013 3v6a3 3 0 01-6 0V5a3 3 0 013-3z"/><path d="M19 10a7 7 0 01-14 0"/></svg></span>
+          מאומן על תמלול כל השיעורים בקורס
+        </li>
+        <li>
+          <span class="vk"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="3.2"/></svg></span>
+          יודע איפה התלמיד נמצא על ציר הזמן ובקורס
+        </li>
+        <li>
+          <span class="vk"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+          עונה רק מתוך חומר הקורס — בלי הזיות
+        </li>
+        <li>
+          <span class="vk"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></span>
+          חוסך לך לענות שוב ושוב על אותן שאלות
+        </li>
+      </ul>
+
+      <!-- Plan card -->
+      <div class="plan-card">
+        <div class="plan-top">
+          <div class="plan-name">מנהיג</div>
+          <div class="plan-price">
+            <span class="plan-price-amount">₪399</span>
+            <span class="plan-price-period">/ חודש</span>
+          </div>
+        </div>
+        <div class="plan-perks">
+          <span class="perk-chip"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>בורדי ללא הגבלה</span>
+          <span class="perk-chip"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>עד 100,000 תלמידים</span>
+          <span class="perk-chip"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>אתרי קורסים ∞</span>
+          <span class="perk-chip"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Whiteboard Studio + Live</span>
+        </div>
+      </div>
+
+      <div class="current-plan-note">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        המסלול הנוכחי שלך: <b>מחנך</b> — בורדי תלמיד אינו כלול בו.
+      </div>
+
+      <div class="upsell-divider"></div>
+
+      <!-- CTAs -->
+      <button class="cta-primary" onclick="showToast('מעבר לעמוד שדרוג…')">
+        <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        שדרג למסלול מנהיג
+      </button>
+      <button class="cta-ghost" onclick="showToast('פותח השוואת מסלולים…')">
+        <svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>
+        השוואת מסלולים
+      </button>
+      <button class="cta-text-link" onclick="closeUpsell()">אולי מאוחר יותר</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+(function(){
+  /* ---------- THEME ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var themeIcon = document.getElementById('themeIcon');
+  themeBtn.addEventListener('click', function(){
+    var dark = document.documentElement.getAttribute('data-theme')==='dark';
+    document.documentElement.setAttribute('data-theme', dark?'light':'dark');
+    themeIcon.innerHTML = dark
+      ? '<path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/>'
+      : '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/>';
+  });
+
+  /* ---------- UPSELL OPEN / CLOSE ---------- */
+  var overlay = document.getElementById('upsell-manhig');
+  var lockedHint = document.getElementById('lockedHint');
+
+  window.closeUpsell = function(){
+    overlay.classList.remove('active');
+    setTimeout(function(){ overlay.style.display='none'; }, 300);
+    lockedHint.classList.add('show');
+  };
+
+  window.openUpsell = function(){
+    overlay.style.display='flex';
+    // force reflow so the transition replays
+    void overlay.offsetWidth;
+    overlay.classList.add('active');
+    lockedHint.classList.remove('show');
+  };
+
+  window.closeOnOverlay = function(e){
+    if(e.target===e.currentTarget){ closeUpsell(); }
+  };
+
+  document.getElementById('reopenBtn').addEventListener('click', openUpsell);
+
+  /* close on Escape */
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape' && overlay.classList.contains('active')){ closeUpsell(); }
+  });
+
+  /* ---------- TOASTS ---------- */
+  var toastsEl = document.getElementById('toasts');
+  window.showToast = function(msg){
+    var t = document.createElement('div');
+    t.className='toast';
+    t.innerHTML = '<div class="tk"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="tx">'+msg+'</div>';
+    toastsEl.appendChild(t);
+    requestAnimationFrame(function(){ t.classList.add('show'); });
+    setTimeout(function(){ t.classList.remove('show'); setTimeout(function(){ t.remove(); }, 350); }, 3200);
+  };
+})();
+</script>
+</body>
+</html>
