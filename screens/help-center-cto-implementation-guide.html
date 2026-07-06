@@ -101,12 +101,13 @@
   <a href="#boardi"><span class="n">07</span>צ'אט בורדי</a>
   <a href="#gaps"><span class="n">08</span>רישום פערים ← פרודקשיין</a>
   <a href="#roadmap"><span class="n">09</span>מפת דרכים + Stack</a>
+  <a href="#support"><span class="n">10</span>פנייה לנציג + תמיכה</a>
 </aside>
 <main class="main">
 <div class="doc-head">
   <div class="eyebrow"><span class="dot"></span>WHITEBOARD · HELP CENTER · CTO GUIDE</div>
   <h1>מערך הידע — מרכז עזרה שמתעדכן מהמערכת החיה</h1>
-  <p class="lead">מרכז עזרה ציבורי (help.whiteboard.education) לשני קהלים — מרצים ותלמידים — שבו כל צילום מסך הוא תוצר של "מתכון" הניתן להרצה מחדש מול הפרודקשיין, וסוכן סורק תקופתי מזהה פיצ'רים חדשים, מסכים שהשתנו ומתכונים שנשברו. גרסה 1.2 · יולי 2026 · אלון גבאי.</p>
+  <p class="lead">מרכז עזרה ציבורי (help.whiteboard.education) לשני קהלים — מרצים ותלמידים — שבו כל צילום מסך הוא תוצר של "מתכון" הניתן להרצה מחדש מול הפרודקשיין, וסוכן סורק תקופתי מזהה פיצ'רים חדשים, מסכים שהשתנו ומתכונים שנשברו. כולל תשתית "דברו עם נציג" — פניות תמיכה עם חיבור ל-Admin CRM ומיילים אוטומטיים (סעיף 10). גרסה 1.3 · יולי 2026 · אלון גבאי.</p>
 </div>
 
 <section id="overview">
@@ -301,6 +302,85 @@ dist/                        <span class="cm">← האתר הבנוי → Vercel
     <tr><td>אירוח</td><td>Vercel + דומיין מותאם</td><td><code class="inl">npm run deploy</code></td></tr>
   </table>
   <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><p><b>הערת סטאק:</b> המערך הוא אתר תוכן סטטי ולכן חורג בכוונה מסטאק המוצר (Next.js/Prisma/Trigger.dev) — אין צורך בשרת. אם בעתיד מרכז העזרה ייכנס לתוך הפלטפורמה, קובצי ה-MD הם ה-source of truth שממנו מיובאים הנתונים.</p></div>
+</section>
+
+<section id="support">
+  <h2><span class="h2num">10</span>פנייה לנציג + תמיכה</h2>
+  <p class="sec-sub">היציאה היחידה של מרכז העזרה אל בן-אדם: טופס "דברו עם נציג" שמזהה אוטומטית אם הפונה מרצה או תלמיד, ממלא את פרטיו אם הוא מחובר למערכת, מצרף את ההקשר (המדריך שממנו פנה, דפדפן) — ומזין את מסך ניהול הפניות ב-Admin CRM, עם מייל התראה לתיבת התמיכה ומייל אישור אוטומטי לפונה.</p>
+
+  <h3>הזרימה מקצה לקצה</h3>
+  <div class="card"><p style="margin:0;line-height:2">
+    טופס באתר (סטטי) ← <code class="inl">POST /api/support/tickets</code> ← ולידציה + anti-spam ← שורת <code class="inl">support_tickets</code> ← <b>שני מיילים במקביל</b>: התראה לתיבת התמיכה (Reply-To = הפונה) + אישור לפונה עם מספר הפנייה ← הפנייה מופיעה במסך <b>"שירות (CS) › ניהול פניות"</b> במרכז הבקרה ← נציג עונה מהמסך והתשובה נשלחת לפונה במייל.
+  </p></div>
+
+  <h3>צד האתר — מה כבר בנוי (חי בבילד)</h3>
+  <table>
+    <tr><th>יכולת</th><th>איך זה עובד</th></tr>
+    <tr><td><b>נקודות כניסה</b></td><td>כפתור "דברו עם נציג" בפוטר של כל עמוד · צ'אט בורדי — צ'יפ "השאירו פרטים לנציג" כשאין תשובה, ו"זה לא זה — דברו עם נציג" אחרי כל תשובה (השאלה שנשאלה נכנסת לטופס אוטומטית) · משוב "המדריך עזר? לא" — קישור לנציג עם שם המדריך בפנייה</td></tr>
+    <tr><td><b>זיהוי קהל</b></td><td>אוטומטי מ-<code class="inl">data-audience</code> של העמוד (עמודי <code class="inl">/student/</code> = תלמיד) + כפתור "אני בעצם תלמיד/מרצה" לתיקון ידני</td></tr>
+    <tr><td><b>מילוי אוטומטי לפונה מחובר</b></td><td>שרשרת: <code class="inl">window.WB_USER</code> (כשהמרכז מוטמע במערכת) ← <code class="inl">localStorage["wb-user"]</code> ← <code class="inl">GET /api/me</code> עם credentials. שדות שמולאו מסומנים בירוק + הודעה "מולא אוטומטית — אפשר לתקן"</td></tr>
+    <tr><td><b>הקשר אוטומטי</b></td><td>נשלח עם הפנייה בלי מאמץ מהפונה: URL + כותרת המדריך הנוכחי (מוצג לפונה בשקיפות — "מצורף אוטומטית"), userAgent, ערכת נושא</td></tr>
+    <tr><td><b>שדות</b></td><td>שם, אימייל (חובה), טלפון, נושא (תקלה טכנית / שאלה על שימוש / חיוב ותשלומים / בקשת פיצ'ר / אחר), תיאור חופשי עם placeholder מנחה ("מה ניסיתם לעשות ומה קרה בפועל")</td></tr>
+    <tr><td><b>anti-spam</b></td><td>שדה honeypot נסתר — נשלח ערך ⇐ הפנייה נבלעת בצד הלקוח; בצד השרת מומלץ rate-limit לפי IP</td></tr>
+    <tr><td><b>שער מצב-תצוגה</b></td><td>כל עוד <code class="inl">site.support.endpoint</code> ריק ב-<code class="inl">categories.json</code>, הטופס מציג "מצב תצוגה — הפרטים לא נשלחו" ולא מזייף הצלחה. אין הצגת "נשלח" בלי שרת אמיתי</td></tr>
+  </table>
+
+  <h3>מודל הנתונים</h3>
+  <pre><code><span class="cm">-- טבלת הפניות — נכנסת לסכמת המוצר לצד ה-CRM הקיים</span>
+<span class="kw">CREATE TABLE</span> <span class="ty">support_tickets</span> (
+  id            <span class="ty">TEXT PRIMARY KEY</span>,        <span class="cm">-- "WB-1042" — רץ, קריא ללקוח</span>
+  status        <span class="ty">TEXT NOT NULL DEFAULT</span> <span class="st">'new'</span>,  <span class="cm">-- new | in_progress | waiting_customer | resolved</span>
+  source        <span class="ty">TEXT NOT NULL</span>,           <span class="cm">-- help-center | boardi-chat | manual</span>
+  audience      <span class="ty">TEXT NOT NULL</span>,           <span class="cm">-- teacher | student</span>
+  category      <span class="ty">TEXT NOT NULL</span>,           <span class="cm">-- bug | usage | billing | feature | other</span>
+  priority      <span class="ty">TEXT NOT NULL DEFAULT</span> <span class="st">'normal'</span>,
+  name          <span class="ty">TEXT NOT NULL</span>,
+  email         <span class="ty">TEXT NOT NULL</span>,
+  phone         <span class="ty">TEXT</span>,
+  message       <span class="ty">TEXT NOT NULL</span>,
+  context_url   <span class="ty">TEXT</span>,                    <span class="cm">-- המדריך שממנו נשלחה הפנייה</span>
+  context_title <span class="ty">TEXT</span>,
+  user_agent    <span class="ty">TEXT</span>,
+  user_id       <span class="ty">TEXT REFERENCES</span> users(id), <span class="cm">-- אם הפונה זוהה כמחובר — קישור ל-CRM</span>
+  assignee_id   <span class="ty">TEXT REFERENCES</span> admins(id),
+  created_at    <span class="ty">TIMESTAMPTZ NOT NULL DEFAULT</span> now(),
+  first_response_at <span class="ty">TIMESTAMPTZ</span>,         <span class="cm">-- מדד SLA</span>
+  resolved_at   <span class="ty">TIMESTAMPTZ</span>
+);
+<span class="cm">-- הודעות בפנייה (תשובות נציג במייל + הערות פנימיות)</span>
+<span class="kw">CREATE TABLE</span> <span class="ty">support_ticket_messages</span> (
+  id         <span class="ty">TEXT PRIMARY KEY</span>,
+  ticket_id  <span class="ty">TEXT NOT NULL REFERENCES</span> support_tickets(id),
+  author     <span class="ty">TEXT NOT NULL</span>,               <span class="cm">-- customer | agent | system</span>
+  body       <span class="ty">TEXT NOT NULL</span>,
+  internal   <span class="ty">BOOLEAN NOT NULL DEFAULT</span> <span class="kw">false</span>, <span class="cm">-- הערה פנימית — לא נשלחת לפונה</span>
+  created_at <span class="ty">TIMESTAMPTZ NOT NULL DEFAULT</span> now()
+);</code></pre>
+
+  <h3>נקודות הקצה</h3>
+  <table>
+    <tr><th>Endpoint</th><th>תפקיד</th><th>דגשים</th></tr>
+    <tr><td><code>POST /api/support/tickets</code></td><td>קליטת פנייה מהטופס</td><td>ציבורי, ללא auth · ולידציה בצד השרת (אימייל, אורך) · rate-limit לפי IP · מחזיר <code class="inl">{ ticketId }</code> · שולח את שני המיילים · CORS ל-<code class="inl">help.whiteboard.education</code></td></tr>
+    <tr><td><code>GET /api/me</code></td><td>מילוי אוטומטי לפונה מחובר</td><td>מחזיר <code class="inl">{ name, email, phone, role }</code> מה-session · CORS עם <code class="inl">credentials</code> בין הסאב-דומיינים (cookie על <code class="inl">.whiteboard.education</code>) · 401 שקט אם לא מחובר — הטופס פשוט נשאר ריק</td></tr>
+    <tr><td><code>PATCH /api/admin/tickets/:id</code></td><td>סטטוס / שיוך / עדיפות</td><td>auth אדמין · שינוי ל-resolved קובע <code class="inl">resolved_at</code></td></tr>
+    <tr><td><code>POST /api/admin/tickets/:id/reply</code></td><td>תשובת נציג</td><td>שולח לפונה במייל (אלא אם <code class="inl">internal: true</code>) · תשובה ראשונה קובעת <code class="inl">first_response_at</code></td></tr>
+  </table>
+  <p>חיווט הצד הסטטי: <code class="inl">categories.json ← site.support.endpoint / sessionEndpoint</code> מוזרקים בבילד כ-<code class="inl">data-support-endpoint / data-session-endpoint</code> על ה-body — מילוי שני השדות הוא כל מה שנדרש כדי להדליק את הטופס בפרודקשיין.</p>
+
+  <h3>תשתית המיילים</h3>
+  <table>
+    <tr><th>מייל</th><th>תבנית (בריפו)</th><th>דגשים</th></tr>
+    <tr><td><b>התראה לתיבת התמיכה</b></td><td><code>emails/support-notification.html</code></td><td>נושא: <code class="inl">[WB-1042] תקלה טכנית — שם (מרצה)</code> · <b>Reply-To = כתובת הפונה</b> כדי שאפשר לענות ישירות מהאינבוקס · כולל צ'יפים (קהל/נושא/עדיפות), תוכן הפנייה, בלוק הקשר אוטומטי וכפתור לפתיחת הפנייה במסך הניהול</td></tr>
+    <tr><td><b>אישור לפונה</b></td><td><code>emails/customer-confirmation.html</code></td><td>נשלח מיידית · מספר פנייה בולט + מה שכתב · קישור חזרה למדריך שממנו פנה ("בינתיים אולי זה יעזור") · From ללא-מענה, שפה בגובה העיניים</td></tr>
+  </table>
+  <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p><b>החלטות פתוחות (לא הומצאו):</b> (1) כתובת תיבת התמיכה הרשמית — לקביעת אלון; (2) שכבת השליחה — ספק טרנזקציוני של המוצר או תרחיש Make (עקבי עם תשתית הסליקה הקיימת ב-Make); (3) פורמט מזהה הפנייה (מוצע WB-רץ). התבניות משתמשות במשתני <code class="inl">{{placeholder}}</code> ואגנוסטיות לשכבת השליחה.</p></div>
+
+  <h3>חיבור ל-Admin CRM</h3>
+  <ul>
+    <li><b>מסך ניהול ייעודי:</b> "שירות (CS) › ניהול פניות" במרכז הבקרה — KPI (פתוחות, זמן תגובה ראשונה, SLA בסיכון, נפתרו השבוע), טאבים לפי סטטוס, סינון לפי קהל/נושא/מקור/אחראי, מגירת פנייה עם ציר זמן, תשובה במייל מהמסך, הערות פנימיות, ו"העבר למוצר ובאגים" לאסקלציה. עוצב על מערכת העיצוב של מסכי ההנהלה הקיימים.</li>
+    <li><b>קישור ל-CRM אנשי קשר:</b> פנייה מפונה מזוהה (<code class="inl">user_id</code>) מופיעה גם בכרטיס איש הקשר — ההיסטוריה השירותית ליד ההיסטוריה העסקית.</li>
+    <li><b>זרימת סטטוסים:</b> חדש ← בטיפול (תשובה ראשונה — עוצר SLA) ← ממתין ללקוח ← נפתר. פנייה בקטגוריית "תקלה טכנית" שמאומתת כבאג — מועברת למסך "מוצר ובאגים" עם קישור דו-כיווני.</li>
+  </ul>
 </section>
 </main>
 <script>

@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="/whiteboard-designs/help/assets/site.css">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('wb-help-theme')||'light'}catch(e){}</script>
 </head>
-<body data-audience="teacher" data-base="/whiteboard-designs/help">
+<body data-audience="teacher" data-base="/whiteboard-designs/help" data-support-endpoint="" data-session-endpoint="">
 <header class="topbar">
   <a class="logo" href="/whiteboard-designs/help/">
     <img class="logo-img" src="/whiteboard-designs/help/assets/brand/whiteboard-logo.png" alt="WHITEBOARD">
@@ -135,6 +135,46 @@
     <button type="submit" aria-label="שליחה"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1)"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg></button>
   </form>
 </div>
-<footer class="footer">מרכז העזרה של WHITEBOARD · מתעדכן אוטומטית מול המערכת · <a href="https://whiteboard.education">whiteboard.education</a></footer>
+<div class="contact-modal" hidden>
+  <div class="cm-card">
+    <button class="cm-close" aria-label="סגירת הטופס">✕</button>
+    <div class="cm-head">
+      <img src="/whiteboard-designs/help/assets/brand/boardi-13.svg" alt="">
+      <div><h3>דברו עם נציג</h3>
+      <p>לא מצאתם תשובה במדריכים? השאירו פרטים — נציג יחזור אליכם, ואישור יישלח אליכם למייל.</p></div>
+    </div>
+    <form class="cm-form" novalidate>
+      <div class="cm-aud">פונים בתור <b class="cm-aud-label">מרצה</b>
+        <button type="button" class="cm-aud-toggle">אני בעצם תלמיד</button></div>
+      <div class="cm-grid">
+        <label>שם מלא<input name="name" autocomplete="name" required></label>
+        <label>אימייל לחזרה<input name="email" type="email" dir="ltr" autocomplete="email" required></label>
+        <label>טלפון<input name="phone" type="tel" dir="ltr" autocomplete="tel"></label>
+        <label>נושא הפנייה<select name="category">
+          <option value="bug">תקלה טכנית — משהו לא עובד</option>
+          <option value="usage">שאלה על שימוש במערכת</option>
+          <option value="billing">חיוב ותשלומים</option>
+          <option value="feature">בקשת פיצ'ר</option>
+          <option value="other">אחר</option>
+        </select></label>
+      </div>
+      <label class="cm-msg">מה קרה?<textarea name="message" rows="4" required placeholder="ספרו מה ניסיתם לעשות ומה קרה בפועל — ככה נוכל לעזור מהר יותר"></textarea></label>
+      <div class="cm-context" hidden>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13.4 10.6 21 3m0 0h-5.4M21 3v5.4M10.6 13.4 3 21m0 0h5.4M3 21v-5.4"/></svg>
+        מצורף אוטומטית לפנייה: המדריך שממנו פניתם — <b class="cm-context-title"></b></div>
+      <div class="cm-autofill" hidden>הפרטים מולאו אוטומטית מהחשבון המחובר — אפשר לתקן לפני השליחה.</div>
+      <input type="text" name="company" class="cm-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="cm-error" hidden></div>
+      <button type="submit" class="cm-submit">שליחת הפנייה</button>
+    </form>
+    <div class="cm-success" hidden>
+      <img src="/whiteboard-designs/help/assets/brand/boardi-5.svg" alt="">
+      <h3>הפנייה נשלחה!</h3>
+      <p class="cm-success-line"></p>
+      <button type="button" class="cm-done">סגירה</button>
+    </div>
+  </div>
+</div>
+<footer class="footer">מרכז העזרה של WHITEBOARD · מתעדכן אוטומטית מול המערכת · <button class="contact-open footer-contact">דברו עם נציג</button> · <a href="https://whiteboard.education">whiteboard.education</a></footer>
 <script src="/whiteboard-designs/help/assets/site.js" defer></script>
 </body></html>

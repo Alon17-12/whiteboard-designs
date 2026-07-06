@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!--
+  אישור אוטומטי לפונה — נשלח מיד עם קליטת פנייה מטופס "דברו עם נציג".
+  משתני תבנית ({{...}}): ticketId, name, categoryLabel, message, contextArticle,
+  contextArticleUrl, helpCenterUrl, assetsBaseUrl (כתובת מלאה לנכסי מותג).
+  בלוק ההקשר (BEGIN/END context) מושמט כשאין contextArticle.
+  טבלאות + סגנון inline — תאימות ללקוחות מייל. עברית RTL.
+-->
+<html lang="he" dir="rtl">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>קיבלנו את הפנייה שלך</title></head>
+<body style="margin:0;padding:0;background:#EBF3FB;font-family:'Heebo',Arial,Helvetica,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EBF3FB;padding:32px 12px;">
+<tr><td align="center">
+<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#FFFFFF;border-radius:18px;overflow:hidden;border:1px solid rgba(37,62,122,0.1);">
+  <!-- header -->
+  <tr><td style="background:#253E7A;padding:26px 32px;" align="right">
+    <img src="{{assetsBaseUrl}}/whiteboard-logo-white.png" alt="WHITEBOARD" width="140" style="display:block;">
+  </td></tr>
+  <!-- body -->
+  <tr><td style="padding:32px 32px 8px;" align="right">
+    <h1 style="margin:0 0 6px;font-size:22px;line-height:1.3;color:#1a2f5e;">קיבלנו את הפנייה שלך, {{name}} 👋</h1>
+    <p style="margin:0 0 18px;font-size:14.5px;line-height:1.75;color:rgba(37,62,122,0.7);">
+      הפנייה נקלטה אצל צוות התמיכה של WHITEBOARD ונציג יחזור אליך בהקדם.
+      שומרים את המייל הזה — מספר הפנייה יעזור לנו למצוא אותך מהר.
+    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F9FF;border:1px solid rgba(37,62,122,0.1);border-radius:12px;">
+      <tr><td style="padding:16px 20px;" align="right">
+        <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:rgba(37,62,122,0.55);">מספר פנייה</p>
+        <p style="margin:0 0 12px;font-size:20px;font-weight:700;color:#1a2f5e;direction:ltr;text-align:right;">{{ticketId}}</p>
+        <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:rgba(37,62,122,0.55);">נושא</p>
+        <p style="margin:0 0 12px;font-size:14px;color:#1a2f5e;">{{categoryLabel}}</p>
+        <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:rgba(37,62,122,0.55);">מה כתבת לנו</p>
+        <p style="margin:0;font-size:14px;line-height:1.7;color:#1a2f5e;">{{message}}</p>
+      </td></tr>
+    </table>
+    <!-- BEGIN context -->
+    <p style="margin:16px 0 0;font-size:13px;line-height:1.7;color:rgba(37,62,122,0.7);">
+      בינתיים, אולי המדריך שממנו פנית יעזור:
+      <a href="{{contextArticleUrl}}" style="color:#38C4F2;font-weight:700;text-decoration:none;">{{contextArticle}}</a>
+    </p>
+    <!-- END context -->
+  </td></tr>
+  <!-- cta -->
+  <tr><td style="padding:20px 32px 30px;" align="center">
+    <a href="{{helpCenterUrl}}" style="display:inline-block;background:#F05680;color:#FFFFFF;font-size:14px;font-weight:700;text-decoration:none;padding:12px 34px;border-radius:30px;">למרכז העזרה</a>
+  </td></tr>
+  <!-- footer -->
+  <tr><td style="background:#F4F9FF;border-top:1px solid rgba(37,62,122,0.1);padding:16px 32px;" align="center">
+    <p style="margin:0;font-size:11.5px;line-height:1.7;color:rgba(37,62,122,0.45);">
+      המייל נשלח אוטומטית ממרכז העזרה של WHITEBOARD · אין להשיב למייל זה — נציג יחזור אליך מהפנייה עצמה
+    </p>
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body></html>

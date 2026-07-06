@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ניהול פניות | שירות (CS) | WHITEBOARD ניהול</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A; --navy-dark:#1a2f5e; --navy-light:#3a5499;
+    --cyan:#38C4F2; --cyan-dark:#1db0d8; --cyan-light:rgba(56,196,242,0.12);
+    --light-blue:#E3F4FD;
+    --pink:#F05680; --pink-light:rgba(240,86,128,0.12);
+    --yellow:#EAD654; --yellow-light:rgba(234,214,84,0.18);
+    --green:#7DC57A; --green-bright:#22c55e; --green-light:rgba(125,197,122,0.14);
+    --white:#FFFFFF;
+    --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#f5f8ff; --surface-3:#edf4ff;
+    --border:rgba(37,62,122,0.1); --border-hover:rgba(56,196,242,0.4);
+    --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.55); --text-light:rgba(37,62,122,0.38);
+    --font-he:'Heebo',sans-serif; --font-en:'Fredoka',sans-serif;
+    --r-xs:6px; --r-sm:10px; --r-md:16px; --r-lg:18px; --r-xl:24px;
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:0 16px 48px rgba(37,62,122,0.14);
+    --sidebar-bg:var(--navy);
+  }
+  [data-theme="dark"] {
+    --cyan-light:rgba(56,196,242,0.14); --light-blue:rgba(56,196,242,0.1);
+    --pink-light:rgba(240,86,128,0.18); --yellow-light:rgba(234,214,84,0.18); --green-light:rgba(125,197,122,0.18);
+    --bg:#0c1424; --surface:#131e35; --surface-2:#1a2740; --surface-3:#1e2e48;
+    --border:rgba(255,255,255,0.07); --border-hover:rgba(56,196,242,0.4);
+    --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.55); --text-light:rgba(221,229,245,0.32);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3); --shadow-md:0 6px 28px rgba(0,0,0,0.4); --shadow-lg:0 16px 48px rgba(0,0,0,0.55);
+    --sidebar-bg:#0d1628;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:var(--font-he); background:var(--bg); color:var(--text-main); min-height:100vh; display:flex; transition:background .3s,color .3s; }
+  ::-webkit-scrollbar { width:9px; height:9px; }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:6px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--text-light); }
+  .sidebar { width:230px; background:var(--sidebar-bg); border-left:1px solid rgba(255,255,255,0.05); min-height:100vh; display:flex; flex-direction:column; padding:22px 0 16px; flex-shrink:0; position:fixed; right:0; top:0; bottom:0; z-index:50; transition:background .3s; overflow-y:auto; }
+  .sidebar::-webkit-scrollbar { width:0; }
+  .sidebar-logo { padding:4px 18px 18px; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:8px; display:flex; align-items:center; justify-content:center; }
+  .sidebar-logo img { width:148px; object-fit:contain; display:block; }
+  .admin-badge { display:flex; align-items:center; gap:7px; margin:0 14px 12px; padding:8px 12px; background:rgba(56,196,242,0.12); border:1px solid rgba(56,196,242,0.25); border-radius:var(--r-sm); }
+  .admin-badge svg { width:15px; height:15px; color:var(--cyan); flex-shrink:0; }
+  .admin-badge span { font-size:12px; font-weight:700; color:var(--cyan); font-family:var(--font-en); letter-spacing:.4px; }
+  .nav-group-label { font-size:10.5px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:rgba(255,255,255,0.32); padding:14px 20px 6px; font-family:var(--font-en); }
+  .sidebar-section { padding:0 12px; }
+  .nav-item { display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:var(--r-sm); cursor:pointer; transition:all .18s; text-decoration:none; color:rgba(255,255,255,0.65); font-size:13.5px; font-weight:500; position:relative; }
+  .nav-item:hover { background:rgba(255,255,255,0.08); color:#fff; }
+  .nav-item.active { background:rgba(56,196,242,0.2); color:var(--cyan); font-weight:700; }
+  .nav-item svg { width:18px; height:18px; flex-shrink:0; }
+  .nav-item .badge-count { margin-inline-start:auto; background:var(--pink); color:#fff; font-size:10.5px; font-weight:700; min-width:19px; height:19px; padding:0 5px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:var(--font-en); }
+  .sidebar-bottom { margin-top:auto; padding:14px 12px 0; border-top:1px solid rgba(255,255,255,0.1); }
+  .profile-mini { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--r-sm); cursor:pointer; transition:background .2s; }
+  .profile-mini:hover { background:rgba(255,255,255,0.08); }
+  .avatar-sm { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--cyan),var(--navy-light)); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#fff; flex-shrink:0; font-family:var(--font-en); }
+  .profile-mini-name { font-size:13px; font-weight:600; color:#fff; }
+  .profile-mini-role { font-size:11px; color:rgba(255,255,255,0.45); }
+  .main { margin-right:230px; flex:1; display:flex; flex-direction:column; min-width:0; }
+  .topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 30px; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:40; box-shadow:var(--shadow-sm); transition:background .3s; }
+  .topbar-breadcrumb { display:flex; align-items:center; gap:8px; font-size:14px; }
+  .breadcrumb-link { color:var(--text-sub); cursor:pointer; transition:color .2s; text-decoration:none; }
+  .breadcrumb-link:hover { color:var(--text-main); }
+  .breadcrumb-sep svg { width:15px; height:15px; display:block; color:var(--text-light); }
+  .breadcrumb-current { color:var(--text-main); font-weight:700; }
+  .topbar-actions { display:flex; align-items:center; gap:12px; }
+  .search-box { display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-sm); padding:8px 14px; width:280px; transition:all .2s; }
+  .search-box:focus-within { border-color:var(--cyan); box-shadow:0 0 0 3px rgba(56,196,242,0.12); }
+  .search-box svg { width:16px; height:16px; color:var(--text-light); flex-shrink:0; }
+  .search-box input { border:none; background:transparent; outline:none; font-family:var(--font-he); font-size:13.5px; color:var(--text-main); width:100%; }
+  .search-box input::placeholder { color:var(--text-light); }
+  .icon-btn { width:40px; height:40px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; color:var(--text-sub); position:relative; }
+  .icon-btn:hover { background:var(--light-blue); color:var(--navy); border-color:var(--cyan); }
+  [data-theme="dark"] .icon-btn:hover { color:var(--cyan); border-color:var(--border-hover); }
+  .icon-btn svg { width:19px; height:19px; }
+  .icon-btn .notif-dot { position:absolute; top:8px; left:9px; width:8px; height:8px; border-radius:50%; background:var(--pink); border:2px solid var(--surface); }
+  .icon-sun { display:none; } .icon-moon { display:block; }
+  [data-theme="dark"] .icon-sun { display:block; } [data-theme="dark"] .icon-moon { display:none; }
+  .page-body { padding:30px; flex:1; max-width:1640px; width:100%; }
+  .greeting-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:26px; gap:24px; }
+  .greeting-wrap { display:flex; align-items:center; gap:16px; }
+  .greeting-boardi { width:64px; flex-shrink:0; filter:drop-shadow(0 6px 16px rgba(37,62,122,0.22)); }
+  .greeting-title { font-size:27px; font-weight:900; color:var(--text-main); line-height:1.1; }
+  .greeting-subtitle { font-size:14px; color:var(--text-sub); margin-top:6px; }
+  .greeting-subtitle .dot { color:var(--text-light); margin:0 8px; }
+  .header-actions { display:flex; gap:10px; align-items:center; flex-shrink:0; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:30px; font-family:var(--font-he); font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; border:none; white-space:nowrap; }
+  .btn-primary { background:linear-gradient(135deg,var(--cyan),var(--cyan-dark)); color:#fff; box-shadow:0 4px 16px rgba(56,196,242,0.35); }
+  [data-theme="dark"] .btn-primary { color:#0b1424; }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(56,196,242,0.45); }
+  .btn-secondary { background:var(--surface); color:var(--navy); border:1.5px solid var(--border); }
+  .btn-secondary:hover { background:var(--light-blue); border-color:var(--cyan); }
+  [data-theme="dark"] .btn-secondary { background:var(--surface-2); color:var(--text-main); }
+  [data-theme="dark"] .btn-secondary:hover { border-color:var(--border-hover); color:var(--cyan); }
+  .btn svg { width:16px; height:16px; }
+  .kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:22px; }
+  .kpi-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:18px 20px; box-shadow:var(--shadow-sm); transition:transform .2s,box-shadow .2s; cursor:pointer; position:relative; overflow:hidden; }
+  .kpi-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+  .kpi-card::before { content:''; position:absolute; top:0; right:0; width:4px; height:100%; background:var(--c,var(--cyan)); }
+  .kpi-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .kpi-icon { width:40px; height:40px; border-radius:var(--r-sm); background:var(--c-light,var(--cyan-light)); display:flex; align-items:center; justify-content:center; color:var(--c,var(--cyan)); }
+  .kpi-icon svg { width:20px; height:20px; }
+  .kpi-delta { font-size:12px; font-weight:700; padding:3px 8px; border-radius:10px; display:inline-flex; align-items:center; gap:3px; }
+  .kpi-delta.up { color:var(--green); background:var(--green-light); }
+  .kpi-delta.down { color:var(--pink); background:var(--pink-light); }
+  .kpi-delta svg { width:11px; height:11px; }
+  .kpi-value { font-size:27px; font-weight:900; font-family:var(--font-en); color:var(--text-main); line-height:1; margin-bottom:4px; direction:ltr; text-align:right; }
+  .kpi-label { font-size:13px; color:var(--text-sub); font-weight:500; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:22px; box-shadow:var(--shadow-sm); transition:background .3s; }
+  .card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:12px; }
+  .card-title { font-size:16.5px; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:10px; }
+  .card-title-icon { width:30px; height:30px; border-radius:9px; background:var(--light-blue); display:flex; align-items:center; justify-content:center; color:var(--cyan); }
+  [data-theme="dark"] .card-title-icon { background:var(--cyan-light); }
+  .card-title-icon svg { width:15px; height:15px; }
+  .card-sub { font-size:12.5px; color:var(--text-sub); font-weight:500; margin-top:2px; }
+
+  /* LAYOUT: table + drawer */
+  .cs-layout { display:grid; grid-template-columns:minmax(0,1fr) 396px; gap:20px; align-items:start; }
+
+  /* FILTER BAR */
+  .filter-bar { display:flex; flex-direction:column; gap:14px; margin-bottom:16px; }
+  .status-tabs { display:flex; background:var(--surface-2); border:1px solid var(--border); border-radius:20px; padding:3px; width:fit-content; max-width:100%; overflow-x:auto; }
+  .status-tabs button { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border:none; background:transparent; color:var(--text-sub); font-family:var(--font-he); font-size:12.5px; font-weight:600; border-radius:14px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+  .status-tabs button .cnt { font-family:var(--font-en); font-size:11px; font-weight:700; background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:1px 7px; color:var(--text-sub); }
+  .status-tabs button.active { background:var(--cyan); color:#fff; }
+  [data-theme="dark"] .status-tabs button.active { color:var(--navy-dark); }
+  .status-tabs button.active .cnt { background:rgba(255,255,255,0.25); border-color:transparent; color:inherit; }
+  .filter-chips { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .fchip { display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border-radius:20px; background:var(--surface-2); border:1px solid var(--border); color:var(--text-sub); font-family:var(--font-he); font-size:12.5px; font-weight:600; cursor:pointer; transition:all .2s; }
+  .fchip:hover { border-color:var(--border-hover); color:var(--text-main); }
+  .fchip b { color:var(--text-main); font-weight:700; }
+  .fchip svg { width:13px; height:13px; color:var(--text-light); }
+  .filter-search { display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid var(--border); border-radius:20px; padding:7px 14px; width:230px; transition:all .2s; margin-inline-start:auto; }
+  .filter-search:focus-within { border-color:var(--cyan); box-shadow:0 0 0 3px rgba(56,196,242,0.12); }
+  .filter-search svg { width:14px; height:14px; color:var(--text-light); flex-shrink:0; }
+  .filter-search input { border:none; background:transparent; outline:none; font-family:var(--font-he); font-size:12.5px; color:var(--text-main); width:100%; }
+  .filter-search input::placeholder { color:var(--text-light); }
+
+  /* TABLE */
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; }
+  thead th { text-align:right; font-size:11.5px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:.5px; padding:0 12px 12px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  tbody td { padding:12px; border-bottom:1px solid var(--border); font-size:13px; color:var(--text-main); vertical-align:middle; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr { transition:background .2s; cursor:pointer; }
+  tbody tr:hover { background:var(--surface-2); }
+  tbody tr.selected { background:var(--cyan-light); box-shadow:inset 3px 0 0 var(--cyan); }
+  tbody tr.selected td:first-child { position:relative; }
+  .tid { font-family:var(--font-en); font-weight:600; font-size:12.5px; color:var(--text-sub); direction:ltr; display:inline-block; white-space:nowrap; }
+  tr.selected .tid { color:var(--cyan); }
+  .subj-cell { min-width:190px; max-width:250px; }
+  .subj { font-size:13.5px; font-weight:700; color:var(--text-main); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .subj-prev { font-size:11.5px; color:var(--text-sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .who-cell { min-width:150px; }
+  .who-name { font-size:13px; font-weight:700; color:var(--text-main); display:flex; align-items:center; gap:6px; }
+  .who-mail { font-size:11px; color:var(--text-sub); font-family:var(--font-en); direction:ltr; text-align:right; }
+  .aud { font-size:10px; font-weight:700; padding:1.5px 7px; border-radius:9px; flex-shrink:0; }
+  .aud.teacher { background:var(--cyan-light); color:var(--cyan-dark); }
+  [data-theme="dark"] .aud.teacher { color:var(--cyan); }
+  .aud.student { background:var(--yellow-light); color:#b89c00; }
+  [data-theme="dark"] .aud.student { color:var(--yellow); }
+  .cat { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; }
+  .cat.bug { background:var(--pink-light); color:var(--pink); }
+  .cat.question { background:var(--cyan-light); color:var(--cyan-dark); }
+  [data-theme="dark"] .cat.question { color:var(--cyan); }
+  .cat.billing { background:var(--green-light); color:var(--green); }
+  .cat.feature { background:rgba(58,84,153,0.14); color:var(--navy-light); }
+  [data-theme="dark"] .cat.feature { color:#8aa3e0; }
+  .cat.other { background:var(--surface-3); color:var(--text-sub); }
+  .src-cell { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--text-sub); white-space:nowrap; }
+  .src-cell svg { width:13px; height:13px; color:var(--text-light); flex-shrink:0; }
+  .prio { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; white-space:nowrap; }
+  .prio .pd { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .prio.high { color:var(--pink); } .prio.high .pd { background:var(--pink); }
+  .prio.normal { color:var(--text-sub); } .prio.normal .pd { background:var(--cyan); }
+  .prio.low { color:var(--text-light); } .prio.low .pd { background:var(--border); }
+  .sla { font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:10px; white-space:nowrap; }
+  .sla.ok { background:var(--green-light); color:var(--green); }
+  .sla.breach { background:var(--pink-light); color:var(--pink); }
+  .sla.none { color:var(--text-light); background:transparent; padding-inline:0; font-weight:500; }
+  .tstatus { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
+  .tstatus .sdot { width:5px; height:5px; border-radius:50%; background:currentColor; }
+  .tstatus.new { background:var(--pink-light); color:var(--pink); }
+  .tstatus.prog { background:var(--cyan-light); color:var(--cyan-dark); }
+  [data-theme="dark"] .tstatus.prog { color:var(--cyan); }
+  .tstatus.waitc { background:var(--yellow-light); color:#b89c00; } [data-theme="dark"] .tstatus.waitc { color:var(--yellow); }
+  .tstatus.done { background:var(--green-light); color:var(--green); }
+  .owner-av { width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:11px; font-weight:700; flex-shrink:0; }
+  .owner-none { font-size:12px; color:var(--text-light); }
+  .ttime { font-size:11.5px; color:var(--text-light); white-space:nowrap; }
+
+  /* DRAWER (docked to the left in RTL) */
+  .drawer { position:sticky; top:84px; max-height:calc(100vh - 104px); overflow-y:auto; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); box-shadow:var(--shadow-md); display:flex; flex-direction:column; }
+  .drawer-head { padding:18px 20px 14px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface); z-index:2; border-radius:var(--r-md) var(--r-md) 0 0; }
+  .drawer-top { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+  .drawer-id { font-family:var(--font-en); font-weight:600; font-size:13px; color:var(--cyan); direction:ltr; }
+  .drawer-close { width:30px; height:30px; border-radius:9px; border:1px solid var(--border); background:var(--surface); color:var(--text-sub); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; }
+  .drawer-close:hover { background:var(--pink-light); color:var(--pink); border-color:var(--pink); }
+  .drawer-close svg { width:14px; height:14px; }
+  .drawer-subj { font-size:16.5px; font-weight:800; color:var(--text-main); line-height:1.3; margin-bottom:10px; }
+  .drawer-chips { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+  .drawer-body { padding:18px 20px; display:flex; flex-direction:column; gap:18px; }
+  .dsec-label { font-size:11.5px; font-weight:700; letter-spacing:.5px; color:var(--text-light); text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .dsec-label svg { width:13px; height:13px; }
+  .desc-box { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-sm); padding:13px 15px; font-size:13.5px; line-height:1.7; color:var(--text-main); }
+  .ctx-box { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-sm); padding:6px 15px; }
+  .ctx-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 0; border-bottom:1px dashed var(--border); font-size:12.5px; }
+  .ctx-row:last-child { border-bottom:none; }
+  .ctx-key { color:var(--text-sub); flex-shrink:0; }
+  .ctx-val { font-weight:700; color:var(--text-main); text-align:left; }
+  .ctx-val.link { color:var(--cyan); cursor:pointer; text-decoration:none; }
+  .ctx-val.link:hover { text-decoration:underline; }
+  .contact-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0; font-size:12.5px; border-bottom:1px dashed var(--border); }
+  .contact-row:last-child { border-bottom:none; }
+  .copy-val { display:inline-flex; align-items:center; gap:6px; font-family:var(--font-en); direction:ltr; font-weight:600; color:var(--text-main); cursor:pointer; padding:2px 8px; border-radius:8px; transition:background .2s; font-size:12px; }
+  .copy-val:hover { background:var(--cyan-light); color:var(--cyan-dark); }
+  [data-theme="dark"] .copy-val:hover { color:var(--cyan); }
+  .copy-val svg { width:12px; height:12px; color:var(--text-light); flex-shrink:0; }
+  /* timeline */
+  .tl { display:flex; flex-direction:column; }
+  .tl-item { display:flex; gap:11px; position:relative; padding-bottom:16px; }
+  .tl-item:last-child { padding-bottom:0; }
+  .tl-item::before { content:''; position:absolute; right:9px; top:22px; bottom:0; width:2px; background:var(--border); }
+  .tl-item:last-child::before { display:none; }
+  .tl-dot { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; z-index:1; }
+  .tl-dot svg { width:11px; height:11px; }
+  .tl-dot.done { background:var(--green-light); color:var(--green); }
+  .tl-dot.auto { background:var(--cyan-light); color:var(--cyan-dark); }
+  [data-theme="dark"] .tl-dot.auto { color:var(--cyan); }
+  .tl-txt { font-size:12.5px; font-weight:600; color:var(--text-main); line-height:1.4; }
+  .tl-sub { font-size:11px; color:var(--text-sub); margin-top:1px; }
+  .tl-time { font-size:10.5px; color:var(--text-light); font-family:var(--font-en); direction:ltr; margin-top:2px; }
+  /* reply composer */
+  .composer { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; transition:border-color .2s; }
+  .composer:focus-within { border-color:var(--cyan); }
+  .composer.internal { border-color:var(--yellow); background:var(--yellow-light); }
+  .composer textarea { width:100%; border:none; outline:none; background:transparent; padding:12px 14px; font-family:var(--font-he); font-size:13px; color:var(--text-main); resize:vertical; min-height:84px; line-height:1.6; }
+  .composer textarea::placeholder { color:var(--text-light); }
+  .composer-note { font-size:11px; color:var(--text-sub); padding:0 14px 10px; display:flex; align-items:center; gap:5px; }
+  .composer-note svg { width:12px; height:12px; flex-shrink:0; color:var(--text-light); }
+  .composer-actions { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px; flex-wrap:wrap; }
+  .toggle-note { display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:var(--text-sub); cursor:pointer; user-select:none; }
+  .toggle-note .tgl { width:32px; height:18px; border-radius:10px; background:var(--surface-3); border:1px solid var(--border); position:relative; transition:background .2s; flex-shrink:0; }
+  .toggle-note .tgl::after { content:''; position:absolute; top:2px; right:2px; width:12px; height:12px; border-radius:50%; background:var(--text-light); transition:all .2s; }
+  .toggle-note.on { color:#b89c00; } [data-theme="dark"] .toggle-note.on { color:var(--yellow); }
+  .toggle-note.on .tgl { background:var(--yellow-light); border-color:var(--yellow); }
+  .toggle-note.on .tgl::after { right:16px; background:var(--yellow); }
+  /* quick actions */
+  .qa-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .qa-field label { display:block; font-size:11px; font-weight:700; color:var(--text-sub); margin-bottom:5px; }
+  .qa-field select { width:100%; padding:8px 10px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--surface-2); color:var(--text-main); font-family:var(--font-he); font-size:12.5px; font-weight:600; outline:none; cursor:pointer; transition:border-color .2s; }
+  .qa-field select:focus { border-color:var(--cyan); }
+  .qa-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:2px; }
+  .qa-chip { display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border-radius:20px; background:var(--surface-2); border:1px solid var(--border); color:var(--navy); font-family:var(--font-he); font-size:12px; font-weight:700; cursor:pointer; transition:all .2s; }
+  [data-theme="dark"] .qa-chip { color:var(--text-main); }
+  .qa-chip:hover { background:var(--light-blue); border-color:var(--cyan); }
+  [data-theme="dark"] .qa-chip:hover { color:var(--cyan); border-color:var(--border-hover); }
+  .qa-chip svg { width:13px; height:13px; flex-shrink:0; }
+  .qa-chip.escalate { color:var(--pink); }
+  .qa-chip.escalate:hover { background:var(--pink-light); border-color:var(--pink); color:var(--pink); }
+  /* automation strip */
+  .auto-strip { margin-top:20px; display:flex; align-items:center; gap:12px; padding:14px 18px; background:var(--surface); border:1px dashed var(--border-hover); border-radius:var(--r-md); }
+  .auto-strip-ic { width:36px; height:36px; border-radius:var(--r-sm); background:var(--cyan-light); color:var(--cyan-dark); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  [data-theme="dark"] .auto-strip-ic { color:var(--cyan); }
+  .auto-strip-ic svg { width:18px; height:18px; }
+  .auto-strip-title { font-size:13px; font-weight:800; color:var(--text-main); }
+  .auto-strip-txt { font-size:12.5px; color:var(--text-sub); margin-top:1px; }
+
+  @media (max-width:1320px){ .cs-layout{grid-template-columns:1fr;} .drawer{position:static; max-height:none;} }
+  @media (max-width:1200px){ .kpi-strip{grid-template-columns:repeat(2,1fr);} .search-box{width:180px;} .filter-search{width:100%; margin-inline-start:0;} }
+  .toast-container { position:fixed; bottom:24px; left:24px; z-index:200; display:flex; flex-direction:column; gap:10px; }
+  .toast { display:flex; align-items:center; gap:11px; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-sm); padding:13px 16px; box-shadow:var(--shadow-lg); min-width:280px; animation:toastIn .35s ease forwards; }
+  @keyframes toastIn { from{opacity:0;transform:translateX(-30px);} to{opacity:1;transform:translateX(0);} }
+  .toast.out { animation:toastOut .35s ease forwards; }
+  @keyframes toastOut { to{opacity:0;transform:translateX(-30px);} }
+  .toast-icon { width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .toast-icon svg { width:16px; height:16px; }
+  .toast.success .toast-icon{background:var(--green-light);color:var(--green);} .toast.info .toast-icon{background:var(--cyan-light);color:var(--cyan);}
+  .toast-text { font-size:13.5px; font-weight:600; color:var(--text-main); }
+</style>
+<script>try{var t=localStorage.getItem("wb-admin-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-logo"><img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD"></div>
+  <div class="admin-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>ADMIN · ניהול</span></div>
+  <div class="sidebar-section"><a class="nav-item" href="מרכז הבקרה - דשבורד ראשי.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>מרכז הבקרה</a></div>
+  <div class="nav-group-label">שיווק ומכירות</div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="שיווק ומשפך.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>שיווק ומשפך</a>
+    <a class="nav-item" href="לקוחות ומנויים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg>לקוחות ומנויים</a>
+    <a class="nav-item" href="מכירות Enterprise.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v4H3zM3 10h18v11H3z"/><path d="M8 14h8"/></svg>מכירות Enterprise</a>
+    <a class="nav-item" href="שותפים ועמלות.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>שותפים ועמלות</a>
+    <a class="nav-item" href="סליקה ותשלומים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>סליקה ותשלומים<span style="margin-inline-start:auto;font-size:9.5px;font-weight:700;color:#b89c00;background:rgba(234,214,84,0.2);padding:2px 6px;border-radius:8px;font-family:var(--font-en)">עתידי</span></a>
+  </div>
+  <div class="nav-group-label">תפעול ומוצר</div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="אנליטיקת מרצים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>אנליטיקת מרצים</a>
+    <a class="nav-item" href="מוצר ובאגים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="M12 6V3M5 9H2M22 9h-3M5 15H2M22 15h-3M7 4l-2-2M17 4l2-2"/></svg>מוצר ובאגים<span class="badge-count">7</span></a>
+    <a class="nav-item active" href="שירות CS.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>שירות (CS)<span class="badge-count">12</span></a>
+  </div>
+  <div class="sidebar-bottom">
+    <a class="nav-item" data-mod="הגדרות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות</a>
+    <div class="profile-mini"><div class="avatar-sm">AG</div><div><div class="profile-mini-name">אלון גבאי</div><div class="profile-mini-role">מנכ״ל</div></div></div>
+  </div>
+</aside>
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-breadcrumb"><span class="breadcrumb-link">ניהול</span><span class="breadcrumb-sep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></span><a class="breadcrumb-link" href="שירות CS.html">שירות (CS)</a><span class="breadcrumb-sep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></span><span class="breadcrumb-current">ניהול פניות</span></div>
+    <div class="topbar-actions">
+      <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="חיפוש פנייה / לקוח…"></div>
+      <button class="icon-btn" id="notifBtn" aria-label="התראות"><span class="notif-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+      <button class="icon-btn" id="themeBtn" aria-label="מצב תצוגה"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+    </div>
+  </header>
+  <main class="page-body">
+    <div class="greeting-row">
+      <div class="greeting-wrap"><img class="greeting-boardi" src="../BOARDi/SVG/4.svg" alt="BOARDi"><div>
+        <div class="greeting-title">ניהול פניות תמיכה</div>
+        <div class="greeting-subtitle">כל הפניות שמגיעות ממרכז העזרה (הטופס "דברו עם נציג") ומצ'אט בורדי — במקום אחד <span class="dot">•</span> יולי 2026</div>
+      </div></div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>ייצוא CSV</button>
+        <button class="btn btn-primary" id="newTicketBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>פנייה ידנית</button>
+      </div>
+    </div>
+
+    <div class="kpi-strip">
+      <div class="kpi-card" style="--c:var(--pink);--c-light:var(--pink-light)"><div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><span class="kpi-delta down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>3</span></div><div class="kpi-value">14</div><div class="kpi-label">פניות פתוחות</div></div>
+      <div class="kpi-card" style="--c:var(--cyan);--c-light:var(--cyan-light)"><div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><span class="kpi-delta up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>22%</span></div><div class="kpi-value">1.8ש'</div><div class="kpi-label">זמן תגובה ראשונה (ממוצע)</div></div>
+      <div class="kpi-card" style="--c:var(--yellow);--c-light:var(--yellow-light)"><div class="kpi-top"><div class="kpi-icon" style="color:#b89c00"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg></div><span class="kpi-delta down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>1</span></div><div class="kpi-value">3</div><div class="kpi-label">פניות ב־SLA בסיכון</div></div>
+      <div class="kpi-card" style="--c:var(--green);--c-light:var(--green-light)"><div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><span class="kpi-delta up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>9%</span></div><div class="kpi-value">31</div><div class="kpi-label">נפתרו השבוע</div></div>
+    </div>
+
+    <div class="cs-layout">
+      <!-- TICKETS TABLE -->
+      <div class="card">
+        <div class="card-head"><div><div class="card-title"><span class="card-title-icon" style="background:var(--pink-light);color:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>כל הפניות</div><div class="card-sub">42 פניות ב־30 הימים האחרונים · לחיצה על שורה פותחת את הפנייה</div></div></div>
+
+        <div class="filter-bar">
+          <div class="status-tabs" id="statusTabs">
+            <button class="active">הכל <span class="cnt">42</span></button>
+            <button>חדש <span class="cnt">6</span></button>
+            <button>בטיפול <span class="cnt">5</span></button>
+            <button>ממתין ללקוח <span class="cnt">3</span></button>
+            <button>נפתר <span class="cnt">28</span></button>
+          </div>
+          <div class="filter-chips">
+            <button class="fchip" data-toast="סינון לפי קהל">קהל: <b>הכל</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+            <button class="fchip" data-toast="סינון לפי קטגוריה">קטגוריה: <b>הכל</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+            <button class="fchip" data-toast="סינון לפי מקור">מקור: <b>הכל</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+            <button class="fchip" data-toast="סינון לפי אחראי">אחראי: <b>הכל</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+            <div class="filter-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="חיפוש בנושא, שם או מייל…"></div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>מזהה</th><th>נושא</th><th>פונה</th><th>קטגוריה</th><th>מקור</th><th>עדיפות</th><th>SLA</th><th>סטטוס</th><th>אחראי</th><th>נוצר</th></tr></thead>
+            <tbody id="ticketRows">
+              <tr class="selected"><td><span class="tid">WB-1042</span></td><td class="subj-cell"><div class="subj">הסרטונים בפרק 3 לא נטענים לתלמידים</div><div class="subj-prev">העליתי אתמול שלושה סרטונים חדשים לפרק 3, אצלי בעורך הם מתנגנים אבל…</div></td><td class="who-cell"><div class="who-name">דנה מלר <span class="aud teacher">מרצה</span></div><div class="who-mail">dana@studio-dana.co.il</div></td><td><span class="cat bug">תקלה טכנית</span></td><td><span class="src-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>מרכז העזרה</span></td><td><span class="prio high"><span class="pd"></span>גבוהה</span></td><td><span class="sla ok">עוד 1ש׳</span></td><td><span class="tstatus prog"><span class="sdot"></span>בטיפול</span></td><td><span class="owner-av" style="background:linear-gradient(135deg,#38C4F2,#3a5499)">רב</span></td><td><span class="ttime">לפני 25 דק׳</span></td></tr>
+              <tr><td><span class="tid">WB-1041</span></td><td class="subj-cell"><div class="subj">לא מצליחה להוריד קבלה על הקורס</div><div class="subj-prev">רכשתי את הקורס לפני שבוע ואני צריכה קבלה להחזר מהעבודה…</div></td><td class="who-cell"><div class="who-name">נועה פרידמן <span class="aud student">תלמידה</span></div><div class="who-mail">noaf88@gmail.com</div></td><td><span class="cat billing">חיוב ותשלומים</span></td><td><span class="src-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>מרכז העזרה</span></td><td><span class="prio normal"><span class="pd"></span>רגילה</span></td><td><span class="sla ok">עוד 3ש׳</span></td><td><span class="tstatus new"><span class="sdot"></span>חדש</span></td><td><span class="owner-none">לא שויך</span></td><td><span class="ttime">לפני שעה</span></td></tr>
+              <tr><td><span class="tid">WB-1040</span></td><td class="subj-cell"><div class="subj">איך מגדירים טפטוף תוכן לפי שבועות?</div><div class="subj-prev">בניתי תוכנית ליווי ואני רוצה שהפרקים ייפתחו שבוע אחרי שבוע…</div></td><td class="who-cell"><div class="who-name">אורי שלו <span class="aud teacher">מרצה</span></div><div class="who-mail">uri@shalev-courses.com</div></td><td><span class="cat question">שאלה</span></td><td><span class="src-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>צ'אט בורדי</span></td><td><span class="prio low"><span class="pd"></span>נמוכה</span></td><td><span class="sla ok">עוד 6ש׳</span></td><td><span class="tstatus new"><span class="sdot"></span>חדש</span></td><td><span class="owner-av" style="background:linear-gradient(135deg,#7DC57A,#4a9a47)">נא</span></td><td><span class="ttime">לפני שעתיים</span></td></tr>
+              <tr><td><span class="tid">WB-1039</span></td><td class="subj-cell"><div class="subj">חיוב כפול בכרטיס האשראי</div><div class="subj-prev">קיבלתי שני חיובים של ₪149 על אותו חודש, אשמח לבדיקה והחזר…</div></td><td class="who-cell"><div class="who-name">מיכל דהן <span class="aud student">תלמידה</span></div><div class="who-mail">michal.d@walla.co.il</div></td><td><span class="cat billing">חיוב ותשלומים</span></td><td><span class="src-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>מרכז העזרה</span></td><td><span class="prio high"><span class="pd"></span>גבוהה</span></td><td><span class="sla breach">חריגה 1ש׳</span></td><td><span class="tstatus prog"><span class="sdot"></span>בטיפול</span></td><td><span class="owner-av" style="background:linear-gradient(135deg,#F05680,#c03a6a)">אג</span></td><td><span class="ttime">לפני 3ש׳</span></td></tr>
+              <tr><td><span class="tid">WB-1038</span></td><td class="subj-cell"><div class="subj">בקשה: כתוביות אוטומטיות לסרטונים</div><div class="subj-prev">חלק מהתלמידים שלי צופים בלי סאונד, כתוביות אוטומטיות יעזרו מאוד…</div></td><td class="who-cell"><div class="who-name">יעל אבישר <span class="aud teacher">מרצה</span></div><div class="who-mail">yael@academy.org</div></td><td><span class="cat feature">בקשת פיצ'ר</span></td><td><span class="src-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>צ'אט בורדי</span></td><td><span class="prio low"><span class="pd"></span>נמוכה</span></td><td><span class="sla ok">עוד יום</span></td><td><span class="tstatus new"><span class="sdot"></span>חדש</span></td><td><span class="owner-none">לא שויך</span></td><td><span class="ttime">לפני 5ש׳</span></td></tr>
+              <tr><td><span class="tid">WB-1037</span></td><td class="subj-cell"><div class="subj">תלמידים לא רואים את התעודה בסיום</div><div class="subj-prev">שני תלמידים סיימו 100% מהקורס אבל מסך התעודה נשאר ריק…</div></td><td class="who-cell"><div class="who-name">דוד כספי <span class="aud teacher">מרצה</span></div><div class="who-mail">david@firm.co.il</div></td><td><span class="cat bug">תקלה טכנית</span></td><td><span class="src-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>מרכז העזרה</span></td><td><span class="prio normal"><span class="pd"></span>רגילה</span></td><td><span class="sla ok">עוד 2ש׳</span></td><td><span class="tstatus prog"><span class="sdot"></span>בטיפול</span></td><td><span class="owner-av" style="background:linear-gradient(135deg,#38C4F2,#3a5499)">רב</span></td><td><span class="ttime">לפני 6ש׳</span></td></tr>
+              <tr><td><span class="tid">WB-1036</span></td><td class="subj-cell"><div class="subj">קישור איפוס הסיסמה לא מגיע למייל</div><div class="subj-prev">ביקשתי איפוס סיסמה שלוש פעמים ושום מייל לא הגיע, גם לא לספאם…</div></td><td class="who-cell"><div class="who-name">אביב לוי <span class="aud student">תלמיד</span></div><div class="who-mail">avivlevi1@gmail.com</div></td><td><span class="cat other">אחר</span></td><td><span class="src-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>מרכז העזרה</span></td><td><span class="prio normal"><span class="pd"></span>רגילה</span></td><td><span class="sla breach">חריגה 30 דק׳</span></td><td><span class="tstatus waitc"><span class="sdot"></span>ממתין ללקוח</span></td><td><span class="owner-av" style="background:linear-gradient(135deg,#7DC57A,#4a9a47)">נא</span></td><td><span class="ttime">לפני 7ש׳</span></td></tr>
+              <tr><td><span class="tid">WB-1035</span></td><td class="subj-cell"><div class="subj">אפשר לחבר את המערכת ל־Make?</div><div class="subj-prev">אני רוצה שכל הרשמה חדשה תיכנס אוטומטית לגיליון ולרשימת התפוצה…</div></td><td class="who-cell"><div class="who-name">רוני הראל <span class="aud teacher">מרצה</span></div><div class="who-mail">roni@biz.co.il</div></td><td><span class="cat question">שאלה</span></td><td><span class="src-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>צ'אט בורדי</span></td><td><span class="prio low"><span class="pd"></span>נמוכה</span></td><td><span class="sla ok">עוד 8ש׳</span></td><td><span class="tstatus new"><span class="sdot"></span>חדש</span></td><td><span class="owner-none">לא שויך</span></td><td><span class="ttime">לפני 9ש׳</span></td></tr>
+              <tr><td><span class="tid">WB-1034</span></td><td class="subj-cell"><div class="subj">הקופון לא עובד בדף התשלום</div><div class="subj-prev">קיבלתי קוד הנחה מהמרצה אבל בדף התשלום כתוב שהקוד לא בתוקף…</div></td><td class="who-cell"><div class="who-name">שירה מזרחי <span class="aud student">תלמידה</span></div><div class="who-mail">shira.m@outlook.com</div></td><td><span class="cat billing">חיוב ותשלומים</span></td><td><span class="src-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>מרכז העזרה</span></td><td><span class="prio high"><span class="pd"></span>גבוהה</span></td><td><span class="sla ok">עוד 45 דק׳</span></td><td><span class="tstatus prog"><span class="sdot"></span>בטיפול</span></td><td><span class="owner-av" style="background:linear-gradient(135deg,#F05680,#c03a6a)">אג</span></td><td><span class="ttime">לפני 10ש׳</span></td></tr>
+              <tr><td><span class="tid">WB-1033</span></td><td class="subj-cell"><div class="subj">בקשה: דוח התקדמות שבועי במייל</div><div class="subj-prev">יהיה נהדר לקבל כל ראשון סיכום קצר של ההתקדמות של התלמידים…</div></td><td class="who-cell"><div class="who-name">נדב בן־דוד <span class="aud teacher">מרצה</span></div><div class="who-mail">nadav@gmail.com</div></td><td><span class="cat feature">בקשת פיצ'ר</span></td><td><span class="src-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>צ'אט בורדי</span></td><td><span class="prio low"><span class="pd"></span>נמוכה</span></td><td><span class="sla none">עמד ביעד</span></td><td><span class="tstatus done"><span class="sdot"></span>נפתר</span></td><td><span class="owner-av" style="background:linear-gradient(135deg,#7DC57A,#4a9a47)">נא</span></td><td><span class="ttime">אתמול</span></td></tr>
+              <tr><td><span class="tid">WB-1032</span></td><td class="subj-cell"><div class="subj">השיעור החי לא נפתח לי בזום</div><div class="subj-prev">לחצתי על הקישור לשיעור החי וקיבלתי שגיאה שהפגישה לא קיימת…</div></td><td class="who-cell"><div class="who-name">עדי כהן <span class="aud student">תלמידה</span></div><div class="who-mail">adico@gmail.com</div></td><td><span class="cat bug">תקלה טכנית</span></td><td><span class="src-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>מרכז העזרה</span></td><td><span class="prio normal"><span class="pd"></span>רגילה</span></td><td><span class="sla none">עמד ביעד</span></td><td><span class="tstatus done"><span class="sdot"></span>נפתר</span></td><td><span class="owner-av" style="background:linear-gradient(135deg,#38C4F2,#3a5499)">רב</span></td><td><span class="ttime">אתמול</span></td></tr>
+              <tr><td><span class="tid">WB-1031</span></td><td class="subj-cell"><div class="subj">עדכון פרטי חברה בחשבונית</div><div class="subj-prev">עברנו כתובת משרד ואנחנו צריכים שהחשבוניות ייצאו עם הפרטים החדשים…</div></td><td class="who-cell"><div class="who-name">איתי ברק <span class="aud teacher">מרצה</span></div><div class="who-mail">itay@electra-academy.co.il</div></td><td><span class="cat other">אחר</span></td><td><span class="src-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>מרכז העזרה</span></td><td><span class="prio normal"><span class="pd"></span>רגילה</span></td><td><span class="sla none">עמד ביעד</span></td><td><span class="tstatus done"><span class="sdot"></span>נפתר</span></td><td><span class="owner-av" style="background:linear-gradient(135deg,#F05680,#c03a6a)">אג</span></td><td><span class="ttime">לפני יומיים</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TICKET DETAIL DRAWER -->
+      <aside class="drawer" id="ticketDrawer">
+        <div class="drawer-head">
+          <div class="drawer-top">
+            <span class="drawer-id">WB-1042</span>
+            <button class="drawer-close" data-toast="סגירת חלונית הפנייה" aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          </div>
+          <div class="drawer-subj">הסרטונים בפרק 3 לא נטענים לתלמידים</div>
+          <div class="drawer-chips">
+            <span class="tstatus prog"><span class="sdot"></span>בטיפול</span>
+            <span class="cat bug">תקלה טכנית</span>
+            <span class="prio high"><span class="pd"></span>עדיפות גבוהה</span>
+            <span class="sla ok">SLA: עוד 1ש׳</span>
+          </div>
+        </div>
+        <div class="drawer-body">
+
+          <div>
+            <div class="dsec-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>תיאור הפנייה</div>
+            <div class="desc-box">העליתי אתמול שלושה סרטונים חדשים לפרק 3 בקורס "צילום למתחילים". אצלי בעורך הם מתנגנים רגיל, אבל תלמידים מדווחים שהנגן נתקע על מסך טעינה. ניסיתי גם ממחשב אחר — אותה תופעה. אשמח לעזרה, יש לי השקה ביום ראשון.</div>
+          </div>
+
+          <div>
+            <div class="dsec-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>הקשר אוטומטי</div>
+            <div class="ctx-box">
+              <div class="ctx-row"><span class="ctx-key">קהל</span><span class="ctx-val">מרצה <span style="font-weight:500;color:var(--text-sub)">(זוהה אוטומטית)</span></span></div>
+              <div class="ctx-row"><span class="ctx-key">נשלח מתוך המדריך</span><a class="ctx-val link" data-toast="פתיחת המדריך במרכז העזרה">מדריכים › קורסים › בניית פרקים</a></div>
+              <div class="ctx-row"><span class="ctx-key">דפדפן</span><span class="ctx-val" style="font-family:var(--font-en);direction:ltr">Chrome 137 · macOS</span></div>
+              <div class="ctx-row"><span class="ctx-key">מסלול</span><span class="ctx-val">Pro · חודשי</span></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="dsec-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/></svg>פרטי הפונה</div>
+            <div class="ctx-box">
+              <div class="contact-row"><span class="ctx-key">שם</span><span class="ctx-val">דנה מלר <span class="aud teacher">מרצה</span></span></div>
+              <div class="contact-row"><span class="ctx-key">מייל</span><span class="copy-val" data-copy="dana@studio-dana.co.il"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>dana@studio-dana.co.il</span></div>
+              <div class="contact-row"><span class="ctx-key">טלפון</span><span class="copy-val" data-copy="050-7231184"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>050-7231184</span></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="dsec-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>ציר זמן</div>
+            <div class="tl">
+              <div class="tl-item"><div class="tl-dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div><div><div class="tl-txt">הפנייה התקבלה ממרכז העזרה</div><div class="tl-sub">דרך הטופס "דברו עם נציג" · נשלחה התראה למייל התמיכה</div><div class="tl-time">09:42</div></div></div>
+              <div class="tl-item"><div class="tl-dot auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z" fill="none"/></svg></div><div><div class="tl-txt">מייל אישור נשלח ללקוח אוטומטית</div><div class="tl-sub">"קיבלנו את הפנייה, נחזור אלייך בהקדם"</div><div class="tl-time">09:42</div></div></div>
+              <div class="tl-item"><div class="tl-dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+<path d="M20 6L9 17l-5-5"/></svg></div><div><div class="tl-txt">רותם הגיבה ללקוח</div><div class="tl-sub">ביקשה קישור לפרק ופרטי נגן · ממתין לתשובה נוספת מדנה</div><div class="tl-time">10:15</div></div></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="dsec-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>תגובה ללקוח</div>
+            <div class="composer" id="composer">
+              <textarea id="replyText" placeholder="היי דנה, בדקנו את הפרק ו…"></textarea>
+              <div class="composer-note" id="composerNote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>התשובה תישלח ללקוח במייל</div>
+            </div>
+            <div class="composer-actions">
+              <button class="btn btn-primary" id="sendReplyBtn" style="padding:8px 16px;font-size:13px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>שליחת תשובה במייל</button>
+              <span class="toggle-note" id="internalToggle"><span class="tgl"></span>הערה פנימית</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="dsec-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>פעולות מהירות</div>
+            <div class="qa-grid">
+              <div class="qa-field"><label>שינוי סטטוס</label><select id="statusSelect"><option>חדש</option><option selected>בטיפול</option><option>ממתין ללקוח</option><option>נפתר</option></select></div>
+              <div class="qa-field"><label>שיוך אחראי</label><select id="ownerSelect"><option>לא שויך</option><option selected>רותם בר</option><option>נועה אשכנזי</option><option>אלון גבאי</option></select></div>
+            </div>
+            <div class="qa-actions">
+              <button class="qa-chip" data-toast="בחירת מדריך ממרכז העזרה לצירוף לתשובה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>צרף מדריך ממרכז העזרה</button>
+              <button class="qa-chip escalate" id="escalateBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="M12 6V3M5 9H2M22 9h-3M5 15H2M22 15h-3M7 4l-2-2M17 4l2-2"/></svg>העבר למוצר ובאגים</button>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+    </div>
+
+    <div class="auto-strip">
+      <div class="auto-strip-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <div>
+        <div class="auto-strip-title">אוטומציה פעילה</div>
+        <div class="auto-strip-txt">כל פנייה חדשה מהטופס "דברו עם נציג" שולחת התראה למייל התמיכה, ומייל אישור אוטומטי נשלח לפונה עם מספר הפנייה.</div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+  document.getElementById('themeBtn').addEventListener('click', () => { const h=document.documentElement; h.setAttribute('data-theme', h.getAttribute('data-theme')==='dark'?'light':'dark'); });
+  function showToast(text, type='info') { const c=document.getElementById('toastContainer'); const icons={info:'<path d="M12 16v-4M12 8h.01"/><circle cx="12" cy="12" r="10"/>',success:'<path d="M20 6L9 17l-5-5"/>'}; const t=document.createElement('div'); t.className='toast '+type; t.innerHTML='<div class="toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'+icons[type]+'</svg></div><div class="toast-text">'+text+'</div>'; c.appendChild(t); setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),350);},3000); }
+  document.querySelectorAll('[data-mod]').forEach(el=>el.addEventListener('click',()=>{var m=el.dataset.mod;if(m==='הגדרות'){showToast('הגדרות — בבנייה 🚧','info');}else{window.location.href=m+'.html';}}));
+  document.querySelectorAll('[data-toast]').forEach(el=>el.addEventListener('click',(e)=>{e.stopPropagation();showToast(el.dataset.toast,'info');}));
+  document.getElementById('notifBtn').addEventListener('click',()=>showToast('יש לך 4 התראות חדשות','info'));
+  document.getElementById('exportBtn').addEventListener('click',()=>showToast('קובץ ה־CSV מיוצא…','success'));
+  document.getElementById('newTicketBtn').addEventListener('click',()=>showToast('פתיחת פנייה ידנית חדשה','info'));
+  /* status tabs */
+  document.querySelectorAll('#statusTabs button').forEach(b=>b.addEventListener('click',()=>{b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active');showToast('סינון · '+b.firstChild.textContent.trim(),'info');}));
+  /* row selection */
+  document.querySelectorAll('#ticketRows tr').forEach(tr=>tr.addEventListener('click',()=>{document.querySelectorAll('#ticketRows tr').forEach(x=>x.classList.remove('selected'));tr.classList.add('selected');const id=tr.querySelector('.tid').textContent;showToast('נפתחה פנייה '+id,'info');}));
+  /* click-to-copy */
+  document.querySelectorAll('.copy-val').forEach(el=>el.addEventListener('click',()=>{const v=el.dataset.copy;if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v).then(()=>showToast('הועתק: '+v,'success')).catch(()=>showToast('הועתק: '+v,'success'));}else{showToast('הועתק: '+v,'success');}}));
+  /* internal note toggle */
+  const internalToggle=document.getElementById('internalToggle');
+  internalToggle.addEventListener('click',()=>{
+    internalToggle.classList.toggle('on');
+    const on=internalToggle.classList.contains('on');
+    document.getElementById('composer').classList.toggle('internal',on);
+    document.getElementById('composerNote').innerHTML=on
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>הערה פנימית — הלקוח לא יראה אותה'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>התשובה תישלח ללקוח במייל';
+    document.getElementById('replyText').placeholder=on?'הערה לצוות בלבד…':'היי דנה, בדקנו את הפרק ו…';
+    document.getElementById('sendReplyBtn').innerHTML=on
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>שמירת הערה פנימית'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>שליחת תשובה במייל';
+  });
+  document.getElementById('sendReplyBtn').addEventListener('click',()=>{
+    const on=internalToggle.classList.contains('on');
+    const txt=document.getElementById('replyText');
+    if(!txt.value.trim()){showToast(on?'כתבו הערה לפני השמירה':'כתבו תשובה לפני השליחה','info');return;}
+    showToast(on?'ההערה הפנימית נשמרה':'התשובה נשלחה ללקוח במייל · WB-1042','success');
+    txt.value='';
+  });
+  document.getElementById('statusSelect').addEventListener('change',e=>showToast('הסטטוס עודכן ל"'+e.target.value+'"','success'));
+  document.getElementById('ownerSelect').addEventListener('change',e=>showToast('הפנייה שויכה ל'+e.target.value,'success'));
+  document.getElementById('escalateBtn').addEventListener('click',()=>{showToast('הפנייה הועברה למוצר ובאגים','success');setTimeout(()=>{window.location.href='מוצר ובאגים.html';},900);});
+  document.getElementById("themeBtn")&&document.getElementById("themeBtn").addEventListener("click",function(){try{localStorage.setItem("wb-admin-theme",document.documentElement.getAttribute("data-theme"));}catch(e){}});
+</script>
+</body>
+</html>

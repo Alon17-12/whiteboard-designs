@@ -123,6 +123,128 @@
     setTimeout(() => { btn.classList.remove('copied'); btn.querySelector('span').textContent = 'העתק קישור'; }, 2500);
   }));
 
+  // ---- טופס פנייה לנציג ----
+  const cModal = document.querySelector('.contact-modal');
+  const cForm = cModal?.querySelector('.cm-form');
+  const cSuccess = cModal?.querySelector('.cm-success');
+  const cError = cModal?.querySelector('.cm-error');
+  const AUD_HE = { teacher: 'מרצה', student: 'תלמיד' };
+  let cAudience = document.body.dataset.audience || 'teacher';
+  let prefilled = false;
+
+  function setAudLabel() {
+    cModal.querySelector('.cm-aud-label').textContent = AUD_HE[cAudience];
+    cModal.querySelector('.cm-aud-toggle').textContent = cAudience === 'teacher' ? 'אני בעצם תלמיד' : 'אני בעצם מרצה';
+  }
+
+  // מילוי אוטומטי לפונה מחובר: WB_USER גלובלי (כשהמרכז מוטמע במערכת) → localStorage → נקודת קצה session
+  async function prefillUser() {
+    if (prefilled) return;
+    prefilled = true;
+    let u = window.WB_USER || null;
+    if (!u) { try { u = JSON.parse(localStorage.getItem('wb-user') || 'null'); } catch (e) {} }
+    const sess = document.body.dataset.sessionEndpoint;
+    if (!u && sess) {
+      try {
+        const r = await fetch(sess, { credentials: 'include' });
+        if (r.ok) u = await r.json();
+      } catch (e) {}
+    }
+    if (!u || (!u.name && !u.email)) return;
+    let any = false;
+    for (const [k, v] of [['name', u.name || u.fullName], ['email', u.email], ['phone', u.phone]]) {
+      const inp = cForm.querySelector(`[name="${k}"]`);
+      if (v && inp && !inp.value) { inp.value = v; inp.classList.add('autofilled'); any = true; }
+    }
+    if (u.role === 'student' || u.role === 'teacher') { cAudience = u.role; setAudLabel(); }
+    if (any) cModal.querySelector('.cm-autofill').hidden = false;
+  }
+
+  function openContact(opts = {}) {
+    if (!cModal) return;
+    chat && (chat.hidden = true, launcher.hidden = false);
+    cModal.hidden = false;
+    cForm.hidden = false; cSuccess.hidden = true; cError.hidden = true;
+    setAudLabel();
+    if (opts.category) cForm.querySelector('[name="category"]').value = opts.category;
+    if (opts.message && !cForm.querySelector('[name="message"]').value)
+      cForm.querySelector('[name="message"]').value = opts.message;
+    // הקשר אוטומטי: המדריך שממנו נשלחה הפנייה
+    const h1 = document.querySelector('.article h1');
+    if (h1) {
+      cModal.querySelector('.cm-context').hidden = false;
+      cModal.querySelector('.cm-context-title').textContent = h1.textContent.trim();
+    }
+    prefillUser();
+    setTimeout(() => cForm.querySelector('[name="name"]').focus(), 60);
+  }
+  function closeContact() { cModal.hidden = true; }
+
+  document.querySelectorAll('.contact-open').forEach(b => b.addEventListener('click', () => openContact()));
+  cModal?.querySelector('.cm-close')?.addEventListener('click', closeContact);
+  cModal?.querySelector('.cm-done')?.addEventListener('click', closeContact);
+  cModal?.addEventListener('click', e => { if (e.target === cModal) closeContact(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && cModal && !cModal.hidden) closeContact(); });
+  cModal?.querySelector('.cm-aud-toggle')?.addEventListener('click', () => {
+    cAudience = cAudience === 'teacher' ? 'student' : 'teacher';
+    setAudLabel();
+  });
+
+  cForm?.addEventListener('submit', async e => {
+    e.preventDefault();
+    cError.hidden = true;
+    // ולידציה בסיסית
+    let bad = false;
+    for (const name of ['name', 'email', 'message']) {
+      const inp = cForm.querySelector(`[name="${name}"]`);
+      const ok = name === 'email' ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim()) : inp.value.trim().length > 1;
+      inp.classList.toggle('invalid', !ok);
+      if (!ok) bad = true;
+    }
+    if (bad) { cError.textContent = 'חסרים פרטים — בדקו שם, אימייל תקין ותיאור קצר של מה שקרה.'; cError.hidden = false; return; }
+    if (cForm.querySelector('.cm-hp').value) return; // honeypot — בוט
+    const h1 = document.querySelector('.article h1');
+    const payload = {
+      source: 'help-center',
+      audience: cAudience,
+      category: cForm.querySelector('[name="category"]').value,
+      name: cForm.querySelector('[name="name"]').value.trim(),
+      email: cForm.querySelector('[name="email"]').value.trim(),
+      phone: cForm.querySelector('[name="phone"]').value.trim(),
+      message: cForm.querySelector('[name="message"]').value.trim(),
+      context: {
+        url: location.href,
+        article: h1 ? h1.textContent.trim() : null,
+        userAgent: navigator.userAgent,
+        theme: root.dataset.theme
+      }
+    };
+    const endpoint = document.body.dataset.supportEndpoint;
+    const btn = cForm.querySelector('.cm-submit');
+    if (!endpoint) {
+      // מצב תצוגה — אין עדיין שרת פניות מחובר; לא מציגים "נשלח" על כלום
+      cError.textContent = 'מצב תצוגה: הטופס עדיין לא מחובר לשרת הפניות, והפרטים לא נשלחו. החיבור מתועד במדריך היישום.';
+      cError.hidden = false;
+      return;
+    }
+    btn.disabled = true; btn.textContent = 'שולח…';
+    try {
+      const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json().catch(() => ({}));
+      cForm.hidden = true;
+      cSuccess.hidden = false;
+      cSuccess.querySelector('.cm-success-line').innerHTML =
+        (data.ticketId ? `מספר הפנייה שלכם: <b>${data.ticketId}</b>.<br>` : '') +
+        `שלחנו אישור למייל <b>${payload.email}</b> — נציג יחזור אליכם בהקדם.`;
+    } catch (err) {
+      cError.textContent = 'משהו השתבש בשליחה — נסו שוב עוד רגע.';
+      cError.hidden = false;
+    } finally {
+      btn.disabled = false; btn.textContent = 'שליחת הפנייה';
+    }
+  });
+
   // ---- צ'אט בורדי ----
   const chat = document.querySelector('.boardi-chat');
   const launcher = document.querySelector('.boardi-launcher');
@@ -190,14 +312,16 @@
     }).filter(h => h.s > 0).sort((a, b) => b.s - a.s);
 
     if (!scored.length) {
-      boMsg('לא מצאתי מדריך שעונה בדיוק על זה. נסו לנסח אחרת — למשל "איך יוצרים קורס" או "הזמנת תלמידים". אפשר גם לפתוח את החיפוש למעלה.');
+      boMsg('לא מצאתי מדריך שעונה בדיוק על זה. נסו לנסח אחרת — למשל "איך יוצרים קורס" או "הזמנת תלמידים". ואם זו תקלה או משהו שרק בן אדם יכול לפתור — אשמח לחבר אתכם לנציג.');
+      chips([{ label: 'השאירו פרטים לנציג', go: true, onClick: () => openContact({ message: q }) }]);
       return;
     }
     const top = scored[0].it;
     const planNote = top.plan ? ` שימו לב — הפיצ'ר זמין ממסלול <b>${PLAN_HE[top.plan]}</b> ומעלה.` : '';
     boMsg(`${top.description || 'יש לנו מדריך מסודר בדיוק על זה.'}${planNote}<br>המדריך המלא: <b>${top.title}</b> (${top.cat}).`);
     const list = [{ label: 'קח אותי לשם', go: true, onClick: () => takeover(top) }];
-    for (const alt of scored.slice(1, 3)) {
+    list.push({ label: 'זה לא זה — דברו עם נציג', onClick: () => openContact({ message: q }) });
+    for (const alt of scored.slice(1, 2)) {
       list.push({ label: alt.it.title, onClick: () => { userMsg(alt.it.title); withTyping(() => {
         const pn = alt.it.plan ? ` (זמין ממסלול ${PLAN_HE[alt.it.plan]} ומעלה)` : '';
         boMsg(`${alt.it.description || alt.it.title}${pn}`);
@@ -259,8 +383,18 @@
   // ---- משוב ----
   document.querySelectorAll('.feedback button').forEach(btn => btn.addEventListener('click', e => {
     const box = e.target.closest('.feedback');
+    const v = e.target.dataset.v;
     box.querySelectorAll('button').forEach(b => b.remove());
-    box.querySelector('em').hidden = false;
+    const em = box.querySelector('em');
+    em.hidden = false;
+    if (v === 'no') {
+      em.textContent = 'תודה על הכנות! ';
+      const cbtn = document.createElement('button');
+      cbtn.className = 'fb-contact';
+      cbtn.textContent = 'רוצים עזרה מנציג? השאירו פרטים';
+      cbtn.addEventListener('click', () => openContact({ message: `המדריך "${document.querySelector('.article h1')?.textContent.trim() || ''}" לא עזר לי. ` }));
+      em.after(cbtn);
+    }
     try {
       const log = JSON.parse(localStorage.getItem('wb-help-feedback') || '[]');
       log.push({ url: location.pathname, v: e.target.dataset.v, at: new Date().toISOString() });
