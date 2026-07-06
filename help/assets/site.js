@@ -128,14 +128,9 @@
   const cForm = cModal?.querySelector('.cm-form');
   const cSuccess = cModal?.querySelector('.cm-success');
   const cError = cModal?.querySelector('.cm-error');
-  const AUD_HE = { teacher: 'מרצה', student: 'תלמיד' };
-  let cAudience = document.body.dataset.audience || 'teacher';
+  // הקהל מזוהה אוטומטית לפי העמוד שממנו פונים — אין בחירה ידנית
+  const cAudience = document.body.dataset.audience || 'teacher';
   let prefilled = false;
-
-  function setAudLabel() {
-    cModal.querySelector('.cm-aud-label').textContent = AUD_HE[cAudience];
-    cModal.querySelector('.cm-aud-toggle').textContent = cAudience === 'teacher' ? 'אני בעצם תלמיד' : 'אני בעצם מרצה';
-  }
 
   // מילוי אוטומטי לפונה מחובר: WB_USER גלובלי (כשהמרכז מוטמע במערכת) → localStorage → נקודת קצה session
   async function prefillUser() {
@@ -156,7 +151,6 @@
       const inp = cForm.querySelector(`[name="${k}"]`);
       if (v && inp && !inp.value) { inp.value = v; inp.classList.add('autofilled'); any = true; }
     }
-    if (u.role === 'student' || u.role === 'teacher') { cAudience = u.role; setAudLabel(); }
     if (any) cModal.querySelector('.cm-autofill').hidden = false;
   }
 
@@ -165,7 +159,6 @@
     chat && (chat.hidden = true, launcher.hidden = false);
     cModal.hidden = false;
     cForm.hidden = false; cSuccess.hidden = true; cError.hidden = true;
-    setAudLabel();
     if (opts.category) cForm.querySelector('[name="category"]').value = opts.category;
     if (opts.message && !cForm.querySelector('[name="message"]').value)
       cForm.querySelector('[name="message"]').value = opts.message;
@@ -185,10 +178,6 @@
   cModal?.querySelector('.cm-done')?.addEventListener('click', closeContact);
   cModal?.addEventListener('click', e => { if (e.target === cModal) closeContact(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && cModal && !cModal.hidden) closeContact(); });
-  cModal?.querySelector('.cm-aud-toggle')?.addEventListener('click', () => {
-    cAudience = cAudience === 'teacher' ? 'student' : 'teacher';
-    setAudLabel();
-  });
 
   cForm?.addEventListener('submit', async e => {
     e.preventDefault();
@@ -221,22 +210,22 @@
     };
     const endpoint = document.body.dataset.supportEndpoint;
     const btn = cForm.querySelector('.cm-submit');
-    if (!endpoint) {
-      // מצב תצוגה — אין עדיין שרת פניות מחובר; לא מציגים "נשלח" על כלום
-      cError.textContent = 'מצב תצוגה: הטופס עדיין לא מחובר לשרת הפניות, והפרטים לא נשלחו. החיבור מתועד במדריך היישום.';
-      cError.hidden = false;
-      return;
-    }
+    const showSuccess = (ticketId, demo) => {
+      cForm.hidden = true;
+      cSuccess.hidden = false;
+      cSuccess.querySelector('.cm-success-line').innerHTML =
+        (ticketId ? `מספר הפנייה שלכם: <b>${ticketId}</b>.<br>` : '') +
+        `<b>נציג אנושי יצור איתכם קשר ב-24 השעות הקרובות.</b><br>` +
+        `שלחנו אישור עם כל הפרטים למייל <b>${payload.email}</b>.`;
+      cSuccess.querySelector('.cm-demo-note').hidden = !demo;
+    };
+    if (!endpoint) { showSuccess(null, true); return; } // מצב תצוגה — חוויית האישור המלאה, עם הערה שכלום לא נשלח
     btn.disabled = true; btn.textContent = 'שולח…';
     try {
       const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const data = await r.json().catch(() => ({}));
-      cForm.hidden = true;
-      cSuccess.hidden = false;
-      cSuccess.querySelector('.cm-success-line').innerHTML =
-        (data.ticketId ? `מספר הפנייה שלכם: <b>${data.ticketId}</b>.<br>` : '') +
-        `שלחנו אישור למייל <b>${payload.email}</b> — נציג יחזור אליכם בהקדם.`;
+      showSuccess(data.ticketId, false);
     } catch (err) {
       cError.textContent = 'משהו השתבש בשליחה — נסו שוב עוד רגע.';
       cError.hidden = false;
@@ -244,6 +233,37 @@
       btn.disabled = false; btn.textContent = 'שליחת הפנייה';
     }
   });
+
+  // ---- פופאפ דירוג (משוב "כן") ----
+  const rModal = document.querySelector('.rate-modal');
+  let rating = 5;
+  function openRate() {
+    if (!rModal) return;
+    rModal.hidden = false;
+    rModal.querySelector('.rm-body').hidden = false;
+    rModal.querySelector('.rm-thanks').hidden = true;
+  }
+  function closeRate() { rModal.hidden = true; }
+  rModal?.querySelectorAll('.rm-star').forEach(st => st.addEventListener('click', () => {
+    rating = +st.dataset.v;
+    rModal.querySelectorAll('.rm-star').forEach(s => s.classList.toggle('on', +s.dataset.v <= rating));
+  }));
+  rModal?.querySelector('.rm-send')?.addEventListener('click', () => {
+    const text = rModal.querySelector('textarea').value.trim();
+    const review = { type: 'review', rating, text, url: location.href, article: document.querySelector('.article h1')?.textContent.trim() || null, audience: cAudience };
+    const endpoint = document.body.dataset.supportEndpoint;
+    if (endpoint) fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(review) }).catch(() => {});
+    try {
+      const log = JSON.parse(localStorage.getItem('wb-help-reviews') || '[]');
+      log.push({ ...review, at: new Date().toISOString() });
+      localStorage.setItem('wb-help-reviews', JSON.stringify(log));
+    } catch (e) {}
+    rModal.querySelector('.rm-body').hidden = true;
+    rModal.querySelector('.rm-thanks').hidden = false;
+  });
+  rModal?.querySelector('.rm-close')?.addEventListener('click', closeRate);
+  rModal?.querySelector('.rm-done')?.addEventListener('click', closeRate);
+  rModal?.addEventListener('click', e => { if (e.target === rModal) closeRate(); });
 
   // ---- צ'אט בורדי ----
   const chat = document.querySelector('.boardi-chat');
@@ -388,13 +408,12 @@
     box.querySelectorAll('button').forEach(b => b.remove());
     const em = box.querySelector('em');
     em.hidden = false;
-    if (v === 'no') {
-      em.textContent = 'תודה על הכנות! ';
-      const cbtn = document.createElement('button');
-      cbtn.className = 'fb-contact';
-      cbtn.textContent = 'רוצים עזרה מנציג? השאירו פרטים';
-      cbtn.addEventListener('click', () => openContact({ message: `המדריך "${document.querySelector('.article h1')?.textContent.trim() || ''}" לא עזר לי. ` }));
-      em.after(cbtn);
+    if (v === 'yes') {
+      openRate(); // דירוג 5 כוכבים + המלצה
+    } else {
+      em.textContent = 'תודה על הכנות — בואו נפתור את זה.';
+      // פנייה לתמיכה עם הקשר העמוד שממנו הגיע
+      openContact({ category: 'usage', message: `המדריך "${document.querySelector('.article h1')?.textContent.trim() || document.title}" לא עזר לי. ` });
     }
     try {
       const log = JSON.parse(localStorage.getItem('wb-help-feedback') || '[]');

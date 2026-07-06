@@ -142,13 +142,12 @@
   <div class="cm-card">
     <button class="cm-close" aria-label="סגירת הטופס">✕</button>
     <div class="cm-head">
-      <img src="/whiteboard-designs/help/assets/brand/boardi-13.svg" alt="">
+      <img src="/whiteboard-designs/help/assets/brand/boardi-1.svg" alt="">
       <div><h3>דברו עם נציג</h3>
-      <p>לא מצאתם תשובה במדריכים? השאירו פרטים — נציג יחזור אליכם, ואישור יישלח אליכם למייל.</p></div>
+      <p>לא מצאתם תשובה במדריכים? השאירו פרטים — נציג אנושי יחזור אליכם תוך 24 שעות.</p></div>
     </div>
     <form class="cm-form" novalidate>
-      <div class="cm-aud">פונים בתור <b class="cm-aud-label">מרצה</b>
-        <button type="button" class="cm-aud-toggle">אני בעצם תלמיד</button></div>
+      <div class="cm-aud">פונים בתור <b class="cm-aud-label">מרצה</b><span class="cm-aud-auto">זוהה אוטומטית לפי העמוד</span></div>
       <div class="cm-grid">
         <label>שם מלא<input name="name" autocomplete="name" required></label>
         <label>אימייל לחזרה<input name="email" type="email" dir="ltr" autocomplete="email" required></label>
@@ -172,9 +171,31 @@
     </form>
     <div class="cm-success" hidden>
       <img src="/whiteboard-designs/help/assets/brand/boardi-5.svg" alt="">
-      <h3>הפנייה נשלחה!</h3>
+      <h3>הפנייה התקבלה!</h3>
       <p class="cm-success-line"></p>
+      <small class="cm-demo-note" hidden>מצב תצוגה — הטופס עדיין לא מחובר לשרת הפניות, שום דבר לא נשלח בפועל.</small>
       <button type="button" class="cm-done">סגירה</button>
+    </div>
+  </div>
+</div>
+<div class="rate-modal" hidden>
+  <div class="rm-card">
+    <button class="rm-close" aria-label="סגירה">✕</button>
+    <div class="rm-body">
+      <img src="/whiteboard-designs/help/assets/brand/boardi-5.svg" alt="">
+      <h3>איזה כיף שעזרנו!</h3>
+      <p>נשמח לדירוג והמלצה קצרה — זה עוזר למרצים אחרים למצוא את הדרך.</p>
+      <div class="rm-stars" role="radiogroup" aria-label="דירוג">
+        <button type="button" class="rm-star on" data-v="1" aria-label="1 כוכבים">★</button><button type="button" class="rm-star on" data-v="2" aria-label="2 כוכבים">★</button><button type="button" class="rm-star on" data-v="3" aria-label="3 כוכבים">★</button><button type="button" class="rm-star on" data-v="4" aria-label="4 כוכבים">★</button><button type="button" class="rm-star on" data-v="5" aria-label="5 כוכבים">★</button>
+      </div>
+      <textarea rows="3" placeholder="מה עזר לכם במדריך? (לא חובה)"></textarea>
+      <button type="button" class="rm-send">שליחת ההמלצה</button>
+    </div>
+    <div class="rm-thanks" hidden>
+      <img src="/whiteboard-designs/help/assets/brand/boardi-7.svg" alt="">
+      <h3>תודה רבה!</h3>
+      <p>ההמלצה התקבלה — ממשיכים לשפר את המדריכים בזכותכם.</p>
+      <button type="button" class="rm-done">סגירה</button>
     </div>
   </div>
 </div>
