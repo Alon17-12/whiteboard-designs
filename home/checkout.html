@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>תשלום מאובטח — WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--pink-strong:#e23e6b;
+  --green:#7DC57A;--green-bright:#22c55e;--yellow:#EAD654;
+  --bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;
+  --border:rgba(37,62,122,.1);--border-strong:rgba(37,62,122,.2);
+  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,.52);--text-xs:rgba(37,62,122,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Heebo',sans-serif;background:
+  radial-gradient(800px 460px at 90% -10%,rgba(56,196,242,.12),transparent 60%),
+  radial-gradient(640px 420px at 6% 108%,rgba(240,86,128,.08),transparent 60%),var(--bg);
+  color:var(--text-main);min-height:100dvh}
+h1,h2,h3{font-family:'Fredoka'}
+.top{display:flex;align-items:center;justify-content:space-between;padding:18px 26px;max-width:1060px;margin:0 auto}
+.top img{height:36px}
+.secure{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:#15803d;
+  background:color-mix(in srgb,var(--green-bright) 12%,transparent);border:1px solid color-mix(in srgb,var(--green-bright) 35%,transparent);
+  padding:6px 14px;border-radius:100px}
+.secure svg{width:13px}
+.wrap{max-width:1060px;margin:8px auto 60px;padding:0 22px;display:grid;grid-template-columns:1fr 1.15fr;gap:26px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:0 24px 60px rgba(37,62,122,.12);padding:26px 28px}
+/* ---- summary (right) ---- */
+.sum h2{font-size:20px;margin-bottom:16px}
+.plan-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.plan-head b{font-family:'Fredoka';font-weight:600;font-size:22px}
+.ribbon{background:var(--pink);color:#fff;font-size:11.5px;font-weight:800;padding:4px 12px;border-radius:100px}
+.perks{list-style:none;display:flex;flex-direction:column;gap:8px;margin:14px 0 18px}
+.perks li{display:flex;align-items:center;gap:9px;font-size:14px}
+.perks .ck{width:19px;height:19px;border-radius:50%;background:color-mix(in srgb,var(--green-bright) 16%,transparent);color:var(--green-bright);display:grid;place-items:center;flex-shrink:0}
+.perks .ck svg{width:11px}
+.bill-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.bp{position:relative;border:1.5px solid var(--border-strong);border-radius:14px;padding:13px 15px 11px;cursor:pointer;background:var(--surface);transition:border-color .2s,background .2s;text-align:right}
+.bp.on{border-color:var(--cyan);background:color-mix(in srgb,var(--cyan) 7%,var(--surface))}
+.bp b{display:block;font-size:14.5px}
+.bp .bpp{font-family:'Fredoka';font-weight:600;font-size:19px}
+.bp .bps{display:block;font-size:11.5px;color:var(--text-sub)}
+.bp .save{position:absolute;top:-10px;left:10px;background:var(--yellow);color:#6b5d00;font-size:10.5px;font-weight:800;padding:2px 10px;border-radius:100px}
+.tot{border-top:1px solid var(--border);padding-top:14px;display:flex;flex-direction:column;gap:6px}
+.tl{display:flex;justify-content:space-between;font-size:14px;color:var(--text-sub)}
+.tl.big{font-size:17px;color:var(--text-main);font-weight:800}
+.tl .free{color:var(--green-bright);font-weight:800}
+.trial-note{margin-top:12px;background:color-mix(in srgb,var(--cyan) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--cyan) 28%,transparent);border-radius:12px;padding:11px 14px;font-size:13px;line-height:1.6}
+.trial-note b{color:#1a86ad}
+/* ---- payment (left) ---- */
+.pay h2{font-size:20px;margin-bottom:16px}
+.fld{margin-bottom:13px}
+.fld label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.fld input{width:100%;border:1.5px solid var(--border-strong);border-radius:12px;background:var(--surface-2);
+  font-family:'Heebo';font-size:15px;color:var(--text-main);padding:12px 14px;transition:border-color .2s,box-shadow .2s}
+.fld input:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 4px color-mix(in srgb,var(--cyan) 15%,transparent)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cc-zone{border:1.5px dashed color-mix(in srgb,var(--navy) 26%,transparent);border-radius:14px;padding:16px;margin:6px 0 16px;position:relative;background:var(--surface-2)}
+.cc-zone .cz-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cc-zone .cz-head b{font-size:13.5px;display:inline-flex;align-items:center;gap:7px}
+.cc-zone .cz-head b svg{width:15px;color:var(--navy)}
+.cc-brands{display:inline-flex;gap:6px}
+.cc-brands i{width:34px;height:22px;border-radius:4px;background:var(--surface);border:1px solid var(--border);display:grid;place-items:center;font-family:'JetBrains Mono';font-size:7.5px;font-weight:600;color:var(--text-sub);font-style:normal}
+#cardcomFields iframe{width:100%;border:0;min-height:210px;border-radius:10px}
+.demo-tag{position:absolute;top:-11px;right:16px;background:var(--yellow);color:#6b5d00;font-size:10.5px;font-weight:800;padding:3px 12px;border-radius:100px}
+.btn-pay{width:100%;border:0;cursor:pointer;background:var(--pink);color:#fff;font-family:'Heebo';font-weight:800;font-size:17.5px;
+  padding:16px;border-radius:14px;box-shadow:0 14px 34px rgba(240,86,128,.38);transition:transform .2s,background .2s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-pay:hover{background:var(--pink-strong);transform:translateY(-2px)}
+.btn-pay:disabled{opacity:.6;cursor:wait;transform:none}
+.btn-pay svg{width:18px}
+.trust{display:flex;justify-content:center;gap:18px;margin-top:14px;font-size:11.5px;color:var(--text-xs);flex-wrap:wrap}
+.trust span{display:inline-flex;align-items:center;gap:5px}
+.trust svg{width:12px;color:var(--green-bright)}
+.err{display:none;background:color-mix(in srgb,var(--pink) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--pink) 35%,transparent);color:var(--pink-strong);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:12px}
+.err.on{display:block}
+@media(max-width:840px){.wrap{grid-template-columns:1fr}.sum{order:-1}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a href="index.html"><img src="assets/whiteboard-logo.png" alt="WHITEBOARD"></a>
+  <span class="secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>תשלום מאובטח · PCI DSS</span>
+</header>
+
+<main class="wrap">
+  <!-- order summary -->
+  <section class="card sum" aria-label="סיכום הזמנה">
+    <h2>סיכום ההזמנה</h2>
+    <div class="plan-head"><b id="planName">מסלול</b><span class="ribbon" id="planRibbon" hidden>30 יום חינם</span></div>
+    <ul class="perks" id="perks"></ul>
+    <div class="bill-pick" id="billPick">
+      <button type="button" class="bp" data-billing="monthly">
+        <b>חודשי</b><span class="bpp" id="pM">—</span><span class="bps">לחודש, מתחדש אוטומטית</span>
+      </button>
+      <button type="button" class="bp" data-billing="yearly">
+        <span class="save">שלם 10 · קבל 12</span>
+        <b>שנתי</b><span class="bpp" id="pY">—</span><span class="bps" id="pYs">לשנה</span>
+      </button>
+    </div>
+    <div class="tot">
+      <div class="tl"><span id="lineLabel">סה"כ</span><span id="lineVal">—</span></div>
+      <div class="tl big"><span>לתשלום היום</span><span class="free" id="todayVal">₪0</span></div>
+    </div>
+    <div class="trial-note" id="trialNote"><b>30 הימים הראשונים חינם.</b> שומרים אמצעי תשלום, לא מחייבים. החיוב הראשון: <b id="firstCharge"></b>. אפשר לבטל בקליק אחד עד אז — בלי שאלות.</div>
+  </section>
+
+  <!-- payment -->
+  <section class="card pay" aria-label="פרטי תשלום">
+    <h2>פרטי תשלום</h2>
+    <div class="err" id="err"></div>
+    <form id="payForm" novalidate>
+      <div class="fld"><label for="fName">שם מלא</label><input id="fName" autocomplete="name" required placeholder="ישראל ישראלי"></div>
+      <div class="two">
+        <div class="fld"><label for="fEmail">אימייל (איתו תיכנסו למערכת)</label><input id="fEmail" type="email" autocomplete="email" required placeholder="you@email.com" style="direction:ltr;text-align:left"></div>
+        <div class="fld"><label for="fPhone">טלפון</label><input id="fPhone" type="tel" autocomplete="tel" required placeholder="050-0000000" style="direction:ltr;text-align:left"></div>
+      </div>
+      <div class="cc-zone" id="ccZone">
+        <span class="demo-tag" id="demoTag" hidden>מצב הדגמה</span>
+        <div class="cz-head">
+          <b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>פרטי כרטיס</b>
+          <span class="cc-brands"><i>VISA</i><i>MC</i><i>AMEX</i><i>ISRA</i></span>
+        </div>
+        <div id="cardcomFields"><!-- CardCom hosted fields / LowProfile iframe נטען לכאן --></div>
+      </div>
+      <button class="btn-pay" id="payBtn" type="submit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span id="payLabel">התחילו 30 יום חינם</span>
+      </button>
+      <div class="trust">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>ביטול בקליק אחד</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>בלי התחייבות</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>0% עמלה על המכירות שלך</span>
+      </div>
+    </form>
+  </section>
+</main>
+
+<script>window.WB_FUNNEL_CONFIG={page:'checkout'};</script>
+<script src="assets/wb-funnel.js"></script>
+<script>
+(function(){
+  /* ================= CONFIG ================= */
+  var DEBUG=/[?&]wbdebug=1/.test(location.search);
+  /* ---- CardCom LowProfile integration ----
+     mode 'live'  → the page POSTs to BACKEND_CREATE which opens a LowProfile deal on
+                    the CardCom API and returns {iframe_url, lowprofile_id, txn_ref}. The
+                    iframe loads into #cardcomFields. On completion CardCom notifies us
+                    two ways (we support both): a postMessage to this window, AND a
+                    server-to-server webhook + redirect to SuccessURL/ErrorURL. Before we
+                    trust a payment we re-verify it server-side (BACKEND_VERIFY) — the
+                    server + CardCom are the source of truth, never the client.
+     mode 'demo'  → styled mock card fields to exercise the whole flow end-to-end,
+                    incl. the decline branch (a card starting 4000 simulates a decline). */
+  var CARDCOM={
+    mode:'demo',
+    BACKEND_CREATE:'/api/billing/create-lowprofile', // POST {plan,billing,customer,attribution,funnel_id} → {iframe_url, lowprofile_id, txn_ref}
+    BACKEND_VERIFY:'/api/billing/verify',            // POST {lowprofile_id, funnel_id} → {paid, plan, billing, amount, txn_id}
+    ORIGIN:''                                        // set to CardCom's iframe origin to enforce postMessage source (e.g. 'https://secure.cardcom.solutions')
+  };
+
+  var PLANS={
+    teacher:  {name:'מורה',   price:149, perks:['עד 2,000 תלמידים','קורסים ללא הגבלה','CRM מובנה','0% עמלה על מכירות']},
+    educator: {name:'מחנך',   price:199, perks:['עד 25,000 תלמידים','בורדי — יצירת קורס עם AI','5 אתרי קורסים','משחקים ודומיין מותאם']},
+    leader:   {name:'מנהיג',  price:399, perks:['עד 100,000 תלמידים','בורדי ללא הגבלה','WhiteBoard Studio + Live','אתרים ללא הגבלה']}
+  };
+
+  var qs=new URLSearchParams(location.search);
+  var planKey=(qs.get('plan')||'educator').toLowerCase();
+  if(!PLANS[planKey])planKey='educator';
+  var plan=PLANS[planKey];
+  var billing=(qs.get('billing')||'monthly').toLowerCase()==='yearly'?'yearly':'monthly';
+
+  /* ---- render summary ---- */
+  document.getElementById('planName').textContent='מסלול '+plan.name;
+  document.getElementById('planRibbon').hidden=false;
+  var ul=document.getElementById('perks');
+  plan.perks.forEach(function(t){
+    var li=document.createElement('li');
+    li.innerHTML='<span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>';
+    li.appendChild(document.createTextNode(t));ul.appendChild(li);
+  });
+  document.getElementById('pM').textContent='₪'+plan.price;
+  document.getElementById('pY').textContent='₪'+(plan.price*10).toLocaleString();
+  document.getElementById('pYs').textContent='לשנה · שווה ערך ל-₪'+Math.round(plan.price*10/12)+' לחודש';
+
+  function charge(){return billing==='yearly'?plan.price*10:plan.price;}
+  function renderBilling(){
+    document.querySelectorAll('.bp').forEach(function(b){b.classList.toggle('on',b.dataset.billing===billing);});
+    document.getElementById('lineLabel').textContent=billing==='yearly'?'מנוי שנתי · '+plan.name:'מנוי חודשי · '+plan.name;
+    document.getElementById('lineVal').textContent='₪'+charge().toLocaleString()+(billing==='yearly'?' לשנה':' לחודש');
+    var d=new Date(Date.now()+30*864e5);
+    document.getElementById('firstCharge').textContent=d.toLocaleDateString('he-IL')+' · ₪'+charge().toLocaleString();
+  }
+  document.querySelectorAll('.bp').forEach(function(b){
+    b.addEventListener('click',function(){
+      billing=b.dataset.billing;renderBilling();
+      WBF.set({billing:billing,value:charge()});
+      WBF.step('billing_changed',{billing:billing,value:charge()});
+    });
+  });
+
+  /* ---- funnel context + step: checkout loaded (step 5) ---- */
+  WBF.set({plan:planKey,billing:billing,value:charge(),currency:'ILS'});
+  renderBilling();
+  WBF.step('checkout_loaded',{value:charge()});
+  WBF.trackForm(document.getElementById('payForm'),'checkout');   // field-level: which fields fill / stall
+
+  /* ---- prefill from the lead popup (sessionStorage.wb_lead) ---- */
+  var lead=null;
+  try{
+    lead=JSON.parse(sessionStorage.getItem('wb_lead')||'null');
+    if(lead){
+      if(lead.name)document.getElementById('fName').value=lead.name;
+      if(lead.email)document.getElementById('fEmail').value=lead.email;
+      if(lead.phone)document.getElementById('fPhone').value=lead.phone;
+      WBF.step('checkout_prefilled',{from:'lead_popup'});
+    }
+  }catch(e){}
+
+  function showErr(msg){var e=document.getElementById('err');e.textContent=msg;e.classList.add('on');}
+  function clearErr(){document.getElementById('err').classList.remove('on');}
+  function busy(on,label){var btn=document.getElementById('payBtn');btn.disabled=on;
+    document.getElementById('payLabel').textContent=label||(on?'מעבד…':'התחילו 30 יום חינם');}
+
+  /* ================= CardCom payment lifecycle =================
+     Success is only ever accepted after server verification. We route the
+     verified plan/amount/txn to the thank-you page. Both notification paths
+     (postMessage from the iframe, and SuccessURL redirect) converge here. */
+  function toThankYou(v){
+    var val=(v&&v.amount!=null)?v.amount:charge();
+    var pk=(v&&v.plan)?v.plan:planKey, bl=(v&&v.billing)?v.billing:billing;
+    WBF.advance();   // forward navigation — not an abandonment
+    location.href='thank-you.html?plan='+encodeURIComponent(pk)+'&billing='+encodeURIComponent(bl)
+      +'&value='+encodeURIComponent(val)+'&txn='+encodeURIComponent((v&&(v.txn_id||v.txn))||'');
+  }
+  function onPaid(v){
+    WBF.set({plan:(v&&v.plan)||planKey,billing:(v&&v.billing)||billing,value:(v&&v.amount!=null)?v.amount:charge()});
+    WBF.step('payment_success',{txn:(v&&(v.txn_id||v.txn))||'',amount:(v&&v.amount!=null)?v.amount:charge(),verified:!!(v&&v.verified)});
+    toThankYou(v);
+  }
+  function onFail(reason,code){
+    WBF.step('payment_failed',{reason:reason||'unknown',code:code||''});
+    busy(false);showErr('התשלום לא הושלם'+(reason?(' — '+reason):'')+'. אפשר לנסות שוב או כרטיס אחר.');
+  }
+  function verifyThenPaid(lowprofileId,fallback){
+    if(CARDCOM.BACKEND_VERIFY){
+      fetch(CARDCOM.BACKEND_VERIFY,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({lowprofile_id:lowprofileId,funnel_id:WBF.id()})})
+        .then(function(r){return r.json();})
+        .then(function(v){ if(v&&v.paid) onPaid(Object.assign({verified:true},v)); else onFail('אימות נכשל','verify'); })
+        .catch(function(){ onFail('שגיאת אימות','verify_error'); });
+    } else onPaid(Object.assign({verified:false},fallback||{}));
+  }
+
+  /* return-URL fallback: CardCom SuccessURL/ErrorURL can send the user back here */
+  (function handleReturn(){
+    var res=qs.get('lp_result');
+    if(res==='success'){ verifyThenPaid(qs.get('lowprofile')||window.__lowprofile,{txn:qs.get('txn')}); }
+    else if(res==='error'||res==='failure'){ onFail(qs.get('reason')||'declined',qs.get('code')); }
+  })();
+
+  /* ---- card fields ---- */
+  var zone=document.getElementById('cardcomFields');
+  if(CARDCOM.mode==='live'){
+    fetch(CARDCOM.BACKEND_CREATE,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({plan:planKey,billing:billing,value:charge(),currency:'ILS',
+        customer:lead||{},attribution:WBF.attribution(),funnel_id:WBF.id()})})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        window.__lowprofile=d.lowprofile_id;window.__txnRef=d.txn_ref;
+        var f=document.createElement('iframe');
+        f.src=d.iframe_url;f.allow='payment';f.onload=function(){WBF.step('card_iframe_loaded');};
+        zone.appendChild(f);
+      })
+      .catch(function(){WBF.step('payment_error',{reason:'create_failed'});showErr('שגיאה בטעינת שדות התשלום — נסו לרענן.');});
+
+    /* CardCom notifies completion via postMessage */
+    window.addEventListener('message',function(e){
+      if(CARDCOM.ORIGIN && e.origin!==CARDCOM.ORIGIN)return;
+      var m=e.data;if(typeof m==='string'){try{m=JSON.parse(m);}catch(_){return;}}
+      if(!m||typeof m!=='object')return;
+      var ok=(m.type==='cardcom:success')||(m.ResponseCode===0)||(m.OperationResponse==='0');
+      var bad=(m.type==='cardcom:failure')||(m.ResponseCode&&m.ResponseCode!==0);
+      if(ok){ verifyThenPaid(window.__lowprofile||m.lowprofile_id,{txn:m.txn||m.InternalDealNumber}); }
+      else if(bad){ onFail(m.Description||'declined',m.ResponseCode); }
+    });
+  }else{
+    document.getElementById('demoTag').hidden=false;
+    zone.innerHTML=
+      '<div class="fld"><label for="ccNum">מספר כרטיס</label><input id="ccNum" inputmode="numeric" placeholder="4580 0000 0000 0000" style="direction:ltr;text-align:left;font-family:JetBrains Mono,monospace"></div>'+
+      '<div class="two">'+
+      '<div class="fld"><label for="ccExp">תוקף</label><input id="ccExp" inputmode="numeric" placeholder="MM/YY" style="direction:ltr;text-align:left;font-family:JetBrains Mono,monospace"></div>'+
+      '<div class="fld"><label for="ccCvv">CVV</label><input id="ccCvv" inputmode="numeric" placeholder="•••" style="direction:ltr;text-align:left;font-family:JetBrains Mono,monospace"></div>'+
+      '</div>';
+    WBF.trackForm(zone,'checkout_card');
+  }
+
+  /* ---- submit (payment_started, step 6) ---- */
+  document.getElementById('payForm').addEventListener('submit',function(ev){
+    ev.preventDefault();clearErr();
+    var name=document.getElementById('fName').value.trim(),
+        email=document.getElementById('fEmail').value.trim(),
+        phone=document.getElementById('fPhone').value.trim();
+    if(!name||!email.includes('@')||phone.replace(/\D/g,'').length<9){
+      WBF.field('checkout','identity','error',{reason:'invalid'});
+      showErr('בדקו שם, אימייל וטלפון — אלה הפרטים שאיתם נפתח החשבון.');return;
+    }
+    busy(true,'מעבד…');
+    WBF.step('payment_started',{value:charge()});
+    if(CARDCOM.mode==='live'){
+      /* LowProfile usually self-submits inside the iframe; the postMessage /
+         return-URL handlers above resolve success or failure. Nothing else to do. */
+    }else{
+      var num=(document.getElementById('ccNum').value||'').replace(/\s/g,'');
+      setTimeout(function(){
+        if(num.indexOf('4000')===0){ onFail('הכרטיס נדחה (הדגמה)','051'); }   // test-decline card
+        else { onPaid({txn:'DEMO-'+Math.random().toString(36).slice(2,8).toUpperCase(),amount:charge(),verified:false}); }
+      },900);
+    }
+  });
+})();
+</script>
+</body>
+</html>

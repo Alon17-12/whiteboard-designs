@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHITEBOARD · איפיון פאנל רכישה + סליקת CardCom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --pink:#F05680;
+  --green:#7DC57A; --yellow:#EAD654;
+  --bg:#EBF3FB; --surface:#fff; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+  --border:rgba(37,62,122,.1); --text-main:#1a2f5e; --text-sub:rgba(37,62,122,.62);
+  --text-xs:rgba(37,62,122,.4); --code-bg:#0f1a33; --r-sm:10px; --r-md:16px;
+}
+[data-theme="dark"]{
+  --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+  --border:rgba(255,255,255,.08); --text-main:#dde5f5; --text-sub:rgba(221,229,245,.6);
+  --text-xs:rgba(221,229,245,.32); --code-bg:#0a1220;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);font-size:15px;line-height:1.7;display:flex;min-height:100vh}
+h1,h2,h3,h4{font-family:'Fredoka',sans-serif;font-weight:600;line-height:1.3}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:.86em;background:var(--surface-3);padding:.12em .45em;border-radius:6px;color:var(--navy);direction:ltr;display:inline-block}
+[data-theme="dark"] code{color:var(--cyan)}
+
+/* sidebar */
+.side{width:270px;flex-shrink:0;background:var(--navy);color:#fff;position:sticky;top:0;height:100vh;overflow-y:auto;padding:26px 20px}
+.side .brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.side .brand b{font-family:'Fredoka';font-weight:600;font-size:19px;letter-spacing:.3px}
+.side .brand .dot{width:11px;height:11px;border-radius:50%;background:var(--cyan)}
+.side .sub{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:26px}
+.side nav a{display:block;color:rgba(255,255,255,.78);font-size:13.5px;padding:8px 12px;border-radius:8px;margin-bottom:2px;transition:.15s}
+.side nav a:hover{background:rgba(255,255,255,.08);text-decoration:none;color:#fff}
+.side nav a.head{font-family:'Fredoka';font-weight:600;color:#fff;margin-top:16px;font-size:12px;letter-spacing:.5px;text-transform:uppercase;opacity:.6;padding:6px 12px;pointer-events:none}
+.side .pages{margin-top:22px;border-top:1px solid rgba(255,255,255,.1);padding-top:16px}
+.side .pages a{display:flex;align-items:center;gap:8px;background:rgba(56,196,242,.14);color:#cdeeff;margin-bottom:6px;font-weight:500}
+.side .pages a:hover{background:rgba(56,196,242,.24)}
+
+/* main */
+main{flex:1;max-width:960px;padding:44px 54px 120px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.theme-btn{background:var(--surface);border:1px solid var(--border);color:var(--text-main);width:40px;height:40px;border-radius:10px;cursor:pointer;display:grid;place-items:center}
+h1.title{font-size:32px;font-weight:700;letter-spacing:-.5px}
+.lead{color:var(--text-sub);font-size:16.5px;max-width:70ch;margin:10px 0 6px}
+.meta-pills{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 34px}
+.pill{background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:5px 13px;font-size:12.5px;color:var(--text-sub);font-weight:500}
+.pill b{color:var(--text-main)}
+
+section{margin-bottom:46px;scroll-margin-top:20px}
+section>h2{font-size:23px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+section>h2 .n{width:30px;height:30px;border-radius:9px;background:var(--navy);color:#fff;font-size:14px;display:grid;place-items:center;flex-shrink:0}
+[data-theme="dark"] section>h2 .n{background:var(--cyan);color:var(--navy)}
+section>p{color:var(--text-sub);margin:10px 0}
+h3{font-size:17px;margin:26px 0 8px;color:var(--text-main)}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:22px 24px;margin:16px 0}
+.rules{background:linear-gradient(135deg,rgba(56,196,242,.1),rgba(240,86,128,.07));border:1px solid rgba(56,196,242,.3)}
+.rules h3{margin-top:0;color:var(--navy)}
+[data-theme="dark"] .rules h3{color:var(--cyan)}
+.rules ul{margin:10px 20px 0}
+.rules li{margin-bottom:7px;font-size:14.5px}
+
+ul.clean{list-style:none;margin:12px 0}
+ul.clean li{padding-right:26px;position:relative;margin-bottom:9px;color:var(--text-sub)}
+ul.clean li::before{content:'';position:absolute;right:4px;top:10px;width:8px;height:8px;border-radius:50%;background:var(--cyan)}
+ul.clean li b{color:var(--text-main)}
+
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;background:var(--surface);border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border)}
+th{background:var(--surface-2);text-align:right;padding:11px 14px;font-family:'Fredoka';font-weight:500;font-size:12.5px;color:var(--text-sub);border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td code,th code{font-size:12px}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;font-family:'Fredoka'}
+.tag.fb{background:rgba(24,119,242,.14);color:#1877f2}
+.tag.step{background:rgba(56,196,242,.16);color:#0d84b0}
+[data-theme="dark"] .tag.step{color:#7fd8f5}
+.idx{font-family:'Fredoka';font-weight:600;color:var(--cyan);font-size:15px}
+
+pre{background:var(--code-bg);color:#e6edf3;border-radius:var(--r-sm);padding:18px 20px;overflow-x:auto;margin:14px 0;direction:ltr;text-align:left;font-size:13px;line-height:1.6}
+pre code{background:none;color:inherit;padding:0;direction:ltr}
+.c-key{color:#79c0ff}.c-str{color:#a5d6ff}.c-com{color:#8b949e}.c-fn{color:#d2a8ff}.c-num{color:#f0883e}
+
+.flow{display:flex;flex-direction:column;gap:0;margin:20px 0}
+.flow .step{display:flex;gap:16px;align-items:flex-start;position:relative;padding-bottom:20px}
+.flow .step:not(:last-child)::before{content:'';position:absolute;right:15px;top:34px;bottom:0;width:2px;background:var(--border)}
+.flow .bub{width:32px;height:32px;border-radius:50%;background:var(--cyan);color:#fff;display:grid;place-items:center;font-family:'Fredoka';font-weight:600;font-size:14px;flex-shrink:0;z-index:1}
+.flow .step.srv .bub{background:var(--navy)}
+.flow .step.ok .bub{background:var(--green)}
+.flow .step.bad .bub{background:var(--pink)}
+.flow .txt b{display:block;font-family:'Fredoka';font-weight:500;font-size:15px}
+.flow .txt span{color:var(--text-sub);font-size:13.5px}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.mini{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:16px 18px}
+.mini h4{font-size:14px;margin-bottom:6px;color:var(--navy)}
+[data-theme="dark"] .mini h4{color:var(--cyan)}
+.mini p{font-size:13px;color:var(--text-sub);margin:0}
+
+.chk{list-style:none;margin:14px 0}
+.chk li{position:relative;padding:12px 44px 12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:9px;font-size:14px}
+.chk li::before{content:'';position:absolute;right:15px;top:15px;width:18px;height:18px;border:2px solid var(--cyan);border-radius:5px}
+.chk li b{color:var(--text-main);font-family:'Fredoka';font-weight:500}
+.chk li .who{display:inline-block;font-size:11px;background:var(--surface-3);color:var(--text-sub);padding:2px 8px;border-radius:6px;margin-inline-start:6px;font-weight:600}
+.status{display:inline-block;font-size:11.5px;font-weight:600;font-family:'Fredoka';padding:3px 10px;border-radius:99px}
+.status.done{background:rgba(125,197,122,.18);color:#4e9e4a}
+.status.wait{background:rgba(234,214,84,.2);color:#a08a1a}
+[data-theme="dark"] .status.wait{color:#e0cf5a}
+
+@media(max-width:900px){.side{display:none}main{padding:30px 20px 80px}}
+</style>
+</head>
+<body>
+<aside class="side">
+  <div class="brand"><span class="dot"></span><b>WhiteBoard</b></div>
+  <div class="sub">איפיון פאנל רכישה + סליקת CardCom</div>
+  <nav>
+    <a class="head">האיפיון</a>
+    <a href="#overview">1 · סקירה ומטרה</a>
+    <a href="#arch">2 · ארכיטקטורה</a>
+    <a href="#spine">3 · עמוד השדרה של הפאנל</a>
+    <a href="#data">4 · מודל הדאטא</a>
+    <a href="#cardcom">5 · מחזור סליקת CardCom</a>
+    <a href="#api">6 · שני ה-Endpoints בבקאנד</a>
+    <a href="#fields">7 · מדידה ברמת שדה + נטישה</a>
+    <a href="#sinks">8 · שלושת היעדים + פיקסל</a>
+    <a href="#optimize">9 · מה אפשר לאפטם</a>
+    <a href="#golive">10 · צ'קליסט להעלאה חיה</a>
+    <a class="head">הדפים החיים</a>
+  </nav>
+  <div class="pages">
+    <a href="index.html">🏠 דף הבית (עברית)</a>
+    <a href="index-en.html">🌐 דף הבית (אנגלית)</a>
+    <a href="checkout.html?plan=educator">💳 דף תשלום</a>
+    <a href="thank-you.html?plan=educator&status=paid">✅ דף תודה</a>
+  </div>
+</aside>
+
+<main>
+  <div class="top">
+    <div>
+      <h1 class="title">פאנל רכישה + סליקת CardCom</h1>
+      <p class="lead">התשתית המלאה למסע הרכישה של WhiteBoard — מדף הבית, דרך הפופאפ, לדף התשלום ולדף התודה — בנויה כך שכל שלב וכל נתון נמדדים, כדי לאפשר אופטימיזציה מלאה של הפאנל.</p>
+    </div>
+    <button class="theme-btn" onclick="tg()" aria-label="מצב לילה" id="tb">🌙</button>
+  </div>
+  <div class="meta-pills">
+    <span class="pill">גרסה <b>1.0</b></span>
+    <span class="pill">סטטוס: <b>נבנה ואומת מקצה־לקצה</b></span>
+    <span class="pill">סליקה: <b>CardCom LowProfile</b></span>
+    <span class="pill">מדידה: <b>GA4 · Clarity · Meta Pixel</b></span>
+    <span class="pill">שכבה משותפת: <b>wb-funnel.js</b></span>
+  </div>
+
+  <div class="card rules">
+    <h3>עקרונות ליבה</h3>
+    <ul>
+      <li><b>מקור אמת אחד:</b> קובץ משותף אחד (<code>assets/wb-funnel.js</code>, נחשף כ-<code>window.WBF</code>) יורה כל אירוע בכל הדפים — אין קוד מדידה כפול.</li>
+      <li><b>אף פעם לא סומכים על הלקוח:</b> תשלום מאומת מחדש בשרת (<code>/api/billing/verify</code>) — השרת ו-CardCom הם מקור האמת, לא הדפדפן.</li>
+      <li><b>פאנל אחד תפור לרוחב:</b> מזהה <code>funnel_id</code> יחיד עובר מדף הבית → פופאפ → תשלום → תודה, כך שכל המסע ניתן לתפירה ולניתוח.</li>
+      <li><b>מוכן לפרסום:</b> אירועי Meta סטנדרטיים עם <code>eventID</code> לניכוי כפילויות מול CAPI צד-שרת. פיקסל WHITEBOARD חדש — <u>לא</u> של הבונקר.</li>
+    </ul>
+  </div>
+
+  <section id="overview">
+    <h2><span class="n">1</span> סקירה ומטרה</h2>
+    <p>המטרה: להפוך את מסע הרכישה למדיד לגמרי. כל לחיצה, כל שדה, כל נשירה — נרשמים תחת מזהה מסע אחד, כך שאפשר לענות על שאלות כמו "מתוך מי שפתח את הפופאפ, כמה השלימו תשלום?" או "איזה מסלול ממיר הכי טוב מתנועה ממומנת?".</p>
+    <p>הזרימה שהלקוח עובר:</p>
+    <div class="flow">
+      <div class="step"><div class="bub">1</div><div class="txt"><b>דף הבית</b><span>הלקוח גולל, מגיע לטבלת המחירים ולוחץ CTA של מסלול</span></div></div>
+      <div class="step"><div class="bub">2</div><div class="txt"><b>פופאפ פרטים</b><span>שם, אימייל, טלפון, אישור — פרטים ראשוניים לפני תשלום</span></div></div>
+      <div class="step"><div class="bub">3</div><div class="txt"><b>דף תשלום (CardCom)</b><span>הפרטים מוזרמים אוטומטית; הלקוח משלים סליקה מאובטחת</span></div></div>
+      <div class="step srv"><div class="bub">4</div><div class="txt"><b>אימות בשרת</b><span>השרת מאמת מול CardCom שהתשלום אכן בוצע ומזהה את המסלול</span></div></div>
+      <div class="step ok"><div class="bub">5</div><div class="txt"><b>דף תודה</b><span>הפניה לדף התודה + רישום אירוע ההמרה (Purchase / StartTrial / Lead)</span></div></div>
+    </div>
+    <p>מסלול <b>ניסיון</b> (חינם) מדלג על התשלום ועובר ישר לפלטפורמה; מסלול <b>ארגוני</b> עובר לדף תודה כליד מוסמך במקום רכישה.</p>
+  </section>
+
+  <section id="arch">
+    <h2><span class="n">2</span> ארכיטקטורה</h2>
+    <p>ארבעה דפים סטטיים + שכבת מדידה משותפת אחת. אין בקאנד ייעודי לפרונט — רק שני endpoints לסליקה (סעיף 6).</p>
+    <table>
+      <tr><th>רכיב</th><th>קובץ</th><th>תפקיד</th></tr>
+      <tr><td>שכבת פאנל</td><td><code>assets/wb-funnel.js</code></td><td>מקור אמת אחד. חושף <code>window.WBF</code>. נטען בכל דף לפני שאר הסקריפטים.</td></tr>
+      <tr><td>דף בית</td><td><code>index.html</code> / <code>index-en.html</code></td><td>עמוד מכירה, טבלת מחירים, פופאפ ליד</td></tr>
+      <tr><td>דף תשלום</td><td><code>checkout.html</code></td><td>מחזור חיי CardCom LowProfile, אימות, ניתוב</td></tr>
+      <tr><td>דף תודה</td><td><code>thank-you.html</code></td><td>רישום ההמרה (deduped), CTA לכניסה למערכת</td></tr>
+      <tr><td>מילון אירועים</td><td><code>FUNNEL-EVENTS.md</code></td><td>חוזה הדאטא המלא — כל אירוע וכל שדה</td></tr>
+    </table>
+    <p>הטעינה בכל דף, לפני הסקריפטים של הדף:</p>
+    <pre><code><span class="c-com">&lt;!-- pixelId ריק עד שיהיה פיקסל WHITEBOARD; Clarity כבר פעיל --&gt;</span>
+&lt;script&gt;window.<span class="c-key">WB_FUNNEL_CONFIG</span>={page:<span class="c-str">'checkout'</span>, pixelId:<span class="c-str">''</span>};&lt;/script&gt;
+&lt;script src=<span class="c-str">"assets/wb-funnel.js"</span>&gt;&lt;/script&gt;</code></pre>
+  </section>
+
+  <section id="spine">
+    <h2><span class="n">3</span> עמוד השדרה של הפאנל</h2>
+    <p>הפאנל הראשי הוא רצף מסודר של 10 שלבים (<code>step_index</code> 0→9). זה בדיוק דוח הנשירה: סופרים <code>funnel_id</code> ייחודיים בכל שלב ורואים איפה מאבדים אנשים.</p>
+    <table>
+      <tr><th>#</th><th>אירוע</th><th>דף</th><th>נורה כאשר</th><th>Pixel</th></tr>
+      <tr><td class="idx">0</td><td><code>page_view</code></td><td>הכל</td><td>טעינת כל דף (אוטומטי)</td><td><span class="tag fb">PageView</span></td></tr>
+      <tr><td class="idx">1</td><td><code>pricing_viewed</code></td><td>בית</td><td>אזור המחירים נכנס לתצוגה</td><td>—</td></tr>
+      <tr><td class="idx">2</td><td><code>plan_selected</code></td><td>בית</td><td>נלחץ CTA של מסלול</td><td>—</td></tr>
+      <tr><td class="idx">3</td><td><code>lead_popup_opened</code></td><td>בית</td><td>פופאפ הפרטים נפתח</td><td>—</td></tr>
+      <tr><td class="idx">4</td><td><code>lead_submitted</code></td><td>בית</td><td>פרטים תקינים + אישור נלכדו</td><td><span class="tag fb">Lead</span></td></tr>
+      <tr><td class="idx">5</td><td><code>checkout_loaded</code></td><td>תשלום</td><td>דף התשלום המותג נטען</td><td><span class="tag fb">InitiateCheckout</span></td></tr>
+      <tr><td class="idx">6</td><td><code>payment_started</code></td><td>תשלום</td><td>כפתור התשלום נלחץ (פרטים תקינים)</td><td><span class="tag fb">AddPaymentInfo</span></td></tr>
+      <tr><td class="idx">7</td><td><code>payment_success</code></td><td>תשלום</td><td>תשלום אושר (מאומת-שרת בחי)</td><td>—</td></tr>
+      <tr><td class="idx">8</td><td><code>thankyou_viewed</code></td><td>תודה</td><td>דף התודה נטען</td><td>—</td></tr>
+      <tr><td class="idx">9</td><td><code>purchase_completed</code></td><td>תודה</td><td>הכנסה נרשמה, פעם אחת לעסקה</td><td><span class="tag fb">Purchase</span></td></tr>
+    </table>
+    <p>וריאציות המרה בשלב 9 (לא כל עסקה היא "רכישה"):</p>
+    <ul class="clean">
+      <li><b>ניסיון</b> → <code>trial_started</code> + פיקסל <span class="tag fb">StartTrial</span></li>
+      <li><b>ארגוני</b> → <code>lead_qualified</code> + פיקסל <span class="tag fb">Lead</span></li>
+    </ul>
+  </section>
+
+  <section id="data">
+    <h2><span class="n">4</span> מודל הדאטא — מה רוכב על כל אירוע</h2>
+    <p>כל אירוע יוצא עם אותה זהות, כדי שאפשר יהיה לתפור את כל המסע ולפלח אותו לפי כל ממד.</p>
+    <table>
+      <tr><th>שדה</th><th>משמעות</th></tr>
+      <tr><td><code>funnel_id</code></td><td>מסע אחד לכל טאב-session — תופר בית → פופאפ → תשלום → תודה</td></tr>
+      <tr><td><code>plan</code> / <code>billing</code> / <code>value</code> / <code>currency</code></td><td>ההקשר הנוכחי (נקבע ב-<code>WBF.set</code>, רוכב על כל האירועים הבאים)</td></tr>
+      <tr><td><code>step_index</code></td><td>מיקום בעמוד השדרה (0–9) — רק על שלבי שדרה; מניע את דוחות הפאנל</td></tr>
+      <tr><td><code>step_ms</code></td><td>מילישניות מהאירוע הקודם (מהירות / היסוס)</td></tr>
+      <tr><td><code>page</code></td><td><code>homepage</code> · <code>checkout</code> · <code>thank_you</code></td></tr>
+      <tr><td>attribution</td><td><code>utm_source/medium/campaign/content/term</code>, <code>referrer</code>, <code>landing</code>, <code>first_seen</code> — ייחוס first-touch נשמר</td></tr>
+      <tr><td><code>ts</code></td><td>זמן האירוע</td></tr>
+    </table>
+    <div class="grid2">
+      <div class="mini"><h4>funnel_id — התפירה</h4><p>נוצר פעם אחת ונשמר ב-<code>sessionStorage</code>. עובר בין הדפים דרך אותו session. זה מה שמאפשר לספור מסע שלם ולא אירועים בודדים.</p></div>
+      <div class="mini"><h4>attribution — הייחוס</h4><p>נלכד בביקור הראשון ונשמר ב-<code>localStorage</code>. כל המרה עתידית יודעת מאיזו קמפיין/מקור הגיע הלקוח — גם ימים אחרי.</p></div>
+    </div>
+    <p>גישה מהקונסול לצורכי דיבוג: <code>WBF.dump()</code> מדפיס את כל המסלול, <code>WBF.journey()</code> מחזיר אותו, <code>WBF.id()</code> את מזהה המסע. הוסף <code>?wbdebug=1</code> ל-URL כדי לראות כל אירוע חי.</p>
+  </section>
+
+  <section id="cardcom">
+    <h2><span class="n">5</span> מחזור חיי סליקת CardCom</h2>
+    <p>הסליקה בנויה על <b>CardCom LowProfile</b> — עמוד סליקה מאובטח שמוטמע כ-iframe. הזרימה:</p>
+    <div class="flow">
+      <div class="step srv"><div class="bub">1</div><div class="txt"><b>create-lowprofile</b><span>הדף מבקש מהשרת לפתוח עסקה. השרת פונה ל-CardCom ומחזיר <code>iframe_url</code> + <code>lowprofile_id</code></span></div></div>
+      <div class="step"><div class="bub">2</div><div class="txt"><b>הטמעת iframe</b><span>עמוד הסליקה של CardCom מוטמע בדף. הלקוח מזין פרטי אשראי בתוך הסביבה המאובטחת של CardCom (PCI על CardCom, לא עלינו)</span></div></div>
+      <div class="step"><div class="bub">3</div><div class="txt"><b>תוצאה חוזרת</b><span>הצלחה חוזרת דרך <code>postMessage</code> או דרך <code>SuccessURL</code> (redirect fallback) חזרה ל-<code>checkout.html?lp_result=success</code></span></div></div>
+      <div class="step srv"><div class="bub">4</div><div class="txt"><b>אימות בשרת</b><span>הדף שולח <code>lowprofile_id</code> ל-<code>/api/billing/verify</code>. השרת מאשר מול CardCom — <u>מקור האמת היחיד</u>. אף פעם לא סומכים על הודעת הדפדפן</span></div></div>
+      <div class="step ok"><div class="bub">5</div><div class="txt"><b>הצלחה → תודה</b><span><code>payment_success</code> נורה, ואז ניתוב לדף תודה עם המסלול והסכום המאומתים</span></div></div>
+      <div class="step bad"><div class="bub">✕</div><div class="txt"><b>כישלון → נשארים</b><span>דחייה או אימות שנכשל → <code>payment_failed</code>, נשארים בדף עם הודעת שגיאה. שגיאת תשתית → <code>payment_error</code></span></div></div>
+    </div>
+    <h3>מצב demo מול live</h3>
+    <div class="grid2">
+      <div class="mini"><h4>mode: 'demo' <span class="status done">פעיל עכשיו</span></h4><p>שדות אשראי מדומים שמריצים את כל הזרימה מקצה לקצה, כולל ענף הדחייה — כרטיס שמתחיל ב-<code>4000</code> מדמה סירוב. אין קריאה אמיתית ל-CardCom.</p></div>
+      <div class="mini"><h4>mode: 'live' <span class="status wait">ממתין ל-endpoints</span></h4><p>ממשה את שני ה-endpoints (סעיף 6), הפוך <code>CARDCOM.mode='live'</code>, הגדר <code>CARDCOM.ORIGIN</code>. הכל כבר מחווט.</p></div>
+    </div>
+  </section>
+
+  <section id="api">
+    <h2><span class="n">6</span> שני ה-Endpoints בבקאנד</h2>
+    <p>הפרונט מצפה לשני נתיבים בלבד. אלה החוזים המדויקים שהדף כבר מדבר איתם:</p>
+    <h3>POST /api/billing/create-lowprofile</h3>
+    <pre><code><span class="c-com">// request</span>
+{ plan: <span class="c-str">"educator"</span>, billing: <span class="c-str">"monthly"</span>,
+  customer: { name, email, phone },
+  attribution: {...}, funnel_id: <span class="c-str">"…"</span> }
+
+<span class="c-com">// response — השרת פתח עסקה מול CardCom והחזיר:</span>
+{ iframe_url: <span class="c-str">"https://secure.cardcom.solutions/…"</span>,
+  lowprofile_id: <span class="c-str">"…"</span>, txn_ref: <span class="c-str">"…"</span> }</code></pre>
+    <p>השרת קובע את הסכום מהמסלול+חיוב בצד שלו (לא מהלקוח), מגדיר SuccessURL/ErrorURL בחזרה ל-<code>checkout.html?lp_result=success|error&amp;lowprofile=…&amp;txn=…</code>.</p>
+    <h3>POST /api/billing/verify</h3>
+    <pre><code><span class="c-com">// request</span>
+{ lowprofile_id: <span class="c-str">"…"</span>, funnel_id: <span class="c-str">"…"</span> }
+
+<span class="c-com">// response — השרת אישר מול CardCom. מקור האמת.</span>
+{ paid: <span class="c-key">true</span>, plan: <span class="c-str">"educator"</span>, billing: <span class="c-str">"monthly"</span>,
+  amount: <span class="c-num">199</span>, txn_id: <span class="c-str">"…"</span> }</code></pre>
+    <div class="card rules" style="margin-top:20px">
+      <h3>למה אימות-שרת חובה</h3>
+      <p style="margin:6px 0 0">הודעת ה-<code>postMessage</code> וה-redirect מגיעים מהדפדפן — ניתנים לזיוף. לכן אחרי כל "הצלחה" הדף שולח ל-<code>verify</code>, והשרת שואל את CardCom ישירות האם העסקה באמת נסלקה. רק <code>paid:true</code> מהשרת מעביר לדף תודה ורושם הכנסה. אופציונלי: <code>LEADS_ENDPOINT</code> לשליחת הליד ל-CRM כבר בשלב 4, לפני התשלום.</p>
+    </div>
+  </section>
+
+  <section id="fields">
+    <h2><span class="n">7</span> מדידה ברמת שדה + נטישה</h2>
+    <p><code>WBF.trackForm(formEl,'lead')</code> מחווט אוטומטית כל טופס: focus ראשון → <code>field_started</code>, יציאה עם ערך → <code>field_completed</code>, יציאה ריקה → <code>field_abandoned</code>. זה מה שמראה בדיוק איזה שדה מאבד אנשים.</p>
+    <table>
+      <tr><th>אירוע משני</th><th>נורה כאשר</th></tr>
+      <tr><td><code>field_started/completed/abandoned</code></td><td>אינטראקציה עם שדה בטופס</td></tr>
+      <tr><td><code>field_error</code></td><td>ולידציה חסמה שליחה (<code>reason</code>)</td></tr>
+      <tr><td><code>lead_popup_closed</code></td><td>פופאפ נסגר (<code>close_btn</code> · <code>backdrop</code> · <code>escape</code>)</td></tr>
+      <tr><td><code>billing_changed</code></td><td>מעבר חודשי⇄שנתי בתשלום</td></tr>
+      <tr><td><code>checkout_prefilled</code></td><td>שדות מולאו אוטומטית מהפופאפ</td></tr>
+      <tr><td><code>payment_failed</code> / <code>payment_error</code></td><td>דחייה / כשל אימות / שגיאת תשתית</td></tr>
+      <tr><td><code>funnel_abandoned</code></td><td>טאב הוסתר/נסגר (<code>last_step</code>, <code>seconds_in_funnel</code>)</td></tr>
+    </table>
+    <p><b>נטישה אמיתית בלבד:</b> מעבר קדימה בפאנל (פופאפ→תשלום→תודה) גם מפעיל <code>pagehide</code>. לכן לפני כל ניווט קדימה הדף קורא <code>WBF.advance()</code>, שמדכא את פינג הנטישה. כך <code>funnel_abandoned</code> מסמן יציאה אמיתית ולא מעבר תקין.</p>
+  </section>
+
+  <section id="sinks">
+    <h2><span class="n">8</span> שלושת היעדים + הפיקסל</h2>
+    <p>כל אירוע משוכפל בו-זמנית לשלושה יעדים:</p>
+    <div class="grid2">
+      <div class="mini"><h4>1 · dataLayer (GTM / GA4)</h4><p>כל אירוע נדחף ל-<code>dataLayer</code> כ-<code>wb_event</code> עם כל השדות — מוכן ל-GTM ולדוחות GA4.</p></div>
+      <div class="mini"><h4>2 · Microsoft Clarity</h4><p>אירוע מותאם + תיוג ה-session ב-<code>plan</code>/<code>billing</code>/<code>furthest_step</code> לסינון הקלטות. כבר פעיל (<code>xi43gegise</code>).</p></div>
+      <div class="mini"><h4>3 · Meta Pixel</h4><p>אירוע סטנדרטי כשממופה (PageView, Lead, InitiateCheckout, AddPaymentInfo, Purchase…), אחרת trackCustom. עם <code>eventID</code> לניכוי כפילויות מול CAPI.</p></div>
+      <div class="mini"><h4>מוכנות CAPI</h4><p>ה-<code>eventID</code> על אירועי ההמרה מאפשר שליחה כפולה (דפדפן + שרת) בלי לספור פעמיים — כשתחברו CAPI צד-שרת.</p></div>
+    </div>
+  </section>
+
+  <section id="optimize">
+    <h2><span class="n">9</span> מה זה נותן לאופטימיזציה</h2>
+    <ul class="clean">
+      <li><b>דוח פאנל מלא:</b> ספירת <code>funnel_id</code> ייחודיים בכל <code>step_index</code> → נשירה מדויקת בין כל שלב.</li>
+      <li><b>פאנל לפי מסלול / חיוב / מקור:</b> כל אירוע נושא <code>plan</code>, <code>billing</code> וייחוס — אפשר לפלח את הפאנל לפי כל אחד מהם.</li>
+      <li><b>אופטימיזציית טופס:</b> <code>field_started/completed/abandoned</code> מראים בדיוק איזה שדה מאבד אנשים.</li>
+      <li><b>מהירות:</b> <code>step_ms</code> חושף נקודות היסוס.</li>
+      <li><b>אמינות סליקה:</b> <code>payment_started</code> מול <code>payment_success/failed/error</code> = שיעור ההצלחה בתשלום וסיבות הכשל.</li>
+      <li><b>פרסום:</b> אירועי פיקסל סטנדרטיים עם <code>eventID</code> מוכנים ל-CAPI צד-שרת.</li>
+    </ul>
+  </section>
+
+  <section id="golive">
+    <h2><span class="n">10</span> צ'קליסט להעלאה חיה</h2>
+    <ul class="chk">
+      <li><b>META_PIXEL_ID</b> <span class="who">אלון</span> — להזין ב-<code>WB_FUNNEL_CONFIG.pixelId</code> של כל דף (פיקסל WHITEBOARD חדש, לא של הבונקר). Clarity כבר פעיל.</li>
+      <li><b>Endpoint 1 — create-lowprofile</b> <span class="who">CTO</span> — POST → <code>{iframe_url, lowprofile_id, txn_ref}</code>. השרת פותח עסקה מול CardCom וקובע את הסכום.</li>
+      <li><b>Endpoint 2 — verify</b> <span class="who">CTO</span> — POST → <code>{paid, plan, billing, amount, txn_id}</code>. אימות מול CardCom = מקור האמת.</li>
+      <li><b>הפעלת live</b> <span class="who">CTO</span> — <code>CARDCOM.mode='live'</code> + <code>CARDCOM.ORIGIN</code> לאורג'ין של CardCom + הפניית Success/Error URLs ל-<code>checkout.html?lp_result=…</code>.</li>
+      <li><b>LEADS_ENDPOINT (אופציונלי)</b> <span class="who">CTO</span> — POST של הליד ל-CRM כבר בשלב 4, לפני התשלום.</li>
+      <li><b>הזרמת מדידה מהגרסה האנגלית</b> <span class="who">בוצע חלקית</span> — הפופאפ האנגלי מנתב ל-checkout שכבר מחובר; מיפוי WBF מלא לדף האנגלי כשלב הבא.</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+function tg(){var h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('tb').textContent=d?'🌙':'☀️';}
+</script>
+</body>
+</html>
