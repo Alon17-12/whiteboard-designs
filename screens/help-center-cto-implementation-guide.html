@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מערך הידע (Help Center) — מדריך יישום CTO | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253E7A; --navy-dark:#1a2f5e; --navy-light:#3a5499;
+    --cyan:#38C4F2; --cyan-dark:#1db0d8; --cyan-light:rgba(56,196,242,0.12);
+    --light-blue:#E3F4FD; --pink:#F05680; --pink-light:rgba(240,86,128,0.12);
+    --yellow:#EAD654; --yellow-light:rgba(234,214,84,0.18);
+    --green:#7DC57A; --green-bright:#22c55e; --green-light:rgba(125,197,122,0.14);
+    --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#f5f8ff; --surface-3:#edf4ff;
+    --border:rgba(37,62,122,0.1); --border-hover:rgba(56,196,242,0.4);
+    --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.6); --text-light:rgba(37,62,122,0.4);
+    --code-bg:#0f1b33; --code-text:#dce6fb;
+    --font-he:'Heebo',sans-serif; --font-en:'Fredoka',sans-serif; --font-mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+    --r-sm:10px; --r-md:16px;
+    --sh-sm:0 2px 10px rgba(37,62,122,0.07); --sh-md:0 6px 24px rgba(37,62,122,0.1);
+  }
+  [data-theme="dark"]{
+    --cyan-light:rgba(56,196,242,0.14); --light-blue:rgba(56,196,242,0.1);
+    --pink-light:rgba(240,86,128,0.18); --yellow-light:rgba(234,214,84,0.18); --green-light:rgba(125,197,122,0.18);
+    --bg:#0c1424; --surface:#131e35; --surface-2:#1a2740; --surface-3:#1e2e48;
+    --border:rgba(255,255,255,0.08); --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.6); --text-light:rgba(221,229,245,0.34);
+    --code-bg:#0a1326; --sh-sm:0 2px 12px rgba(0,0,0,0.3); --sh-md:0 6px 28px rgba(0,0,0,0.4);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--font-he);background:var(--bg);color:var(--text-main);display:flex;transition:background .3s,color .3s;}
+  ::-webkit-scrollbar{width:10px;height:10px;} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:6px;}
+  .side{width:268px;background:var(--surface);border-inline-start:1px solid var(--border);height:100vh;position:fixed;right:0;top:0;display:flex;flex-direction:column;padding:24px 0;overflow-y:auto;z-index:10;}
+  .side-logo{padding:0 22px 18px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+  .side-logo .brand{font-family:var(--font-en);font-weight:700;font-size:19px;color:var(--navy);display:flex;align-items:center;gap:8px;} [data-theme="dark"] .side-logo .brand{color:var(--cyan);}
+  .side-logo .logosq{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--cyan),var(--navy));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;}
+  .side-logo .sub{font-size:12px;color:var(--text-sub);margin-top:4px;}
+  .side a{display:block;padding:9px 22px;font-size:13.5px;color:var(--text-sub);text-decoration:none;border-inline-end:3px solid transparent;transition:all .15s;}
+  .side a:hover{background:var(--surface-2);color:var(--text-main);}
+  .side a.active{color:var(--cyan);border-inline-end-color:var(--cyan);background:var(--cyan-light);font-weight:700;}
+  .side a .n{font-family:var(--font-en);color:var(--text-light);margin-inline-end:8px;font-size:12px;}
+  .main{margin-inline-start:268px;flex:1;max-width:1000px;padding:46px 56px 120px;}
+  .topbtns{position:fixed;top:22px;left:28px;z-index:20;}
+  .tbtn{width:40px;height:40px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sub);box-shadow:var(--sh-sm);}
+  .tbtn:hover{color:var(--cyan);border-color:var(--cyan);} .tbtn svg{width:19px;height:19px;}
+  .icon-sun{display:none;} [data-theme="dark"] .icon-sun{display:block;} [data-theme="dark"] .icon-moon{display:none;}
+  .doc-head{margin-bottom:36px;}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--cyan);font-family:var(--font-en);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);}
+  h1{font-size:38px;font-weight:900;line-height:1.12;margin-bottom:14px;}
+  .lead{font-size:16px;color:var(--text-sub);line-height:1.65;max-width:720px;}
+  section{margin-bottom:50px;scroll-margin-top:30px;}
+  h2{font-size:25px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+  h2 .h2num{font-family:var(--font-en);font-size:15px;font-weight:700;color:#fff;background:var(--navy);width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;} [data-theme="dark"] h2 .h2num{background:var(--cyan);color:var(--navy-dark);}
+  h3{font-size:17px;font-weight:800;margin:24px 0 10px;}
+  .sec-sub{font-size:14.5px;color:var(--text-sub);line-height:1.65;margin-bottom:18px;max-width:740px;}
+  p{line-height:1.7;color:var(--text-main);font-size:14.5px;margin-bottom:12px;}
+  ul{margin:0 18px 14px 0;padding-inline-start:4px;} li{line-height:1.75;font-size:14.5px;margin-bottom:5px;}
+  b{font-weight:700;} code.inl{font-family:var(--font-mono);background:var(--surface-3);padding:2px 7px;border-radius:5px;font-size:13px;direction:ltr;display:inline-block;}
+  .rules{background:linear-gradient(135deg,var(--navy),#2f4d96);border-radius:var(--r-md);padding:24px 26px;color:#fff;margin:24px 0;box-shadow:var(--sh-md);} [data-theme="dark"] .rules{background:linear-gradient(135deg,#0f1b3a,#1a2a55);border:1px solid rgba(56,196,242,0.2);}
+  .rules h3{color:#fff;margin:0 0 14px;font-size:16px;display:flex;align-items:center;gap:9px;} .rules h3 svg{width:18px;height:18px;color:var(--cyan);}
+  .rules ol{margin:0;padding-inline-start:20px;} .rules li{color:rgba(255,255,255,0.9);margin-bottom:8px;font-size:14px;} .rules li b{color:var(--cyan);}
+  .rules code.inl{background:rgba(255,255,255,0.14);color:#fff;}
+  pre{background:var(--code-bg);border-radius:var(--r-md);padding:20px 22px;overflow-x:auto;margin:14px 0;border:1px solid rgba(255,255,255,0.06);}
+  pre code{font-family:var(--font-mono);font-size:12.8px;line-height:1.65;color:var(--code-text);direction:ltr;display:block;white-space:pre;}
+  .cm{color:#6b86b8;} .kw{color:#5ad0f5;} .ty{color:#7DC57A;} .st{color:#EAD654;} .fn{color:#ff8ba8;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:20px 22px;box-shadow:var(--sh-sm);margin:14px 0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .callout{display:flex;gap:13px;padding:16px 18px;border-radius:var(--r-md);margin:16px 0;align-items:flex-start;}
+  .callout svg{width:20px;height:20px;flex-shrink:0;margin-top:2px;} .callout p{margin:0;font-size:14px;}
+  .callout.info{background:var(--cyan-light);border:1px solid rgba(56,196,242,0.25);} .callout.info svg{color:var(--cyan);}
+  .callout.warn{background:var(--yellow-light);border:1px solid rgba(234,214,84,0.4);} .callout.warn svg{color:#b89c00;} [data-theme="dark"] .callout.warn svg{color:var(--yellow);}
+  .callout.danger{background:var(--pink-light);border:1px solid rgba(240,86,128,0.3);} .callout.danger svg{color:var(--pink);}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px;}
+  th{text-align:right;font-size:11.5px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.4px;padding:0 12px 10px;border-bottom:1px solid var(--border);}
+  td{padding:11px 12px;border-bottom:1px solid var(--border);color:var(--text-main);vertical-align:top;} td code{font-family:var(--font-mono);font-size:12.5px;color:var(--cyan);direction:ltr;}
+  .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px;white-space:nowrap;}
+  .pill.v1{background:var(--green-light);color:var(--green);} .pill.v2{background:var(--yellow-light);color:#b89c00;} [data-theme="dark"] .pill.v2{color:var(--yellow);}
+  .pill.v3{background:var(--pink-light);color:var(--pink);} .pill.v4{background:var(--cyan-light);color:var(--cyan-dark);}
+  @media (max-width:1000px){ .side{display:none;} .main{margin-inline-start:0;padding:30px 22px 80px;} .grid2{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="topbtns">
+  <button class="tbtn" id="themeBtn" aria-label="מצב תצוגה">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+  </button>
+</div>
+<aside class="side">
+  <div class="side-logo"><div class="brand"><span class="logosq">W</span> WHITEBOARD</div><div class="sub">מערך הידע (Help Center) · מדריך יישום CTO</div></div>
+  <a href="#overview" class="active"><span class="n">00</span>סקירה + כללי CTO</a>
+  <a href="#principle"><span class="n">01</span>עקרון הליבה — מתכונים</a>
+  <a href="#arch"><span class="n">02</span>ארכיטקטורה</a>
+  <a href="#flow"><span class="n">03</span>זרימת העדכון</a>
+  <a href="#data"><span class="n">04</span>מודל הנתונים</a>
+  <a href="#engines"><span class="n">05</span>מנועים (API)</a>
+  <a href="#components"><span class="n">06</span>רכיבי UI</a>
+  <a href="#boardi"><span class="n">07</span>צ'אט בורדי</a>
+  <a href="#gaps"><span class="n">08</span>רישום פערים ← פרודקשיין</a>
+  <a href="#roadmap"><span class="n">09</span>מפת דרכים + Stack</a>
+</aside>
+<main class="main">
+<div class="doc-head">
+  <div class="eyebrow"><span class="dot"></span>WHITEBOARD · HELP CENTER · CTO GUIDE</div>
+  <h1>מערך הידע — מרכז עזרה שמתעדכן מהמערכת החיה</h1>
+  <p class="lead">מרכז עזרה ציבורי (help.whiteboard.education) לשני קהלים — מרצים ותלמידים — שבו כל צילום מסך הוא תוצר של "מתכון" הניתן להרצה מחדש מול הפרודקשיין, וסוכן סורק תקופתי מזהה פיצ'רים חדשים, מסכים שהשתנו ומתכונים שנשברו. גרסה 1.2 · יולי 2026 · אלון גבאי.</p>
+</div>
+
+<section id="overview">
+  <h2><span class="h2num">00</span>סקירה + כללי CTO</h2>
+  <p class="sec-sub">82 מאמרים (מרצה: 13 קטגוריות · תלמיד: 5, אזור מבודד לחלוטין) · 180 מתכוני צילום · אתר סטטי בעיצוב מערכת WHITEBOARD (light+dark, RTL, Fredoka/Heebo) · צ'אט בורדי שמנווט את הקורא למדריך · תגי מסלולים אוטומטיים.</p>
+  <div class="rules">
+    <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>כללי היסוד של המערך — אין חריגות</h3>
+    <ol>
+      <li><b>אין PNG יתום.</b> כל צילום נוצר ממתכון JSON שניתן להריץ מחדש. תמונה בלי מתכון לא נכנסת לריפו.</li>
+      <li><b>אין פרסום בלי אימות.</b> מאמר עם <code class="inl">verified: null</code> לא נבנה לאתר הציבורי.</li>
+      <li><b>אין דאטה מומצא.</b> עובדות רק ממקור מאומת; אי-ודאות מסומנת <code class="inl">&lt;!-- לאימות --&gt;</code> ונפתרת לפני פרסום. תוקן בעקבות תקרית הסליקה (ר' סעיף 08).</li>
+      <li><b>אין דאטה אישי בצילומים.</b> שמות/מיילים של תלמידים מטושטשים ב-<code class="inl">mask</code> ברמת המתכון.</li>
+      <li><b>אין פרסום אוטומטי של שינוי מהותי.</b> הסוכן מכין טיוטות; אלון מאשר; רק אז דיפלוי.</li>
+    </ol>
+  </div>
+  <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p><b>סטטוס נוכחי:</b> כל הצילומים באתר הם <b>צילומי ביניים מהעיצובים המאושרים</b> (מסכים מחודשים) — לא מהפרודקשיין. לפני פרסום ראשון, הסוכן מריץ <code class="inl">capture.js</code> מול המערכת החיה ודורס את כולם בצילומים אמיתיים (אותם שמות קבצים). הפערים הידועים מרוכזים בסעיף 08.</p></div>
+</section>
+
+<section id="principle">
+  <h2><span class="h2num">01</span>עקרון הליבה — מתכוני צילום</h2>
+  <p class="sec-sub">הבעיה הקבועה של מערכי ידע היא התיישנות שקטה: המערכת משתנה ועשרות צילומים הופכים שקריים בלי שאיש יודע אילו. הפתרון — כל תמונה היא תוצר בילד, לא קובץ סטטי.</p>
+  <table>
+    <tr><th>תוצאת הרצת מתכון</th><th>משמעות</th><th>טיפול</th></tr>
+    <tr><td><span class="pill v1">OK</span></td><td>המסך לא השתנה (hash זהה)</td><td>כלום</td></tr>
+    <tr><td><span class="pill v2">CHANGED</span></td><td>פיקסלים השתנו — עדכון UI</td><td>קוסמטי → אישור צילום · פונקציונלי → עדכון מאמר</td></tr>
+    <tr><td><span class="pill v3">BROKEN</span></td><td>סלקטור/ניווט נכשל — פיצ'ר הוזז או שונה</td><td>חקירה בפרודקשיין, תיקון מתכון + מאמר</td></tr>
+    <tr><td><span class="pill v4">UNCOVERED</span></td><td>עמוד בפרודקשיין ללא מתכון (מזוהה ב-crawl)</td><td>טיוטת מאמר + מתכונים חדשים</td></tr>
+  </table>
+  <p>כך תיקיית <code class="inl">recipes/</code> היא ספציפיקציה חיה של המערכת, ושאלת "מה השתנה החודש?" הופכת לשאילתת diff.</p>
+</section>
+
+<section id="arch">
+  <h2><span class="h2num">02</span>ארכיטקטורה</h2>
+  <p class="sec-sub">אין שרת ואין DB: כל המצב חי בריפו כקבצי JSON/Markdown — גרסאות מלאות בגיט, code review על תוכן, rollback חינם.</p>
+<pre><code><span class="cm">// whiteboard-help/ — מבנה הריפו</span>
+content/categories.json      <span class="cm">← מקור אמת יחיד לעץ (18 קטגוריות / 82 מאמרים)</span>
+content/{teacher,student}/&lt;cat&gt;/&lt;slug&gt;.md
+content/STYLE.md             <span class="cm">← חוקי כתיבה מחייבים לכל כותב (אנושי או סוכן)</span>
+recipes/&lt;id&gt;.json            <span class="cm">← מתכון לכל צילום (180)</span>
+recipes/baseline.lock.json   <span class="cm">← חתימת sha256 של כל צילום מאושר</span>
+assets/screenshots/          <span class="cm">← תוצרי בילד — לא נערכים ידנית</span>
+assets/{brand,img}/          <span class="cm">← לוגו, מסקוטים, תמונות ידניות (make-scenario)</span>
+engine/                      <span class="cm">← build · capture · capture-design · crawl · launch-chrome</span>
+dist/                        <span class="cm">← האתר הבנוי → Vercel</span></code></pre>
+  <div class="grid2">
+    <div class="card"><h3 style="margin-top:0">צד הצילום</h3><p>Playwright (<code class="inl">playwright-core</code>) מתחבר ב-<code class="inl">connectOverCDP</code> לכרום ייעודי (<code class="inl">npm run chrome</code>, פרופיל שמור, פורט 9222) — יורש סשן מחובר לפרודקשיין. אותו דפוס שהוכח ב-Walk Me.</p></div>
+    <div class="card"><h3 style="margin-top:0">צד האתר</h3><p>בילד Node טהור (marked בלבד, ללא framework) מרנדר HTML עצמאי: עמודי בית/קטגוריה/מאמר, אינדקס חיפוש, אזור תלמיד מבודד. פריסה: Vercel + דומיין <code class="inl">help.whiteboard.education</code>.</p></div>
+  </div>
+</section>
+
+<section id="flow">
+  <h2><span class="h2num">03</span>זרימת העדכון האוטומטי</h2>
+  <p class="sec-sub">ממומש כסקיל <code class="inl">whiteboard-kb-update</code> (ריצה שבועית או ידנית). דורש כרום מחובר — רץ מקומית.</p>
+  <table>
+    <tr><th>#</th><th>שלב</th><th>פעולה</th><th>פלט</th></tr>
+    <tr><td>1</td><td><b>Recapture</b></td><td><code>capture.js --all --check</code> — כל המתכונים מחדש</td><td>capture-report.json: OK/CHANGED/BROKEN</td></tr>
+    <tr><td>2</td><td><b>Crawl</b></td><td><code>crawl.js</code> — BFS על הניווט בפרודקשיין</td><td>sitemap.json: added/removed/uncovered</td></tr>
+    <tr><td>3</td><td><b>Triage</b></td><td>Claude משווה, חוקר, מתקן מתכונים, כותב טיוטות</td><td>שינויים ב-content/ + recipes/</td></tr>
+    <tr><td>4</td><td><b>Digest</b></td><td>דו"ח שינויים לאלון — <b>שער אישור אנושי חובה</b></td><td>אישור / תיקונים</td></tr>
+    <tr><td>5</td><td><b>Publish</b></td><td><code>--accept</code> → עדכון verified → build → deploy</td><td>baseline מעודכן, אתר חי</td></tr>
+  </table>
+  <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><p>עדכון צילום זהה-פונקציונלית (rebrand קוסמטי) מותר אוטומטית אחרי אישור התקציר; מאמר חדש או שינוי זרימה — לעולם לא בלי אישור.</p></div>
+</section>
+
+<section id="data">
+  <h2><span class="h2num">04</span>מודל הנתונים</h2>
+  <h3>Frontmatter של מאמר</h3>
+<pre><code><span class="cm">---</span>
+<span class="kw">title:</span> <span class="st">יצירת קורס חדש</span>       <span class="cm"># זהה ל-categories.json</span>
+<span class="kw">slug:</span> <span class="st">create-course</span>
+<span class="kw">category:</span> <span class="st">courses</span> · <span class="kw">audience:</span> <span class="st">teacher | student</span> · <span class="kw">order:</span> <span class="ty">1</span>
+<span class="kw">description:</span> <span class="st">משפט אחד — חיפוש + כותרת משנה + תשובת בורדי</span>
+<span class="kw">verified:</span> <span class="ty">null</span>              <span class="cm"># תאריך אימות מול פרודקשיין; null = לא מתפרסם</span>
+<span class="kw">plan:</span> <span class="ty">null | teacher | educator | leader | enterprise</span>  <span class="cm"># תג מסלול אוטומטי</span>
+<span class="kw">related:</span> [<span class="st">chapters-structure</span>, <span class="st">upload-video</span>]
+<span class="cm">---</span></code></pre>
+  <h3>מתכון צילום</h3>
+<pre><code>{
+  <span class="kw">"id"</span>: <span class="st">"course-create-button"</span>,
+  <span class="kw">"title"</span>: <span class="st">"כפתור יצירת קורס בלוח הבקרה"</span>,        <span class="cm">// alt + כיתוב</span>
+  <span class="kw">"url"</span>: <span class="st">"/dashboard"</span>,                              <span class="cm">// מאומת ב-crawl</span>
+  <span class="kw">"themes"</span>: [<span class="st">"light"</span>, <span class="st">"dark"</span>],
+  <span class="kw">"steps"</span>: [{ <span class="kw">"action"</span>: <span class="st">"click"</span>, <span class="kw">"selector"</span>: <span class="st">".courses-tab"</span>, <span class="kw">"settle"</span>: <span class="ty">300</span> }],
+  <span class="kw">"capture"</span>: { <span class="kw">"type"</span>: <span class="st">"element | viewport | clip"</span>, <span class="kw">"selector"</span>: <span class="st">"..."</span>, <span class="kw">"padding"</span>: <span class="ty">24</span> },
+  <span class="kw">"mask"</span>: [<span class="st">".student-name"</span>],                        <span class="cm">// פרטיות — חובה על דאטה אישי</span>
+  <span class="kw">"annotate"</span>: [{ <span class="kw">"selector"</span>: <span class="st">"..."</span>, <span class="kw">"type"</span>: <span class="st">"ring"</span> }],
+  <span class="kw">"selectorSource"</span>: <span class="st">"approved-design"</span>,              <span class="cm">// עד אימות מול DOM אמיתי</span>
+  <span class="kw">"designSource"</span>: <span class="st">"/…/מסכים מחודשים/קורס/הגדרות קורס.html"</span>  <span class="cm">// מקור צילום הביניים</span>
+}</code></pre>
+  <p><code class="inl">baseline.lock.json</code> — חוזה המצב המאושר: <code class="inl">{ "&lt;id&gt;.&lt;theme&gt;": { hash, capturedAt, url } }</code>. כל סטייה מדווחת בהרצה הבאה.</p>
+</section>
+
+<section id="engines">
+  <h2><span class="h2num">05</span>המנועים (API)</h2>
+  <table>
+    <tr><th>מנוע</th><th>פקודה</th><th>תפקיד</th></tr>
+    <tr><td><code>launch-chrome.js</code></td><td><code>npm run chrome</code></td><td>כרום עם דיבאג-פורט על פרופיל ייעודי שמור — התחברות חד-פעמית</td></tr>
+    <tr><td><code>capture.js</code></td><td><code>capture --all [--check|--accept]</code></td><td>הרצת מתכונים מול פרודקשיין: ניווט → steps → mask+annotate → צילום → diff מול baseline</td></tr>
+    <tr><td><code>capture-design.js</code></td><td><code>capture-design --all</code></td><td>צילומי ביניים מ-designSource (file://) — אותו capture spec; לא נרשם ל-baseline</td></tr>
+    <tr><td><code>crawl.js</code></td><td><code>npm run crawl</code></td><td>מפת מסכים בפועל + diff מסריקה קודמת + פערי כיסוי</td></tr>
+    <tr><td><code>build.js</code></td><td><code>npm run build[:drafts]</code></td><td>MD→HTML: שלבים ממוספרים, קאלאאוטים, screenshot embeds, תגי מסלול, TOC, רזולוציית קישורי slug, חיפוש, בידוד תלמיד</td></tr>
+  </table>
+</section>
+
+<section id="components">
+  <h2><span class="h2num">06</span>רכיבי UI</h2>
+  <div class="grid2">
+    <div class="card"><h3 style="margin-top:0">ניווט</h3><p>סיידבר ימני — אקורדיון יחיד (קטגוריה אחת פתוחה) עם אנימציית grid-rows ושברון מסתובב · TOC שמאלי "בעמוד הזה" עם עוגני h2 + scrollspy (כמו מסכי ההגדרות במערכת) · פירורי לחם · הקודם/הבא.</p></div>
+    <div class="card"><h3 style="margin-top:0">מאמר</h3><p>תג טיוטה (עד verified) · תג מסלול ("זמין ממסלול מנהיג ומעלה") · צילומים עם lightbox והחלפת light/dark · קאלאאוטים tip/warning/info · "העתק קישור" · משוב "המדריך עזר?" עם בורדי.</p></div>
+    <div class="card"><h3 style="margin-top:0">חיפוש</h3><p>אינדקס JSON בבילד (כותרת ×10 · ראשי פרקים ×5 · תיאור ×4 · גוף ×1), קיצור <code class="inl">/</code>, ניווט מקלדת. משמש גם את בורדי.</p></div>
+    <div class="card"><h3 style="margin-top:0">אזור תלמיד</h3><p><code class="inl">/student/</code> מבודד לחלוטין: אפס קישורים לאזור המרצה, טופבר נקי, מאמרי יסוד (התחברות, איפוס סיסמה, גישה מהירה, פתקים, חוברת קורס, בורדי). המרצה משתף בכפתור "העתק קישור".</p></div>
+  </div>
+</section>
+
+<section id="boardi">
+  <h2><span class="h2num">07</span>צ'אט בורדי</h2>
+  <p class="sec-sub">בורדי נוכח בכל מסך — הירו, משוב, ו-launcher צף. הצ'אט בשפת העיצוב של דף הבית (בועות 4/16px, נקודות הקלדה, צ'יפים).</p>
+  <ul>
+    <li><b>מנוע תשובות:</b> retrieval קליינט-סייד על אינדקס החיפוש; עדיפות ×1.5 לקהל הנוכחי (מרצה/תלמיד); התשובה = description + תג מסלול אם רלוונטי + עד 2 חלופות.</li>
+    <li><b>השתלטות:</b> "קח אותי לשם" → overlay עם בורדי → ניווט → פעימת הדגשה על כותרת היעד + המשך שיחה ("הגענו! זה המדריך").</li>
+    <li><b>שלב 2 (עתידי):</b> החלפת ה-retrieval ב-API של בורדי האמיתי (RAG על אותם קובצי MD — המבנה כבר תואם), ואז ההשתלטות תוכל להצביע על שלב ספציפי במאמר.</li>
+  </ul>
+</section>
+
+<section id="gaps">
+  <h2><span class="h2num">08</span>רישום פערים ← פרודקשיין</h2>
+  <p class="sec-sub">מרשם מחייב: כל פער בין צילומי הביניים (מהעיצובים) לבין הפרודקשיין, שחייב להיסגר לפני פרסום. הסוכן שואב את התמונות האמיתיות מהפרודקשיין לפני הפרסום הראשון — הטבלה הזו היא הצ'ק-ליסט שלו.</p>
+  <div class="callout danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p><b>גורף:</b> כל 180 הצילומים כרגע ממקור עיצוב (Monday/לוקאלי). פערים אופייניים בעיצובים: לוגו placeholder במקום הלוגו האמיתי, היעדר בורדי במסכים, דאטה דמו. <b>אף צילום ביניים לא עולה לפרודקשיין</b> — שער ה-verified אוכף זאת.</p></div>
+  <h3>מסכים חסרים בעיצובים המאושרים (יצולמו רק בפרודקשיין)</h3>
+  <table>
+    <tr><th>מסך</th><th>מאמרים תלויים</th><th>סטטוס</th></tr>
+    <tr><td>אשף יצירת קורס</td><td>create-course</td><td><span class="pill v3">אין עיצוב</span></td></tr>
+    <tr><td>ספריית תוכן ייעודית + "בחר מהספרייה"</td><td>content-library, content-blocks</td><td><span class="pill v3">אין עיצוב</span></td></tr>
+    <tr><td>צ'קאאוט של לקוח קונה</td><td>checkout, pricing-course</td><td><span class="pill v3">אין עיצוב</span> ("מסך תשלום.html" = בחירת מסלול WHITEBOARD)</td></tr>
+    <tr><td>מסך התחברות תלמיד + איפוס סיסמה</td><td>student-login, student-password-reset</td><td><span class="pill v3">אין עיצוב</span></td></tr>
+    <tr><td>חוברת הקורס לתלמיד</td><td>student-booklet</td><td><span class="pill v3">אין עיצוב</span></td></tr>
+    <tr><td>הגדרות תמחור קורס</td><td>pricing-course</td><td><span class="pill v3">לא נצפה</span></td></tr>
+    <tr><td>מודאל הזמנת תלמיד + פופאפ בחירת סוג שיעור</td><td>invite-students, lesson-types</td><td><span class="pill v3">אין עיצוב</span></td></tr>
+    <tr><td>מרכזי הידע — גרסת dark</td><td>hubs-overview ואחרים</td><td><span class="pill v2">חלקי</span></td></tr>
+  </table>
+  <h3>סתירות בין עיצובים (להכרעה מול פרודקשיין)</h3>
+  <table>
+    <tr><th>סתירה</th><th>מקורות</th></tr>
+    <tr><td>מגבלות מסלול ניסיון: קורס 1 / 30 תלמידים מול 3 קורסים / 100</td><td>דף נחיתה מול מסך מסלולים</td></tr>
+    <tr><td>שני דורות של מסך הגדרות (טאבים שונים)</td><td>הגדרות גלובליות מול עיצוב 1.7</td></tr>
+    <tr><td>"הסיכומים שלי" מול "הספריה שלי" בתפריט תלמיד</td><td>תפריטי מצב תלמיד/מרצה</td></tr>
+    <tr><td>6 תבניות בית ספר (כולל "יודמי") מול 5 מתועדות</td><td>רשת התבניות בהגדרות</td></tr>
+    <tr><td>plan gating לא רשמי: מנתח תלמידים, ניתוח מכירות, ערכת מותג (תג "מנהיג"), בורדי לתלמיד</td><td>עיצובים בלבד — לא בטבלת המסלולים</td></tr>
+  </table>
+  <h3>עובדות שתוקנו במערך (לקחים)</h3>
+  <table>
+    <tr><th>תאריך</th><th>תיקון</th></tr>
+    <tr><td>2026-07-05</td><td><b>סליקה:</b> אין חיבור CardCom רשמי/מובנה. הסליקה מתחברת דרך <b>האפליקציה הרשמית של WHITEBOARD ב-Make</b> (מודול add student + מדריך חיבור קורסים). תוקן ב-7 מאמרים; הוסרו 2 מתכונים שתיעדו מסך הגדרות-סליקה שלא קיים.</td></tr>
+  </table>
+  <p>בנוסף: 84 סימוני <code class="inl">&lt;!-- לאימות --&gt;</code> פזורים במאמרים — כל אחד ייסגר בשלב האימות (grep <code class="inl">"לאימות"</code> נותן את הרשימה המלאה והעדכנית).</p>
+
+  <h3>דגשים ליישום — דחיפת מה שלא מדויק</h3>
+  <p class="sec-sub">מה מותר לדחוף עכשיו, מה חסום, ומה חייב לקרות לפני שכל אי-דיוק הופך לתוכן חי. <b>הכלל המנחה: כל צילום שבאתר היום הוא ביניים — לפני פרסום, הסוכן מכניס צילומים מהפרודקשיין.</b></p>
+  <table>
+    <tr><th>נושא</th><th>מצב היום</th><th>דגש ליישום</th></tr>
+    <tr><td><b>כל 180 הצילומים</b></td><td>ביניים, מהעיצובים המאושרים (חסרים לוגו אמיתי/בורדי, דאטה דמו)</td><td><span class="pill v3">חסם פרסום</span> להריץ <code>capture.js --all</code> מול הפרודקשיין — דורס את כולם באותם שמות קבצים. אין דיפלוי ציבורי לפני זה</td></tr>
+    <tr><td><b>מתכוני viewport זמניים</b></td><td>37 מתכונים שהומרו מצילום-אלמנט צר לצילום מסך מלא (בעקבות בקרת ההרכב)</td><td>מול הפרודקשיין לשקול חזרה לחיתוך אלמנט <b>לרוחב</b> היכן שהאלמנט מוצג טוב יותר מקרוב; חובה לעמוד בכללי ההרכב (יחס עד 1.15, רוחב ≥ 560px)</td></tr>
+    <tr><td><b>בקרת התאמה</b></td><td>לינט אוטומטי (shot-audit) + בקרה ויזואלית של Claude — שלב 3.5 בסקיל</td><td><span class="pill v3">חסם פרסום</span> אחרי צילום פרודקשיין: אפס ממצאי לינט פתוחים + אפס MISMATCH לפני digest</td></tr>
+    <tr><td><b>סלקטורים</b></td><td>כולם <code>selectorSource: approved-design</code> — מהעיצובים, לא מה-DOM האמיתי</td><td>ב-crawl הראשון לאמת מול הפרודקשיין; להעדיף aria-label / data-testid; לבקש data-testid מצוות הפיתוח למסכים מרכזיים</td></tr>
+    <tr><td><b>מאמרים על מסכים שאין להם עיצוב</b></td><td>8 מסכים (אשף קורס, צ'קאאוט, לוגין תלמיד, חוברת…) — מתוארים ברמת עקרונות עם סימוני לאימות</td><td>לצלם מהפרודקשיין בלבד; אם המסך שונה מהותית מהמתואר — לשכתב את המאמר, לא להתאים את הצילום</td></tr>
+    <tr><td><b>עובדות מסלולים לא רשמיות</b></td><td>plan של מנתח תלמידים/מכירות, ערכת מותג, בורדי-תלמיד — מהעיצובים בלבד</td><td>לא להציג תג מסלול עד אישור אלון או טבלת המסלולים; היום מוצג plan רק היכן שרשמי</td></tr>
+    <tr><td><b>verified gate</b></td><td>כל 85 המאמרים <code>verified: null</code> — הבילד הציבורי ריק בכוונה</td><td><span class="pill v1">עובד כמתוכנן</span> אין לעקוף: מאמר מקבל תאריך verified רק אחרי צילום פרודקשיין + קריאת אימות מלאה שלו</td></tr>
+  </table>
+</section>
+
+<section id="roadmap">
+  <h2><span class="h2num">09</span>מפת דרכים + Stack</h2>
+  <table>
+    <tr><th>שלב</th><th>תוכן</th><th>סטטוס</th></tr>
+    <tr><td>1</td><td>תשתית + 82 מאמרים + 180 מתכונים + צ'אט בורדי + צילומי ביניים</td><td><span class="pill v1">בוצע</span></td></tr>
+    <tr><td>2</td><td>גישה: כרום מחובר + productionBaseUrl</td><td><span class="pill v2">ממתין לאלון</span></td></tr>
+    <tr><td>3</td><td>Crawl ראשון + התאמת העץ למציאות + סגירת רישום הפערים (סעיף 08)</td><td><span class="pill v2">ממתין</span></td></tr>
+    <tr><td>4</td><td>צילום פרודקשיין מלא (דורס ביניים) + אימות מאמרים (verified)</td><td><span class="pill v2">ממתין</span></td></tr>
+    <tr><td>5</td><td>דיפלוי Vercel + help.whiteboard.education</td><td><span class="pill v2">ממתין</span></td></tr>
+    <tr><td>6</td><td>מחזור /kb-update שבועי</td><td><span class="pill v2">ממתין</span></td></tr>
+    <tr><td>—</td><td>חשבון דמו ייעודי · בורדי-API אמיתי בצ'אט · הזנת המערך ל-BOARDi כ-RAG · אנליטיקת חיפושים כושלים</td><td><span class="pill v4">Backlog</span></td></tr>
+  </table>
+  <h3>Tech Stack</h3>
+  <table>
+    <tr><th>שכבה</th><th>טכנולוגיה</th><th>הערה</th></tr>
+    <tr><td>תוכן</td><td>Markdown + YAML frontmatter</td><td>מקור אמת בגיט; מוכן ל-RAG של בורדי</td></tr>
+    <tr><td>צילום</td><td>playwright-core + connectOverCDP</td><td>יורש סשן מחובר; דפוס Walk Me</td></tr>
+    <tr><td>בילד</td><td>Node ESM + marked</td><td>ללא framework; HTML עצמאי</td></tr>
+    <tr><td>אתר</td><td>סטטי + JS ואניל (חיפוש, צ'אט, TOC, אקורדיון)</td><td>אפס תלות חיצונית</td></tr>
+    <tr><td>Diff</td><td>sha256 + baseline.lock.json</td><td>דטרמיניסטי לאותה מכונה/viewport</td></tr>
+    <tr><td>אוטומציה</td><td>סקיל whiteboard-kb-update</td><td>שער אישור אנושי לפני publish</td></tr>
+    <tr><td>אירוח</td><td>Vercel + דומיין מותאם</td><td><code class="inl">npm run deploy</code></td></tr>
+  </table>
+  <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><p><b>הערת סטאק:</b> המערך הוא אתר תוכן סטטי ולכן חורג בכוונה מסטאק המוצר (Next.js/Prisma/Trigger.dev) — אין צורך בשרת. אם בעתיד מרכז העזרה ייכנס לתוך הפלטפורמה, קובצי ה-MD הם ה-source of truth שממנו מיובאים הנתונים.</p></div>
+</section>
+</main>
+<script>
+document.getElementById('themeBtn').addEventListener('click',()=>{
+  const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark';});
+const links=[...document.querySelectorAll('.side a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+document.addEventListener('scroll',()=>{
+  let cur=0;secs.forEach((s,i)=>{if(s&&s.getBoundingClientRect().top<=90)cur=i;});
+  links.forEach((a,i)=>a.classList.toggle('active',i===cur));
+},{passive:true});
+</script>
+</body>
+</html>

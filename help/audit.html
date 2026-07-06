@@ -1,0 +1,915 @@
+<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8">
+<title>בקרת צילומים — מערך הידע</title>
+<style>body{font-family:'Heebo',sans-serif;background:#EBF3FB;color:#1a2f5e;padding:30px;max-width:1200px;margin:0 auto}
+h1{font-size:22px;margin-bottom:4px}.sum{color:rgba(37,62,122,.6);font-size:13px;margin-bottom:24px}
+.row{display:grid;grid-template-columns:1fr 1.2fr;gap:18px;background:#fff;border:1px solid rgba(37,62,122,.1);border-radius:14px;padding:18px;margin-bottom:14px}
+.row.bad{border-color:rgba(240,86,128,.5);border-width:2px}
+.txt b{font-size:14.5px}.txt small{display:block;color:rgba(37,62,122,.55);font-size:12px;margin:3px 0 8px}
+.txt p{font-size:12.5px;line-height:1.6;color:rgba(37,62,122,.75);margin-bottom:8px}
+.txt code{font-size:11px;background:#f4f9ff;padding:2px 8px;border-radius:5px;direction:ltr;display:inline-block}
+.flag{display:block;margin-top:6px;font-size:11.5px;font-weight:700;color:#F05680}
+.img img{width:100%;border:1px solid rgba(37,62,122,.12);border-radius:10px}
+.miss{padding:40px;text-align:center;background:#f4f9ff;border-radius:10px;color:rgba(37,62,122,.4);font-size:13px}</style></head>
+<body><h1>בקרת צילומים — מערך הידע</h1>
+<div class="sum">180 צילומים משובצים · 0 ממצאי לינט (מסומנים באדום) · נוצר 6.7.2026, 10:44:16</div>
+<div class="row ">
+    <div class="txt"><b>הרשמה והתחברות למערכת</b><small>צעדים ראשונים · שלב 1 — פותחים את מסך ההתחברות</small>
+      <p>גולשים לכתובת ההתחברות של המערכת ומגיעים למסך ההתחברות של WHITEBOARD. <!-- לאימות: כתובת ההתחברות המדויקת בפרודקשיין --></p>
+      <code>gs-login-card</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/gs-login-card.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הרשמה והתחברות למערכת</b><small>צעדים ראשונים · שלב 4 — או מתחברים עם אימייל וסיסמה</small>
+      <p>3. מסמנים את תיבת ההסכמה ל**תנאי השימוש**. 4. לוחצים על **התחברו למערכת**.</p>
+      <code>gs-login-email-form</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/gs-login-email-form.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>היכרות עם לוח הבקרה</b><small>צעדים ראשונים · שלב 1 — נכנסים ללוח הבקרה</small>
+      <p>בסיידבר הימני לוחצים על **לוח הבקרה**. בראש המסך תקבלו ברכת שלום עם תמונת מצב מהירה — כמה תלמידים פעילים עכשיו וכמה משימות מחכות. לצד הברכה שני כפתורים מהירים: **צור קורס חדש** ו**ייצוא דוח**.</p>
+      <code>gs-dashboard-overview</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/gs-dashboard-overview.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>היכרות עם לוח הבקרה</b><small>צעדים ראשונים · שלב 2 — קוראים את מדדי המפתח</small>
+      <p>לכל מדד מוצמד חץ שינוי (ירוק לעלייה, ורוד לירידה) ביחס לתקופה הקודמת — כך רואים מגמה במבט אחד.</p>
+      <code>gs-dashboard-kpi</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/gs-dashboard-kpi.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>היכרות עם לוח הבקרה</b><small>צעדים ראשונים · שלב 3 — בודקים מה בורדי מצא</small>
+      <p>פאנל **BOARDi Insights** מציג תובנות שבורדי הפיק מהנתונים שלכם: תלמידים בסיכון נטישה, קורס שמזנק במכירות, שיעור שתלמידים נוטשים באמצע. לכל תובנה מוצמד כפתור פעולה — למשל **צור מייל שחזור** — כך שאפשר לטפל בה בלי לעזוב את המסך. כפתור **רענן** מבקש מבורדי תובנות עדכניות.</p>
+      <code>gs-dashboard-insights</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/gs-dashboard-insights.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>היכרות עם לוח הבקרה</b><small>צעדים ראשונים · שלב 4 — עוברים על המשימות והפעילות</small>
+      <p>- **מה מחכה לך היום** — משימות שדורשות טיפול: תשלומים שנכשלו, תלמידים שממתינים לאישור, הודעות במועדון, שידור חי מתקרב. לכל משימה כפתור פעולה ישיר. - **פעילות אחרונה** — פיד של אירועים: רכישות, סיומי קורס, הצטרפויות למועדון וביקורות.</p>
+      <code>gs-dashboard-tasks</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/gs-dashboard-tasks.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מעבר בין מצב מרצה למצב תלמיד</b><small>צעדים ראשונים · שלב 1 — מאתרים את מתג המצב</small>
+      <p>המתג יושב בתחתית הסיידבר הימני, מתחת לכותרת "מצב תצוגה": שני כפתורים זה לצד זה — **תלמיד** ו**מרצה**. הכפתור המודגש הוא המצב הנוכחי.</p>
+      <code>gs-mode-switcher</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/gs-mode-switcher.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>המדריכים המובנים במערכת (Walk Me)</b><small>צעדים ראשונים · שלב 2 — מפעילים מדריך מחדש</small>
+      <p>פספסתם משהו או רוצים לרענן? לוחצים על אייקון בורדי בסרגל העליון ובוחרים בתפריט **המדריכים שלי**. משם מפעילים מחדש את סיור ההיכרות או כל מדריך אחר. <!-- לאימות: מיקום מדויק של אייקון בורדי בטופבר ומבנה התפריט --></p>
+      <code>gs-walkme-relaunch</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/gs-walkme-relaunch.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>עריכת הפרופיל האישי</b><small>צעדים ראשונים · שלב 3 — מעדכנים פרטים אישיים</small>
+      <p>באזור **פרטים אישיים** מעדכנים שם פרטי, שם משפחה וטלפון. שדה האימייל נעול — לא ניתן לשנות את כתובת האימייל של החשבון.</p>
+      <code>gs-profile-details</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/gs-profile-details.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>עריכת הפרופיל האישי</b><small>צעדים ראשונים · שלב 6 — שומרים את השינויים</small>
+      <p>כפתור השמירה יושב בסרגל העליון ומשקף את המצב: ברגע שנוגעים בשדה הוא מציג "שינויים שלא נשמרו", ואחרי לחיצה — "ההגדרות עודכנו".</p>
+      <code>gs-profile-save-state</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/gs-profile-save-state.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>יצירת קורס חדש</b><small>בניית קורס · שלב 4 — מכירים את סביבת העבודה של הקורס</small>
+      <p>- **אנליטיקס** — נתוני צפייה והתקדמות. - **בורדי** — העוזר החכם של הקורס.</p>
+      <code>course-header-tabs</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-header-tabs.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>יצירת קורס חדש</b><small>בניית קורס · מה התלמיד רואה</small>
+      <p>תלמיד שנכנס לקורס מקבל את נגן הקורס: סרגל צד עם רשימת הפרקים והשיעורים ומד התקדמות אישי, אזור השיעור במרכז, וסרגל תחתון עם כפתורי **הקודם** ו**הבא** ו**סמן כהושלם**. כל מה שתבנו בהמשך — מבנה, תוכן וערכת מותג — מתלבש על התבנית הזאת.</p>
+      <code>course-student-view</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-student-view.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בניית מבנה הקורס — פרקים ושיעורים</b><small>בניית קורס · שלב 1 — עוברים למצב עריכה</small>
+      <p>בעמוד הקורס, בפינת הסרגל העליון, לוחצים על **מצב עריכה**. סרגל הצד מציג עכשיו לכל פרק ושיעור כפתורי עריכה, ידית גרירה וכפתור הוספה.</p>
+      <code>course-chapters-sidebar</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-chapters-sidebar.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בניית מבנה הקורס — פרקים ושיעורים</b><small>בניית קורס · שלב 2 — מוסיפים פרק חדש</small>
+      <p>בתחתית רשימת הפרקים לוחצים על **הוסף פרק חדש** ונותנים לפרק שם. ליד שם הפרק מוצג משך הצפייה הכולל של השיעורים שבו.</p>
+      <code>course-add-chapter</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-add-chapter.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בניית מבנה הקורס — פרקים ושיעורים</b><small>בניית קורס · מה התלמיד רואה</small>
+      <p>התלמיד רואה את אותו סרגל צד — בלי כלי העריכה: רשימת פרקים עם משך צפייה, שיעורים עם סימון "הושלם" על מה שכבר נצפה, ומד התקדמות אישי ("1 / 5 שיעורים") בראש הסרגל. שיעורים בטיוטה לא מוסתרים מהרשימה אלא מוצגים כ"לא זמין עדיין".</p>
+      <code>course-student-progress</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-student-progress.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>סוגי השיעורים במערכת</b><small>בניית קורס · סוגי השיעורים</small>
+      <p><!-- לאימות: רשימת הסוגים המלאה בפרודקשיין — הרשימה כאן מבוססת על הסוגים שמופיעים בעיצוב המאושר --></p>
+      <code>course-lesson-types</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-lesson-types.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בלוקים של תוכן בתוך שיעור</b><small>בניית קורס · שלב 1 — פותחים את בוחר הבלוקים</small>
+      <p>במצב עריכה, בתחתית תוכן השיעור, לוחצים על **הוסף בלוק תוכן**. נפתח חלון בחירה עם כל סוגי הבלוקים.</p>
+      <code>course-block-picker</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-block-picker.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בלוקים של תוכן בתוך שיעור</b><small>בניית קורס · שלב 3 — מצרפים קבצים נלווים</small>
+      <p>מתחת לתוכן השיעור יש כרטיס **קבצים נלווים** — שם מוסיפים מצגות, טבלאות וכל קובץ שהתלמידים צריכים להוריד. לוחצים על **הוסף קובץ**, וכל קובץ מוצג עם שם, סוג וכפתור **הורדה**.</p>
+      <code>course-files-card</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-files-card.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בלוקים של תוכן בתוך שיעור</b><small>בניית קורס · מה התלמיד רואה</small>
+      <p>התלמיד מקבל את עמוד השיעור המורכב: הסרטון למעלה, מתחתיו הבלוקים לפי הסדר שקבעתם, וכרטיס הקבצים הנלווים עם כפתור **הורדה** ליד כל קובץ. כל הבלוקים מוצגים בעיצוב של ערכת המותג — הגופנים והצבעים שבחרתם, בלי כלי העריכה.</p>
+      <code>course-student-lesson</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-student-lesson.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>העלאת סרטונים לאחסון של WHITEBOARD</b><small>בניית קורס · שלב 1 — פותחים את השיעור במצב עריכה</small>
+      <p>נכנסים לשיעור הרצוי ועוברים ל**מצב עריכה**. שיעור וידאו שעדיין אין בו סרטון מציג את ההודעה "לא הוגדר סרטון לשיעור זה" עם אפשרויות ההוספה.</p>
+      <code>course-video-empty</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-video-empty.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>העלאת סרטונים לאחסון של WHITEBOARD</b><small>בניית קורס · שלב 3 — עוקבים אחרי ההעלאה</small>
+      <p>אפשר ללחוץ **השהה העלאה** ולהמשיך מאוחר יותר, או **בטל העלאה** — ביטול עוצר את התהליך ותצטרכו להתחיל מחדש.</p>
+      <code>course-upload-progress</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-upload-progress.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>העלאת סרטונים לאחסון של WHITEBOARD</b><small>בניית קורס · שלב 5 — מפרסמים לשיעור</small>
+      <p>- **פרסם לשיעור** — הסרטון משתבץ בשיעור כפי שהוא. - **פתח בעורך** — עוברים לעורך הווידאו המובנה לחיתוכים, לוגו, פתיח וכתוביות לפני הפרסום.</p>
+      <code>course-upload-success</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-upload-success.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>ספריית התוכן — ניהול קבצים וסרטונים</b><small>בניית קורס · שלב 1 — פותחים את הספריה</small>
+      <p>בתפריט הצד לוחצים על **הספריה שלי**.</p>
+      <code>course-library-nav</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-library-nav.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הגדרות הקורס</b><small>בניית קורס · שלב 1 — פרטי הבסיס</small>
+      <p>בחלק העליון עורכים את **שם הקורס** ואת **התיאור הקצר** — אלה מופיעים בדף הקורס ובחיפוש. כאן גם נמצאים **סטטוס הקורס** (טיוטה או פורסם) ו**כתובת הקורס (URL)** — הכתובת הייחודית שבה תלמידים מגיעים לקורס.</p>
+      <code>course-settings-general</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-settings-general.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הגדרות הקורס</b><small>בניית קורס · שלב 3 — תמחור ורכישה</small>
+      <p>בוחרים בין **חינם** — כל תלמיד יכול לגשת ללא תשלום — ל**בתשלום**, שבו התלמיד רוכש גישה לקורס וקובעים מחיר בשקלים. את התמחור אפשר לשנות בכל עת.</p>
+      <code>course-settings-pricing</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-settings-pricing.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>ערכת מותג לקורס</b><small>בניית קורס · שלב 3 — קובעים צבעים וטיפוגרפיה</small>
+      <p>בכרטיס **צבעים** בוחרים צבע ראשי, צבע משני וצבע רקע — בבורר צבע או בהקלדת ערך HEX. בכרטיס **טיפוגרפיה** בוחרים גופן לכותרות, גופן לגוף הטקסט וגודל טקסט.</p>
+      <code>course-brand-editor</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-brand-editor.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>ערכת מותג לקורס</b><small>בניית קורס · שלב 5 — בודקים בתצוגה המקדימה ושומרים</small>
+      <p>פאנל **תצוגה מקדימה** מציג את דף הקורס עם הערכה החדשה בעדכון חי. כשמרוצים — לוחצים **שמור שינויים**. התחרטתם? **אפס לברירת מחדל** מחזיר את עיצוב המערכת.</p>
+      <code>course-brand-preview</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-brand-preview.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>פרסום הקורס ושיתוף שלו</b><small>בניית קורס · שלב 1 — מפרסמים את הקורס</small>
+      <p>בטאב **הגדרות** של הקורס, בסעיף **סטטוס הקורס**, מעבירים את הסטטוס מ**טיוטה** ל**פורסם**. קורס מפורסם גלוי לתלמידים ופתוח להרשמה.</p>
+      <code>course-publish-status</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-publish-status.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>פרסום הקורס ושיתוף שלו</b><small>בניית קורס · שלב 2 — מפרסמים שיעורים</small>
+      <p>שיעור בטיוטה מציג לתלמידים הודעת "השיעור עדיין לא זמין — יפורסם בקרוב", כך שאפשר לבנות מראש את כל המבנה ולחשוף שיעור אחרי שיעור.</p>
+      <code>course-publish-lesson</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-publish-lesson.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>פרסום הקורס ושיתוף שלו</b><small>בניית קורס · שלב 3 — משתפים את הקורס</small>
+      <p>הכתובת הייחודית של הקורס מוגדרת בטאב **הגדרות**, בסעיף **כתובת הקורס (URL)** — זו הכתובת שמעבירים לתלמידים או משבצים בדף המכירה.</p>
+      <code>course-share-url</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-share-url.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>פרסום הקורס ושיתוף שלו</b><small>בניית קורס · מה התלמיד רואה</small>
+      <p>בקורס מפורסם התלמיד רואה רק את השיעורים שפרסמתם. שיעור שעדיין בטיוטה מציג במקום הסרטון את ההודעה "השיעור עדיין לא זמין — יפורסם בקרוב", כך שהתלמידים יודעים שיש עוד תוכן בדרך.</p>
+      <code>course-student-unpublished</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/course-student-unpublished.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>היכרות עם אולפן ההקלטות</b><small>אולפן ההקלטות · איך נראה התהליך</small>
+      <p>4. **עורך הווידאו** — חיתוכים, לוגו, פתיח וסגיר, מעברים, כותרות וכתוביות. 5. **העלאה ופרסום** — הסרטון עולה לאחסון של WHITEBOARD, מעובד ומשובץ בשיעור.</p>
+      <code>studio-lobby-overview</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-lobby-overview.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקלטת שיעור — מהלובי ועד הטייק האחרון</b><small>אולפן ההקלטות · שלב 2 — מגדירים מצלמה, מיקרופון ואיכות</small>
+      <p>בצד התצוגה המקדימה מפעילים את המצלמה, המיקרופון ושיתוף המסך, ובוחרים את ההתקנים מהרשימות. תחת **הגדרות הקלטה** קובעים את צורת חלון המצלמה במצב שיתוף מסך (מלבן או עיגול), את גודלו ואת מיקום ברירת המחדל שלו על המסך, ובוחרים איכות הקלטה.</p>
+      <code>studio-lobby-setup</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-lobby-setup.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקלטת שיעור — מהלובי ועד הטייק האחרון</b><small>אולפן ההקלטות · שלב 3 — מתחילים להקליט</small>
+      <p>לוחצים **התחל הקלטה**. המערכת מציגה ספירה לאחור וההקלטה יוצאת לדרך, עם מונה זמן וסימון REC על המסך.</p>
+      <code>studio-record-cta</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-record-cta.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקלטת שיעור — מהלובי ועד הטייק האחרון</b><small>אולפן ההקלטות · שלב 4 — עוברים בין מצבי תצוגה</small>
+      <p>בזמן ההקלטה אפשר להחליף מצב בכל רגע: **מצלמה**, **מסך + מצלמה** או **מסך**. כפתור **נכסים** פותח את רשימת הקבצים שהעליתם בלובי — לוחצים **הצג** כדי להקרין נכס, או מדביקים קישור לאתר להצגה חיה.</p>
+      <code>studio-mode-switcher</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-mode-switcher.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקלטת שיעור — מהלובי ועד הטייק האחרון</b><small>אולפן ההקלטות · שלב 5 — מקליטים בטייקים</small>
+      <p>הכפתור המרכזי מתחיל ועוצר טייק. לא יצא טוב? מוחקים את הטייק האחרון ומקליטים שוב — כל הטייקים נשמרים לבחירה בשלב הסקירה. לסיום לוחצים **סיים הקלטה** ומאשרים **סיים ושמור**.</p>
+      <code>studio-record-controls</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-record-controls.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>עבודה עם הפרומפטר</b><small>אולפן ההקלטות · שלב 2 — מכוונים את התצוגה</small>
+      <p>- **קו מיקוד** — הקו שמסמן את השורה הנוכחית: שליש עליון, מרכז או שליש תחתון. - **מראה (Mirror)** — היפוך הטקסט לעבודה עם זכוכית טלפרומפטר.</p>
+      <code>studio-prompter-panel</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-prompter-panel.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>עבודה עם הפרומפטר</b><small>אולפן ההקלטות · שלב 3 — בוחרים איפה הפרומפטר יוצג</small>
+      <p>- **על המסך** — הפרומפטר צף מעל אזור ההקלטה. אפשר לגרור אותו לכל מקום ולשנות את גודלו. - **מסך חיצוני** — הפרומפטר נפתח בחלון נפרד למסך שני, עם סרגל שליטה משלו: הפעלה, מהירות, גודל גופן ומראה.</p>
+      <code>studio-prompter-overlay</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-prompter-overlay.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>סקירת טייקים ובחירת הגרסה הטובה</b><small>אולפן ההקלטות · שלב 1 — צופים בטייקים</small>
+      <p>בנגן שבמרכז המסך צופים בהקלטה, ומתחתיו **ציר הטייקים** — כל טייק מוצג כמקטע צבעוני על ציר הזמן, כך שקל לקפוץ בין טייקים ולהשוות. בצד מוצגת **רשימת טייקים** עם סיכום: משך כולל ומספר טייקים.</p>
+      <code>studio-takes-list</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-takes-list.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>סקירת טייקים ובחירת הגרסה הטובה</b><small>אולפן ההקלטות · שלב 4 — בוחרים איך להמשיך</small>
+      <p>- **פתח בעורך** — עוברים לעורך הווידאו לחיתוכים, לוגו, פתיח, מעברים וכתוביות. - **פרסם כמו שזה** — הסרטון מתפרסם כפי שהוקלט. המערכת תזכיר לכם מה מוותרים עליו: חיתוכים, לוגו מותג, פתיח וסגיר וכתוביות.</p>
+      <code>studio-review-actions</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-review-actions.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>עורך הווידאו המובנה</b><small>אולפן ההקלטות · שלב 1 — מתמצאים בטאבים</small>
+      <p>פאנל הכלים מחולק לטאבים: **חיתוך**, **לוגו**, **פתיח / סגיר**, **מעברים**, **כתוביות**, **כותרות** ו**פריסט**.</p>
+      <code>studio-editor-tabs</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-editor-tabs.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>עורך הווידאו המובנה</b><small>אולפן ההקלטות · שלב 4 — מוסיפים מעברים וכותרות</small>
+      <p>בטאב **מעברים** גוררים סוג מעבר (Fade, Dissolve, Slide, Zoom) אל המרווח בין קטעים בטיימליין, וקובעים משך לכל מעבר. בטאב **כותרות** בוחרים סגנון, מקלידים טקסט, גוררים את הכותרת למיקום הרצוי בתצוגה המקדימה וקובעים מתי ולכמה זמן תוצג.</p>
+      <code>studio-editor-timeline</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-editor-timeline.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>כתוביות אוטומטיות ועריכתן</b><small>אולפן ההקלטות · שלב 1 — מייצרים כתוביות אוטומטית</small>
+      <p>נכנסים לעורך הכתוביות מטאב **כתוביות** בעורך הווידאו ולוחצים **יצירה אוטומטית**. האודיו נשלח לתמלול AI וחוזר כרשימת כתוביות מסונכרנות לזמנים. אם כבר יש לכם קובץ כתוביות, אפשר במקום זה ללחוץ **ייבוא SRT**.</p>
+      <code>studio-subtitles-autogen</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-subtitles-autogen.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>כתוביות אוטומטיות ועריכתן</b><small>אולפן ההקלטות · שלב 4 — מחליטים על צריבה</small>
+      <p>- **ללא צריבה** — הכתוביות מוצגות כשכבה נפרדת בנגן. שינויי העיצוב תלויים בנגן הצפייה. - **עם צריבה** — הכתוביות נחרטות על הווידאו עצמו, בדיוק בעיצוב שקבעתם.</p>
+      <code>studio-subtitles-burnin</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/studio-subtitles-burnin.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מה זה בורדי ואיפה פוגשים אותו</b><small>BOARDi — העוזר החכם · שלב 1 — נכנסים לבורדי מהתפריט הראשי</small>
+      <p>בסרגל הצד, תחת "ניווט ראשי", לוחצים על **בורדי**. נפתח מרכז המשימות — מסך הבית של בורדי.</p>
+      <code>boardi-hub-home</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/boardi-hub-home.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מה זה בורדי ואיפה פוגשים אותו</b><small>BOARDi — העוזר החכם · שלב 4 — ממשיכים מאיפה שהפסקתם</small>
+      <p>בתחתית מרכז המשימות יש אזור **המשך מאיפה שהפסקת** — טיוטות קורסים, סקירות וניתוחים שהתחלתם. לחיצה על שורה מחזירה אתכם ישר לעבודה.</p>
+      <code>boardi-hub-recent</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/boardi-hub-recent.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בניית קורס עם בונה הקורסים של בורדי</b><small>BOARDi — העוזר החכם · שלב 2 — עונים על שאלות העומק של בורדי</small>
+      <p>בורדי שואל שאלות קצרות, אחת-אחת: מה תחום הקורס, למי הוא מיועד, מה מטרת הבוגר בסיום, כמה תוכן אתם מדמיינים ואיזה סגנון למידה מתאים. על רוב השאלות עונים בלחיצה על אחת האפשרויות, ואפשר תמיד לענות חופשי בשדה הטקסט — או לכתוב "תציע אתה" ולתת לבורדי להחליט.</p>
+      <code>boardi-builder-chat</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/boardi-builder-chat.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בניית קורס עם בונה הקורסים של בורדי</b><small>BOARDi — העוזר החכם · שלב 3 — עוקבים אחרי רמת הבנת הקורס</small>
+      <p>בצד המסך יש מד **רמת הבנת הקורס**. ככל שבורדי מבין טוב יותר את הקורס והמטרות — האחוז עולה, ורואים בדיוק אילו פרטים הוא כבר הבין: תחום הקורס, קהל יעד, מטרת הבוגר, היקף ותכולה וסגנון למידה. בונה הקורסים לא יבנה ליי-אאוט לפני שההבנה מספיק גבוהה.</p>
+      <code>boardi-builder-certainty</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/boardi-builder-certainty.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מנתח התלמידים — שאלות על הביצועים</b><small>BOARDi — העוזר החכם · שלב 2 — בוחרים תחום או שואלים חופשי</small>
+      <p>בורדי מציע ארבעה תחומי ניתוח בכרטיסים מהירים: **סקירה כללית**, **שיווק**, **מכירות** ו**שירות · איכות** (השלמה, שביעות רצון ונקודות נטישה). לוחצים על כרטיס — או כותבים שאלה משלכם בשדה הטקסט, למשל "מי בסיכון נטישה עכשיו?".</p>
+      <code>boardi-analyst-chat</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/boardi-analyst-chat.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מנתח התלמידים — שאלות על הביצועים</b><small>BOARDi — העוזר החכם · שלב 4 — נועצים תובנות ל-DATA Board</small>
+      <p>ליד כל כרטיס נתונים והמלצה יש כפתור נעיצה 📌. לחיצה מעבירה את התובנה ל-**DATA Board** — הלוח שבצד המסך. שם גם מחכה אזור **בורדי ממליץ לנעוץ** עם התראות חמות: תלמידים בסיכון, נקודת נטישה בשיעור מסוים, שינויים בעלות לליד ועוד. לחיצה על התראה שולחת לבורדי את השאלה המתאימה.</p>
+      <code>boardi-analyst-databoard</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/boardi-analyst-databoard.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>ניתוח מכירות עם בורדי</b><small>BOARDi — העוזר החכם · שלב 2 — בוחרים ניתוח או שואלים חופשי</small>
+      <p>אפשר גם לכתוב חופשי, למשל "תן לי סקירת מכירות של החודש".</p>
+      <code>boardi-sales-chat</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/boardi-sales-chat.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>ניתוח מכירות עם בורדי</b><small>BOARDi — העוזר החכם · שלב 5 — נועצים ומורידים דוח</small>
+      <p>כמו במנתח התלמידים, כל תובנה ניתנת לנעיצה 📌 ל-**DATA Board**, ובראש הלוח מחכות התראות שכדאי לבדוק — יום שיא מכירות, עגלות נטושות, הזדמנות אפסייל. בסיום לוחצים **הורד דוח מעוצב** ומקבלים דוח מכירות ממותג עם כל מה שנעצתם.</p>
+      <code>boardi-sales-databoard</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/boardi-sales-databoard.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מהם מרכזי ידע ואיזה סוג מתאים לך</b><small>מרכזי ידע · איפה מוצאים את מרכזי הידע</small>
+      <p>בתפריט הצד לוחצים על **מרכזי הידע שלי**. בראש המסך מופיעים כרטיסי הסוגים: הקורסים שלי, בתי ספר, תכניות הכשרה ומועדונים — עם מונה לכל סוג. מתחתיהם רשימת הקורסים והמרכזים הקיימים שלכם.</p>
+      <code>hub-knowledge-hubs-cards</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/hub-knowledge-hubs-cards.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקמת בית ספר — אתר הקורסים שלך</b><small>מרכזי ידע · שלב 3 — ממלאים את פרטי בית הספר</small>
+      <p>2. **תיאור** — עד 300 תווים. מופיע לתלמידים בדף בית הספר. 3. **כתובת URL** — הכתובת הייחודית שבה תלמידים יגיעו לבית הספר, בפורמט `whiteboard.education/schools/...`.</p>
+      <code>school-settings-details</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/school-settings-details.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקמת בית ספר — אתר הקורסים שלך</b><small>מרכזי ידע · שלב 6 — קובעים נראות</small>
+      <p>בקטע **נראות** בוחרים מי רואה את בית הספר: **ציבורי** — פתוח לכולם, או **פרטי — בהזמנה בלבד**.</p>
+      <code>school-settings-visibility</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/school-settings-visibility.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקמת בית ספר — אתר הקורסים שלך</b><small>מרכזי ידע · שלב 7 — עורכים את הדפים במצב עריכה</small>
+      <p>נכנסים לבית הספר עצמו. כמרצים אתם רואים אותו במצב עריכה: סרגל עליון מציג "מצב עריכה — בית ספר", ואפשר לגרור קורסים לשינוי סדר וללחוץ על כל כרטיס לעריכה. כפתור **תצוגה מקדימה** מראה איך האתר נראה לתלמיד, ומתג תלמיד/מרצה בפינה מחליף בין נקודות המבט.</p>
+      <code>school-edit-banner</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/school-edit-banner.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>תבניות העיצוב של בית הספר</b><small>מרכזי ידע · איפה בוחרים תבנית</small>
+      <p>בלשונית **הגדרות** של בית הספר, בקטע **תבנית בית הספר**, לוחצים על התבנית הרצויה. התבנית המסומנת בווי היא הפעילה.</p>
+      <code>school-settings-template-grid</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/school-settings-template-grid.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>תבניות העיצוב של בית הספר</b><small>מרכזי ידע · פרימיום</small>
+      <p>דף שיווקי ארוך בסגנון דף נחיתה: כותרת גדולה עם קריאה לפעולה, סרטון הסבר, רצועת מספרים, קורס מוביל מודגש לצד רשת קורסים, אזור "הכירו את המרצה", המלצת תלמיד וקריאה לפעולה סוגרת. מתאים כשבית הספר הוא גם דף המכירה המרכזי שלכם.</p>
+      <code>school-template-premium-hero</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/school-template-premium-hero.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>חנות הקורסים של בית הספר</b><small>מרכזי ידע · שלב 1 — נכנסים לעמוד הקורסים</small>
+      <p>בתפריט העליון של בית הספר לוחצים על **הקורסים שלנו**. כמרצים אתם רואים את העמוד במצב עריכה — כל רכיב שלוחצים עליו נפתח לעריכה. בראש העמוד באנר עם תגית מבצע, כותרת ראשית ושדה חיפוש לתלמידים.</p>
+      <code>school-store-hero</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/school-store-hero.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>חנות הקורסים של בית הספר</b><small>מרכזי ידע · שלב 3 — עורכים כרטיסי קורסים</small>
+      <p>שימו לב לסימון "אוטומטי" ליד הדירוג וההתקדמות — הנתונים האלה נמשכים מהמערכת ולא נערכים ידנית.</p>
+      <code>school-store-course-card</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/school-store-course-card.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>חנות הקורסים של בית הספר</b><small>מרכזי ידע · שלב 5 — עורכים את כרטיסי היתרונות</small>
+      <p>בתחתית החנות ארבעה כרטיסי יתרונות (למשל: גישה לצמיתות, תעודת סיום, תמיכה אישית). לוחצים על אייקון העריכה שעל כל כרטיס ומעדכנים כותרת וטקסט — כדאי להתאים אותם למה שאתם באמת מציעים.</p>
+      <code>school-store-features</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/school-store-features.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>עמודי המידע — אודות, שאלות נפוצות וצור קשר</b><small>מרכזי ידע · שלב 2 — עורכים את עמוד האודות</small>
+      <p>3. **מה תלמדו כאן?** — כרטיסי תחומי הלימוד המרכזיים. 4. **מה אומרים התלמידים** — כרטיסי המלצות עם ציטוט, שם ותפקיד.</p>
+      <code>school-about-header</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/school-about-header.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>עמודי המידע — אודות, שאלות נפוצות וצור קשר</b><small>מרכזי ידע · שלב 3 — עורכים את השאלות הנפוצות</small>
+      <p>עמוד השאלות הנפוצות הוא אקורדיון: כל פריט מציג שאלה, ולחיצה פותחת את התשובה. כותבים כאן את מה שבאמת שואלים אתכם — גישה לתכנים, תעודות, תשלומים, מדיניות החזרים והתאמה למתחילים. בתחתית העמוד תיבת "לא מצאת תשובה?" שמפנה לצור קשר. <!-- לאימות: איך מוסיפים ומסדרים שאלות במצב העריכה --></p>
+      <code>school-faq-item</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/school-faq-item.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>עמודי המידע — אודות, שאלות נפוצות וצור קשר</b><small>מרכזי ידע · שלב 4 — עורכים את עמוד צור קשר</small>
+      <p>עמוד צור קשר כולל את ערוצי הקשר שלכם — אימייל, צ'אט וטלפון עם שעות פעילות — וטופס **שלחו לנו הודעה** עם שדות שם מלא, אימייל, נושא והודעה, לצד ציון זמני מענה. <!-- לאימות: לאן מגיעות פניות מהטופס — למייל המרצה, ל-CRM או לשניהם --></p>
+      <code>school-contact-form</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/school-contact-form.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקמת מועדון — קהילה סביב התוכן</b><small>מרכזי ידע · שלב 2 — ממלאים את פרטי המועדון</small>
+      <p>בלשונית **הגדרות**, בקטע **פרטי המועדון**, ממלאים שם (עד 80 תווים), תיאור (עד 300 תווים) וכתובת URL בפורמט `whiteboard.education/clubs/...`. משם גם מעתיקים את הקישור הציבורי לשיתוף עם מצטרפים פוטנציאליים.</p>
+      <code>club-settings-details</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-settings-details.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקמת מועדון — קהילה סביב התוכן</b><small>מרכזי ידע · שלב 3 — קובעים תמחור</small>
+      <p>בקטע **תמחור ומנוי** מגדירים מחיר מנוי חודשי ומחיר מנוי שנתי. רוצים מועדון פתוח? מפעילים את המתג **מועדון חינמי** — המחיר מתאפס והמועדון נפתח לכולם ללא תשלום.</p>
+      <code>club-settings-pricing</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-settings-pricing.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקמת מועדון — קהילה סביב התוכן</b><small>מרכזי ידע · שלב 4 — מגדירים הרשאות חברים</small>
+      <p>- להזמין חברים - לצפות בלוח המובילים</p>
+      <code>club-settings-permissions</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-settings-permissions.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקמת מועדון — קהילה סביב התוכן</b><small>מרכזי ידע · שלב 5 — בוחרים מצב צ'אט · שלב 1 — בוחרים מצב צ'אט</small>
+      <p>בקטע **צ'אט מועדון** בוחרים איך הקהילה מתקשרת: **צ'אט פתוח** — כולם מדברים בחופשיות, **צ'אט עם מורה** — אתם מנהלים את השיחה והחברים מגיבים, או **ללא צ'אט** — הצ'אט מוסתר לגמרי.</p>
+      <code>club-settings-chat-modes</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-settings-chat-modes.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקמת מועדון — קהילה סביב התוכן</b><small>מרכזי ידע · שלב 8 — מציצים בבית המועדון</small>
+      <p>נכנסים למועדון עצמו. עמוד הבית כולל כרטיס ברוכים הבאים עם סרטון קבלת פנים, נתוני המועדון, הודעות אחרונות (מוסיפים עם **הוסף הודעה**) ורשימת אירועים קרובים. במצב עריכה השינויים נשמרים אוטומטית, ו**פרסם שינויים** מעלה אותם לאוויר.</p>
+      <code>club-home-welcome</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-home-welcome.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הפיד של המועדון</b><small>מרכזי ידע · שלב 1 — מפרסמים פוסט</small>
+      <p>נכנסים ל**פיד המועדון** מסרגל הניווט. בראש הפיד תיבת "שתפו משהו עם הקהילה..." — כותבים, מצרפים **תמונה** או **סרטון**, ולוחצים **פרסם**. פוסט שלכם מסומן בתגית "מרצה" ליד השם, כך שהחברים מזהים אתכם מיד. כפתור **פרסם הודעה** בסרגל העריכה עושה את אותו הדבר מכל מקום במסך.</p>
+      <code>club-feed-compose</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-feed-compose.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הפיד של המועדון</b><small>מרכזי ידע · שלב 2 — מארגנים לפי נושאים</small>
+      <p>בצד הפיד רשימת **נושאים** עם מונה פוסטים לכל נושא — לחיצה על נושא מסננת את הפיד. כל פוסט נושא תגית נושא צבעונית, כך שגם בקהילה גדולה קל למצוא את השיחות הרלוונטיות. <!-- לאימות: איך מוסיפים ועורכים נושא חדש — מהגדרות הפיד או מהרשימה עצמה --></p>
+      <code>club-feed-topics</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-feed-topics.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הפיד של המועדון</b><small>מרכזי ידע · שלב 3 — נועצים ומנהלים</small>
+      <p>כמרצים יש לכם שליטה מלאה על הפיד: נועצים פוסט חשוב בראש הפיד (יופיע עם סימון "נעוץ על ידך"), מסירים פוסטים שלא במקום, ומסננים לפי נושאים. **הגדרות פיד** בסרגל העריכה מרכז את אפשרויות הניהול. <!-- לאימות: אילו אפשרויות בדיוק נמצאות בתוך הגדרות פיד --></p>
+      <code>club-feed-post-pinned</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-feed-post-pinned.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>אירועים ווובינרים במועדון</b><small>מרכזי ידע · שלב 1 — יוצרים אירוע חדש</small>
+      <p>במסך **אירועים** לוחצים **אירוע חדש**. האירועים מוצגים בשלוש תצוגות — **לוח שנה**, **רשימה** ו**הקלטות** — עם דפדוף בין חודשים. כל אירוע מסומן כ**אונליין** או **פרונטלי**, עם תאריך, שעה ומיקום, ומופיע גם כרכיב צבעוני על התאריך בלוח.</p>
+      <code>club-events-calendar</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-events-calendar.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>אירועים ווובינרים במועדון</b><small>מרכזי ידע · שלב 4 — פותחים חדר וובינר</small>
+      <p>וובינר יכול לקבל חדר ייעודי — ערוץ סגור שרק לקוחות שנרשמו לוובינר רואים, מסומן בתגית **לקוחות בלבד** ובמנעול ברשימת הערוצים. שם ממשיכים את השיחה אחרי המפגש, עונים על שאלות ומשתפים חומרים. לוחצים **חדר וובינר חדש** ליצירת חדר, ו**ניהול חדרים** לניהול ההרשאות וההודעות.</p>
+      <code>club-webinar-room</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-webinar-room.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>אירועים ווובינרים במועדון</b><small>מרכזי ידע · מה התלמיד רואה</small>
+      <p>החברים רואים את האירועים הקרובים בעמוד הבית של המועדון ובצד מסך האירועים — עם תאריך, שעה, סוג (אונליין או פרונטלי) וכפתור **הירשם**. אחרי ההרשמה הזימון מגיע אליהם, ובחדרי וובינר שהם זכאים להם הם מוצאים את המשך השיחה והחומרים.</p>
+      <code>club-events-upcoming</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-events-upcoming.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>אירועים ווובינרים במועדון</b><small>מרכזי ידע · מה התלמיד רואה</small>
+      <p>כל חבר שולט בהתראות שלו מהפרופיל האישי — בקטע **העדפות התראות** יש מתג ייעודי ל**תזכורות אירועים**, לצד עדכוני מועדון ושיעורים חדשים.</p>
+      <code>club-notification-prefs</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-notification-prefs.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הצ'אט של המועדון</b><small>מרכזי ידע · שלב 2 — בונים ערוצים</small>
+      <p>השיחה מחולקת לערוצים, מסודרים בקבוצות: **ערוצים כלליים** (כללי, הודעות, שאלות ותשובות), **קורסים** — ערוץ לכל קורס, ו**נושאים**. לוחצים **ערוץ חדש** להוספת ערוץ. חלוקה טובה שומרת על שיחה ממוקדת — שאלות על קורס מסוים לא מתערבבות עם פטפוט כללי.</p>
+      <code>club-chat-channels</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-chat-channels.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הצ'אט של המועדון</b><small>מרכזי ידע · מה התלמיד רואה</small>
+      <p>החבר רואה את רשימת הערוצים עם נקודת חיווי על ערוצים שיש בהם הודעות חדשות. בתוך ערוץ: כותרת עם תיאור ומספר החברים, הודעות עם חלוקה לפי ימים, וההודעות שלו מיושרות לצד השני. בתחתית תיבת כתיבה עם צירוף קבצים. חדרי וובינר שהוא לא זכאי להם מסומנים במנעול — נכנסים רק לקוחות שנרשמו.</p>
+      <code>club-chat-messages</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-chat-messages.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>לוח המובילים ומעורבות חברים</b><small>מרכזי ידע · שלב 1 — פותחים את לוח המובילים</small>
+      <p>נכנסים ל**לוח מובילים** מסרגל הניווט של המועדון. בראש המסך פודיום עם שלושת המובילים, ומתחתיו טבלת הדירוג המלאה — חבר, נקודות, שיעורים ושינוי במיקום. לשוניות **השבוע**, **החודש** ו**כל הזמן** מחליפות את טווח הזמן.</p>
+      <code>club-leaderboard-podium</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-leaderboard-podium.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>לוח המובילים ומעורבות חברים</b><small>מרכזי ידע · שלב 4 — עוקבים אחרי החברים</small>
+      <p>מסך **חברים** מציג את כל חברי המועדון בכרטיסים, עם חיפוש וסינון מהיר: **כולם**, **פעילים**, **מרצים**, **חדשים**. כל כרטיס מציג את נתוני הפעילות של החבר (פוסטים, שיעורים, נקודות) ותגית מצב כמו "פעיל" או "פעילה מאוד" — כך מזהים בקלות גם את המובילים וגם את מי שנעלם וכדאי לחזר אחריו.</p>
+      <code>club-members-grid</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/club-members-grid.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקמת תכנית הכשרה</b><small>מרכזי ידע · שלב 2 — מוסיפים קורסים לתכנית · שלב 2 — רואים את הנעילות בליי-אאוט</small>
+      <p>בלשונית **ליי-אאוט**, ברצועת **קורסים בתכנית**, לוחצים **הוסף קורס** לכל קורס שנכנס למסלול. כל קורס מקבל מספר סידורי, וגוררים את הכרטיסים כדי לשנות את הסדר. סמלי השרשרת בין הקורסים מציינים נעילה — עליהם בהרחבה במדריך [מסלול הלמידה](program-layout).</p>
+      <code>program-ribbon-chain</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/program-ribbon-chain.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקמת תכנית הכשרה</b><small>מרכזי ידע · שלב 3 — בונים פרקים ושיעורים</small>
+      <p>בוחרים קורס ברצועה, ומתחתיו נפתח עורך התוכן שלו: פרקים, ובכל פרק טבלת שיעורים עם שם, סוג, מקור, סטטוס ותאריך. **הוסף פרק חדש** יוצר פרק, **הוסף שיעור** מוסיף שורה, וגרירה משנה סדר. לכל שיעור קובעים סטטוס: **פורסם**, **טיוטה** או **מוסתר**.</p>
+      <code>program-lessons-table</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/program-lessons-table.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקמת תכנית הכשרה</b><small>מרכזי ידע · שלב 6 — קובעים מחיר ותקופת גישה</small>
+      <p>בקטע **תמחור** מגדירים את מחיר התכנית ואת תקופת הגישה — כמה זמן התלמיד יקבל גישה מרגע הרכישה: ימים, שבועות, חודשים, שנים או לתמיד.</p>
+      <code>program-settings-pricing</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/program-settings-pricing.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מסלול הלמידה — סדר, נעילות ופגישות</b><small>מרכזי ידע · שלב 1 — מפעילים מעבר לפי סדר</small>
+      <p>בלשונית **הגדרות** של התכנית, בקטע **סדר קורסים ונעילה**, מפעילים את המתג **חובה לעבור קורסים לפי סדר** — הקורס הבא יינעל עד שהתלמיד ישלים את הקורס הנוכחי. מפת הקורסים מציגה את השרשרת, ולכל קורס קובעים **אחוז השלמה מינימלי** שנדרש כדי לפתוח את הבא.</p>
+      <code>program-sequential-lock</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/program-sequential-lock.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מסלול הלמידה — סדר, נעילות ופגישות</b><small>מרכזי ידע · שלב 5 — מנהלים בקשות במסך הפגישות</small>
+      <p>לשונית **פגישות** מרכזת את כל הפעילות: כרטיסי סיכום (פגישות השבוע, ממתינות לאישור, סה"כ החודש, שעות ליווי), יומן שבועי, וטבלת **בקשות ממתינות לאישור** שבה לוחצים **אשר** או **דחה** לכל בקשה. בלחיצה על פגישה ביומן נפתח פאנל עם הפרטים, קישור הזום, הערות וכפתורי **שלח תזכורת** ו**בטל פגישה** — ואפשר גם</p>
+      <code>program-meetings-pending</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/program-meetings-pending.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מסלול הלמידה — סדר, נעילות ופגישות</b><small>מרכזי ידע · שלב 6 — ככה זה נראה לתלמיד</small>
+      <p>בדשבורד התכנית של התלמיד, **מפת מסלול הלמידה** מציגה את הקורסים כתחנות: הושלם, פעיל, ונעול. קורס נעול מסומן ב"נעול" עד שעומדים בתנאי ההשלמה, כרטיס "המשך מאיפה שעצרת" מחזיר לשיעור הבא, והפגישה הקרובה מופיעה בכרטיס משלה עם קישור ליומן.</p>
+      <code>program-student-roadmap</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/program-student-roadmap.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הזמנת תלמידים לקורס</b><small>תלמידים · שלב 2 — לוחצים על "הוסף תלמיד"</small>
+      <p>בפינת הכותרת של המסך לוחצים על הכפתור הראשי **הוסף תלמיד**.</p>
+      <code>students-add-button</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/students-add-button.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הזמנת תלמידים לקורס</b><small>תלמידים · שלב 4 — עוקבים אחרי ההצטרפות · שלב 2 — מסננים ומחפשים</small>
+      <p>התלמיד החדש מופיע בטבלת התלמידים. בסרגל מעל הטבלה יש טאבים לסינון מהיר — **כל התלמידים**, **פעילים** ו**לידים** — עם מונה ליד כל אחד, כך שרואים מיד כמה הצטרפו בפועל.</p>
+      <code>students-table-toolbar</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/students-table-toolbar.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מסך התלמידים שלי — ניהול ומעקב</b><small>תלמידים · שלב 1 — קוראים את המספרים שבראש המסך</small>
+      <p>לכל מדד מוצמד חץ מגמה ביחס לתקופה הקודמת.</p>
+      <code>students-screen-overview</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/students-screen-overview.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מסך התלמידים שלי — ניהול ומעקב</b><small>תלמידים · שלב 4 — מבצעים פעולות על תלמיד</small>
+      <p>- **שלח הודעה** (אייקון מעטפה) — פנייה ישירה לתלמיד - **הסר תלמיד** (אייקון פח) — הסרה מהקורס</p>
+      <code>students-row-actions</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/students-row-actions.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הגדרות תלמידים והרשאות גישה</b><small>תלמידים · שלב 3 — מסירים תלמיד מהקורס</small>
+      <p>במסך **התלמידים שלי**, בעמודת הפעולות של השורה, לוחצים על אייקון הפח (**הסר תלמיד**).</p>
+      <code>students-remove-action</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/students-remove-action.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הגדרות תלמידים והרשאות גישה</b><small>תלמידים · שלב 4 — נשארים מעודכנים על נרשמים חדשים</small>
+      <p>כדי לקבל התראה על כל תלמיד חדש שנרשם לקורס, מפעילים בפרופיל האישי, באזור **התראות**, את המתג **עדכונים על תלמידים חדשים**.</p>
+      <code>students-signup-alert-toggle</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/students-signup-alert-toggle.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>תמחור קורס — חד-פעמי, מנוי ותשלומים</b><small>מכירות ותשלומים · מה הלקוח רואה</small>
+      <p>המחיר שקבעתם מופיע אוטומטית בתיבת המחיר בדף הנחיתה של הקורס — לצד כפתור **הצטרף לקורס עכשיו** וההטבות שמקבלים ברכישה (למשל גישה לכל החיים ותעודת סיום).</p>
+      <code>sales-landing-price-box</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/sales-landing-price-box.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>דף הנחיתה של הקורס</b><small>מכירות ותשלומים · שלב 2 — מכירים את מבנה הדף</small>
+      <p>- **מספרים** — תלמידים, שיעורים ודירוג. - **תיבת המחיר** — המחיר, כפתור **הצטרף לקורס עכשיו** וההטבות שמקבלים ברכישה.</p>
+      <code>sales-landing-preview</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/sales-landing-preview.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>דף הנחיתה של הקורס</b><small>מכירות ותשלומים · שלב 5 — משתפים את הדף</small>
+      <p>לוחצים על **שתף דף** — נפתח חלון עם הקישור הישיר לדף הנחיתה. מעתיקים עם **העתק** ומפיצים בכל ערוץ: רשתות חברתיות, דיוור או קמפיין ממומן.</p>
+      <code>sales-landing-share</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/sales-landing-share.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>CRM — כל אנשי הקשר במקום אחד</b><small>CRM ודיוור · שלב 2 — קוראים את המספרים למעלה</small>
+      <p>שורת הכרטיסים בראש המסך נותנת תמונת מצב מהירה: סה"כ אנשי קשר, תלמידים, חברי מועדון, לידים וביטולי הרשמה.</p>
+      <code>crm-contacts-stats</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/crm-contacts-stats.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>CRM — כל אנשי הקשר במקום אחד</b><small>CRM ודיוור · שלב 4 — מבינים את הטבלה</small>
+      <p>- **תגיות** — תיוג חופשי שלכם ("VIP", "תל אביב", "חם"). - **תאריך הצטרפות**.</p>
+      <code>crm-contacts-table</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/crm-contacts-table.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>כרטיס איש קשר וציר הזמן</b><small>CRM ודיוור · שלב 2 — כרטיס הפרופיל</small>
+      <p>בצד מוצג הפרופיל: שם, תגי סוג (תלמיד, חבר מועדון, VIP), מייל, טלפון, עיר, מקור ההצטרפות ומי הזמין אותו. מתחת — שלוש פעולות מהירות: **התקשר**, **WhatsApp** ו**מייל**, ואזור התגיות שבו מוסיפים תגית עם **+ תגית**.</p>
+      <code>crm-contact-profile</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/crm-contact-profile.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>כרטיס איש קשר וציר הזמן</b><small>CRM ודיוור · שלב 4 — ציר הזמן</small>
+      <p>בטאב **פעילות** מוצג ציר זמן של כל אירוע, מהחדש לישן: צפייה בשיעור, פתיחת מייל ולחיצה על קישור, תשלום או חידוש מנוי, הרשמה לקורס והערות שהוספתם. זה המקום להבין "מה קורה עם הלקוח הזה" בשניות.</p>
+      <code>crm-contact-timeline</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/crm-contact-timeline.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מערכת הדיוור — סדרות וטריגרים</b><small>CRM ודיוור · שלב 2 — בוחרים טריגר</small>
+      <p>- **זמן צפייה אחרונה** — ריענון לתלמידים שלא צפו לאחרונה, כדי להחזיר אותם ללמידה. - **סיום קורס** — לתלמידים שסיימו את כל השיעורים. הזדמנות טובה להציע את הקורס הבא.</p>
+      <code>mail-triggers</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/mail-triggers.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מערכת הדיוור — סדרות וטריגרים</b><small>CRM ודיוור · שלב 3 — קוראים את טבלת המיילים</small>
+      <p>- **מתוזמן** — ממתין לתאריך שנקבע. - **טיוטה** — עוד לא נשלח.</p>
+      <code>mail-campaigns-table</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/mail-campaigns-table.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>עורך המייל הוויזואלי</b><small>CRM ודיוור · שלב 1 — מגדירים את המייל</small>
+      <p>בוחרים איך לבנות: **עורך ויזואלי** (מומלץ) או **בניית HTML** למתקדמים, ולוחצים **המשך לעורך**. אפשר גם **שמור טיוטה** ולחזור בהמשך.</p>
+      <code>mail-new-setup</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/mail-new-setup.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>עורך המייל הוויזואלי</b><small>CRM ודיוור · שלב 3 — מוסיפים בלוקים</small>
+      <p>לוחצים **הוסף בלוק תוכן** או גוררים בלוק מהמגירה הצדדית למיקום הרצוי. בין הבלוקים: כותרת ראשית וכותרת משנה, גוף טקסט, ציטוט, מפריד, כפתור CTA, תמונה / GIF, מרווח, רשתות חברתיות, חתימה אישית, כרטיס קורס/מוצר, תמונה + טקסט, תיבת העתקה / קופון, גלריית תמונות, טיימר ספירה לאחור ופוטר כתובת ופרטי קשר.</p>
+      <code>mail-editor-blocks</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/mail-editor-blocks.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בניית מבחן</b><small>מבחנים ותעודות · שלב 2 — מגדירים את כללי המבחן</small>
+      <p>- **ערבב שאלות** — סדר שאלות אקראי לכל תלמיד. - **הגבלת זמן** — מפעילים וקובעים דקות.</p>
+      <code>exam-editor-settings</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/exam-editor-settings.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בניית מבחן</b><small>מבחנים ותעודות · שלב 3 — כותבים שאלות</small>
+      <p>לוחצים **הוסף שאלה**, מקלידים את נוסח השאלה ואת אפשרויות התשובה. את התשובה הנכונה מסמנים בלחיצה על העיגול שלצד האפשרות. אפשר להוסיף אפשרות עם **הוסף אפשרות**, למחוק אפשרות (נדרשות לפחות 2), לגרור שאלות לשינוי סדר ולמחוק שאלה שלמה.</p>
+      <code>exam-editor-question</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/exam-editor-question.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בניית מבחן</b><small>מבחנים ותעודות · שלב 4 — מפנים תשובה שגויה לקטע מהשיעור</small>
+      <p>לכל שאלה אפשר להגדיר **הפניה לשיעור**: בוחרים שיעור מהקורס ומקלידים חותמת זמן (דק:שנ). כשתלמיד טועה בשאלה, במקום לראות רק את התשובה הנכונה — הוא צופה בקטע הרלוונטי מהשיעור שמסביר אותה. **צפה בקטע** מאפשר לוודא שבחרתם את הרגע הנכון.</p>
+      <code>exam-editor-video-ref</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/exam-editor-video-ref.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בניית מבחן</b><small>מבחנים ותעודות · מה התלמיד רואה</small>
+      <p>התלמיד מגיע למבחן ממסלול הלמידה ומקבל מסך פתיחה: מספר השאלות, ציון העובר ומגבלת הזמן — ואם המבחן חוסם, אזהרה ברורה: "חובה לעבור את המבחן כדי להתקדם לשיעור הבא". לוחצים **התחל מבחן** ועונים שאלה-שאלה, עם מונה התקדמות, טיימר וניווט **הקודם / הבא**. לפני הגשה מופיע אישור — אחרי הגשה אין חזרה.</p>
+      <code>exam-student-start</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/exam-student-start.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>בניית מבחן</b><small>מבחנים ותעודות · מה התלמיד רואה</small>
+      <p>בסיום התלמיד רואה את הציון בטבעת גדולה עם **סקירת שאלות** מלאה — התשובה שלו מול הנכונה. עבר? באנר "השיעור הבא נפתח" וכפתור **לשיעור הבא**. נכשל? הוא רואה כמה ניסיונות נשארו, אילו שיעורים כדאי לחזור עליהם, ובכל שאלה שגויה שהגדרתם לה הפניה — כרטיס **צפה בהסבר מהשיעור** שמנגן את הקטע המדויק.</p>
+      <code>exam-student-results-failed</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/exam-student-results-failed.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>תוצאות המבחן — מבט המרצה</b><small>מבחנים ותעודות · שלב 2 — קוראים את מדדי המפתח</small>
+      <p>ארבעה כרטיסים בראש המסך מסכמים את המבחן: **ממוצע ציון**, **עברו**, **נכשלו** (מתוך סך הנבחנים) ו**ציון גבוה ביותר**.</p>
+      <code>exam-results-kpis</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/exam-results-kpis.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>תוצאות המבחן — מבט המרצה</b><small>מבחנים ותעודות · שלב 3 — עוברים על טבלת התלמידים</small>
+      <p>טבלת **תוצאות תלמידים** מציגה לכל תלמיד את הציון, הסטטוס (עבר/נכשל), מספר הניסיון ותאריך ההיבחנות. לוחצים על כותרת עמודה כדי למיין, ועל אייקון הצפייה בשורת תלמיד כדי לראות את המבחן שלו. <!-- לאימות: מה נפתח בלחיצה על אייקון הצפייה בשורת תלמיד --></p>
+      <code>exam-results-table</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/exam-results-table.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>תוצאות המבחן — מבט המרצה</b><small>מבחנים ותעודות · שלב 4 — מזהים שאלות בעייתיות</small>
+      <p>פאנל **ניתוח שאלות** מציג לכל שאלה את אחוז העונים נכון. שאלה עם אחוז הצלחה נמוך במיוחד מסומנת בתג **שאלה בעייתית** — רמז שהנוסח מבלבל או שהחומר לא כוסה מספיק בשיעור.</p>
+      <code>exam-results-questions</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/exam-results-questions.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>תעודות — תבניות והנפקה</b><small>מבחנים ותעודות · שלב 2 — בוחרים תבנית</small>
+      <p>בגלריית **בחר תבנית תעודה** יש ארבע תבניות: **קלאסית**, **מודרנית**, **מקצועית** ו**יצירתית**. ערכת המותג שלכם — צבעים ולוגו — מוזרקת אוטומטית לכל תבנית, ותצוגה מקדימה חיה בצד מתעדכנת עם כל בחירה.</p>
+      <code>cert-template-gallery</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/cert-template-gallery.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>תעודות — תבניות והנפקה</b><small>מבחנים ותעודות · שלב 3 — מתאימים את תוכן התעודה</small>
+      <p>- **טקסט מותאם** — המשפט שמופיע מעל שם התלמיד (למשל "הוענקה בהצלחה ל:"). - **חתימת מרצה** — גוררים תמונת חתימה או מקלידים את שם המרצה.</p>
+      <code>cert-settings</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/cert-settings.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>תעודות — תבניות והנפקה</b><small>מבחנים ותעודות · מה התלמיד רואה</small>
+      <p>כשתלמיד עומד בתנאים, הוא מקבל מסך חגיגי עם התעודה שלו: שם, תאריך הנפקה, מספר סידורי, חתימה ו-QR. משם הוא יכול ל**הורד PDF**, לשתף ב-**LinkedIn** או ב-**WhatsApp**, ולראות סיכום של מה שהשלים בתכנית.</p>
+      <code>cert-issued</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/cert-issued.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>המשחקים במערכת ואיך משבצים אותם</b><small>משחקים · שלב 1 — מכירים את שלושת המשחקים · מה התלמיד רואה</small>
+      <p>**תשחץ (חיפוש מילים)** — התלמידים מחפשים מילים מהחומר ברשת אותיות, על הזמן. אתם קובעים את רשימת המילים, את גודל הרשת ואת כיווני החיפוש. המדריך המלא: [משחק התשחץ — בנייה ועריכה](game-crossword).</p>
+      <code>game-wordsearch-play</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/game-wordsearch-play.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>המשחקים במערכת ואיך משבצים אותם</b><small>משחקים · שלב 1 — מכירים את שלושת המשחקים · מה התלמיד רואה</small>
+      <p>**זיכרון** — משחק זוגות של רמז ותשובה: הופכים כרטיסים ומחפשים התאמות, למשל מונח מול ההגדרה שלו. רמז יכול להיות טקסט או תמונה. המדריך המלא: [משחק הזיכרון — בנייה ועריכה](game-memory).</p>
+      <code>game-memory-play</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/game-memory-play.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>המשחקים במערכת ואיך משבצים אותם</b><small>משחקים · שלב 1 — מכירים את שלושת המשחקים · מה התלמיד רואה</small>
+      <p>**איש תלוי** — התלמידים מנחשים מילה מהחומר אות-אות, עם מגבלת טעויות ורמז אופציונלי. יש ניקוד וסיבובים. המדריך המלא: [משחק איש תלוי — בנייה ועריכה](game-hangman).</p>
+      <code>game-hangman-play</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/game-hangman-play.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>משחק התשחץ — בנייה ועריכה</b><small>משחקים · שלב 2 — קובעים את הגדרות המשחק</small>
+      <p>- **גודל רשת** — 8×8, 10×10, 11×11 או 13×13. - **כיוונים** — אופקי, אנכי ואלכסוני. אפשר לסמן כל שילוב.</p>
+      <code>game-wordsearch-edit</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/game-wordsearch-edit.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>משחק הזיכרון — בנייה ועריכה</b><small>משחקים · שלב 2 — קובעים את הגדרות המשחק</small>
+      <p>- **הגבלת זמן** — מפעילים וקובעים דקות, או משאירים חופשי. - **ערבב כרטיסים** — סדר אקראי בכל פתיחה של המשחק.</p>
+      <code>game-memory-edit</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/game-memory-edit.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>משחק איש תלוי — בנייה ועריכה</b><small>משחקים · שלב 2 — קובעים את הגדרות המשחק</small>
+      <p>- **מקסימום טעויות** — 5, 7 או 9. - **הצג רמז** — האם התלמיד רואה את הרמז ליד המילה.</p>
+      <code>game-hangman-edit</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/game-hangman-edit.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>תזמון שידור חי</b><small>לייב · שלב 2 — ממלאים את פרטי השיעור</small>
+      <p>- **משך מוערך** — מ-30 ועד 120 דקות. - **מספר משתתפים מקסימלי**.</p>
+      <code>live-schedule-form</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/live-schedule-form.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>תזמון שידור חי</b><small>לייב · שלב 3 — מכינים תוכן אינטראקטיבי מראש</small>
+      <p>כל מה שמכינים כאן יחכה לכם בחדר השידור, מוכן לשליחה בלחיצה.</p>
+      <code>live-schedule-interactive</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/live-schedule-interactive.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>תזמון שידור חי</b><small>לייב · שלב 5 — מזמינים משתתפים ושולחים זימון</small>
+      <p>תחת **הזמן משתתפים** בוחרים בין **כל תלמידי הקורס** לבין **בחירה ידנית** של תלמידים ספציפיים. לוחצים על **צור שיעור חי**, בודקים את הפרטים בחלון האישור ולוחצים **שלח זימון** — כל התלמידים מקבלים הודעה עם לינק ישיר למפגש.</p>
+      <code>live-schedule-confirm</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/live-schedule-confirm.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>חדר השידור של המרצה</b><small>לייב · שלב 1 — מתמצאים במסך</small>
+      <p>- **סרגל צד** — שלושה טאבים: **משתתפים**, **צ'אט** ו**אינטראקציות**. - **סרגל תחתון** — כפתורי השליטה המהירים.</p>
+      <code>live-room-overview</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>חדר השידור של המרצה</b><small>לייב · שלב 2 — שולטים במצלמה, במיקרופון ובשיתוף המסך</small>
+      <p>בסרגל התחתון נמצאים כפתורי **מיקרופון**, **מצלמה** ו**שיתוף מסך**. כששיתוף המסך פעיל מופיע החיווי "שיתוף מסך פעיל", והווידאו שלכם עובר לחלון קטן (PiP) כדי שהתלמידים ימשיכו לראות אתכם.</p>
+      <code>live-room-bottom-bar</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>חדר השידור של המרצה</b><small>לייב · שלב 3 — מנהלים משתתפים</small>
+      <p>- **הפוך למציג** - **הסר מהשיעור**</p>
+      <code>live-room-sidebar-tabs</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>סקרים ושאלות בלייב</b><small>לייב · שלב 1 — פותחים את טאב האינטראקציות</small>
+      <p>בסרגל הצד של [חדר השידור](/live-room) לוחצים על **אינטראקציות** (או על **כלים אינטראקטיביים** בסרגל התחתון). ברשת הכלים בוחרים **סקר מהיר** או **שאלה חיה**.</p>
+      <code>live-tools-grid</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>סקרים ושאלות בלייב</b><small>לייב · שלב 2 — בונים ושולחים סקר מהיר</small>
+      <p>לוחצים **שלח סקר** — והוא מופיע אצל כל התלמידים.</p>
+      <code>live-poll-teacher-panel</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>סקרים ושאלות בלייב</b><small>לייב · שלב 4 — בונים שאלה חיה עם ניקוד</small>
+      <p>לוחצים **שלח שאלה**. כשהתלמידים עונים רואים את מונה העונים, את פילוח התשובות ואת **טבלת המובילים**.</p>
+      <code>live-quiz-teacher-panel</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>סקרים ושאלות בלייב</b><small>לייב · מה התלמיד רואה</small>
+      <p>**בסקר** — האפשרויות עם אחוזי ההצבעה, אישור "הצבעתך נרשמה" והזמן שנותר:</p>
+      <code>live-poll-student-view</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>סקרים ושאלות בלייב</b><small>לייב · מה התלמיד רואה</small>
+      <p>**בשאלה חיה** — טיימר עצר, תשובות A–D, ואחרי המענה חיווי נקודות ("+100 נקודות!") ומיקום אישי בלוח המובילים ("מקום 3 מתוך 28"):</p>
+      <code>live-quiz-student-view</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>חדרי דיון בלייב</b><small>לייב · שלב 2 — קובעים חדרים ומחלקים משתתפים</small>
+      <p>לכל חדר אפשר לתת שם משלו (למשל "צבעים חמים"), ומי שטרם שובץ מופיע באזור **ללא שיבוץ** — גוררים אותו לחדר המתאים.</p>
+      <code>live-breakout-modal</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>חדרי דיון בלייב</b><small>לייב · מה התלמיד רואה</small>
+      <p>ברגע הפיצול התלמיד מקבל מסך מעבר: "הועברת לחדר דיון", עם שם החדר, מספר המשתתפים בו והזמן שנותר. בתוך החדר הוא רואה את חברי הקבוצה שלו בלבד, כפתור **חזרה לחדר ראשי** והערה שהמרצה יחזיר אותו בסיום הדיון.</p>
+      <code>live-breakout-student-view</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>פריסטים — תבניות מוכנות לשידור</b><small>לייב · שלב 1 — פותחים את ספריית הערכות</small>
+      <p>תחת **שיעורים חיים** נכנסים אל **ערכות מוכנות**. כל ערכה מוצגת ככרטיס עם תיאור, מספר פריטים וכמה פעמים השתמשתם בה. מכאן אפשר **לערוך**, לשכפל או למחוק ערכה.</p>
+      <code>live-presets-library</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/live-presets-library.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>פריסטים — תבניות מוכנות לשידור</b><small>לייב · שלב 3 — מוסיפים פריטים לרצף</small>
+      <p>כל פריט מופיע ככרטיס ברשימת **פריטים בערכה**: לחיצה עליו פותחת את הפרטים המלאים (השאלה, האפשרויות והתשובה הנכונה), וידית הגרירה משנה את הסדר.</p>
+      <code>live-preset-editor</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/live-preset-editor.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>משחק בשידור חי</b><small>לייב · שלב 2 — בוחרים משחק מוכן או יוצרים מהיר</small>
+      <p>קובעים **משך זמן** (דקה עד 5 דקות) ולוחצים **הפעל משחק**.</p>
+      <code>live-game-teacher-panel</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>משחק בשידור חי</b><small>לייב · שלב 3 — עוקבים אחרי המשחק החי</small>
+      <p>המשחק עולה מעל השידור אצל כולם. אתם רואים את לוח המשחק, טיימר, מספר המשתתפים שמשחקים — ולצדם **לוח מובילים** שמתעדכן חי וסרגל נתונים (זוגות שנמצאו, ניסיונות, מי מוביל).</p>
+      <code>live-game-overlay</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>משחק בשידור חי</b><small>לייב · מה התלמיד רואה</small>
+      <p>המשחק נפתח אצל התלמיד מעל הווידאו: לוח המשחק במרכז, טיימר ומספר המשתתפים למעלה, ולצד הלוח **טבלת מובילים** שבה השורה שלו מסומנת ("את/ה"). כל התאמה נכונה מזכה בנקודות ומטפסת בטבלה.</p>
+      <code>live-game-student-view</code></div>
+    <div class="img"><div class="miss">אין צילום</div></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקלטות הלייב</b><small>לייב · שלב 2 — מוצאים את ההקלטה</small>
+      <p>כל הקלטה מוצגת ככרטיס עם תמונה ממוזערת, משך, תאריך, מספר משתתפים ומספר צפיות. מחפשים לפי שם בשדה **חפש הקלטה...**.</p>
+      <code>live-recordings-list</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/live-recordings-list.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הקלטות הלייב</b><small>לייב · שלב 3 — צופים ומנווטים בפרקים</small>
+      <p>לחיצה על הקלטה פותחת אותה בנגן הצדדי. מתחת לנגן מופיעים **פרקים** עם חותמות זמן — לחיצה על פרק קופצת ישירות לאותו רגע בהקלטה.</p>
+      <code>live-recordings-player</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/live-recordings-player.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מסך האנליטיקס — המדדים החשובים</b><small>אנליטיקס ונתונים · שלב 3 — קוראים את ארבעת המדדים הראשיים</small>
+      <p>בראש המסך ארבעה כרטיסים עם חיווי שינוי לצד כל אחד: תלמידים פעילים, דירוג ממוצע, צפיות בשיעורים וזמן צפייה כולל.</p>
+      <code>analytics-kpis</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/analytics-kpis.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מסך האנליטיקס — המדדים החשובים</b><small>אנליטיקס ונתונים · שלב 5 — מאתרים איפה תלמידים נתקעים</small>
+      <p>- **התקדמות תלמידים** — התפלגות: כמה סיימו, כמה באמצע וכמה כמעט לא התחילו. - **השלמה לפי שיעור** — אחוז המסיימים של כל שיעור. ירידה חדה בין שיעור לשיעור היא הסימן הכי ברור לנקודת נטישה: אולי השיעור ארוך מדי, אולי קשה מדי.</p>
+      <code>analytics-progress</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/analytics-progress.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>מסך האנליטיקס — המדדים החשובים</b><small>אנליטיקס ונתונים · שלב 6 — יורדים לרמת התלמיד הבודד</small>
+      <p>טבלת **פעילות תלמידים** מציגה לכל תלמיד את ההתקדמות, מספר השיעורים שסיים, מתי נראה לאחרונה וסטטוס. תלמיד שלא נכנס שבועיים — מועמד טבעי למייל תזכורת.</p>
+      <code>analytics-students-table</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/analytics-students-table.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>חיבורים ומקורות נתונים</b><small>אנליטיקס ונתונים · שלב 2 — מה פעיל תמיד</small>
+      <p>- דירוגים ושביעות רצון - תוכן הקורסים</p>
+      <code>analytics-native-sources</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/analytics-native-sources.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>חיבורים ומקורות נתונים</b><small>אנליטיקס ונתונים · שלב 4 — מחברים מקורות חיצוניים</small>
+      <p>- **Google Analytics** — תנועה, מקורות ביקור וסשנים לאתר הקורסים (GA4). - **Google Ads** — ביצועי קמפיינים בגוגל, עלות ותשואה.</p>
+      <code>analytics-external-connections</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/analytics-external-connections.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>ההגדרות הגלובליות של החשבון</b><small>הגדרות ואינטגרציות · שלב 1 — פותחים את ההגדרות</small>
+      <p>בסרגל הצד לוחצים **הגדרות**. בראש המסך יש חיווי שמירה — כשכתוב "כל השינויים נשמרו" אפשר לצאת בראש שקט.</p>
+      <code>settings-tabs</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/settings-tabs.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>ההגדרות הגלובליות של החשבון</b><small>הגדרות ואינטגרציות · שלב 3 — הגדרות דוא"ל</small>
+      <p>- **פרטי שולח** — שם השולח, אימייל השולח, אימייל למענה וכתובת פיזית (נדרשת לפי תקני דיוור בינלאומיים כמו CAN-SPAM). - **מייל בדיקה** — **שלח מייל בדיקה** מוודא שההגדרות תקינות לפני שקהל אמיתי מקבל משהו.</p>
+      <code>settings-email-sender</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/settings-email-sender.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>ערכת המותג — לוגו, צבעים וגופנים</b><small>הגדרות ואינטגרציות · שלב 3 — קובעים את צבעי המותג</small>
+      <p>מתחת לצבעים יש מחוון **עגלות פינות** שקובע עד כמה הכפתורים מעוגלים, עם כפתור דוגמה חי.</p>
+      <code>settings-brand-colors</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/settings-brand-colors.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>ערכת המותג — לוגו, צבעים וגופנים</b><small>הגדרות ואינטגרציות · שלב 5 — בודקים בתצוגה החיה</small>
+      <p>בסרגל התצוגה עוברים בין שלוש נקודות המבט של הלקוח: **דף נחיתה**, **מיילים** ו**דף הקורס** — ובין תצוגת **שולחן עבודה** ל**נייד**. כך רואים את המותג בכל הקשר לפני שמפרסמים.</p>
+      <code>settings-brand-preview</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/settings-brand-preview.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>אינטגרציות — סקירה כללית</b><small>הגדרות ואינטגרציות · (פתיח)</small>
+      <p>WHITEBOARD מגיעה עם אינטגרציות מובנות לכלים שאתם כבר עובדים איתם — Google Analytics, Facebook Pixel ו-Vimeo, ו-Zapier בדרך. המסך תחת **הגדרות ← אינטגרציות** מרכז את כולן בקבוצות, ולצד כל אחת סטטוס: מחובר, לא מחובר או בקרוב. המאמר הזה הוא מפה קצרה — לכל חיבור יש מדריך ייעודי עם שלבי ההטמעה המלאים.</p>
+      <code>settings-integrations-marketing</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/settings-integrations-marketing.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>חיבור מטא — פייסבוק פיקסל</b><small>הגדרות ואינטגרציות · (פתיח)</small>
+      <p>מדריך ההטמעה המלא זמין גם בתוך המערכת: **הגדרות ← אינטגרציות ← מטא ← "?" ← למדריך ההטמעה**. בצד המדריך יש פאנל **פרטי החיבור שלך** — ממלאים את השדות והקודים נוצרים אוטומטית.</p>
+      <code>settings-guide-meta</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/settings-guide-meta.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>חיבור גוגל — Google Analytics</b><small>הגדרות ואינטגרציות · (פתיח)</small>
+      <p>המדריך המלא זמין בתוך המערכת: **הגדרות ← אינטגרציות ← Google Analytics ← "?" ← למדריך ההטמעה**, ולצידו פאנל **פרטי החיבור שלך** שמייצר את הכתובות אוטומטית.</p>
+      <code>settings-guide-google</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/settings-guide-google.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>חיבור Vimeo</b><small>הגדרות ואינטגרציות · (פתיח)</small>
+      <p>מדריך ההטמעה המלא זמין בתוך המערכת: **הגדרות ← אינטגרציות ← Vimeo ← "?" ← למדריך ההטמעה**.</p>
+      <code>settings-guide-vimeo</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/settings-guide-vimeo.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>חיבור Google Calendar</b><small>הגדרות ואינטגרציות · (פתיח)</small>
+      <p>מדריך ההטמעה המלא זמין בתוך המערכת: **הגדרות ← אינטגרציות ← Google Calendar ← "?" ← למדריך ההטמעה**.</p>
+      <code>settings-guide-calendar</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/settings-guide-calendar.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>חיבור Make — אוטומציות</b><small>הגדרות ואינטגרציות · (פתיח)</small>
+      <p>מדריך ההטמעה המלא זמין בתוך המערכת: **הגדרות ← אינטגרציות ← Make.com ← "?" ← למדריך ההטמעה**.</p>
+      <code>settings-guide-make</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/settings-guide-make.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>חיבור Make — אוטומציות</b><small>הגדרות ואינטגרציות · יכולות</small>
+      <p>- התראות ביטול מנוי — במסך האינטגרציות יש מתג **תזכורות ביטול מנוי** ששולח התראה דרך ה-Webhook כשמנוי מבוטל או עומד להסתיים, לנמענים שתגדירו. - **שלח בדיקה** — שולח הודעת דמו ל-Webhook כדי לוודא שהצינור עובד.</p>
+      <code>settings-integrations-automation</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/settings-integrations-automation.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>התחברות וכניסה לקורס הראשון</b><small>כניסה ראשונה · שלב 3 — מגיעים אל הקורסים שלי · שלב 2 — מסך הקורסים שלי</small>
+      <p>אחרי ההתחברות אתה נוחת במסך **הקורסים שלי** — הבית שלך במערכת. כאן מופיעים כל הקורסים שיש לך גישה אליהם, כולל ההתקדמות שלך בכל אחד.</p>
+      <code>stu-my-courses</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-my-courses.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>התמצאות — הקורסים שלי והספרייה שלי</b><small>כניסה ראשונה · שלב 1 — מכירים את תפריט הצד</small>
+      <p>בתחתית התפריט נמצא מתג **מצב תצוגה** (תלמיד / מרצה) — רלוונטי רק אם אתה גם מלמד במערכת — והפרופיל שלך.</p>
+      <code>stu-sidebar</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-sidebar.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>התמצאות — הקורסים שלי והספרייה שלי</b><small>כניסה ראשונה · שלב 3 — הספרייה שלי</small>
+      <p>בספרייה מרוכז התוכן שלך בתיקיות — למשל תיקיית **הקורסים שלי** ותיקיית **תוכן** עם קבצים. אפשר לחפש, לעבור בין תצוגת רשת לרשימה ולנווט פנימה בלחיצה על תיקייה.</p>
+      <code>stu-library-folders</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-library-folders.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>צפייה בשיעורים ומעקב התקדמות</b><small>צפייה ולמידה · שלב 1 — מתמצאים בנגן</small>
+      <p>- **אזור השיעור** — הווידאו או התוכן של השיעור הנוכחי, ומתחתיו קבצים נלווים. - **פס צד דק** — כפתורים מהירים למחברת הקורס, לפתקים, לבורדי ולהגדרות.</p>
+      <code>stu-player-overview</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-player-overview.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>צפייה בשיעורים ומעקב התקדמות</b><small>צפייה ולמידה · שלב 2 — מנווטים בין פרקים ושיעורים</small>
+      <p>בסרגל הצד כל פרק נפתח ונסגר בלחיצה, וכל שיעור מציג את השם והמשך שלו. שיעורים שסיימת מסומנים, והשיעור הנוכחי מודגש. יש גם שדה **חפש שיעור...** למציאת שיעור ספציפי.</p>
+      <code>stu-player-sidebar</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-player-sidebar.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>צפייה בשיעורים ומעקב התקדמות</b><small>צפייה ולמידה · שלב 3 — צופים בקצב שלך</small>
+      <p>- **מהירות ניגון** — מ-0.5× ועד 2×. - מיקומך בקורס — "שיעור X מתוך Y".</p>
+      <code>stu-player-bottom-bar</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-player-bottom-bar.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הפתקים שלי — הערות עם חותמת זמן</b><small>צפייה ולמידה · שלב 1 — כותבים פתק תוך כדי שיעור</small>
+      <p>בנגן הקורס, לחץ על כפתור הפתקים בפס הצד. נפתח פאנל **הפתקים שלי** — כותבים את ההערה ולוחצים **שמור פתק**. הפתק נשמר יחד עם נקודת הזמן הנוכחית בסרטון.</p>
+      <code>stu-notes-panel</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-notes-panel.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הפתקים שלי — הערות עם חותמת זמן</b><small>צפייה ולמידה · שלב 2 — פותחים את הסיכומים שלי</small>
+      <p>כל הפתקים מכל הקורסים מרוכזים במסך **הסיכומים שלי** (בתפריט הצד). כל פתק מוצג ככרטיס עם שם הקורס, השיעור, תקציר התוכן — ו**חותמת זמן**.</p>
+      <code>stu-notes-grid</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-notes-grid.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הפתקים שלי — הערות עם חותמת זמן</b><small>צפייה ולמידה · שלב 5 — צופים במחברת מסודרת ומייצאים PDF</small>
+      <p>בתצוגת **לפי קורס** הפתקים מסתדרים כמחברת — לפי פרקים ושיעורים, עם חותמות הזמן לצד כל סיכום. משם אפשר ללחוץ **יצוא מחברת ל-PDF** ולקבל קובץ מסודר של כל הסיכומים בקורס, כולל אפשרות לכלול כותרות פרקים וציוני זמן.</p>
+      <code>stu-notes-notebook</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-notes-notebook.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הפיד — הקהילה שלך במועדון</b><small>המועדון · שלב 1 — נכנסים למועדון</small>
+      <p>בתפריט הצד לחץ על **המועדונים שלי**. כל מועדון שאתה חבר בו מוצג ככרטיס עם מספר החברים, מספר הקורסים וההתקדמות שלך בתוכן. לחץ **כניסה למועדון**.</p>
+      <code>stu-clubs-grid</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-clubs-grid.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הפיד — הקהילה שלך במועדון</b><small>המועדון · שלב 2 — קוראים את הפיד</small>
+      <p>במרכז הפיד רצים הפוסטים: של המרצה (מסומן בתג **מרצה**) ושל חברי הקהילה. הודעות חשובות שהמרצה קיבע מופיעות ראשונות עם סימון נעיצה. מתחת לכל פוסט — לייק, תגובות ושיתוף.</p>
+      <code>stu-club-feed</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-club-feed.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הפיד — הקהילה שלך במועדון</b><small>המועדון · שלב 5 — מעדכנים את הפרופיל שלך</small>
+      <p>מפס הניווט הצדדי נכנסים אל **הפרופיל שלי**: תמונה, פרטים אישיים וכמה מילים עליך — ומתחת, **העדפות התראות** (עדכוני מועדון, שיעורים חדשים, תזכורות אירועים). בסיום לוחצים **שמור שינויים**.</p>
+      <code>stu-club-profile</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-club-profile.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>אירועים ומפגשים במועדון</b><small>המועדון · שלב 2 — מסתכלים על לוח השנה</small>
+      <p>בתצוגת **לוח שנה** כל אירוע מסומן ביום שלו, עם צבע לפי סוג: מפגש אונליין, מפגש פרונטלי או הקלטה. עוברים בין חודשים עם חיצי הניווט.</p>
+      <code>stu-club-events-calendar</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-club-events-calendar.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>אירועים ומפגשים במועדון</b><small>המועדון · שלב 3 — נרשמים לאירוע</small>
+      <p>בצד המסך מופיעים **אירועים קרובים** — לכל אירוע התאריך, השעה, המיקום (זום או כתובת פיזית) ותג **אונליין** / **פרונטלי**. לחץ **הירשם** כדי לשריין מקום.</p>
+      <code>stu-club-events-upcoming</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-club-events-upcoming.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הצ'אט של המועדון</b><small>המועדון · שלב 2 — בוחרים ערוץ</small>
+      <p>הערוצים מסודרים בקבוצות — למשל **ערוצים כלליים** (כללי, הודעות, שאלות ותשובות), ערוצים לפי **קורסים** וערוצים לפי **נושאים**. ערוץ עם הודעות שלא קראת מסומן במונה קטן. לחיצה על ערוץ פותחת את השיחה שלו.</p>
+      <code>stu-club-chat-channels</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-club-chat-channels.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>הצ'אט של המועדון</b><small>המועדון · שלב 3 — קוראים ומשתתפים</small>
+      <p>בראש השיחה מופיעים שם הערוץ והתיאור שלו. ההודעות מסודרות לפי ימים, והודעות של המרצה מסומנות בתג **מרצה**. כותבים בשורת ההודעה למטה ולוחצים שלח — אפשר לצרף גם קבצים.</p>
+      <code>stu-club-chat-messages</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-club-chat-messages.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>גישה למבחן וקבלת תוצאות</b><small>מבחנים ותעודות · שלב 1 — נכנסים למבחן</small>
+      <p>כשמגיעים לשיעור מסוג מבחן, מופיע מסך פתיחה עם כל מה שצריך לדעת מראש: מספר השאלות, ציון העובר והאם יש הגבלת זמן. אם המבחן חוסם — תראה גם את ההודעה "חובה לעבור את המבחן כדי להתקדם לשיעור הבא". מוכן? לחץ **התחל מבחן**.</p>
+      <code>stu-exam-start</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-exam-start.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>גישה למבחן וקבלת תוצאות</b><small>מבחנים ותעודות · שלב 2 — עונים על השאלות</small>
+      <p>עוברים בין שאלות עם **הקודם** ו**הבא**, ואפשר לחזור ולשנות תשובה לפני ההגשה.</p>
+      <code>stu-exam-question</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-exam-question.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>גישה למבחן וקבלת תוצאות</b><small>מבחנים ותעודות · שלב 4 — מקבלים תוצאות</small>
+      <p>מסך התוצאות מציג את הציון שלך בטבעת אחוזים, את מספר התשובות הנכונות ואת ציון העובר. עברת? תראה "כל הכבוד, עברת!" והשיעור הבא נפתח. מתחת מחכה **סקירת שאלות** — כל שאלה עם התשובה שלך, ובשאלות שטעית בהן גם התשובה הנכונה.</p>
+      <code>stu-exam-results-pass</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-exam-results-pass.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>גישה למבחן וקבלת תוצאות</b><small>מבחנים ותעודות · שלב 5 — אם לא עברת</small>
+      <p>- מספר הניסיונות שנותרו לך. - **נסה שוב** — לניסיון נוסף, או **חזור לחומר** לחזרה על השיעורים קודם.</p>
+      <code>stu-exam-results-fail</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-exam-results-fail.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>התעודה שלי</b><small>מבחנים ותעודות · שלב 2 — מה מופיע על התעודה</small>
+      <p>- תאריך ההנפקה ומספר סידורי. - חתימת המרצה וקוד QR.</p>
+      <code>stu-certificate</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-certificate.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>התעודה שלי</b><small>מבחנים ותעודות · שלב 3 — מורידים ומשתפים</small>
+      <p>- **שתף ב-LinkedIn** — הישג כזה שווה פוסט. - **שתף ב-WhatsApp**.</p>
+      <code>stu-certificate-actions</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-certificate-actions.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>שיחה עם בורדי בתוך הקורס</b><small>BOARDi לתלמיד · שלב 1 — פותחים את בורדי</small>
+      <p>בנגן הקורס, לחץ על כפתור בורדי בפס הצד. נפתח חלון שיחה — כותבים שאלה בשדה **שאל שאלה על הקורס...** ושולחים.</p>
+      <code>stu-boardi-chat</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-boardi-chat.light.png"></div>
+  </div><div class="row ">
+    <div class="txt"><b>שיחה עם בורדי בתוך הקורס</b><small>BOARDi לתלמיד · שלב 4 — שומרים סיכום לפתקים</small>
+      <p>אחרי כמה שאלות בורדי יציע לשמור לך סיכום של השיחה. לחיצה על **הוסף סיכום לפתקים שלי** כותבת את עיקרי הדברים ישירות אל [הפתקים שלך](/student-notes) — כולל הפניות לנקודות הזמן שצוינו בשיחה. משם אפשר ללחוץ **פתח בפתקים שלי** ולראות את הסיכום.</p>
+      <code>stu-boardi-actions</code></div>
+    <div class="img"><img loading="lazy" src="assets/screenshots/stu-boardi-actions.light.png"></div>
+  </div></body></html>
