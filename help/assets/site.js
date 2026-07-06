@@ -346,7 +346,8 @@
       chips((audience === 'student'
         ? ['איך נכנסים לקורס?', 'איפה הפתקים שלי?', 'איך ניגשים למבחן?']
         : ['איך יוצרים קורס חדש?', 'איך מעלים סרטונים?', 'איך מזמינים תלמידים?'])
-        .map(qq => ({ label: qq, onClick: () => { userMsg(qq); withTyping(() => answer(qq)); } })));
+        .map(qq => ({ label: qq, onClick: () => { userMsg(qq); withTyping(() => answer(qq)); } }))
+        .concat([{ label: 'דברו עם נציג', onClick: () => openContact() }]));
     }
   }
   function closeChat() { chat.hidden = true; launcher.hidden = false; }
