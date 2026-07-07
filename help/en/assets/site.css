@@ -278,6 +278,8 @@ h2.step{display:flex;align-items:center;gap:12px}
 .bl-hint{color:#fff;font-family:var(--font);font-size:13px;font-weight:600;padding-inline-end:8px}
 .boardi-chat{position:fixed;bottom:62px;left:22px;z-index:260;width:min(380px,calc(100vw - 32px));height:min(540px,calc(100dvh - 140px));display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:0 24px 60px rgba(10,20,40,.3);overflow:hidden}
 .boardi-chat[hidden]{display:none}
+/* אנגלית (LTR): בורדי עובר לצד ימין כדי לא להסתיר את הכותרות בצד שמאל */
+[data-lang="en"] .boardi-launcher,[data-lang="en"] .boardi-chat{left:auto;right:22px}
 .bc-head{display:flex;align-items:center;gap:10px;padding:12px 16px;background:linear-gradient(155deg,var(--navy),var(--navy-dark));color:#fff}
 .bc-head img{width:38px;height:38px}
 .bc-head b{display:block;font-family:var(--font-head);font-size:15px}
