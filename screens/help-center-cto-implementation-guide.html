@@ -102,6 +102,7 @@
   <a href="#gaps"><span class="n">08</span>רישום פערים ← פרודקשיין</a>
   <a href="#roadmap"><span class="n">09</span>מפת דרכים + Stack</a>
   <a href="#support"><span class="n">10</span>פנייה לנציג + תמיכה</a>
+  <a href="#i18n"><span class="n">11</span>גרסה אנגלית (i18n)</a>
 </aside>
 <main class="main">
 <div class="doc-head">
@@ -384,6 +385,20 @@ dist/                        <span class="cm">← האתר הבנוי → Vercel
     <li><b>קישור ל-CRM אנשי קשר:</b> פנייה מפונה מזוהה (<code class="inl">user_id</code>) מופיעה גם בכרטיס איש הקשר — ההיסטוריה השירותית ליד ההיסטוריה העסקית.</li>
     <li><b>זרימת סטטוסים:</b> חדש ← בטיפול (תשובה ראשונה — עוצר SLA) ← ממתין ללקוח ← נפתר. פנייה בקטגוריית "תקלה טכנית" שמאומתת כבאג — מועברת למסך "מוצר ובאגים" עם קישור דו-כיווני.</li>
   </ul>
+</section>
+
+<section id="i18n">
+  <h2><span class="h2num">11</span>גרסה אנגלית (i18n)</h2>
+  <p class="sec-sub">מרכז העזרה קיים בשתי שפות מאותו מנוע: עברית (RTL) בשורש, אנגלית (LTR) תחת <code class="inl">/en/</code>. לא תרגום מכונה — לוקליזציה: מדריך סגנון + גלוסרי מחייב, ממשק מקומי מלא, וצילומי מסך באנגלית.</p>
+  <table>
+    <tr><th>שכבה</th><th>איך זה עובד</th></tr>
+    <tr><td><b>תוכן</b></td><td>86 מאמרים ב-<code class="inl">content/en/</code> (מבנה מראה של העברית, אותם slugs) + <code class="inl">categories.en.json</code>. כללי הכתיבה והגלוסרי ב-<code class="inl">content/EN-STYLE.md</code> (מרצה=instructor, מרכז ידע=knowledge hub, מסלולים כשמות פרטיים וכו'). עובדות זהות 1:1; סימוני לאימות הפכו ל-<code class="inl">&lt;!-- verify --&gt;</code></td></tr>
+    <tr><td><b>בילד</b></td><td><code class="inl">KB_LANG=en</code> — אותו build.js: מילון מחרוזות T (עברית/אנגלית) לכל הממשק, <code class="inl">dir=ltr</code>, כותרות שלבים "Step N —", תגי מסלול ("Available on the Leader plan and up"), קאלאאוטים Pro tip/Heads-up/Good to know</td></tr>
+    <tr><td><b>ריצה</b></td><td>site.js קורא <code class="inl">data-lang</code> ובוחר מילון L: צ'אט בורדי באנגלית (ברכות, צ'יפים, השתלטות), טופס הנציג, חיפוש case-insensitive, ומתג שפה עב⇄EN שמנווט לאותו מאמר בשפה השנייה (אותם slugs)</td></tr>
+    <tr><td><b>צילומי מסך</b></td><td>עיקרון "אין PNG יתום" נשמר: <code class="inl">extract-strings.js</code> מחלץ את כל המחרוזות העבריות מ-80 מסכי העיצוב ← מילוני תרגום ב-<code class="inl">i18n/en/*.json</code> (5,409 מחרוזות, גלוסרי אחיד) ← <code class="inl">capture-design --lang en</code> מזריק את המילון ל-DOM לפני הצילום ושומר ל-<code class="inl">assets/screenshots/en/</code>. הבילד האנגלי מעדיף את הצילום האנגלי ונופל לעברי אם חסר</td></tr>
+    <tr><td><b>מיילים</b></td><td><code class="inl">emails/en/</code> — שתי התבניות ב-LTR עם אותם משתני {{placeholder}}; הפנייה נושאת <code class="inl">context.lang</code> כדי שהשרת יבחר תבנית</td></tr>
+  </table>
+  <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p><b>פערים לפרודקשיין (אנגלית):</b> (1) צילומי ה-EN הם העיצובים העבריים עם טקסט מוחלף — <b>הפריסה נשארת RTL</b>; כשלמוצר יהיה מצב אנגלית אמיתי, capture.js יצלם אותו ישירות (מתכון + <code class="inl">--lang en</code> מול פרודקשיין) והכיווניות תתיישר מעצמה. (2) מחירים נשארו ב-₪ — החלטת תמחור בינלאומי פתוחה. (3) שמות דמו תורגמו לשמות אנגליים במילונים בלבד.</p></div>
 </section>
 </main>
 <script>

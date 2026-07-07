@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--
+  Notification to the support inbox — sent to the team for every new ticket from the "Talk to a human" form.
+  Template variables ({{...}}): ticketId, name, email, phone, audienceLabel (instructor/student),
+  categoryLabel, priorityLabel, message, contextArticle, contextUrl, userAgent,
+  createdAt, adminTicketUrl (direct link to the ticket in the ticket-management screen).
+  Recommended subject line: [{{ticketId}}] {{categoryLabel}} — {{name}} ({{audienceLabel}})
+-->
+<html lang="en" dir="ltr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>New ticket — {{ticketId}}</title></head>
+<body style="margin:0;padding:0;background:#EBF3FB;font-family:'Heebo',Arial,Helvetica,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EBF3FB;padding:32px 12px;">
+<tr><td align="center">
+<table role="presentation" width="620" cellpadding="0" cellspacing="0" style="max-width:620px;width:100%;background:#FFFFFF;border-radius:18px;overflow:hidden;border:1px solid rgba(37,62,122,0.1);">
+  <!-- header -->
+  <tr><td style="background:#253E7A;padding:20px 28px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td align="left"><p style="margin:0;font-size:16px;font-weight:700;color:#FFFFFF;">New support ticket</p>
+      <p style="margin:2px 0 0;font-size:12px;color:rgba(255,255,255,0.65);">{{createdAt}}</p></td>
+      <td align="right"><span style="display:inline-block;background:#38C4F2;color:#0b1424;font-size:14px;font-weight:700;padding:6px 14px;border-radius:20px;direction:ltr;">{{ticketId}}</span></td>
+    </tr></table>
+  </td></tr>
+  <!-- meta chips -->
+  <tr><td style="padding:20px 28px 0;" align="left">
+    <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+      <td style="padding-right:8px;"><span style="display:inline-block;background:rgba(56,196,242,0.12);border:1px solid rgba(56,196,242,0.35);color:#1a86ad;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;">{{audienceLabel}}</span></td>
+      <td style="padding-right:8px;"><span style="display:inline-block;background:rgba(240,86,128,0.1);border:1px solid rgba(240,86,128,0.3);color:#F05680;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;">{{categoryLabel}}</span></td>
+      <td><span style="display:inline-block;background:rgba(37,62,122,0.06);border:1px solid rgba(37,62,122,0.2);color:#253E7A;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;">Priority: {{priorityLabel}}</span></td>
+    </tr></table>
+  </td></tr>
+  <!-- contact -->
+  <tr><td style="padding:18px 28px 0;" align="left">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F9FF;border:1px solid rgba(37,62,122,0.1);border-radius:12px;">
+      <tr><td style="padding:14px 18px;" align="left">
+        <p style="margin:0;font-size:14px;color:#1a2f5e;"><b>{{name}}</b></p>
+        <p style="margin:4px 0 0;font-size:13px;direction:ltr;text-align:left;"><a href="mailto:{{email}}" style="color:#38C4F2;text-decoration:none;">{{email}}</a> · <a href="tel:{{phone}}" style="color:#38C4F2;text-decoration:none;">{{phone}}</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+  <!-- message -->
+  <tr><td style="padding:18px 28px 0;" align="left">
+    <p style="margin:0 0 6px;font-size:12px;font-weight:700;color:rgba(37,62,122,0.55);">Message</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-left:3px solid #38C4F2;background:#F4F9FF;border-radius:8px;">
+      <tr><td style="padding:14px 18px;" align="left">
+        <p style="margin:0;font-size:14.5px;line-height:1.75;color:#1a2f5e;">{{message}}</p>
+      </td></tr>
+    </table>
+  </td></tr>
+  <!-- auto context -->
+  <tr><td style="padding:18px 28px 0;" align="left">
+    <p style="margin:0 0 6px;font-size:12px;font-weight:700;color:rgba(37,62,122,0.55);">Auto-captured context</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px dashed rgba(37,62,122,0.25);border-radius:10px;">
+      <tr><td style="padding:12px 18px;" align="left">
+        <p style="margin:0;font-size:12.5px;line-height:1.9;color:rgba(37,62,122,0.75);">
+          Sent from the guide: <a href="{{contextUrl}}" style="color:#38C4F2;text-decoration:none;font-weight:700;">{{contextArticle}}</a><br>
+          Browser: <span style="direction:ltr;unicode-bidi:embed;">{{userAgent}}</span>
+        </p>
+      </td></tr>
+    </table>
+  </td></tr>
+  <!-- cta -->
+  <tr><td style="padding:22px 28px 28px;" align="center">
+    <a href="{{adminTicketUrl}}" style="display:inline-block;background:#F05680;color:#FFFFFF;font-size:14px;font-weight:700;text-decoration:none;padding:12px 34px;border-radius:30px;">Open ticket in admin</a>
+  </td></tr>
+  <!-- footer -->
+  <tr><td style="background:#F4F9FF;border-top:1px solid rgba(37,62,122,0.1);padding:14px 28px;" align="center">
+    <p style="margin:0;font-size:11.5px;color:rgba(37,62,122,0.45);">Sent automatically from the "Talk to a human" form in the Help Center · A confirmation was sent to the requester at the same moment</p>
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body></html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The checkout screen — what your customer sees · WHITEBOARD Help Center</title>
+<meta name="description" content="The customer's journey from clicking the join button through payment confirmation and getting access to the course">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/whiteboard-designs/help/en/assets/site.css">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('wb-help-theme')||'light'}catch(e){}</script>
+</head>
+<body data-audience="teacher" data-lang="en" data-base="/whiteboard-designs/help/en" data-support-endpoint="" data-session-endpoint="">
+<header class="topbar">
+  <a class="logo" href="/whiteboard-designs/help/en/">
+    <img class="logo-img" src="/whiteboard-designs/help/en/assets/brand/whiteboard-logo.png" alt="WHITEBOARD">
+    <span class="logo-tag">Help Center</span>
+  </a>
+  <button class="search-open" aria-label="Search the Help Center">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <span>Search the Help Center…</span><kbd>/</kbd>
+  </button>
+  <nav class="aud-switch">
+    <a href="/whiteboard-designs/help/en/" class="active">For instructors</a>
+    <a href="/whiteboard-designs/help/en/student/">Student guides</a>
+  </nav>
+  <button class="lang-switch" title="מרכז העזרה בעברית">עברית</button>
+  <button class="theme-toggle" aria-label="Toggle light/dark mode">
+    <svg class="ic-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+    <svg class="ic-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+  </button>
+</header>
+<div class="shell">
+  <aside class="sidebar"><div class="sidebar-inner"><details class="nav-cat"><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg><span>Getting started</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/getting-started/signup-login/">Sign up and log in</a><a class="nav-art" href="/whiteboard-designs/help/en/getting-started/dashboard-tour/">Get to know the dashboard</a><a class="nav-art" href="/whiteboard-designs/help/en/getting-started/teacher-student-mode/">Switch between instructor mode and student mode</a><a class="nav-art" href="/whiteboard-designs/help/en/getting-started/walkme-tours/">The built-in guided tours (Walk Me)</a><a class="nav-art" href="/whiteboard-designs/help/en/getting-started/personal-profile/">Edit your personal profile</a><a class="nav-art" href="/whiteboard-designs/help/en/getting-started/plans-overview/">WHITEBOARD plans — what's included in each plan</a></div></div></details><details class="nav-cat"><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg><span>Building a course</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/courses/create-course/">Create a new course</a><a class="nav-art" href="/whiteboard-designs/help/en/courses/chapters-structure/">Build your course structure — chapters and lessons</a><a class="nav-art" href="/whiteboard-designs/help/en/courses/lesson-types/">Lesson types in the platform</a><a class="nav-art" href="/whiteboard-designs/help/en/courses/content-blocks/">Content blocks inside a lesson</a><a class="nav-art" href="/whiteboard-designs/help/en/courses/upload-video/">Upload videos to WHITEBOARD storage</a><a class="nav-art" href="/whiteboard-designs/help/en/courses/content-library/">The content library — manage files and videos</a><a class="nav-art" href="/whiteboard-designs/help/en/courses/course-settings/">Course settings</a><a class="nav-art" href="/whiteboard-designs/help/en/courses/course-brand-kit/">Brand kit for a course</a><a class="nav-art" href="/whiteboard-designs/help/en/courses/publish-course/">Publish and share your course</a></div></div></details><details class="nav-cat"><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg><span>Recording studio</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/studio/studio-overview/">Get to know the recording studio</a><a class="nav-art" href="/whiteboard-designs/help/en/studio/record-lesson/">Record a lesson — from the lobby to the final take</a><a class="nav-art" href="/whiteboard-designs/help/en/studio/teleprompter/">Working with the teleprompter</a><a class="nav-art" href="/whiteboard-designs/help/en/studio/takes-review/">Review your takes and pick the best version</a><a class="nav-art" href="/whiteboard-designs/help/en/studio/video-editor/">The built-in video editor</a><a class="nav-art" href="/whiteboard-designs/help/en/studio/subtitles-editor/">Automatic captions and how to edit them</a></div></div></details><details class="nav-cat"><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/></svg><span>BOARDi — your smart assistant</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/boardi/boardi-overview/">What is BOARDi and where you'll find it</a><a class="nav-art" href="/whiteboard-designs/help/en/boardi/boardi-course-builder/">Build a course with BOARDi's course builder</a><a class="nav-art" href="/whiteboard-designs/help/en/boardi/boardi-student-analyst/">The student analyst — ask questions about performance</a><a class="nav-art" href="/whiteboard-designs/help/en/boardi/boardi-sales-analyst/">Analyze sales with BOARDi</a></div></div></details><details class="nav-cat"><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01"/></svg><span>Knowledge hubs</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/knowledge-hubs/hubs-overview/">What knowledge hubs are and which type fits you</a><a class="nav-art" href="/whiteboard-designs/help/en/knowledge-hubs/school-setup/">Set up a school — your course website</a><a class="nav-art" href="/whiteboard-designs/help/en/knowledge-hubs/school-templates/">School design templates</a><a class="nav-art" href="/whiteboard-designs/help/en/knowledge-hubs/school-store/">Your school's course store</a><a class="nav-art" href="/whiteboard-designs/help/en/knowledge-hubs/school-info-pages/">Info pages — About, FAQ and Contact</a><a class="nav-art" href="/whiteboard-designs/help/en/knowledge-hubs/club-setup/">Set up a club — a community around your content</a><a class="nav-art" href="/whiteboard-designs/help/en/knowledge-hubs/club-feed/">The club feed</a><a class="nav-art" href="/whiteboard-designs/help/en/knowledge-hubs/club-events/">Events and webinars in your club</a><a class="nav-art" href="/whiteboard-designs/help/en/knowledge-hubs/club-chat/">The club chat</a><a class="nav-art" href="/whiteboard-designs/help/en/knowledge-hubs/club-leaderboard/">The leaderboard and member engagement</a><a class="nav-art" href="/whiteboard-designs/help/en/knowledge-hubs/program-setup/">Set up a training program</a><a class="nav-art" href="/whiteboard-designs/help/en/knowledge-hubs/program-layout/">The learning path — order, locks and meetings</a></div></div></details><details class="nav-cat"><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Students</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/students/invite-students/">Invite students to a course</a><a class="nav-art" href="/whiteboard-designs/help/en/students/my-students/">The My Students screen — manage and track</a><a class="nav-art" href="/whiteboard-designs/help/en/students/student-settings/">Student settings and access permissions</a></div></div></details><details class="nav-cat" open><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg><span>Sales &amp; payments</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/sales/pricing-course/">Price your course — one-time, subscription and installments</a><a class="nav-art" href="/whiteboard-designs/help/en/sales/landing-page/">Your course landing page</a><a class="nav-art active" href="/whiteboard-designs/help/en/sales/checkout/">The checkout screen — what your customer sees</a><a class="nav-art" href="/whiteboard-designs/help/en/sales/payments-payouts/">Payments and payouts</a></div></div></details><details class="nav-cat"><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span>CRM &amp; email campaigns</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/crm-mailing/crm-contacts/">CRM — all your contacts in one place</a><a class="nav-art" href="/whiteboard-designs/help/en/crm-mailing/crm-contact-timeline/">The contact card and timeline</a><a class="nav-art" href="/whiteboard-designs/help/en/crm-mailing/mailing-overview/">Email campaigns — sequences and triggers</a><a class="nav-art" href="/whiteboard-designs/help/en/crm-mailing/mailing-editor/">The visual email editor</a></div></div></details><details class="nav-cat"><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg><span>Exams &amp; certificates</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/exams-certificates/create-exam/">Build an exam</a><a class="nav-art" href="/whiteboard-designs/help/en/exams-certificates/exam-results/">Exam results — the instructor view</a><a class="nav-art" href="/whiteboard-designs/help/en/exams-certificates/certificates/">Certificates — templates and issuing</a></div></div></details><details class="nav-cat"><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg><span>Games</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/games/games-overview/">The games in the platform and how to add them</a><a class="nav-art" href="/whiteboard-designs/help/en/games/game-crossword/">The Crossword game — build and edit</a><a class="nav-art" href="/whiteboard-designs/help/en/games/game-memory/">The Memory game — build and edit</a><a class="nav-art" href="/whiteboard-designs/help/en/games/game-hangman/">The Hangman game — build and edit</a></div></div></details><details class="nav-cat"><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/></svg><span>Live sessions</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/live/live-schedule/">Schedule a live session</a><a class="nav-art" href="/whiteboard-designs/help/en/live/live-room/">The instructor's live room</a><a class="nav-art" href="/whiteboard-designs/help/en/live/live-polls/">Polls and questions in a live session</a><a class="nav-art" href="/whiteboard-designs/help/en/live/live-breakouts/">Breakout rooms in a live session</a><a class="nav-art" href="/whiteboard-designs/help/en/live/live-presets/">Presets — ready-made templates for your broadcast</a><a class="nav-art" href="/whiteboard-designs/help/en/live/live-game/">Play a game in a live session</a><a class="nav-art" href="/whiteboard-designs/help/en/live/live-recordings/">Live session recordings</a></div></div></details><details class="nav-cat"><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg><span>Analytics &amp; data</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/analytics/analytics-overview/">The analytics screen — the metrics that matter</a><a class="nav-art" href="/whiteboard-designs/help/en/analytics/data-connections/">Connections and data sources</a></div></div></details><details class="nav-cat"><summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>Settings &amp; integrations</span>
+      <svg class="nav-chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </summary><div class="nav-arts"><div class="nav-arts-inner"><a class="nav-art" href="/whiteboard-designs/help/en/settings-integrations/global-settings/">Your account's global settings</a><a class="nav-art" href="/whiteboard-designs/help/en/settings-integrations/team-permissions/">Team &amp; permissions — grant course-management access</a><a class="nav-art" href="/whiteboard-designs/help/en/settings-integrations/brand-kit/">The brand kit — logo, colors and fonts</a><a class="nav-art" href="/whiteboard-designs/help/en/settings-integrations/integrations/">Integrations — an overview</a><a class="nav-art" href="/whiteboard-designs/help/en/settings-integrations/integration-meta/">Connect Meta — Facebook Pixel</a><a class="nav-art" href="/whiteboard-designs/help/en/settings-integrations/integration-google/">Connect Google — Google Analytics</a><a class="nav-art" href="/whiteboard-designs/help/en/settings-integrations/integration-vimeo/">Connect Vimeo</a><a class="nav-art" href="/whiteboard-designs/help/en/settings-integrations/integration-calendar/">Connect Google Calendar</a><a class="nav-art" href="/whiteboard-designs/help/en/settings-integrations/integration-make/">Connect Make — automations</a></div></div></details></div></aside>
+  <main class="main"><nav class="crumbs"><a href="/whiteboard-designs/help/en/">Home</a><span>›</span>
+        <a href="/whiteboard-designs/help/en/sales/">Sales &amp; payments</a><span>›</span><b>The checkout screen — what your customer sees</b>
+        <span class="crumbs-spacer"></span><button class="share-btn" data-url="https://help.whiteboard.education/sales/checkout/" title="Copy link to this guide">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      <span>Copy link</span></button></nav>
+      <div class="draft-badge">Draft — not yet verified against the live platform</div>
+      <article class="article"><header><h1>The checkout screen — what your customer sees</h1>
+        <p class="lede">The customer's journey from clicking the join button through payment confirmation and getting access to the course</p>
+        <div class="art-meta"></div></header>
+        <p>When someone clicks <strong>Join the course now</strong> on the landing page, the purchase flow begins. In this guide we&#39;ll walk through what the customer meets along the way — and what you control behind the scenes.</p>
+<h2 class="step" id="step-1"><span class="step-num">1</span>From click to payment page</h2>
+<p>The customer clicks the join button on the landing page and moves to payment. The payment itself is processed against your own payment account (CardCom, for example), and the purchase connects to the course through the WHITEBOARD app on Make.</p>
+<!-- verify: what the checkout screen the customer actually sees looks like (fields, order, design) — no approved design exists for this screen and it hasn't been observed in production -->
+
+<h2 class="step" id="step-2"><span class="step-num">2</span>Payment methods the customer can choose</h2>
+<p>The payment methods the customer sees are determined by your payment provider — credit card, and depending on your account, Bit, Google Pay, or Apple Pay.</p>
+<!-- verify: which payment methods are actually supported in the current purchase flow through Make -->
+
+
+<h2 class="step" id="step-3"><span class="step-num">3</span>What happens right after payment</h2>
+<ul>
+<li>The customer gets immediate access to the course.</li>
+<li>A welcome email is sent to them automatically, with a button into the course — styled with your brand kit.</li>
+</ul>
+<!-- verify: the content of the automatic post-purchase email and whether it's sent on every plan -->
+
+<h2 class="step" id="step-4"><span class="step-num">4</span>If the customer starts but doesn't finish</h2>
+<p>Customers who started a payment and abandoned midway aren&#39;t lost: the email campaigns system includes an <strong>abandoned cart</strong> trigger that automatically sends them a reminder email. How to set it up — in <a href="/whiteboard-designs/help/en/crm-mailing/mailing-overview/">The email campaigns system — sequences and triggers</a>.</p>
+<h2 class="step" id="step-5"><span class="step-num">5</span>Where you see the transaction</h2>
+<p>Every purchase is logged on the contact&#39;s card in the CRM, in the <strong>Payments</strong> tab — including the amount, payment method, and status. That gives you a complete record of every customer in one place.</p>
+<div class="callout info"><div class="callout-head"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Good to know</span></div><div class="callout-body">
+
+<p>WHITEBOARD takes no commission on the sale. What the customer pays goes directly to your payment account, minus only the credit card company&#39;s standard processing fee.</p>
+</div></div>
+
+<h2 id="sec-1">What&#39;s next</h2>
+<p>For payments to work, you need an active payments connection through Make — <a href="/whiteboard-designs/help/en/sales/payments-payouts/">Payments and payouts</a>.</p>
+</article>
+      <div class="feedback"><img class="fb-boardi" src="/whiteboard-designs/help/en/assets/brand/boardi-2.svg" alt=""><span>Was this guide helpful?</span>
+        <button data-v="yes">Yes</button><button data-v="no">No</button><em hidden>Thanks for the feedback!</em></div>
+      <div class="related"><h4>Related guides</h4><a href="/whiteboard-designs/help/en/sales/pricing-course/">Price your course — one-time, subscription and installments</a><a href="/whiteboard-designs/help/en/sales/payments-payouts/">Payments and payouts</a><a href="/whiteboard-designs/help/en/crm-mailing/mailing-overview/">Email campaigns — sequences and triggers</a></div>
+      <nav class="pager">
+        <a class="pg prev" href="/whiteboard-designs/help/en/sales/landing-page/"><small>Previous</small>Your course landing page</a>
+        <a class="pg next" href="/whiteboard-designs/help/en/sales/payments-payouts/"><small>Next</small>Payments and payouts</a>
+      </nav></main>
+  <aside class="toc"><div class="toc-inner">
+    <h5>On this page</h5>
+    <a href="#step-1" data-target="step-1">From click to payment page</a><a href="#step-2" data-target="step-2">Payment methods the customer can choose</a><a href="#step-3" data-target="step-3">What happens right after payment</a><a href="#step-4" data-target="step-4">If the customer starts but doesn't finish</a><a href="#step-5" data-target="step-5">Where you see the transaction</a><a href="#sec-1" data-target="sec-1">What's next</a>
+  </div></aside>
+</div>
+<div class="search-modal" hidden>
+  <div class="search-box">
+    <input type="search" placeholder="What do you want to learn?" aria-label="Search the Help Center">
+    <div class="search-results"></div>
+  </div>
+</div>
+<div class="lightbox" hidden><button class="lightbox-close" aria-label="Close">✕</button><img alt=""></div>
+<button class="boardi-launcher" aria-label="Ask BOARDi">
+  <img src="/whiteboard-designs/help/en/assets/brand/boardi-6.svg" alt=""><span class="bl-hint">Ask BOARDi</span>
+</button>
+<div class="boardi-chat" hidden>
+  <div class="bc-head">
+    <img src="/whiteboard-designs/help/en/assets/brand/boardi-2.svg" alt="">
+    <div><b>BOARDi</b><small>Your Help Center sidekick</small></div>
+    <button class="bc-close" aria-label="Close chat">✕</button>
+  </div>
+  <div class="bc-msgs"></div>
+  <form class="bc-input">
+    <input type="text" placeholder="I have a question" aria-label="BOARDi">
+    <button type="submit" aria-label="Send"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1)"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg></button>
+  </form>
+</div>
+<div class="contact-modal" hidden>
+  <div class="cm-card">
+    <button class="cm-close" aria-label="Close the form">✕</button>
+    <div class="cm-head">
+      <img src="/whiteboard-designs/help/en/assets/brand/boardi-1.svg" alt="">
+      <div><h3>Talk to a human</h3>
+      <p>Couldn’t find an answer in the guides? Leave your details — a real human will get back to you within 24 hours.</p></div>
+    </div>
+    <form class="cm-form" novalidate>
+      <div class="cm-grid">
+        <label>Full name<input name="name" autocomplete="name" required></label>
+        <label>Email for our reply<input name="email" type="email" dir="ltr" autocomplete="email" required></label>
+        <label>Phone<input name="phone" type="tel" dir="ltr" autocomplete="tel"></label>
+        <label>Topic<select name="category">
+          <option value="bug">Technical issue — something’s broken</option>
+          <option value="usage">Question about using the platform</option>
+          <option value="billing">Billing &amp; payments</option>
+          <option value="feature">Feature request</option>
+          <option value="other">Other</option>
+        </select></label>
+      </div>
+      <label class="cm-msg">What happened?<textarea name="message" rows="4" required placeholder="Tell us what you were trying to do and what actually happened — it helps us help you faster"></textarea></label>
+      <div class="cm-context" hidden>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13.4 10.6 21 3m0 0h-5.4M21 3v5.4M10.6 13.4 3 21m0 0h5.4M3 21v-5.4"/></svg>
+        Automatically attached: the guide you’re writing from — <b class="cm-context-title"></b></div>
+      <div class="cm-autofill" hidden>We filled in your details from your signed-in account — feel free to edit before sending.</div>
+      <input type="text" name="company" class="cm-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="cm-error" hidden></div>
+      <button type="submit" class="cm-submit">Send</button>
+    </form>
+    <div class="cm-success" hidden>
+      <img class="boardi-celebrate" src="/whiteboard-designs/help/en/assets/brand/boardi-7.svg" alt="">
+      <h3>Got it — your request is in!</h3>
+      <p class="cm-success-line"></p>
+      <small class="cm-demo-note" hidden>Preview mode — the form isn’t wired to the ticketing server yet, so nothing was actually sent.</small>
+      <button type="button" class="cm-done">Close</button>
+    </div>
+  </div>
+</div>
+<div class="rate-modal" hidden>
+  <div class="rm-card">
+    <button class="rm-close" aria-label="Close">✕</button>
+    <div class="rm-body">
+      <img src="/whiteboard-designs/help/en/assets/brand/boardi-5.svg" alt="">
+      <h3>So glad we could help!</h3>
+      <p>Mind leaving a quick rating and a line or two? It helps other instructors find their way.</p>
+      <div class="rm-stars" role="radiogroup" aria-label="Rating">
+        <button type="button" class="rm-star on" data-v="1" aria-label="1 stars">★</button><button type="button" class="rm-star on" data-v="2" aria-label="2 stars">★</button><button type="button" class="rm-star on" data-v="3" aria-label="3 stars">★</button><button type="button" class="rm-star on" data-v="4" aria-label="4 stars">★</button><button type="button" class="rm-star on" data-v="5" aria-label="5 stars">★</button>
+      </div>
+      <textarea rows="3" placeholder="What helped you in this guide? (optional)"></textarea>
+      <button type="button" class="rm-send">Send review</button>
+    </div>
+    <div class="rm-thanks" hidden>
+      <img class="boardi-celebrate" src="/whiteboard-designs/help/en/assets/brand/boardi-7.svg" alt="">
+      <h3>Thank you!</h3>
+      <p>Your review is in — it makes these guides better for everyone.</p>
+      <button type="button" class="rm-done">Close</button>
+    </div>
+  </div>
+</div>
+<footer class="footer">WHITEBOARD Help Center · kept in sync with the live platform · <button class="contact-open footer-contact">Talk to a human</button> · <a href="https://whiteboard.education">whiteboard.education</a></footer>
+<script src="/whiteboard-designs/help/en/assets/site.js" defer></script>
+</body></html>

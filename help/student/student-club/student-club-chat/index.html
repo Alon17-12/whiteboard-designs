@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="/whiteboard-designs/help/assets/site.css">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('wb-help-theme')||'light'}catch(e){}</script>
 </head>
-<body data-audience="student" data-base="/whiteboard-designs/help" data-support-endpoint="" data-session-endpoint="">
+<body data-audience="student" data-lang="he" data-base="/whiteboard-designs/help" data-support-endpoint="" data-session-endpoint="">
 <header class="topbar">
   <a class="logo" href="/whiteboard-designs/help/student/">
     <img class="logo-img" src="/whiteboard-designs/help/assets/brand/whiteboard-logo.png" alt="WHITEBOARD">
@@ -20,6 +20,7 @@
     <span>חיפוש במרכז העזרה…</span><kbd>/</kbd>
   </button>
   
+  <button class="lang-switch" title="Help Center in English">EN</button>
   <button class="theme-toggle" aria-label="החלפת מצב תצוגה">
     <svg class="ic-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
     <svg class="ic-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
@@ -47,7 +48,7 @@
         <p class="lede">ערוצי הצ'אט של המועדון — איך עוברים בין ערוצים, שולחים הודעות ולא מפספסים כלום</p>
         <div class="art-meta"></div></header>
         <p>הצ&#39;אט הוא המקום לשיחה השוטפת של המועדון — פחות רשמי מהפיד, מהיר יותר ממייל. הוא מחולק לערוצים לפי נושאים, כמו שאתה מכיר מכל אפליקציית צ&#39;אט.</p>
-<h2 class="step" id="step-1"><span class="step-num">1</span>פותחים את הצ&#39;אט</h2>
+<h2 class="step" id="step-1"><span class="step-num">1</span>פותחים את הצ'אט</h2>
 <p>בפס הניווט הצדדי של המועדון לחץ על אייקון הצ&#39;אט. המסך מתחלק לשניים: רשימת הערוצים בצד, והשיחה במרכז.</p>
 <h2 class="step" id="step-2"><span class="step-num">2</span>בוחרים ערוץ</h2>
 <p>הערוצים מסודרים בקבוצות — למשל <strong>ערוצים כלליים</strong> (כללי, הודעות, שאלות ותשובות), ערוצים לפי <strong>קורסים</strong> וערוצים לפי <strong>נושאים</strong>. ערוץ עם הודעות שלא קראת מסומן במונה קטן. לחיצה על ערוץ פותחת את השיחה שלו.</p>
@@ -80,12 +81,12 @@
       </nav></main>
   <aside class="toc"><div class="toc-inner">
     <h5>בעמוד הזה</h5>
-    <a href="#step-1" data-target="step-1">פותחים את הצ&amp;#39;אט</a><a href="#step-2" data-target="step-2">בוחרים ערוץ</a><a href="#step-3" data-target="step-3">קוראים ומשתתפים</a><a href="#sec-1" data-target="sec-1">מה הלאה</a>
+    <a href="#step-1" data-target="step-1">פותחים את הצ'אט</a><a href="#step-2" data-target="step-2">בוחרים ערוץ</a><a href="#step-3" data-target="step-3">קוראים ומשתתפים</a><a href="#sec-1" data-target="sec-1">מה הלאה</a>
   </div></aside>
 </div>
 <div class="search-modal" hidden>
   <div class="search-box">
-    <input type="search" placeholder="מה תרצו ללמוד?" aria-label="חיפוש">
+    <input type="search" placeholder="מה תרצו ללמוד?" aria-label="חיפוש במרכז העזרה">
     <div class="search-results"></div>
   </div>
 </div>
@@ -101,7 +102,7 @@
   </div>
   <div class="bc-msgs"></div>
   <form class="bc-input">
-    <input type="text" placeholder="יש לי שאלה" aria-label="שאלה לבורדי">
+    <input type="text" placeholder="יש לי שאלה" aria-label="BOARDi">
     <button type="submit" aria-label="שליחה"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1)"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg></button>
   </form>
 </div>

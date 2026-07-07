@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="/whiteboard-designs/help/assets/site.css">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('wb-help-theme')||'light'}catch(e){}</script>
 </head>
-<body data-audience="teacher" data-base="/whiteboard-designs/help" data-support-endpoint="" data-session-endpoint="">
+<body data-audience="teacher" data-lang="he" data-base="/whiteboard-designs/help" data-support-endpoint="" data-session-endpoint="">
 <header class="topbar">
   <a class="logo" href="/whiteboard-designs/help/">
     <img class="logo-img" src="/whiteboard-designs/help/assets/brand/whiteboard-logo.png" alt="WHITEBOARD">
@@ -23,6 +23,7 @@
     <a href="/whiteboard-designs/help/" class="active">למרצה</a>
     <a href="/whiteboard-designs/help/student/">מדריכים לתלמיד</a>
   </nav>
+  <button class="lang-switch" title="Help Center in English">EN</button>
   <button class="theme-toggle" aria-label="החלפת מצב תצוגה">
     <svg class="ic-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
     <svg class="ic-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
@@ -116,7 +117,7 @@
 </div>
 <div class="search-modal" hidden>
   <div class="search-box">
-    <input type="search" placeholder="מה תרצו ללמוד?" aria-label="חיפוש">
+    <input type="search" placeholder="מה תרצו ללמוד?" aria-label="חיפוש במרכז העזרה">
     <div class="search-results"></div>
   </div>
 </div>
@@ -132,7 +133,7 @@
   </div>
   <div class="bc-msgs"></div>
   <form class="bc-input">
-    <input type="text" placeholder="יש לי שאלה" aria-label="שאלה לבורדי">
+    <input type="text" placeholder="יש לי שאלה" aria-label="BOARDi">
     <button type="submit" aria-label="שליחה"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1)"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg></button>
   </form>
 </div>
