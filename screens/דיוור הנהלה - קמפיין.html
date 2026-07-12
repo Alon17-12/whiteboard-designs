@@ -414,6 +414,11 @@
     <a class="nav-item" href="שותפים ועמלות.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>שותפים ועמלות</a>
     <a class="nav-item" href="סליקה ותשלומים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>סליקה ותשלומים<span style="margin-inline-start:auto;font-size:9.5px;font-weight:700;color:#b89c00;background:rgba(234,214,84,0.2);padding:2px 6px;border-radius:8px;font-family:var(--font-en)">עתידי</span></a>
   </div>
+  <div class="nav-group-label">כספים</div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="תחזית כלכלית.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/><circle cx="20" cy="4" r="1.6"/></svg>תחזית כלכלית</a>
+  </div>
+
   <div class="nav-group-label">תפעול ומוצר</div>
   <div class="sidebar-section">
     <a class="nav-item" href="אנליטיקת מרצים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>אנליטיקת מרצים</a>
@@ -686,7 +691,7 @@
               <div class="html-helper">הדביקו או כתבו קוד HTML — נתמך בכל לקוחות המייל</div>
               <textarea class="html-area" id="htmlArea" dir="ltr" spellcheck="false" placeholder="<!-- קוד ה-HTML של המייל -->"></textarea>
               <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px;">
-                <a class="btn btn-secondary" id="openHtmlEditorBtn" href="מייל - מסך פתיחה.html">
+                <a class="btn btn-secondary" id="openHtmlEditorBtn" href="../דיוור/מייל - מסך פתיחה.html">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14 21 3M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg>
                   פתח עורך HTML מלא
                 </a>
@@ -1307,7 +1312,7 @@
     function openBlockEditor(){
       state.builder = 'blocks';
       snapshotState();
-      window.location.href = 'עורך מייל ויזואלי.html?from=campaign';
+      window.location.href = '../דיוור/עורך מייל ויזואלי.html?from=campaign';
     }
     document.getElementById('openEditorBtn').addEventListener('click', openBlockEditor);
 

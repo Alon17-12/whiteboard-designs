@@ -130,11 +130,12 @@
   <a href="#revenue"><span class="n">03</span>מכירות מול תזרים</a>
   <a href="#jobs"><span class="n">04</span>עבודות רקע (Trigger.dev)</a>
   <a href="#clearing"><span class="n">05</span>סליקה ותשלומים (עתידי)</a>
-  <a href="#roles"><span class="n">06</span>הרשאות ותפקידים</a>
-  <a href="#api"><span class="n">07</span>API ואינטגרציות</a>
-  <a href="#components"><span class="n">08</span>רכיבי UI</a>
-  <a href="#roadmap"><span class="n">09</span>מפת דרכים</a>
-  <a href="#stack"><span class="n">10</span>מחסנית טכנולוגית</a>
+  <a href="#forecast"><span class="n">06</span>תחזית כלכלית</a>
+  <a href="#roles"><span class="n">07</span>הרשאות ותפקידים</a>
+  <a href="#api"><span class="n">08</span>API ואינטגרציות</a>
+  <a href="#components"><span class="n">09</span>רכיבי UI</a>
+  <a href="#roadmap"><span class="n">10</span>מפת דרכים</a>
+  <a href="#stack"><span class="n">11</span>מחסנית טכנולוגית</a>
 </aside>
 
 <main class="main">
@@ -146,7 +147,7 @@
 
   <section id="overview">
     <h2><span class="h2num">00</span>סקירה + כללי CTO</h2>
-    <p class="sec-sub">7 מודולים + דשבורד ראשי, כולם נשענים על דאטה שכבר קיימת. שכבת אגרגציה (Trigger.dev) מחשבת KPIs מתוזמן, והממשק מציג דשבורדים בזמן אמת עם התראות פעולה.</p>
+    <p class="sec-sub">8 מודולים + דשבורד ראשי, כולם נשענים על דאטה שכבר קיימת. שכבת אגרגציה (Trigger.dev) מחשבת KPIs מתוזמן, והממשק מציג דשבורדים בזמן אמת עם התראות פעולה.</p>
     <div class="rules">
       <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>5 כללי הזהב (חובה)</h3>
       <ol>
@@ -166,6 +167,7 @@
       <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>שירות (CS)</h4><p>פרופיל 360°, טיקטים, שימור.</p></div>
       <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="M12 6V3M5 9H2M22 9h-3"/></svg></span>מוצר ובאגים</h4><p>דיווחי באג, בקשות פיצ'ר, צ'אט חכם.</p></div>
       <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>סליקה ותשלומים <span class="pill fut">עתידי</span></h4><p>תשתית לתשלומים דרך חברת הסליקה.</p></div>
+      <div class="card mod-card"><h4><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/></svg></span>תחזית כלכלית</h4><p>הנחות יסוד, תחזית מול ביצוע חי, תזכורת שבועית למילוי.</p></div>
     </div>
   </section>
 
@@ -184,6 +186,7 @@ app/
     affiliates/page.tsx
     service/page.tsx
     product/page.tsx
+    forecast/page.tsx      <span class="cm">// תחזית כלכלית</span>
     billing/page.tsx       <span class="cm">// סליקה (עתידי)</span>
   api/admin/
     kpis/route.ts          <span class="cm">// קריאת read-model</span>
@@ -324,6 +327,8 @@ trigger/admin/             <span class="cm">// עבודות רקע</span></code>
         <tr><td><code>cart-abandon-reminder</code></td><td>כל שעה</td><td>שולח תזכורת אוטומטית לנוטשי עגלה.</td></tr>
         <tr><td><code>compute-payouts</code></td><td>חודשי</td><td>מחשב עמלות שותפים ומכין רשימת תשלומים לאישור.</td></tr>
         <tr><td><code>weekly-digest</code></td><td>ראשון 09:00</td><td>מייל סיכום שבועי להנהלה.</td></tr>
+        <tr><td><code>forecast-autofill</code></td><td>יומי</td><td>ממלא בתחזית הכלכלית את הביצוע בפועל (לקוחות חדשים, MRR) מה‑read‑model.</td></tr>
+        <tr><td><code>forecast-week-reminder</code></td><td>ראשון 09:00</td><td>תזכורת למילוי הוצאות שיווק בתחזית — נשלחת רק אם החודש הנוכחי לא הושלם (סעיף 06).</td></tr>
         <tr><td><code>sync-clearing</code> <span class="pill fut">עתידי</span></td><td>webhook</td><td>קולט עסקאות מחברת הסליקה ומפעיל הפקת חשבונית.</td></tr>
       </tbody>
     </table>
@@ -358,17 +363,92 @@ trigger/admin/             <span class="cm">// עבודות רקע</span></code>
     <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><p><b>תלוי יוזמת הסליקה:</b> הפקת החשבוניות, ה‑rev‑share וההתחברות לרשות המסים מפורטים במדריך ה‑CTO של "סליקה וחשבוניות". מודול זה צורך את הנתונים בלבד.</p></div>
   </section>
 
+  <section id="forecast">
+    <h2><span class="h2num">06</span>תחזית כלכלית (Forecast)</h2>
+    <p class="sec-sub">מסך <code class="inl">admin/forecast</code> — המודל הפיננסי (VC‑Grade Financials) כמסך חי בתוך האדמין: יומן הנחות יסוד, Unit Economics, טבלת תחזית‑מול‑ביצוע וגרף תרחישים. העיקרון: <b>מה שהמערכת יודעת — נמשך אוטומטית; מה שרק ההנהלה יודעת — מוזן ידנית, ותזכורת שבועית אוטומטית מוודאת שזה קורה.</b></p>
+
+    <h3>שלושה סוגי נתונים במסך</h3>
+    <table>
+      <thead><tr><th>נתון</th><th>מקור</th><th>עדכון</th></tr></thead>
+      <tbody>
+        <tr><td><b>הנחות יסוד</b> (ARPU, Margin, Churn, CAC יעד, CVR)</td><td><code>ForecastAssumption</code> — נערכות במסך</td><td>לייב: שינוי הנחה מחשב מחדש Unit Economics, תחזית וגרף בצד לקוח, ונשמר ב‑<code>PATCH</code></td></tr>
+        <tr><td><b>ביצוע אוטומטי</b> (לקוחות חדשים, לקוחות פעילים, MRR, churn חי)</td><td><code>KpiSnapshot</code> + <code>RevenueRecognition</code> (read‑model)</td><td><code>forecast-autofill</code> יומי; מוצג עם תג "אוטו" וניתן לעקיפה ידנית</td></tr>
+        <tr><td><b>ביצוע ידני</b> (הוצאות שיווק בפועל)</td><td>הזנה ידנית של ההנהלה</td><td>שדה editable בטבלה — נושא התזכורת השבועית</td></tr>
+      </tbody>
+    </table>
+
+    <h3>מודל נתונים</h3>
+    <pre><code><span class="kw">model</span> <span class="ty">ForecastAssumption</span> {
+  id        <span class="ty">String</span> <span class="kw">@id @default</span>(cuid())
+  key       <span class="ty">String</span> <span class="kw">@unique</span>   <span class="cm">// "arpu" | "grossMargin" | "churn" | "cacTarget" | "trialCvr"</span>
+  value     <span class="ty">Float</span>
+  source    <span class="ty">AssumptionSource</span>  <span class="cm">// ACTUAL_DATA | ESTIMATE</span>
+  rationale <span class="ty">String</span>            <span class="cm">// הרציונל מוצג במסך</span>
+  updatedBy <span class="ty">String</span>
+  updatedAt <span class="ty">DateTime</span> <span class="kw">@updatedAt</span>
+}
+
+<span class="kw">model</span> <span class="ty">ForecastMonth</span> {
+  id           <span class="ty">String</span> <span class="kw">@id @default</span>(cuid())
+  periodMonth  <span class="ty">String</span> <span class="kw">@unique</span>  <span class="cm">// "2026-07"</span>
+  fcNewCust    <span class="ty">Int</span>              <span class="cm">// תחזית לקוחות חדשים</span>
+  fcMarketing  <span class="ty">Int</span>              <span class="cm">// תחזית הוצאות שיווק (אגורות)</span>
+  actNewCust   <span class="ty">Int?</span>             <span class="cm">// אוטו מ-read-model; override ידני מותר</span>
+  actNewCustAuto <span class="ty">Boolean</span> <span class="kw">@default</span>(true)
+  actMarketing <span class="ty">Int?</span>             <span class="cm">// ידני — נושא התזכורת</span>
+  filledAt     <span class="ty">DateTime?</span>       <span class="cm">// מתי הושלם החודש (מכבה את התזכורת)</span>
+  filledById   <span class="ty">String?</span>
+}</code></pre>
+
+    <h3>תזכורת שבועית אוטומטית (Trigger.dev)</h3>
+    <ul>
+      <li><b>תזמון:</b> cron <code class="inl">0 9 * * 0</code> (ראשון 09:00, Asia/Jerusalem) — יום ושעה ניתנים להגדרה במסך ("הגדרות תזכורת").</li>
+      <li><b>תנאי שליחה:</b> נשלחת רק אם <code class="inl">actMarketing</code> של החודש הנוכחי ריק. חודש מלא ⇒ דילוג אוטומטי עד החודש הבא.</li>
+      <li><b>ערוצים:</b> מייל ל‑EXEC+FINANCE עם deep‑link למסך + התראה במרכז הבקרה (פריט "ממתין לטיפול" בדשבורד).</li>
+      <li><b>אסקלציה (אופציונלי):</b> אם לא מולא עד רביעי — תזכורת נוספת.</li>
+    </ul>
+    <pre><code><span class="cm">// trigger/admin/forecast-week-reminder.ts</span>
+<span class="kw">export const</span> forecastWeekReminder = <span class="fn">schedules.task</span>({
+  id: <span class="st">"forecast-week-reminder"</span>,
+  cron: { pattern: <span class="st">"0 9 * * 0"</span>, timezone: <span class="st">"Asia/Jerusalem"</span> },
+  run: <span class="kw">async</span> () => {
+    <span class="kw">const</span> m = <span class="kw">await</span> <span class="fn">getForecastMonth</span>(<span class="fn">currentMonth</span>());
+    <span class="kw">if</span> (m?.actMarketing != <span class="kw">null</span>) <span class="kw">return</span>;  <span class="cm">// החודש מלא — אין תזכורת</span>
+    <span class="kw">await</span> <span class="fn">notify</span>({
+      roles: [<span class="st">"EXEC"</span>, <span class="st">"FINANCE"</span>],
+      channels: [<span class="st">"email"</span>, <span class="st">"in_app"</span>],
+      title: <span class="st">"תזכורת: נתוני התחזית הכלכלית ממתינים למילוי"</span>,
+      deepLink: <span class="st">"/admin/forecast?focus=marketing"</span>,
+    });
+  },
+});
+
+<span class="cm">// trigger/admin/forecast-autofill.ts — יומי: מושך ביצוע מה-read-model</span>
+<span class="kw">export const</span> forecastAutofill = <span class="fn">schedules.task</span>({
+  id: <span class="st">"forecast-autofill"</span>,
+  cron: <span class="st">"30 3 * * *"</span>,
+  run: <span class="kw">async</span> () => {
+    <span class="kw">const</span> month = <span class="fn">currentMonth</span>();
+    <span class="kw">const</span> newCust = <span class="kw">await</span> <span class="fn">countNewPaidSubscriptions</span>(month);
+    <span class="kw">await</span> <span class="fn">upsertForecastMonth</span>(month, { actNewCust: newCust },
+      { onlyIf: <span class="st">"actNewCustAuto"</span> });  <span class="cm">// לא דורס override ידני</span>
+  },
+});</code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>עדכון בלייב:</b> כל שינוי בטבלה נשמר מיידית (<code class="inl">PATCH /api/admin/forecast</code>, debounce 400ms) ומחזיר את השורות המחושבות (CAC בפועל, MRR בהכרה, לקוחות פעילים אחרי נטישה). החישוב רץ גם בצד לקוח לעדכון מיידי של הגרף — השרת הוא מקור האמת.</p></div>
+    <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><p><b>עקביות עם סעיף 03:</b> ה‑MRR בתחזית מחושב בשיטת <b>הכרה בהכנסה</b> (<code class="inl">RevenueRecognition</code>) — לא תזרים. תשלום שנתי מראש נזקף 1/12 לחודש, בדיוק כמו בדשבורד הראשי, כדי שקו "בפועל" בגרף יהיה בר‑השוואה לתחזית.</p></div>
+  </section>
+
   <section id="roles">
-    <h2><span class="h2num">06</span>הרשאות ותפקידים</h2>
+    <h2><span class="h2num">07</span>הרשאות ותפקידים</h2>
     <p class="sec-sub">גישה לפי תפקיד צוות (RBAC) ב‑middleware. כל מודול חשוף רק לתפקידים הרלוונטיים; ההנהלה רואה הכול.</p>
     <table>
       <thead><tr><th>תפקיד</th><th>גישה</th></tr></thead>
       <tbody>
-        <tr><td><code>EXEC</code> (הנהלה)</td><td>כל המודולים + נתוני כספים מלאים.</td></tr>
+        <tr><td><code>EXEC</code> (הנהלה)</td><td>כל המודולים + נתוני כספים מלאים + עריכת הנחות התחזית.</td></tr>
         <tr><td><code>MARKETING</code></td><td>שיווק ומשפך, שותפים, אנליטיקת מרצים (קריאה).</td></tr>
         <tr><td><code>SALES</code></td><td>Enterprise, לקוחות, הצעות מחיר וחוזים.</td></tr>
         <tr><td><code>SERVICE</code></td><td>שירות (CS), פרופיל 360°, באגים.</td></tr>
-        <tr><td><code>FINANCE</code></td><td>תזרים/מכירות, עמלות, סליקה וחשבוניות.</td></tr>
+        <tr><td><code>FINANCE</code></td><td>תזרים/מכירות, עמלות, סליקה וחשבוניות, תחזית כלכלית.</td></tr>
       </tbody>
     </table>
     <pre><code><span class="cm">// lib/admin/rbac.ts</span>
@@ -377,13 +457,14 @@ trigger/admin/             <span class="cm">// עבודות רקע</span></code>
   MARKETING: [<span class="st">"marketing"</span>, <span class="st">"affiliates"</span>, <span class="st">"lecturers"</span>],
   SALES:     [<span class="st">"enterprise"</span>, <span class="st">"customers"</span>],
   SERVICE:   [<span class="st">"service"</span>, <span class="st">"product"</span>],
-  FINANCE:   [<span class="st">"customers"</span>, <span class="st">"affiliates"</span>, <span class="st">"billing"</span>],
+  FINANCE:   [<span class="st">"customers"</span>, <span class="st">"affiliates"</span>, <span class="st">"billing"</span>, <span class="st">"forecast"</span>],
 };</code></pre>
   </section>
 
   <section id="api">
-    <h2><span class="h2num">07</span>API ואינטגרציות</h2>
+    <h2><span class="h2num">08</span>API ואינטגרציות</h2>
     <ul>
+      <li><b>תחזית כלכלית:</b> <code class="inl">GET /api/admin/forecast</code> (הנחות + חודשים + שורות מחושבות) · <code class="inl">PATCH /api/admin/forecast</code> (עדכון לייב של הנחה/תא, debounce 400ms).</li>
       <li><b>מקורות שיווק:</b> UTM/מקור נשמר על <code class="inl">Lead.source</code> מטופס ההרשמה; אינטגרציה ל‑Google/Meta Ads לייחוס המרות (v2).</li>
       <li><b>חיוב והכרה:</b> webhooks מספק הסליקה → <code class="inl">CashTransaction</code> → <code class="inl">recognize-revenue</code>.</li>
       <li><b>חשבוניות:</b> דרך מנוע החשבוניות של WHITEBOARD (יוזמת הסליקה) → רשות המסים Open API.</li>
@@ -393,28 +474,28 @@ trigger/admin/             <span class="cm">// עבודות רקע</span></code>
   </section>
 
   <section id="components">
-    <h2><span class="h2num">08</span>רכיבי UI</h2>
+    <h2><span class="h2num">09</span>רכיבי UI</h2>
     <div class="grid2">
       <div class="card"><h3 style="margin-top:0">משותפים (shell)</h3><ul style="margin-bottom:0"><li><code class="inl">&lt;AdminShell&gt;</code> — sidebar + topbar + theme</li><li><code class="inl">&lt;KpiCard&gt;</code> — ערך, דלתא, אייקון</li><li><code class="inl">&lt;DataTable&gt;</code> — מיון, פילטר, pagination</li><li><code class="inl">&lt;Toast/Modal&gt;</code> — מעוצבים בלבד</li></ul></div>
-      <div class="card"><h3 style="margin-top:0">תצוגתיים</h3><ul style="margin-bottom:0"><li><code class="inl">&lt;RevenueChart&gt;</code> — MRR + תזרים (דו-קווי)</li><li><code class="inl">&lt;Funnel&gt;</code> — שלבים פרופורציונליים</li><li><code class="inl">&lt;HealthDonut&gt;</code> — בריא/בסיכון/קריטי</li><li><code class="inl">&lt;Pipeline&gt;</code> — kanban עסקאות</li><li><code class="inl">&lt;Customer360&gt;</code> — פרופיל שירות</li></ul></div>
+      <div class="card"><h3 style="margin-top:0">תצוגתיים</h3><ul style="margin-bottom:0"><li><code class="inl">&lt;RevenueChart&gt;</code> — MRR + תזרים (דו-קווי)</li><li><code class="inl">&lt;Funnel&gt;</code> — שלבים פרופורציונליים</li><li><code class="inl">&lt;HealthDonut&gt;</code> — בריא/בסיכון/קריטי</li><li><code class="inl">&lt;Pipeline&gt;</code> — kanban עסקאות</li><li><code class="inl">&lt;Customer360&gt;</code> — פרופיל שירות</li><li><code class="inl">&lt;ForecastTable&gt;</code> — תחזית מול ביצוע, תאים חיים</li><li><code class="inl">&lt;ScenarioChart&gt;</code> — בסיס/אופטימי/פסימי/בפועל</li></ul></div>
     </div>
     <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><p><b>חוב טכני מהמוקאפים:</b> ה‑CSS שוכפל בכל מסך. בבנייה — stylesheet/Design‑System משותף אחד וקומפוננטות בלבד. כל מצב (Empty/Loading/Error) חייב מימוש, ולא רק מצב מלא.</p></div>
   </section>
 
   <section id="roadmap">
-    <h2><span class="h2num">09</span>מפת דרכים</h2>
+    <h2><span class="h2num">10</span>מפת דרכים</h2>
     <table>
       <thead><tr><th>שלב</th><th>תכולה</th></tr></thead>
       <tbody>
         <tr><td><span class="pill v1">v1</span></td><td>shell + RBAC · דשבורד · שיווק ומשפך · לקוחות ומנויים · אנליטיקת מרצים · read‑model + compute‑kpis.</td></tr>
-        <tr><td><span class="pill v2">v2</span></td><td>שותפים ועמלות · Enterprise (pipeline/הצעות/חוזים) · שירות 360° · מוצר ובאגים + צ'אט חכם · digest שבועי.</td></tr>
+        <tr><td><span class="pill v2">v2</span></td><td>שותפים ועמלות · Enterprise (pipeline/הצעות/חוזים) · שירות 360° · מוצר ובאגים + צ'אט חכם · digest שבועי · תחזית כלכלית (autofill + תזכורת שבועית).</td></tr>
         <tr><td><span class="pill fut">עתידי</span></td><td>סליקה ותשלומים (מתחבר ליוזמת הסליקה) · ייחוס Ads · drill‑down מתקדם.</td></tr>
       </tbody>
     </table>
   </section>
 
   <section id="stack">
-    <h2><span class="h2num">10</span>מחסנית טכנולוגית</h2>
+    <h2><span class="h2num">11</span>מחסנית טכנולוגית</h2>
     <table>
       <thead><tr><th>שכבה</th><th>טכנולוגיה</th></tr></thead>
       <tbody>

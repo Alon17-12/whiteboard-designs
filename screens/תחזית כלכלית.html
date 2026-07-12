@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תחזית כלכלית | WHITEBOARD ניהול</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#253E7A; --navy-dark:#1a2f5e; --navy-light:#3a5499;
+    --cyan:#38C4F2; --cyan-dark:#1db0d8; --cyan-light:rgba(56,196,242,0.12);
+    --light-blue:#E3F4FD;
+    --pink:#F05680; --pink-light:rgba(240,86,128,0.12);
+    --yellow:#EAD654; --yellow-light:rgba(234,214,84,0.18);
+    --green:#7DC57A; --green-bright:#22c55e; --green-light:rgba(125,197,122,0.14);
+    --white:#FFFFFF;
+    --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#f5f8ff; --surface-3:#edf4ff;
+    --border:rgba(37,62,122,0.1); --border-hover:rgba(56,196,242,0.4);
+    --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.55); --text-light:rgba(37,62,122,0.38);
+    --font-he:'Heebo',sans-serif; --font-en:'Fredoka',sans-serif;
+    --r-xs:6px; --r-sm:10px; --r-md:16px; --r-lg:18px; --r-xl:24px;
+    --shadow-sm:0 2px 10px rgba(37,62,122,0.07);
+    --shadow-md:0 6px 24px rgba(37,62,122,0.1);
+    --shadow-lg:0 16px 48px rgba(37,62,122,0.14);
+    --sidebar-bg:var(--navy);
+  }
+  [data-theme="dark"] {
+    --cyan-light:rgba(56,196,242,0.14); --light-blue:rgba(56,196,242,0.1);
+    --pink-light:rgba(240,86,128,0.18); --yellow-light:rgba(234,214,84,0.18); --green-light:rgba(125,197,122,0.18);
+    --bg:#0c1424; --surface:#131e35; --surface-2:#1a2740; --surface-3:#1e2e48;
+    --border:rgba(255,255,255,0.07); --border-hover:rgba(56,196,242,0.4);
+    --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.55); --text-light:rgba(221,229,245,0.32);
+    --shadow-sm:0 2px 12px rgba(0,0,0,0.3); --shadow-md:0 6px 28px rgba(0,0,0,0.4); --shadow-lg:0 16px 48px rgba(0,0,0,0.55);
+    --sidebar-bg:#0d1628;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:var(--font-he); background:var(--bg); color:var(--text-main); min-height:100vh; display:flex; transition:background .3s,color .3s; }
+  ::-webkit-scrollbar { width:9px; height:9px; }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:6px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--text-light); }
+
+  /* ── SIDEBAR ─────────────────────────── */
+  .sidebar { width:230px; background:var(--sidebar-bg); border-left:1px solid rgba(255,255,255,0.05); min-height:100vh; display:flex; flex-direction:column; padding:22px 0 16px; flex-shrink:0; position:fixed; right:0; top:0; bottom:0; z-index:50; transition:background .3s; overflow-y:auto; }
+  .sidebar::-webkit-scrollbar { width:0; }
+  .sidebar-logo { padding:4px 18px 18px; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:8px; display:flex; align-items:center; justify-content:center; }
+  .sidebar-logo img { width:148px; object-fit:contain; display:block; }
+  .admin-badge { display:flex; align-items:center; gap:7px; margin:0 14px 12px; padding:8px 12px; background:rgba(56,196,242,0.12); border:1px solid rgba(56,196,242,0.25); border-radius:var(--r-sm); }
+  .admin-badge svg { width:15px; height:15px; color:var(--cyan); flex-shrink:0; }
+  .admin-badge span { font-size:12px; font-weight:700; color:var(--cyan); font-family:var(--font-en); letter-spacing:.4px; }
+  .nav-group-label { font-size:10.5px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:rgba(255,255,255,0.32); padding:14px 20px 6px; font-family:var(--font-en); }
+  .sidebar-section { padding:0 12px; }
+  .nav-item { display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:var(--r-sm); cursor:pointer; transition:all .18s; text-decoration:none; color:rgba(255,255,255,0.65); font-size:13.5px; font-weight:500; position:relative; }
+  .nav-item:hover { background:rgba(255,255,255,0.08); color:#fff; }
+  .nav-item.active { background:rgba(56,196,242,0.2); color:var(--cyan); font-weight:700; }
+  .nav-item svg { width:18px; height:18px; flex-shrink:0; }
+  .nav-item .badge-count { margin-inline-start:auto; background:var(--pink); color:#fff; font-size:10.5px; font-weight:700; min-width:19px; height:19px; padding:0 5px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:var(--font-en); }
+  .sidebar-bottom { margin-top:auto; padding:14px 12px 0; border-top:1px solid rgba(255,255,255,0.1); }
+  .profile-mini { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--r-sm); cursor:pointer; transition:background .2s; }
+  .profile-mini:hover { background:rgba(255,255,255,0.08); }
+  .avatar-sm { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--cyan),var(--navy-light)); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#fff; flex-shrink:0; font-family:var(--font-en); }
+  .profile-mini-name { font-size:13px; font-weight:600; color:#fff; }
+  .profile-mini-role { font-size:11px; color:rgba(255,255,255,0.45); }
+
+  /* ── MAIN ─────────────────────────── */
+  .main { margin-right:230px; flex:1; display:flex; flex-direction:column; min-width:0; }
+  .topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 30px; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:40; box-shadow:var(--shadow-sm); transition:background .3s; }
+  .topbar-breadcrumb { display:flex; align-items:center; gap:8px; font-size:14px; }
+  .breadcrumb-link { color:var(--text-sub); cursor:pointer; transition:color .2s; text-decoration:none; }
+  .breadcrumb-link:hover { color:var(--text-main); }
+  .breadcrumb-sep { color:var(--text-light); }
+  .breadcrumb-sep svg { width:15px; height:15px; display:block; }
+  .breadcrumb-current { color:var(--text-main); font-weight:700; }
+  .topbar-actions { display:flex; align-items:center; gap:12px; }
+  .icon-btn { width:40px; height:40px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; color:var(--text-sub); position:relative; }
+  .icon-btn:hover { background:var(--light-blue); color:var(--navy); border-color:var(--cyan); }
+  [data-theme="dark"] .icon-btn:hover { color:var(--cyan); border-color:var(--border-hover); }
+  .icon-btn svg { width:19px; height:19px; }
+  .icon-btn .notif-dot { position:absolute; top:8px; left:9px; width:8px; height:8px; border-radius:50%; background:var(--pink); border:2px solid var(--surface); }
+  .icon-sun { display:none; } .icon-moon { display:block; }
+  [data-theme="dark"] .icon-sun { display:block; } [data-theme="dark"] .icon-moon { display:none; }
+
+  .page-body { padding:30px; flex:1; max-width:1640px; width:100%; }
+
+  /* ── GREETING ─────────────────────────── */
+  .greeting-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; gap:24px; flex-wrap:wrap; }
+  .greeting-wrap { display:flex; align-items:center; gap:16px; }
+  .greeting-boardi { width:70px; flex-shrink:0; filter:drop-shadow(0 6px 16px rgba(37,62,122,0.22)); }
+  .greeting-title { font-size:29px; font-weight:900; color:var(--text-main); line-height:1.1; }
+  .greeting-subtitle { font-size:14px; color:var(--text-sub); margin-top:6px; }
+  .greeting-subtitle .dot { color:var(--text-light); margin:0 8px; }
+  .greeting-subtitle b { color:var(--green); font-weight:700; }
+  .live-chip { display:inline-flex; align-items:center; gap:6px; background:var(--green-light); border:1px solid rgba(125,197,122,0.4); color:var(--green); font-size:12px; font-weight:700; padding:3px 10px; border-radius:20px; vertical-align:middle; }
+  .live-chip .pulse { width:7px; height:7px; border-radius:50%; background:var(--green-bright); animation:pulse 1.6s ease infinite; }
+  @keyframes pulse { 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:.4; transform:scale(.75);} }
+  .header-actions { display:flex; gap:10px; align-items:center; flex-shrink:0; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:30px; font-family:var(--font-he); font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; border:none; white-space:nowrap; }
+  .btn-primary { background:linear-gradient(135deg,var(--cyan),var(--cyan-dark)); color:#fff; box-shadow:0 4px 16px rgba(56,196,242,0.35); }
+  [data-theme="dark"] .btn-primary { color:#0b1424; }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(56,196,242,0.45); }
+  .btn-secondary { background:var(--surface); color:var(--navy); border:1.5px solid var(--border); }
+  .btn-secondary:hover { background:var(--light-blue); border-color:var(--cyan); }
+  [data-theme="dark"] .btn-secondary { background:var(--surface-2); color:var(--text-main); }
+  [data-theme="dark"] .btn-secondary:hover { border-color:var(--border-hover); color:var(--cyan); }
+  .btn svg { width:16px; height:16px; }
+
+  /* ── REMINDER BANNER ─────────────────────────── */
+  .reminder-banner { display:flex; align-items:center; gap:14px; background:var(--yellow-light); border:1px solid rgba(234,214,84,0.5); border-radius:var(--r-md); padding:15px 18px; margin-bottom:22px; }
+  .reminder-banner.done { background:var(--green-light); border-color:rgba(125,197,122,0.45); }
+  .reminder-ic { width:40px; height:40px; border-radius:11px; background:rgba(234,214,84,0.35); color:#b89c00; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  [data-theme="dark"] .reminder-ic { color:var(--yellow); }
+  .reminder-banner.done .reminder-ic { background:rgba(125,197,122,0.3); color:var(--green); }
+  .reminder-ic svg { width:19px; height:19px; }
+  .reminder-body { flex:1; min-width:0; }
+  .reminder-title { font-size:14.5px; font-weight:800; color:var(--text-main); }
+  .reminder-sub { font-size:12.5px; color:var(--text-sub); margin-top:2px; }
+  .reminder-sub b { color:#b89c00; } [data-theme="dark"] .reminder-sub b { color:var(--yellow); }
+  .reminder-banner.done .reminder-sub b { color:var(--green); }
+  .reminder-actions { display:flex; gap:8px; flex-shrink:0; align-items:center; }
+  .reminder-btn { padding:9px 16px; border-radius:20px; font-family:var(--font-he); font-size:13px; font-weight:700; cursor:pointer; border:none; background:var(--navy); color:#fff; transition:all .2s; }
+  [data-theme="dark"] .reminder-btn { background:var(--cyan); color:var(--navy-dark); }
+  .reminder-btn:hover { transform:translateY(-1px); box-shadow:var(--shadow-md); }
+  .reminder-ghost { padding:9px 14px; border-radius:20px; font-family:var(--font-he); font-size:12.5px; font-weight:700; cursor:pointer; border:1px solid var(--border); background:var(--surface); color:var(--text-sub); display:inline-flex; align-items:center; gap:6px; transition:all .2s; }
+  .reminder-ghost:hover { color:var(--navy); border-color:var(--cyan); }
+  [data-theme="dark"] .reminder-ghost:hover { color:var(--cyan); }
+  .reminder-ghost svg { width:14px; height:14px; }
+
+  /* ── KPI STRIP ─────────────────────────── */
+  .kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:22px; }
+  .kpi-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:18px 20px; box-shadow:var(--shadow-sm); transition:transform .2s,box-shadow .2s; position:relative; overflow:hidden; }
+  .kpi-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+  .kpi-card::before { content:''; position:absolute; top:0; right:0; width:4px; height:100%; background:var(--c,var(--cyan)); }
+  .kpi-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .kpi-icon { width:40px; height:40px; border-radius:var(--r-sm); background:var(--c-light,var(--cyan-light)); display:flex; align-items:center; justify-content:center; color:var(--c,var(--cyan)); }
+  .kpi-icon svg { width:20px; height:20px; }
+  .kpi-note { font-size:11px; font-weight:700; padding:3px 8px; border-radius:10px; color:var(--text-sub); background:var(--surface-2); border:1px solid var(--border); }
+  .kpi-value { font-size:27px; font-weight:900; font-family:var(--font-en); color:var(--text-main); line-height:1; margin-bottom:4px; direction:ltr; text-align:right; }
+  .kpi-label { font-size:13px; color:var(--text-sub); font-weight:500; }
+  .kpi-formula { font-size:10.5px; color:var(--text-light); margin-top:5px; font-family:var(--font-en); direction:ltr; text-align:right; }
+
+  /* ── CARDS ─────────────────────────── */
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:22px; box-shadow:var(--shadow-sm); transition:background .3s; margin-bottom:22px; }
+  .card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; gap:12px; flex-wrap:wrap; }
+  .card-title { font-size:16.5px; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:10px; }
+  .card-title-icon { width:30px; height:30px; border-radius:9px; background:var(--light-blue); display:flex; align-items:center; justify-content:center; color:var(--cyan); flex-shrink:0; }
+  [data-theme="dark"] .card-title-icon { background:var(--cyan-light); }
+  .card-title-icon svg { width:15px; height:15px; }
+  .card-sub { font-size:13px; color:var(--text-sub); line-height:1.6; margin-bottom:16px; max-width:900px; }
+  .card-sub b { color:var(--text-main); }
+
+  /* TABLES */
+  .table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--r-sm); }
+  table { width:100%; border-collapse:collapse; }
+  thead th { text-align:right; font-size:11.5px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:.5px; padding:11px 12px; border-bottom:1px solid var(--border); background:var(--surface-2); white-space:nowrap; }
+  tbody td { padding:11px 12px; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--text-main); vertical-align:middle; }
+  tbody tr:last-child td { border-bottom:none; }
+  .num { font-family:var(--font-en); font-weight:700; direction:ltr; }
+
+  /* Assumptions table */
+  .src-pill { font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:10px; white-space:nowrap; font-family:var(--font-en); }
+  .src-pill.actual { background:var(--green-light); color:var(--green); }
+  .src-pill.estimate { background:var(--yellow-light); color:#b89c00; }
+  [data-theme="dark"] .src-pill.estimate { color:var(--yellow); }
+  .assume-input { width:86px; background:var(--cyan-light); border:1px solid rgba(56,196,242,0.35); border-radius:var(--r-xs); padding:6px 8px; text-align:center; font-weight:700; font-family:var(--font-en); font-size:13.5px; color:var(--text-main); direction:ltr; transition:all .15s; }
+  .assume-input:focus { outline:none; border-color:var(--cyan); box-shadow:0 0 0 3px rgba(56,196,242,0.15); }
+  .sys-val { display:inline-flex; align-items:center; gap:6px; font-family:var(--font-en); font-weight:800; direction:ltr; }
+  .sys-val .pulse { width:6px; height:6px; border-radius:50%; background:var(--green-bright); animation:pulse 1.6s ease infinite; flex-shrink:0; }
+  .sys-val.good { color:var(--green); }
+  .sys-val.bad { color:var(--pink); }
+  .sys-val.na { color:var(--text-light); font-weight:600; }
+  .rationale { font-size:12px; color:var(--text-sub); line-height:1.55; max-width:380px; }
+
+  /* Forecast table */
+  .ftable thead th { text-align:center; }
+  .ftable thead th:first-child { text-align:right; min-width:200px; }
+  .ftable tbody td { text-align:center; font-family:var(--font-en); font-size:13px; white-space:nowrap; }
+  .ftable tbody td:first-child { text-align:right; font-family:var(--font-he); font-weight:700; font-size:13px; white-space:normal; min-width:200px; }
+  .ftable .row-forecast td { color:var(--text-sub); font-weight:500; }
+  .ftable .row-forecast td:first-child { color:var(--text-sub); }
+  .ftable .row-actual { background:var(--cyan-light); }
+  .ftable .row-calc td { font-weight:800; }
+  .ftable .col-now { background:rgba(56,196,242,0.07); }
+  thead th.col-now { background:var(--cyan-light); color:var(--cyan-dark); }
+  [data-theme="dark"] thead th.col-now { color:var(--cyan); }
+  .ftable .col-total { background:var(--pink-light); font-weight:800; border-right:1px solid rgba(240,86,128,0.25); }
+  thead th.col-total { background:var(--pink-light); color:var(--pink); }
+  .cell-input { width:84px; background:var(--surface); border:1px solid rgba(56,196,242,0.4); border-radius:var(--r-xs); padding:6px 6px; text-align:center; font-weight:700; font-family:var(--font-en); font-size:13px; color:var(--text-main); direction:ltr; transition:all .15s; }
+  .cell-input:focus { outline:none; border-color:var(--cyan); box-shadow:0 0 0 3px rgba(56,196,242,0.15); }
+  .cell-input.missing { border-color:rgba(234,214,84,0.9); background:var(--yellow-light); }
+  .cell-input.flash { animation:flashIn 1.2s ease; }
+  @keyframes flashIn { 0%{box-shadow:0 0 0 5px rgba(56,196,242,0.35);} 100%{box-shadow:0 0 0 0 rgba(56,196,242,0);} }
+  .auto-tag { display:inline-flex; align-items:center; gap:4px; font-size:9.5px; font-weight:700; color:var(--green); background:var(--green-light); border-radius:8px; padding:1px 6px; margin-inline-start:5px; font-family:var(--font-en); vertical-align:middle; }
+  .auto-tag .pulse { width:5px; height:5px; border-radius:50%; background:var(--green-bright); animation:pulse 1.6s ease infinite; }
+  .row-label-note { display:block; font-size:10.5px; font-weight:500; color:var(--text-light); margin-top:2px; }
+  .a-cac { color:var(--pink) !important; }
+  .a-mrr { color:var(--green) !important; }
+  .delta-cell { font-size:10.5px; font-weight:700; display:block; margin-top:2px; }
+  .delta-cell.up { color:var(--green); } .delta-cell.down { color:var(--pink); }
+
+  /* CHART */
+  .chart-legend { display:flex; gap:18px; margin-bottom:14px; flex-wrap:wrap; }
+  .cl-item { display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:var(--text-sub); }
+  .cl-dot { width:16px; height:4px; border-radius:3px; flex-shrink:0; }
+  .cl-dot.dashed { background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 7px); height:3px; }
+  .chart-wrap { position:relative; height:260px; width:100%; }
+  .chart-svg { width:100%; height:100%; overflow:visible; }
+  .chart-grid-line { stroke:var(--border); stroke-width:1; stroke-dasharray:3 4; }
+  .chart-x-label, .chart-y-label { font-family:var(--font-en); font-size:11px; fill:var(--text-light); }
+  .chart-x-label { text-anchor:middle; }
+
+  /* CFO VERDICT */
+  .verdict { background:linear-gradient(135deg,#253E7A 0%,#2f4d96 55%,#38527f 100%); border-radius:var(--r-xl); padding:26px; color:#fff; position:relative; overflow:hidden; margin-bottom:22px; box-shadow:var(--shadow-lg); }
+  [data-theme="dark"] .verdict { background:linear-gradient(135deg,#0f1b3a 0%,#1a2a55 50%,#0f1b3a 100%); border:1px solid rgba(56,196,242,0.2); }
+  .verdict::before { content:''; position:absolute; width:460px; height:460px; border-radius:50%; background:radial-gradient(circle,rgba(56,196,242,0.2) 0%,transparent 70%); top:-230px; left:-160px; pointer-events:none; }
+  .verdict-head { display:flex; align-items:center; gap:14px; margin-bottom:16px; position:relative; z-index:2; }
+  .verdict-boardi { width:56px; flex-shrink:0; filter:drop-shadow(0 6px 14px rgba(0,0,0,0.25)); }
+  .verdict-eyebrow { font-size:12px; font-weight:600; color:var(--cyan); letter-spacing:1.5px; text-transform:uppercase; font-family:var(--font-en); }
+  .verdict-title { font-size:20px; font-weight:800; color:#fff; line-height:1.2; margin-top:3px; }
+  .verdict-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; position:relative; z-index:2; }
+  .verdict-card { background:rgba(255,255,255,0.08); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.12); border-radius:var(--r-md); padding:18px; }
+  .verdict-card h4 { font-size:14px; font-weight:800; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+  .verdict-card h4 svg { width:16px; height:16px; flex-shrink:0; }
+  .verdict-card.good h4 { color:#95d892; }
+  .verdict-card.risk h4 { color:#ff8ba8; }
+  .verdict-card p { font-size:12.5px; color:rgba(255,255,255,0.72); line-height:1.6; margin:0; }
+  .verdict-card p b { color:#fff; }
+
+  /* MODAL */
+  .modal-overlay { position:fixed; inset:0; background:rgba(12,20,36,0.55); backdrop-filter:blur(3px); z-index:150; display:none; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--surface); border-radius:var(--r-lg); box-shadow:var(--shadow-lg); width:460px; max-width:calc(100vw - 40px); padding:24px; animation:modalIn .25s ease; }
+  @keyframes modalIn { from{opacity:0; transform:translateY(14px) scale(.98);} to{opacity:1; transform:none;} }
+  .modal-title { font-size:17px; font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:10px; }
+  .modal-sub { font-size:12.5px; color:var(--text-sub); margin-bottom:18px; line-height:1.5; }
+  .form-row { margin-bottom:14px; }
+  .form-label { display:block; font-size:12.5px; font-weight:700; color:var(--text-sub); margin-bottom:6px; }
+  .form-select, .form-input { width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-sm); padding:10px 12px; font-family:var(--font-he); font-size:13.5px; color:var(--text-main); transition:all .15s; }
+  .form-select:focus, .form-input:focus { outline:none; border-color:var(--cyan); box-shadow:0 0 0 3px rgba(56,196,242,0.12); }
+  .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-sm); margin-bottom:8px; }
+  .toggle-row span { font-size:13px; font-weight:600; }
+  .switch { width:38px; height:22px; border-radius:12px; background:var(--border); position:relative; cursor:pointer; transition:background .2s; border:none; flex-shrink:0; }
+  .switch::after { content:''; position:absolute; top:3px; right:3px; width:16px; height:16px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,0.25); }
+  .switch.on { background:var(--green); }
+  .switch.on::after { transform:translateX(-16px); }
+  .modal-actions { display:flex; gap:10px; justify-content:flex-start; margin-top:20px; }
+
+  @media (max-width:1200px){ .kpi-strip{grid-template-columns:repeat(2,1fr);} .verdict-grid{grid-template-columns:1fr;} }
+
+  /* TOAST */
+  .toast-container { position:fixed; bottom:24px; left:24px; z-index:200; display:flex; flex-direction:column; gap:10px; }
+  .toast { display:flex; align-items:center; gap:11px; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-sm); padding:13px 16px; box-shadow:var(--shadow-lg); min-width:280px; animation:toastIn .35s ease forwards; }
+  @keyframes toastIn { from{opacity:0;transform:translateX(-30px);} to{opacity:1;transform:translateX(0);} }
+  .toast.out { animation:toastOut .35s ease forwards; }
+  @keyframes toastOut { to{opacity:0;transform:translateX(-30px);} }
+  .toast-icon { width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .toast-icon svg { width:16px; height:16px; }
+  .toast.success .toast-icon{background:var(--green-light);color:var(--green);} .toast.info .toast-icon{background:var(--cyan-light);color:var(--cyan);} .toast.warn .toast-icon{background:var(--yellow-light);color:#b89c00;}
+  .toast-text { font-size:13.5px; font-weight:600; color:var(--text-main); }
+</style>
+<script>try{var t=localStorage.getItem("wb-admin-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo"><img src="../LOGO/LOGO PNG/WHITEBOARD 2.0-07.png" alt="WHITEBOARD"></div>
+  <div class="admin-badge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span>ADMIN · ניהול</span>
+  </div>
+
+  <div class="sidebar-section">
+    <a class="nav-item" href="מרכז הבקרה - דשבורד ראשי.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>מרכז הבקרה</a>
+  </div>
+
+  <div class="nav-group-label">שיווק ומכירות</div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="שיווק ומשפך.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>שיווק ומשפך</a>
+    <a class="nav-item" href="לקוחות ומנויים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg>לקוחות ומנויים</a>
+    <a class="nav-item" href="מכירות Enterprise.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v4H3zM3 10h18v11H3z"/><path d="M8 14h8"/></svg>מכירות Enterprise</a>
+    <a class="nav-item" href="שותפים ועמלות.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>שותפים ועמלות</a>
+    <a class="nav-item" href="סליקה ותשלומים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>סליקה ותשלומים<span style="margin-inline-start:auto;font-size:9.5px;font-weight:700;color:#b89c00;background:rgba(234,214,84,0.2);padding:2px 6px;border-radius:8px;font-family:var(--font-en)">עתידי</span></a>
+  </div>
+
+  <div class="nav-group-label">כספים</div>
+  <div class="sidebar-section">
+    <a class="nav-item active" href="תחזית כלכלית.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/><circle cx="20" cy="4" r="1.6"/></svg>תחזית כלכלית</a>
+  </div>
+
+  <div class="nav-group-label">תפעול ומוצר</div>
+  <div class="sidebar-section">
+    <a class="nav-item" href="אנליטיקת מרצים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>אנליטיקת מרצים</a>
+    <a class="nav-item" href="מוצר ובאגים.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="M12 6V3M5 9H2M22 9h-3M5 15H2M22 15h-3M7 4l-2-2M17 4l2-2"/></svg>מוצר ובאגים<span class="badge-count">7</span></a>
+    <a class="nav-item" href="שירות CS.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>שירות (CS)<span class="badge-count">12</span></a>
+  </div>
+
+  <div class="sidebar-bottom">
+    <a class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות</a>
+    <div class="profile-mini">
+      <div class="avatar-sm">AG</div>
+      <div><div class="profile-mini-name">אלון גבאי</div><div class="profile-mini-role">מנכ״ל</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <a class="breadcrumb-link" href="מרכז הבקרה - דשבורד ראשי.html">ניהול</a>
+      <span class="breadcrumb-sep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></span>
+      <span class="breadcrumb-current">תחזית כלכלית</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="notifBtn" aria-label="התראות"><span class="notif-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+      <button class="icon-btn" id="themeBtn" aria-label="מצב תצוגה">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="page-body">
+
+    <!-- GREETING -->
+    <div class="greeting-row">
+      <div class="greeting-wrap">
+        <img class="greeting-boardi" src="../BOARDi/SVG/7.svg" alt="BOARDi">
+        <div>
+          <div class="greeting-title">תחזית כלכלית — H2 2026</div>
+          <div class="greeting-subtitle">
+            תחזית מול ביצועים בפועל <span class="dot">•</span>
+            <span class="live-chip"><span class="pulse"></span> מתעדכן בלייב מהמערכת</span>
+            <span class="dot">•</span> עדכון ידני אחרון: <b id="lastFilled">6 ביולי 2026</b>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>ייצוא דוח</button>
+        <button class="btn btn-primary" id="fillNowBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>עדכון נתוני החודש</button>
+      </div>
+    </div>
+
+    <!-- WEEKLY REMINDER BANNER -->
+    <div class="reminder-banner" id="reminderBanner">
+      <div class="reminder-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+      <div class="reminder-body">
+        <div class="reminder-title" id="reminderTitle">תזכורת שבועית — הוצאות השיווק של יולי טרם עודכנו</div>
+        <div class="reminder-sub" id="reminderSub">לקוחות חדשים ו‑MRR נמשכים אוטומטית מהמערכת. <b>הוצאות שיווק מוזנות ידנית</b> — התזכורת נשלחת כל יום ראשון ב‑09:00 במייל ובהתראה, עד שהחודש מלא.</div>
+      </div>
+      <div class="reminder-actions">
+        <button class="reminder-btn" id="reminderFillBtn">מלא עכשיו</button>
+        <button class="reminder-ghost" id="reminderSettingsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות תזכורת</button>
+      </div>
+    </div>
+
+    <!-- KPI STRIP (Unit Economics — live) -->
+    <div class="kpi-strip">
+      <div class="kpi-card" style="--c:var(--navy);--c-light:rgba(37,62,122,0.1)">
+        <div class="kpi-top">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <span class="kpi-note">מחושב חי</span>
+        </div>
+        <div class="kpi-value" id="kpiLtv">₪3,669</div>
+        <div class="kpi-label">LTV — שווי לקוח לכל חייו</div>
+        <div class="kpi-formula">(ARPU × Margin) / Churn</div>
+      </div>
+      <div class="kpi-card" style="--c:var(--pink);--c-light:var(--pink-light)">
+        <div class="kpi-top">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+          <span class="kpi-note">יעד GTM</span>
+        </div>
+        <div class="kpi-value" id="kpiCac">₪500</div>
+        <div class="kpi-label">CAC יעד — עלות רכישת לקוח</div>
+        <div class="kpi-formula" id="kpiCacActual">בפועל עד כה: —</div>
+      </div>
+      <div class="kpi-card" style="--c:var(--green);--c-light:var(--green-light)">
+        <div class="kpi-top">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M21 3l-7 7-4-4-7 7"/></svg></div>
+          <span class="kpi-note">בנצ׳מרק: 3:1</span>
+        </div>
+        <div class="kpi-value" id="kpiRatio">7.3 : 1</div>
+        <div class="kpi-label">יחס LTV:CAC</div>
+        <div class="kpi-formula">LTV / CAC</div>
+      </div>
+      <div class="kpi-card" style="--c:var(--cyan);--c-light:var(--cyan-light)">
+        <div class="kpi-top">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <span class="kpi-note">מחושב חי</span>
+        </div>
+        <div class="kpi-value" id="kpiPayback">2.3 חוד׳</div>
+        <div class="kpi-label">Payback — החזר עלות רכישה</div>
+        <div class="kpi-formula">CAC / (ARPU × Margin)</div>
+      </div>
+    </div>
+
+    <!-- 1. ASSUMPTIONS LOG -->
+    <section class="card">
+      <div class="card-head">
+        <div class="card-title"><span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></span>יומן הנחות יסוד — הנחה מול מציאות</div>
+      </div>
+      <p class="card-sub">כל משתנה במודל מסווג כ<b>נתון אמת</b> או <b>הערכה</b>. עמודת <b>"בפועל במערכת"</b> נמשכת חיה מה‑read‑model של האדמין (KpiSnapshot) ומאירה כל הנחה שהמציאות כבר סותרת. ערכי ההנחות ניתנים לעריכה — כל שינוי מחשב מחדש את ה‑Unit Economics, את התחזית ואת הגרף.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>משתנה</th>
+              <th style="text-align:center">ערך למודל</th>
+              <th style="text-align:center">מקור</th>
+              <th style="text-align:center">בפועל במערכת</th>
+              <th>רציונל</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>ARPU</b> — הכנסה ממוצעת ללקוח</td>
+              <td style="text-align:center"><input class="assume-input" id="inpArpu" type="number" value="259"> <span class="num" style="font-size:11px;color:var(--text-light)">₪/חוד׳</span></td>
+              <td style="text-align:center"><span class="src-pill estimate">הערכה</span></td>
+              <td style="text-align:center"><span class="sys-val na">— טרם מספיק דאטה</span></td>
+              <td class="rationale">תמהיל שמרני של המסלולים בפועל: 70% "מחנך" (₪199) + 30% "מנהיג" (₪399) = ₪259. מסלול "מורה" (₪149) ושנתי ("שלם 10 קבל 12") יעדכנו את התמהיל כשיהיו נתוני אמת.</td>
+            </tr>
+            <tr>
+              <td><b>Gross Margin</b> — רווח גולמי</td>
+              <td style="text-align:center"><input class="assume-input" id="inpMargin" type="number" value="85"> <span class="num" style="font-size:11px;color:var(--text-light)">%</span></td>
+              <td style="text-align:center"><span class="src-pill estimate">הערכה</span></td>
+              <td style="text-align:center"><span class="sys-val na">— חיבור עלויות Bunny (v2)</span></td>
+              <td class="rationale">SaaS טיפוסי 80–90%. אצלנו אחסון וידאו (Bunny Stream + DRM) ו‑API של AI (BOARDi) מכבידים — 85% ריאלי. ה‑15% הם תשתיות.</td>
+            </tr>
+            <tr>
+              <td><b>Monthly Churn</b> — נטישה חודשית</td>
+              <td style="text-align:center"><input class="assume-input" id="inpChurn" type="number" value="6" step="0.1"> <span class="num" style="font-size:11px;color:var(--text-light)">%</span></td>
+              <td style="text-align:center"><span class="src-pill estimate">הערכה</span></td>
+              <td style="text-align:center"><span class="sys-val good"><span class="pulse"></span>3.4%</span></td>
+              <td class="rationale">הנחת Seed שמרנית ל‑Creator Economy: 6%. הנתון החי מ"לקוחות ומנויים" עומד על 3.4% — טוב מההנחה. ההנחה נשארת שמרנית עד 6 חודשי דאטה רצופים.</td>
+            </tr>
+            <tr>
+              <td><b>CAC יעד</b> — עלות רכישת לקוח</td>
+              <td style="text-align:center"><input class="assume-input" id="inpCac" type="number" value="500"> <span class="num" style="font-size:11px;color:var(--text-light)">₪</span></td>
+              <td style="text-align:center"><span class="src-pill actual">נתון אמת</span></td>
+              <td style="text-align:center"><span class="sys-val" id="sysCac"><span class="pulse"></span>—</span></td>
+              <td class="rationale">הוגדר ב‑GTM כמדד Scale מובהק. ה"בפועל" מחושב מהטבלה למטה: סך הוצאות שיווק בפועל ÷ סך לקוחות חדשים בפועל.</td>
+            </tr>
+            <tr>
+              <td><b>Trial→Paid CVR</b> — המרת ניסיון</td>
+              <td style="text-align:center"><input class="assume-input" id="inpCvr" type="number" value="15"> <span class="num" style="font-size:11px;color:var(--text-light)">%</span></td>
+              <td style="text-align:center"><span class="src-pill actual">נתון אמת</span></td>
+              <td style="text-align:center"><span class="sys-val good"><span class="pulse"></span>16.2%</span></td>
+              <td class="rationale">תנאי המינימום בתוכנית 30 הימים. הנתון החי נמשך ממודול "שיווק ומשפך" (המרת מסלול "ניסיון" ללא כרטיס אשראי → מנוי בתשלום).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2. FORECAST TABLE -->
+    <section class="card" id="forecastCard">
+      <div class="card-head">
+        <div class="card-title"><span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>תחזית מול ביצוע — יולי עד דצמבר 2026</div>
+        <span class="live-chip"><span class="pulse"></span> שינויים נשמרים אוטומטית</span>
+      </div>
+      <p class="card-sub"><b>שורות התחזית</b> קבועות מהמודל. <b>השורות הכחולות</b> הן נתוני האמת: לקוחות חדשים נמשכים אוטומטית מהמערכת (מנויים חדשים בתשלום), הוצאות שיווק מוזנות ידנית — זה מה שהתזכורת השבועית מוודאת. ה‑MRR מחושב בשיטת <b>הכרה בהכנסה</b> (תשלום שנתי נפרס 1/12 לחודש), בדיוק כמו בדשבורד הראשי.</p>
+      <div class="table-wrap">
+        <table class="ftable">
+          <thead><tr id="ftHead"></tr></thead>
+          <tbody id="ftBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3. SCENARIO CHART -->
+    <section class="card">
+      <div class="card-head">
+        <div class="card-title"><span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/></svg></span>תרחישי MRR — בסיס, אופטימי, פסימי מול בפועל</div>
+      </div>
+      <p class="card-sub">קו <b>"בפועל"</b> מתעדכן חי מהנתונים בטבלה ונמתח רק על חודשים שמולאו. תרחיש אופטימי = ‎+50% על הבסיס; פסימי = ‎−50% (נטישה גבוהה או קשיי חדירה).</p>
+      <div class="chart-legend">
+        <span class="cl-item"><span class="cl-dot" style="background:var(--navy)"></span>MRR בפועל</span>
+        <span class="cl-item"><span class="cl-dot" style="background:var(--cyan)"></span>תרחיש בסיס</span>
+        <span class="cl-item"><span class="cl-dot dashed" style="color:var(--green)"></span>אופטימי (+50%)</span>
+        <span class="cl-item"><span class="cl-dot dashed" style="color:var(--pink)"></span>פסימי (−50%)</span>
+      </div>
+      <div class="chart-wrap"><svg class="chart-svg" id="mrrChart" viewBox="0 0 1000 260" preserveAspectRatio="none"></svg></div>
+    </section>
+
+    <!-- 4. CFO VERDICT -->
+    <section class="verdict">
+      <div class="verdict-head">
+        <img class="verdict-boardi" src="../BOARDi/SVG/4.svg" alt="BOARDi">
+        <div>
+          <div class="verdict-eyebrow">CFO Analysis · תמצית המודל</div>
+          <div class="verdict-title">מה המספרים אומרים — ומה חייבים למדוד</div>
+        </div>
+      </div>
+      <div class="verdict-grid">
+        <div class="verdict-card good">
+          <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>נקודות חוזק</h4>
+          <p>יחס LTV:CAC של <b>7.3:1</b> ו‑Payback של <b>2.3 חודשים</b> — הרבה מעל בנצ׳מרק 3:1. עסק שמחזיר את עלות השיווק תוך חודשיים מממן את עצמו וגדל בלי הון חיצוני. המנועים: מסלולי "מחנך"/"מנהיג", <b>0% עמלה על מכירות</b> (הסליקה דרך האפליקציה הרשמית של WHITEBOARD ב‑Make — אין חיבור CardCom מובנה), לוקליזציה מלאה ו‑AI Native שמוזיל את הפקת התוכן ליוצר.</p>
+        </div>
+        <div class="verdict-card risk">
+          <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>סיכונים למעקב</h4>
+          <p>התזה נשענת על שמירת CAC של <b>₪500</b>. זה ריאלי ב‑100 הלקוחות הראשונים (הפליטים של Skool ורב‑מסר) — אחר כך ה‑CAC יטפס. Churn ב‑Creator Economy יכול לקפוץ ל‑10% במיתון. לכן המסך הזה קיים: <b>עמודת "בפועל במערכת" והטבלה למעלה הם מנגנון ההתרעה</b> — ברגע שהנחה נשברת, רואים את זה כאן לפני שרואים את זה בבנק.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- REMINDER SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-title"><span class="card-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>הגדרות תזכורת שבועית</div>
+    <div class="modal-sub">התזכורת נשלחת אוטומטית (Trigger.dev) כל עוד נתוני החודש הנוכחי לא הושלמו. ברגע שהחודש מלא — היא מפסיקה מעצמה עד החודש הבא.</div>
+    <div class="form-row">
+      <label class="form-label">יום בשבוע</label>
+      <select class="form-select" id="setDay">
+        <option selected>יום ראשון</option><option>יום שני</option><option>יום שלישי</option><option>יום רביעי</option><option>יום חמישי</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="form-label">שעה</label>
+      <input class="form-input" id="setHour" type="time" value="09:00">
+    </div>
+    <div class="form-row">
+      <label class="form-label">ערוצים</label>
+      <div class="toggle-row"><span>מייל להנהלה (EXEC + FINANCE)</span><button class="switch on" aria-label="מייל"></button></div>
+      <div class="toggle-row"><span>התראה במרכז הבקרה</span><button class="switch on" aria-label="התראה"></button></div>
+      <div class="toggle-row"><span>תזכורת נוספת אם לא מולא עד רביעי</span><button class="switch" aria-label="אסקלציה"></button></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="saveSettingsBtn">שמירה</button>
+      <button class="btn btn-secondary" id="closeSettingsBtn">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toasts"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ── STATE ─────────────────────────── */
+  var MONTHS = [
+    { key:'2026-07', label:'יולי',    fNew:15, fMark:7500  },
+    { key:'2026-08', label:'אוגוסט',  fNew:25, fMark:12500 },
+    { key:'2026-09', label:'ספטמבר', fNew:35, fMark:17500 },
+    { key:'2026-10', label:'אוקטובר', fNew:50, fMark:25000 },
+    { key:'2026-11', label:'נובמבר', fNew:65, fMark:32500 },
+    { key:'2026-12', label:'דצמבר',  fNew:80, fMark:40000 }
+  ];
+  var CURRENT = 0; // index of current month (יולי)
+
+  var state = {
+    assumptions: { arpu:259, margin:85, churn:6, cac:500, cvr:15 },
+    // aNew: auto-filled from system (demo: mid-July snapshot). aMark: manual — the weekly reminder's job.
+    actuals: MONTHS.map(function(m,i){ return { aNew: i===0 ? 9 : '', aNewAuto: i===0, aMark:'' }; })
+  };
+  try {
+    var saved = JSON.parse(localStorage.getItem('wb-admin-forecast-v1') || 'null');
+    if (saved && saved.actuals && saved.actuals.length === MONTHS.length) state = saved;
+  } catch(e){}
+
+  function persist(){
+    try { localStorage.setItem('wb-admin-forecast-v1', JSON.stringify(state)); } catch(e){}
+  }
+
+  /* ── HELPERS ─────────────────────────── */
+  function ils(n){ return '₪' + Math.round(n).toLocaleString('en-US'); }
+  function num(v){ var n = parseFloat(v); return isNaN(n) ? 0 : n; }
+  function filled(v){ return v !== '' && v !== null && v !== undefined; }
+
+  /* ── CORE CALC ─────────────────────────── */
+  function compute(){
+    var a = state.assumptions;
+    var arpu = num(a.arpu), margin = num(a.margin)/100, churn = num(a.churn)/100, cac = num(a.cac);
+
+    // Unit economics
+    var ltv = churn > 0 ? (arpu * margin) / churn : 0;
+    var ratio = cac > 0 ? ltv / cac : 0;
+    var payback = (arpu * margin) > 0 ? cac / (arpu * margin) : 0;
+    document.getElementById('kpiLtv').textContent = ils(ltv);
+    document.getElementById('kpiCac').textContent = ils(cac);
+    document.getElementById('kpiRatio').textContent = ratio.toFixed(1) + ' : 1';
+    document.getElementById('kpiPayback').textContent = payback.toFixed(1) + ' חוד׳';
+
+    // Per-month series
+    var fActive = 0, aActive = 0;
+    var res = { fMrr:[], aMrr:[], fCac:[], aCac:[], fActive:[], aActive:[],
+                tFNew:0, tANew:0, tFMark:0, tAMark:0, tFMrr:0, tAMrr:0, anyActual:[] };
+    MONTHS.forEach(function(m, i){
+      var act = state.actuals[i];
+      fActive = i === 0 ? m.fNew : fActive * (1 - churn) + m.fNew;
+      res.fActive.push(Math.round(fActive));
+      var fMrr = fActive * arpu;
+      res.fMrr.push(fMrr);
+      res.fCac.push(m.fNew > 0 ? m.fMark / m.fNew : 0);
+      res.tFNew += m.fNew; res.tFMark += m.fMark; res.tFMrr += fMrr;
+
+      var hasNew = filled(act.aNew), aNewV = num(act.aNew), aMarkV = num(act.aMark);
+      aActive = i === 0 ? aNewV : aActive * (1 - churn) + aNewV;
+      res.aActive.push(hasNew ? Math.round(aActive) : null);
+      var aMrr = aActive * arpu;
+      res.aMrr.push(hasNew ? aMrr : null);
+      res.aCac.push((aNewV > 0 && filled(act.aMark)) ? aMarkV / aNewV : null);
+      res.anyActual.push(hasNew || filled(act.aMark));
+      if (hasNew) { res.tANew += aNewV; res.tAMrr += aMrr; }
+      if (filled(act.aMark)) res.tAMark += aMarkV;
+    });
+
+    // Actual CAC to date (assumptions row + KPI note)
+    var cacActual = res.tANew > 0 && res.tAMark > 0 ? res.tAMark / res.tANew : null;
+    var sysCacEl = document.getElementById('sysCac');
+    if (cacActual !== null) {
+      sysCacEl.innerHTML = '<span class="pulse"></span>' + ils(cacActual);
+      sysCacEl.className = 'sys-val ' + (cacActual <= cac ? 'good' : 'bad');
+      document.getElementById('kpiCacActual').textContent = 'בפועל עד כה: ' + ils(cacActual);
+    } else {
+      sysCacEl.innerHTML = '<span class="pulse"></span>ממתין להוצאות שיווק';
+      sysCacEl.className = 'sys-val na';
+      document.getElementById('kpiCacActual').textContent = 'בפועל עד כה: —';
+    }
+
+    renderTable(res);
+    renderChart(res);
+    updateReminder();
+  }
+
+  /* ── FORECAST TABLE ─────────────────────────── */
+  function headHtml(){
+    var h = '<th>מדד</th>';
+    MONTHS.forEach(function(m, i){
+      h += '<th class="' + (i === CURRENT ? 'col-now' : '') + '">' + m.label + (i === CURRENT ? ' · נוכחי' : '') + '</th>';
+    });
+    h += '<th class="col-total">סה״כ H2</th>';
+    return h;
+  }
+
+  function renderTable(res){
+    document.getElementById('ftHead').innerHTML = headHtml();
+    var a = state.assumptions;
+    var rows = [];
+
+    function cells(vals, total, fmt, cls){
+      var tds = '';
+      vals.forEach(function(v, i){
+        tds += '<td class="' + (i === CURRENT ? 'col-now ' : '') + (cls || '') + '">' + (v === null || v === undefined ? '—' : fmt(v)) + '</td>';
+      });
+      tds += '<td class="col-total ' + (cls || '') + '">' + (total === null ? '—' : fmt(total)) + '</td>';
+      return tds;
+    }
+
+    // forecast new
+    rows.push('<tr class="row-forecast"><td>לקוחות חדשים — תחזית</td>' +
+      cells(MONTHS.map(function(m){ return m.fNew; }), res.tFNew, function(v){ return Math.round(v); }) + '</tr>');
+
+    // actual new (auto)
+    var tds = '<td>לקוחות חדשים — בפועל<span class="row-label-note">נמשך אוטומטית ממנויים חדשים בתשלום</span></td>';
+    state.actuals.forEach(function(act, i){
+      var auto = act.aNewAuto ? '<span class="auto-tag"><span class="pulse"></span>אוטו</span>' : '';
+      tds += '<td class="' + (i === CURRENT ? 'col-now' : '') + '"><input class="cell-input" data-i="' + i + '" data-f="aNew" type="number" value="' + act.aNew + '" placeholder="—">' + auto + '</td>';
+    });
+    tds += '<td class="col-total num">' + (res.tANew || '—') + '</td>';
+    rows.push('<tr class="row-actual">' + tds + '</tr>');
+
+    // forecast marketing
+    rows.push('<tr class="row-forecast"><td>הוצאות שיווק — תחזית</td>' +
+      cells(MONTHS.map(function(m){ return m.fMark; }), res.tFMark, ils) + '</tr>');
+
+    // actual marketing (manual — reminder target)
+    tds = '<td>הוצאות שיווק — בפועל<span class="row-label-note">הזנה ידנית · נושא התזכורת השבועית</span></td>';
+    state.actuals.forEach(function(act, i){
+      var missing = i <= CURRENT && !filled(act.aMark) ? ' missing' : '';
+      tds += '<td class="' + (i === CURRENT ? 'col-now' : '') + '"><input class="cell-input' + missing + '" data-i="' + i + '" data-f="aMark" type="number" value="' + act.aMark + '" placeholder="—"></td>';
+    });
+    tds += '<td class="col-total num">' + (res.tAMark ? ils(res.tAMark) : '—') + '</td>';
+    rows.push('<tr class="row-actual">' + tds + '</tr>');
+
+    // CAC rows
+    rows.push('<tr class="row-forecast"><td>CAC חזוי</td>' + cells(res.fCac, null, ils) + '</tr>');
+    var cacTotal = (res.tANew > 0 && res.tAMark > 0) ? res.tAMark / res.tANew : null;
+    var cacCells = '';
+    res.aCac.forEach(function(v, i){
+      var d = '';
+      if (v !== null) {
+        var target = num(a.cac);
+        var diff = Math.round(v - target);
+        d = '<span class="delta-cell ' + (diff <= 0 ? 'up' : 'down') + '">' + (diff <= 0 ? '▼' : '▲') + ' ' + ils(Math.abs(diff)) + ' מול יעד</span>';
+      }
+      cacCells += '<td class="' + (i === CURRENT ? 'col-now ' : '') + 'a-cac">' + (v === null ? '—' : ils(v)) + d + '</td>';
+    });
+    cacCells += '<td class="col-total a-cac">' + (cacTotal === null ? '—' : ils(cacTotal)) + '</td>';
+    rows.push('<tr class="row-calc"><td>CAC בפועל</td>' + cacCells + '</tr>');
+
+    // active customers
+    rows.push('<tr class="row-forecast"><td>לקוחות פעילים — תחזית (אחרי נטישה)</td>' + cells(res.fActive, null, function(v){ return v; }) + '</tr>');
+    rows.push('<tr class="row-calc"><td>לקוחות פעילים — בפועל</td>' + cells(res.aActive, null, function(v){ return v; }) + '</tr>');
+
+    // MRR rows (recognition)
+    rows.push('<tr class="row-forecast"><td>MRR — תחזית<span class="row-label-note">הכרה בהכנסה: שנתי נפרס 1/12</span></td>' + cells(res.fMrr, res.tFMrr, ils) + '</tr>');
+    rows.push('<tr class="row-calc"><td>MRR — בפועל</td>' + cells(res.aMrr, res.tAMrr || null, ils, 'a-mrr') + '</tr>');
+
+    document.getElementById('ftBody').innerHTML = rows.join('');
+
+    // bind inputs
+    document.querySelectorAll('.cell-input').forEach(function(inp){
+      inp.addEventListener('change', onCellChange);
+      inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') e.target.blur(); });
+    });
+  }
+
+  function onCellChange(e){
+    var i = +e.target.dataset.i, f = e.target.dataset.f;
+    state.actuals[i][f] = e.target.value === '' ? '' : num(e.target.value);
+    if (f === 'aNew') state.actuals[i].aNewAuto = false; // manual override
+    var now = new Date();
+    document.getElementById('lastFilled').textContent = now.getDate() + ' ביולי 2026, ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    persist();
+    compute();
+    toast('success', 'הנתון נשמר — התחזית והגרף עודכנו בלייב');
+  }
+
+  /* ── CHART (pure SVG) ─────────────────────────── */
+  function renderChart(res){
+    var svg = document.getElementById('mrrChart');
+    var W = 1000, H = 260, PAD_L = 64, PAD_R = 16, PAD_T = 14, PAD_B = 30;
+    var best = res.fMrr.map(function(v){ return v * 1.5; });
+    var worst = res.fMrr.map(function(v){ return v * 0.5; });
+    var maxV = Math.max.apply(null, best.concat(res.aMrr.filter(function(v){ return v !== null; }), [1]));
+    maxV = Math.ceil(maxV / 20000) * 20000;
+
+    function x(i){ return PAD_L + (W - PAD_L - PAD_R) * (i / (MONTHS.length - 1)); }
+    function y(v){ return PAD_T + (H - PAD_T - PAD_B) * (1 - v / maxV); }
+    function path(arr){
+      var d = '', started = false;
+      arr.forEach(function(v, i){
+        if (v === null) { started = false; return; }
+        d += (started ? ' L' : ' M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1);
+        started = true;
+      });
+      return d;
+    }
+
+    var s = '';
+    // grid + y labels
+    for (var g = 0; g <= 4; g++){
+      var gv = maxV * g / 4, gy = y(gv);
+      s += '<line class="chart-grid-line" x1="' + PAD_L + '" x2="' + (W - PAD_R) + '" y1="' + gy + '" y2="' + gy + '"/>';
+      s += '<text class="chart-y-label" x="' + (PAD_L - 8) + '" y="' + (gy + 4) + '" text-anchor="end">₪' + (gv / 1000).toFixed(0) + 'K</text>';
+    }
+    // x labels
+    MONTHS.forEach(function(m, i){
+      s += '<text class="chart-x-label" x="' + x(i) + '" y="' + (H - 8) + '">' + m.label + '</text>';
+    });
+    // area under base
+    var areaD = path(res.fMrr) + ' L' + x(MONTHS.length - 1) + ' ' + y(0) + ' L' + x(0) + ' ' + y(0) + ' Z';
+    s += '<path d="' + areaD + '" fill="rgba(56,196,242,0.07)"/>';
+    // lines
+    s += '<path d="' + path(best) + '" fill="none" stroke="#7DC57A" stroke-width="2" stroke-dasharray="6 5"/>';
+    s += '<path d="' + path(worst) + '" fill="none" stroke="#F05680" stroke-width="2" stroke-dasharray="6 5"/>';
+    s += '<path d="' + path(res.fMrr) + '" fill="none" stroke="#38C4F2" stroke-width="3" stroke-linecap="round"/>';
+    s += '<path d="' + path(res.aMrr) + '" fill="none" stroke="#253E7A" stroke-width="4" stroke-linecap="round"/>';
+    [ [res.fMrr, '#38C4F2', 3.5], [res.aMrr, '#253E7A', 5] ].forEach(function(cfg){
+      cfg[0].forEach(function(v, i){
+        if (v === null) return;
+        s += '<circle cx="' + x(i) + '" cy="' + y(v) + '" r="' + cfg[2] + '" fill="var(--surface)" stroke="' + cfg[1] + '" stroke-width="2.5"><title>' + MONTHS[i].label + ': ' + ils(v) + '</title></circle>';
+      });
+    });
+    svg.innerHTML = s;
+  }
+
+  /* ── WEEKLY REMINDER ─────────────────────────── */
+  function updateReminder(){
+    var banner = document.getElementById('reminderBanner');
+    var cur = state.actuals[CURRENT];
+    var missing = [];
+    if (!filled(cur.aMark)) missing.push('הוצאות שיווק');
+    if (!filled(cur.aNew)) missing.push('לקוחות חדשים');
+    if (missing.length){
+      banner.classList.remove('done');
+      banner.querySelector('.reminder-ic').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>';
+      document.getElementById('reminderTitle').textContent = 'תזכורת שבועית — ' + missing.join(' + ') + ' של ' + MONTHS[CURRENT].label + ' טרם עודכנו';
+      document.getElementById('reminderSub').innerHTML = 'לקוחות חדשים ו‑MRR נמשכים אוטומטית מהמערכת. <b>הוצאות שיווק מוזנות ידנית</b> — התזכורת נשלחת כל יום ראשון ב‑09:00 במייל ובהתראה, עד שהחודש מלא.';
+      document.getElementById('reminderFillBtn').style.display = '';
+    } else {
+      banner.classList.add('done');
+      banner.querySelector('.reminder-ic').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>';
+      document.getElementById('reminderTitle').textContent = 'נתוני ' + MONTHS[CURRENT].label + ' מלאים — התזכורת הבאה תישלח רק בחודש הבא';
+      document.getElementById('reminderSub').innerHTML = 'כל הנתונים של החודש הנוכחי הוזנו. התזכורת האוטומטית (<b>יום ראשון 09:00</b>) מדלגת על שבועות שבהם החודש כבר מלא.';
+      document.getElementById('reminderFillBtn').style.display = 'none';
+    }
+  }
+
+  function focusCurrentMonthInput(){
+    document.getElementById('forecastCard').scrollIntoView({ behavior:'smooth', block:'center' });
+    setTimeout(function(){
+      var inp = document.querySelector('.cell-input[data-f="aMark"][data-i="' + CURRENT + '"]');
+      if (!filled(state.actuals[CURRENT].aMark) && inp) { inp.focus(); inp.classList.add('flash'); setTimeout(function(){ inp.classList.remove('flash'); }, 1300); return; }
+      var inp2 = document.querySelector('.cell-input[data-f="aNew"][data-i="' + CURRENT + '"]');
+      if (inp2) { inp2.focus(); inp2.classList.add('flash'); setTimeout(function(){ inp2.classList.remove('flash'); }, 1300); }
+    }, 420);
+  }
+
+  /* ── ASSUMPTION INPUTS ─────────────────────────── */
+  [ ['inpArpu','arpu'], ['inpMargin','margin'], ['inpChurn','churn'], ['inpCac','cac'], ['inpCvr','cvr'] ].forEach(function(pair){
+    var el = document.getElementById(pair[0]);
+    el.value = state.assumptions[pair[1]];
+    el.addEventListener('change', function(){
+      state.assumptions[pair[1]] = num(el.value);
+      persist();
+      compute();
+      toast('info', 'הנחת היסוד עודכנה — כל המודל חושב מחדש');
+    });
+  });
+
+  /* ── UI WIRING ─────────────────────────── */
+  document.getElementById('fillNowBtn').addEventListener('click', focusCurrentMonthInput);
+  document.getElementById('reminderFillBtn').addEventListener('click', focusCurrentMonthInput);
+  document.getElementById('exportBtn').addEventListener('click', function(){ toast('info', 'דוח תחזית מול ביצוע H2 2026 מופק ויישלח למייל'); });
+  document.getElementById('notifBtn').addEventListener('click', function(){ toast('warn', 'תזכורת פעילה: נתוני ' + MONTHS[CURRENT].label + ' ממתינים למילוי'); });
+
+  var modal = document.getElementById('settingsModal');
+  document.getElementById('reminderSettingsBtn').addEventListener('click', function(){ modal.classList.add('open'); });
+  document.getElementById('closeSettingsBtn').addEventListener('click', function(){ modal.classList.remove('open'); });
+  modal.addEventListener('click', function(e){ if (e.target === modal) modal.classList.remove('open'); });
+  document.getElementById('saveSettingsBtn').addEventListener('click', function(){
+    modal.classList.remove('open');
+    toast('success', 'הגדרות התזכורת נשמרו — ' + document.getElementById('setDay').value + ' ' + document.getElementById('setHour').value);
+  });
+  document.querySelectorAll('.switch').forEach(function(sw){ sw.addEventListener('click', function(){ sw.classList.toggle('on'); }); });
+
+  document.getElementById('themeBtn').addEventListener('click', function(){
+    var h = document.documentElement;
+    var n = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    h.setAttribute('data-theme', n);
+    try { localStorage.setItem('wb-admin-theme', n); } catch(e){}
+  });
+
+  /* ── TOASTS ─────────────────────────── */
+  var ICONS = {
+    success:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>',
+    info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
+    warn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>'
+  };
+  var toastTimer = null;
+  function toast(type, text){
+    var c = document.getElementById('toasts');
+    // Keep at most one toast — rapid edits shouldn't stack
+    c.innerHTML = '';
+    if (toastTimer) clearTimeout(toastTimer);
+    var el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.innerHTML = '<div class="toast-icon">' + ICONS[type] + '</div><div class="toast-text">' + text + '</div>';
+    c.appendChild(el);
+    toastTimer = setTimeout(function(){
+      el.classList.add('out');
+      setTimeout(function(){ el.remove(); }, 360);
+    }, 3000);
+  }
+
+  compute();
+})();
+</script>
+</body>
+</html>

@@ -405,14 +405,14 @@
 
   <section id="editor">
     <h2><span class="h2num">07</span>שימוש חוזר בעורך + רינדור</h2>
-    <p class="sec-sub">צעד התוכן של הקמפיין וכל מייל בסדרה ("ערוך מייל") פותחים את <code class="inl">עורך מייל ויזואלי.html</code> — אותו עורך בלוקים בדיוק שבו משתמשים המרצים. אין עורך שני, אין registry שני.</p>
+    <p class="sec-sub">צעד התוכן של הקמפיין וכל מייל בסדרה ("ערוך מייל") פותחים את <code class="inl">../דיוור/עורך מייל ויזואלי.html</code> — אותו עורך בלוקים בדיוק שבו משתמשים המרצים. אין עורך שני, אין registry שני.</p>
     <ul>
       <li><b>registry משותף:</b> אותם סוגי בלוקים (טקסט, תמונה, כפתור CTA, מפריד, פוטר, הסרת תפוצה) — מוגדרים פעם אחת ומשמשים את שני המודולים.</li>
       <li><b>מודל אחיד:</b> פלט העורך הוא <code class="inl">blocks_json</code> שנשמר ב‑<code class="inl">email_docs</code> — אותו מבנה למרצה ולהנהלה.</li>
       <li><b>רינדור:</b> בעת שליחה, <code class="inl">blocks_json</code> מתורגם ל‑MJML/HTML עם styles inline; משתנים נפתרים פר‑נמען (snapshot); בלוקי הסרה וכתובת פיזית נאכפים.</li>
     </ul>
     <pre><code><span class="cm">// קישור "ערוך מייל" — אותו עורך של המרצים</span>
-<span class="kw">const</span> editorUrl = <span class="st">`עורך מייל ויזואלי.html?docId=</span>${emailDocId}<span class="st">`</span>;
+<span class="kw">const</span> editorUrl = <span class="st">`../דיוור/עורך מייל ויזואלי.html?docId=</span>${emailDocId}<span class="st">`</span>;
 
 <span class="cm">// רינדור משותף: blocks_json → HTML email</span>
 <span class="kw">function</span> <span class="fn">renderEmail</span>(blocks: <span class="ty">Block</span>[], vars: <span class="ty">Vars</span>): <span class="ty">string</span> {
@@ -433,7 +433,7 @@
         <tr><td>רשימות דיוור</td><td><code>דיוור הנהלה - קהלים.html</code></td><td>רשימות דיוור ידניות (snapshot) + יוצר רשימה לפי תויות + מעקב ביצועים.</td><td><span class="pill v1">מאופיין</span></td></tr>
         <tr><td>קמפיין בודד</td><td><code>דיוור הנהלה - קמפיין.html</code></td><td>אשף 4 שלבים: קהל → פרטי המייל → בנייה (בלוקים/HTML) → תזמון ושליחה.</td><td><span class="pill v1">מאופיין</span></td></tr>
         <tr><td>סדרת מיילים</td><td><code>דיוור הנהלה - סדרה.html</code></td><td>טריגר + צעדים (מייל / המתנה / תנאי‑פיצול לשני מסלולים) + אנליטיקת שלב.</td><td><span class="pill v1">מאופיין</span></td></tr>
-        <tr><td>עורך מייל ויזואלי</td><td><code>עורך מייל ויזואלי.html</code></td><td>העורך המשותף (קיים) — נפתח מהקמפיין עם <code>?from=campaign</code> וניווט אשף.</td><td><span class="pill v1">קיים</span></td></tr>
+        <tr><td>עורך מייל ויזואלי</td><td><code>../דיוור/עורך מייל ויזואלי.html</code></td><td>העורך המשותף (קיים) — נפתח מהקמפיין עם <code>?from=campaign</code> וניווט אשף.</td><td><span class="pill v1">קיים</span></td></tr>
         <tr><td>שיווק ומשפך (עדכון)</td><td><code>שיווק ומשפך.html</code></td><td>מסך קיים + פריט ניווט "דיוור וקמפיינים" + כפתור "קמפיין חדש".</td><td><span class="pill v1">מאופיין</span></td></tr>
       </tbody>
     </table>
