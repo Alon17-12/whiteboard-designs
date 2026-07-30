@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>אנשים, לא רשימות — WHITEBOARD דיוור</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --cyan-dark:#1db0d8;
+    --pink:#F05680; --green:#22c55e; --amber:#EAD654;
+    --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#e7f1fd;
+    --border:rgba(37,62,122,0.12); --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.6); --text-xs:rgba(37,62,122,0.4);
+    --font:'Heebo',sans-serif; --font-brand:'Fredoka',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{font-family:var(--font);background:
+    radial-gradient(circle at 85% 12%,rgba(56,196,242,.10),transparent 45%),
+    radial-gradient(circle at 12% 88%,rgba(240,86,128,.07),transparent 45%),
+    var(--bg);
+    color:var(--text-main);height:100dvh;overflow:hidden;}
+  svg{display:block;}
+
+  .deck{height:100dvh;position:relative;}
+  .slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:6vh 7vw;opacity:0;visibility:hidden;transform:translateY(14px);
+    transition:opacity .45s ease,transform .45s ease,visibility .45s;}
+  .slide.active{opacity:1;visibility:visible;transform:none;}
+  .slide.active .anim{animation:rise .55s cubic-bezier(.2,.7,.3,1) both;}
+  .slide.active .anim:nth-child(2){animation-delay:.08s;}
+  .slide.active .anim:nth-child(3){animation-delay:.16s;}
+  .slide.active .anim:nth-child(4){animation-delay:.24s;}
+  .slide.active .anim:nth-child(5){animation-delay:.32s;}
+  @keyframes rise{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){.slide,.slide.active .anim{transition:none;animation:none!important;}}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-brand);font-weight:600;font-size:clamp(12px,1.4vw,15px);
+    color:var(--cyan-dark);background:rgba(56,196,242,.12);padding:6px 15px;border-radius:30px;margin-bottom:22px;letter-spacing:.3px;}
+  h1{font-family:var(--font-brand);font-weight:700;font-size:clamp(30px,5.4vw,64px);line-height:1.08;letter-spacing:-.5px;}
+  h2{font-family:var(--font-brand);font-weight:700;font-size:clamp(26px,4vw,46px);line-height:1.12;}
+  .lead{font-size:clamp(15px,2vw,23px);color:var(--text-sub);margin-top:20px;max-width:820px;line-height:1.55;}
+  .hl{color:var(--cyan-dark);} .hl-p{color:var(--pink);} .hl-g{color:var(--green);}
+  .center{text-align:center;} .full{width:100%;max-width:1080px;}
+
+  /* cover mark */
+  .mark{width:clamp(64px,7vw,92px);height:clamp(64px,7vw,92px);border-radius:22px;background:var(--navy);display:flex;align-items:center;justify-content:center;margin-bottom:26px;box-shadow:0 14px 40px rgba(37,62,122,.28);}
+  .mark svg{width:58%;height:58%;}
+  .logo-txt{font-family:var(--font-brand);font-weight:700;font-size:clamp(13px,1.5vw,16px);letter-spacing:2px;color:var(--text-xs);margin-top:30px;}
+  .logo-txt span{color:var(--cyan-dark);}
+
+  /* generic card */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:0 10px 34px rgba(37,62,122,.10);}
+
+  /* ===== problem: overlapping lists ===== */
+  .lists-row{display:flex;gap:28px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:14px;}
+  .listbox{width:250px;padding:20px;border-radius:18px;border:2px solid var(--border);background:var(--surface);}
+  .listbox .lh{font-family:var(--font-brand);font-weight:600;font-size:16px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .listbox .lh .d{width:9px;height:9px;border-radius:50%;background:var(--green);}
+  .person{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:11px;font-size:14px;font-weight:600;margin-bottom:6px;}
+  .person .av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--navy));color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+  .person.dup{background:rgba(240,86,128,.1);outline:2px solid rgba(240,86,128,.4);}
+  .warn{margin-top:26px;display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:clamp(14px,1.7vw,18px);color:var(--pink);background:rgba(240,86,128,.1);border:1px solid rgba(240,86,128,.25);padding:11px 20px;border-radius:14px;}
+  .warn svg{width:20px;height:20px;}
+
+  /* ===== new model: pool + segments ===== */
+  .model{display:flex;gap:34px;align-items:center;width:100%;max-width:1040px;flex-wrap:wrap;justify-content:center;margin-top:12px;}
+  .pool{flex:1;min-width:280px;background:linear-gradient(160deg,var(--navy),var(--navy-dark));color:#fff;border-radius:24px;padding:34px 30px;text-align:center;box-shadow:0 18px 50px rgba(37,62,122,.3);}
+  .pool .plabel{font-family:var(--font-brand);font-weight:600;font-size:18px;opacity:.85;}
+  .pool .pnum{font-family:var(--font-brand);font-weight:700;font-size:clamp(46px,6vw,74px);line-height:1;margin:8px 0 4px;}
+  .pool .psub{font-size:13.5px;opacity:.7;}
+  .avatars{display:flex;justify-content:center;flex-wrap:wrap;gap:5px;margin-top:20px;}
+  .avatars i{width:26px;height:26px;border-radius:50%;display:block;background:rgba(255,255,255,.22);}
+  .avatars i:nth-child(3n){background:var(--cyan);} .avatars i:nth-child(5n){background:rgba(240,86,128,.7);}
+  .segs{flex:1;min-width:280px;display:flex;flex-direction:column;gap:13px;}
+  .seg{display:flex;align-items:center;gap:13px;padding:15px 18px;border-radius:15px;background:var(--surface);border:1.5px solid var(--border);box-shadow:0 6px 18px rgba(37,62,122,.07);}
+  .seg .si{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .seg .si svg{width:19px;height:19px;}
+  .seg .st{font-family:var(--font-brand);font-weight:600;font-size:15.5px;} .seg .ss{font-size:12px;color:var(--text-sub);margin-top:1px;}
+  .seg .sn{margin-inline-start:auto;font-family:var(--font-brand);font-weight:700;color:var(--navy);font-size:15px;}
+  .si.a{background:rgba(56,196,242,.15);color:var(--cyan-dark);} .si.b{background:rgba(34,197,94,.15);color:var(--green);}
+  .si.c{background:rgba(240,86,128,.13);color:var(--pink);} .si.d{background:rgba(37,62,122,.1);color:var(--navy);}
+
+  .bigline{font-family:var(--font-brand);font-weight:700;font-size:clamp(24px,3.4vw,40px);line-height:1.2;}
+  .quote-eq{display:inline-flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:8px;}
+  .chip-eq{font-family:var(--font-brand);font-weight:600;padding:12px 22px;border-radius:16px;font-size:clamp(16px,2.2vw,26px);}
+  .chip-list{background:var(--surface-3);color:var(--navy);border:1.5px solid var(--border);}
+  .chip-seg{background:rgba(56,196,242,.14);color:var(--cyan-dark);border:1.5px solid rgba(56,196,242,.35);}
+  .eqsign{font-family:var(--font-brand);font-weight:700;font-size:clamp(22px,3vw,34px);color:var(--text-xs);}
+
+  /* ===== 3-layer stack ===== */
+  .stack{display:flex;flex-direction:column;gap:14px;width:100%;max-width:880px;margin-top:10px;}
+  .layer{display:flex;align-items:center;gap:20px;padding:22px 26px;border-radius:18px;position:relative;overflow:hidden;}
+  .layer .badge{font-family:var(--font-brand);font-weight:700;font-size:13px;padding:5px 13px;border-radius:30px;flex-shrink:0;}
+  .layer .lt{font-family:var(--font-brand);font-weight:700;font-size:clamp(17px,2.1vw,22px);}
+  .layer .ld{font-size:clamp(12.5px,1.5vw,15px);color:var(--text-sub);margin-top:3px;}
+  .layer.floor{background:var(--surface);border:1.5px solid var(--border);}
+  .layer.floor .badge{background:var(--surface-3);color:var(--navy);}
+  .layer.ceil{background:var(--surface);border:1.5px solid rgba(56,196,242,.3);}
+  .layer.ceil .badge{background:rgba(56,196,242,.15);color:var(--cyan-dark);}
+  .layer.bridge{background:linear-gradient(120deg,rgba(56,196,242,.12),rgba(240,86,128,.08));border:1.5px solid rgba(56,196,242,.35);}
+  .layer.bridge .badge{background:var(--cyan);color:#fff;}
+  .layer .emoji{font-size:26px;}
+
+  /* ===== BOARDi bridge ===== */
+  .boardi-face{width:clamp(80px,9vw,120px);height:clamp(80px,9vw,120px);border-radius:26px;background:var(--surface);border:3px solid var(--navy);position:relative;flex-shrink:0;box-shadow:0 12px 30px rgba(37,62,122,.16);}
+  .boardi-face::before{content:'';position:absolute;top:-13px;left:50%;transform:translateX(-50%);width:4px;height:13px;background:var(--navy);border-radius:3px;}
+  .boardi-face::after{content:'';position:absolute;top:-19px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:var(--cyan);}
+  .bf-eyes{position:absolute;top:34%;left:0;right:0;display:flex;justify-content:center;gap:20%;}
+  .bf-eyes span{width:12%;height:14%;border-radius:50%;background:var(--navy);}
+  .bf-smile{position:absolute;bottom:26%;left:50%;transform:translateX(-50%);width:38%;height:20%;border:3px solid var(--pink);border-top:none;border-radius:0 0 40px 40px;}
+  .chatflow{display:flex;flex-direction:column;gap:16px;max-width:560px;}
+  .bubble{padding:15px 20px;border-radius:18px;font-size:clamp(14px,1.7vw,18px);font-weight:500;max-width:100%;}
+  .bubble.user{background:var(--navy);color:#fff;border-bottom-right-radius:5px;align-self:flex-end;}
+  .bubble.bot{background:var(--surface);border:1.5px solid var(--border);border-bottom-left-radius:5px;align-self:flex-start;box-shadow:0 6px 18px rgba(37,62,122,.08);}
+  .bubble.bot b{color:var(--cyan-dark);font-family:var(--font-brand);}
+
+  /* future / unlock cards */
+  .cards3{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;width:100%;max-width:1000px;margin-top:8px;}
+  .ucard{flex:1;min-width:230px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:0 8px 24px rgba(37,62,122,.08);}
+  .ucard .ui{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+  .ucard .ui svg{width:22px;height:22px;}
+  .ucard h3{font-family:var(--font-brand);font-weight:600;font-size:19px;margin-bottom:7px;}
+  .ucard p{font-size:13.5px;color:var(--text-sub);line-height:1.5;}
+
+  /* before/after */
+  .ba{display:flex;gap:26px;width:100%;max-width:1000px;flex-wrap:wrap;justify-content:center;margin-top:8px;}
+  .bacol{flex:1;min-width:280px;border-radius:20px;padding:26px;}
+  .bacol.before{background:var(--surface);border:1.5px solid var(--border);}
+  .bacol.after{background:linear-gradient(160deg,rgba(56,196,242,.09),var(--surface));border:1.5px solid rgba(56,196,242,.35);}
+  .bacol .bal{font-family:var(--font-brand);font-weight:700;font-size:14px;padding:5px 13px;border-radius:30px;display:inline-block;margin-bottom:16px;}
+  .bacol.before .bal{background:var(--surface-3);color:var(--text-sub);}
+  .bacol.after .bal{background:var(--cyan);color:#fff;}
+  .baitem{display:flex;align-items:flex-start;gap:11px;font-size:15px;margin-bottom:12px;line-height:1.4;}
+  .baitem svg{width:19px;height:19px;flex-shrink:0;margin-top:2px;}
+  .baitem.bad svg{color:var(--pink);} .baitem.good svg{color:var(--green);}
+
+  /* nav */
+  .nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:20;
+    background:rgba(255,255,255,.8);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:30px;padding:7px 10px;box-shadow:0 8px 24px rgba(37,62,122,.14);}
+  .navbtn{width:34px;height:34px;border-radius:50%;border:none;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;}
+  .navbtn:hover{background:var(--cyan-dark);} .navbtn svg{width:16px;height:16px;} .navbtn:disabled{opacity:.3;cursor:default;background:var(--navy);}
+  .dots{display:flex;gap:6px;}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--border);cursor:pointer;transition:.2s;}
+  .dot.on{background:var(--cyan);width:22px;border-radius:8px;}
+  .counter{position:fixed;top:22px;left:26px;font-family:var(--font-brand);font-weight:600;font-size:14px;color:var(--text-xs);z-index:20;direction:ltr;}
+  .brand-corner{position:fixed;top:20px;right:26px;font-family:var(--font-brand);font-weight:700;font-size:14px;letter-spacing:1px;color:var(--text-xs);z-index:20;}
+  .brand-corner span{color:var(--cyan-dark);}
+  .hint{position:fixed;bottom:24px;right:26px;font-size:12px;color:var(--text-xs);z-index:20;}
+</style>
+</head>
+<body>
+  <div class="brand-corner">WHITE<span>BOARD</span></div>
+  <div class="counter"><span id="cur">1</span> / <span id="tot">12</span></div>
+
+  <div class="deck" id="deck">
+
+    <!-- 1 cover -->
+    <section class="slide center active">
+      <div class="mark anim"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v13H3z"/><path d="M7 21h10"/><path d="M8 12l3 3 5-6"/></svg></div>
+      <div class="eyebrow anim">מערכת הדיוור · הרעיון המרכזי</div>
+      <h1 class="anim">אנשים, לא רשימות</h1>
+      <p class="lead anim">איך בונים כלי דיוור שהוא <b class="hl">פשוט לתפעול</b> — ובו-זמנית <b class="hl-p">עוצמתי</b>.<br>מודל אחד שפותר את שניהם.</p>
+      <div class="logo-txt anim">WHITE<span>BOARD</span> · דיוור</div>
+    </section>
+
+    <!-- 2 the problem -->
+    <section class="slide center">
+      <div class="eyebrow anim">הבעיה</div>
+      <h2 class="anim">"רשימות" גורמות לך לחשוב כמו מחשב</h2>
+      <div class="lists-row anim">
+        <div class="listbox">
+          <div class="lh"><span class="d"></span>מפגשי הלייב</div>
+          <div class="person dup"><span class="av">ד</span>דנה כהן</div>
+          <div class="person"><span class="av">ר</span>רונית אלבז</div>
+          <div class="person"><span class="av">ע</span>עומר כץ</div>
+        </div>
+        <div class="listbox">
+          <div class="lh"><span class="d"></span>ניוזלטר שבועי</div>
+          <div class="person dup"><span class="av">ד</span>דנה כהן</div>
+          <div class="person"><span class="av">ש</span>שירה גל</div>
+          <div class="person"><span class="av">ד</span>דוד פרץ</div>
+        </div>
+      </div>
+      <div class="warn anim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>דנה נספרת פעמיים · שולחים לה מייל כפול · הנתונים לא מסתכמים</div>
+    </section>
+
+    <!-- 3 the insight -->
+    <section class="slide center">
+      <div class="eyebrow anim">התובנה</div>
+      <h1 class="anim">יש רק דבר אחד <span class="hl">אמיתי</span>:<br>אנשים.</h1>
+      <p class="lead anim">"רשימה", "תגית", "מי שקנה", "מי שפתח" — כל אלה הם בסך הכל <b>שאלות</b> על אותם אנשים. לא ישויות נפרדות.</p>
+    </section>
+
+    <!-- 4 new model -->
+    <section class="slide">
+      <div class="eyebrow anim center full" style="text-align:center">המודל החדש</div>
+      <h2 class="anim center full" style="text-align:center;margin-bottom:26px">בריכה אחת של אנשים · סגמנטים שצפים מעליה</h2>
+      <div class="model">
+        <div class="pool anim">
+          <div class="plabel">אנשים</div>
+          <div class="pnum">2,130</div>
+          <div class="psub">כל נרשם = שורה אחת. פעם אחת. לעולם לא כפול.</div>
+          <div class="avatars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+        <div class="segs anim">
+          <div class="seg"><span class="si d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6H4M20 12H4M20 18H4"/></svg></span><div><div class="st">כולם</div><div class="ss">כל האנשים</div></div><span class="sn">2,130</span></div>
+          <div class="seg"><span class="si a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span><div><div class="st">מועדון ההורות</div><div class="ss">סגמנט ידני · "רשימה"</div></div><span class="sn">1,240</span></div>
+          <div class="seg"><span class="si c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V8H6a2 2 0 0 1 0-4h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg></span><div><div class="st">קנו קורס A ולא התחילו</div><div class="ss">סגמנט התנהגותי · מתעדכן לבד</div></div><span class="sn">83</span></div>
+          <div class="seg"><span class="si b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><div><div class="st">לא פתחו 30 יום</div><div class="ss">סגמנט התנהגותי</div></div><span class="sn">410</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 list = named segment -->
+    <section class="slide center">
+      <div class="eyebrow anim">המפתח</div>
+      <div class="bigline anim">"רשימה" היא פשוט</div>
+      <div class="quote-eq anim" style="margin-top:20px">
+        <span class="chip-eq chip-list">רשימה</span>
+        <span class="eqsign">=</span>
+        <span class="chip-eq chip-seg">סגמנט שנתת לו שֵם</span>
+      </div>
+      <p class="lead anim center">זה מיישב את הכל: <b class="hl">אנשים</b> הם הישות האמיתית, <b class="hl">סגמנט</b> הוא השאלה. שולחים תמיד ל"מי שעונה על השאלה עכשיו" — <b class="hl-g">מנוכה כפילויות, תמיד מדויק</b>.</p>
+    </section>
+
+    <!-- 6 the balance -->
+    <section class="slide">
+      <div class="eyebrow anim center full" style="text-align:center">האיזון</div>
+      <h2 class="anim center full" style="text-align:center;margin-bottom:24px">פשוט × עוצמתי — 3 שכבות</h2>
+      <div class="stack">
+        <div class="layer floor anim"><span class="badge">הרצפה</span><span class="emoji">🎯</span><div><div class="lt">כפתור אחד</div><div class="ld">מאמן לא-טכני: קבוצות מוכנות בשם + "כולם", בקליק. ספירה אמיתית. זהו.</div></div></div>
+        <div class="layer ceil anim"><span class="badge">התקרה</span><span class="emoji">⚙️</span><div><div class="lt">"סינון מתקדם"</div><div class="ld">מי שרוצה: בונה סגמנטים לפי רכישה / התקדמות בקורס / התנהגות → נשמר כקהל דינמי.</div></div></div>
+        <div class="layer bridge anim"><span class="badge">הגשר</span><span class="emoji">🌉</span><div><div class="lt">בורדי</div><div class="ld">מי שלא יודע לבנות פילטר — פשוט מדבר. עוצמה דרך שפה, בלי פילטרים.</div></div></div>
+      </div>
+    </section>
+
+    <!-- 7 floor -->
+    <section class="slide center">
+      <div class="eyebrow anim">הרצפה · מה שרוב המשתמשים יראו</div>
+      <h2 class="anim">"למי לשלוח?" — קליק אחד</h2>
+      <div class="segs anim full" style="max-width:560px;margin-top:24px;gap:12px">
+        <div class="seg" style="border-color:var(--cyan);background:rgba(56,196,242,.06)"><span class="si a">✓</span><div><div class="st">כולם</div></div><span class="sn">2,130 נמענים</span></div>
+        <div class="seg"><span class="si d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg></span><div><div class="st">מועדון ההורות</div></div><span class="sn">1,240</span></div>
+        <div class="seg"><span class="si d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span><div><div class="st">ניוזלטר שבועי</div></div><span class="sn">890</span></div>
+      </div>
+      <p class="lead anim center" style="margin-top:22px">בלי dropdown. בלי "‎+2 רשימות". בלי דאגה שאשלח כפול. <b class="hl-g">הספירה תמיד אמת.</b></p>
+    </section>
+
+    <!-- 8 ceiling -->
+    <section class="slide center">
+      <div class="eyebrow anim">התקרה · שכבה מתחת, למי שרוצה</div>
+      <h2 class="anim">בונים קהל לפי מה שאנשים <span class="hl">עשו</span></h2>
+      <div class="lists-row anim" style="margin-top:22px;gap:12px">
+        <span class="chip-eq chip-seg" style="font-size:16px;padding:10px 18px">קנו קורס A</span>
+        <span class="eqsign" style="font-size:20px">+</span>
+        <span class="chip-eq chip-seg" style="font-size:16px;padding:10px 18px">לא התחילו ללמוד</span>
+        <span class="eqsign" style="font-size:20px">→</span>
+        <span class="chip-eq chip-list" style="font-size:16px;padding:10px 18px;background:var(--navy);color:#fff;border:none">83 אנשים</span>
+      </div>
+      <p class="lead anim center">שומרים בשם → זה הופך ל<b class="hl">קהל שבונה את עצמו</b>. מחר יקנו עוד 5 — הם ייכנסו אוטומטית. ה-LMS, הקהילה והסליקה מזינים אותו בחינם.</p>
+    </section>
+
+    <!-- 9 bridge boardi -->
+    <section class="slide">
+      <div class="eyebrow anim center full" style="text-align:center">הגשר · בורדי</div>
+      <h2 class="anim center full" style="text-align:center;margin-bottom:8px">עוצמה דרך שפה, לא דרך פילטרים</h2>
+      <div class="lists-row anim" style="gap:34px;align-items:center;margin-top:26px">
+        <div class="boardi-face"><div class="bf-eyes"><span></span><span></span></div><div class="bf-smile"></div></div>
+        <div class="chatflow">
+          <div class="bubble user">"שלח מייל למי שקנה קורס A ולא התחיל"</div>
+          <div class="bubble bot">מצאתי <b>83 אנשים</b>. בניתי מהם סגמנט וניסחתי טיוטה — "מוכנים להתחיל? 3 דקות וקופצים ללמידה 🚀". רוצה לראות?</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 unlock -->
+    <section class="slide">
+      <div class="eyebrow anim center full" style="text-align:center">מה זה פותח (גל 2)</div>
+      <h2 class="anim center full" style="text-align:center;margin-bottom:24px">אותו פרימיטיב — עוצמה שאף כלי חיצוני לא יכול</h2>
+      <div class="cards3">
+        <div class="ucard anim"><div class="ui" style="background:rgba(34,197,94,.14);color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>מייל שמדבר ₪</h3><p>"סדרת קבלת הפנים הכניסה ₪14,200" — כי הסליקה באותה מערכת. Mailchimp פיזית לא יכול לכתוב את זה.</p></div>
+        <div class="ucard anim"><div class="ui" style="background:rgba(56,196,242,.14);color:var(--cyan-dark)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h3>טריגרים אוטומטיים</h3><p>נטש עגלה · סיים קורס · שקט בקהילה → מייל יוצא לבד. אירועי המערכת מפעילים את הדיוור.</p></div>
+        <div class="ucard anim"><div class="ui" style="background:rgba(240,86,128,.13);color:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 12l3 3 5-6"/></svg></div><h3>בורדי יוזם</h3><p>"3 תלמידים נתקעו בשיעור 4 — לשלוח דחיפה?" הקהל כבר בנוי, הטיוטה כבר מוכנה.</p></div>
+      </div>
+    </section>
+
+    <!-- 11 before after -->
+    <section class="slide">
+      <div class="eyebrow anim center full" style="text-align:center">לפני / אחרי</div>
+      <div class="ba">
+        <div class="bacol before anim">
+          <span class="bal">לפני · רשימות</span>
+          <div class="baitem bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>אותו אדם בכמה רשימות = כפילויות</div>
+          <div class="baitem bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>ספירת נמענים לא אמינה</div>
+          <div class="baitem bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>המשתמש מתחזק רשימות ידנית</div>
+          <div class="baitem bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>badge "‎+2 רשימות" מבלבל</div>
+        </div>
+        <div class="bacol after anim">
+          <span class="bal">אחרי · אנשים + סגמנטים</span>
+          <div class="baitem good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>אדם אחד = שורה אחת, לנצח</div>
+          <div class="baitem good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>ספירה תמיד מדויקת ומנוכת-כפילויות</div>
+          <div class="baitem good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>קהלים בונים את עצמם מהמערכת</div>
+          <div class="baitem good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>בורדי בונה קהל ממשפט</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 the one idea -->
+    <section class="slide center">
+      <div class="mark anim"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v13H3z"/><path d="M7 21h10"/><path d="M8 12l3 3 5-6"/></svg></div>
+      <div class="eyebrow anim">הרעיון האחד</div>
+      <h1 class="anim">אדם אחד = שורה אחת.<br>כל השאר — <span class="hl">שאלה</span>.</h1>
+      <p class="lead anim center">רצפה של כפתור אחד. תקרה של קהלים חכמים. בורדי באמצע.<br><b class="hl-p">פשוט לתפעל, עוצמתי מתחת.</b></p>
+    </section>
+
+  </div>
+
+  <div class="nav">
+    <button class="navbtn" id="prev" aria-label="הקודם"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></button>
+    <div class="dots" id="dots"></div>
+    <button class="navbtn" id="next" aria-label="הבא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg></button>
+  </div>
+  <div class="hint">← → מקשי חיצים</div>
+
+<script>
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, N=slides.length;
+  document.getElementById('tot').textContent=N;
+  var dotsBox=document.getElementById('dots');
+  slides.forEach(function(_,k){var d=document.createElement('div');d.className='dot'+(k===0?' on':'');d.onclick=function(){go(k);};dotsBox.appendChild(d);});
+  var dots=[].slice.call(document.querySelectorAll('.dot'));
+  function go(n){
+    n=Math.max(0,Math.min(N-1,n));
+    slides[i].classList.remove('active');dots[i].classList.remove('on');
+    i=n;
+    slides[i].classList.add('active');dots[i].classList.add('on');
+    document.getElementById('cur').textContent=i+1;
+    document.getElementById('prev').disabled=i===0;
+    document.getElementById('next').disabled=i===N-1;
+  }
+  // RTL: Right arrow = previous, Left arrow = next
+  document.getElementById('next').onclick=function(){go(i+1);};
+  document.getElementById('prev').onclick=function(){go(i-1);};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowLeft'||e.key===' '||e.key==='PageDown'){go(i+1);e.preventDefault();}
+    else if(e.key==='ArrowRight'||e.key==='PageUp'){go(i-1);e.preventDefault();}
+    else if(e.key==='Home'){go(0);} else if(e.key==='End'){go(N-1);}
+  });
+  go(0);
+</script>
+</body>
+</html>

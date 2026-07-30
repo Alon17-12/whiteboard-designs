@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>דיוור — סקירה | WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --cyan-dark:#1db0d8;
+    --pink:#F05680; --green:#22c55e; --amber:#F59E0B;
+    --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+    --border:rgba(37,62,122,0.1); --border-mid:rgba(37,62,122,0.18);
+    --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.62); --text-xs:rgba(37,62,122,0.4);
+    --font:'Heebo',sans-serif; --font-brand:'Fredoka',sans-serif;
+    --r-sm:10px; --r-md:14px; --r-lg:20px;
+    --sh-sm:0 2px 8px rgba(37,62,122,0.08); --sh-md:0 8px 30px rgba(37,62,122,0.12);
+  }
+  [data-theme="dark"]{
+    --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+    --border:rgba(255,255,255,0.08); --border-mid:rgba(255,255,255,0.14);
+    --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.62); --text-xs:rgba(221,229,245,0.36);
+    --sh-sm:0 2px 10px rgba(0,0,0,0.3); --sh-md:0 8px 32px rgba(0,0,0,0.45);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{font-family:var(--font);background:var(--bg);color:var(--text-main);height:100dvh;overflow:hidden;display:flex;transition:background .3s,color .3s;}
+  svg{display:block;}
+  ::-webkit-scrollbar{width:8px;height:8px;} ::-webkit-scrollbar-thumb{background:var(--border-mid);border-radius:8px;}
+
+  .side{width:220px;flex-shrink:0;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:16px 12px;}
+  [data-theme="dark"] .side{background:#0e1830;border-inline-start:1px solid rgba(255,255,255,.05);}
+  .side .logo{display:flex;align-items:center;gap:9px;padding:6px 8px 16px;}
+  .side .logo .mark{width:34px;height:34px;border-radius:9px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .side .logo .mark svg{width:22px;height:22px;}
+  .side .logo b{font-family:var(--font-brand);font-weight:700;font-size:16px;letter-spacing:.3px;}
+  .side .logo b span{color:var(--cyan);}
+  .side .grp{font-size:10.5px;font-weight:700;color:rgba(255,255,255,.4);padding:14px 10px 6px;letter-spacing:.4px;}
+  .nav{display:flex;flex-direction:column;gap:2px;}
+  .nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);color:rgba(255,255,255,.72);font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;transition:.15s;}
+  .nav a svg{width:17px;height:17px;flex-shrink:0;}
+  .nav a:hover{background:rgba(255,255,255,.07);color:#fff;}
+  .nav a.active{background:rgba(56,196,242,.16);color:var(--cyan);font-weight:700;}
+  .side .spacer{flex:1;}
+  .side .me{display:flex;align-items:center;gap:9px;padding:9px 8px;border-radius:var(--r-sm);cursor:pointer;}
+  .side .me:hover{background:rgba(255,255,255,.07);}
+  .side .me .av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--pink));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;flex-shrink:0;}
+  .side .me .who b{font-size:12.5px;display:block;} .side .me .who span{font-size:10.5px;color:rgba(255,255,255,.5);}
+
+  .main{flex:1;min-width:0;display:flex;flex-direction:column;}
+  .topbar{height:56px;flex-shrink:0;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:var(--sh-sm);z-index:5;}
+  .crumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-sub);}
+  .crumb b{color:var(--text-main);font-weight:700;} .crumb svg{width:15px;height:15px;color:var(--text-xs);}
+  .iconbtn{width:38px;height:38px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--text-sub);cursor:pointer;}
+  .iconbtn:hover{color:var(--text-main);} .iconbtn svg{width:19px;height:19px;} .icon-sun{display:none;} [data-theme="dark"] .icon-sun{display:block;} [data-theme="dark"] .icon-moon{display:none;}
+
+  .content{flex:1;min-height:0;overflow-y:auto;padding:24px 28px 44px;}
+  .cwrap{max-width:1080px;margin:0 auto;}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:22px;font-family:var(--font);font-size:13.5px;font-weight:700;border:none;cursor:pointer;transition:.18s;white-space:nowrap;} .btn svg{width:16px;height:16px;}
+  .btn-primary{background:linear-gradient(135deg,var(--cyan),var(--cyan-dark));color:#fff;box-shadow:0 4px 15px rgba(56,196,242,.32);} .btn-primary:hover{transform:translateY(-1px);}
+  .link{font-size:12.5px;font-weight:700;color:var(--cyan);text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;} .link svg{width:14px;height:14px;}
+
+  /* greeting */
+  .hello{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;}
+  .hello h1{font-family:var(--font-brand);font-weight:700;font-size:26px;}
+  .hello p{font-size:13.5px;color:var(--text-sub);margin-top:5px;}
+
+  /* KPI tiles */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px 18px;box-shadow:var(--sh-sm);}
+  .kpi .k{font-size:12px;color:var(--text-sub);font-weight:600;margin-bottom:9px;display:flex;align-items:center;gap:7px;}
+  .kpi .ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .kpi .ic svg{width:16px;height:16px;}
+  .ic-1{background:rgba(56,196,242,.14);color:var(--cyan);} .ic-2{background:rgba(37,62,122,.1);color:var(--navy);} [data-theme="dark"] .ic-2{color:#8aa9e8;}
+  .ic-3{background:rgba(34,197,94,.14);color:var(--green);} .ic-4{background:rgba(240,86,128,.13);color:var(--pink);}
+  .kpi .v{font-family:var(--font-brand);font-weight:700;font-size:27px;line-height:1;font-variant-numeric:tabular-nums;}
+  .kpi .v small{font-size:15px;color:var(--text-sub);}
+  .kpi .sub{font-size:11.5px;margin-top:6px;font-weight:600;color:var(--text-xs);}
+  .kpi .sub.up{color:var(--green);}
+
+  /* activity chart */
+  .chart{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:18px 20px;box-shadow:var(--sh-sm);margin-bottom:22px;}
+  .chart-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .chart-h .t{font-family:var(--font-brand);font-weight:700;font-size:15px;}
+  .chart-h .lg{display:flex;gap:14px;font-size:11.5px;color:var(--text-sub);}
+  .chart-h .lg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-inline-end:5px;vertical-align:middle;}
+  .chart-sub{font-size:12px;color:var(--text-sub);margin:-8px 0 16px;}
+  .bars{display:flex;align-items:flex-end;gap:16px;height:150px;padding-top:24px;border-bottom:1.5px solid var(--border);}
+  .barcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;height:100%;justify-content:flex-end;}
+  .bargroup{display:flex;align-items:flex-end;justify-content:center;gap:6px;width:100%;height:100%;}
+  .bcell{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;height:100%;flex:1;max-width:24px;}
+  .bcell .b{width:100%;border-radius:5px 5px 0 0;transition:height .4s ease;}
+  .bcell .b.open{background:var(--cyan);} .bcell .b.click{background:var(--green);}
+  .bcell .bval{font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .bcell .bval.o{color:#1f93c4;} [data-theme="dark"] .bcell .bval.o{color:var(--cyan);}
+  .bcell .bval.c{color:#4c9a49;} [data-theme="dark"] .bcell .bval.c{color:var(--green);}
+  .barcol .lbl{font-size:11px;color:var(--text-sub);font-weight:600;}
+
+  .grid{display:grid;grid-template-columns:1.7fr 1fr;gap:18px;align-items:start;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--sh-sm);overflow:hidden;}
+  .card-h{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;}
+  .card-h .t{font-family:var(--font-brand);font-weight:700;font-size:15px;}
+
+  /* recent emails */
+  .em{display:flex;align-items:center;gap:13px;padding:12px 18px;border-top:1px solid var(--border);cursor:pointer;transition:.15s;}
+  .em:hover{background:var(--surface-2);}
+  .em .ic{width:38px;height:38px;border-radius:10px;background:rgba(56,196,242,.13);color:var(--cyan);display:flex;align-items:center;justify-content:center;flex-shrink:0;} .em .ic svg{width:18px;height:18px;}
+  .em .m{flex:1;min-width:0;}
+  .em .nm{font-size:13.5px;font-weight:600;font-family:var(--font-brand);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .em .meta{font-size:11.5px;color:var(--text-sub);margin-top:3px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+  .em .meta .cd{width:7px;height:7px;border-radius:50%;background:var(--green);} .em .meta .sep{width:3px;height:3px;border-radius:50%;background:var(--text-xs);}
+  .tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
+  .tag.sent{color:var(--green);background:rgba(34,197,94,.12);} .tag.draft{color:var(--amber);background:rgba(245,158,11,.13);}
+  .em .st{display:flex;gap:16px;flex-shrink:0;}
+  .em .st .s{text-align:center;} .em .st .sv{font-family:var(--font-brand);font-weight:700;font-size:14px;} .em .st .sk{font-size:9.5px;color:var(--text-xs);font-weight:600;}
+  .em .q{width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);display:flex;align-items:center;justify-content:center;color:var(--text-sub);flex-shrink:0;transition:.15s;}
+  .em .q:hover{border-color:var(--cyan);color:var(--cyan);} .em .q svg{width:15px;height:15px;}
+
+  /* side lists */
+  .mini{padding:6px 0;}
+  .mrow{display:flex;align-items:center;gap:11px;padding:10px 18px;cursor:pointer;transition:.15s;}
+  .mrow:hover{background:var(--surface-2);}
+  .mrow .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+  .dot.live{background:var(--green);} .dot.draft{background:var(--amber);}
+  .mrow .mm{flex:1;min-width:0;} .mrow .mn{font-size:12.5px;font-weight:600;font-family:var(--font-brand);line-height:1.3;}
+  .mrow .ms{font-size:11px;color:var(--text-sub);margin-top:2px;}
+  .mrow .mv{font-family:var(--font-brand);font-weight:700;font-size:14px;flex-shrink:0;}
+  .card-foot{padding:12px 18px;border-top:1px solid var(--border);}
+  .serow{padding:13px 18px;border-top:1px solid var(--border);}
+  .serow .sn{font-size:13px;font-weight:600;font-family:var(--font-brand);display:flex;align-items:center;gap:8px;}
+  .serow .ss{font-size:11.5px;color:var(--text-sub);margin-top:4px;}
+  .pill-on{font-size:10px;font-weight:700;color:var(--green);background:rgba(34,197,94,.12);padding:2px 8px;border-radius:20px;}
+
+  .toasts{position:fixed;bottom:22px;inset-inline-start:22px;z-index:80;display:flex;flex-direction:column;gap:8px;}
+  .toast{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--border-mid);border-radius:var(--r-sm);padding:12px 15px;box-shadow:var(--sh-md);font-size:13px;font-weight:600;animation:tin .3s ease;}
+  @keyframes tin{from{opacity:0;transform:translateX(-26px);}to{opacity:1;transform:none;}} .toast svg{width:16px;height:16px;color:var(--cyan);flex-shrink:0;}
+
+  @media (max-width:1100px){ .side{display:none;} }
+  @media (max-width:860px){
+    body{overflow:auto;height:auto;min-height:100dvh;flex-direction:column;}
+    .content{overflow:visible;padding:18px 14px 40px;}
+    .kpis{grid-template-columns:repeat(2,1fr);} .grid{grid-template-columns:1fr;}
+    .hello{flex-direction:column;align-items:flex-start;} .em .st{display:none;}
+  }
+</style>
+</head>
+<body>
+  <aside class="side">
+    <div class="logo">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#253E7A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v13H3z"/><path d="M7 21h10"/><path d="M8 12l3 3 5-6"/></svg></span>
+      <b>WHITE<span>BOARD</span></b>
+    </div>
+    <div class="grp">ניווט ראשי</div>
+    <nav class="nav">
+      <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>לוח בקרה</a>
+      <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M8 12l3 3 5-6"/></svg>בורדי</a>
+      <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>מרכזי הידע שלי</a>
+      <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>אנשי הקשר שלי</a>
+      <a class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>רשימות תפוצה</a>
+      <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v15H6.5A2.5 2.5 0 0 0 4 19.5z"/></svg>הספרייה שלי</a>
+      <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>הגדרות</a>
+    </nav>
+    <div class="spacer"></div>
+    <div class="me"><div class="av">ד</div><div class="who"><b>דנה כהן</b><span>מסלול מחנך</span></div></div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="crumb">דיוור<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg><b>בית הדיוור</b></div>
+      <button class="iconbtn" id="themeBtn" aria-label="מצב תצוגה">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+    </header>
+
+    <main class="content"><div class="cwrap">
+      <div class="hello">
+        <div>
+          <h1>שלום דנה 👋</h1>
+          <p>הנה תמונת המצב של הדיוור שלך — כל הרשימות, המיילים והביצועים במקום אחד.</p>
+        </div>
+        <button class="btn btn-primary" onclick="window.location.href=encodeURI('מייל חדש - בחירת רשימות.html')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>מייל חדש</button>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="k"><span class="ic ic-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>נמענים פעילים</div><div class="v">2,130</div><div class="sub up">▲ 64 השבוע</div></div>
+        <div class="kpi"><div class="k"><span class="ic ic-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg></span>מיילים שנשלחו</div><div class="v">12</div><div class="sub">ב-30 הימים האחרונים</div></div>
+        <div class="kpi"><div class="k"><span class="ic ic-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></span>פתיחה ממוצעת</div><div class="v">40<small>%</small></div><div class="sub up">▲ 3% מהחודש שעבר</div></div>
+        <div class="kpi"><div class="k"><span class="ic ic-4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>לחיצה ממוצעת</div><div class="v">7<small>%</small></div><div class="sub">יציב</div></div>
+      </div>
+
+      <div class="chart">
+        <div class="chart-h">
+          <div class="t">פעילות דיוור — 6 שבועות אחרונים</div>
+          <div class="lg"><span><i style="background:var(--cyan)"></i>פתיחות</span><span><i style="background:var(--green)"></i>קליקים</span></div>
+        </div>
+        <div class="chart-sub">שיעור פתיחה וקליק מתוך הנמענים, בכל אחד מ-6 השבועות האחרונים</div>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <div class="grid">
+        <!-- recent emails -->
+        <div class="card">
+          <div class="card-h"><div class="t">מיילים אחרונים</div><a class="link" onclick="toast('כל המיילים','info')">לכל המיילים<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></a></div>
+          <div id="recent"></div>
+        </div>
+        <!-- side -->
+        <div style="display:flex;flex-direction:column;gap:18px;">
+          <div class="card">
+            <div class="card-h"><div class="t">הרשימות שלי</div></div>
+            <div class="mini" id="lists"></div>
+            <div class="card-foot"><a class="link" onclick="toast('לרשימות התפוצה','info')">ניהול רשימות<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></a></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><div class="t">סדרות פעילות</div></div>
+            <div id="series"></div>
+          </div>
+        </div>
+      </div>
+    </div></main>
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+
+<script>
+(function(){var t=localStorage.getItem('wb-admin-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();
+document.getElementById('themeBtn').addEventListener('click',function(){
+  var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';
+  d.setAttribute('data-theme',n);localStorage.setItem('wb-admin-theme',n);
+});
+function toast(msg,type){type=type||'info';var c=document.getElementById('toasts');var el=document.createElement('div');el.className='toast';
+  el.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'+msg;c.appendChild(el);
+  setTimeout(function(){el.style.opacity='0';el.style.transform='translateX(-26px)';el.style.transition='.3s';setTimeout(function(){el.remove();},300);},2600);}
+function goDetail(){window.location.href=encodeURI('פרטי מייל.html');}
+function goLists(){window.location.href=encodeURI('רשימות תפוצה - מסך בית.html');}
+var MAIL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>';
+var Q='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+
+/* chart — 6 weeks (open %, click %) */
+var WEEKS=[{w:'שב׳ 1',o:34,c:5},{w:'שב׳ 2',o:39,c:6},{w:'שב׳ 3',o:37,c:6},{w:'שב׳ 4',o:44,c:9},{w:'שב׳ 5',o:41,c:7},{w:'השבוע',o:47,c:11}];
+var bars=document.getElementById('bars');
+var F=2.4; /* px per percent — shared scale so bars are honestly comparable */
+WEEKS.forEach(function(x){
+  bars.insertAdjacentHTML('beforeend',
+    '<div class="barcol"><div class="bargroup">'+
+      '<div class="bcell"><span class="bval o">'+x.o+'%</span><div class="b open" style="height:'+(x.o*F)+'px"></div></div>'+
+      '<div class="bcell"><span class="bval c">'+x.c+'%</span><div class="b click" style="height:'+(x.c*F)+'px"></div></div>'+
+    '</div><div class="lbl">'+x.w+'</div></div>');
+});
+
+/* recent emails (cross-list) */
+var RECENT=[
+  {n:'ברוכים הבאים למועדון!',list:'מפגשי הלייב',extra:1,date:'28 ביוני',tag:'sent',tagText:'נשלח',o:38,c:6},
+  {n:'טיפ השבוע: גבולות בגיל שנתיים',list:'ניוזלטר שבועי',extra:0,date:'אתמול',tag:'sent',tagText:'נשלח',o:38,c:5},
+  {n:'סיכום מפגש יולי + הקלטה',list:'מפגשי הלייב',extra:0,date:'12 ביולי',tag:'sent',tagText:'נשלח',o:44,c:9},
+  {n:'תזכורת: מפגש לייב מחר ב-21:00',list:'מפגשי הלייב',extra:0,date:'3 ביולי',tag:'sent',tagText:'נשלח',o:51,c:12},
+  {n:'5 משחקים לוויסות רגשי',list:'ניוזלטר שבועי',extra:0,date:'טיוטה',tag:'draft',tagText:'טיוטה',o:null,c:null}
+];
+var rec=document.getElementById('recent');
+RECENT.forEach(function(e){
+  var extra=e.extra>0?'<span class="tag" style="background:var(--surface-3);color:var(--text-sub)">+'+e.extra+' רשימות</span>':'';
+  var st=e.o!=null?'<div class="st"><div class="s"><div class="sv">'+e.o+'%</div><div class="sk">פתיחה</div></div><div class="s"><div class="sv">'+e.c+'%</div><div class="sk">קליק</div></div></div>':'';
+  var q=e.tag==='sent'?'<div class="q" title="פרטים" onclick="event.stopPropagation();goDetail()">'+Q+'</div>':'';
+  rec.insertAdjacentHTML('beforeend','<div class="em" '+(e.tag==='sent'?'onclick="goDetail()"':'onclick="toast(\'פתיחת הטיוטה בעורך…\',\'info\')"')+'><div class="ic">'+MAIL+'</div><div class="m"><div class="nm">'+e.n+' <span class="tag '+e.tag+'">'+e.tagText+'</span>'+extra+'</div><div class="meta"><span class="cd"></span>'+e.list+'<span class="sep"></span>'+e.date+'</div></div>'+st+q+'</div>');
+});
+
+/* my lists */
+var LISTS=[
+  {n:'מפגשי הלייב של מועדון הורות התפתחותית',s:'live',subs:'1,240',st:'פעילה'},
+  {n:'ניוזלטר שבועי — טיפים להורים',s:'live',subs:'890',st:'פעילה'},
+  {n:'הורות רכה — סדנת אונליין',s:'draft',subs:'0',st:'טיוטה'},
+  {n:'תלמידי הקורס · הורות רגועה',s:'live',subs:'320',st:'אוטומטית'},
+  {n:'נוטשי עגלה · הורות רגועה',s:'live',subs:'45',st:'אוטומטית'},
+  {n:'תלמידי הקורס · גבולות בגיל הרך',s:'live',subs:'210',st:'אוטומטית'},
+  {n:'נוטשי עגלה · גבולות בגיל הרך',s:'live',subs:'38',st:'אוטומטית'}
+];
+var lb=document.getElementById('lists');
+LISTS.forEach(function(l){
+  lb.insertAdjacentHTML('beforeend','<div class="mrow" onclick="goLists()"><span class="dot '+l.s+'"></span><div class="mm"><div class="mn">'+l.n+'</div><div class="ms">'+l.st+'</div></div><div class="mv">'+l.subs+'</div></div>');
+});
+
+/* active series */
+var SERIES=[{n:'סדרת קבלת פנים',list:'מפגשי הלייב',steps:4}];
+var sb=document.getElementById('series');
+if(SERIES.length){SERIES.forEach(function(s){
+  sb.insertAdjacentHTML('beforeend','<div class="serow"><div class="sn">'+s.n+' <span class="pill-on">פעילה</span></div><div class="ss">'+s.list+' · '+s.steps+' שלבים · נשלחת לכל נרשם חדש</div></div>');
+});}else{sb.insertAdjacentHTML('beforeend','<div class="serow"><div class="ss">אין סדרות פעילות כרגע.</div></div>');}
+</script>
+</body>
+</html>

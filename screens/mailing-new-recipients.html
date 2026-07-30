@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מייל חדש — בחירת רשימות | WHITEBOARD דיוור</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253E7A; --navy-dark:#1a2e5e; --cyan:#38C4F2; --cyan-dark:#1db0d8;
+    --pink:#F05680; --green:#22c55e; --amber:#F59E0B;
+    --bg:#EBF3FB; --surface:#FFFFFF; --surface-2:#F4F9FF; --surface-3:#edf4ff;
+    --border:rgba(37,62,122,0.1); --border-mid:rgba(37,62,122,0.18);
+    --text-main:#1a2f5e; --text-sub:rgba(37,62,122,0.62); --text-xs:rgba(37,62,122,0.4);
+    --font:'Heebo',sans-serif; --font-brand:'Fredoka',sans-serif;
+    --r-sm:10px; --r-md:14px; --r-lg:20px;
+    --sh-sm:0 2px 8px rgba(37,62,122,0.08); --sh-md:0 8px 30px rgba(37,62,122,0.12);
+  }
+  [data-theme="dark"]{
+    --bg:#0c1422; --surface:#131e35; --surface-2:#192740; --surface-3:#1e2e48;
+    --border:rgba(255,255,255,0.08); --border-mid:rgba(255,255,255,0.14);
+    --text-main:#dde5f5; --text-sub:rgba(221,229,245,0.62); --text-xs:rgba(221,229,245,0.36);
+    --sh-sm:0 2px 10px rgba(0,0,0,0.3); --sh-md:0 8px 32px rgba(0,0,0,0.45);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:var(--font);background:var(--bg);color:var(--text-main);height:100dvh;overflow:hidden;display:flex;flex-direction:column;transition:background .3s,color .3s;}
+  svg{display:block;}
+  ::-webkit-scrollbar{width:8px;} ::-webkit-scrollbar-thumb{background:var(--border-mid);border-radius:8px;}
+  .topbar{height:56px;flex-shrink:0;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px;box-shadow:var(--sh-sm);}
+  .crumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-sub);}
+  .crumb b{color:var(--text-main);font-weight:700;} .crumb svg{width:15px;height:15px;color:var(--text-xs);}
+  .iconbtn{width:38px;height:38px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--text-sub);cursor:pointer;}
+  .iconbtn svg{width:19px;height:19px;} .icon-sun{display:none;} [data-theme="dark"] .icon-sun{display:block;} [data-theme="dark"] .icon-moon{display:none;}
+
+  .stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:18px;overflow:hidden;}
+  .wiz{width:100%;max-width:680px;height:100%;max-height:100%;display:flex;flex-direction:column;gap:14px;padding:6px 0;}
+  .head{text-align:center;flex-shrink:0;}
+  .step{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;color:var(--cyan);background:rgba(56,196,242,.12);padding:4px 12px;border-radius:20px;margin-bottom:9px;}
+  .step .n{width:16px;height:16px;border-radius:50%;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--font-brand);}
+  .head h1{font-family:var(--font-brand);font-weight:700;font-size:clamp(20px,3vw,26px);line-height:1.2;}
+  .head p{font-size:13px;color:var(--text-sub);margin-top:6px;max-width:540px;margin-inline:auto;line-height:1.5;}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-md);display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;}
+  .card-top{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--border);flex-shrink:0;}
+  .search{position:relative;flex:1;}
+  .search svg{position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-xs);pointer-events:none;}
+  .search input{width:100%;padding:9px 34px 9px 12px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);font-family:var(--font);font-size:13px;color:var(--text-main);}
+  .search input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,.12);}
+  .selall{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--text-sub);cursor:pointer;white-space:nowrap;user-select:none;}
+
+  .list{flex:1;min-height:0;overflow-y:auto;padding:8px;}
+  .group-h{font-size:11px;font-weight:700;color:var(--text-xs);padding:12px 8px 7px;letter-spacing:.2px;display:flex;align-items:center;gap:7px;}
+  .group-h svg{width:13px;height:13px;}
+  .opt{display:flex;align-items:center;gap:12px;padding:12px 13px;border:1.5px solid var(--border);border-radius:var(--r-md);background:var(--surface-2);cursor:pointer;transition:.15s;user-select:none;margin-bottom:6px;}
+  .opt:hover{border-color:var(--border-mid);}
+  .opt.sel{border-color:var(--cyan);background:rgba(56,196,242,.07);}
+  .cbx{width:22px;height:22px;border-radius:7px;border:2px solid var(--border-mid);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.15s;background:var(--surface);}
+  .opt.sel .cbx{background:var(--cyan);border-color:var(--cyan);}
+  .cbx svg{width:14px;height:14px;color:#fff;opacity:0;transition:.15s;} .opt.sel .cbx svg{opacity:1;}
+  .lic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;} .lic svg{width:18px;height:18px;}
+  .ic-man{background:rgba(37,62,122,.1);color:var(--navy);} [data-theme="dark"] .ic-man{color:#8aa9e8;}
+  .ic-stud{background:rgba(56,196,242,.15);color:var(--cyan-dark);}
+  .ic-cart{background:rgba(245,158,11,.16);color:#b5820b;} [data-theme="dark"] .ic-cart{color:var(--amber);}
+  .opt .ob{flex:1;min-width:0;} .opt .on{font-size:14px;font-weight:600;font-family:var(--font-brand);line-height:1.3;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .opt .kind{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--surface-3);color:var(--text-sub);}
+  .opt .os{font-size:11.5px;color:var(--text-sub);margin-top:2px;}
+  .opt .osub{font-family:var(--font-brand);font-weight:700;font-size:15px;flex-shrink:0;} .opt .osub small{font-size:11px;color:var(--text-sub);font-weight:600;}
+
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px;border-top:1px solid var(--border);background:var(--surface-2);flex-shrink:0;}
+  .summary .l1{font-size:13px;color:var(--text-sub);} .summary .l1 b{color:var(--text-main);font-family:var(--font-brand);font-weight:700;font-size:15px;}
+  .dedup{font-size:12px;font-weight:700;color:var(--green);display:none;align-items:center;gap:6px;margin-top:5px;}
+  .dedup.show{display:flex;} .dedup svg{width:14px;height:14px;flex-shrink:0;}
+  .fbtns{display:flex;gap:9px;}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:24px;font-family:var(--font);font-size:14px;font-weight:700;border:none;cursor:pointer;transition:.18s;} .btn svg{width:16px;height:16px;}
+  .btn-ghost{background:var(--surface);color:var(--navy);border:1.5px solid var(--border-mid);} [data-theme="dark"] .btn-ghost{color:var(--text-main);}
+  .btn-primary{background:linear-gradient(135deg,var(--cyan),var(--cyan-dark));color:#fff;box-shadow:0 4px 15px rgba(56,196,242,.32);} .btn-primary:hover{transform:translateY(-1px);}
+  .btn-primary:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none;}
+
+  .toasts{position:fixed;bottom:22px;inset-inline-start:22px;z-index:80;display:flex;flex-direction:column;gap:8px;}
+  .toast{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--border-mid);border-radius:var(--r-sm);padding:12px 15px;box-shadow:var(--sh-md);font-size:13px;font-weight:600;animation:tin .3s ease;}
+  @keyframes tin{from{opacity:0;transform:translateX(-26px);}to{opacity:1;transform:none;}} .toast svg{width:16px;height:16px;color:var(--cyan);flex-shrink:0;}
+
+  @media (max-width:600px){ body{overflow:auto;height:auto;min-height:100dvh;} .stage{overflow:visible;} .wiz{height:auto;} .card{flex:none;} .list{max-height:none;} .foot{flex-direction:column;align-items:stretch;} .fbtns{justify-content:stretch;} .fbtns .btn{flex:1;justify-content:center;} }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="crumb">דיוור<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg><b>מייל חדש</b></div>
+    <button class="iconbtn" id="themeBtn" aria-label="מצב תצוגה">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </header>
+
+  <div class="stage">
+    <div class="wiz">
+      <div class="head">
+        <div class="step"><span class="n">1</span>שלב 1 מתוך 2 · בחירת נמענים</div>
+        <h1>לאיזה רשימות לשלוח את המייל?</h1>
+        <p>בוחרים רשימה אחת, כמה, או את כולן. <b>מי שנמצא בכמה רשימות יקבל מייל אחד בלבד</b> — הספירה תמיד מנוכת-כפילויות.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="q" placeholder="חיפוש רשימה…" oninput="render()">
+          </div>
+          <label class="selall" onclick="toggleAll()"><span class="cbx" id="allbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>בחר הכל</label>
+        </div>
+        <div class="list" id="list"></div>
+        <div class="foot">
+          <div class="summary">
+            <div class="l1"><span id="selcount">לא נבחרו רשימות</span> · <b id="recips">0</b> נמענים</div>
+            <div class="dedup" id="dedup"></div>
+          </div>
+          <div class="fbtns">
+            <button class="btn btn-ghost" onclick="goBack()">ביטול</button>
+            <button class="btn btn-primary" id="cont" disabled onclick="goEditor()">המשך לעורך<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+
+<script>
+(function(){var t=localStorage.getItem('wb-admin-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();
+document.getElementById('themeBtn').addEventListener('click',function(){
+  var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';
+  d.setAttribute('data-theme',n);localStorage.setItem('wb-admin-theme',n);
+});
+function toast(msg){var c=document.getElementById('toasts');var el=document.createElement('div');el.className='toast';
+  el.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'+msg;c.appendChild(el);
+  setTimeout(function(){el.style.opacity='0';el.style.transform='translateX(-26px)';el.style.transition='.3s';setTimeout(function(){el.remove();},300);},2400);}
+function goBack(){window.location.href=encodeURI('רשימות תפוצה - מסך בית.html');}
+function goEditor(){toast('ממשיך לעורך המייל הוויזואלי…');setTimeout(function(){window.location.href=encodeURI('עורך מייל ויזואלי.html');},600);}
+
+/* --- members as id-ranges so dedup is REAL (union of overlapping ranges) --- */
+function range(a,b){var r=[];for(var i=a;i<b;i++)r.push(i);return r;}
+var ICONS={
+  man:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>',
+  stud:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2.5 9 2.5 12 0v-5"/></svg>',
+  cart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>'
+};
+var LISTS=[
+  /* manual lists — maintained by the creator */
+  {id:'club',   name:'מפגשי הלייב של מועדון הורות התפתחותית', kind:'manual', members:range(0,1240)},
+  {id:'weekly', name:'ניוזלטר שבועי — טיפים להורים',          kind:'manual', members:range(900,1790)},
+  {id:'soft',   name:'הורות רכה — סדנת אונליין',              kind:'manual', disabled:true, members:range(0,0)},
+  /* automatic lists — system-detected by behavior */
+  {id:'a-stud', name:'תלמידי הקורס', sub:'הורות רגועה',   kind:'auto', type:'stud', members:range(1700,2020)},
+  {id:'a-cart', name:'נוטשי עגלה',   sub:'הורות רגועה',   kind:'auto', type:'cart', members:range(2020,2065)},
+  {id:'b-stud', name:'תלמידי הקורס', sub:'גבולות בגיל הרך', kind:'auto', type:'stud', members:range(1900,2110)},
+  {id:'b-cart', name:'נוטשי עגלה',   sub:'גבולות בגיל הרך', kind:'auto', type:'cart', members:range(2110,2148)}
+];
+var sel={};
+function fmt(n){return n.toLocaleString('he-IL');}
+function q(){return document.getElementById('q').value.trim();}
+function matches(l){var s=q();return !s||l.name.indexOf(s)>-1||(l.sub&&l.sub.indexOf(s)>-1);}
+function optHTML(l){
+  if(l.disabled){
+    return '<div class="opt" style="opacity:.5;pointer-events:none">'+
+      '<span class="cbx"></span>'+
+      '<span class="lic ic-man">'+ICONS.man+'</span>'+
+      '<div class="ob"><div class="on">'+l.name+'<span class="kind" style="background:var(--surface-3);color:var(--text-sub)">טיוטה</span></div><div class="os">עדיין לא פורסמה</div></div>'+
+      '<div class="osub">0 <small>נמענים</small></div></div>';
+  }
+  var on=!!sel[l.id];
+  var icClass=l.kind==='auto'?(l.type==='cart'?'ic-cart':'ic-stud'):'ic-man';
+  var ic=l.kind==='auto'?(l.type==='cart'?ICONS.cart:ICONS.stud):ICONS.man;
+  var badge=l.kind==='auto'?'<span class="kind">אוטומטי</span>':'';
+  var subline=l.sub?'<div class="os">קורס · '+l.sub+'</div>':'';
+  return '<div class="opt'+(on?' sel':'')+'" onclick="sel[\''+l.id+'\']=!sel[\''+l.id+'\'];render();">'+
+    '<span class="cbx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>'+
+    '<span class="lic '+icClass+'">'+ic+'</span>'+
+    '<div class="ob"><div class="on">'+l.name+badge+'</div>'+subline+'</div>'+
+    '<div class="osub">'+fmt(l.members.length)+' <small>נמענים</small></div></div>';
+}
+function render(){
+  var box=document.getElementById('list');box.innerHTML='';
+  var man=LISTS.filter(function(l){return l.kind==='manual'&&matches(l);});
+  var aut=LISTS.filter(function(l){return l.kind==='auto'&&matches(l);});
+  if(man.length){
+    box.insertAdjacentHTML('beforeend','<div class="group-h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>רשימות ידניות</div>');
+    man.forEach(function(l){box.insertAdjacentHTML('beforeend',optHTML(l));});
+  }
+  if(aut.length){
+    box.insertAdjacentHTML('beforeend','<div class="group-h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>רשימות אוטומטיות · המערכת מזהה לפי התנהגות</div>');
+    aut.forEach(function(l){box.insertAdjacentHTML('beforeend',optHTML(l));});
+  }
+  updateFoot();
+}
+function updateFoot(){
+  var chosen=LISTS.filter(function(l){return sel[l.id];});
+  var sumRaw=chosen.reduce(function(a,l){return a+l.members.length;},0);
+  var seen={},unique=0;
+  chosen.forEach(function(l){l.members.forEach(function(m){if(!seen[m]){seen[m]=1;unique++;}});});
+  var dupes=sumRaw-unique;
+  document.getElementById('selcount').textContent=chosen.length?('נבחרו '+chosen.length+' רשימות'):'לא נבחרו רשימות';
+  document.getElementById('recips').textContent=fmt(unique);
+  var dd=document.getElementById('dedup');
+  if(dupes>0){dd.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>'+fmt(dupes)+' כפילויות אוחדו — כל אחד יקבל מייל אחד';dd.className='dedup show';}
+  else{dd.textContent='';dd.className='dedup';}
+  document.getElementById('cont').disabled=chosen.length===0;
+  var sels=LISTS.filter(function(l){return !l.disabled;});
+  var all=sels.every(function(l){return sel[l.id];});
+  var ab=document.getElementById('allbox');
+  ab.style.background=all?'var(--cyan)':'var(--surface)';ab.style.borderColor=all?'var(--cyan)':'var(--border-mid)';ab.querySelector('svg').style.opacity=all?'1':'0';
+}
+function toggleAll(){var sels=LISTS.filter(function(l){return !l.disabled;});var all=sels.every(function(l){return sel[l.id];});sels.forEach(function(l){sel[l.id]=!all;});render();}
+render();
+</script>
+</body>
+</html>

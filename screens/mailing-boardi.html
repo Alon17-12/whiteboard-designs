@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בורדי · יוצר הדיוור — WHITEBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Heebo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green:#7DC57A;--green-bright:#22c55e;--yellow:#EAD654;--purple:#9B6BF2;--orange:#F5A65B;
+  --bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);--border-strong:rgba(37,62,122,0.16);
+  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.55);--text-xs:rgba(37,62,122,0.38);
+  --r-xs:6px;--r-sm:10px;--r-md:16px;--r-lg:18px;
+  --shadow:0 18px 50px -22px rgba(37,62,122,0.45);--shadow-sm:0 6px 22px -12px rgba(37,62,122,0.4);
+}
+[data-theme="dark"]{
+  --bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.16);
+  --text-main:#dde5f5;--text-sub:rgba(221,229,245,0.55);--text-xs:rgba(221,229,245,0.3);--shadow-sm:0 8px 26px -14px rgba(0,0,0,0.7);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text-main);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px}
+
+.shell{display:flex;height:100vh}
+
+/* ===== SIDEBAR ===== */
+.side{width:220px;flex:0 0 220px;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:18px 14px}
+.logo{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 0 14px}
+.logo .mk{width:46px;height:46px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center}
+.logo .mk svg{width:30px;height:30px}
+.logo .wm{font-family:'Fredoka';font-weight:700;font-size:15px;letter-spacing:.5px}
+.logo .wm small{display:block;font-size:8px;letter-spacing:3px;color:#ffffff88;text-align:center;font-family:'Heebo';font-weight:500}
+.nav-tag{font-size:10px;color:#ffffff55;letter-spacing:1px;margin:12px 10px 6px}
+.side nav a{display:flex;align-items:center;gap:11px;color:#dbe6ff;font-size:13.5px;padding:10px 12px;border-radius:9px;margin-bottom:2px;transition:.15s}
+.side nav a svg{width:17px;height:17px;flex:0 0 auto;opacity:.85}
+.side nav a:hover{background:#ffffff10}
+.side nav a.on{background:linear-gradient(90deg,#ffffff22,#ffffff10);color:#fff;font-weight:600}
+.side nav a.on svg{opacity:1;color:var(--cyan)}
+.side .spacer{flex:1}
+.mode-tog{display:flex;background:#ffffff14;border-radius:10px;padding:3px;margin:4px 4px 12px}
+.mode-tog button{flex:1;font-size:12px;padding:7px;border-radius:8px;color:#cdd9f5;display:flex;align-items:center;justify-content:center;gap:5px}
+.mode-tog button.on{background:#fff;color:var(--navy);font-weight:700}
+.mode-tog button svg{width:14px;height:14px}
+.prof{display:flex;align-items:center;gap:10px;padding:8px 6px;border-top:1px solid #ffffff1a}
+.prof .av{width:34px;height:34px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Fredoka'}
+.prof .nm{font-size:13px;font-weight:600}.prof .em{font-size:10.5px;color:#ffffff77}
+
+/* ===== TOPBAR ===== */
+.wrap{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{height:60px;flex:0 0 60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.top .crumb{display:flex;align-items:center;gap:10px}
+.top .back{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-sub)}
+.top h1{font-family:'Fredoka';font-size:18px;font-weight:600}
+.top h1 span{color:var(--text-xs);font-weight:400;font-size:14px}
+.top .acts{display:flex;gap:8px}
+.iconbtn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.iconbtn:hover{color:var(--cyan);border-color:var(--cyan)}
+.iconbtn svg{width:17px;height:17px}
+
+/* ===== BODY ===== */
+.body{flex:1;display:flex;min-height:0}
+.chat{flex:1;display:flex;flex-direction:column;min-width:0}
+.stream{flex:1;overflow-y:auto;padding:26px clamp(18px,4vw,54px);display:flex;flex-direction:column;gap:16px}
+.stream .day{align-self:center;font-size:11px;color:var(--text-xs);background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:100px}
+
+/* message rows — בורדי RIGHT, מרצה LEFT */
+.row{display:flex;gap:12px;max-width:740px;align-items:flex-end;align-self:flex-start;animation:pop .35s ease}
+.row.me{align-self:flex-end;flex-direction:row-reverse}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.av-b{width:56px;height:56px;flex:0 0 auto;display:flex;align-items:flex-end;justify-content:center;transition:.4s}
+.av-b img{width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 5px 12px rgba(37,62,122,.20))}
+.av-me{width:38px;height:38px;flex:0 0 auto;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fredoka';font-weight:700;box-shadow:var(--shadow-sm);align-self:flex-end;margin-bottom:2px}
+.bub{background:var(--surface);border:1px solid var(--border);border-radius:16px 4px 16px 16px;padding:13px 16px;font-size:14.5px;line-height:1.6;box-shadow:var(--shadow-sm);color:var(--text-main)}
+.row.me .bub{background:var(--navy);color:#eaf1ff;border-radius:4px 16px 16px 16px;border-color:transparent}
+.bub .who{font-size:11px;color:var(--cyan);font-weight:700;margin-bottom:4px;font-family:'Fredoka'}
+.bub b{color:inherit;font-weight:700}
+.time{font-size:10px;color:var(--text-xs);margin-top:6px}
+
+/* typing */
+.typing{display:flex;gap:5px;align-items:center;padding:15px 18px}
+.typing i{width:8px;height:8px;border-radius:50%;background:var(--cyan);animation:bounce 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
+.typing-lbl{font-size:11px;color:var(--text-xs);margin-right:2px}
+
+/* quick-action cards (goals) */
+.qa{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;max-width:560px}
+.qacard{text-align:right;background:var(--surface-2);border:1.5px solid var(--border);border-radius:14px;padding:14px;transition:.15s;display:flex;gap:11px;align-items:flex-start}
+.qacard:hover{border-color:var(--cyan);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.qacard .qi{width:36px;height:36px;border-radius:10px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff}
+.qacard .qi svg{width:18px;height:18px}
+.qacard h4{font-size:14px;font-weight:700;margin-bottom:2px}
+.qacard p{font-size:11.5px;color:var(--text-sub);line-height:1.4}
+.qacard.dim{opacity:.4;pointer-events:none}
+
+/* MC */
+.mc{margin-top:4px}
+.mc .q{font-size:14.5px;font-weight:600;margin-bottom:11px}
+.mc .opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.mc.single .opts{grid-template-columns:1fr}
+.opt{text-align:right;background:var(--surface-2);border:1.5px solid var(--border);border-radius:12px;padding:13px 15px;font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;transition:.15s}
+.opt:hover{border-color:var(--cyan);background:color-mix(in srgb,var(--cyan) 8%,var(--surface));transform:translateY(-1px)}
+.opt .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--border-strong);flex:0 0 auto}
+.opt.pick{border-color:var(--green-bright);background:color-mix(in srgb,var(--green-bright) 10%,var(--surface));pointer-events:none}
+.opt.pick .dot{border-color:var(--green-bright);background:var(--green-bright);position:relative}
+.opt.pick .dot::after{content:"";position:absolute;inset:3px 5px;border-left:2px solid #fff;border-bottom:2px solid #fff;width:6px;height:9px;transform:rotate(-45deg) translate(1px,-1px)}
+.opt.dim{opacity:.4}
+
+/* loading */
+.loadc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;max-width:340px}
+.loadc .m{width:74px;height:74px;animation:float 2.4s ease-in-out infinite}
+.loadc .vid{width:180px;height:auto;border-radius:14px;box-shadow:var(--shadow-sm);background:#0c1422}
+@keyframes float{50%{transform:translateY(-8px)}}
+.loadc .st{font-size:14px;font-weight:600;min-height:20px}
+.loadc .bar{width:100%;height:7px;background:var(--surface-3);border-radius:10px;overflow:hidden}
+.loadc .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green-bright));border-radius:10px;transition:width .8s ease}
+.loadc .sub{font-size:11.5px;color:var(--text-xs)}
+
+/* ===== AUDIENCE ASSEMBLY CARD (the bridge to the lists foundation) ===== */
+.aud{max-width:560px;background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.aud .ah{padding:16px 18px;background:linear-gradient(135deg,var(--surface-2),var(--surface));border-bottom:1px solid var(--border)}
+.aud .ah .tagr{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--purple);font-weight:700;margin-bottom:9px}
+.aud .ah h3{font-family:'Fredoka';font-size:19px;font-weight:700;display:flex;align-items:center;gap:9px}
+.aud .ah h3 .n{font-variant-numeric:tabular-nums;color:var(--cyan)}
+.aud .ah p{font-size:12px;color:var(--text-sub);margin-top:4px}
+.aud .ab{padding:12px 14px}
+.src{display:flex;align-items:center;gap:11px;padding:11px 12px;border:1px solid var(--border);border-radius:12px;margin-bottom:8px;background:var(--surface)}
+.src .si{width:34px;height:34px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--navy) 8%,var(--surface));color:var(--navy)}
+[data-theme="dark"] .src .si{background:#ffffff10;color:var(--cyan)}
+.src .si svg{width:17px;height:17px}
+.src .st2{flex:1;min-width:0}
+.src .st2 .k{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.src .st2 .sub{font-size:11px;color:var(--text-xs);margin-top:1px}
+.src .cnt{font-family:'Fredoka';font-weight:700;font-size:16px;font-variant-numeric:tabular-nums;color:var(--text-main)}
+.segbadge{font-size:9.5px;font-weight:700;color:var(--purple);background:color-mix(in srgb,var(--purple) 14%,transparent);border:1px solid color-mix(in srgb,var(--purple) 32%,transparent);padding:2px 7px;border-radius:100px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.segbadge svg{width:10px;height:10px}
+.autob{font-size:9.5px;font-weight:700;color:var(--cyan);background:color-mix(in srgb,var(--cyan) 14%,transparent);border:1px solid color-mix(in srgb,var(--cyan) 30%,transparent);padding:2px 7px;border-radius:100px;white-space:nowrap}
+.dedup{display:flex;align-items:center;gap:9px;background:color-mix(in srgb,var(--green-bright) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--green-bright) 30%,transparent);border-radius:12px;padding:11px 13px;margin:4px 0 2px;font-size:12.5px;color:var(--green-bright);font-weight:600}
+.dedup svg{width:17px;height:17px;flex:0 0 auto}
+.dedup b{color:var(--green-bright)}
+.audsug{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px dashed var(--border-strong);border-radius:12px;padding:11px 13px;margin-top:8px}
+.audsug .txt{flex:1;font-size:12px;color:var(--text-sub);line-height:1.45}
+.audsug .txt b{color:var(--text-main)}
+.audsug button{font-size:12px;font-weight:700;color:var(--cyan);border:1px solid var(--cyan);border-radius:9px;padding:8px 12px;white-space:nowrap;display:flex;gap:6px;align-items:center}
+.audsug button:hover{background:color-mix(in srgb,var(--cyan) 10%,transparent)}
+.audsug button svg{width:13px;height:13px}
+.aud .af{padding:13px 16px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* campaign-type scheduling row */
+.sched{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.chipbtn.on{border-color:var(--cyan);color:var(--cyan);background:color-mix(in srgb,var(--cyan) 8%,transparent)}
+.dateinp{font-family:inherit;font-size:12.5px;border:1.5px solid var(--border);border-radius:9px;padding:7px 9px;background:var(--surface);color:var(--text-main);outline:none}
+.dateinp:focus{border-color:var(--cyan)}
+
+/* segment builder (behavior-based dynamic segmentation) */
+.segrow{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px 15px;font-size:14px;line-height:2.3;color:var(--text-main)}
+.segrow .rec{display:inline-block;font-size:9.5px;font-weight:700;color:var(--green-bright);background:color-mix(in srgb,var(--green-bright) 12%,transparent);border:1px solid color-mix(in srgb,var(--green-bright) 30%,transparent);padding:2px 8px;border-radius:100px;margin-inline-start:6px;line-height:1.6}
+.pillset{display:inline-flex;background:var(--surface-3);border-radius:9px;padding:3px;gap:2px;vertical-align:middle;margin:0 3px}
+.pillset button{font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:7px;color:var(--text-sub);font-variant-numeric:tabular-nums}
+.pillset button.on{background:var(--surface);color:var(--navy);box-shadow:var(--shadow-sm)}
+[data-theme="dark"] .pillset button.on{color:var(--cyan)}
+.segsel{font-family:inherit;font-size:13px;font-weight:700;color:var(--cyan);background:color-mix(in srgb,var(--cyan) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--cyan) 30%,transparent);border-radius:8px;padding:5px 8px;cursor:pointer;vertical-align:middle}
+.segextra{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.segextra .lbl{font-size:11.5px;color:var(--text-xs);width:100%;margin-bottom:-2px}
+.segchip{font-size:12.5px;font-weight:600;padding:8px 12px;border-radius:100px;border:1px dashed var(--border-strong);color:var(--text-sub);display:flex;gap:6px;align-items:center}
+.segchip:hover{border-color:var(--cyan);color:var(--cyan)}
+.segchip.on{border-style:solid;border-color:var(--cyan);color:var(--cyan);background:color-mix(in srgb,var(--cyan) 8%,transparent)}
+
+/* ===== EMAIL PREVIEW CARD ===== */
+.mailc{max-width:560px;background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.mailc .mch{padding:16px 18px;border-bottom:1px solid var(--border)}
+.mailc .mch .tagr{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--purple);font-weight:700;margin-bottom:9px}
+.mailc .subjline{font-size:11px;color:var(--text-xs);margin-bottom:3px}
+.mailc .subj{font-family:'Fredoka';font-size:18px;font-weight:700;line-height:1.25}
+.mailc .pre{font-size:12px;color:var(--text-sub);margin-top:4px}
+.mailc .mcmeta{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.mailc .mcmeta span{font-size:11px;background:var(--surface-3);color:var(--text-sub);padding:4px 10px;border-radius:100px;font-weight:600;display:flex;gap:5px;align-items:center}
+.mailbody{padding:14px 16px;max-height:250px;overflow-y:auto;background:var(--surface-2)}
+.blk{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px 14px;margin-bottom:9px;font-size:13px;line-height:1.55;color:var(--text-main)}
+.blk .bt{font-size:9.5px;font-weight:700;color:var(--text-xs);letter-spacing:.5px;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.blk.h b{font-family:'Fredoka';font-size:16px}
+.blk.cta{text-align:center;background:linear-gradient(135deg,var(--surface),var(--surface-3))}
+.blk.cta .ctabtn{display:inline-block;background:var(--cyan);color:#fff;font-weight:700;font-size:13px;padding:10px 22px;border-radius:10px;margin-top:2px}
+.blk.foot{font-size:11px;color:var(--text-xs);text-align:center;background:none;border-style:dashed}
+.mailc .mcf{padding:13px 16px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.mailc .mcf .grow{flex:1}
+.voice{display:flex;align-items:center;gap:7px;margin-top:10px;font-size:11.5px;color:var(--purple);font-weight:600;background:color-mix(in srgb,var(--purple) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--purple) 26%,transparent);border-radius:100px;padding:5px 11px;width:fit-content}
+.voice svg{width:13px;height:13px;flex:0 0 auto}
+
+/* style-reference card (BOARDi asks for copy reference) */
+.refc{max-width:520px;background:linear-gradient(135deg,color-mix(in srgb,var(--purple) 10%,var(--surface)),var(--surface));border:1px solid color-mix(in srgb,var(--purple) 30%,transparent);border-radius:16px;padding:15px 17px}
+.refc .rt{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--purple);font-weight:700;margin-bottom:8px}
+.refc h4{font-size:14.5px;font-weight:700;margin-bottom:5px}
+.refc p{font-size:12.5px;color:var(--text-sub);line-height:1.5;margin-bottom:12px}
+.refc .learned{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--green-bright);font-weight:600;background:color-mix(in srgb,var(--green-bright) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--green-bright) 26%,transparent);border-radius:10px;padding:9px 11px;margin-bottom:12px}
+.refc .learned svg{width:15px;height:15px;flex:0 0 auto}
+.refc .refacts{display:flex;gap:9px;flex-wrap:wrap}
+.refc .refacts .btn{padding:10px 15px;font-size:13px}
+.refc .btn-p{background:var(--purple);color:#fff;box-shadow:0 8px 20px -8px var(--purple)}
+
+/* ===== modal + email preview + send-test ===== */
+.modal-bg{position:fixed;inset:0;background:rgba(12,20,34,.55);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);display:flex;align-items:center;justify-content:center;padding:30px;z-index:90;opacity:0;pointer-events:none;transition:.28s}
+.modal-bg.show{opacity:1;pointer-events:all}
+.modal{width:min(560px,100%);max-height:90vh;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:0 40px 90px -30px rgba(0,0,0,.55);display:flex;flex-direction:column;transform:translateY(14px) scale(.98);transition:.28s;overflow:hidden}
+.modal-bg.show .modal{transform:none}
+.modal .mh{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.modal .mh .mi{width:38px;height:38px;border-radius:10px;background:color-mix(in srgb,var(--cyan) 15%,transparent);color:var(--cyan);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.modal .mh h3{font-family:'Fredoka';font-size:17px;font-weight:600;flex:1}
+.modal .mh p{font-size:11.5px;color:var(--text-xs);margin:2px 0 0}
+.modal .mx{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.modal .mx:hover{border-color:var(--pink);color:var(--pink)}
+.modal .mb{padding:16px 18px;overflow-y:auto}
+.modal .mf{padding:13px 18px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center}
+/* device toggle in preview */
+.devtog{display:flex;background:var(--surface-3);border-radius:9px;padding:3px;gap:2px}
+.devtog button{font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:7px;color:var(--text-sub);display:flex;gap:5px;align-items:center}
+.devtog button.on{background:var(--surface);color:var(--navy);box-shadow:var(--shadow-sm)}
+[data-theme="dark"] .devtog button.on{color:var(--cyan)}
+.devtog button svg{width:13px;height:13px}
+/* rendered email frame */
+.emlwrap{background:var(--surface-2);border-radius:14px;padding:16px;display:flex;justify-content:center}
+.eml{width:100%;max-width:520px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px -14px rgba(0,0,0,.35);transition:max-width .3s ease;color:#1a2f5e}
+.eml.mob{max-width:300px}
+.eml .ehead{background:linear-gradient(135deg,#253E7A,#1db0d8);padding:18px;color:#fff;text-align:center;font-family:'Fredoka';font-weight:700;font-size:15px}
+.eml .ebody{padding:20px 18px}
+.eml h2{font-family:'Fredoka';font-size:19px;font-weight:700;margin-bottom:12px;line-height:1.25}
+.eml p{font-size:13.5px;line-height:1.65;margin-bottom:12px;color:#3a4a6e}
+.eml .ectastrip{text-align:center;margin:18px 0}
+.eml .ecta{display:inline-block;background:#38C4F2;color:#fff;font-weight:700;font-size:14px;padding:13px 30px;border-radius:10px;text-decoration:none}
+.eml .efoot{border-top:1px solid #e6eef8;padding:14px 18px;font-size:10.5px;color:#8a97b5;text-align:center}
+/* send-test input */
+.tfield{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+.tfield label{font-size:12px;font-weight:600;color:var(--text-sub)}
+.tfield input{background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;padding:11px 13px;font-family:inherit;font-size:14px;color:var(--text-main);outline:none}
+.tfield input:focus{border-color:var(--cyan)}
+.thint{font-size:11.5px;color:var(--text-xs);line-height:1.5;margin-top:8px;display:flex;gap:7px}
+.thint svg{width:14px;height:14px;flex:0 0 auto;color:var(--cyan);margin-top:1px}
+
+/* buttons */
+.btn{padding:11px 18px;border-radius:11px;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+.btn svg{width:16px;height:16px}
+.btn-g{background:var(--green-bright);color:#fff;box-shadow:0 8px 20px -8px var(--green-bright)}
+.btn-g:hover{filter:brightness(1.05)}
+.btn-o{border:1px solid var(--border);color:var(--text-sub)}.btn-o:hover{border-color:var(--navy);color:var(--navy)}
+.chipbtn{font-size:12px;font-weight:600;padding:8px 13px;border-radius:9px;border:1px solid var(--border);color:var(--text-sub);display:flex;gap:6px;align-items:center}
+.chipbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.chipbtn svg{width:14px;height:14px}
+
+/* handoff */
+.handoff{max-width:540px;background:linear-gradient(135deg,color-mix(in srgb,var(--purple) 14%,var(--surface)),var(--surface));border:1px solid color-mix(in srgb,var(--purple) 35%,transparent);border-radius:16px;padding:16px 18px;display:flex;gap:13px;align-items:center}
+.handoff .hi{width:42px;height:42px;border-radius:11px;background:color-mix(in srgb,var(--purple) 20%,transparent);color:var(--purple);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.handoff .ht{flex:1}.handoff .ht b{font-size:14px}.handoff .ht p{font-size:12.5px;margin:2px 0 0;color:var(--text-sub)}
+.handoff .hb{background:var(--purple);color:#fff;font-size:12.5px;font-weight:700;padding:9px 14px;border-radius:10px;white-space:nowrap}
+
+/* composer */
+.composer{flex:0 0 auto;padding:14px clamp(18px,4vw,54px) 18px;border-top:1px solid var(--border);background:var(--surface)}
+.cbox{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:14px;padding:7px 8px 7px 16px}
+.cbox:focus-within{border-color:var(--cyan)}
+.cbox input{flex:1;background:none;border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text-main)}
+.cbox input::placeholder{color:var(--text-xs)}
+.cbox .snd{width:40px;height:40px;border-radius:11px;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.cbox .snd svg{width:18px;height:18px}
+.cbox .attach{color:var(--text-xs);display:flex;align-items:center;justify-content:center;width:32px;height:32px}
+
+/* ===== AUDIENCE RAIL ("הקהל שנבנה") ===== */
+.rail{width:320px;flex:0 0 320px;border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;padding:22px 20px;overflow-y:auto}
+.rail h2{font-family:'Fredoka';font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.rail h2 svg{width:17px;height:17px;color:var(--cyan)}
+.rail .desc{font-size:11.5px;color:var(--text-xs);line-height:1.5;margin-bottom:16px}
+.totbox{background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:18px;text-align:center;margin-bottom:8px}
+.totbox .big{font-family:'Fredoka';font-weight:700;font-size:46px;line-height:1;font-variant-numeric:tabular-nums;color:var(--cyan);transition:color .4s}
+.totbox .lbl{font-size:12.5px;font-weight:600;color:var(--text-sub);margin-top:2px}
+.totbox .raw{font-size:11px;color:var(--text-xs);margin-top:6px;font-variant-numeric:tabular-nums}
+.raildedup{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--green-bright);font-weight:600;background:color-mix(in srgb,var(--green-bright) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--green-bright) 26%,transparent);border-radius:11px;padding:9px 11px;margin-bottom:14px}
+.raildedup svg{width:15px;height:15px;flex:0 0 auto}
+.rsrc-t{font-size:11px;color:var(--text-xs);letter-spacing:.5px;margin:2px 2px 9px}
+.rsrc{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:11px;border:1px solid var(--border);margin-bottom:8px;background:var(--surface);animation:pop .35s ease}
+.rsrc .rk{flex:1;min-width:0}
+.rsrc .rk .n{font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rsrc .rk .s{font-size:10.5px;color:var(--text-xs);margin-top:1px}
+.rsrc .rc{font-family:'Fredoka';font-weight:700;font-size:13.5px;font-variant-numeric:tabular-nums;color:var(--text-sub)}
+.rail .empty{font-size:12px;color:var(--text-xs);text-align:center;padding:20px 6px;line-height:1.6}
+.railnote{margin-top:auto;font-size:11px;color:var(--text-xs);background:var(--surface-2);border:1px dashed var(--border-strong);border-radius:11px;padding:11px 13px;line-height:1.5}
+.railnote b{color:var(--text-sub)}
+
+/* demo controller */
+.ctrl{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;background:var(--navy);color:#fff;border-radius:100px;padding:8px 10px 8px 18px;box-shadow:var(--shadow);z-index:60}
+.ctrl .lbl{font-size:12px;font-weight:600}
+.ctrl button{background:#ffffff1a;border-radius:100px;padding:8px 15px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px}
+.ctrl button.play{background:var(--cyan);color:var(--navy)}
+.ctrl button:hover{filter:brightness(1.08)}
+.ctrl button svg{width:15px;height:15px}
+.ctrl .rst{background:transparent;padding:8px}
+
+/* toast */
+.toasts{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:10px;z-index:80}
+.toast{background:var(--surface);border:1px solid var(--border);border-right:4px solid var(--green-bright);border-radius:12px;padding:13px 16px;box-shadow:var(--shadow);display:flex;gap:11px;align-items:center;min-width:260px;animation:slidein .3s ease}
+@keyframes slidein{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+.toast .ti{width:30px;height:30px;border-radius:8px;background:color-mix(in srgb,var(--green-bright) 15%,transparent);color:var(--green-bright);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.toast .tx b{font-size:13.5px}.toast .tx p{font-size:11.5px;color:var(--text-sub);margin:0}
+
+@media (max-width:1100px){.rail{display:none}}
+@media (max-width:760px){.side{display:none}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <div class="logo">
+      <div class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="#253E7A" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M8 20h8M12 18v2"/><circle cx="9.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><circle cx="14.5" cy="10.5" r="1" fill="#253E7A" stroke="none"/><path d="M9.5 13.5c1.5 1.2 3.5 1.2 5 0"/></svg></div>
+      <div class="wm">WHITEBOARD<small>LEARN · CREATE · GROW</small></div>
+    </div>
+    <span class="nav-tag">ניווט ראשי</span>
+    <nav>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> לוח בקרה</a>
+      <a href="#" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg> בורדי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21V12h6v9"/></svg> מרכזי הידע שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg> אנשי הקשר שלי</a>
+      <a href="רשימות תפוצה - מסך בית.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 9v11"/></svg> רשימות תפוצה</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> הספרייה שלי</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.2A1.6 1.6 0 0 0 7 19.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1-2.7H3a2 2 0 0 1 0-4h.2a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H10a1.6 1.6 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.2a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V10a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1z"/></svg> הגדרות</a>
+    </nav>
+    <div class="spacer"></div>
+    <div class="mode-tog">
+      <button class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M6 12v5c3 3 9 3 12 0v-5"/><path d="M2 10l10-5 10 5-10 5z"/></svg> מורה</button>
+      <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> תלמיד</button>
+    </div>
+    <div class="prof"><div class="av">א</div><div><div class="nm">אלון גבאי</div><div class="em">alon@…</div></div></div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="wrap">
+    <div class="top">
+      <div class="crumb">
+        <div class="back"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        <h1>יוצר הדיוור <span>· בורדי</span></h1>
+      </div>
+      <div class="acts">
+        <button class="iconbtn" title="שיחות אחרונות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+        <button class="iconbtn" id="theme" title="מצב תצוגה"><svg id="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+        <button class="iconbtn" title="שפה">🇮🇱</button>
+      </div>
+    </div>
+
+    <div class="body">
+      <!-- CHAT -->
+      <div class="chat">
+        <div class="stream" id="stream">
+          <div class="day">היום · 09:14</div>
+        </div>
+        <div class="composer">
+          <div class="cbox">
+            <input id="inp" placeholder="ספר לבורדי מה לשלוח, ולמי…" />
+            <button class="attach"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.4 11.05 12.25 20.2a5 5 0 0 1-7.07-7.07l9.19-9.19a3 3 0 0 1 4.24 4.24l-9.2 9.19a1 1 0 0 1-1.41-1.41l8.48-8.49"/></svg></button>
+            <button class="snd" id="sendbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUDIENCE RAIL -->
+      <aside class="rail">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> הקהל שנבנה</h2>
+        <p class="desc">בורדי מרכיב את הקהל מהרשימות שלך — כולל רשימות אוטומטיות לפי התנהגות. מי שנמצא בכמה רשימות מקבל <b>מייל אחד</b>.</p>
+
+        <div id="railContent">
+          <div class="empty">עדיין לא נבחר קהל.<br>ספר לבורדי מה המטרה — והוא יבנה את הרשימה כאן.</div>
+        </div>
+
+        <div class="railnote">💡 <b>קהל דינמי:</b> רשימות "לפי התנהגות" מתעדכנות לבד. הספירה כאן חיה — אם עד השליחה תלמיד יחזור לצפות או ינטוש, הרשימה תשקף זאת אוטומטית.</div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- DEMO CONTROLLER -->
+<div class="ctrl">
+  <span class="lbl">דמו · יוצר הדיוור</span>
+  <button class="play" id="play"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg> נגן</button>
+  <button id="step">צעד ▶</button>
+  <button class="rst" id="reset" title="התחל מחדש"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.3 2.6L3 8"/><path d="M3 3v5h5"/></svg></button>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div class="modal-bg" id="prevModal">
+  <div class="modal">
+    <div class="mh">
+      <div class="mi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+      <div style="flex:1"><h3>תצוגה מקדימה</h3><p>כך המייל ייראה אצל הנמען · המשתנים ממולאים לדוגמה</p></div>
+      <div class="devtog" id="devtog"><button class="on" data-d="desk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> מחשב</button><button data-d="mob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg> נייד</button></div>
+      <button class="mx" onclick="closeModal('prevModal')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="mb">
+      <div class="emlwrap"><div class="eml" id="emlFrame">
+        <div class="ehead">מפגשי הלייב · הורות רגועה</div>
+        <div class="ebody">
+          <h2>שלום דנה, שמרנו לך מקום 🎓</h2>
+          <p>שמנו לב שלא נכנסת לאחרונה ל<b>"הורות רגועה"</b> — וזה בסדר גמור, החיים עמוסים. רצינו להזכיר לך שהמסע ממשיך, והמפגש החי הקרוב הוא הזדמנות מושלמת לחזור לקצב.</p>
+          <p>נדבר על גבולות בלי צעקות, ותוכלי לשאול אותי כל שאלה בשידור חי. אני מבטיחה — תצאי עם כלי אחד לפחות ליישום מיידי.</p>
+          <div class="ectastrip"><a class="ecta">שמירת מקום למפגש →</a></div>
+        </div>
+        <div class="efoot">קיבלת את המייל כי נרשמת לקורס "הורות רגועה" · הסרה מרשימת התפוצה</div>
+      </div></div>
+    </div>
+    <div class="mf"><button class="btn btn-o" onclick="closeModal('prevModal')">סגור</button><span style="flex:1"></span><span style="font-size:11.5px;color:var(--text-xs)">💙 הנמען מקבל את הגרסה עם השם והפרטים שלו</span></div>
+  </div>
+</div>
+
+<!-- SEND-TEST MODAL -->
+<div class="modal-bg" id="testModal">
+  <div class="modal" style="width:min(440px,100%)">
+    <div class="mh">
+      <div class="mi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></div>
+      <div style="flex:1"><h3>שלח מייל ניסיון</h3><p>קבל את המייל אליך לבדיקה — לא נשלח לקהל</p></div>
+      <button class="mx" onclick="closeModal('testModal')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="mb">
+      <div class="tfield"><label>לאיזו כתובת לשלוח?</label><input id="testEmail" type="email" value="alon@alon-gabay.co.il"></div>
+      <div class="thint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span>המשתנים ({{first_name}} וכו') יוצגו עם ערכי דוגמה. אפשר לשלוח לכמה כתובות מופרדות בפסיק.</span></div>
+    </div>
+    <div class="mf"><button class="btn btn-g" id="testSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg> שלח ניסיון</button><button class="btn btn-o" onclick="closeModal('testModal')">ביטול</button></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+const M = "../../BOARDi/SVG/";
+const VID = "../../BOARDi/BOARDi%20Coding.mp4";
+const stream = document.getElementById('stream');
+const inp = document.getElementById('inp');
+
+/* mascot reflects understanding of the campaign */
+let curLevel = 10;
+let styleUploaded = false;        // did the teacher upload a copy reference?
+let campaignType = 'single';      // single | series
+let campaignSchedule = 'עכשיו';   // "עכשיו" | scheduled datetime | "אוטומטי" (series)
+let segDays = 14;                 // behavior filter: not-logged-in ≥ N days
+let segCourse = 'הורות רגועה';    // target course | "כל הקורסים"
+function mascotFor(c){
+  if(c>=90) return '5.svg';   // נלהב
+  if(c>=72) return '2.svg';   // שמח
+  if(c>=48) return '12.svg';  // מציג
+  if(c>=24) return '7.svg';   // כותב
+  return '4.svg';             // חושב
+}
+function avatarHTML(){
+  return `<div class="av-b"><img src="${M}${mascotFor(curLevel)}" alt="בורדי" onerror="this.style.display='none';this.parentNode.textContent='🤖'"></div>`;
+}
+
+/* ---------- chat primitives ---------- */
+function scrollDown(){stream.scrollTop=stream.scrollHeight}
+function boardi(html,time='09:14'){
+  const r=document.createElement('div');r.className='row';
+  r.innerHTML=`${avatarHTML()}<div class="bub"><div class="who">בורדי</div>${html}<div class="time">${time}</div></div>`;
+  stream.appendChild(r);scrollDown();return r;
+}
+function boardiBare(node){
+  const r=document.createElement('div');r.className='row';
+  r.appendChild(document.createRange().createContextualFragment(avatarHTML()));
+  r.appendChild(node);stream.appendChild(r);scrollDown();return r;
+}
+function me(text,time='09:15'){
+  const r=document.createElement('div');r.className='row me';
+  r.innerHTML=`<div class="av-me">א</div><div class="bub">${text}<div class="time" style="color:#ffffff88">${time}</div></div>`;
+  stream.appendChild(r);scrollDown();return r;
+}
+let typingRow=null;
+function showTyping(){
+  typingRow=document.createElement('div');typingRow.className='row';
+  typingRow.innerHTML=`<div class="av-b"><img src="${M}7.svg" alt="" onerror="this.parentNode.textContent='✍️'"></div>
+  <div class="bub" style="display:flex;align-items:center"><div class="typing"><i></i><i></i><i></i></div><span class="typing-lbl">בורדי חושב…</span></div>`;
+  stream.appendChild(typingRow);scrollDown();
+}
+function hideTyping(){if(typingRow){typingRow.remove();typingRow=null}}
+
+/* quick-action goal cards */
+const GOALS=[
+  {k:'winback',t:'החזרת תלמידים',d:'מי שקנה קורס ונעלם — להחזיר אותו',c:'var(--orange)',ic:'<path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.3 2.6L3 8"/><path d="M3 3v5h5"/>'},
+  {k:'launch',t:'השקת קורס / מפגש',d:'להזמין את הקהל למשהו חדש',c:'var(--cyan)',ic:'<path d="M4.5 16.5 3 22l5.5-1.5M13 3l8 8-9 3-2-2z"/><path d="m11 13-4 4"/>'},
+  {k:'nurture',t:'חימום ותוכן',d:'טיפ / ערך שוטף לרשימה',c:'var(--green-bright)',ic:'<path d="M12 2s4 3 4 8a4 4 0 0 1-8 0c0-2 1-3 1-3"/><path d="M12 22a6 6 0 0 0 6-6c0-2-1-3-1-3"/>'},
+  {k:'announce',t:'עדכון / הודעה',d:'לספר לכולם משהו חשוב',c:'var(--purple)',ic:'<path d="M3 11l18-5v12L3 14v-3zM11.6 16.8A3 3 0 0 1 7 15"/>'}
+];
+function goalCards(onPick){
+  const box=document.createElement('div');box.className='qa';
+  GOALS.forEach(g=>{
+    const b=document.createElement('button');b.className='qacard';
+    b.innerHTML=`<span class="qi" style="background:${g.c}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${g.ic}</svg></span><div><h4>${g.t}</h4><p>${g.d}</p></div>`;
+    b.onclick=()=>{box.querySelectorAll('.qacard').forEach(x=>x.classList.add('dim'));me('מטרה: '+g.t);onPick(g);};
+    box.appendChild(b);
+  });
+  const wrap=document.createElement('div');wrap.className='bub';wrap.style.maxWidth='none';
+  wrap.innerHTML='<div class="who">בורדי</div><div style="font-size:14.5px;margin-bottom:2px">מה המטרה של הדיוור הפעם? אפשר לבחור — או פשוט לכתוב לי בשפה חופשית 👇</div>';
+  wrap.appendChild(box);
+  boardiBare(wrap);
+}
+
+/* MC */
+function mcQuestion(q,opts,onPick,single){
+  const r=boardi(`<div class="mc ${single?'single':''}"><div class="q">${q}</div><div class="opts"></div></div>`);
+  const box=r.querySelector('.opts');
+  opts.forEach(o=>{
+    const b=document.createElement('button');b.className='opt';
+    b.innerHTML=`<span class="dot"></span><span>${o}</span>`;
+    b.onclick=()=>{box.querySelectorAll('.opt').forEach(x=>x.classList.add('dim'));b.classList.remove('dim');b.classList.add('pick');me(o);onPick(o);};
+    box.appendChild(b);
+  });
+  scrollDown();return r;
+}
+
+/* loading */
+function loadingCard(stages,done,sub){
+  const r=boardi(`<div class="loadc"><video class="vid" src="${VID}" autoplay loop muted playsinline onerror="this.replaceWith(Object.assign(document.createElement('img'),{className:'m',src:'${M}7.svg'}))"></video>
+    <div class="st">מתחיל…</div><div class="bar"><i></i></div><div class="sub">${sub||'בורדי עובד…'}</div></div>`);
+  const st=r.querySelector('.st'), bar=r.querySelector('.bar i');let i=0;
+  (function next(){
+    if(i>=stages.length){setTimeout(()=>{r.remove();done&&done()},350);return}
+    st.textContent=stages[i];bar.style.width=Math.round(((i+1)/stages.length)*100)+'%';
+    i++;scrollDown();setTimeout(next,1000);
+  })();
+}
+
+/* ---------- AUDIENCE MODEL (same primitive as the picker: dedup by unique union) ---------- */
+/* mock members as id-ranges so the union is real */
+function range(a,b){const r=[];for(let i=a;i<b;i++)r.push(i);return r;}
+// תלמידי הורות רגועה שלא נכנסו 14 יום  (dynamic subset of the course-students auto-list)
+const SRC_INACTIVE={key:'inactive',name:'תלמידי הקורס · הורות רגועה',sub:'סגמנט דינמי · לא נכנסו ≥ 14 יום',dyn:true,members:range(1000,1184)}; // 184
+// נוטשי עגלה · הורות רגועה (auto behavior list) — 45, overlaps inactive by 6 ids (1178..1183)
+const SRC_CART={key:'cart',name:'נוטשי עגלה · הורות רגועה',sub:'רשימה אוטומטית · לפי התנהגות',auto:true,members:range(1178,1223)}; // 45, overlap 6
+let AUD=[]; // selected sources
+
+/* ---------- RAIL render ---------- */
+const railContent=document.getElementById('railContent');
+function unique(list){const s=new Set();list.forEach(x=>s.add(x));return s.size;}
+function audStats(){
+  const raw=AUD.reduce((a,s)=>a+s.members.length,0);
+  const all=[];AUD.forEach(s=>s.members.forEach(m=>all.push(m)));
+  const uniq=unique(all);
+  return {raw,uniq,dupes:raw-uniq};
+}
+function renderRail(){
+  if(!AUD.length){railContent.innerHTML='<div class="empty">עדיין לא נבחר קהל.<br>ספר לבורדי מה המטרה — והוא יבנה את הרשימה כאן.</div>';return;}
+  const {raw,uniq,dupes}=audStats();
+  let rows='';
+  AUD.forEach(s=>{
+    const badge=s.dyn?'<span class="segbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="3"/></svg>דינמי</span>':(s.auto?'<span class="autob">אוטומטי</span>':'');
+    rows+=`<div class="rsrc"><div class="rk"><div class="n">${s.name} ${badge}</div><div class="s">${s.sub}</div></div><div class="rc">${s.members.length.toLocaleString('he')}</div></div>`;
+  });
+  railContent.innerHTML=`
+    <div class="totbox"><div class="big">${uniq.toLocaleString('he')}</div><div class="lbl">נמענים ייחודיים</div>
+      ${dupes>0?`<div class="raw">${raw.toLocaleString('he')} סה״כ ברשימות · ${dupes} חופפים</div>`:''}</div>
+    ${dupes>0?`<div class="raildedup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span><b>${dupes} כפילויות אוחדו</b> — כל אחד מקבל מייל אחד</span></div>`:''}
+    <div class="rsrc-t">מקורות הקהל</div>${rows}`;
+}
+
+/* ---------- AUDIENCE assembly card (in chat) ---------- */
+function audienceCard(){
+  const allCourses = segCourse==='כל הקורסים';
+  SRC_INACTIVE.name = allCourses ? 'תלמידי כל הקורסים' : 'תלמידי הקורס · '+segCourse;
+  SRC_INACTIVE.sub  = 'סגמנט דינמי · לא נכנסו ≥ '+segDays+' יום';
+  AUD=[SRC_INACTIVE];renderRail();
+  const {uniq}=audStats();
+  const courseTxt = allCourses ? 'תלמידי כל הקורסים' : 'תלמידי "'+segCourse+'"';
+  const card=document.createElement('div');card.className='aud';
+  card.innerHTML=`
+    <div class="ah"><div class="tagr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M17 11l2 2 4-4"/></svg> נבנה על ידי בורדי · קהל דינמי</div>
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="n" id="audBig">${uniq.toLocaleString('he')}</span> נמענים</h3>
+      <p>בניתי קהל <b>מהתנהגות אמיתית</b>: ${courseTxt} שלא נכנסו מעל <b>${segDays} ימים</b>. הרשימה חיה — מתעדכנת לבד עד לשליחה.</p></div>
+    <div class="ab">
+      <div class="src"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M6 12v5c3 3 9 3 12 0v-5"/><path d="M2 10l10-5 10 5-10 5z"/></svg></span>
+        <div class="st2"><div class="k">${SRC_INACTIVE.name} <span class="segbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="3"/></svg>סגמנט דינמי</span></div><div class="sub">מסנן: לא נכנסו ≥ ${segDays} יום · 184 מתוך 320 תלמידים</div></div>
+        <div class="cnt">184</div></div>
+      <div class="audsug" id="audSug">
+        <div class="txt">💡 <b>שווה לצרף גם את נוטשי העגלה של אותו קורס</b> (45) — גילו עניין אך לא השלימו רכישה. חלקם כבר בקהל, אז אאחד ולא אשלח כפול.</div>
+        <button id="addCart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg> צרף</button>
+      </div>
+    </div>
+    <div class="af"><button class="btn btn-g" id="audOk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> הקהל מדויק — המשך</button>
+      <button class="btn btn-o" onclick="toast('התאמת קהל','אפשר גם לכתוב לי בצ׳אט: להוסיף/להסיר רשימה')">התאם</button></div>`;
+  const r=boardiBare(card);
+  card.querySelector('#addCart').onclick=()=>{
+    AUD=[SRC_INACTIVE,SRC_CART];renderRail();
+    const {uniq,dupes}=audStats();
+    card.querySelector('#audBig').textContent=uniq.toLocaleString('he');
+    // append cart source row + dedup line into the card
+    const ab=card.querySelector('.ab');
+    const sug=card.querySelector('#audSug');
+    const cartRow=document.createElement('div');cartRow.className='src';cartRow.style.animation='pop .35s ease';
+    cartRow.innerHTML=`<span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg></span>
+      <div class="st2"><div class="k">נוטשי עגלה · הורות רגועה <span class="autob">אוטומטי</span></div><div class="sub">רשימה אוטומטית · לפי התנהגות</div></div><div class="cnt">45</div>`;
+    ab.insertBefore(cartRow,sug);
+    const ded=document.createElement('div');ded.className='dedup';
+    ded.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span>184 + 45 = 229 · <b>${dupes} כפילויות אוחדו</b> → ${uniq} נמענים ייחודיים. כל אחד מקבל מייל אחד.</span>`;
+    ab.insertBefore(ded,sug);
+    sug.remove();
+    toast('הקהל אוחד','נוטשי העגלה נוספו · '+dupes+' חופפים סוננו אוטומטית');
+    scrollDown();
+  };
+  card.querySelector('#audOk').onclick=()=>{
+    card.querySelector('.af').innerHTML=`<span style="color:var(--green-bright);font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> הקהל אושר ✓</span>`;
+    curLevel=64;
+    if(playing)schedule(650,()=>runBeat()); else runBeat();
+  };
+  return r;
+}
+
+/* ---------- EMAIL preview card ---------- */
+function mailCard(){
+  const {uniq}=audStats();
+  const card=document.createElement('div');card.className='mailc';
+  card.innerHTML=`
+    <div class="mch"><div class="tagr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg> נכתב על ידי בורדי · טיוטת מייל</div>
+      <div class="subjline">נושא</div><div class="subj">מתגעגעים אליך במפגש הלייב 💙</div>
+      <div class="pre">הכנו לך משהו — ויש מקום שמור בדיוק בשבילך.</div>
+      <div class="mcmeta"><span>👥 ${uniq} נמענים</span><span>${campaignType==='series'?'≡ סדרת מיילים':'✉️ מייל בודד · '+campaignSchedule}</span><span>🎨 ערכת מותג</span><span>🎯 החזרת תלמידים</span></div>
+      <div class="voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg> נכתב בקול שלך · ${styleUploaded?'12 מיילים קודמים + דוגמה שהעלית':'מבוסס על 12 המיילים ששלחת'}</div></div>
+    <div class="mailbody">
+      <div class="blk h"><div class="bt">כותרת</div><b>שלום {{first_name}}, שמרנו לך מקום 🎓</b></div>
+      <div class="blk"><div class="bt">פסקה</div>שמנו לב שלא נכנסת לאחרונה ל<b>"הורות רגועה"</b> — וזה בסדר גמור, החיים עמוסים. רצינו להזכיר לך שהמסע ממשיך, והמפגש החי הקרוב הוא הזדמנות מושלמת לחזור לקצב.</div>
+      <div class="blk"><div class="bt">פסקה</div>נדבר על גבולות בלי צעקות, ותוכל/י לשאול אותי כל שאלה בשידור חי. אני מבטיחה — תצא/י עם כלי אחד לפחות ליישום מיידי.</div>
+      <div class="blk cta"><div class="bt">כפתור פעולה</div><span class="ctabtn">שמירת מקום למפגש →</span></div>
+      <div class="blk foot"><div class="bt">כותרת תחתונה</div>קיבלת את המייל כי נרשמת לקורס "הורות רגועה" · הסרה מרשימת התפוצה</div>
+    </div>
+    <div class="mcf"><button class="btn btn-g" id="mailSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg> שלח ל-${uniq} נמענים</button>
+      <span class="grow"></span>
+      <button class="chipbtn" id="mailPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg> תצוגה מקדימה</button>
+      <button class="chipbtn" id="mailTest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg> שלח ניסיון</button>
+      <button class="chipbtn" id="mailEdit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg> פתח בעורך</button></div>`;
+  const r=boardiBare(card);
+  card.querySelector('#mailPrev').onclick=openPreview;
+  card.querySelector('#mailTest').onclick=openSendTest;
+  card.querySelector('#mailEdit').onclick=()=>{toast('פותח בעורך הוויזואלי','הקהל והתוכן עוברים איתך');setTimeout(()=>window.open('עורך מייל ויזואלי.html','_blank'),500);};
+  card.querySelector('#mailSend').onclick=()=>{
+    const {uniq}=audStats();
+    card.querySelector('.mcf').innerHTML=`<span style="color:var(--green-bright);font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> נשלח ל-${uniq} נמענים · ללא כפילויות</span>`;
+    curLevel=95;
+    toast('המייל יצא לדרך 🚀',uniq+' נמענים ייחודיים · אעקוב אחרי הפתיחות');
+    setTimeout(sentSummary,600);
+    setTimeout(handoffCard,1400);
+  };
+  return r;
+}
+
+function sentSummary(){
+  boardi(`מעולה — המייל בדרך ל-<b>${audStats().uniq} נמענים ייחודיים</b> ✅<br>הודות לאיחוד, אף אחד לא קיבל שני מיילים. אעדכן אותך כשיתחילו להיכנס פתיחות ולחיצות.`,'09:19');
+}
+
+function handoffCard(){
+  const r=document.createElement('div');r.className='row';
+  r.innerHTML=`<div class="av-b"><img src="${M}5.svg" onerror="this.parentNode.innerHTML='🎉'"></div>
+  <div class="handoff"><div class="hi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
+    <div class="ht"><b>אעקוב אחרי הביצועים בשבילך</b><p>ברגע שתהיה תמונה — אכין לך סבב שני אוטומטי למי שלא פתח.</p></div>
+    <button class="hb" onclick="toast('מעבר למנתח הביצועים','אחזור אליך עם סיכום פתיחות ולחיצות');this.closest('.row').remove();">עקוב אחרי המייל →</button></div>`;
+  stream.appendChild(r);scrollDown();
+}
+
+/* ---------- style-reference card (BOARDi asks for a copy reference) ---------- */
+function styleRefCard(){
+  const card=document.createElement('div');card.className='refc';
+  card.innerHTML=`
+    <div class="rt"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg> לומד לכתוב בקול שלך</div>
+    <h4>אני כותב בקול <b>שלך</b> — לא בקול גנרי ✍️</h4>
+    <p>ככל שיש לי יותר דוגמאות לאיך אתה כותב, המייל יישמע יותר אתה. יש לך דוגמה לקופי שאהבת — שלך או השראה?</p>
+    <div class="learned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> כבר למדתי מ-<b>12 מיילים</b> ששלחת דרך WhiteBoard — טון, מבנה ומה עובד אצלך</div>
+    <div class="refacts">
+      <button class="btn btn-p" id="refUp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg> העלה דוגמה</button>
+      <button class="btn btn-o" id="refSkip">אין לי כרגע — למד מהמיילים שלי</button>
+    </div>`;
+  const r=boardiBare(card);
+  const proceed=()=>{
+    card.querySelector('.refacts').innerHTML=`<span style="color:var(--green-bright);font-weight:700;font-size:13px;display:flex;gap:7px;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> ${styleUploaded?'הדוגמה נשמרה לרפרנס':'לומד מהמיילים הקודמים שלך'}</span>`;
+    if(playing)schedule(650,()=>runBeat()); else runBeat();
+  };
+  card.querySelector('#refUp').onclick=()=>{styleUploaded=true;me('הנה מייל השקה שאהבתי 📎 launch-email.txt');toast('הדוגמה נשמרה לרפרנס','בורדי ילמד ממנה טון, מבנה וקצב');proceed();};
+  card.querySelector('#refSkip').onclick=()=>{styleUploaded=false;me('אין לי כרגע — תלמד מהמיילים שלי');proceed();};
+  return r;
+}
+
+/* ---------- modals: preview + send-test ---------- */
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function openPreview(){openModal('prevModal')}
+function openSendTest(){openModal('testModal')}
+document.getElementById('devtog').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#devtog button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('emlFrame').classList.toggle('mob',b.dataset.d==='mob');});
+['prevModal','testModal'].forEach(id=>document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)closeModal(id)}));
+document.getElementById('testSend').onclick=()=>{const v=document.getElementById('testEmail').value.trim();closeModal('testModal');toast('מייל ניסיון נשלח',(v||'אליך')+' · בדוק את תיבת הדואר');};
+
+/* toast */
+function toast(t,p){
+  const el=document.createElement('div');el.className='toast';
+  el.innerHTML=`<div class="ti"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></div><div class="tx"><b>${t}</b><p>${p}</p></div>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>{el.style.opacity=0;el.style.transform='translateX(-30px)';el.style.transition='.3s';setTimeout(()=>el.remove(),300)},3600);
+}
+
+/* ---------- campaign-type + scheduling card ---------- */
+function campaignTypeCard(){
+  const card=document.createElement('div');card.className='aud';
+  card.innerHTML=`
+    <div class="ah"><div class="tagr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg> שלב 1 · סוג הדיוור</div>
+      <h3>איזה סוג דיוור נשלח?</h3>
+      <p>מייל בודד — הודעה אחת, עכשיו או מתוזמנת. סדרה — רצף קבוע שנשלח אוטומטית.</p></div>
+    <div class="ab">
+      <div class="qa" style="max-width:none">
+        <button class="qacard" data-t="single"><span class="qi" style="background:var(--cyan)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></span><div><h4>מייל בודד מתוזמן</h4><p>הודעה אחת · שלח עכשיו או תזמן לתאריך ושעה</p></div></button>
+        <button class="qacard" data-t="series"><span class="qi" style="background:var(--purple)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/></svg></span><div><h4>סדרת מיילים קבועה</h4><p>רצף שנשלח אוטומטית · למשל סדרת החזרה / ברוכים הבאים</p></div></button>
+      </div>
+      <div id="schedWrap"></div>
+    </div>`;
+  const r=boardiBare(card);
+  let done=false;
+  const proceedC=()=>{ if(done)return; done=true;
+    card.querySelectorAll('button,select,input').forEach(el=>el.disabled=true);
+    curLevel=Math.max(curLevel,52); if(playing)schedule(600,()=>runBeat()); else runBeat();
+  };
+  const cards=card.querySelectorAll('.qacard');
+  cards.forEach(c=>c.onclick=()=>{
+    if(done)return;
+    cards.forEach(x=>{x.classList.remove('dim');if(x!==c)x.classList.add('dim')});c.style.borderColor='var(--cyan)';
+    campaignType=c.dataset.t;
+    if(campaignType==='series'){campaignSchedule='אוטומטי';me('סדרת מיילים קבועה');proceedC();return;}
+    const sw=card.querySelector('#schedWrap');
+    sw.innerHTML=`<div class="sched"><span style="font-size:13px;font-weight:600">מתי לשלוח?</span>
+      <button class="chipbtn" data-s="now"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> שלח עכשיו</button>
+      <button class="chipbtn" data-s="later"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> תזמן לתאריך</button>
+      <input type="datetime-local" class="dateinp" id="schedDate" style="display:none">
+      <button class="btn btn-g" id="schedOk" style="display:none;padding:8px 14px;font-size:13px">אישור</button></div>`;
+    const now=sw.querySelector('[data-s="now"]'),later=sw.querySelector('[data-s="later"]'),di=sw.querySelector('#schedDate'),ok=sw.querySelector('#schedOk');
+    now.onclick=()=>{campaignSchedule='עכשיו';me('מייל בודד · שלח עכשיו');proceedC();};
+    later.onclick=()=>{later.classList.add('on');now.style.display='none';di.style.display='';ok.style.display='';};
+    ok.onclick=()=>{campaignSchedule=di.value?di.value.replace('T',' · '):'מתוזמן';me('מייל בודד · מתוזמן '+(di.value?('ל-'+di.value.replace('T',' ')):''));proceedC();};
+  });
+  return r;
+}
+
+/* ---------- behavior-segment builder (dynamic segmentation) ---------- */
+function segmentCard(){
+  const card=document.createElement('div');card.className='aud';
+  card.innerHTML=`
+    <div class="ah"><div class="tagr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.5V19l4 2v-8.5z"/></svg> שלב 2 · מיקוד לפי התנהגות</div>
+      <h3>לפי איזו התנהגות למקד?</h3>
+      <p>בורדי בונה קהל דינמי מפעולות אמיתיות — לא רשימה ידנית. הגדר את הפילוח, ואפשר לצרף עוד תנאים.</p></div>
+    <div class="ab">
+      <div class="segrow">
+        תלמידים שלא נכנסו מעל
+        <span class="pillset" id="daysSet"><button data-d="7">7</button><button class="on" data-d="14">14</button><button data-d="30">30</button></span>
+        ימים ·
+        <select class="segsel" id="courseSel"><option>הורות רגועה</option><option>גבולות בגיל הרך</option><option>כל הקורסים</option></select>
+        <span class="rec">✓ מומלץ למטרה שלך</span>
+      </div>
+      <div class="segextra"><span class="lbl">אפשר לצרף עוד פילוח:</span>
+        <button class="segchip" data-x="joinafter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> הצטרפו אחרי תאריך</button>
+        <button class="segchip" data-x="joinbefore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> הצטרפו לפני תאריך</button>
+        <button class="segchip" data-x="cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> נוטשי עגלה</button>
+      </div>
+      <div id="segDate"></div>
+    </div>
+    <div class="af"><button class="btn btn-g" id="segOk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg> בנה את הקהל</button>
+      <button class="btn btn-o" onclick="toast('פילוח בשפה חופשית','אפשר גם לכתוב לי: תלמידים שלא נכנסו שבועיים להורות רגועה')">תאר בצ׳אט</button></div>`;
+  const r=boardiBare(card);
+  card.querySelectorAll('#daysSet button').forEach(b=>b.onclick=()=>{card.querySelectorAll('#daysSet button').forEach(x=>x.classList.remove('on'));b.classList.add('on');});
+  card.querySelectorAll('.segchip').forEach(c=>c.onclick=()=>{
+    c.classList.toggle('on');const x=c.dataset.x,sd=card.querySelector('#segDate');
+    if(x==='joinafter'||x==='joinbefore'){
+      if(c.classList.contains('on'))sd.insertAdjacentHTML('beforeend',`<div class="sched" data-for="${x}"><span style="font-size:12.5px;color:var(--text-sub)">${x==='joinafter'?'הצטרפו אחרי':'הצטרפו לפני'}:</span><input type="date" class="dateinp"></div>`);
+      else{const el=sd.querySelector('.sched[data-for="'+x+'"]');if(el)el.remove();}
+    }
+  });
+  card.querySelector('#segOk').onclick=()=>{
+    segDays=card.querySelector('#daysSet .on').dataset.d;
+    segCourse=card.querySelector('#courseSel').value;
+    me(`תלמידים שלא נכנסו מעל ${segDays} ימים · ${segCourse}`);
+    card.querySelector('.af').innerHTML=`<span style="color:var(--green-bright);font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> הפילוח הוגדר · בונה את הקהל…</span>`;
+    curLevel=Math.max(curLevel,70);
+    if(playing)schedule(650,()=>runBeat());else runBeat();
+  };
+  return r;
+}
+
+/* ---------- scripted flow ---------- */
+const beats=[
+  {t:'boardi',run:()=>boardi(`שלום אלון 👋 אני <b>בורדי הדיוור</b>. אני עוזר לך לשלוח מייל שמניע לפעולה — בלי להתעסק עם רשימות ידניות.<br>הכי חשוב אצלי: כל נמען מקבל <b>מייל אחד בלבד</b>, גם אם הוא בכמה רשימות.`)},
+  {t:'goals',run:()=>goalCards(g=>{curLevel=30; if(playing)schedule(500,()=>runBeat()); else runBeat();})},
+  {t:'user',run:()=>me('בעצם — רוצה להחזיר את מי שקנה את "הורות רגועה" אבל לא נכנס כבר שבועיים, ולהזמין אותם למפגש הלייב הקרוב 🙏')},
+  {t:'typing'},
+  {t:'boardi',run:()=>{curLevel=46;return boardi(`הבנתי בול 👌 מטרה: <b>החזרת תלמידים לא-פעילים</b> של "הורות רגועה", עם הזמנה למפגש חי.<br>נגדיר שלושה דברים לפי הסדר — <b>סוג הדיוור</b> ← <b>הקהל</b> ← ה<b>טון</b> — ואז אני כותב.`);}},
+  {t:'ctype',run:()=>campaignTypeCard()},
+  {t:'typing'},
+  {t:'boardi',run:()=>{curLevel=56;return boardi(`מעולה. עכשיו <b>נמקד את הקהל</b> — למי בדיוק שולחים, לפי התנהגות אמיתית.`);}},
+  {t:'segment',run:()=>segmentCard()},
+  {t:'loading',run:next=>loadingCard(['מתרגם את הפילוח לשאילתה…','שולף תלמידים לפי התנהגות…','מרכיב סגמנט דינמי חי…','מוודא שאין כפילויות…'],next,'בורדי בונה את הקהל…')},
+  {t:'aud',run:()=>audienceCard()},
+  {t:'typing'},
+  {t:'boardi',run:()=>{curLevel=66;return boardi(`יופי — הקהל מוכן. דבר אחרון לפני שאני כותב: <b>הטון</b>.`);}},
+  {t:'mc',run:next=>mcQuestion('איזה טון מתאים לקהל הזה?',['חם ואישי','תכליתי וקצר','נלהב ואנרגטי'],o=>{curLevel=72;next()})},
+  {t:'typing'},
+  {t:'ref',run:()=>styleRefCard()},
+  {t:'typing'},
+  {t:'boardi',run:()=>{curLevel=80;return boardi(`יש לי הכל 🎯 כותב עכשיו את המייל — בטון שבחרת ובקול שלך. אפשר תצוגה מקדימה ושליחת ניסיון לפני השליחה 👇`);}},
+  {t:'loading',run:next=>loadingCard(['כותב נושא שמזמין פתיחה…','בונה גוף מייל אישי…','מוסיף כפתור לשמירת מקום…','מרכיב תצוגה מקדימה…'],next,'בורדי כותב את המייל…')},
+  {t:'mail',run:()=>mailCard()}
+];
+
+let idx=0, playing=false, playTimer=null;
+function runBeat(){
+  if(idx>=beats.length)return;
+  const b=beats[idx];idx++;
+  if(b.t==='typing'){showTyping();return schedule(700,()=>{hideTyping();runBeat()})}
+  if(b.t==='goals'){hideTyping();b.run();return;}            // waits for card click
+  if(b.t==='mc'){hideTyping();b.run(()=>{if(playing)schedule(600,()=>runBeat());});return;}
+  if(b.t==='loading'){b.run(()=>{if(playing)schedule(400,()=>runBeat());});return;}
+  if(b.t==='ctype'){b.run();return;}                          // waits for campaign-type + schedule
+  if(b.t==='ref'){b.run();return;}                            // waits for reference choice
+  if(b.t==='segment'){b.run();return;}                        // waits for segment build
+  if(b.t==='aud'){b.run();return;}                            // waits for "המשך למייל"
+  b.run&&b.run();
+  if(b.t==='mail')return;                                     // final interactive
+  if(playing)schedule(b.t==='user'?650:900,()=>runBeat());
+}
+function schedule(ms,fn){clearTimeout(playTimer);playTimer=setTimeout(fn,ms)}
+
+function stepOnce(){playing=false;clearTimeout(playTimer);runBeat();}
+document.getElementById('step').onclick=stepOnce;
+document.getElementById('play').onclick=function(){
+  playing=!playing;
+  this.innerHTML=playing?'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg> השהה':'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> נגן';
+  if(playing)runBeat();else clearTimeout(playTimer);
+};
+document.getElementById('reset').onclick=()=>location.reload();
+document.getElementById('sendbtn').onclick=()=>{if(inp.value.trim()){me(inp.value.trim());inp.value='';}};
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&inp.value.trim()){me(inp.value.trim());inp.value=''}});
+
+/* theme */
+const root=document.documentElement,tb=document.getElementById('theme');
+tb.onclick=()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');
+  tb.querySelector('svg').innerHTML=d?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';};
+
+runBeat();
+</script>
+</body>
+</html>

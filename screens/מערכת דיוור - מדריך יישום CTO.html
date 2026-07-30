@@ -92,6 +92,7 @@
   <a href="#arch"><span class="n">02</span>ארכיטקטורה</a>
   <a href="#blocks"><span class="n">03</span>מודל הבלוקים המשותף</a>
   <a href="#render"><span class="n">04</span>רינדור למייל + משתנים</a>
+  <a href="#copyai"><span class="n">AI</span>בורדי קופירייטר + רפרנס</a>
   <a href="#data"><span class="n">05</span>מודל הנתונים</a>
   <a href="#types"><span class="n">06</span>קמפיין · סדרה · טריגר</a>
   <a href="#jobs"><span class="n">07</span>שליחה (Trigger.dev)</a>
@@ -103,7 +104,7 @@
   <div class="doc-head">
     <span class="eyebrow"><span class="dot"></span> מדריך יישום · CTO</span>
     <h1>מערכת דיוור — עורך מייל מבוסס בלוקים</h1>
-    <p class="lead">פישוט פלואו יצירת המייל: <b>מסך פתיחה</b> (כותרת + משתנים + בחירת עורך ויזואלי/HTML) ואז <b>עורך בלוקים inline</b> — בדיוק <b>אותו מודל בלוקים של הקורס</b>: כפתור "הוסף בלוק תוכן" → block‑picker → בלוק נכנס inline ונערך במקום, עם toolbar מינימלי. אותו <code class="inl">addBlock()</code>, אותם <code class="inl">.content-block</code> — מה שמוריד תחזוקה ומאחד חוויה. <b>סדרות מיילים מוגדרות בדף נפרד.</b></p>
+    <p class="lead">פלואו יצירת המייל (מיושר 2026-07-29): <b>נמענים → עורך → שליחה</b>. שלב 1 — <b>בחירת רשימות</b> (עם ניכוי-כפילויות חי). שלב 2 — <b>עורך בלוקים inline</b> שכולל בראשו <b>נושא + Preheader</b> (מסך הפתיחה הנפרד בוטל — הנושא/preheader עברו לראש העורך) ורצועת "נשלח אל". שלב 3 — <b>מודל שליחה</b> (סיכום נמענים + תזמון: שלח עכשיו / תזמן לתאריך). העורך = בדיוק <b>אותו מודל בלוקים של הקורס</b>: "הוסף בלוק תוכן" → block‑picker → בלוק inline נערך במקום. אותו <code class="inl">addBlock()</code>, אותם <code class="inl">.content-block</code>. <b>סדרות מיילים מוגדרות בדף נפרד.</b></p>
   </div>
 
   <section id="overview">
@@ -132,7 +133,7 @@
         <li>סטטוסים לא ברורים (פעיל/מתוזמן/מתמשך)</li>
       </ul></div>
       <div class="card"><h3 style="margin-top:0;color:var(--green)">אחרי</h3><ul style="margin-bottom:0">
-        <li><b>מסך פתיחה</b> נקי: כותרת המייל + משתנים זמינים + בחירת עורך</li>
+        <li>פלואו נקי בן 3 שלבים: <b>נמענים → עורך → שליחה</b> (נושא+Preheader בראש העורך)</li>
         <li>בחירה מפורשת: <b>עורך ויזואלי</b> או <b>בניית HTML</b></li>
         <li><b>עורך בלוקים inline זהה לקורס</b> — "הוסף בלוק" → block‑picker</li>
         <li>עריכה <b>במקום</b>, toolbar מינימלי (מעלה/מטה/מחק) — בלי הגדרות מיותרות</li>
@@ -210,6 +211,92 @@ trigger/mailing/            <span class="cm">// עבודות שליחה</span></
     <div class="callout warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg><p><b>תאימות מייל:</b> CSS inline, רוחב ≤600px, טבלאות לפריסה, alt לכל תמונה, ו‑fallback לכל משתנה. בלוקים כמו <code class="inl">columns</code> מתקמפלים לטבלה, לא ל‑flex.</p></div>
   </section>
 
+  <section id="copyai">
+    <h2><span class="h2num">AI</span>בורדי כקופירייטר מכירות + רפרנס סגנון</h2>
+    <p class="sec-sub">בורדי הוא לא "מנסח טקסט" גנרי — הוא task-BOARDi <b>מיומן בכתיבת קופי מכירות לקורסים דיגיטליים</b> (יוצר הדיוור, ראה סקיל <code class="inl">boardi-builder</code>). כל טיוטה מוזנת משני עוגנים: <b>(1)</b> מתודולוגיית קופי מובנית במערכת-הפרומפט; <b>(2)</b> רפרנס אישי לקול ולסגנון של המרצה. <b>ככל שיש יותר רפרנס — הפלט נשמע יותר "המרצה", פחות גנרי.</b></p>
+
+    <h3>עוגן 1 · מערכת-הפרומפט (הקופירייטר)</h3>
+    <p>ה-system prompt מגדיר את בורדי כקופירייטר <b>Direct-Response</b> לקורסים דיגיטליים, עם ארגז-כלים של מסגרות מוכחות. <b>חשוב:</b> אלה <b>מתודולוגיות</b> שנלמדות, לא חיקוי אישיות/מותג של אף אדם.</p>
+    <div class="grid2">
+      <div class="card"><h3 style="margin-top:0">מסגרות מובנות (מתודולוגיה)</h3><ul style="margin-bottom:0">
+        <li><b>Alex Hormozi — Value Equation:</b> להגדיל את התוצאה-הנחשקת ואת סבירות-ההצלחה הנתפסת, להקטין זמן ומאמץ; offer-stacking.</li>
+        <li><b>Russell Brunson — Hook · Story · Offer</b> + Value Ladder + epiphany bridge.</li>
+        <li><b>עידן וולר — direct-response עברי:</b> שפת דיבור, פתיח שעוצר גלילה, P.S. אפקטיבי.</li>
+        <li><b>קלאסי:</b> PAS · AIDA · 4U לכותרת הנושא.</li>
+      </ul></div>
+      <div class="card"><h3 style="margin-top:0">Guardrails (חובה)</h3><ul style="margin-bottom:0">
+        <li>ללא הבטחות שווא / הכנסה מובטחת (ציות + מוניטין שולח).</li>
+        <li><b>CTA יחיד</b> וברור לכל מייל.</li>
+        <li>נושא ≤ ~45 תווים · preheader משלים, לא חוזר על הנושא.</li>
+        <li>טון · אורך · אימוג'י לפי ה-<code class="inl">VoiceProfile</code> של המרצה, לא ברירת-מחדל.</li>
+        <li>עברית טבעית, RTL, בלי "תרגומית".</li>
+      </ul></div>
+    </div>
+
+    <h3>עוגן 2 · שני מקורות רפרנס-הסגנון</h3>
+    <table>
+      <thead><tr><th>מקור</th><th>איך נאסף</th><th>למה משמש</th></tr></thead>
+      <tbody>
+        <tr><td><b>דוגמאות שהמרצה מעלה</b></td><td>בורדי מבקש דוגמה לקופי (שלו/השראה) בפלואו. <b>ask-and-proceed:</b> אם אין — ממשיך בלי לחסום. העלאה / הדבקה / URL → <code class="inl">CopyReference</code>.</td><td>טון וקצב מועדפים, ניסוחים אהובים.</td></tr>
+        <tr><td><b>ארכיון מיילים שנשלחו (אוטומטי)</b></td><td>כל מייל שיצא — מ<b>צ'אט בורדי</b> ומ<b>קהילת המייל</b> — נשמר: טקסט, מבנה בלוקים (<code class="inl">doc</code>), עיצוב/מותג ומדדי פתיחה/קליק → <code class="inl">SentEmailArchive</code>.</td><td>מבנה ויזואלי, שפה, ומה <b>עובד</b> אצל הקהל (משקל לפי ביצועים).</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--amber)"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><p><b>בקשת הרפרנס בפלואו:</b> אחרי שלב הטון, בורדי מציג כרטיס "לומד לכתוב בקול שלך" — מציין שכבר למד מ-N מיילים קודמים, ומציע להעלות דוגמה. שני מסלולים: <b>"העלה דוגמה"</b> או <b>"אין לי — למד מהמיילים שלי"</b>. תמיד מתקדם, לעולם לא חוסם על היעדר רפרנס.</p></div>
+
+    <h3>עוגן 2 · RAG + פרופיל-קול (VoiceProfile)</h3>
+    <pre><code><span class="cm">// אינדוקס אוטומטי — נורה בכל שליחה</span>
+index-sent-email (Trigger.dev):
+  a = <span class="ty">SentEmailArchive</span>.<span class="fn">create</span>({ teacherId, origin, subject, doc, html, sentAt })
+  a.embedding = <span class="fn">embed</span>(<span class="fn">plainText</span>(doc))            <span class="cm">// pgvector</span>
+
+<span class="cm">// גזירת פרופיל-קול — מתוזמן (יומי / על-סף מיילים חדשים)</span>
+derive-voice-profile (Trigger.dev):
+  refs = <span class="ty">CopyReference</span>[teacher] + <span class="fn">topBy</span>(<span class="ty">SentEmailArchive</span>, [openRate, clickRate])
+  <span class="ty">VoiceProfile</span>.<span class="fn">upsert</span>({ teacherId, tone, traits, sampleCount })  <span class="cm">// LLM מסכם קול</span>
+
+<span class="cm">// בזמן כתיבה — הקשר שמוזרק לבורדי</span>
+context = <span class="fn">get_voice_profile</span>(teacherId)              <span class="cm">// תמצית קבועה של הקול</span>
+        + <span class="fn">search_copy_reference</span>(goal, k=<span class="st">4</span>)         <span class="cm">// top-k רלוונטי (RAG)</span>
+draft   = <span class="fn">LLM</span>({ system: copywriterPrompt, voice: profile, examples: refs, brief: intake })</code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>לולאת שיפור:</b> מיילים עם פתיחה/קליק גבוהים מקבלים <b>משקל גבוה יותר</b> כרפרנס — כך בורדi לומד לא רק את הקול של המרצה, אלא מה <b>ממיר</b> אצל הקהל שלו. פרטיות: כל האינדוקס מסונן <code class="inl">teacherId</code> (RLS); רפרנס של מרצה אחד לעולם לא זולג לאחר.</p></div>
+
+    <h3>מודלים (Prisma) · רפרנס-סגנון</h3>
+    <pre><code><span class="kw">model</span> <span class="ty">CopyReference</span> {        <span class="cm">// דוגמאות קופי שהמרצה העלה (אופציונלי)</span>
+  id        <span class="ty">String</span> <span class="kw">@id @default</span>(cuid())
+  teacherId <span class="ty">String</span>
+  source    <span class="ty">String</span>            <span class="cm">// upload | paste | url</span>
+  title     <span class="ty">String?</span>
+  body      <span class="ty">String</span>            <span class="cm">// הטקסט הגולמי</span>
+  notes     <span class="ty">String?</span>           <span class="cm">// "אהבתי את הפתיח"</span>
+  embedding <span class="ty">Unsupported</span>(<span class="st">"vector"</span>)?  <span class="cm">// pgvector</span>
+  createdAt <span class="ty">DateTime</span> <span class="kw">@default</span>(now())
+}
+
+<span class="kw">model</span> <span class="ty">SentEmailArchive</span> {     <span class="cm">// כל מייל שנשלח — רפרנס אוטומטי</span>
+  id         <span class="ty">String</span> <span class="kw">@id @default</span>(cuid())
+  teacherId  <span class="ty">String</span>
+  campaignId <span class="ty">String?</span>          <span class="cm">// אם נשלח מהמערכת</span>
+  origin     <span class="ty">String</span>           <span class="cm">// boardi_chat | mail_community | manual</span>
+  subject    <span class="ty">String</span>
+  preheader  <span class="ty">String?</span>
+  doc        <span class="ty">Json</span>             <span class="cm">// BlockDoc — המבנה הוויזואלי</span>
+  html       <span class="ty">String</span>           <span class="cm">// הרינדור הסופי</span>
+  openRate   <span class="ty">Float?</span>           <span class="cm">// משקל רפרנס</span>
+  clickRate  <span class="ty">Float?</span>
+  embedding  <span class="ty">Unsupported</span>(<span class="st">"vector"</span>)?
+  sentAt     <span class="ty">DateTime</span>
+}
+
+<span class="kw">model</span> <span class="ty">VoiceProfile</span> {         <span class="cm">// פרופיל-קול נגזר, אחד למרצה</span>
+  teacherId   <span class="ty">String</span> <span class="kw">@id</span>
+  tone        <span class="ty">String</span>          <span class="cm">// "חם/אישי" | "תכליתי" ...</span>
+  traits      <span class="ty">Json</span>            <span class="cm">// אורך משפט, אימוג'י, ביטויים, מבני CTA מועדפים</span>
+  sampleCount <span class="ty">Int</span>             <span class="cm">// כמה מיילים/דוגמאות מאחורי הפרופיל</span>
+  updatedAt   <span class="ty">DateTime</span> <span class="kw">@updatedAt</span>
+}</code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg><p><b>Action-API / tools:</b> <code class="inl">upsert_copy_reference</code> (העלאה), <code class="inl">search_copy_reference(goal,k)</code> ו-<code class="inl">get_voice_profile(teacherId)</code> (קריאה, מזינים את הקשר-הכתיבה), ו-<code class="inl">index-sent-email</code> שנורה אוטומטית ב-<code class="inl">send-campaign</code>. הכתיבה עצמה נשארת <b>preview→confirm</b> ככל פעולת בורדי.</p></div>
+  </section>
+
   <section id="data">
     <h2><span class="h2num">05</span>מודל הנתונים (Prisma)</h2>
     <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.22-8.56"/><polyline points="22 4 12 14.01 9 11.01"/></svg><p><b>בינדינג אוטומטי לדאטה (חובה):</b> בלוקים שמושכים נתונים אמיתיים מתמלאים אוטומטית מהמערכת — <b>פרופיל המרצה</b> (חתימה: שם/תפקיד/אווטאר/קישורים), <b>הדר/מיתוג</b> (לוגו, צבע מותג, שם המועדון), ו<b>כרטיס קורס</b> (בחירת קורס מתוך הקטלוג → שם/תמונה/<b>מחיר</b> נטענים אוטומטית). בלוקי תמונה פותחים בורר מתוך <b>ספריית המדיה</b> של המשתמש. ה‑UI: כל אזור תמונה → <code class="inl">&lt;MediaPicker&gt;</code>; כרטיס קורס → <code class="inl">&lt;CoursePicker&gt;</code> (Server Component שמושך מ‑<code class="inl">Course</code> / <code class="inl">LecturerProfile</code> / <code class="inl">BrandKit</code>). בזמן שליחה הערכים מוקפאים ל‑snapshot כדי שמיילים ישנים לא ישתנו.</p></div>
@@ -265,7 +352,23 @@ trigger/mailing/            <span class="cm">// עבודות שליחה</span></
         <tr><td><b>מבוסס טריגר</b></td><td><code>EmailSeries</code> עם <code>trigger</code></td><td>אירוע (הצטרפות/נטישה/סיום/חוסר‑פעילות) מפעיל את הסדרה.</td></tr>
       </tbody>
     </table>
-    <p>שלושתם חולקים את <code class="inl">EmailTemplate</code> (אותו עורך). קהל היעד תומך: כולם · לידים · לקוחות · מיובאים · סינון לפי תגית — מתחבר ל‑CRM.</p>
+    <p>שלושתם חולקים את <code class="inl">EmailTemplate</code> (אותו עורך). <b>בחירת סוג הדיוור בבורדי</b> ממפה ישירות: <b>"מייל בודד מתוזמן"</b> → <code class="inl">Campaign</code> (<code class="inl">sendMode = NOW | SCHEDULED</code> + <code class="inl">scheduledAt</code>); <b>"סדרת מיילים קבועה"</b> → <code class="inl">EmailSeries</code> (ידני או <code class="inl">trigger</code>).</p>
+
+    <h3>קהל דינמי · פילוח לפי התנהגות</h3>
+    <p class="sec-sub">קהל היעד הוא לא רשימה סטטית אלא <b>שאילתה חיה על ה-Metrics Layer</b>. בורדי בונה אותה משפה חופשית או מבונה-הפילוח, והיא מתעדכנת לבד עד לשליחה. הבסיס תומך: כולם · לידים · לקוחות · מיובאים · תגית · רשימה. מעליו — <b>סגמנטים התנהגותיים</b> (auto-lists שהמערכת מזהה לבד):</p>
+    <pre><code><span class="cm">// audience — נשמר ב-Campaign.audience / EmailSeries; מתקמפל ל-live query</span>
+audience = {
+  base: <span class="st">"all"</span> | <span class="st">"leads"</span> | <span class="st">"customers"</span> | <span class="st">"list:&lt;id&gt;"</span> | <span class="st">"course:&lt;id&gt;:students"</span>,
+  behavior?: [                                <span class="cm">// אפס או יותר תנאים התנהגותיים</span>
+    { type: <span class="st">"inactive_days"</span>, course: <span class="st">"&lt;id&gt;"</span> | <span class="st">"all"</span>, gte: <span class="st">14</span> },  <span class="cm">// לא נכנסו ≥ N ימים (לקורס / לכל הקורסים)</span>
+    { type: <span class="st">"joined"</span>, op: <span class="st">"after"</span> | <span class="st">"before"</span>, date: <span class="st">"2026-06-01"</span> }, <span class="cm">// הצטרפו לפני/אחרי תאריך</span>
+    { type: <span class="st">"cart_abandon"</span>, course: <span class="st">"&lt;id&gt;"</span> }               <span class="cm">// נוטשי עגלה של קורס</span>
+  ],
+  dedup: <span class="kw">true</span>                                  <span class="cm">// תמיד — union ייחודי, נמען מקבל מייל אחד</span>
+}
+<span class="cm">// resolveAudience(audience) → Recipient[] ; ריצה על ה-Metrics Layer (Tier-1 native), RLS לפי teacherId</span>
+<span class="cm">// הספירה בבורדי + במסך בחירת-הרשימות = |union|, לעולם לא סכום (ראה מסך "מייל חדש - בחירת רשימות")</span></code></pre>
+    <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p><b>סגמנטים דינמיים כרשימות אוטומטיות:</b> <code class="inl">inactive_days</code> / <code class="inl">cart_abandon</code> / <code class="inl">course:students</code> מוצגים למרצה כ<b>רשימות אוטומטיות</b> (תג "אוטומטי"/"סגמנט דינמי") — אי אפשר לערוך ידנית, המערכת מתחזקת. זהו היסוד שה-AI יושב מעליו: בורדי בוחר/מרכיב סגמנטים, וה<b>הלימה (dedup)</b> מובטחת תמיד. <code class="inl">joined-before/after-date</code> ו-<code class="inl">inactive_days</code> משתנים = פרמטרים חיים של אותו סגמנט.</p></div>
   </section>
 
   <section id="jobs">
@@ -296,8 +399,12 @@ trigger/mailing/            <span class="cm">// עבודות שליחה</span></
   <section id="components">
     <h2><span class="h2num">08</span>רכיבי UI</h2>
     <div class="grid2">
-      <div class="card"><h3 style="margin-top:0">מסך פתיחה + שלד</h3><ul style="margin-bottom:0"><li><code class="inl">&lt;EmailSetup&gt;</code> — כותרת + Preheader + משתנים</li><li><code class="inl">&lt;EditorChoice&gt;</code> — ויזואלי / HTML</li><li><code class="inl">&lt;EmailEditor&gt;</code> — top bar + קנבס + block‑picker</li><li><code class="inl">&lt;VarsPopover&gt;</code> — משתנים בעברית → טוקן</li></ul></div>
+      <div class="card"><h3 style="margin-top:0">פלואו: נמענים → עורך → שליחה</h3><ul style="margin-bottom:0"><li><code class="inl">&lt;RecipientPicker&gt;</code> — בחירת רשימות + dedup (union חי)</li><li><code class="inl">&lt;EmailEditor&gt;</code> — נושא+Preheader בראש + רצועת נמענים + קנבס + block‑picker</li><li><code class="inl">&lt;SendModal&gt;</code> — סיכום נמענים + תזמון (עכשיו/מתוזמן) + שליחה</li><li><code class="inl">&lt;VarsPopover&gt;</code> — משתנים בעברית → טוקן. <b>מסך הפתיחה הנפרד בוטל.</b></li></ul></div>
       <div class="card"><h3 style="margin-top:0">בלוקים (משותף עם הקורס)</h3><ul style="margin-bottom:0"><li><code class="inl">openBlockPicker()</code> → <code class="inl">.block-picker</code> (7 בלוקי תוכן + מרווח + רשתות)</li><li><code class="inl">addBlock(type)</code> — מכניס <code class="inl">.content-block</code> inline</li><li><code class="inl">.block-toolbar</code> — מעלה/מטה/מחק בלבד</li><li>בלוק <code class="inl">unsub</code> (הסרה מרשימת תפוצה) — ברירת מחדל, חובה, לא נמחק</li><li>עריכה <code class="inl">contenteditable</code> במקום — ללא PropertiesPanel</li></ul></div>
+    </div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="card"><h3 style="margin-top:0">בית הדיוור (סקירה)</h3><ul style="margin-bottom:0"><li>4 KPI: נמענים פעילים (|union| חי) · מיילים שנשלחו (30 יום) · פתיחה ממוצעת · לחיצה ממוצעת</li><li><code class="inl">&lt;RecentEmails&gt;</code> — מיילים אחרונים חוצי‑רשימות + סטטיסטיקת פתיחה/קליק לכל מייל</li><li><code class="inl">&lt;MyLists&gt;</code> — 7 רשימות (ידניות/אוטומטיות) · מקור‑אמת אחד המשותף לכל מסכי הדיוור</li><li>ניווט‑צד פעיל = "רשימות תפוצה"; דיוור = סקשן (בית הדיוור ↔ רשימות)</li></ul></div>
+      <div class="card"><h3 style="margin-top:0">&lt;ActivityChart&gt; — גרף פעילות</h3><ul style="margin-bottom:0"><li><b>עמודים מקובצים</b> (grouped, לא stacked): לכל שבוע שני עמודים — פתיחה (cyan) לצד קליק (green)</li><li><b>תווית ערך מעל כל עמוד</b> בצבע התואם ללגנדה — הגרף לא קריא בלי המספרים</li><li><b>סקאלה אחת משותפת</b> לשני המדדים (<code class="inl">F</code> px לאחוז) — היחס בין הברים נשמר ביושר; אין להערים מדדים בסקאלות שונות</li><li>כיתוב‑משנה מסביר את היחידה ("שיעור פתיחה/קליק מתוך הנמענים"); קו‑בסיס תחתון; סדר RTL (העדכני מימין)</li><li>מקור נתונים: aggregation של <code class="inl">open</code>/<code class="inl">click</code> אירועי מייל לכל חלון שבועי</li></ul></div>
     </div>
     <div class="callout info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><p>נגישות: הוספה בלחיצה מה‑block‑picker (לא תלוי גרירה), הזזה דרך toolbar (מעלה/מטה), aria-labels על כל כפתורי הבלוק, focus עובר אוטומטית לבלוק החדש, ו‑<code class="inl">prefers-reduced-motion</code> לאנימציות.</p></div>
   </section>
@@ -309,6 +416,7 @@ trigger/mailing/            <span class="cm">// עבודות שליחה</span></
       <tbody>
         <tr><td><span class="pill v1">v1</span></td><td>BlockRegistry משותף · עורך אחוד · קמפיין בודד · רינדור מייל + משתנים · send-campaign.</td></tr>
         <tr><td><span class="pill v2">v2</span></td><td>סדרות drip + טריגרים · enroll/run-series · תנאים · סטטיסטיקות (נפתח/קליק) · עריכת AI לבלוקים · A/B לנושא.</td></tr>
+        <tr><td><span class="pill v2">v2</span></td><td><b>בורדי קופירייטר + רפרנס-סגנון:</b> system-prompt קופי-מכירות · <code>CopyReference</code> (העלאת דוגמאות, ask-and-proceed) · <code>SentEmailArchive</code> (אינדוקס אוטומטי של מיילים שנשלחו מצ'אט בורדי + קהילת המייל) · <code>VoiceProfile</code> + RAG · תצוגה-מקדימה ושליחת-ניסיון בחלון הטיוטה.</td></tr>
       </tbody>
     </table>
     <table>
