@@ -13,7 +13,7 @@
   --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.52);--text-xs:rgba(37,62,122,0.35);
   --r-xs:6px;--r-sm:10px;--r-md:16px;--r-lg:18px;--font:'Fredoka',sans-serif;--body:'Heebo',sans-serif;
 }
-[data-theme="dark"]{--bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,.07);--text-main:#dde5f5;--text-sub:rgba(221,229,245,.48);--text-xs:rgba(221,229,245,.28)}
+[data-theme="dark"]{--bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,.07);--text-main:#dde5f5;--text-sub:rgba(221,229,245,.52);--text-xs:rgba(221,229,245,.36)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--body);background:var(--bg);color:var(--text-main);height:100dvh;overflow:hidden;display:flex;font-size:13px;transition:.25s}
 svg{stroke-linecap:round;stroke-linejoin:round}
@@ -205,7 +205,7 @@ svg{stroke-linecap:round;stroke-linejoin:round}
 .trow:not(.head):hover .cell.name{border-inline-start-color:var(--cyan)}
 /* kanban */
 .kcol{border-top:3px solid var(--cyan)}
-.kcard{border-top:3px solid var(--border)}
+.kcard{border-inline-start:3px solid var(--border)}
 .kcard:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(37,62,122,.14);border-color:var(--cyan)}
 .kadd{margin-top:8px;padding:8px;border-radius:10px;border:1.5px dashed var(--border);color:var(--text-xs);font-size:11.5px;font-weight:700;text-align:center;cursor:pointer}
 .kadd:hover{border-color:var(--cyan);color:var(--cyan)}
@@ -217,7 +217,65 @@ svg{stroke-linecap:round;stroke-linejoin:round}
 .cmt-send input{flex:1;min-width:0;border:1.5px solid var(--border);border-radius:9px;padding:8px 11px;font-family:var(--body);font-size:12.5px;background:var(--surface);color:var(--text-main);outline:none;transition:border-color .15s}
 .cmt-send input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,196,242,.1)}
 /* accessible focus */
-button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible,[role="button"]:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+/* ===== Council-v2 polish ===== */
+/* row actions + menus */
+.rowopt{display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--text-main)}
+.rowopt:hover{background:var(--surface-2)}
+.rowmenu{opacity:0;cursor:pointer;color:var(--text-xs);flex-shrink:0;display:grid;place-items:center;width:22px;height:22px;border-radius:6px;font-weight:800}
+.trow:not(.head):hover .rowmenu{opacity:1}
+.rowmenu:hover{background:var(--surface-3);color:var(--cyan)}
+/* column header: sort primary, menu secondary */
+.colhead{cursor:pointer}
+.colmenu{opacity:0;cursor:pointer;color:var(--text-xs);font-weight:800;padding:0 4px;flex-shrink:0;font-size:15px;line-height:1}
+.trow.head .cell:hover .colmenu{opacity:1}
+.sortarrow{color:var(--cyan);font-size:10px;margin-inline-start:3px;font-weight:900}
+/* due dates */
+.due-over{background:rgba(240,86,128,.14)!important;color:var(--pink)!important;border:1px solid rgba(240,86,128,.35)!important;font-weight:700}
+.due-today{background:rgba(234,214,84,.2)!important;color:#9a7d00!important;border:1px solid rgba(234,214,84,.55)!important;font-weight:700}
+[data-theme="dark"] .due-today{color:#ecd94e!important}
+/* group summary battery */
+.gsummary{display:flex;align-items:center;gap:14px;padding:8px 12px;border-top:1px dashed var(--border);background:var(--surface-2);font-size:11px;color:var(--text-sub);flex-wrap:wrap}
+.gs-count{font-weight:700}
+.battery{display:flex;height:9px;width:190px;border-radius:6px;overflow:hidden;background:var(--surface-3);box-shadow:inset 0 0 0 1px var(--border)}
+.battery span{height:100%}
+.numsum b{color:var(--text-main)}
+/* my-items chip */
+.mine-chip{border:1px solid var(--border);background:var(--surface);border-radius:20px;padding:5px 12px;font-weight:700;font-size:12px;color:var(--text-sub);cursor:pointer}
+.mine-chip:hover{border-color:var(--cyan);color:var(--text-main)}
+.mine-chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+/* empty person ghost avatar */
+.ava-empty{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:50%;border:1.5px dashed var(--border);color:var(--text-xs);font-size:14px;line-height:1}
+/* undo toast button */
+.toast-undo{margin-inline-start:12px;border:none;background:var(--navy);color:#fff;border-radius:8px;padding:5px 13px;font-weight:700;cursor:pointer;font-family:var(--body);font-size:12px}
+.toast-undo:hover{background:var(--navy-dark)}
+/* status popover selected marker + calmer blocks */
+.menu .opt{padding:7px 10px;display:flex;align-items:center;justify-content:center;gap:6px}
+.menu .opt.sel{box-shadow:inset 0 0 0 2px rgba(255,255,255,.85)}
+.menu .opt .osel{font-weight:900}
+/* dark-mode pill calming */
+[data-theme="dark"] .pill{filter:brightness(.86) saturate(.92)}
+[data-theme="dark"] .menu .opt{filter:brightness(.9) saturate(.92)}
+/* empty state */
+.empty-state{display:flex;flex-direction:column;align-items:center;gap:12px;padding:44px 20px;text-align:center;color:var(--text-sub)}
+.empty-state svg{width:66px;height:66px;color:var(--text-xs);opacity:.7}
+.empty-state .es-title{font-family:var(--font);font-weight:600;font-size:15px;color:var(--text-main)}
+.empty-state button{margin-top:4px}
+/* drawer: action bar + two-column fields */
+.dr-actions{display:flex;gap:8px;flex-wrap:wrap;padding:4px 0 12px;border-bottom:1px solid var(--border);margin-bottom:2px}
+.field{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.field>label{margin:0;flex-shrink:0}
+.field>div{text-align:left;min-width:0}
+.field-full{display:block}
+.field-full>label{margin-bottom:8px}
+/* header row reads as header */
+.trow.head{border-bottom:2px solid var(--border)}
+/* sidebar count pill unified with tab count */
+.nav-item .bc{background:rgba(255,255,255,.08);border-radius:20px;padding:1px 8px;min-width:22px;text-align:center}
+/* desktop density */
+@media(min-width:821px){.trow{min-height:36px}.cell{padding:5px 11px}}
+/* reduced motion */
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 /* ===== Responsive ===== */
 @media (max-width:820px){
   .hamb{display:grid}
@@ -227,7 +285,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
   .crumb b{font-size:14px}
   .board-head{padding:10px 14px 6px}
   .board-scroll{padding:4px 14px 60px}
-  .btabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;scrollbar-width:none}
+  .btabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;scrollbar-width:none;-webkit-mask-image:linear-gradient(to left,#000 88%,transparent);mask-image:linear-gradient(to left,#000 88%,transparent)}
   .btabs::-webkit-scrollbar{display:none}
   .btab{flex-shrink:0}
   .toolbar{gap:6px}
@@ -258,10 +316,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
 
 <div class="main">
   <div class="topbar">
-    <div class="crumb"><button class="icon-btn hamb" onclick="document.body.classList.toggle('nav-open')" title="תפריט" style="margin-inline-end:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>WhiteBoard <span>›</span> <b>Mission Board</b></div>
+    <div class="crumb"><button class="icon-btn hamb" onclick="document.body.classList.toggle('nav-open')" title="תפריט" aria-label="תפריט בורדים" style="margin-inline-end:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>WhiteBoard <span>›</span> <b>Mission Board</b></div>
     <div class="top-actions">
-      <button class="icon-btn" onclick="resetSeed()" title="אפס לנתוני המקור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
-      <button class="icon-btn" id="themeBtn" title="מצב כהה"><svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <button class="icon-btn" onclick="openExport(event)" title="ייצוא / ייבוא" aria-label="ייצוא וייבוא נתונים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></button>
+      <button class="icon-btn" onclick="resetSeed()" title="אפס לנתוני המקור" aria-label="אפס לנתוני המקור"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
+      <button class="icon-btn" id="themeBtn" title="מצב כהה" aria-label="החלף מצב כהה/בהיר" aria-pressed="false"><svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
     </div>
   </div>
   <div class="board-head">
@@ -272,7 +331,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
         <button class="active" data-view="table" onclick="setView('table')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/></svg> טבלה</button>
         <button data-view="kanban" onclick="setView('kanban')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="11" rx="1"/><rect x="17" y="4" width="4" height="7" rx="1"/></svg> קאנבן</button>
       </div>
-      <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><input id="search" placeholder="חיפוש פריט..." oninput="render()"></div>
+      <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><input id="search" placeholder="חיפוש פריט..." aria-label="חיפוש פריט" oninput="onSearch()"></div>
       <button class="tbtn" onclick="addColumn(event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> עמודה</button>
       <button class="btn-primary" onclick="addItemToFirst()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> פריט</button>
     </div>
@@ -282,8 +341,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
 </div>
 
 <div class="scrim" id="scrim" onclick="closeDrawer()"></div>
-<aside class="drawer" id="drawer">
-  <div class="drawer-head"><div style="flex:1;min-width:0"><h3 id="drTitle"></h3><div class="dr-sub" id="drSub"></div></div><button class="icon-btn" onclick="closeDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drTitle">
+  <div class="drawer-head"><div style="flex:1;min-width:0"><h3 id="drTitle" tabindex="-1"></h3><div class="dr-sub" id="drSub"></div></div><button class="icon-btn" id="drClose" onclick="closeDrawer()" title="סגור" aria-label="סגור חלונית"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
   <div class="drawer-body" id="drBody"></div>
 </aside>
 
@@ -370,7 +429,7 @@ function board(){return state.boards[cur]}
 function groupById(id){return board().groups.find(g=>g.id===id)}
 function avaColor(name){let h=0;for(let i=0;i<name.length;i++)h=name.charCodeAt(i)+((h<<5)-h);return PALETTE[Math.abs(h)%PALETTE.length]}
 function personCell(txt){
-  if(!txt)return `<span class="chip" style="opacity:.6">—</span>`;
+  if(!txt)return `<span class="ava-empty" title="ללא שיוך">+</span>`;
   const names=(''+txt).split(/[,،]/).map(s=>s.trim()).filter(Boolean);
   return `<div class="people">`+names.map(n=>`<span class="ava" style="background:${avaColor(n)}" title="${esc(n)}">${esc(n[0]||'?')}</span>`).join('')+`</div>`;
 }
@@ -390,10 +449,12 @@ function renderCell(col,item,scope){
   const path=`'${item.id}','${escA(col.title)}','${scope||'item'}'`;
   switch(col.type){
     case 'status':
-      if(v&&v.label)return `<span class="pill" style="background:${v.color||'#c4c4c4'}" onclick="openStatus(event,${path})">${esc(v.label)}</span>`;
+      if(v&&v.label)return `<span class="pill" style="background:${v.color||'#c4c4c4'};color:${pillText(v.color)}" onclick="openStatus(event,${path})">${esc(v.label)}</span>`;
       return `<span class="pill empty" onclick="openStatus(event,${path})">—</span>`;
     case 'person':return `<span onclick="openPeople(event,${path})" style="cursor:pointer">${personCell(v)}</span>`;
-    case 'date':return v?`<span class="chip" onclick="editText(event,${path},'date')">${esc(v)}</span>`:`<span class="cellval muted" onclick="editText(event,${path},'date')">—</span>`;
+    case 'date':{if(!v)return `<span class="cellval muted" onclick="editText(event,${path},'date')">—</span>`;
+      let cls='chip';const ts=parseHeDate(v);if(ts){const t0=new Date();t0.setHours(0,0,0,0);const d0=new Date(ts);d0.setHours(0,0,0,0);const diff=Math.round((d0-t0)/86400000);const sc=board().columns.find(c=>c.type==='status');const st=sc&&item.cells[sc.title];const done=st&&st.label&&/done|בוצע|הושלם|הסתיים|✓/i.test(st.label);if(!done&&diff<0)cls='chip due-over';else if(!done&&diff===0)cls='chip due-today';}
+      return `<span class="${cls}" onclick="editText(event,${path},'date')">${esc(v)}</span>`;}
     case 'updated':{const ts=item.updatedAt;return ts?`<span class="upd-auto" title="מתעדכן אוטומטית"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg>${esc(heDate(ts))}</span>`:`<span class="cellval muted">—</span>`;}
     case 'file':{const url=v&&(v.url||v);let t=(v&&v.text&&v.text!=='פתח')?v.text:'';
       if(!t&&url){try{const u=new URL(url);t=decodeURIComponent(u.pathname.split('/').filter(Boolean).pop()||'')}catch(_){t=''}}
@@ -424,7 +485,7 @@ function colIcon(t){return `<svg class="cti" viewBox="0 0 24 24" fill="none" str
 /* ================= Tabs + Filters ================= */
 function renderTabs(){
   document.getElementById('boardTabs').innerHTML=state.order.map(k=>{const b=state.boards[k];
-    return `<div class="btab ${k===cur?'active':''}" onclick="selectBoard('${k}')"><span class="bd" style="background:${b.color}"></span>${esc(b.name)}<span class="bcnt">${b.items.length}</span></div>`}).join('')
+    return `<div class="btab ${k===cur?'active':''}" onclick="selectBoard('${k}')" oncontextmenu="openBoardMenu(event,'${k}')" ondblclick="openBoardMenu(event,'${k}')" title="קליק ימני/כפול לעריכת הבורד"><span class="bd" style="background:${b.color}"></span>${esc(b.name)}<span class="bcnt">${b.items.length}</span></div>`}).join('')
     +`<div class="btab add" onclick="addBoard()"><svg viewBox="0 0 24 24" width="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> בורד</div>`;
 }
 function distinctPeople(){const pc=board().columns.find(c=>c.type==='person');if(!pc)return[];const s=new Set();board().items.forEach(it=>{const v=it.cells[pc.title];if(v)(''+v).split(/[,،]/).forEach(n=>{n=n.trim();if(n)s.add(n)})});return[...s].sort();}
@@ -433,7 +494,8 @@ function distinctLabels(col){const s=new Set();board().items.forEach(it=>{const 
 function dateColumns(){return board().columns.filter(c=>c.type==='date');}
 function renderFilterBar(){
   const b=board();let h=`<span class="flabel">סינון</span>`;
-  h+=`<div class="fsel"><select onchange="setFilter('group',this.value)"><option value="">כל הקבוצות</option>${b.groups.map(g=>`<option value="${g.id}" ${filters.group===g.id?'selected':''}>${esc(g.name)}</option>`).join('')}</select></div>`;
+  h+=`<span class="mine-chip ${filters.person===ME?'on':''}" onclick="toggleMine()" title="הצג רק פריטים המשויכים אליי">שלי</span>`;
+  h+=`<div class="fsel"><select onchange="setFilter('group',this.value)" aria-label="סינון לפי קבוצה"><option value="">כל הקבוצות</option>${b.groups.map(g=>`<option value="${g.id}" ${filters.group===g.id?'selected':''}>${esc(g.name)}</option>`).join('')}</select></div>`;
   const pc=prioColumn();
   if(pc){filters.prioCol=pc.title;h+=`<div class="fsel"><select onchange="setFilter('prioVal',this.value)"><option value="">${esc(pc.title)}: הכל</option>${distinctLabels(pc.title).map(l=>`<option ${filters.prioVal===l?'selected':''}>${esc(l)}</option>`).join('')}</select></div>`;}
   const ppl=distinctPeople();
@@ -453,6 +515,9 @@ function passFilters(it){
 function sortItems(arr){
   if(filters.sort==='updated')return arr.slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
   if(filters.sort&&filters.sort.startsWith('date:')){const col=filters.sort.slice(5);return arr.slice().sort((a,b)=>{const da=a.cells[col]||'',db=b.cells[col]||'';return db>da?1:db<da?-1:0})}
+  if(filters.sort&&filters.sort.startsWith('col:')){const col=filters.sort.slice(4);const dir=filters.sortDir||1;const c=board().columns.find(x=>x.title===col);
+    const val=it=>{const v=it.cells[col];if(v==null||v==='')return c&&c.type==='number'?-Infinity:'';if(v.label!==undefined)return v.label;if(v.url!==undefined)return v.text||v.url;if(c&&c.type==='number')return parseFloat(v)||0;return ''+v};
+    return arr.slice().sort((a,b)=>{const x=val(a),y=val(b);if(typeof x==='number'&&typeof y==='number')return (x-y)*dir;return (''+x).localeCompare(''+y,'he')*dir});}
   return arr;
 }
 
@@ -471,13 +536,13 @@ function renderTable(){
       <div class="group-head" onclick="toggleGroup('${g.id}')">
         <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
         <span class="gbar" style="background:${g.color}"></span>
-        <span class="gname" style="color:${g.color};cursor:pointer" onclick="openGroupMenu(event,'${g.id}')" title="לחץ לעריכת קבוצה">${esc(g.name)}</span>
+        <span class="gname" data-gname="${g.id}" style="color:${g.color};cursor:pointer" onclick="openGroupMenu(event,'${g.id}')" title="לחץ לעריכת קבוצה">${esc(g.name)}</span>
         <span class="gcount">${b.items.filter(it=>it.groupId===g.id).length}</span>
       </div>
       <div class="table">
         <div class="trow head">
           <div class="cell name">פריט</div>
-          ${b.columns.map(c=>`<div class="cell" style="width:${colW(c.type)}px"><span class="colhead" onclick="openColMenu(event,'${c.id}')" title="לחץ לעריכת עמודה">${colIcon(c.type)}${esc(c.title)}</span></div>`).join('')}
+          ${b.columns.map(c=>`<div class="cell" style="width:${colW(c.type)}px"><span class="colhead" onclick="sortByCol(event,'${escA(c.title)}')" title="מיון לפי ${esc(c.title)}">${colIcon(c.type)}${esc(c.title)}${sortArrow(c.title)}</span><span class="colmenu" onclick="openColMenu(event,'${c.id}')" title="עריכת עמודה" aria-label="עריכת עמודה">⋯</span></div>`).join('')}
           <div class="cell addcol" onclick="addColumn(event)" title="הוסף עמודה"><svg viewBox="0 0 24 24" width="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></div>
         </div>`;
     items.forEach(it=>{
@@ -485,8 +550,9 @@ function renderTable(){
       html+=`<div class="trow">
         <div class="cell name">
           <svg class="expander ${so?'open':''}" onclick="toggleSub('${it.id}',event)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="${hasSub||b.subColumns.length?'':'opacity:.25'}"><path d="M9 6l6 6-6 6"/></svg>
-          <span class="item-name" onclick="openDrawer('${it.id}')">${esc(it.name)}</span>
+          <span class="item-name" data-name="${it.id}" onclick="openDrawer('${it.id}')" ondblclick="event.stopPropagation();openNameEditor('${it.id}')" title="לחיצה כפולה לשינוי שם">${esc(it.name)}</span>
           ${(it.updates&&it.updates.length)?`<span class="upd-badge" onclick="openDrawer('${it.id}')"><svg viewBox="0 0 24 24" width="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>${it.updates.length}</span>`:''}
+          <span class="rowmenu" onclick="openRowMenu(event,'${it.id}')" title="פעולות" aria-label="פעולות פריט">⋯</span>
         </div>
         ${b.columns.map(c=>`<div class="cell" style="width:${colW(c.type)}px" data-cell="${it.id}|${esc(c.title)}">${renderCell(c,it)}</div>`).join('')}
         <div class="cell addcol"></div>
@@ -496,17 +562,21 @@ function renderTable(){
         html+=`<div class="subwrap">
           <div class="subrow"><div class="sname sub-h">תת-משימה</div>${subCols.map(c=>`<div class="sub-h" style="width:${colW(c.type)}px">${esc(c.title)}</div>`).join('')}</div>`;
         it.subitems.forEach(s=>{
-          html+=`<div class="subrow"><div class="sname"><span class="item-name" onclick="openDrawer('${it.id}')">${esc(s.name)}</span></div>`+
+          html+=`<div class="subrow"><div class="sname"><span class="item-name" data-name="${s.id}" onclick="openDrawer('${it.id}')" ondblclick="event.stopPropagation();openNameEditor('${s.id}')" title="לחיצה כפולה לשינוי שם">${esc(s.name)}</span></div>`+
             subCols.map(c=>`<div style="width:${colW(c.type)}px" data-cell="${s.id}|${esc(c.title)}">${renderCell(c,s,'sub')}</div>`).join('')+`</div>`;
         });
         html+=`<div class="sub-add" onclick="addSub('${it.id}')">＋ תת-משימה</div></div>`;
       }
     });
+    html+=groupSummary(items,b);
     html+=`<div class="g-add" onclick="addItem('${g.id}')"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> הוסף פריט</div>
       </div></div>`;
   });
-  if((q||filters.group||filters.prioVal||filters.person)&&matched===0)
-    return `<div style="padding:40px;color:var(--text-xs)">אין פריטים תואמים — <span style="color:var(--cyan);cursor:pointer" onclick="document.getElementById('search').value='';clearFilters()">נקה סינון</span></div>`;
+  const active=q||filters.group||filters.prioVal||filters.person;
+  if(active&&matched===0)
+    return `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg><div class="es-title">אין פריטים תואמים</div><div>נסה לשנות את החיפוש או הסינון</div><button class="tbtn" onclick="document.getElementById('search').value='';clearFilters()">נקה סינון</button></div>`;
+  if(!active&&b.items.length===0)
+    return `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg><div class="es-title">הבורד ריק</div><div>בואו נוסיף את המשימה הראשונה</div><button class="btn-primary" onclick="addItemToFirst()"><svg viewBox="0 0 24 24" width="15" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> משימה ראשונה</button></div>`;
   html+=`<div class="newgroup" onclick="addGroup()"><svg viewBox="0 0 24 24" width="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> הוסף קבוצה</div>`;
   return html;
 }
@@ -524,7 +594,7 @@ function renderKanban(){
     const color=cols[k]||'#c4c4c4';
     return `<div class="kcol" style="border-top-color:${color}"><div class="kcol-head"><span class="kdot" style="background:${color}"></span><span class="ktitle">${esc(k)}</span><span class="kcnt">${buckets[k].length}</span></div>
       <div class="kcards" ondragover="event.preventDefault()" ondrop="drop(event,'${escA(k)}','${escA(sc.title)}')">
-        ${buckets[k].map(it=>{const g=groupById(it.groupId);return `<div class="kcard" draggable="true" style="border-top-color:${g.color}" ondragstart="drag(event,'${it.id}')" onclick="openDrawer('${it.id}')">
+        ${buckets[k].map(it=>{const g=groupById(it.groupId);return `<div class="kcard" draggable="true" style="border-inline-start-color:${g.color}" ondragstart="drag(event,'${it.id}')" onclick="openDrawer('${it.id}')">
           <div class="kname">${esc(it.name)}</div>
           <div class="kmeta"><span class="kgroup-tag" style="color:${g.color}">${esc(g.name)}</span>${personCell(it.cells[(board().columns.find(c=>c.type==='person')||{}).title])}</div></div>`}).join('')}
         <div class="kadd" onclick="addKanbanCard('${escA(k)}','${escA(sc.title)}')">＋ כרטיס</div>
@@ -540,14 +610,16 @@ function render(){
   document.getElementById('btName').textContent=b.name;
   document.getElementById('btCnt').textContent=b.items.length+' פריטים';
   document.getElementById('stage').innerHTML=view==='table'?renderTable():renderKanban();
+  if(pendingEditId){const id=pendingEditId;pendingEditId=null;openNameEditor(id);}
+  else if(pendingEditGroup){const gid=pendingEditGroup;pendingEditGroup=null;openGroupNameEditor(gid);}
 }
 function renderNav(){
   document.getElementById('navBoards').innerHTML=state.order.map(k=>{const b=state.boards[k];
-    return `<div class="nav-item ${k===cur?'active':''}" onclick="selectBoard('${k}')"><span class="bdot" style="background:${b.color}"></span>${esc(b.name)}<span class="bc">${b.items.length}</span></div>`}).join('')
+    return `<div class="nav-item ${k===cur?'active':''}" onclick="selectBoard('${k}')" oncontextmenu="openBoardMenu(event,'${k}')"><span class="bdot" style="background:${b.color}"></span>${esc(b.name)}<span class="bc">${b.items.length}</span></div>`}).join('')
     +`<div class="nav-item" onclick="addBoard()" style="color:rgba(255,255,255,.4)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> בורד חדש</div>`;
 }
-function selectBoard(k){cur=k;filters={group:'',prioCol:'',prioVal:'',person:'',sort:''};document.body.classList.remove('nav-open');renderNav();render()}
-function setView(v){view=v;document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));render()}
+function selectBoard(k){closePop();cur=k;filters={group:'',prioCol:'',prioVal:'',person:'',sort:'',sortDir:1};document.body.classList.remove('nav-open');renderNav();render()}
+function setView(v){closePop();view=v;document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));render()}
 function toggleGroup(id){const k=cur+id;collapsed[k]=!collapsed[k];render()}
 function toggleSub(id,e){e.stopPropagation();const k=cur+id;openSubs[k]=!openSubs[k];render()}
 
@@ -555,11 +627,99 @@ function toggleSub(id,e){e.stopPropagation();const k=cur+id;openSubs[k]=!openSub
 function findItem(id){const b=board();let it=b.items.find(x=>x.id===id);if(it)return{it,parent:null};for(const p of b.items){const s=(p.subitems||[]).find(x=>x.id===id);if(s)return{it:s,parent:p}}return{it:null}}
 function setCell(id,col,val){const{it}=findItem(id);if(!it)return;if(val===''||val==null)delete it.cells[col];else it.cells[col]=val;it.updatedAt=Date.now();save();render()}
 
+/* ===== Undo (snapshot-based; no confirm dialogs) ===== */
+let _undo=null;
+function snapshot(){try{_undo=JSON.parse(JSON.stringify(state))}catch(e){_undo=null}}
+function undo(){if(!_undo)return;state=_undo;_undo=null;if(!state.boards[cur])cur=state.order[0];save();renderNav();render();toast('הפעולה בוטלה')}
+function toastUndo(msg){toast(msg,{label:'בטל',fn:undo})}
+
+/* ===== Contrast: dark text on light pills ===== */
+function pillText(bg){bg=(''+(bg||'#c4c4c4')).replace('#','');if(bg.length===3)bg=bg.split('').map(c=>c+c).join('');if(bg.length<6)return '#fff';const f=i=>parseInt(bg.slice(i,i+2),16)/255;const lin=x=>x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4);const L=.2126*lin(f(0))+.7152*lin(f(2))+.0722*lin(f(4));return L>.42?'#1a2f5e':'#fff'}
+
+/* ===== Item lifecycle: rename / delete / duplicate / move ===== */
+let pendingEditId=null,pendingEditGroup=null;
+function renameItem(id,name){const{it}=findItem(id);if(!it)return;name=(''+name).trim();if(name){it.name=name;it.updatedAt=Date.now();save()}render();if(document.getElementById('drawer').classList.contains('open'))openDrawer(id)}
+function deleteItem(id){const b=board();if(!b.items.some(x=>x.id===id))return;snapshot();b.items=b.items.filter(x=>x.id!==id);save();render();closeDrawer();toastUndo('הפריט נמחק')}
+function deleteSubitem(id){snapshot();board().items.forEach(p=>{p.subitems=(p.subitems||[]).filter(s=>s.id!==id)});save();render();toastUndo('תת-המשימה נמחקה')}
+function duplicateItem(id){const b=board();const idx=b.items.findIndex(x=>x.id===id);if(idx<0)return;const clone=JSON.parse(JSON.stringify(b.items[idx]));clone.id=uid('i');clone.name=(clone.name||'')+' (עותק)';clone.updatedAt=Date.now();(clone.subitems||[]).forEach(s=>s.id=uid('s'));b.items.splice(idx+1,0,clone);save();render();toast('הפריט שוכפל')}
+function moveItem(id,gid){const{it}=findItem(id);if(!it)return;it.groupId=gid;it.updatedAt=Date.now();save();render();toast('הפריט הועבר')}
+function openRowMenu(e,id){e.stopPropagation();closePop();const b=board();
+  pop.innerHTML=`<div class="rowopt" onclick="startRename('${id}')">✎ שנה שם</div>
+    <div class="rowopt" onclick="duplicateItem('${id}');closePop()">⧉ שכפל</div>
+    <div class="menu-lbl" style="margin-top:4px">העבר לקבוצה</div>
+    ${b.groups.map(g=>`<div class="rowopt" onclick="moveItem('${id}','${g.id}');closePop()"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${g.color}"></span>${esc(g.name)}</div>`).join('')}
+    <button class="menu-danger" onclick="deleteItem('${id}');closePop()">מחק פריט</button>`;
+  showPop(e);}
+function startRename(id){closePop();pendingEditId=id;render();}
+function openNameEditor(id){const el=document.querySelector('[data-name="'+id+'"]');if(!el)return;const{it}=findItem(id);if(!it)return;const inp=document.createElement('input');inp.className='inledit';inp.value=it.name||'';el.replaceWith(inp);inp.focus();inp.select();
+  const done=(commit)=>{if(commit)renameItem(id,inp.value);else render();};
+  inp.onblur=()=>done(true);inp.onkeydown=(ev)=>{if(ev.key==='Enter'){ev.preventDefault();inp.blur()}if(ev.key==='Escape'){ev.stopPropagation();inp.onblur=null;render()}};}
+function openGroupNameEditor(gid){const el=document.querySelector('[data-gname="'+gid+'"]');if(!el)return;const g=groupById(gid);if(!g)return;const inp=document.createElement('input');inp.className='inledit';inp.value=g.name||'';el.replaceWith(inp);inp.focus();inp.select();
+  const done=(commit)=>{if(commit){const nv=inp.value.trim();if(nv){g.name=nv;save()}}render();};
+  inp.onblur=()=>done(true);inp.onkeydown=(ev)=>{if(ev.key==='Enter'){ev.preventDefault();inp.blur()}if(ev.key==='Escape'){ev.stopPropagation();inp.onblur=null;render()}};}
+
+/* ===== Header sort ===== */
+function sortByCol(e,title){e.stopPropagation();const key='col:'+title;if(filters.sort!==key){filters.sort=key;filters.sortDir=1}else if(filters.sortDir===1){filters.sortDir=-1}else{filters.sort='';filters.sortDir=1}render()}
+function sortArrow(title){return filters.sort==='col:'+title?`<span class="sortarrow">${(filters.sortDir||1)===1?'▲':'▼'}</span>`:''}
+
+/* ===== Group summary battery ===== */
+function groupSummary(items,b){
+  const sc=b.columns.find(c=>c.type==='status');let bar='';
+  if(sc&&items.length){const dist={};items.forEach(it=>{const v=it.cells[sc.title];const k=(v&&v.label)||'—';const col=(v&&v.color)||'var(--surface-3)';(dist[k]=dist[k]||{n:0,color:col}).n++});
+    const total=items.length;bar=`<div class="battery" role="img" aria-label="התפלגות ${esc(sc.title)}">`+Object.keys(dist).map(k=>`<span style="width:${(dist[k].n/total*100).toFixed(1)}%;background:${dist[k].color}" title="${esc(k)}: ${dist[k].n}"></span>`).join('')+`</div>`;}
+  const nums=b.columns.filter(c=>c.type==='number').map(c=>{const sum=items.reduce((a,it)=>a+(parseFloat(it.cells[c.title])||0),0);return `<span class="numsum">${esc(c.title)}: <b>${sum}</b></span>`}).join('');
+  return `<div class="gsummary"><span class="gs-count">${items.length} פריטים</span>${bar}${nums}</div>`;
+}
+
+/* ===== My items filter ===== */
+function toggleMine(){filters.person=filters.person===ME?'':ME;render()}
+
+/* ===== Export / Import ===== */
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+function exportJSON(){dl(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),'mission-board-backup.json');toast('גובה כ-JSON')}
+function exportCSV(){const b=board();const cols=b.columns;const cellStr=v=>{if(v==null)return '';if(v.label!==undefined)return v.label;if(v.url!==undefined)return v.url;return ''+v};
+  const rows=[['קבוצה','פריט',...cols.map(c=>c.title)]];
+  b.groups.forEach(g=>b.items.filter(it=>it.groupId===g.id).forEach(it=>rows.push([g.name,it.name,...cols.map(c=>cellStr(it.cells[c.title]))])));
+  const csv='﻿'+rows.map(r=>r.map(c=>`"${(''+c).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+  dl(new Blob([csv],{type:'text/csv'}),(b.name||'board')+'.csv');toast('יוצא כ-CSV')}
+function importJSON(){const inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';inp.onchange=()=>{const f=inp.files&&inp.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(d&&d.boards&&d.order){snapshot();state=d;cur=state.order[0];syncRoster();save();renderNav();render();toastUndo('הנתונים יובאו')}else toast('קובץ לא תקין')}catch(_){toast('שגיאה בקריאת הקובץ')}};rd.readAsText(f)};inp.click()}
+function openExport(e){if(e&&e.stopPropagation)e.stopPropagation();closePop();
+  pop.innerHTML=`<div class="menu-lbl">ייצוא / ייבוא</div>
+    <div class="rowopt" onclick="exportJSON();closePop()">⬇ ייצוא JSON (גיבוי מלא)</div>
+    <div class="rowopt" onclick="exportCSV();closePop()">⬇ ייצוא CSV (בורד נוכחי)</div>
+    <div class="rowopt" onclick="importJSON();closePop()">⬆ ייבוא JSON</div>`;
+  showPop(e);}
+
+/* ===== Board tab menu: rename / recolor / duplicate / delete ===== */
+function openBoardMenu(e,key){e.preventDefault();e.stopPropagation();closePop();const bd=state.boards[key];if(!bd)return;
+  pop.innerHTML=`<div class="menu-lbl">עריכת בורד</div>
+    <div class="mrow" style="border:none;margin:0;padding:0;flex-direction:column;gap:6px">
+      <input id="bdName" value="${esc(bd.name)}" style="width:100%" onkeydown="if(event.key==='Enter')saveBoard('${key}')">
+      <div class="swatches">${PALETTE.map(c=>`<span class="swatch ${bd.color===c?'on':''}" data-c="${c}" style="background:${c}" onclick="setBoardColor('${key}','${c}')"></span>`).join('')}</div>
+      <button onclick="saveBoard('${key}')" style="width:100%;padding:8px">שמור</button>
+    </div>
+    <div class="rowopt" onclick="duplicateBoard('${key}');closePop()">⧉ שכפל בורד</div>
+    ${state.order.length>1?`<button class="menu-danger" onclick="deleteBoard('${key}')">מחק בורד</button>`:''}`;
+  showPop(e);setTimeout(()=>{const el=document.getElementById('bdName');if(el){el.focus();el.select()}},30);}
+function saveBoard(key){const bd=state.boards[key];if(!bd)return;const nv=document.getElementById('bdName').value.trim();if(nv)bd.name=nv;save();renderNav();render();closePop();toast('הבורד עודכן')}
+function setBoardColor(key,c){const bd=state.boards[key];if(!bd)return;bd.color=c;save();renderNav();render();document.querySelectorAll('#popover .swatch').forEach(s=>s.classList.toggle('on',s.dataset.c===c))}
+function duplicateBoard(key){const src=state.boards[key];if(!src)return;const nk=uid('b');const clone=JSON.parse(JSON.stringify(src));clone.key=nk;clone.name=(clone.name||'')+' (עותק)';
+  clone.groups.forEach(g=>{const old=g.id;g.id=uid('g');clone.items.forEach(it=>{if(it.groupId===old)it.groupId=g.id})});
+  clone.columns.forEach(c=>c.id=uid('c'));(clone.subColumns||[]).forEach(c=>c.id=uid('sc'));
+  clone.items.forEach(it=>{it.id=uid('i');(it.subitems||[]).forEach(s=>s.id=uid('s'))});
+  state.boards[nk]=clone;const idx=state.order.indexOf(key);state.order.splice(idx+1,0,nk);cur=nk;save();renderNav();render();toast('הבורד שוכפל')}
+function deleteBoard(key){if(state.order.length<=1){toast('חייב להישאר לפחות בורד אחד');return}snapshot();delete state.boards[key];state.order=state.order.filter(k=>k!==key);if(cur===key)cur=state.order[0];save();renderNav();render();closePop();toastUndo('הבורד נמחק')}
+
+/* ===== Debounced search ===== */
+let _searchT=null;
+function onSearch(){closePop();clearTimeout(_searchT);_searchT=setTimeout(render,140)}
+
 let pop=document.getElementById('popover');
 function openStatus(e,id,col){
   e.stopPropagation();closePop();
   const labels=labelColorsFor(col);
-  pop.innerHTML=Object.keys(labels).map(l=>`<div class="opt" style="background:${labels[l]}" onclick="pickStatus('${id}','${escA(col)}','${escA(l)}','${labels[l]}')">${esc(l)}</div>`).join('')
+  const cv=((findItem(id).it||{}).cells||{})[col];const curLabel=cv&&cv.label;
+  pop.innerHTML=Object.keys(labels).map(l=>`<div class="opt ${l===curLabel?'sel':''}" style="background:${labels[l]};color:${pillText(labels[l])}" onclick="pickStatus('${id}','${escA(col)}','${escA(l)}','${labels[l]}')">${l===curLabel?'<span class="osel">✓</span>':''}${esc(l)}</div>`).join('')
     +`<div class="opt" style="background:var(--surface-3);color:var(--text-sub)" onclick="pickStatus('${id}','${escA(col)}','','')">נקה</div>`
     +`<div class="mrow"><input id="newLabel" placeholder="תווית חדשה..." onkeydown="if(event.key==='Enter')addLabel('${id}','${escA(col)}')"><button onclick="addLabel('${id}','${escA(col)}')">＋</button></div>`;
   showPop(e);
@@ -652,32 +812,46 @@ function addColumn(e){
   setTimeout(()=>document.getElementById('ncTitle').focus(),30);
 }
 function doAddColumn(){const t=document.getElementById('ncTitle').value.trim();const ty=document.getElementById('ncType').value;if(!t)return;board().columns.push({id:uid('c'),title:t,type:ty});pop.style.transform='';closePop();save();render();toast('העמודה נוספה')}
-function addItem(gid){const b=board();b.items.push({id:uid('i'),name:'משימה חדשה',groupId:gid,cells:{},subitems:[]});save();render();toast('פריט נוסף')}
-function addItemToFirst(){addItem(board().groups[0].id)}
+function addItem(gid){const b=board();const it={id:uid('i'),name:'משימה חדשה',groupId:gid,cells:{},subitems:[]};b.items.push(it);pendingEditId=it.id;save();render()}
+function addItemToFirst(){addItem((filters.group&&groupById(filters.group)?filters.group:board().groups[0].id))}
 function addKanbanCard(label,col){const b=board();const it={id:uid('i'),name:'משימה חדשה',groupId:b.groups[0].id,cells:{},subitems:[]};if(label&&label!=='— ריק —'){const color=labelColorsFor(col)[label]||nextColor(col);it.cells[col]={label,color}}b.items.push(it);save();render();toast('כרטיס נוסף')}
-function addSub(itemId){const{it}=findItem(itemId);it.subitems=it.subitems||[];it.subitems.push({id:uid('s'),name:'תת-משימה חדשה',cells:{}});openSubs[cur+itemId]=true;save();render();toast('תת-משימה נוספה')}
-function addGroup(){const b=board();b.groups.push({id:uid('g'),name:'קבוצה חדשה',color:PALETTE[b.groups.length%PALETTE.length]});save();render();toast('קבוצה נוספה')}
+function addSub(itemId){const{it}=findItem(itemId);it.subitems=it.subitems||[];const s={id:uid('s'),name:'תת-משימה חדשה',cells:{}};it.subitems.push(s);openSubs[cur+itemId]=true;pendingEditId=s.id;save();render()}
+function addGroup(){const b=board();const g={id:uid('g'),name:'קבוצה חדשה',color:PALETTE[b.groups.length%PALETTE.length]};b.groups.push(g);pendingEditGroup=g.id;save();render()}
 function addBoard(){const key=uid('b');state.boards[key]={key,name:'בורד חדש',color:PALETTE[state.order.length%PALETTE.length],columns:[{id:uid('c'),title:'סטטוס',type:'status'},{id:uid('c'),title:'אחראי',type:'person'}],subColumns:[],groups:[{id:uid('g'),name:'כללי',color:'#38C4F2'}],items:[]};state.order.push(key);cur=key;save();renderNav();render();toast('בורד נוצר')}
 
 /* drawer */
+let _drawerTrigger=null;
 function openDrawer(id){
-  const{it}=findItem(id);const b=board();
-  document.getElementById('drTitle').textContent=it.name;
+  const{it}=findItem(id);if(!it)return;const b=board();const isTop=b.items.some(x=>x.id===id);
+  if(!document.getElementById('drawer').classList.contains('open'))_drawerTrigger=document.activeElement;
+  const drT=document.getElementById('drTitle');drT.textContent=it.name;drT.title='לחיצה כפולה לשינוי שם';drT.ondblclick=()=>editDrawerTitle(id);
   const g=groupById(it.groupId);const sub=[];
   if(g)sub.push(`<span class="dr-chip"><span class="dc-dot" style="background:${g.color}"></span>${esc(g.name)}</span>`);
   sub.push(`<span class="dr-chip"><span class="dc-dot" style="background:${b.color}"></span>${esc(b.name)}</span>`);
   if(it.updatedAt)sub.push(`<span class="dr-chip">עודכן ${esc(heDate(it.updatedAt))}</span>`);
   document.getElementById('drSub').innerHTML=sub.join('');
-  const cols=b.items.some(x=>x.id===id)?b.columns:(b.subColumns.length?b.subColumns:[{title:'סטטוס',type:'status'},{title:'אחראי',type:'person'}]);
+  const cols=isTop?b.columns:(b.subColumns.length?b.subColumns:[{title:'סטטוס',type:'status'},{title:'אחראי',type:'person'}]);
   const upd=it.updates||[];
-  document.getElementById('drBody').innerHTML=cols.map(c=>`<div class="field"><label>${esc(c.title)}</label><div data-cell="${id}|${esc(c.title)}">${renderCell(c,it)}</div></div>`).join('')
-    +`<div class="field"><label>עדכונים ותגובות (${upd.length})</label>
-        <div id="cmtList">${upd.map(u=>`<div class="cmt"><div class="ch"><span class="ca">${esc((u.by||'?')[0]||'?')}</span><span class="cn">${esc(u.by||'')}</span><span class="ct">${fmtTime(u.at)}</span></div><div class="cb">${esc(u.text).replace(/\\n/g,'<br>')}</div></div>`).join('')||`<div style="color:var(--text-xs);font-size:12px">אין עדכונים עדיין — כתוב את הראשון.</div>`}</div>
-        <div class="cmt-send"><input id="cmtInput" class="field-input" placeholder="כתוב עדכון..." onkeydown="if(event.key==='Enter')addComment('${id}')"><button onclick="addComment('${id}')">שלח</button></div>
+  const actions=`<div class="dr-actions">
+      <button class="tbtn" onclick="editDrawerTitle('${id}')"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg> שנה שם</button>
+      ${isTop?`<button class="tbtn" onclick="duplicateItem('${id}')"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg> שכפל</button>`:''}
+      <button class="tbtn" style="color:var(--pink);border-color:rgba(240,86,128,.3)" onclick="${isTop?`deleteItem('${id}')`:`deleteSubitem('${id}')`}"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg> מחק</button>
+    </div>`;
+  document.getElementById('drBody').innerHTML=actions+cols.map(c=>`<div class="field"><label>${esc(c.title)}</label><div data-cell="${id}|${esc(c.title)}">${renderCell(c,it)}</div></div>`).join('')
+    +`<div class="field field-full"><label>עדכונים ותגובות (${upd.length})</label>
+        <div id="cmtList">${upd.map(u=>`<div class="cmt"><div class="ch"><span class="ca">${esc((u.by||'?')[0]||'?')}</span><span class="cn">${esc(u.by||'')}</span><span class="ct">${fmtTime(u.at)}</span></div><div class="cb">${esc(u.text).replace(/\\n/g,'<br>')}</div></div>`).join('')||`<div class="empty-state" style="padding:20px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div>אין עדכונים עדיין — כתוב את הראשון</div></div>`}</div>
+        <div class="cmt-send"><input id="cmtInput" aria-label="כתוב עדכון" placeholder="כתוב עדכון..." onkeydown="if(event.key==='Enter')addComment('${id}')"><button onclick="addComment('${id}')">שלח</button></div>
       </div>`;
   document.getElementById('drawer').classList.add('open');document.getElementById('scrim').classList.add('open');
+  setTimeout(()=>{const c=document.getElementById('drClose');if(c)c.focus();},60);
 }
-function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('scrim').classList.remove('open')}
+function editDrawerTitle(id){const drT=document.getElementById('drTitle');drT.contentEditable='true';drT.focus();
+  const r=document.createRange();r.selectNodeContents(drT);const s=getSelection();s.removeAllRanges();s.addRange(r);
+  const finish=(commit)=>{drT.contentEditable='false';drT.onblur=null;drT.onkeydown=null;if(commit)renameItem(id,drT.textContent);};
+  drT.onblur=()=>finish(true);
+  drT.onkeydown=(ev)=>{if(ev.key==='Enter'){ev.preventDefault();drT.blur()}if(ev.key==='Escape'){ev.stopPropagation();drT.textContent=(findItem(id).it||{}).name||'';drT.blur()}};
+}
+function closeDrawer(){const d=document.getElementById('drawer');if(!d.classList.contains('open'))return;d.classList.remove('open');document.getElementById('scrim').classList.remove('open');if(_drawerTrigger&&_drawerTrigger.focus){try{_drawerTrigger.focus()}catch(e){}}_drawerTrigger=null}
 function fmtTime(ts){if(!ts)return'';const d=new Date(ts);return d.toLocaleDateString('he-IL')+' '+d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})}
 function addComment(id){const inp=document.getElementById('cmtInput');const t=(inp.value||'').trim();if(!t)return;const{it}=findItem(id);it.updates=it.updates||[];it.updates.push({text:t,by:ME,at:Date.now()});it.updatedAt=Date.now();save();openDrawer(id);render();toast('עדכון נוסף')}
 
@@ -689,8 +863,13 @@ function drop(e,label,col){e.preventDefault();document.querySelectorAll('.kcard'
 
 /* theme + toast */
 document.getElementById('themeBtn').onclick=()=>{const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('themeBtn').setAttribute('aria-pressed',(!d).toString());
   document.getElementById('themeIcon').outerHTML=d?`<svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`:`<svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>`};
-function toast(msg){const t=document.createElement('div');t.className='toast';t.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>${esc(msg)}</span>`;document.getElementById('toasts').appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-30px)';t.style.transition='.3s';setTimeout(()=>t.remove(),300)},2600)}
+// Escape closes popover first, then drawer
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(pop.classList.contains('open')){closePop();}else if(document.getElementById('drawer').classList.contains('open')){closeDrawer();}}});
+function toast(msg,action){const t=document.createElement('div');t.className='toast';t.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>${esc(msg)}</span>`;
+  if(action){const btn=document.createElement('button');btn.className='toast-undo';btn.textContent=action.label;btn.onclick=()=>{action.fn();t.remove()};t.appendChild(btn)}
+  document.getElementById('toasts').appendChild(t);const dur=action?5200:2600;setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-30px)';t.style.transition='.3s';setTimeout(()=>t.remove(),300)},dur)}
 
 /* boot */
 function boot(){renderNav();render();document.getElementById('loading').style.display='none'}
