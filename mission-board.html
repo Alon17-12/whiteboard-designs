@@ -375,7 +375,7 @@ body.canvas-board #viewSeg,body.canvas-board #colBtn{display:none}
 .canu-wrap{padding-top:2px}
 .canu-head{display:flex;align-items:baseline;gap:12px;padding:4px 2px 14px;flex-wrap:wrap}
 .canu-head h2{font-family:var(--font);font-weight:600;font-size:17px}
-.canu-sub{color:var(--text-xs);font-size:12px;font-weight:600}
+.canu-sub-hint{color:var(--text-xs);font-size:12px;font-weight:600}
 .canu-table{width:max-content;min-width:min(100%,940px)}
 .canu-table .cell.name{position:static;width:300px;box-shadow:none;border-inline-start:3px solid transparent}
 .canu-row{cursor:pointer}
@@ -508,6 +508,31 @@ body.canvas-board #viewSeg,body.canvas-board #colBtn{display:none}
 .btab[draggable],.nav-item[draggable]{cursor:pointer}
 .note-del-x{margin-inline-start:auto;cursor:pointer;color:var(--text-xs);width:24px;height:24px;border-radius:6px;display:grid;place-items:center}
 .note-del-x:hover{background:rgba(240,86,128,.13);color:var(--pink)}
+/* ---- CanU v5: per-note status, sub-items in table, page-complete ---- */
+.pin{position:absolute}
+.pin-st{position:absolute;top:-3px;inset-inline-start:-3px;width:11px;height:11px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(10,20,40,.35)}
+.nstat-row{display:flex;gap:5px;padding:2px 4px;flex-wrap:wrap}
+.nstat-seg{flex:1;min-width:54px;text-align:center;padding:6px 4px;border-radius:8px;border:1.5px solid var(--border);font-weight:700;font-size:11px;cursor:pointer;color:var(--text-sub)}
+.nstat-seg.on{border-color:var(--sc);background:var(--sc);color:#173}
+.page-done{display:inline-flex;align-items:center;gap:5px;color:#2e7d32;font-weight:800;font-size:12px}
+[data-theme="dark"] .page-done{color:#9cd39a}
+.page-done-badge{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--green);color:#fff;margin-inline-start:3px;flex-shrink:0}
+.page-done-badge svg{width:12px;height:12px}
+.canu-row.done{background:rgba(125,197,122,.06)}
+.canu-row.done .cell.name{border-inline-start:3px solid var(--green)}
+.canu-name .expander{margin-inline-end:1px}
+.canu-sub{padding:0!important;background:var(--surface-2)}
+.canu-subrow{display:flex;align-items:stretch;min-height:36px;border-bottom:1px dashed var(--border);cursor:pointer;width:max-content;min-width:100%}
+.canu-subrow:last-child{border-bottom:none}
+.canu-subrow:hover{background:var(--surface-3)}
+.canu-subname{width:300px;display:flex;align-items:center;gap:8px;padding:5px 11px 5px 42px;min-width:0}
+.sub-bullet{width:17px;height:17px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;color:#fff;font-size:10px;font-weight:800}
+.sub-txt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;font-size:12.5px}
+.canu-subrow .subcell{padding:5px 11px;flex-shrink:0;border-inline-start:1px solid var(--border);display:flex;align-items:center;font-size:12px}
+.nstat-chip{padding:3px 11px;border-radius:20px;font-weight:700;font-size:11px;cursor:pointer;white-space:nowrap;box-shadow:0 1px 2px rgba(37,62,122,.1)}
+.canu-subempty{padding:9px 42px;color:var(--text-xs);font-size:11.5px;font-weight:600}
+.canu-subadd{padding:8px 42px;color:var(--text-xs);font-size:11.5px;cursor:pointer;font-weight:700}
+.canu-subadd:hover{color:var(--cyan)}
 .cswatch{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--border)}
 .cswatch.on{box-shadow:0 0 0 2px var(--text-main)}
 .draw-layer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
@@ -1263,21 +1288,40 @@ function switchUser(e){if(e&&e.stopPropagation)e.stopPropagation();closePop();
   pop.innerHTML=`<div class="menu-lbl">מחובר כ… (לבדיקת הרשאות)</div>`+[...new Set(TEAM)].map(n=>`<div class="popt ${n===currentUser?'on':''}" onclick="pickUser('${escA(n)}')"><span class="ava" style="background:${avaColor(n)};margin:0">${esc(n[0]||'?')}</span>${esc(n)}${isAdmin(n)?' <span style="color:var(--cyan);font-size:10px;font-weight:800;margin-inline-start:4px">אדמין</span>':''}<svg class="pcheck" viewBox="0 0 24 24" width="15" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>`).join('');
   showPop(e);}
 function pickUser(n){currentUser=n;closePop();renderUser();if(document.getElementById('canvasView').classList.contains('open'))renderCanvas();render();toast('מחובר כ-'+n);}
+/* per-note workflow status ('הושלם' = approval, permission-gated) */
+const NSTATUS=[{k:'open',t:'פתוח',c:'#c4c4c4'},{k:'progress',t:'בעבודה',c:'#38C4F2'},{k:'review',t:'לבדיקה',c:'#EAD654'},{k:'done',t:'הושלם',c:'#7DC57A'}];
+function nstat(k){return NSTATUS.find(s=>s.k===k)||NSTATUS[0]}
+function noteDone(n){return !!n.done}
+let canuOpenSubs={};
+function toggleCanuSub(id){canuOpenSubs[id]=!canuOpenSubs[id];render();}
+function findNoteIn(pid,nid){const p=canuPage(pid);if(!p)return null;return pageNotes(p).find(x=>x.id===nid)||null;}
+function pageComplete(p){const r=canuRollup(p);return r.total>0&&r.open===0;}
+function applyNoteStatus(n,key){
+  if(key==='done'){if(!canApproveNote(n)){toast('אין הרשאה — רק האחראי או אדמין מאשרים');return false;}n.status='done';n.done=true;n.doneBy=currentUser;n.doneAt=Date.now();}
+  else{n.status=key;n.done=false;n.doneBy='';n.doneAt=0;}
+  n.at=Date.now();save();return true;}
+function setNoteStatus(id,key){const n=findNote(id);if(!n)return;if(applyNoteStatus(n,key)){renderCanvas();editNote({target:document.querySelector('[data-pin="'+id+'"]'),stopPropagation(){}},id);}}
+function setNoteStatusById(pid,nid,key){const n=findNoteIn(pid,nid);if(!n)return;if(applyNoteStatus(n,key)){closePop();render();}}
+function noteStatusMenu(e,pid,nid){e.stopPropagation();closePop();
+  pop.innerHTML=`<div class="menu-lbl">סטטוס פתק</div>`+NSTATUS.map(s=>`<div class="opt" style="background:${s.c};color:${pillText(s.c)}" onclick="setNoteStatusById('${pid}','${nid}','${s.k}')">${s.t}</div>`).join('');
+  showPop(e);}
+function openCanvasNote(pid,nid){openCanvas(pid);setTimeout(()=>{const el=document.querySelector('[data-pin="'+nid+'"]');editNote({target:el||document.body,stopPropagation(){}},nid);},70);}
+function migrateCanuNotes(){if(!state)return;Object.values(state.boards).forEach(b=>{if(b.type!=='canvas')return;(b.items||[]).forEach(p=>{if(!p.canvas)return;if(!p.canvas.shapes)p.canvas.shapes=[];if(!p.canvas.chat)p.canvas.chat=[];(p.canvas.notes||[]).forEach(n=>{if(!n.status)n.status=n.done?'done':'open';n.done=n.status==='done';if(n.done&&!n.doneBy)n.doneBy='אלון גבאי';});});});}
 function mockShot(title,accent){return 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='750'><rect width='1200' height='750' fill='#f4f9ff'/><rect width='1200' height='64' fill='${accent}'/><circle cx='1150' cy='32' r='12' fill='#fff' opacity='.9'/><rect x='40' y='120' width='520' height='40' rx='8' fill='#253E7A'/><rect x='40' y='180' width='420' height='20' rx='6' fill='#c9d6ee'/><rect x='40' y='214' width='360' height='20' rx='6' fill='#c9d6ee'/><rect x='40' y='280' width='180' height='54' rx='27' fill='${accent}'/><rect x='700' y='120' width='460' height='300' rx='16' fill='#e3ecfb'/><text x='60' y='150' font-family='Arial' font-size='30' fill='#fff'>${title}</text></svg>`)}
 function ensureCanuBoard(){
   if(!state||!state.boards||state.boards[CANU_KEY])return;
   const gid=uid('g');
   const mk=(name,accent,notes,chat)=>({id:uid('i'),name,groupId:gid,
     canvas:{media:{kind:'image',url:mockShot(name,accent)},shapes:[],
-      notes:notes.map(n=>{const o={id:uid('n'),author:ME,at:Date.now(),done:false,priority:'P2',assignee:'',due:'',...n};o.doneBy=o.done?(o.doneBy||'אלון גבאי'):'';o.doneAt=o.done?(o.doneAt||Date.now()):0;return o;}),
+      notes:notes.map(n=>{const o={id:uid('n'),author:ME,at:Date.now(),done:false,priority:'P2',assignee:'',due:'',...n};o.status=o.status||(o.done?'done':'open');o.done=o.status==='done';o.doneBy=o.done?(o.doneBy||'אלון גבאי'):'';o.doneAt=o.done?(o.doneAt||Date.now()):0;return o;}),
       chat:(chat||[]).map(c=>({id:uid('c'),at:Date.now(),...c}))}});
   state.boards[CANU_KEY]={key:CANU_KEY,name:'CanU',color:'#38C4F2',type:'canvas',columns:[],subColumns:[],
     groups:[{id:gid,name:'עמודים',color:'#38C4F2'}],
     items:[
       mk('דף הבית','#253E7A',[
-        {x:24,y:70,text:'הכפתור הראשי קטן מדי במובייל',assignee:'אלון גבאי',priority:'P1',due:'2026-08-05'},
-        {x:58,y:44,text:'להחליף את תמונת ההירו',assignee:'Eyal Segal',priority:'P2',due:'2026-08-07'},
-        {x:34,y:34,text:'טקסט הכותרת מיושר לא נכון',priority:'P3',done:true}],
+        {x:24,y:70,text:'הכפתור הראשי קטן מדי במובייל',assignee:'אלון גבאי',priority:'P1',due:'2026-08-05',status:'progress'},
+        {x:58,y:44,text:'להחליף את תמונת ההירו',assignee:'Eyal Segal',priority:'P2',due:'2026-08-07',status:'review'},
+        {x:34,y:34,text:'טקסט הכותרת מיושר לא נכון',priority:'P3',status:'done'}],
         [{by:'Eyal Segal',text:'התחלתי לעבוד על הכפתור, אעדכן מחר בבוקר'},{by:'אלון גבאי',text:'מעולה, תודה 🙏'}]),
       mk('מסך תשלום','#38C4F2',[
         {x:44,y:46,text:'שדה הכרטיס חסר ולידציה',assignee:'yona shay',priority:'P1',due:'2026-08-09'},
@@ -1323,21 +1367,35 @@ function renderCanu(){
     const tp=pageTopPriority(p);const prio=tp?PRIO[tp]:null;const asg=pageAssignees(p);const due=pageNearestDue(p);const ovd=pageOverdue(p);
     const chatN=pageChat(p).length;const media=p.canvas&&p.canvas.media&&p.canvas.media.url;
     const thumb=media?`<span class="canu-thumb" style="background-image:url('${(''+media).replace(/'/g,'%27')}')"></span>`:`<span class="canu-thumb empty"><svg viewBox="0 0 24 24" width="16" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-xs)"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15l5-4 4 3 4-5 5 6"/></svg></span>`;
-    return `<div class="trow canu-row" ondragover="canuRowOver(event,'${p.id}')" ondrop="canuRowDrop(event,'${p.id}')" onclick="openCanvas('${p.id}')">
+    const complete=r.total>0&&r.open===0;const sub=canuOpenSubs[p.id];
+    let out=`<div class="trow canu-row ${complete?'done':''}" ondragover="canuRowOver(event,'${p.id}')" ondrop="canuRowDrop(event,'${p.id}')" onclick="openCanvas('${p.id}')">
       <div class="cell name canu-name">
         <span class="canu-drag" draggable="true" ondragstart="canuDragStart(event,'${p.id}')" ondragend="canuDragEnd(event)" onclick="event.stopPropagation()" title="גרור לשינוי סדר">⠿</span>
+        <svg class="expander ${sub?'open':''}" onclick="event.stopPropagation();toggleCanuSub('${p.id}')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="${r.total?'':'opacity:.25'}" title="הצג פתקים"><path d="M9 6l6 6-6 6"/></svg>
         <span class="canu-idx">${i+1}</span>${thumb}
         <span class="item-name" data-pname="${p.id}" ondblclick="event.stopPropagation();canuRenameRow('${p.id}')" title="דאבל-קליק לשינוי שם">${esc(p.name)}</span>
+        ${complete?`<span class="page-done-badge" title="כל הפתקים הושלמו"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>`:''}
       </div>
       <div class="cell" style="width:170px">${avaStack(asg)}</div>
       <div class="cell" style="width:130px">${prio?`<span class="prio-tag" style="background:${prio.c};color:${pillText(prio.c)}">${tp} · ${prio.t}</span>`:`<span class="cellval muted">—</span>`}</div>
       <div class="cell" style="width:140px">${due?(ovd?`<span class="chip due-over">${esc(due)}</span>`:`<span class="date-val">${esc(due)}</span>`):`<span class="cellval muted">—</span>`}</div>
-      <div class="cell" style="width:190px"><div class="canu-status"><div class="battery" style="width:110px"><span style="width:${pct}%;background:var(--green)"></span></div><span class="canu-roll">${r.done}/${r.total} טופלו</span></div></div>
+      <div class="cell" style="width:190px">${complete?`<span class="page-done"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> הושלמו כל ${r.total}</span>`:`<div class="canu-status"><div class="battery" style="width:110px"><span style="width:${pct}%;background:var(--green)"></span></div><span class="canu-roll">${r.done}/${r.total} טופלו</span></div>`}</div>
       <div class="cell" style="width:110px;gap:13px"><span class="canu-notes" title="פתקים">${r.total}${nIcon}</span>${chatN?`<span class="canu-chatbadge" title="הודעות צ׳אט">${chatN}${cIcon}</span>`:''}</div>
       <div class="cell" style="width:150px" onclick="event.stopPropagation()"><button class="tbtn canu-open" onclick="openCanvas('${p.id}')">פתח קנבס</button><span class="canu-del" onclick="canuDeletePage(event,'${p.id}')" title="מחק עמוד">${trash}</span></div>
-    </div>`;}).join('');
+    </div>`;
+    if(sub){const notes=pageNotes(p);
+      out+=`<div class="subwrap canu-sub">`+(notes.length?notes.map(n=>{const st=nstat(n.status);const pr=PRIO[n.priority]||PRIO.P2;const dn=noteDone(n);
+        return `<div class="subrow canu-subrow" onclick="openCanvasNote('${p.id}','${n.id}')">
+          <div class="canu-subname"><span class="sub-bullet" style="background:${dn?'var(--green)':pr.c}">${dn?'✓':''}</span><span class="sub-txt">${esc(n.text||'(ללא תיאור)')}</span></div>
+          <div class="subcell" style="width:170px">${n.assignee?`<span class="ava" style="background:${avaColor(n.assignee)};margin:0;width:22px;height:22px;font-size:9px" title="${esc(n.assignee)}">${esc(n.assignee[0]||'?')}</span>`:'<span class="ava-empty" style="width:22px;height:22px">+</span>'}</div>
+          <div class="subcell" style="width:130px"><span class="prio-tag" style="background:${pr.c};color:${pillText(pr.c)}">${n.priority||'P2'}</span></div>
+          <div class="subcell" style="width:140px">${n.due?`<span class="date-val">${esc(n.due)}</span>`:'<span class="cellval muted">—</span>'}</div>
+          <div class="subcell" style="width:190px"><span class="nstat-chip" onclick="event.stopPropagation();noteStatusMenu(event,'${p.id}','${n.id}')" style="background:${st.c};color:${pillText(st.c)}" title="שנה סטטוס">${st.t}</span></div>
+        </div>`}).join(''):`<div class="canu-subempty">אין פתקים עדיין — פתחו את הקנבס והוסיפו</div>`)+
+        `<div class="canu-subadd" onclick="openCanvas('${p.id}')">＋ הוסף פתק (בקנבס)</div></div>`;}
+    return out;}).join('');
   return `<div class="canu-wrap">
-    <div class="canu-head"><h2>עמודים לסקירה</h2><span class="canu-sub">${pages.length} עמודים · בעלים/פריוריטי/דדליין מסוכמים מהפתקים · לחצו על עמוד לפתיחה, גררו ⠿ לסידור, דאבל-קליק לשינוי שם</span></div>
+    <div class="canu-head"><h2>עמודים לסקירה</h2><span class="canu-sub-hint">${pages.length} עמודים · בעלים/פריוריטי/דדליין מסוכמים מהפתקים · הרחיבו ▸ לפתקים · דאבל-קליק לשם · גררו ⠿ לסדר</span></div>
     <div class="table canu-table">
       <div class="trow head">
         <div class="cell name">עמוד</div>
@@ -1375,8 +1433,9 @@ function renderCanvas(){
       ?`<video src="${esc(media.url)}" class="art-media" controls onclick="event.stopPropagation()"></video>`
       :`<img src="${esc(media.url)}" class="art-media" alt="">`)
     :`<div class="art-empty" onclick="uploadCanvasMedia()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15l5-4 4 3 4-5 5 6"/></svg>גררו לכאן צילום מסך או וידאו · או לחצו להעלאה</div>`;
-  const pins=pageNotes(p).map((n,i)=>{const pr=PRIO[n.priority]||PRIO.P2;const bg=n.done?'#7DC57A':pr.c;
-    return `<span class="pin ${n.done?'done':''}" data-pin="${n.id}" style="right:${n.x}%;top:${n.y}%;background:${bg};color:${pillText(bg)}" onclick="editNote(event,'${n.id}')" title="${esc(n.text||'פתק')}">${n.done?'✓':(i+1)}</span>`;}).join('');
+  const complete=pageComplete(p);
+  const pins=pageNotes(p).map((n,i)=>{const pr=PRIO[n.priority]||PRIO.P2;const bg=n.done?'#7DC57A':pr.c;const dot=(!n.done&&(n.status==='progress'||n.status==='review'))?`<i class="pin-st" style="background:${nstat(n.status).c}"></i>`:'';
+    return `<span class="pin ${n.done?'done':''}" data-pin="${n.id}" style="right:${n.x}%;top:${n.y}%;background:${bg};color:${pillText(bg)}" onclick="editNote(event,'${n.id}')" title="${esc(n.text||'פתק')}">${n.done?'✓':(i+1)}${dot}</span>`;}).join('');
   const film=b.items.map((pg,i)=>{const m=pg.canvas&&pg.canvas.media&&pg.canvas.media.url;const rr=canuRollup(pg);const col=rr.total&&rr.open===0?'var(--green)':(rr.open?'var(--pink)':'var(--border)');
     return `<div class="film ${pg.id===p.id?'on':''}" draggable="true" ondragstart="canuDragStart(event,'${pg.id}')" ondragover="canuFilmOver(event,'${pg.id}')" ondragleave="this.classList.remove('dragover')" ondrop="canuFilmDrop(event,'${pg.id}')" ondragend="canuDragEnd(event)" onclick="openCanvas('${pg.id}')"><span class="film-badge">${i+1}</span><span class="film-dot" style="background:${col}"></span><span class="film-thumb" style="${m?`background-image:url('${(''+m).replace(/'/g,'%27')}')`:''}"></span><span class="film-name">${esc(pg.name)}</span></div>`;}).join('');
   document.getElementById('canvasView').innerHTML=`
@@ -1388,6 +1447,7 @@ function renderCanvas(){
         <span class="cv-mchip" style="cursor:default" title="בעלים — מסוכם מהפתקים"><span class="mk">בעלים</span>${asg.length?avaStack(asg):'<span style="color:var(--text-xs)">—</span>'}</span>
         <span class="cv-mchip" style="cursor:default"><span class="mk">פריוריטי</span>${prio?`<span class="prio-tag" style="background:${prio.c};color:${pillText(prio.c)}">${tp}</span>`:'<span style="color:var(--text-xs)">—</span>'}</span>
         <span class="cv-mchip" style="cursor:default"><span class="mk">דדליין</span>${due?`<span class="${ovd?'chip due-over':'date-val'}">${esc(due)}</span>`:'<span style="color:var(--text-xs)">—</span>'}</span>
+        ${complete?`<span class="cv-mchip" style="cursor:default;background:rgba(125,197,122,.16);border-color:rgba(125,197,122,.45);color:#2e7d32;font-weight:800"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> הושלם</span>`:''}
         <span class="cv-mchip cv-roll" style="cursor:default"><div class="battery" style="width:90px"><span style="width:${pct}%;background:var(--green)"></span></div><span class="canu-roll">${r.done}/${r.total} טופלו</span></span>
         <button class="cv-back has-badge" onclick="toggleCanuChat()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>צ׳אט${chatN?` <span class="chat-n">${chatN}</span>`:''}</button>
         <button class="cv-back" onclick="uploadCanvasMedia()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M8 7l4-4 4 4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>העלה מדיה</button>
@@ -1466,10 +1526,6 @@ function canuArtClick(e){
 function findNote(id){const p=canuPage(canuPageId);if(!p)return null;return (p.canvas.notes||[]).find(x=>x.id===id)||null;}
 function editNote(e,id){if(e&&e.stopPropagation)e.stopPropagation();const n=findNote(id);if(!n)return;closePop();
   const can=canApproveNote(n);
-  const approveBlock=n.done
-    ? `<div class="note-approved"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> אושר ע״י ${esc(n.doneBy||'—')}${n.doneAt?' · '+fmtTime(n.doneAt):''}</div>`+(can?`<div class="mrow"><button class="btn-reopen" onclick="toggleNoteDone('${id}')">בטל אישור</button></div>`:'')
-    : (can?`<div class="mrow"><button class="btn-approve" onclick="toggleNoteDone('${id}')"><svg viewBox="0 0 24 24" width="15" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> סמן כהושלם</button></div>`
-          :`<div class="note-locked"><svg viewBox="0 0 24 24" width="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> רק ${n.assignee?esc(n.assignee):'האחראי'} או אדמין יכולים לאשר</div>`);
   pop.innerHTML=`<div class="menu-lbl" style="display:flex;align-items:center;gap:6px">פתק תיקון<span class="note-del-x" onclick="deleteNote('${id}')" title="מחק פתק"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></span></div>
     <div class="mrow" style="border:none;margin:0;padding:0"><textarea class="note-txt" id="noteTxt" rows="3" placeholder="תיאור התיקון...  (Enter = שורה חדשה, אפשר פסקה שלמה)" onchange="setNoteText('${id}',this.value)">${esc(n.text)}</textarea></div>
     <div class="menu-lbl" style="margin-top:7px">פריוריטי</div>
@@ -1478,13 +1534,14 @@ function editNote(e,id){if(e&&e.stopPropagation)e.stopPropagation();const n=find
     <div class="mrow" style="border:none;margin:0;padding:0"><input type="date" class="canu-date" style="width:100%" value="${esc(n.due||'')}" onchange="setNoteField('${id}','due',this.value)"></div>
     <div class="menu-lbl" style="margin-top:7px">שיוך (אחראי)</div>
     ${[...new Set(TEAM)].map(nm=>`<div class="popt ${n.assignee===nm?'on':''}" onclick="setNoteField('${id}','assignee','${escA(nm)}')"><span class="ava" style="background:${avaColor(nm)};margin:0">${esc(nm[0]||'?')}</span>${esc(nm)}<svg class="pcheck" viewBox="0 0 24 24" width="15" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>`).join('')}
-    <div class="menu-lbl" style="margin-top:7px">אישור השלמה</div>
-    ${approveBlock}
+    <div class="menu-lbl" style="margin-top:7px">סטטוס</div>
+    <div class="nstat-row">${NSTATUS.map(s=>`<span class="nstat-seg ${(n.status||'open')===s.k?'on':''}" style="--sc:${s.c}" onclick="setNoteStatus('${id}','${s.k}')">${s.t}</span>`).join('')}</div>
+    ${n.done?`<div class="note-approved"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> אושר ע״י ${esc(n.doneBy||'—')}${n.doneAt?' · '+fmtTime(n.doneAt):''}</div>`:(can?'':`<div class="note-locked"><svg viewBox="0 0 24 24" width="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> סימון "הושלם" — רק ${n.assignee?esc(n.assignee):'האחראי'} או אדמין</div>`)}
     <button class="menu-danger" onclick="deleteNote('${id}')">מחק פתק</button>`;
   showPop(e);setTimeout(()=>{const el=document.getElementById('noteTxt');if(el&&!n.text)el.focus()},30);}
 function setNoteText(id,v){const n=findNote(id);if(!n)return;n.text=v;n.at=Date.now();save();}
 function setNoteField(id,f,v){const n=findNote(id);if(!n)return;n[f]=v;n.at=Date.now();save();renderCanvas();editNote({target:document.querySelector('[data-pin="'+id+'"]'),stopPropagation(){}},id);}
-function toggleNoteDone(id){const n=findNote(id);if(!n)return;if(!canApproveNote(n)){toast('אין הרשאה — רק האחראי או אדמין מאשרים');return;}n.done=!n.done;n.doneBy=n.done?currentUser:'';n.doneAt=n.done?Date.now():0;n.at=Date.now();save();renderCanvas();editNote({target:document.querySelector('[data-pin="'+id+'"]'),stopPropagation(){}},id);}
+function toggleNoteDone(id){const n=findNote(id);if(!n)return;setNoteStatus(id, n.done?'open':'done');}
 function deleteNote(id){const p=canuPage(canuPageId);if(!p)return;p.canvas.notes=(p.canvas.notes||[]).filter(x=>x.id!==id);save();closePop();renderCanvas();}
 function applyCanvasFile(f){const p=canuPage(canuPageId);if(!p)return;
   if(/^video\//.test(f.type)){p.canvas.media={kind:'video',url:URL.createObjectURL(f)};save();renderCanvas();toast('וידאו נטען ('+f.name+') — לסשן זה');return;}
@@ -1499,7 +1556,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
 function boot(){renderNav();render();renderUser();document.getElementById('loading').style.display='none'}
 function start(){
   if(!window.SEED||!window.SEED.length){document.getElementById('loading').innerHTML='<div style="color:var(--text-sub);max-width:400px;text-align:center;line-height:1.7">קובץ הנתונים <b>seed.js</b> עדיין לא נוצר.<br>הרץ את שלב הייבוא, ואז רענן.</div>';return}
-  load();ensureCanuBoard();sanitizeCanuMedia();cur=cur||state.order[0];_undoStack.length=0;_lastSaved=JSON.stringify(state);boot();
+  load();ensureCanuBoard();sanitizeCanuMedia();migrateCanuNotes();cur=cur||state.order[0];_undoStack.length=0;_lastSaved=JSON.stringify(state);boot();
 }
 start();
 </script>
