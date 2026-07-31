@@ -281,6 +281,22 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible,[r
 .trow.sel{background:rgba(56,196,242,.07)}
 .trow.sel .cell.name{border-inline-start-color:var(--cyan);background:rgba(56,196,242,.05)}
 @media(max-width:820px){.rowcheck{opacity:.55}.rowmenu{opacity:.55}.colmenu{opacity:.55}}
+/* drag-to-reorder */
+.drag-handle{opacity:0;cursor:grab;color:var(--text-xs);font-size:13px;flex-shrink:0;user-select:none;padding:0 1px;line-height:1}
+.trow:hover .drag-handle{opacity:.55}
+.drag-handle:active{cursor:grabbing}
+.trow.drop-before{box-shadow:inset 0 3px 0 -1px var(--cyan)}
+.trow.dragging{opacity:.4}
+@media(max-width:820px){.drag-handle{display:none}}
+/* saved views */
+.view-chip{display:inline-flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-weight:700;font-size:11.5px;color:var(--text-sub);cursor:pointer}
+.view-chip:hover{border-color:var(--cyan);color:var(--text-main)}
+.view-chip.on{background:var(--cyan);color:#fff;border-color:var(--cyan)}
+.view-chip .vx{opacity:.55;font-size:10px}
+.view-chip .vx:hover{color:var(--pink);opacity:1}
+.view-add{color:var(--cyan);font-weight:700;font-size:11.5px;cursor:pointer;padding:4px 6px;white-space:nowrap}
+/* keyboard cell focus */
+.cell[data-nav]:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px;border-radius:6px}
 .bulkbar{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:75;background:var(--navy);color:#fff;border-radius:14px;box-shadow:0 16px 44px rgba(10,20,40,.4);padding:8px 8px 8px 16px;display:none;align-items:center;gap:7px;max-width:94vw;flex-wrap:wrap}
 .bulkbar.show{display:flex}
 .bulkbar .bcount{font-weight:800;font-size:13px;margin-inline-end:2px}
@@ -535,6 +551,10 @@ function renderFilterBar(){
   const dc=dateColumns();
   h+=`<span class="flabel">מיון</span><div class="fsel"><select onchange="setFilter('sort',this.value)"><option value="">ללא</option><option value="updated" ${filters.sort==='updated'?'selected':''}>שונה לאחרונה</option>${dc.map(c=>`<option value="date:${esc(c.title)}" ${filters.sort==='date:'+c.title?'selected':''}>לפי ${esc(c.title)}</option>`).join('')}</select></div>`;
   if(filters.group||filters.prioVal||filters.person||filters.sort)h+=`<span class="fclear" onclick="clearFilters()">נקה ✕</span>`;
+  const views=b.views||[];
+  h+=`<span class="flabel" style="margin-inline-start:6px">תצוגות</span>`;
+  h+=views.map((v,i)=>`<span class="view-chip ${isActiveView(v)?'on':''}" onclick="applyView(${i})">${esc(v.name)}<span class="vx" onclick="event.stopPropagation();deleteView(event,${i})">✕</span></span>`).join('');
+  h+=`<span class="view-add" onclick="saveView(event)">＋ שמור תצוגה</span>`;
   document.getElementById('filterBar').innerHTML=h;
 }
 function setFilter(k,v){filters[k]=v;render();}
@@ -556,7 +576,7 @@ function sortItems(arr){
 /* ================= Table ================= */
 function renderTable(){
   const b=board(),q=(document.getElementById('search').value||'').trim();
-  let html='',matched=0;
+  let html='',matched=0,navRow=0;
   b.groups.forEach(g=>{
     if(filters.group&&g.id!==filters.group)return;
     let items=b.items.filter(it=>it.groupId===g.id&&(!q||it.name.includes(q))&&passFilters(it));
@@ -580,15 +600,17 @@ function renderTable(){
         </div>`;
     items.forEach(it=>{
       const hasSub=it.subitems&&it.subitems.length, sk=cur+it.id, so=openSubs[sk];
-      html+=`<div class="trow ${selected.has(it.id)?'sel':''}">
-        <div class="cell name">
+      const nrow=navRow++;
+      html+=`<div class="trow ${selected.has(it.id)?'sel':''}" ondragover="rowDragOver(event,'${it.id}')" ondrop="rowDrop(event,'${it.id}')">
+        <div class="cell name" tabindex="-1" data-nav="${nrow},0">
+          <span class="drag-handle" draggable="true" ondragstart="rowDragStart(event,'${it.id}')" ondragend="rowDragEnd(event)" title="גרור לסידור מחדש">⠿</span>
           <input type="checkbox" class="rowcheck" ${selected.has(it.id)?'checked':''} onclick="toggleSelect(event,'${it.id}')" aria-label="בחר פריט">
           <svg class="expander ${so?'open':''}" onclick="toggleSub('${it.id}',event)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="${hasSub||b.subColumns.length?'':'opacity:.25'}"><path d="M9 6l6 6-6 6"/></svg>
           <span class="item-name" data-name="${it.id}" onclick="openDrawer('${it.id}')" ondblclick="event.stopPropagation();openNameEditor('${it.id}')" title="לחיצה כפולה לשינוי שם">${esc(it.name)}</span>
           ${(it.updates&&it.updates.length)?`<span class="upd-badge" onclick="openDrawer('${it.id}')"><svg viewBox="0 0 24 24" width="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>${it.updates.length}</span>`:''}
           <span class="rowmenu" onclick="openRowMenu(event,'${it.id}')" title="פעולות" aria-label="פעולות פריט">⋯</span>
         </div>
-        ${b.columns.map(c=>`<div class="cell" style="width:${colW(c.type)}px" data-cell="${it.id}|${esc(c.title)}">${renderCell(c,it)}</div>`).join('')}
+        ${b.columns.map((c,ci)=>`<div class="cell" style="width:${colW(c.type)}px" data-cell="${it.id}|${esc(c.title)}" tabindex="-1" data-nav="${nrow},${ci+1}">${renderCell(c,it)}</div>`).join('')}
         <div class="cell addcol"></div>
       </div>`;
       if(so){
@@ -603,7 +625,7 @@ function renderTable(){
       }
     });
     html+=groupSummary(items,b);
-    html+=`<div class="g-add" onclick="addItem('${g.id}')"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> הוסף פריט</div>
+    html+=`<div class="g-add" onclick="addItem('${g.id}')" ondragover="event.preventDefault()" ondrop="rowDropToGroup(event,'${g.id}')"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> הוסף פריט</div>
       </div></div>`;
   });
   const active=q||filters.group||filters.prioVal||filters.person;
@@ -645,6 +667,7 @@ function render(){
   document.getElementById('btCnt').textContent=b.items.length+' פריטים';
   document.getElementById('stage').innerHTML=view==='table'?renderTable():view==='kanban'?renderKanban():renderCalendar();
   renderBulkBar();
+  if(view==='table'){const nf=document.querySelector('[data-nav="'+navFocus+'"]')||document.querySelector('[data-nav]');if(nf)nf.setAttribute('tabindex','0');}
   if(pendingEditId){const id=pendingEditId;pendingEditId=null;openNameEditor(id);}
   else if(pendingEditGroup){const gid=pendingEditGroup;pendingEditGroup=null;openGroupNameEditor(gid);}
 }
@@ -900,6 +923,41 @@ function renderCalendar(){
     <div class="cal-grid">${dow.map(d=>`<div class="cal-dow">${d}</div>`).join('')}${cells}</div>
     ${undated?`<div class="cal-nodate">${undated} פריטים ללא ${esc(dc.title)} — לא מוצגים בלוח</div>`:''}
   </div>`;}
+
+/* ===== Drag-to-reorder rows (within & across groups) ===== */
+let dragRowId=null;
+function rowDragStart(e,id){dragRowId=id;e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',id)}catch(_){}
+  const row=e.target.closest('.trow');if(row)setTimeout(()=>row.classList.add('dragging'),0)}
+function rowDragEnd(){dragRowId=null;document.querySelectorAll('.trow.drop-before,.trow.dragging').forEach(r=>r.classList.remove('drop-before','dragging'))}
+function rowDragOver(e,id){if(!dragRowId||id===dragRowId)return;e.preventDefault();e.dataTransfer.dropEffect='move';const row=e.currentTarget;
+  document.querySelectorAll('.trow.drop-before').forEach(r=>{if(r!==row)r.classList.remove('drop-before')});row.classList.add('drop-before')}
+function rowDrop(e,id){e.preventDefault();const drg=dragRowId;rowDragEnd();if(!drg||id===drg)return;const b=board();
+  const from=b.items.findIndex(x=>x.id===drg);if(from<0)return;const drag=b.items[from];const target=b.items.find(x=>x.id===id);if(!target)return;
+  b.items.splice(from,1);let ti=b.items.findIndex(x=>x.id===id);if(ti<0)ti=b.items.length;drag.groupId=target.groupId;drag.updatedAt=Date.now();b.items.splice(ti,0,drag);
+  if(filters.sort&&filters.sort.startsWith('col:')){filters.sort='';toast('הסדר עודכן (המיון בוטל)')}else toast('הסדר עודכן');save();render()}
+function rowDropToGroup(e,gid){e.preventDefault();const drg=dragRowId;rowDragEnd();if(!drg)return;const b=board();const from=b.items.findIndex(x=>x.id===drg);if(from<0)return;
+  const drag=b.items[from];b.items.splice(from,1);drag.groupId=gid;drag.updatedAt=Date.now();b.items.push(drag);save();render();toast('הפריט הועבר')}
+
+/* ===== Saved filter views (per board) ===== */
+function isActiveView(v){return (v.filters.group||'')===filters.group&&(v.filters.prioVal||'')===(filters.prioVal||'')&&(v.filters.person||'')===(filters.person||'')&&(v.sort||'')===(filters.sort||'')&&(v.view||'table')===view}
+function saveView(e){e.stopPropagation();closePop();pop.innerHTML=`<div class="menu-lbl">שמור תצוגה נוכחית</div><div class="mrow" style="border:none;margin:0;padding:0;flex-direction:column;gap:6px"><input id="viewName" placeholder="שם התצוגה..." onkeydown="if(event.key==='Enter')doSaveView()"><button onclick="doSaveView()" style="width:100%;padding:8px">שמור</button></div>`;showPop(e);setTimeout(()=>{const el=document.getElementById('viewName');el&&el.focus()},30)}
+function doSaveView(){const el=document.getElementById('viewName');const nm=(el&&el.value||'').trim();if(!nm)return;const b=board();b.views=b.views||[];b.views.push({name:nm,filters:{group:filters.group,prioVal:filters.prioVal,person:filters.person},sort:filters.sort,sortDir:filters.sortDir,view});save();render();closePop();toast('התצוגה נשמרה')}
+function applyView(i){const v=(board().views||[])[i];if(!v)return;filters={group:v.filters.group||'',prioCol:filters.prioCol,prioVal:v.filters.prioVal||'',person:v.filters.person||'',sort:v.sort||'',sortDir:v.sortDir||1};view=v.view||'table';document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('active',x.dataset.view===view));render()}
+function deleteView(e,i){e.stopPropagation();const b=board();if(b.views){b.views.splice(i,1);save();render();toast('התצוגה נמחקה')}}
+
+/* ===== Keyboard grid navigation (table view) ===== */
+let navFocus='0,0';
+function activateCell(el){const t=el.querySelector('.pill,.chip,.cellval,.people,.link-btn,.file-btn,.item-name,.upd-auto,.ava-empty');if(t)t.click();}
+document.addEventListener('keydown',e=>{
+  if(view!=='table')return;const el=document.activeElement;if(!el||!el.dataset||!el.dataset.nav)return;
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Enter',' '].indexOf(e.key)<0)return;
+  const parts=el.dataset.nav.split(',');let r=+parts[0],c=+parts[1];
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();activateCell(el);return;}
+  e.preventDefault();
+  if(e.key==='ArrowUp')r--;else if(e.key==='ArrowDown')r++;else if(e.key==='ArrowRight')c--;else if(e.key==='ArrowLeft')c++;
+  const tgt=document.querySelector('[data-nav="'+r+','+c+'"]');
+  if(tgt){el.setAttribute('tabindex','-1');tgt.setAttribute('tabindex','0');tgt.focus();navFocus=r+','+c;}
+});
 function addSub(itemId){const{it}=findItem(itemId);it.subitems=it.subitems||[];const s={id:uid('s'),name:'תת-משימה חדשה',cells:{}};it.subitems.push(s);openSubs[cur+itemId]=true;pendingEditId=s.id;save();render()}
 function addGroup(){const b=board();const g={id:uid('g'),name:'קבוצה חדשה',color:PALETTE[b.groups.length%PALETTE.length]};b.groups.push(g);pendingEditGroup=g.id;save();render()}
 function addBoard(){const key=uid('b');state.boards[key]={key,name:'בורד חדש',color:PALETTE[state.order.length%PALETTE.length],columns:[{id:uid('c'),title:'סטטוס',type:'status'},{id:uid('c'),title:'אחראי',type:'person'}],subColumns:[],groups:[{id:uid('g'),name:'כללי',color:'#38C4F2'}],items:[]};state.order.push(key);cur=key;save();renderNav();render();toast('בורד נוצר')}
