@@ -497,18 +497,23 @@ body.canvas-board #viewSeg,body.canvas-board #colBtn{display:none}
 [data-theme="dark"] .note-approved{color:#9cd39a}
 .note-locked{display:flex;align-items:center;gap:6px;background:var(--surface-2);color:var(--text-sub);border:1px dashed var(--border);border-radius:9px;padding:8px 10px;font-weight:600;font-size:11.5px}
 .cv-work{position:relative}
-.cv-tools{position:absolute;top:16px;inset-inline-end:16px;z-index:6;display:flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:6px;box-shadow:0 8px 26px rgba(37,62,122,.16)}
+.cv-tools{position:absolute;top:14px;left:10px;z-index:6;display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:6px;box-shadow:0 8px 26px rgba(37,62,122,.16)}
 .ctool{width:34px;height:34px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--text-sub);display:grid;place-items:center;cursor:pointer}
 .ctool:hover{background:var(--surface-2);color:var(--text-main)}
 .ctool.on{background:var(--navy);color:#fff}
 .ctool svg{width:17px;height:17px}
-.ctool-sep{width:1px;height:22px;background:var(--border);margin:0 2px}
+.ctool-sep{width:22px;height:1px;background:var(--border);margin:2px 0}
+.btab.tab-drop{border-color:var(--cyan)!important;box-shadow:0 0 0 2px rgba(56,196,242,.35)}
+.nav-item.tab-drop{box-shadow:inset 0 0 0 2px var(--cyan)}
+.btab[draggable],.nav-item[draggable]{cursor:pointer}
+.note-del-x{margin-inline-start:auto;cursor:pointer;color:var(--text-xs);width:24px;height:24px;border-radius:6px;display:grid;place-items:center}
+.note-del-x:hover{background:rgba(240,86,128,.13);color:var(--pink)}
 .cswatch{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--border)}
 .cswatch.on{box-shadow:0 0 0 2px var(--text-main)}
 .draw-layer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
 .artboard.drawmode .draw-layer{pointer-events:auto;cursor:crosshair}
 .artboard .pin{z-index:2}
-@media(max-width:820px){.cv-tools{top:8px;inset-inline-end:8px;padding:4px;gap:3px}.ctool{width:30px;height:30px}}
+@media(max-width:820px){.cv-tools{top:8px;left:8px;padding:4px;gap:3px}.ctool{width:30px;height:30px}}
 </style>
 </head>
 <body>
@@ -575,7 +580,9 @@ const FILE_RE=/^זיפ$|zip|קובץ|attachment/i;
 function heDate(ts){if(!ts)return'';const d=new Date(ts);return isNaN(d)?'':d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit',year:'numeric'})}
 
 function uid(p){return p+Math.random().toString(36).slice(2,8)}
-function save(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
+let _undoStack=[],_lastSaved=null,_restoring=false;
+function save(){try{const cur=JSON.stringify(state);if(!_restoring&&_lastSaved!==null&&_lastSaved!==cur){_undoStack.push(_lastSaved);if(_undoStack.length>30)_undoStack.shift();}_lastSaved=cur;localStorage.setItem(LS,cur);}catch(e){}}
+function undoLast(){if(!_undoStack.length){toast('אין פעולה לבטל');return;}const prev=_undoStack.pop();try{const restored=JSON.parse(prev);_restoring=true;state=restored;_lastSaved=prev;localStorage.setItem(LS,prev);_restoring=false;if(!state.boards[cur])cur=state.order[0];renderNav();render();renderUser();if(document.getElementById('canvasView').classList.contains('open'))renderCanvas();toast('הפעולה בוטלה');}catch(e){_restoring=false;}}
 function normalize(raw){
   // raw = array of board objects from seed
   const boards={},order=[];
@@ -697,7 +704,7 @@ function colIcon(t){return `<svg class="cti" viewBox="0 0 24 24" fill="none" str
 /* ================= Tabs + Filters ================= */
 function renderTabs(){
   document.getElementById('boardTabs').innerHTML=state.order.map(k=>{const b=state.boards[k];
-    return `<div class="btab ${k===cur?'active':''}" onclick="selectBoard('${k}')" oncontextmenu="openBoardMenu(event,'${k}')" ondblclick="openBoardMenu(event,'${k}')" title="קליק ימני/כפול לעריכת הבורד"><span class="bd" style="background:${b.color}"></span>${esc(b.name)}<span class="bcnt">${b.items.length}</span></div>`}).join('')
+    return `<div class="btab ${k===cur?'active':''}" draggable="true" ondragstart="boardDragStart(event,'${k}')" ondragover="boardDragOver(event,'${k}')" ondragleave="this.classList.remove('tab-drop')" ondrop="boardDrop(event,'${k}')" ondragend="boardDragEnd(event)" onclick="selectBoard('${k}')" oncontextmenu="openBoardMenu(event,'${k}')" ondblclick="openBoardMenu(event,'${k}')" title="גרור לשינוי סדר · קליק ימני/כפול לעריכה"><span class="bd" style="background:${b.color}"></span>${esc(b.name)}<span class="bcnt">${b.items.length}</span></div>`}).join('')
     +`<div class="btab add" onclick="addBoard()"><svg viewBox="0 0 24 24" width="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> בורד</div>`;
 }
 function distinctPeople(){const pc=board().columns.find(c=>c.type==='person');if(!pc)return[];const s=new Set();board().items.forEach(it=>{const v=it.cells[pc.title];if(v)(''+v).split(/[,،]/).forEach(n=>{n=n.trim();if(n)s.add(n)})});return[...s].sort();}
@@ -841,10 +848,16 @@ function render(){
 }
 function renderNav(){
   document.getElementById('navBoards').innerHTML=state.order.map(k=>{const b=state.boards[k];
-    return `<div class="nav-item ${k===cur?'active':''}" onclick="selectBoard('${k}')" oncontextmenu="openBoardMenu(event,'${k}')"><span class="bdot" style="background:${b.color}"></span>${esc(b.name)}<span class="bc">${b.items.length}</span></div>`}).join('')
+    return `<div class="nav-item ${k===cur?'active':''}" draggable="true" ondragstart="boardDragStart(event,'${k}')" ondragover="boardDragOver(event,'${k}')" ondragleave="this.classList.remove('tab-drop')" ondrop="boardDrop(event,'${k}')" ondragend="boardDragEnd(event)" onclick="selectBoard('${k}')" oncontextmenu="openBoardMenu(event,'${k}')" title="גרור לשינוי סדר"><span class="bdot" style="background:${b.color}"></span>${esc(b.name)}<span class="bc">${b.items.length}</span></div>`}).join('')
     +`<div class="nav-item" onclick="addBoard()" style="color:rgba(255,255,255,.4)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> בורד חדש</div>`;
 }
 function selectBoard(k){closePop();closeCanvas(true);selected.clear();cur=k;filters={group:'',prioCol:'',prioVal:'',person:'',sort:'',sortDir:1};document.body.classList.remove('nav-open');renderNav();render()}
+/* ===== reorder boards (drag tabs / sidebar) ===== */
+let boardDragKey=null;
+function boardDragStart(e,k){boardDragKey=k;e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',k)}catch(_){}}
+function boardDragOver(e,k){if(!boardDragKey||k===boardDragKey)return;e.preventDefault();e.currentTarget.classList.add('tab-drop')}
+function boardDragEnd(){boardDragKey=null;document.querySelectorAll('.tab-drop').forEach(x=>x.classList.remove('tab-drop'))}
+function boardDrop(e,k){e.preventDefault();const from=boardDragKey;boardDragEnd();if(!from||from===k)return;const arr=state.order;const fi=arr.indexOf(from),to=arr.indexOf(k);if(fi<0||to<0)return;arr.splice(fi,1);let ti=arr.indexOf(k);if(fi<to)ti+=1;arr.splice(ti,0,from);save();renderNav();render();toast('סדר הבורדים עודכן')}
 function setView(v){closePop();view=v;document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));render()}
 function toggleGroup(id){const k=cur+id;collapsed[k]=!collapsed[k];render()}
 function toggleSub(id,e){e.stopPropagation();const k=cur+id;openSubs[k]=!openSubs[k];render()}
@@ -1229,6 +1242,8 @@ document.getElementById('themeBtn').onclick=()=>{const h=document.documentElemen
   document.getElementById('themeIcon').outerHTML=d?`<svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`:`<svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>`};
 // Escape closes popover first, then drawer
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(pop.classList.contains('open')){closePop();}else if(document.getElementById('drawer').classList.contains('open')){closeDrawer();}}});
+// Ctrl/Cmd+Z — undo last action (skip while typing so native text-undo still works)
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&(e.key==='z'||e.key==='Z')&&!e.shiftKey&&!e.altKey){const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;e.preventDefault();undoLast();}});
 function toast(msg,action){const t=document.createElement('div');t.className='toast';t.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>${esc(msg)}</span>`;
   if(action){const btn=document.createElement('button');btn.className='toast-undo';btn.textContent=action.label;btn.onclick=()=>{action.fn();t.remove()};t.appendChild(btn)}
   document.getElementById('toasts').appendChild(t);const dur=action?5200:2600;setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-30px)';t.style.transition='.3s';setTimeout(()=>t.remove(),300)},dur)}
@@ -1455,7 +1470,7 @@ function editNote(e,id){if(e&&e.stopPropagation)e.stopPropagation();const n=find
     ? `<div class="note-approved"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> אושר ע״י ${esc(n.doneBy||'—')}${n.doneAt?' · '+fmtTime(n.doneAt):''}</div>`+(can?`<div class="mrow"><button class="btn-reopen" onclick="toggleNoteDone('${id}')">בטל אישור</button></div>`:'')
     : (can?`<div class="mrow"><button class="btn-approve" onclick="toggleNoteDone('${id}')"><svg viewBox="0 0 24 24" width="15" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> סמן כהושלם</button></div>`
           :`<div class="note-locked"><svg viewBox="0 0 24 24" width="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> רק ${n.assignee?esc(n.assignee):'האחראי'} או אדמין יכולים לאשר</div>`);
-  pop.innerHTML=`<div class="menu-lbl">פתק תיקון</div>
+  pop.innerHTML=`<div class="menu-lbl" style="display:flex;align-items:center;gap:6px">פתק תיקון<span class="note-del-x" onclick="deleteNote('${id}')" title="מחק פתק"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></span></div>
     <div class="mrow" style="border:none;margin:0;padding:0"><textarea class="note-txt" id="noteTxt" rows="3" placeholder="תיאור התיקון...  (Enter = שורה חדשה, אפשר פסקה שלמה)" onchange="setNoteText('${id}',this.value)">${esc(n.text)}</textarea></div>
     <div class="menu-lbl" style="margin-top:7px">פריוריטי</div>
     <div class="prio-row">${Object.keys(PRIO).map(k=>`<span class="prio-chip ${n.priority===k?'on':''}" style="--pc:${PRIO[k].c}" onclick="setNoteField('${id}','priority','${k}')">${k}</span>`).join('')}</div>
@@ -1484,7 +1499,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
 function boot(){renderNav();render();renderUser();document.getElementById('loading').style.display='none'}
 function start(){
   if(!window.SEED||!window.SEED.length){document.getElementById('loading').innerHTML='<div style="color:var(--text-sub);max-width:400px;text-align:center;line-height:1.7">קובץ הנתונים <b>seed.js</b> עדיין לא נוצר.<br>הרץ את שלב הייבוא, ואז רענן.</div>';return}
-  load();ensureCanuBoard();moveCanuFirst();sanitizeCanuMedia();cur=cur||state.order[0];boot();
+  load();ensureCanuBoard();sanitizeCanuMedia();cur=cur||state.order[0];_undoStack.length=0;_lastSaved=JSON.stringify(state);boot();
 }
 start();
 </script>
