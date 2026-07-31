@@ -234,6 +234,20 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible,[r
 .due-over{background:rgba(240,86,128,.14)!important;color:var(--pink)!important;border:1px solid rgba(240,86,128,.35)!important;font-weight:700}
 .due-today{background:rgba(234,214,84,.2)!important;color:#9a7d00!important;border:1px solid rgba(234,214,84,.55)!important;font-weight:700}
 [data-theme="dark"] .due-today{color:#ecd94e!important}
+/* ---- data-grid refinement: quiet empties, clean dates, tabular figures ---- */
+.cellval{font-variant-numeric:tabular-nums}
+.cellval.muted{opacity:.35;font-weight:500}
+.trow:not(.head):hover .cellval.muted{opacity:.6;color:var(--cyan)}
+.date-val{font-variant-numeric:tabular-nums;font-weight:600;font-size:12px;color:var(--text-main);cursor:text;letter-spacing:.2px}
+.trow:not(.head):hover .date-val{color:var(--cyan)}
+.chip{background:var(--surface-2);font-variant-numeric:tabular-nums}
+/* empty status pill: quiet ghost, not a heavy dashed box */
+.pill.empty{background:transparent;border:1px dashed var(--border);color:var(--text-xs);min-width:0;padding:3px 11px;box-shadow:none;opacity:.5;font-weight:600}
+.trow:not(.head):hover .pill.empty{opacity:1;border-color:var(--cyan);color:var(--cyan)}
+/* number cells right-weighted, tabular */
+.cell [class*="cellval"]{letter-spacing:0}
+/* neutral / "unknown" status recedes into a soft chip */
+.pill.neutral{background:var(--surface-2);box-shadow:none;border:1px solid var(--border);font-weight:600}
 /* group summary battery */
 .gsummary{display:flex;align-items:center;gap:14px;padding:8px 12px;border-top:1px dashed var(--border);background:var(--surface-2);font-size:11px;color:var(--text-sub);flex-wrap:wrap}
 .gs-count{font-weight:700}
@@ -497,12 +511,13 @@ function renderCell(col,item,scope){
   const path=`'${item.id}','${escA(col.title)}','${scope||'item'}'`;
   switch(col.type){
     case 'status':
-      if(v&&v.label)return `<span class="pill" style="background:${v.color||'#c4c4c4'};color:${pillText(v.color)}" onclick="openStatus(event,${path})">${esc(v.label)}</span>`;
+      if(v&&v.label){const neu=isNeutral(v.color);return `<span class="pill${neu?' neutral':''}" style="${neu?'color:var(--text-sub)':'background:'+(v.color||'#c4c4c4')+';color:'+pillText(v.color)}" onclick="openStatus(event,${path})">${esc(v.label)}</span>`;}
       return `<span class="pill empty" onclick="openStatus(event,${path})">—</span>`;
     case 'person':return `<span onclick="openPeople(event,${path})" style="cursor:pointer">${personCell(v)}</span>`;
     case 'date':{if(!v)return `<span class="cellval muted" onclick="editText(event,${path},'date')">—</span>`;
-      let cls='chip';const ts=parseHeDate(v);if(ts){const t0=new Date();t0.setHours(0,0,0,0);const d0=new Date(ts);d0.setHours(0,0,0,0);const diff=Math.round((d0-t0)/86400000);const sc=board().columns.find(c=>c.type==='status');const st=sc&&item.cells[sc.title];const done=st&&st.label&&/done|בוצע|הושלם|הסתיים|✓/i.test(st.label);if(!done&&diff<0)cls='chip due-over';else if(!done&&diff===0)cls='chip due-today';}
-      return `<span class="${cls}" onclick="editText(event,${path},'date')">${esc(v)}</span>`;}
+      let due='';const ts=parseHeDate(v);if(ts){const t0=new Date();t0.setHours(0,0,0,0);const d0=new Date(ts);d0.setHours(0,0,0,0);const diff=Math.round((d0-t0)/86400000);const sc=board().columns.find(c=>c.type==='status');const st=sc&&item.cells[sc.title];const done=st&&st.label&&/done|בוצע|הושלם|הסתיים|✓/i.test(st.label);if(!done&&diff<0)due='due-over';else if(!done&&diff===0)due='due-today';}
+      if(due)return `<span class="chip ${due}" onclick="editText(event,${path},'date')">${esc(v)}</span>`;
+      return `<span class="date-val" onclick="editText(event,${path},'date')">${esc(v)}</span>`;}
     case 'updated':{const ts=item.updatedAt;return ts?`<span class="upd-auto" title="מתעדכן אוטומטית"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg>${esc(heDate(ts))}</span>`:`<span class="cellval muted">—</span>`;}
     case 'file':{const url=v&&(v.url||v);let t=(v&&v.text&&v.text!=='פתח')?v.text:'';
       if(!t&&url){try{const u=new URL(url);t=decodeURIComponent(u.pathname.split('/').filter(Boolean).pop()||'')}catch(_){t=''}}
@@ -692,6 +707,7 @@ function undo(){if(!_undo)return;state=_undo;_undo=null;if(!state.boards[cur])cu
 function toastUndo(msg){toast(msg,{label:'בטל',fn:undo})}
 
 /* ===== Contrast: dark text on light pills ===== */
+function isNeutral(c){c=(''+(c||'')).replace('#','');if(c.length<6)return true;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16);return (Math.max(r,g,b)-Math.min(r,g,b))<22}
 function pillText(bg){bg=(''+(bg||'#c4c4c4')).replace('#','');if(bg.length===3)bg=bg.split('').map(c=>c+c).join('');if(bg.length<6)return '#fff';const f=i=>parseInt(bg.slice(i,i+2),16)/255;const lin=x=>x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4);const L=.2126*lin(f(0))+.7152*lin(f(2))+.0722*lin(f(4));return L>.42?'#1a2f5e':'#fff'}
 
 /* ===== Item lifecycle: rename / delete / duplicate / move ===== */
