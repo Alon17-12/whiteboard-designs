@@ -624,7 +624,7 @@ function heDate(ts){if(!ts)return'';const d=new Date(ts);return isNaN(d)?'':d.to
 function uid(p){return p+Math.random().toString(36).slice(2,8)}
 let _undoStack=[],_lastSaved=null,_restoring=false;
 function save(){try{const cur=JSON.stringify(state);if(!_restoring&&_lastSaved!==null&&_lastSaved!==cur){_undoStack.push(_lastSaved);if(_undoStack.length>30)_undoStack.shift();}_lastSaved=cur;localStorage.setItem(LS,cur);}catch(e){}}
-function undoLast(){if(!_undoStack.length){toast('אין פעולה לבטל');return;}const prev=_undoStack.pop();try{const restored=JSON.parse(prev);_restoring=true;state=restored;_lastSaved=prev;localStorage.setItem(LS,prev);_restoring=false;if(!state.boards[cur])cur=state.order[0];renderNav();render();renderUser();if(document.getElementById('canvasView').classList.contains('open'))renderCanvas();toast('הפעולה בוטלה');}catch(e){_restoring=false;}}
+function undoLast(){if(!_undoStack.length){toast('אין פעולה לבטל');return;}const prev=_undoStack.pop();try{const restored=JSON.parse(prev);_restoring=true;state=restored;_lastSaved=prev;localStorage.setItem(LS,prev);_restoring=false;if(!state.boards[cur])cur=state.order[0];closeDrawer();renderNav();render();renderUser();if(document.getElementById('canvasView').classList.contains('open')){const p=canuPage(canuPageId);if(p)renderCanvas();else closeCanvas(true);}toast('הפעולה בוטלה');}catch(e){_restoring=false;}}
 function normalize(raw){
   // raw = array of board objects from seed
   const boards={},order=[];
@@ -674,7 +674,10 @@ function load(){
       state.order.forEach(k=>applySchema(state.boards[k]));
       syncRoster();save();
       return;
-    }catch(e){}
+    }catch(e){
+      // corrupt/partial state → don't silently wipe: keep the raw string as a recoverable backup
+      try{localStorage.setItem(LS+'.bak',saved);setTimeout(()=>toast('הנתונים היו פגומים — שוחזר מקור. גיבוי נשמר'),400);}catch(_){}
+    }
   }
   state=normalize(window.SEED||[]);
   syncRoster();save();
@@ -725,7 +728,7 @@ function renderCell(col,item,scope){
       t=t||'פתח';if(t.length>24)t=t.slice(0,24)+'…';
       return url?`<a class="link-btn" href="${esc(safeUrl(url))}" target="_blank" rel="noopener" title="${esc(url)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>${esc(t)}</a>`:`<span class="cellval muted" onclick="editText(event,${path})">—</span>`;}
     case 'dropdown':return v?`<span class="chip" onclick="openDropdown(event,${path})">${esc(v)}</span>`:`<span class="cellval muted" onclick="openDropdown(event,${path})">—</span>`;
-    default:return v?`<span class="cellval" onclick="editText(event,${path})">${esc(v)}</span>`:`<span class="cellval muted" onclick="editText(event,${path})">—</span>`;
+    default:{const dv=(v&&typeof v==='object')?(v.label||v.text||v.url||''):v;return dv?`<span class="cellval" onclick="editText(event,${path})">${esc(dv)}</span>`:`<span class="cellval muted" onclick="editText(event,${path})">—</span>`;}
   }
 }
 function colW(t){return {name:'c-name',status:150,person:120,date:118,updated:150,dropdown:130,number:100,link:170,file:150,text:220}[t]||150}
@@ -865,7 +868,7 @@ function renderKanban(){
     const color=cols[k]||'#c4c4c4';
     return `<div class="kcol" style="border-top-color:${color}"><div class="kcol-head"><span class="kdot" style="background:${color}"></span><span class="ktitle">${esc(k)}</span><span class="kcnt">${buckets[k].length}</span></div>
       <div class="kcards" ondragover="event.preventDefault()" ondrop="drop(event,'${escA(k)}','${escA(sc.title)}')">
-        ${buckets[k].map(it=>{const g=groupById(it.groupId);return `<div class="kcard" draggable="true" style="border-inline-start-color:${g.color}" ondragstart="drag(event,'${it.id}')" onclick="openDrawer('${it.id}')">
+        ${buckets[k].map(it=>{const g=groupById(it.groupId)||{color:'#c4c4c4',name:'—'};return `<div class="kcard" draggable="true" style="border-inline-start-color:${g.color}" ondragstart="drag(event,'${it.id}')" onclick="openDrawer('${it.id}')">
           <div class="kname">${esc(it.name)}</div>
           <div class="kmeta"><span class="kgroup-tag" style="color:${g.color}">${esc(g.name)}</span>${personCell(it.cells[(board().columns.find(c=>c.type==='person')||{}).title])}</div></div>`}).join('')}
         <div class="kadd" onclick="addKanbanCard('${escA(k)}','${escA(sc.title)}')">＋ כרטיס</div>
@@ -909,10 +912,12 @@ function findItem(id){const b=board();let it=b.items.find(x=>x.id===id);if(it)re
 function setCell(id,col,val){const{it}=findItem(id);if(!it)return;if(val===''||val==null)delete it.cells[col];else it.cells[col]=val;it.updatedAt=Date.now();save();render()}
 
 /* ===== Undo (snapshot-based; no confirm dialogs) ===== */
-let _undo=null;
-function snapshot(){try{_undo=JSON.parse(JSON.stringify(state))}catch(e){_undo=null}}
-function undo(){if(!_undo)return;state=_undo;_undo=null;if(!state.boards[cur])cur=state.order[0];save();renderNav();render();toast('הפעולה בוטלה')}
-function toastUndo(msg){toast(msg,{label:'בטל',fn:undo})}
+// unified undo: save() already snapshots the pre-mutation state onto _undoStack, so the toast
+// "בטל" button and Ctrl+Z share ONE stack. (Was: a separate full-state _undo that reverted
+// interim edits made during the 5s toast window, and desynced from Ctrl+Z.)
+function snapshot(){/* no-op kept for call-site compatibility; save() handles undo capture */}
+function undo(){undoLast()}
+function toastUndo(msg){toast(msg,{label:'בטל',fn:undoLast})}
 
 /* ===== Contrast: dark text on light pills ===== */
 function isNeutral(c){c=(''+(c||'')).replace('#','');if(c.length<6)return true;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16);return (Math.max(r,g,b)-Math.min(r,g,b))<22}
@@ -979,7 +984,7 @@ function exportCSV(){const b=board();const cols=b.columns;const cellStr=v=>{if(v
   b.groups.forEach(g=>b.items.filter(it=>it.groupId===g.id).forEach(it=>rows.push([g.name,it.name,...cols.map(c=>cellStr(it.cells[c.title]))])));
   const csv='﻿'+rows.map(r=>r.map(c=>`"${(''+c).replace(/"/g,'""')}"`).join(',')).join('\r\n');
   dl(new Blob([csv],{type:'text/csv'}),(b.name||'board')+'.csv');toast('יוצא כ-CSV')}
-function importJSON(){const inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';inp.onchange=()=>{const f=inp.files&&inp.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(d&&d.boards&&d.order){snapshot();state=d;cur=state.order[0];syncRoster();save();renderNav();render();toastUndo('הנתונים יובאו')}else toast('קובץ לא תקין')}catch(_){toast('שגיאה בקריאת הקובץ')}};rd.readAsText(f)};inp.click()}
+function importJSON(){const inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';inp.onchange=()=>{const f=inp.files&&inp.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(d&&d.boards&&d.order){state=d;cur=state.order[0];syncRoster();ensureCanuBoard();sanitizeCanuMedia();migrateCanuNotes();repairOrphanGroups();save();renderNav();render();toastUndo('הנתונים יובאו')}else toast('קובץ לא תקין')}catch(_){toast('שגיאה בקריאת הקובץ')}};rd.readAsText(f)};inp.click()}
 function openExport(e){if(e&&e.stopPropagation)e.stopPropagation();closePop();
   pop.innerHTML=`<div class="menu-lbl">ייצוא / ייבוא</div>
     <div class="rowopt" onclick="exportJSON();closePop()">⬇ ייצוא JSON (גיבוי מלא)</div>
@@ -1001,7 +1006,9 @@ function openBoardMenu(e,key){e.preventDefault();e.stopPropagation();closePop();
 function saveBoard(key){const bd=state.boards[key];if(!bd)return;const nv=document.getElementById('bdName').value.trim();if(nv)bd.name=nv;save();renderNav();render();closePop();toast('הבורד עודכן')}
 function setBoardColor(key,c){const bd=state.boards[key];if(!bd)return;bd.color=c;save();renderNav();render();document.querySelectorAll('#popover .swatch').forEach(s=>s.classList.toggle('on',s.dataset.c===c))}
 function duplicateBoard(key){const src=state.boards[key];if(!src)return;const nk=uid('b');const clone=JSON.parse(JSON.stringify(src));clone.key=nk;clone.name=(clone.name||'')+' (עותק)';
-  clone.groups.forEach(g=>{const old=g.id;g.id=uid('g');clone.items.forEach(it=>{if(it.groupId===old)it.groupId=g.id})});
+  const gmap={};clone.groups.forEach(g=>{const old=g.id;g.id=uid('g');gmap[old]=g.id;clone.items.forEach(it=>{if(it.groupId===old)it.groupId=g.id})});
+  // remap group refs inside saved views too, else a cloned view filters by a now-nonexistent group id
+  (clone.views||[]).forEach(v=>{if(v&&v.filters&&v.filters.group&&gmap[v.filters.group])v.filters.group=gmap[v.filters.group];});
   clone.columns.forEach(c=>c.id=uid('c'));(clone.subColumns||[]).forEach(c=>c.id=uid('sc'));
   clone.items.forEach(it=>{it.id=uid('i');(it.subitems||[]).forEach(s=>s.id=uid('s'))});
   state.boards[nk]=clone;const idx=state.order.indexOf(key);state.order.splice(idx+1,0,nk);cur=nk;save();renderNav();render();toast('הבורד שוכפל')}
@@ -1083,9 +1090,11 @@ function openColMenu(e,id){e.stopPropagation();closePop();const c=board().column
 }
 function saveCol(id){const b=board();const c=b.columns.find(x=>x.id===id);if(!c)return;
   const nt=document.getElementById('colName').value.trim();const ty=document.getElementById('colType').value;
-  if(nt&&nt!==c.title){b.items.forEach(it=>{if(it.cells&&it.cells[c.title]!==undefined){it.cells[nt]=it.cells[c.title];delete it.cells[c.title];}});c.title=nt;}
+  if(nt&&nt!==c.title){
+    if(b.columns.some(x=>x.id!==id&&x.title===nt)){toast('כבר קיימת עמודה בשם זה — השינוי היה דורס את נתוניה');return;} // renaming onto an existing title would overwrite its cells
+    b.items.forEach(it=>{if(it.cells&&it.cells[c.title]!==undefined){it.cells[nt]=it.cells[c.title];delete it.cells[c.title];}});c.title=nt;}
   c.type=ty;if(ty==='updated')applySchema(b);save();render();closePop();toast('העמודה עודכנה');}
-function deleteColumn(id){const b=board();const c=b.columns.find(x=>x.id===id);if(!c)return;b.columns=b.columns.filter(x=>x.id!==id);b.items.forEach(it=>{if(it.cells)delete it.cells[c.title];});save();render();closePop();toast('העמודה נמחקה');}
+function deleteColumn(id){const b=board();const c=b.columns.find(x=>x.id===id);if(!c)return;b.columns=b.columns.filter(x=>x.id!==id);b.items.forEach(it=>{if(it.cells)delete it.cells[c.title];});save();render();closePop();toastUndo('העמודה נמחקה');}
 
 /* ===== Group menu — rename / recolor / delete (items move, never lost) ===== */
 function openGroupMenu(e,gid){e.stopPropagation();closePop();const g=groupById(gid);if(!g)return;
@@ -1100,7 +1109,7 @@ function openGroupMenu(e,gid){e.stopPropagation();closePop();const g=groupById(g
 }
 function saveGroup(gid){const g=groupById(gid);if(!g)return;const nv=document.getElementById('grpName').value.trim();if(nv)g.name=nv;save();render();closePop();toast('הקבוצה עודכנה');}
 function setGroupColor(gid,c){const g=groupById(gid);if(!g)return;g.color=c;save();render();document.querySelectorAll('#popover .swatch').forEach(s=>s.classList.toggle('on',s.dataset.c===c));}
-function deleteGroup(gid){const b=board();if(b.groups.length<=1){toast('חייבת להישאר לפחות קבוצה אחת');return;}const other=b.groups.find(g=>g.id!==gid).id;b.items.forEach(it=>{if(it.groupId===gid)it.groupId=other;});b.groups=b.groups.filter(g=>g.id!==gid);save();render();closePop();toast('הקבוצה נמחקה, הפריטים הועברו');}
+function deleteGroup(gid){const b=board();if(b.groups.length<=1){toast('חייבת להישאר לפחות קבוצה אחת');return;}const other=b.groups.find(g=>g.id!==gid).id;b.items.forEach(it=>{if(it.groupId===gid)it.groupId=other;});b.groups=b.groups.filter(g=>g.id!==gid);save();render();closePop();toastUndo('הקבוצה נמחקה, הפריטים הועברו');}
 
 function editText(e,id,col,kind){
   e.stopPropagation();
@@ -1143,7 +1152,9 @@ function addColumn(e){
   pop.classList.add('open');pop.style.top='120px';pop.style.left='50%';pop.style.transform='translateX(50%)';
   setTimeout(()=>document.getElementById('ncTitle').focus(),30);
 }
-function doAddColumn(){const t=document.getElementById('ncTitle').value.trim();const ty=document.getElementById('ncType').value;if(!t)return;board().columns.push({id:uid('c'),title:t,type:ty});pop.style.transform='';closePop();save();render();toast('העמודה נוספה')}
+function doAddColumn(){const t=document.getElementById('ncTitle').value.trim();const ty=document.getElementById('ncType').value;if(!t)return;
+  if(board().columns.some(c=>c.title===t)){toast('כבר קיימת עמודה בשם זה — בחר שם אחר');return;} // cells are keyed by title; duplicates would share/wipe data
+  board().columns.push({id:uid('c'),title:t,type:ty});pop.style.transform='';closePop();save();render();toast('העמודה נוספה')}
 function addItem(gid){const b=board();const it={id:uid('i'),name:'משימה חדשה',groupId:gid,cells:{},subitems:[]};b.items.push(it);pendingEditId=it.id;save();render()}
 function addItemToFirst(){if(board().type==='canvas'){addCanuPage();return;}addItem((filters.group&&groupById(filters.group)?filters.group:board().groups[0].id))}
 function addKanbanCard(label,col){const b=board();const it={id:uid('i'),name:'משימה חדשה',groupId:b.groups[0].id,cells:{},subitems:[]};if(label&&label!=='— ריק —'){const color=labelColorsFor(col)[label]||nextColor(col);it.cells[col]={label,color}}b.items.push(it);save();render();toast('כרטיס נוסף')}
@@ -1331,6 +1342,9 @@ function noteStatusMenu(e,pid,nid){e.stopPropagation();closePop();
   pop.innerHTML=`<div class="menu-lbl">סטטוס פתק</div>`+NSTATUS.map(s=>`<div class="opt" style="background:${s.c};color:${pillText(s.c)}" onclick="setNoteStatusById('${pid}','${nid}','${s.k}')">${s.t}</div>`).join('');
   showPop(e);}
 function openCanvasNote(pid,nid){openCanvas(pid);setTimeout(()=>{const el=document.querySelector('[data-pin="'+nid+'"]');editNote({target:el||document.body,stopPropagation(){}},nid);},70);}
+// heal items whose groupId points to a deleted/nonexistent group (e.g. from a hand-edited import)
+// → reassign to the board's first group, so they don't vanish from the table or crash kanban
+function repairOrphanGroups(){if(!state)return;Object.values(state.boards).forEach(b=>{if(!b.groups||!b.groups.length||!b.items)return;const ids=new Set(b.groups.map(g=>g.id));const first=b.groups[0].id;b.items.forEach(it=>{if(!ids.has(it.groupId))it.groupId=first;});});}
 function migrateCanuNotes(){if(!state)return;Object.values(state.boards).forEach(b=>{if(b.type!=='canvas')return;(b.items||[]).forEach(p=>{if(!p.canvas)return;if(!p.canvas.shapes)p.canvas.shapes=[];if(!p.canvas.chat)p.canvas.chat=[];(p.canvas.notes||[]).forEach(n=>{if(!n.status)n.status=n.done?'done':'open';n.done=n.status==='done';if(n.done&&!n.doneBy)n.doneBy='אלון גבאי';});});});}
 function mockShot(title,accent){return 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='750'><rect width='1200' height='750' fill='#f4f9ff'/><rect width='1200' height='64' fill='${accent}'/><circle cx='1150' cy='32' r='12' fill='#fff' opacity='.9'/><rect x='40' y='120' width='520' height='40' rx='8' fill='#253E7A'/><rect x='40' y='180' width='420' height='20' rx='6' fill='#c9d6ee'/><rect x='40' y='214' width='360' height='20' rx='6' fill='#c9d6ee'/><rect x='40' y='280' width='180' height='54' rx='27' fill='${accent}'/><rect x='700' y='120' width='460' height='300' rx='16' fill='#e3ecfb'/><text x='60' y='150' font-family='Arial' font-size='30' fill='#fff'>${title}</text></svg>`)}
 function ensureCanuBoard(){
@@ -1356,7 +1370,7 @@ function ensureCanuBoard(){
 }
 function moveCanuFirst(){if(!state||!state.order)return;const i=state.order.indexOf(CANU_KEY);if(i>0){state.order.splice(i,1);state.order.unshift(CANU_KEY);save();}}
 // drop session-only video blobs that don't survive reload (avoid dead refs)
-function sanitizeCanuMedia(){if(!state)return;Object.values(state.boards).forEach(b=>{if(b.type!=='canvas')return;(b.items||[]).forEach(p=>{const m=p.canvas&&p.canvas.media;if(m&&m.kind==='video'&&/^blob:/.test(m.url||''))p.canvas.media=null;});});}
+function sanitizeCanuMedia(){if(!state)return;Object.values(state.boards).forEach(b=>{if(b.type!=='canvas')return;(b.items||[]).forEach(p=>{const m=p.canvas&&p.canvas.media;if(m&&/^blob:/.test(m.url||''))p.canvas.media=null;/* any dead session blob (video OR large image) — not just video */});});}
 const PRIO_ORDER={P1:0,P2:1,P3:2};
 function canuRollup(p){const n=(p.canvas&&p.canvas.notes)||[];const total=n.length,done=n.filter(x=>x.done).length;return {done,total,open:total-done};}
 function canuPage(id){return board().items.find(x=>x.id===id)}
@@ -1443,12 +1457,6 @@ function canuDeletePage(e,id){e.stopPropagation();const pg=canuPage(id);
   if(pg&&(pageNotes(pg)||[]).some(noteApproved)&&!isAdmin(currentUser)){toast('אין הרשאה — בעמוד יש משימות מאושרות, רק אדמין מוחק עמוד');return;}
   snapshot();const b=board();b.items=b.items.filter(x=>x.id!==id);if(canuPageId===id)closeCanvas(true);save();render();toastUndo('העמוד נמחק');}
 function setCanuField(id,f,v){const p=canuPage(id);if(!p)return;p[f]=v;save();if(document.getElementById('canvasView').classList.contains('open')&&canuPageId===id)renderCanvas();else render();}
-function canuPickOwner(e,id){e.stopPropagation();closePop();const p=canuPage(id);if(!p)return;
-  pop.innerHTML=`<div class="menu-lbl">בעלים</div>`+[...new Set(TEAM)].map(n=>`<div class="popt ${p.owner===n?'on':''}" onclick="setCanuField('${id}','owner','${escA(n)}');closePop()"><span class="ava" style="background:${avaColor(n)};margin:0">${esc(n[0]||'?')}</span>${esc(n)}<svg class="pcheck" viewBox="0 0 24 24" width="15" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>`).join('')+`<div class="popt" style="justify-content:center;color:var(--pink)" onclick="setCanuField('${id}','owner','');closePop()">נקה בעלים</div>`;
-  showPop(e);}
-function canuPickPrio(e,id){e.stopPropagation();closePop();
-  pop.innerHTML=`<div class="menu-lbl">פריוריטי</div>`+Object.keys(PRIO).map(k=>`<div class="opt" style="background:${prioBg(PRIO[k])};color:${pillText(prioBg(PRIO[k]))}" onclick="setCanuField('${id}','priority','${k}');closePop()">${k} · ${PRIO[k].t}</div>`).join('');
-  showPop(e);}
 
 /* ---- Canvas overlay (approach-A review) ---- */
 function openCanvas(id){if(!canuPage(id))return;canuPageId=id;document.getElementById('canvasView').classList.add('open');renderCanvas();}
@@ -1464,7 +1472,7 @@ function renderCanvas(){
       :`<img src="${esc(media.url)}" class="art-media" alt="">`)
     :`<div class="art-empty" onclick="uploadCanvasMedia()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15l5-4 4 3 4-5 5 6"/></svg>גררו לכאן צילום מסך או וידאו · או לחצו להעלאה</div>`;
   const complete=pageComplete(p);
-  const pins=pageNotes(p).map((n,i)=>{const pr=PRIO[n.priority]||PRIO.P2;const bg=n.done?'#7DC57A':pr.c;const dot=(!n.done&&(n.status==='progress'||n.status==='review'))?`<i class="pin-st" style="background:${nstat(n.status).c}"></i>`:'';
+  const pins=(media?pageNotes(p):[]).map((n,i)=>{const pr=PRIO[n.priority]||PRIO.P2;const bg=n.done?'#7DC57A':pr.c;const dot=(!n.done&&(n.status==='progress'||n.status==='review'))?`<i class="pin-st" style="background:${nstat(n.status).c}"></i>`:'';
     return `<span class="pin ${n.done?'done':''}" data-pin="${n.id}" style="right:${n.x}%;top:${n.y}%;background:${bg};color:${pillText(bg)}" onclick="editNote(event,'${n.id}')" title="${esc(n.text||'פתק')}">${n.done?'✓':(i+1)}${dot}</span>`;}).join('');
   const film=b.items.map((pg,i)=>{const m=pg.canvas&&pg.canvas.media&&pg.canvas.media.url;const rr=canuRollup(pg);const col=rr.total&&rr.open===0?'var(--green)':(rr.open?'var(--pink)':'var(--border)');
     return `<div class="film ${pg.id===p.id?'on':''}" draggable="true" ondragstart="canuDragStart(event,'${pg.id}')" ondragover="canuFilmOver(event,'${pg.id}')" ondragleave="this.classList.remove('dragover')" ondrop="canuFilmDrop(event,'${pg.id}')" ondragend="canuDragEnd(event)" onclick="openCanvas('${pg.id}')"><span class="film-badge">${i+1}</span><span class="film-dot" style="background:${col}"></span><span class="film-thumb" style="${m?`background-image:url('${(''+m).replace(/'/g,'%27')}')`:''}"></span><span class="film-name">${esc(pg.name)}</span></div>`;}).join('');
@@ -1527,7 +1535,7 @@ function setCanuTool(t){canuTool=t;renderCanvas();}
 function setCanuColor(c){canuColor=c;renderCanvas();}
 function canuUndoShape(){const p=canuPage(canuPageId);if(!p||!pageShapes(p).length)return;p.canvas.shapes.pop();save();renderCanvas();}
 function canuClearShapes(){const p=canuPage(canuPageId);if(!p||!pageShapes(p).length)return;p.canvas.shapes=[];save();renderCanvas();toast('הציורים נמחקו');}
-function drawPt(e){const svg=document.getElementById('drawLayer');const r=svg.getBoundingClientRect();return [ +(((e.clientX-r.left)/r.width)*100).toFixed(2), +(((e.clientY-r.top)/r.height)*100).toFixed(2) ];}
+function drawPt(e){const svg=document.getElementById('drawLayer');const r=svg.getBoundingClientRect();const cl=x=>Math.max(0,Math.min(100,x));return [ +cl(((e.clientX-r.left)/r.width)*100).toFixed(2), +cl(((e.clientY-r.top)/r.height)*100).toFixed(2) ];}
 function canuDrawDown(e){if(canuTool==='pointer')return;e.preventDefault();e.stopPropagation();const pt=drawPt(e);
   if(canuTool==='pen')_draw={type:'pen',color:canuColor,w:3,pts:[pt]};
   else _draw={type:'circle',color:canuColor,w:3,x0:pt[0],y0:pt[1],x:pt[0],y:pt[1],rx:0,ry:0};
@@ -1571,17 +1579,21 @@ function editNote(e,id){if(e&&e.stopPropagation)e.stopPropagation();const n=find
   showPop(e);setTimeout(()=>{const el=document.getElementById('noteTxt');if(el&&!n.text)el.focus()},30);}
 function setNoteText(id,v){const n=findNote(id);if(!n)return;n.text=v;n.at=Date.now();save();}
 function setNoteField(id,f,v){const n=findNote(id);if(!n)return;
-  // reassigning an approved note = seizing approval control → same permission as un-approving
-  if(f==='assignee'&&noteLocked(n)){toast('אין הרשאה — פתק מאושר, רק האחראי או אדמין משנים שיוך');return;}
+  // approval (done/status) must ALWAYS route through the permission gate — never forge via a raw field write
+  if(f==='status'||f==='done'){setNoteStatus(id, f==='done'?(v?'done':'open') : v);return;}
+  // any edit to an APPROVED note (reassign / reprioritise / reschedule) = same permission as un-approving
+  if(noteLocked(n)){toast('אין הרשאה — פתק מאושר, רק האחראי או אדמין עורכים');return;}
   n[f]=v;n.at=Date.now();save();renderCanvas();editNote({target:document.querySelector('[data-pin="'+id+'"]'),stopPropagation(){}},id);}
 function toggleNoteDone(id){const n=findNote(id);if(!n)return;setNoteStatus(id, n.done?'open':'done');}
 function deleteNote(id){const p=canuPage(canuPageId);if(!p)return;const n=(p.canvas.notes||[]).find(x=>x.id===id);
   if(n&&noteLocked(n)){toast('אין הרשאה — פתק מאושר, רק האחראי או אדמין מוחקים');return;}
   p.canvas.notes=(p.canvas.notes||[]).filter(x=>x.id!==id);save();closePop();renderCanvas();}
+function revokeMedia(p){const u=p&&p.canvas&&p.canvas.media&&p.canvas.media.url;if(u&&/^blob:/.test(u)){try{URL.revokeObjectURL(u)}catch(e){}}}
 function applyCanvasFile(f){const p=canuPage(canuPageId);if(!p)return;
-  if(/^video\//.test(f.type)){p.canvas.media={kind:'video',url:URL.createObjectURL(f)};save();renderCanvas();toast('וידאו נטען ('+f.name+') — לסשן זה');return;}
+  if(/^video\//.test(f.type)){revokeMedia(p);p.canvas.media={kind:'video',url:URL.createObjectURL(f)};save();renderCanvas();toast('וידאו נטען ('+f.name+') — לסשן זה');return;}
   if(!/^image\//.test(f.type)){toast('קובץ לא נתמך — תמונה או וידאו בלבד');return;}
-  if(f.size>1200000){p.canvas.media={kind:'image',url:URL.createObjectURL(f)};save();renderCanvas();toast('תמונה גדולה — נשמרה לסשן');return;}
+  if(f.size>1200000){revokeMedia(p);p.canvas.media={kind:'image',url:URL.createObjectURL(f)};save();renderCanvas();toast('תמונה גדולה — נשמרה לסשן');return;}
+  revokeMedia(p);
   const rd=new FileReader();rd.onload=()=>{p.canvas.media={kind:'image',url:rd.result};save();renderCanvas();toast('המדיה עודכנה');};rd.readAsDataURL(f);}
 function uploadCanvasMedia(){const inp=document.createElement('input');inp.type='file';inp.accept='image/*,video/*';inp.onchange=()=>{const f=inp.files&&inp.files[0];if(f)applyCanvasFile(f)};inp.click();}
 // Escape closes the canvas overlay (before drawer/popover handled elsewhere)
@@ -1591,7 +1603,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
 function boot(){renderNav();render();renderUser();document.getElementById('loading').style.display='none'}
 function start(){
   if(!window.SEED||!window.SEED.length){document.getElementById('loading').innerHTML='<div style="color:var(--text-sub);max-width:400px;text-align:center;line-height:1.7">קובץ הנתונים <b>seed.js</b> עדיין לא נוצר.<br>הרץ את שלב הייבוא, ואז רענן.</div>';return}
-  load();ensureCanuBoard();sanitizeCanuMedia();migrateCanuNotes();cur=cur||state.order[0];_undoStack.length=0;_lastSaved=JSON.stringify(state);boot();
+  load();ensureCanuBoard();sanitizeCanuMedia();migrateCanuNotes();repairOrphanGroups();cur=cur||state.order[0];_undoStack.length=0;_lastSaved=JSON.stringify(state);boot();
 }
 start();
 </script>
