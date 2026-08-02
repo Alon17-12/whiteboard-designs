@@ -1300,6 +1300,10 @@ let currentUser='אלון גבאי';
 const ADMINS=['אלון גבאי','Eyal Segal'];
 function isAdmin(u){return ADMINS.includes(u)}
 function canApproveNote(n){return isAdmin(currentUser)||(!!n.assignee&&n.assignee===currentUser)}
+// an APPROVED note is protected: only an admin or its assignee may reassign / reopen / delete it.
+// this closes the indirect bypasses of the approval gate (reassign-to-self, delete-then-recreate).
+function noteApproved(n){return !!(n&&(n.done||n.status==='done'))}
+function noteLocked(n){return noteApproved(n)&&!canApproveNote(n)}
 function renderUser(){const el=document.getElementById('sideUser');if(!el)return;const adm=isAdmin(currentUser);
   el.innerHTML=`<div class="avatar" style="background:${avaColor(currentUser)}">${esc(currentUser[0]||'?')}</div><div style="min-width:0;flex:1"><div style="color:#fff;font-weight:600;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(currentUser)}</div><div style="font-size:10px;color:rgba(255,255,255,.72)">${adm?'אדמין · מאשר הכל':'איש צוות · מאשר משלו'}</div></div><svg viewBox="0 0 24 24" width="14" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2" style="flex-shrink:0"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>`;}
 function switchUser(e){if(e&&e.stopPropagation)e.stopPropagation();closePop();
@@ -1434,7 +1438,10 @@ function renderCanu(){
   </div>`;
 }
 function addCanuPage(){const b=board();const p={id:uid('i'),name:'עמוד חדש',groupId:b.groups[0].id,owner:'',priority:'P2',due:'',canvas:{media:null,notes:[]}};b.items.push(p);save();render();toast('עמוד נוסף → שורה בטבלה');}
-function canuDeletePage(e,id){e.stopPropagation();snapshot();const b=board();b.items=b.items.filter(x=>x.id!==id);if(canuPageId===id)closeCanvas(true);save();render();toastUndo('העמוד נמחק');}
+function canuDeletePage(e,id){e.stopPropagation();const pg=canuPage(id);
+  // a page holding approved work (possibly by several people) is admin-only to delete
+  if(pg&&(pageNotes(pg)||[]).some(noteApproved)&&!isAdmin(currentUser)){toast('אין הרשאה — בעמוד יש משימות מאושרות, רק אדמין מוחק עמוד');return;}
+  snapshot();const b=board();b.items=b.items.filter(x=>x.id!==id);if(canuPageId===id)closeCanvas(true);save();render();toastUndo('העמוד נמחק');}
 function setCanuField(id,f,v){const p=canuPage(id);if(!p)return;p[f]=v;save();if(document.getElementById('canvasView').classList.contains('open')&&canuPageId===id)renderCanvas();else render();}
 function canuPickOwner(e,id){e.stopPropagation();closePop();const p=canuPage(id);if(!p)return;
   pop.innerHTML=`<div class="menu-lbl">בעלים</div>`+[...new Set(TEAM)].map(n=>`<div class="popt ${p.owner===n?'on':''}" onclick="setCanuField('${id}','owner','${escA(n)}');closePop()"><span class="ava" style="background:${avaColor(n)};margin:0">${esc(n[0]||'?')}</span>${esc(n)}<svg class="pcheck" viewBox="0 0 24 24" width="15" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>`).join('')+`<div class="popt" style="justify-content:center;color:var(--pink)" onclick="setCanuField('${id}','owner','');closePop()">נקה בעלים</div>`;
@@ -1498,12 +1505,12 @@ function renderCanvas(){
 function chatPanelHTML(p){const msgs=pageChat(p);
   return `<div class="cv-chat">
     <div class="cv-chat-head"><svg viewBox="0 0 24 24" width="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>צ׳אט העמוד<span class="cc-x" onclick="toggleCanuChat()" title="סגור">✕</span></div>
-    <div class="cv-chat-list" id="chatList">${msgs.length?msgs.map(m=>{const me=m.by===ME;return `<div class="cmsg ${me?'me':''}"><span class="cava" style="background:${avaColor(m.by||'?')}">${esc((m.by||'?')[0]||'?')}</span><div class="cmsg-b"><div class="cmsg-meta"><span class="cmsg-who">${esc(m.by||'')}</span><span class="cmsg-t">${fmtTime(m.at)}</span></div><div class="cmsg-txt">${esc(m.text||'')}</div></div></div>`}).join(''):`<div class="cv-chat-empty">אין הודעות עדיין — פתחו שיחה על העמוד הזה</div>`}</div>
+    <div class="cv-chat-list" id="chatList">${msgs.length?msgs.map(m=>{const me=m.by===currentUser;return `<div class="cmsg ${me?'me':''}"><span class="cava" style="background:${avaColor(m.by||'?')}">${esc((m.by||'?')[0]||'?')}</span><div class="cmsg-b"><div class="cmsg-meta"><span class="cmsg-who">${esc(m.by||'')}</span><span class="cmsg-t">${fmtTime(m.at)}</span></div><div class="cmsg-txt">${esc(m.text||'')}</div></div></div>`}).join(''):`<div class="cv-chat-empty">אין הודעות עדיין — פתחו שיחה על העמוד הזה</div>`}</div>
     <div class="cv-chat-send"><input id="chatInput" placeholder="כתוב הודעה לצוות..." onkeydown="if(event.key==='Enter')sendCanuChat('${p.id}')"><button onclick="sendCanuChat('${p.id}')">שלח</button></div>
   </div>`;
 }
 function toggleCanuChat(){canuChatOpen=!canuChatOpen;renderCanvas();if(canuChatOpen)setTimeout(()=>{const i=document.getElementById('chatInput');if(i)i.focus();},40);}
-function sendCanuChat(id){const inp=document.getElementById('chatInput');const t=(inp&&inp.value||'').trim();if(!t)return;const p=canuPage(id);if(!p)return;p.canvas.chat=p.canvas.chat||[];p.canvas.chat.push({id:uid('c'),by:ME,text:t,at:Date.now()});save();renderCanvas();setTimeout(()=>{const i=document.getElementById('chatInput');if(i)i.focus();},30);}
+function sendCanuChat(id){const inp=document.getElementById('chatInput');const t=(inp&&inp.value||'').trim();if(!t)return;const p=canuPage(id);if(!p)return;p.canvas.chat=p.canvas.chat||[];p.canvas.chat.push({id:uid('c'),by:currentUser,text:t,at:Date.now()});save();renderCanvas();setTimeout(()=>{const i=document.getElementById('chatInput');if(i)i.focus();},30);}
 function canuWorkOver(e){if(!e.dataTransfer||![...e.dataTransfer.types].includes('Files'))return;e.preventDefault();e.currentTarget.classList.add('dropping')}
 function canuWorkLeave(e){e.currentTarget.classList.remove('dropping')}
 function canuWorkDrop(e){e.currentTarget.classList.remove('dropping');const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(!f)return;e.preventDefault();applyCanvasFile(f)}
@@ -1542,7 +1549,7 @@ function canuArtClick(e){
   const x=Math.min(96,Math.max(2,(rect.right-e.clientX)/rect.width*100));
   const y=Math.min(95,Math.max(2,(e.clientY-rect.top)/rect.height*100));
   const p=canuPage(canuPageId);if(!p)return;if(!p.canvas.media){uploadCanvasMedia();return;}
-  const n={id:uid('n'),x:+x.toFixed(1),y:+y.toFixed(1),text:'',assignee:'',priority:'P2',done:false,author:ME,at:Date.now()};
+  const n={id:uid('n'),x:+x.toFixed(1),y:+y.toFixed(1),text:'',assignee:'',priority:'P2',done:false,author:currentUser,at:Date.now()};
   p.canvas.notes.push(n);save();renderCanvas();
   const pin=document.querySelector('[data-pin="'+n.id+'"]');editNote({target:pin||art,stopPropagation(){}},n.id);
 }
@@ -1563,9 +1570,14 @@ function editNote(e,id){if(e&&e.stopPropagation)e.stopPropagation();const n=find
     <button class="menu-danger" onclick="deleteNote('${id}')">מחק פתק</button>`;
   showPop(e);setTimeout(()=>{const el=document.getElementById('noteTxt');if(el&&!n.text)el.focus()},30);}
 function setNoteText(id,v){const n=findNote(id);if(!n)return;n.text=v;n.at=Date.now();save();}
-function setNoteField(id,f,v){const n=findNote(id);if(!n)return;n[f]=v;n.at=Date.now();save();renderCanvas();editNote({target:document.querySelector('[data-pin="'+id+'"]'),stopPropagation(){}},id);}
+function setNoteField(id,f,v){const n=findNote(id);if(!n)return;
+  // reassigning an approved note = seizing approval control → same permission as un-approving
+  if(f==='assignee'&&noteLocked(n)){toast('אין הרשאה — פתק מאושר, רק האחראי או אדמין משנים שיוך');return;}
+  n[f]=v;n.at=Date.now();save();renderCanvas();editNote({target:document.querySelector('[data-pin="'+id+'"]'),stopPropagation(){}},id);}
 function toggleNoteDone(id){const n=findNote(id);if(!n)return;setNoteStatus(id, n.done?'open':'done');}
-function deleteNote(id){const p=canuPage(canuPageId);if(!p)return;p.canvas.notes=(p.canvas.notes||[]).filter(x=>x.id!==id);save();closePop();renderCanvas();}
+function deleteNote(id){const p=canuPage(canuPageId);if(!p)return;const n=(p.canvas.notes||[]).find(x=>x.id===id);
+  if(n&&noteLocked(n)){toast('אין הרשאה — פתק מאושר, רק האחראי או אדמין מוחקים');return;}
+  p.canvas.notes=(p.canvas.notes||[]).filter(x=>x.id!==id);save();closePop();renderCanvas();}
 function applyCanvasFile(f){const p=canuPage(canuPageId);if(!p)return;
   if(/^video\//.test(f.type)){p.canvas.media={kind:'video',url:URL.createObjectURL(f)};save();renderCanvas();toast('וידאו נטען ('+f.name+') — לסשן זה');return;}
   if(!/^image\//.test(f.type)){toast('קובץ לא נתמך — תמונה או וידאו בלבד');return;}
