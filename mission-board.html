@@ -10,10 +10,10 @@
 :root{
   --navy:#253E7A;--navy-dark:#1a2e5e;--cyan:#38C4F2;--pink:#F05680;--green:#7DC57A;--yellow:#EAD654;
   --bg:#EBF3FB;--surface:#FFFFFF;--surface-2:#F4F9FF;--surface-3:#edf4ff;--border:rgba(37,62,122,0.1);
-  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.52);--text-xs:rgba(37,62,122,0.35);
+  --text-main:#1a2f5e;--text-sub:rgba(37,62,122,0.7);--text-xs:rgba(37,62,122,0.6);
   --r-xs:6px;--r-sm:10px;--r-md:16px;--r-lg:18px;--font:'Fredoka',sans-serif;--body:'Heebo',sans-serif;
 }
-[data-theme="dark"]{--bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,.07);--text-main:#dde5f5;--text-sub:rgba(221,229,245,.52);--text-xs:rgba(221,229,245,.36)}
+[data-theme="dark"]{--bg:#0c1422;--surface:#131e35;--surface-2:#192740;--surface-3:#1e2e48;--border:rgba(255,255,255,.07);--text-main:#dde5f5;--text-sub:rgba(221,229,245,.66);--text-xs:rgba(221,229,245,.52)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--body);background:var(--bg);color:var(--text-main);height:100dvh;overflow:hidden;display:flex;font-size:13px;transition:.25s}
 svg{stroke-linecap:round;stroke-linejoin:round}
@@ -26,7 +26,7 @@ svg{stroke-linecap:round;stroke-linejoin:round}
 .nav-item.active{background:rgba(56,196,242,.15);color:var(--cyan);font-weight:700}
 .nav-item svg{width:16px;height:16px;flex-shrink:0}
 .nav-item .bdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.nav-item .bc{margin-inline-start:auto;font-size:11px;color:rgba(255,255,255,.4);font-weight:700}
+.nav-item .bc{margin-inline-start:auto;font-size:11px;color:rgba(255,255,255,.72);font-weight:700}
 .side-bottom{margin-top:auto;display:flex;align-items:center;gap:9px;padding:8px 10px;color:rgba(255,255,255,.7)}
 .avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--pink),#d62a5e);display:grid;place-items:center;color:#fff;font-weight:700;font-size:12px}
 .main{flex:1;display:flex;flex-direction:column;min-width:0}
@@ -376,7 +376,10 @@ body.canvas-board #viewSeg,body.canvas-board #colBtn{display:none}
 .canu-head{display:flex;align-items:baseline;gap:12px;padding:4px 2px 14px;flex-wrap:wrap}
 .canu-head h2{font-family:var(--font);font-weight:600;font-size:17px}
 .canu-sub-hint{color:var(--text-xs);font-size:12px;font-weight:600}
+.canu-scroll{overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
 .canu-table{width:max-content;min-width:min(100%,940px)}
+/* scroll affordance on narrow screens: a left-edge fade tells users columns continue */
+@media(max-width:820px){.canu-wrap{position:relative}.canu-wrap::after{content:"";position:absolute;top:56px;bottom:52px;left:0;width:26px;background:linear-gradient(to right,var(--bg),rgba(0,0,0,0));pointer-events:none;z-index:3}}
 .canu-table .cell.name{position:static;width:300px;box-shadow:none;border-inline-start:3px solid transparent}
 .canu-row{cursor:pointer}
 .canu-row:hover .cell.name{border-inline-start-color:var(--cyan)}
@@ -481,8 +484,8 @@ body.canvas-board #viewSeg,body.canvas-board #colBtn{display:none}
 .cv-chat-send input:focus{border-color:var(--cyan)}
 .cv-chat-send button{border:none;background:var(--cyan);color:#fff;border-radius:10px;padding:0 15px;font-weight:700;cursor:pointer;font-family:var(--body)}
 .cv-chat-empty{color:var(--text-xs);font-size:12px;text-align:center;padding:30px 10px;font-weight:600}
-.cv-mchip.has-badge{position:relative}
-.cv-mchip .chat-n{background:var(--pink);color:#fff;border-radius:20px;font-size:10px;font-weight:800;padding:0 5px;min-width:16px;text-align:center}
+.cv-mchip.has-badge,.cv-back.has-badge{position:relative}
+.cv-mchip .chat-n,.cv-back .chat-n{background:var(--pink);color:#fff;border-radius:20px;font-size:10px;font-weight:800;padding:0 5px;min-width:16px;text-align:center;line-height:16px;display:inline-block}
 @media(max-width:820px){.cv-chat{position:absolute;top:60px;bottom:0;inset-inline-start:0;z-index:5;box-shadow:-8px 0 30px rgba(10,20,40,.2)}}
 /* ---- CanU v3: user switch, approval, multiline note, drawing ---- */
 .side-bottom{cursor:pointer;border-radius:10px;transition:background .12s;gap:9px}
@@ -538,7 +541,21 @@ body.canvas-board #viewSeg,body.canvas-board #colBtn{display:none}
 .draw-layer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
 .artboard.drawmode .draw-layer{pointer-events:auto;cursor:crosshair}
 .artboard .pin{z-index:2}
-@media(max-width:820px){.cv-tools{top:8px;left:8px;padding:4px;gap:3px}.ctool{width:30px;height:30px}}
+/* --- touch-target floor: expand hit area on coarse pointers without changing the visual --- */
+@media (pointer:coarse){
+  .pin::before{content:"";position:absolute;inset:-8px;border-radius:50%}
+  .ctool{width:44px;height:44px}
+  .ctool svg{width:19px;height:19px}
+  .cswatch{width:26px;height:26px}
+  .canu-del,.note-del-x{width:40px;height:40px}
+  .icon-btn{width:44px;height:44px}
+  .nstat-chip{padding:7px 12px}
+}
+/* --- mobile canvas: horizontal tool bar pinned to the bottom, clear of the top chips/title --- */
+@media(max-width:820px){
+  .cv-tools{top:auto;bottom:14px;left:50%;transform:translateX(-50%);flex-direction:row;align-items:center;padding:5px;gap:4px;max-width:calc(100vw - 24px);flex-wrap:wrap;justify-content:center}
+  .ctool-sep{width:1px;height:22px;margin:0 2px}
+}
 </style>
 </head>
 <body>
@@ -909,8 +926,8 @@ function deleteSubitem(id){snapshot();board().items.forEach(p=>{p.subitems=(p.su
 function duplicateItem(id){const b=board();const idx=b.items.findIndex(x=>x.id===id);if(idx<0)return;const clone=JSON.parse(JSON.stringify(b.items[idx]));clone.id=uid('i');clone.name=(clone.name||'')+' (עותק)';clone.updatedAt=Date.now();(clone.subitems||[]).forEach(s=>s.id=uid('s'));b.items.splice(idx+1,0,clone);save();render();toast('הפריט שוכפל')}
 function moveItem(id,gid){const{it}=findItem(id);if(!it)return;it.groupId=gid;it.updatedAt=Date.now();save();render();toast('הפריט הועבר')}
 function openRowMenu(e,id){e.stopPropagation();closePop();const b=board();
-  pop.innerHTML=`<div class="rowopt" onclick="startRename('${id}')">✎ שנה שם</div>
-    <div class="rowopt" onclick="duplicateItem('${id}');closePop()">⧉ שכפל</div>
+  pop.innerHTML=`<div class="rowopt" onclick="startRename('${id}')"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-inline-end:5px"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>שנה שם</div>
+    <div class="rowopt" onclick="duplicateItem('${id}');closePop()"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-inline-end:5px"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>שכפל</div>
     <div class="menu-lbl" style="margin-top:4px">העבר לקבוצה</div>
     ${b.groups.map(g=>`<div class="rowopt" onclick="moveItem('${id}','${g.id}');closePop()"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${g.color}"></span>${esc(g.name)}</div>`).join('')}
     <button class="menu-danger" onclick="deleteItem('${id}');closePop()">מחק פריט</button>`;
@@ -978,7 +995,7 @@ function openBoardMenu(e,key){e.preventDefault();e.stopPropagation();closePop();
       <div class="swatches">${PALETTE.map(c=>`<span class="swatch ${bd.color===c?'on':''}" data-c="${c}" style="background:${c}" onclick="setBoardColor('${key}','${c}')"></span>`).join('')}</div>
       <button onclick="saveBoard('${key}')" style="width:100%;padding:8px">שמור</button>
     </div>
-    <div class="rowopt" onclick="duplicateBoard('${key}');closePop()">⧉ שכפל בורד</div>
+    <div class="rowopt" onclick="duplicateBoard('${key}');closePop()"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-inline-end:5px"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>שכפל בורד</div>
     ${state.order.length>1?`<button class="menu-danger" onclick="deleteBoard('${key}')">מחק בורד</button>`:''}`;
   showPop(e);setTimeout(()=>{const el=document.getElementById('bdName');if(el){el.focus();el.select()}},30);}
 function saveBoard(key){const bd=state.boards[key];if(!bd)return;const nv=document.getElementById('bdName').value.trim();if(nv)bd.name=nv;save();renderNav();render();closePop();toast('הבורד עודכן')}
@@ -1275,7 +1292,8 @@ function toast(msg,action){const t=document.createElement('div');t.className='to
 
 /* ===================== CanU (design-review board) ===================== */
 const CANU_KEY='canu';
-const PRIO={P1:{c:'#F05680',t:'דחוף'},P2:{c:'#EAD654',t:'בינוני'},P3:{c:'#38C4F2',t:'רגיל'}};
+const PRIO={P1:{c:'#F05680',pc:'#d62a5e',t:'דחוף'},P2:{c:'#EAD654',t:'בינוני'},P3:{c:'#38C4F2',t:'רגיל'}};
+function prioBg(pr){return (pr&&pr.pc)||(pr&&pr.c)||'#c4c4c4';} // darker variant for text-bearing pills (contrast); bright c stays for pins/fills
 let canuPageId=null;
 /* roles: admins can approve any task; a teammate can approve only their own (assigned) tasks */
 let currentUser='אלון גבאי';
@@ -1283,7 +1301,7 @@ const ADMINS=['אלון גבאי','Eyal Segal'];
 function isAdmin(u){return ADMINS.includes(u)}
 function canApproveNote(n){return isAdmin(currentUser)||(!!n.assignee&&n.assignee===currentUser)}
 function renderUser(){const el=document.getElementById('sideUser');if(!el)return;const adm=isAdmin(currentUser);
-  el.innerHTML=`<div class="avatar" style="background:${avaColor(currentUser)}">${esc(currentUser[0]||'?')}</div><div style="min-width:0;flex:1"><div style="color:#fff;font-weight:600;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(currentUser)}</div><div style="font-size:10px;color:rgba(255,255,255,.5)">${adm?'אדמין · מאשר הכל':'איש צוות · מאשר משלו'}</div></div><svg viewBox="0 0 24 24" width="14" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2" style="flex-shrink:0"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>`;}
+  el.innerHTML=`<div class="avatar" style="background:${avaColor(currentUser)}">${esc(currentUser[0]||'?')}</div><div style="min-width:0;flex:1"><div style="color:#fff;font-weight:600;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(currentUser)}</div><div style="font-size:10px;color:rgba(255,255,255,.72)">${adm?'אדמין · מאשר הכל':'איש צוות · מאשר משלו'}</div></div><svg viewBox="0 0 24 24" width="14" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2" style="flex-shrink:0"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>`;}
 function switchUser(e){if(e&&e.stopPropagation)e.stopPropagation();closePop();
   pop.innerHTML=`<div class="menu-lbl">מחובר כ… (לבדיקת הרשאות)</div>`+[...new Set(TEAM)].map(n=>`<div class="popt ${n===currentUser?'on':''}" onclick="pickUser('${escA(n)}')"><span class="ava" style="background:${avaColor(n)};margin:0">${esc(n[0]||'?')}</span>${esc(n)}${isAdmin(n)?' <span style="color:var(--cyan);font-size:10px;font-weight:800;margin-inline-start:4px">אדמין</span>':''}<svg class="pcheck" viewBox="0 0 24 24" width="15" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>`).join('');
   showPop(e);}
@@ -1298,7 +1316,10 @@ function findNoteIn(pid,nid){const p=canuPage(pid);if(!p)return null;return page
 function pageComplete(p){const r=canuRollup(p);return r.total>0&&r.open===0;}
 function applyNoteStatus(n,key){
   if(key==='done'){if(!canApproveNote(n)){toast('אין הרשאה — רק האחראי או אדמין מאשרים');return false;}n.status='done';n.done=true;n.doneBy=currentUser;n.doneAt=Date.now();}
-  else{n.status=key;n.done=false;n.doneBy='';n.doneAt=0;}
+  else{
+    // reopening an already-approved note = un-approval → same permission as approving
+    if((n.done||n.status==='done')&&!canApproveNote(n)){toast('אין הרשאה — רק האחראי או אדמין מבטלים אישור');return false;}
+    n.status=key;n.done=false;n.doneBy='';n.doneAt=0;}
   n.at=Date.now();save();return true;}
 function setNoteStatus(id,key){const n=findNote(id);if(!n)return;if(applyNoteStatus(n,key)){renderCanvas();editNote({target:document.querySelector('[data-pin="'+id+'"]'),stopPropagation(){}},id);}}
 function setNoteStatusById(pid,nid,key){const n=findNoteIn(pid,nid);if(!n)return;if(applyNoteStatus(n,key)){closePop();render();}}
@@ -1377,7 +1398,7 @@ function renderCanu(){
         ${complete?`<span class="page-done-badge" title="כל הפתקים הושלמו"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>`:''}
       </div>
       <div class="cell" style="width:170px">${avaStack(asg)}</div>
-      <div class="cell" style="width:130px">${prio?`<span class="prio-tag" style="background:${prio.c};color:${pillText(prio.c)}">${tp} · ${prio.t}</span>`:`<span class="cellval muted">—</span>`}</div>
+      <div class="cell" style="width:130px">${prio?`<span class="prio-tag" style="background:${prioBg(prio)};color:${pillText(prioBg(prio))}">${tp} · ${prio.t}</span>`:`<span class="cellval muted">—</span>`}</div>
       <div class="cell" style="width:140px">${due?(ovd?`<span class="chip due-over">${esc(due)}</span>`:`<span class="date-val">${esc(due)}</span>`):`<span class="cellval muted">—</span>`}</div>
       <div class="cell" style="width:190px">${complete?`<span class="page-done"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> הושלמו כל ${r.total}</span>`:`<div class="canu-status"><div class="battery" style="width:110px"><span style="width:${pct}%;background:var(--green)"></span></div><span class="canu-roll">${r.done}/${r.total} טופלו</span></div>`}</div>
       <div class="cell" style="width:110px;gap:13px"><span class="canu-notes" title="פתקים">${r.total}${nIcon}</span>${chatN?`<span class="canu-chatbadge" title="הודעות צ׳אט">${chatN}${cIcon}</span>`:''}</div>
@@ -1388,7 +1409,7 @@ function renderCanu(){
         return `<div class="subrow canu-subrow" onclick="openCanvasNote('${p.id}','${n.id}')">
           <div class="canu-subname"><span class="sub-bullet" style="background:${dn?'var(--green)':pr.c}">${dn?'✓':''}</span><span class="sub-txt">${esc(n.text||'(ללא תיאור)')}</span></div>
           <div class="subcell" style="width:170px">${n.assignee?`<span class="ava" style="background:${avaColor(n.assignee)};margin:0;width:22px;height:22px;font-size:9px" title="${esc(n.assignee)}">${esc(n.assignee[0]||'?')}</span>`:'<span class="ava-empty" style="width:22px;height:22px">+</span>'}</div>
-          <div class="subcell" style="width:130px"><span class="prio-tag" style="background:${pr.c};color:${pillText(pr.c)}">${n.priority||'P2'}</span></div>
+          <div class="subcell" style="width:130px"><span class="prio-tag" style="background:${prioBg(pr)};color:${pillText(prioBg(pr))}">${n.priority||'P2'}</span></div>
           <div class="subcell" style="width:140px">${n.due?`<span class="date-val">${esc(n.due)}</span>`:'<span class="cellval muted">—</span>'}</div>
           <div class="subcell" style="width:190px"><span class="nstat-chip" onclick="event.stopPropagation();noteStatusMenu(event,'${p.id}','${n.id}')" style="background:${st.c};color:${pillText(st.c)}" title="שנה סטטוס">${st.t}</span></div>
         </div>`}).join(''):`<div class="canu-subempty">אין פתקים עדיין — פתחו את הקנבס והוסיפו</div>`)+
@@ -1396,6 +1417,7 @@ function renderCanu(){
     return out;}).join('');
   return `<div class="canu-wrap">
     <div class="canu-head"><h2>עמודים לסקירה</h2><span class="canu-sub-hint">${pages.length} עמודים · בעלים/פריוריטי/דדליין מסוכמים מהפתקים · הרחיבו ▸ לפתקים · דאבל-קליק לשם · גררו ⠿ לסדר</span></div>
+    <div class="canu-scroll">
     <div class="table canu-table">
       <div class="trow head">
         <div class="cell name">עמוד</div>
@@ -1407,6 +1429,7 @@ function renderCanu(){
         <div class="cell" style="width:150px">פעולות</div>
       </div>${rows}
     </div>
+    </div>
     <div class="canu-addrow" onclick="addCanuPage()">＋ עמוד חדש (שורה חדשה)</div>
   </div>`;
 }
@@ -1417,7 +1440,7 @@ function canuPickOwner(e,id){e.stopPropagation();closePop();const p=canuPage(id)
   pop.innerHTML=`<div class="menu-lbl">בעלים</div>`+[...new Set(TEAM)].map(n=>`<div class="popt ${p.owner===n?'on':''}" onclick="setCanuField('${id}','owner','${escA(n)}');closePop()"><span class="ava" style="background:${avaColor(n)};margin:0">${esc(n[0]||'?')}</span>${esc(n)}<svg class="pcheck" viewBox="0 0 24 24" width="15" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>`).join('')+`<div class="popt" style="justify-content:center;color:var(--pink)" onclick="setCanuField('${id}','owner','');closePop()">נקה בעלים</div>`;
   showPop(e);}
 function canuPickPrio(e,id){e.stopPropagation();closePop();
-  pop.innerHTML=`<div class="menu-lbl">פריוריטי</div>`+Object.keys(PRIO).map(k=>`<div class="opt" style="background:${PRIO[k].c};color:${pillText(PRIO[k].c)}" onclick="setCanuField('${id}','priority','${k}');closePop()">${k} · ${PRIO[k].t}</div>`).join('');
+  pop.innerHTML=`<div class="menu-lbl">פריוריטי</div>`+Object.keys(PRIO).map(k=>`<div class="opt" style="background:${prioBg(PRIO[k])};color:${pillText(prioBg(PRIO[k]))}" onclick="setCanuField('${id}','priority','${k}');closePop()">${k} · ${PRIO[k].t}</div>`).join('');
   showPop(e);}
 
 /* ---- Canvas overlay (approach-A review) ---- */
@@ -1445,7 +1468,7 @@ function renderCanvas(){
       <input class="cv-titleinput" value="${esc(p.name)}" onchange="setCanuField('${p.id}','name',this.value)" onkeydown="if(event.key==='Enter')this.blur()" title="שם העמוד — ניתן לעריכה">
       <div class="cv-meta">
         <span class="cv-mchip" style="cursor:default" title="בעלים — מסוכם מהפתקים"><span class="mk">בעלים</span>${asg.length?avaStack(asg):'<span style="color:var(--text-xs)">—</span>'}</span>
-        <span class="cv-mchip" style="cursor:default"><span class="mk">פריוריטי</span>${prio?`<span class="prio-tag" style="background:${prio.c};color:${pillText(prio.c)}">${tp}</span>`:'<span style="color:var(--text-xs)">—</span>'}</span>
+        <span class="cv-mchip" style="cursor:default"><span class="mk">פריוריטי</span>${prio?`<span class="prio-tag" style="background:${prioBg(prio)};color:${pillText(prioBg(prio))}">${tp}</span>`:'<span style="color:var(--text-xs)">—</span>'}</span>
         <span class="cv-mchip" style="cursor:default"><span class="mk">דדליין</span>${due?`<span class="${ovd?'chip due-over':'date-val'}">${esc(due)}</span>`:'<span style="color:var(--text-xs)">—</span>'}</span>
         ${complete?`<span class="cv-mchip" style="cursor:default;background:rgba(125,197,122,.16);border-color:rgba(125,197,122,.45);color:#2e7d32;font-weight:800"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> הושלם</span>`:''}
         <span class="cv-mchip cv-roll" style="cursor:default"><div class="battery" style="width:90px"><span style="width:${pct}%;background:var(--green)"></span></div><span class="canu-roll">${r.done}/${r.total} טופלו</span></span>
