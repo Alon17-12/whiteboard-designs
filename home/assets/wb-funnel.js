@@ -21,7 +21,13 @@
 (function () {
   var CFG = window.WB_FUNNEL_CONFIG || {};
   var CLARITY_ID = CFG.clarityId || 'xi43gegise';   // Clarity project "whiteboard"
-  var PIXEL_ID   = CFG.pixelId || '';               // set the WHITEBOARD pixel id when ready (NOT the Bunker one)
+  /* WHITEBOARD's own pixel: "whiteboard pixel", business 594916872671950, ad account
+     1035055716097456. NOT the Bunker pixel, and NOT 2165422377642345 — that one sits in
+     the blocked business and never fired. The product repo ships the same id
+     (WB_DEFAULT_PIXEL_ID in src/lib/analytics/meta-events.ts); they must stay in sync or
+     Meta sees two unrelated journeys. Pass pixelId:'off' to disable on a page. */
+  var PIXEL_ID   = CFG.pixelId || '1002841276116788';
+  if(PIXEL_ID === 'off') PIXEL_ID = '';
   var PAGE       = CFG.page || 'unknown';
   var DEBUG      = /[?&]wbdebug=1/.test(location.search) || !!CFG.debug;
 
@@ -129,10 +135,12 @@
       if(CTX.billing) clarity('set','billing',CTX.billing);
       if(meta.i!=null) clarity('set','furthest_step',String(meta.i));
     }}catch(e){}
-    // sink 3: Meta Pixel (standard event when mapped, else custom) with dedupe eventID
-    try{ if(window.fbq){
-      if(meta.fb){ fbq('track', meta.fb, fbParams(), opts.eventID?{eventID:opts.eventID}:undefined); }
-      else { fbq('trackCustom', name, props); }
+    // sink 3: Meta Pixel (standard event when mapped, else custom) with dedupe eventID.
+    // Always SCOPED to our pixel: bare fbq('track') broadcasts to every pixel on the page,
+    // so a teacher's pixel or an embedded partner tag would silently receive our funnel.
+    try{ if(window.fbq && PIXEL_ID){
+      if(meta.fb){ fbq('trackSingle', PIXEL_ID, meta.fb, fbParams(), opts.eventID?{eventID:opts.eventID}:undefined); }
+      else { fbq('trackSingleCustom', PIXEL_ID, name, props); }
     }}catch(e){}
 
     if(DEBUG) console.log('%c[WBF]'+(meta.i!=null?(' #'+meta.i):'')+' '+name,
@@ -191,6 +199,7 @@
     field: field,               // WBF.field(form, name, action, props)
     trackForm: trackForm,       // WBF.trackForm(formEl, 'lead')
     set: setCtx,                // WBF.set({plan,billing,value})
+    pixel: function(){return PIXEL_ID;},      // for pages that fire fbq directly — always scope with it
     ctx: function(){return Object.assign({},CTX);},
     id: function(){return funnelId;},
     attribution: function(){return Object.assign({},ATTR);},

@@ -3112,7 +3112,7 @@ window.addEventListener('scroll',cpScroll,{passive:true});
 (function(){
   /* — CONFIG: fill in to activate the external tools (empty = silently skipped) — */
   var CLARITY_ID='xi43gegise';      // Microsoft Clarity project "whiteboard" (homepage)
-  var META_PIXEL_ID='';   // Meta Pixel for WHITEBOARD (do NOT reuse the Bunker pixel)
+  var META_PIXEL_ID='1002841276116788';   // WHITEBOARD's own pixel — same id as wb-funnel.js and the product repo (NOT the Bunker pixel, NOT 2165422377642345)
   var DEBUG=/[?&]wbdebug=1/.test(location.search);
 
   /* — attribution: first-touch UTM + referrer, persisted — */
@@ -3132,7 +3132,7 @@ window.addEventListener('scroll',cpScroll,{passive:true});
     var p=Object.assign({event:ev,page:'homepage'},ATTR,props||{});
     try{dataLayer.push(p);}catch(e){}
     try{if(window.clarity)clarity('event',ev);}catch(e){}
-    try{if(window.fbq)fbq('trackCustom',ev,props||{});}catch(e){}
+    try{if(window.fbq&&META_PIXEL_ID)fbq('trackSingleCustom',META_PIXEL_ID,ev,props||{});}catch(e){}
     if(DEBUG)console.log('%c[wbTrack]','color:#38C4F2;font-weight:bold',ev,props||{});
   }
   window.wbTrack=wbTrack;
@@ -3146,7 +3146,7 @@ window.addEventListener('scroll',cpScroll,{passive:true});
     n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
     t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init',META_PIXEL_ID);fbq('track','PageView');}
+    fbq('init',META_PIXEL_ID);fbq('trackSingle',META_PIXEL_ID,'PageView');}
 
   wbTrack('page_view',{title:document.title});
 

@@ -192,8 +192,8 @@ pre code{background:none;color:inherit;padding:0;direction:ltr}
       <tr><td>מילון אירועים</td><td><code>FUNNEL-EVENTS.md</code></td><td>חוזה הדאטא המלא — כל אירוע וכל שדה</td></tr>
     </table>
     <p>הטעינה בכל דף, לפני הסקריפטים של הדף:</p>
-    <pre><code><span class="c-com">&lt;!-- pixelId ריק עד שיהיה פיקסל WHITEBOARD; Clarity כבר פעיל --&gt;</span>
-&lt;script&gt;window.<span class="c-key">WB_FUNNEL_CONFIG</span>={page:<span class="c-str">'checkout'</span>, pixelId:<span class="c-str">''</span>};&lt;/script&gt;
+    <pre><code><span class="c-com">&lt;!-- הפיקסל של WHITEBOARD (1002841276116788) ו-Clarity כבר מוגדרים בתוך הקובץ --&gt;</span>
+&lt;script&gt;window.<span class="c-key">WB_FUNNEL_CONFIG</span>={page:<span class="c-str">'checkout'</span>};&lt;/script&gt;
 &lt;script src=<span class="c-str">"assets/wb-funnel.js"</span>&gt;&lt;/script&gt;</code></pre>
   </section>
 
@@ -326,7 +326,7 @@ pre code{background:none;color:inherit;padding:0;direction:ltr}
   <section id="golive">
     <h2><span class="n">10</span> צ'קליסט להעלאה חיה</h2>
     <ul class="chk">
-      <li><b>META_PIXEL_ID</b> <span class="who">אלון</span> — להזין ב-<code>WB_FUNNEL_CONFIG.pixelId</code> של כל דף (פיקסל WHITEBOARD חדש, לא של הבונקר). Clarity כבר פעיל.</li>
+      <li><b>META_PIXEL_ID</b> <span class="who">בוצע</span> — פיקסל WHITEBOARD <code>1002841276116788</code> מוטמע כברירת־מחדל ב-<code>wb-funnel.js</code> (וב-<code>index-en.html</code>), אותו מזהה כמו במערכת. אין מה להזין בדפים. נשאר: CAPI בצד שרת. Clarity כבר פעיל.</li>
       <li><b>Endpoint 1 — create-lowprofile</b> <span class="who">CTO</span> — POST → <code>{iframe_url, lowprofile_id, txn_ref}</code>. השרת פותח עסקה מול CardCom וקובע את הסכום.</li>
       <li><b>Endpoint 2 — verify</b> <span class="who">CTO</span> — POST → <code>{paid, plan, billing, amount, txn_id}</code>. אימות מול CardCom = מקור האמת.</li>
       <li><b>הפעלת live</b> <span class="who">CTO</span> — <code>CARDCOM.mode='live'</code> + <code>CARDCOM.ORIGIN</code> לאורג'ין של CardCom + הפניית Success/Error URLs ל-<code>checkout.html?lp_result=…</code>.</li>

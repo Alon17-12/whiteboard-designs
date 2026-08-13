@@ -69,7 +69,9 @@ Conversion variants at step 9 (not every deal is a "purchase"):
 
 ## To go live
 
-1. Set `META_PIXEL_ID` — pass it in each page's `window.WB_FUNNEL_CONFIG={page:'…',pixelId:'…'}` (new WHITEBOARD pixel, **not** the Bunker one). Clarity is already on (`xi43gegise`).
+1. ~~Set `META_PIXEL_ID`~~ **done** — `wb-funnel.js` ships WHITEBOARD's own pixel `1002841276116788` as its default, so no page needs `pixelId` in `WB_FUNNEL_CONFIG` (pass `pixelId:'off'` to disable one). Same id as the product repo's `WB_DEFAULT_PIXEL_ID` — keep them in sync or Meta sees two unrelated journeys. Clarity is already on (`xi43gegise`).
+   Every `fbq` call is scoped with `trackSingle`/`trackSingleCustom`; never reintroduce bare `fbq('track')`, which broadcasts to every pixel on the page.
+   Still missing for full measurement: the server-side CAPI mirror (`sendBeacon` → `/api/analytics/meta` in the product repo) on `lead_submitted`, `checkout_loaded` and `purchase_completed`.
 2. CardCom: implement the two backend endpoints the checkout expects, then flip `CARDCOM.mode` to `'live'` in `checkout.html`:
    - `POST /api/billing/create-lowprofile` → `{ iframe_url, lowprofile_id, txn_ref }`
    - `POST /api/billing/verify` → `{ paid, plan, billing, amount, txn_id }` (server confirms with CardCom — the source of truth)

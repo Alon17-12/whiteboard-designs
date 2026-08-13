@@ -169,12 +169,13 @@ h1{font-size:clamp(26px,5vw,34px);font-weight:600;margin-bottom:8px}
     if(!already){
       try{localStorage.setItem(dedupeKey,'1');}catch(e){}
       var eventId=txn?'purch_'+txn:'purch_'+Date.now();
+      var WB_PIXEL=WBF.pixel();   // scope every fbq call — never let another pixel on the page catch our conversion
       if(plan.price===0){
         WBF.step('trial_started',{plan:planKey,value:0,transaction_id:txn});
-        try{if(window.fbq)fbq('track','StartTrial',{value:0,currency:'ILS'},{eventID:eventId});}catch(e){}
+        try{if(window.fbq&&WB_PIXEL)fbq('trackSingle',WB_PIXEL,'StartTrial',{value:0,currency:'ILS'},{eventID:eventId});}catch(e){}
       }else if(planKey==='enterprise'){
         WBF.step('lead_qualified',{plan:'enterprise',transaction_id:txn});
-        try{if(window.fbq)fbq('track','Lead',{content_name:'enterprise'},{eventID:eventId});}catch(e){}
+        try{if(window.fbq&&WB_PIXEL)fbq('trackSingle',WB_PIXEL,'Lead',{content_name:'enterprise'},{eventID:eventId});}catch(e){}
       }else{
         WBF.step('purchase_completed',{plan:planKey,plan_name:plan.name,billing:billing,
           value:value,currency:'ILS',transaction_id:txn},{eventID:eventId});
