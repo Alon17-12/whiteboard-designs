@@ -67,7 +67,7 @@ tr:last-child td{border-bottom:none}
 
 /* ---------- MARKING ---------- */
 .mk{cursor:pointer;transition:border-color .18s,box-shadow .18s,background .18s,opacity .18s}
-.mk::after{content:'';position:absolute;top:9px;inset-inline-start:9px;width:11px;height:11px;border-radius:50%;border:2px solid var(--line-2);background:transparent;transition:all .18s}
+.mk::after{content:'';position:absolute;top:9px;left:9px;right:auto;width:11px;height:11px;border-radius:50%;border:2px solid var(--line-2);background:transparent;transition:all .18s}
 .mk:hover::after{border-color:var(--cy);transform:scale(1.15)}
 .mk[data-state="1"]{border-color:var(--gr);box-shadow:0 0 0 2px color-mix(in srgb,var(--gr) 26%,transparent);background:color-mix(in srgb,var(--gr) 5%,#fff)}
 .mk[data-state="1"]::after{background:var(--gr);border-color:var(--gr)}
@@ -75,7 +75,7 @@ tr:last-child td{border-bottom:none}
 .mk[data-state="2"]::after{background:var(--yl);border-color:var(--yl)}
 .mk[data-state="3"]{opacity:.4}
 .mk[data-state="3"]::after{background:var(--tx-3);border-color:var(--tx-3)}
-.mk-lbl{position:absolute;top:7px;inset-inline-start:26px;font-size:10px;font-weight:800;letter-spacing:.07em;opacity:0;transition:opacity .18s;pointer-events:none}
+.mk-lbl{position:absolute;top:7px;left:26px;right:auto;direction:rtl;font-size:10px;font-weight:800;letter-spacing:.07em;opacity:0;transition:opacity .18s;pointer-events:none}
 .mk[data-state="1"] .mk-lbl{opacity:1;color:var(--gr)}
 .mk[data-state="2"] .mk-lbl{opacity:1;color:var(--yl)}
 .mk[data-state="3"] .mk-lbl{opacity:1;color:var(--tx-3)}
@@ -200,7 +200,7 @@ tr:last-child td{border-bottom:none}
   <div class="brandrow"><span class="wb">WHITEBOARD</span><span class="x">×</span><span class="org">הסתדרות ההנדסאים והטכנאים בישראל</span></div>
   <span class="poslabel"><span class="pdot"></span>תשתית למידה מבוססת AI</span>
   <h1 class="big">האקדמיה הדיגיטלית<br>של ההנדסאים</h1>
-  <p class="sub" style="font-size:19px;margin-top:16px;max-width:66ch">אתם מלמדים. אנחנו נותנים את התשתית — ובתוכה כלי ה‑AI שמפיקים, מנהלים ומודדים את הלמידה במקומכם.</p>
+  <p class="sub" style="font-size:19px;margin-top:16px;max-width:66ch">המרצים שלכם מלמדים. אנחנו נותנים את התשתית — ובתוכה כלי AI שעוזרים להם להכין את החומר, ומראים לכם מי לומד, מי נעצר ומי צריך דחיפה חזרה.</p>
   <div class="meta">
     <div><span class="k">הוכן עבור</span><span class="v">דני הורנשטיין · אבי יוסוביץ׳ · פלג סיגנר</span></div>
     <div><span class="k">בנושא</span><span class="v">תוכניות דיגיטליות ו‑AI</span></div>
@@ -321,7 +321,7 @@ tr:last-child td{border-bottom:none}
   <div class="body">
     <div class="bigline">
       <span class="bl1">WHITEBOARD היא <em>תשתית למידה מבוססת AI</em>.</span>
-      <span class="bl2">כלומר: <b>המקום שבו הקורסים שלכם חיים, נלמדים, נמדדים ונשמרים</b> — וה‑AI יושב בתוכו ועושה את העבודה הכבדה: מפיק את הקורס, מנתח את הלומדים וכותב את הדיוור. <b>לא מלמדים במקומכם, ולא מוכרים לכם תוכן.</b></span>
+      <span class="bl2">כלומר: <b>המקום שבו הקורסים שלכם חיים, נלמדים, נמדדים ונשמרים</b> — וה‑AI יושב בתוכו כעוזר: חוקר, מאגד חומר, מכין מצגות, ומנתח מי לומד ומי נעצר. <b>הוא לא מחליף את המרצה, והוא לא מלמד במקומו.</b></span>
     </div>
     <div class="split">
       <div class="card accent" style="--c:var(--pk)">
@@ -352,7 +352,7 @@ tr:last-child td{border-bottom:none}
   <p class="sub">ככה נראית תשתית למידה מבוססת AI מבפנים — וה‑AI לא שכבה נפרדת, הוא בתוך כל אחת מהן.</p>
   <div class="body">
     <div class="layers">
-      <div class="layer mk" data-mark="layer-prod" data-label="שכבת הפקה — בורדי, סטודיו, לייב" style="--c:var(--cy)"><span class="mk-lbl"></span><div class="lh"><span class="n">שכבה 01</span><span class="t">הפקה</span></div><div class="lb">המרצה שלכם מדבר — <b>בורדי, ה‑AI שלנו, בונה את מבנה הקורס</b>: פרקים, שיעורים, חומרים ומבחנים. סטודיו הקלטה פנימי, ספריית מדיה ולייבים.</div></div>
+      <div class="layer mk" data-mark="layer-prod" data-label="שכבת הפקה — בורדי, סטודיו, לייב" style="--c:var(--cy)"><span class="mk-lbl"></span><div class="lh"><span class="n">שכבה 01</span><span class="t">הפקה</span></div><div class="lb">המרצה מחליט מה ללמד — <b>בורדי, ה‑AI שלנו, עוזר לו להגיע לשם</b>: מחקר, איגוד החומר, הצעת מבנה, מצגות וחומרי עזר. לצידם סטודיו הקלטה פנימי, ספריית מדיה ולייבים.</div></div>
       <div class="layer mk" data-mark="layer-learn" data-label="שכבת למידה — נגן מוגן, חוברת, מבחנים" style="--c:var(--gr)"><span class="mk-lbl"></span><div class="lh"><span class="n">שכבה 02</span><span class="t">למידה</span></div><div class="lb">נגן וידאו מוגן בהצפנה עם חסימת הורדות, חוברת קורס, פתקים אישיים, מבחנים, תעודות ומשחקי חזרה. <b>נגיש מכל מכשיר, בעברית מלאה.</b></div></div>
       <div class="layer mk" data-mark="layer-control" data-label="שכבת בקרה — נתונים, שעות, תעודות" style="--c:var(--vi)"><span class="mk-lbl"></span><div class="lh"><span class="n">שכבה 03</span><span class="t">בקרה</span></div><div class="lb">מי נרשם, מי צפה, איפה הצפייה צונחת, מי בסיכון נשירה. דוחות שעות ונוכחות — <b>בדיוק הראיות שגמול השתלמות דורש</b> — בלחיצה אחת.</div></div>
       <div class="layer mk" data-mark="layer-growth" data-label="שכבת צמיחה — אתרים, CRM, דיוור, קהילה" style="--c:var(--yl)"><span class="mk-lbl"></span><div class="lh"><span class="n">שכבה 04</span><span class="t">צמיחה</span></div><div class="lb">אתרי קורסים, ניהול לומדים, דיוור ומועדון קהילה. <b>ללא עמלה על מכירות</b>, וייצוא נתונים מלא — הידע והנתונים נשארים שלכם.</div></div>
@@ -363,24 +363,24 @@ tr:last-child td{border-bottom:none}
 <!-- 11 BOARDI -->
 <section class="slide" data-ch="היכולות" data-t="בורדי — כלי ה-AI" style="--ch:var(--navy)">
   <div class="eyebrow"><span class="dot"></span>בורדי · כלי ה‑AI שלכם<span class="num">11</span></div>
-  <h2>ה‑AI לא מלמד במקומכם — <span class="q">הוא מפיק לכם את הקורס</span></h2>
-  <p class="sub">"אין לנו מי שיכין תוכן" היא ההתנגדות הכי נפוצה להכשרה דיגיטלית. בורדי נבנה בדיוק בשבילה.</p>
+  <h2>ה‑AI לא מחליף את המרצה — <span class="q">הוא עושה את העבודה שסביבו</span></h2>
+  <p class="sub">נהיה מדויקים: בשלב הזה, AI לא מלמד ולא יחליף מורה. מה שהוא כן עושה מצוין — הוא כל מה שגוזל למרצה שלכם את הזמן לפני השיעור ואחריו.</p>
   <div class="body">
     <div class="grid g4">
-      <div class="card s mk accent" data-mark="boardi-build" data-label="בורדי בונה קורס משיחה עם המרצה" style="--c:var(--cy)"><span class="mk-lbl"></span><span class="kick">בונה הקורסים</span><h3 style="font-size:15px">משיחה למבנה</h3><p>המרצה מספר על מה שהוא יודע. בורדי מציע מבנה, פרקים ושיעורים — והוא מאשר או משנה.</p></div>
-      <div class="card s mk accent" data-mark="boardi-analyze" data-label="ניתוח תלמידים וזיהוי נשירה" style="--c:var(--gr)"><span class="mk-lbl"></span><span class="kick">מנתח התלמידים</span><h3 style="font-size:15px">מי נתקע ואיפה</h3><p>מנתח התקדמות וצפייה, ומצביע על השיעור שבו הקבוצה נופלת.</p></div>
-      <div class="card s mk accent" data-mark="boardi-lessons" data-label="תחזוקת תוכן שוטפת אחרי ההשקה" style="--c:var(--vi)"><span class="mk-lbl"></span><span class="kick">בורדי שיעורים</span><h3 style="font-size:15px">תחזוקת תוכן</h3><p>מוסיף פרק, מעדכן שיעור, בונה מצגת — אחרי שהקורס כבר רץ.</p></div>
-      <div class="card s mk accent" data-mark="boardi-mail" data-label="כתיבת דיוור לחברים" style="--c:var(--yl)"><span class="mk-lbl"></span><span class="kick">יוצר הדיוור</span><h3 style="font-size:15px">כתיבה ושליחה</h3><p>כותב ובונה דיוורים לחברים בעורך בלוקים, לפי מה שקורה בקורס.</p></div>
+      <div class="card s mk accent" data-mark="boardi-research" data-label="מחקר ואיגוד חומר למרצה" style="--c:var(--cy)"><span class="mk-lbl"></span><span class="kick">לפני השיעור</span><h3 style="font-size:15px">מחקר ואיגוד חומר</h3><p>אוסף מקורות, מסדר את מה שהמרצה כבר יודע לכדי חומר מאורגן, ומציע מבנה אפשרי. <b>המרצה מחליט.</b></p></div>
+      <div class="card s mk accent" data-mark="boardi-decks" data-label="הכנת מצגות וחומרי עזר" style="--c:var(--gr)"><span class="mk-lbl"></span><span class="kick">חומרי הוראה</span><h3 style="font-size:15px">מצגות וחומרי עזר</h3><p>בונה מצגת לשיעור, סיכומים, שאלות תרגול וחומרי נלווים — במקום שעות עבודה ידנית.</p></div>
+      <div class="card s mk accent" data-mark="boardi-analyze" data-label="ניתוח נתוני צפייה ולמידה" style="--c:var(--vi)"><span class="mk-lbl"></span><span class="kick">אחרי השיעור</span><h3 style="font-size:15px">ניתוח נתוני צפייה</h3><p>מי צפה, כמה, ואיפה בדיוק הצפייה צונחת. מצביע על השיעור שבו הקבוצה נופלת.</p></div>
+      <div class="card s mk accent" data-mark="boardi-winback" data-label="זיהוי תלמיד שנעצר והחזרתו ללמידה" style="--c:var(--yl)"><span class="mk-lbl"></span><span class="kick">שימור</span><h3 style="font-size:15px">מחזיר תלמיד שנעצר</h3><p>מזהה מי לא נכנס כבר תקופה, ומסייע להחזיר אותו — בפנייה מותאמת למקום שבו הוא עצר.</p></div>
     </div>
     <div class="card lead">
-      <p style="font-size:15px;line-height:1.6"><b>מד הוודאות:</b> בורדי לא בונה קורס מניחוש — הוא שואל עד שהוא מבין מספיק, ורק כשרמת הוודאות עוברת סף הוא מציע מבנה. כל פעולה עוברת <b>תצוגה מקדימה ואישור אנושי</b> לפני שנשמרת. אתם תמיד היד על ההגה.</p>
+      <p style="font-size:15px;line-height:1.6"><b>הגבול ברור, ואנחנו אומרים אותו מראש:</b> בורדי מציע — <b>המרצה מאשר</b>. כל פעולה שהוא עושה במערכת עוברת תצוגה מקדימה ואישור אנושי לפני שהיא נשמרת, והוא לא מפרסם שום דבר בעצמו. <b>ההוראה נשארת אצל האדם.</b> מה שנחסך זה הזמן שסביבה.</p>
     </div>
   </div>
 </section>
 
 <!-- 12 LIVE -->
-<section class="slide" data-ch="היכולות" data-t="לייב שנשמר לבד" style="--ch:var(--navy)">
-  <div class="eyebrow"><span class="dot"></span>לייב · הנקודה שקל לפספס<span class="num">12</span></div>
+<section class="slide" data-ch="היכולות" data-t="לייב, צ׳אט ופיד" style="--ch:var(--navy)">
+  <div class="eyebrow"><span class="dot"></span>לייב, צ׳אט ופיד · הנקודה שקל לפספס<span class="num">12</span></div>
   <h2>שיעור חי שנגמר — <span class="q">והוא כבר קורס במערכת</span></h2>
   <p class="sub">זו הדרך המהירה ביותר לבנות ספרייה דיגיטלית: לא לשנות כלום ממה שאתם עושים היום, רק להעביר את זה דרך מערכת הלייב.</p>
   <div class="body">
@@ -395,6 +395,11 @@ tr:last-child td{border-bottom:none}
       <div class="card s mk accent" data-mark="live-auto" data-label="לייב נשמר אוטומטית לתוך הקורס" style="--c:var(--cy)"><span class="mk-lbl"></span><h3>אפס עבודה נוספת</h3><p>אף אחד לא צריך להוריד קובץ, לערוך או להעלות. השיעור פשוט נמצא שם אחרי שנגמר.</p></div>
       <div class="card s mk accent" data-mark="live-library" data-label="ספרייה דיגיטלית שנבנית מעצמה" style="--c:var(--gr)"><span class="mk-lbl"></span><h3>ספרייה שנבנית מעצמה</h3><p>שנה של שיעורים חיים = קטלוג קורסים מלא, בלי שהוקצה לזה תקציב הפקה.</p></div>
       <div class="card s mk accent" data-mark="live-hybrid" data-label="לייב היברידי — כיתה ומרחוק יחד" style="--c:var(--vi)"><span class="mk-lbl"></span><h3>גם בכיתה, גם מרחוק</h3><p>מי שבכיתה מקבל שיעור רגיל. מי שבמשמרת מצטרף מרחוק — או צופה למחרת.</p></div>
+    </div>
+    <div class="card mk accent" data-mark="live-segmentation" data-label="לייב, צ׳אט ופיד מסווגים לפי נושא/קורס/מרצה/מחוז" style="--c:var(--yl)"><span class="mk-lbl"></span>
+      <span class="tag" style="--c:var(--yl)">וזה לא נגמר בלייב</span>
+      <h3>לייב, צ׳אט ופיד — מסודרים לפי איך שאתם עובדים</h3>
+      <p>לצד הלייב יש <b>צ׳אט ופיד קהילתי</b>, ואת שלושתם אפשר <b>לסווג לפי נושא, לפי קורס, לפי מרצה, לפי מחוז — או כל חיתוך אחר שתעדיפו</b>. המשמעות: חבר רואה רק את מה שרלוונטי לו ולא מוצף; מרצה מנהל רק את המרחב שלו; ולכל מגמה או מחוז יש בית משלו בתוך מערכת אחת.</p>
     </div>
   </div>
 </section>
@@ -427,7 +432,7 @@ tr:last-child td{border-bottom:none}
       <div class="card mk accent" data-mark="svc-content" data-label="ליווי המרצים בבניית הקורס" style="--c:var(--yl)"><span class="mk-lbl"></span>
         <span class="tag" style="--c:var(--yl)">שירות 04</span>
         <h3>ליווי המרצים בבניית הקורס</h3>
-        <p>לא כותבים במקומם — <b>יושבים איתם</b>. מפגש בנייה עם המרצה, בורדי מייצר את המבנה, ואנחנו מוודאים שהתוצאה עומדת בסטנדרט ובדרישות השעות.</p>
+        <p>לא כותבים במקומם — <b>יושבים איתם</b>. מפגש בנייה עם המרצה, בורדי עוזר לאגד את החומר ולהציע מבנה, ואנחנו מוודאים שהתוצאה עומדת בסטנדרט ובדרישות השעות.</p>
         <p><b>הפער שזה סוגר:</b> מרצה מצוין בכיתה הוא לא בהכרח מרצה מצוין מול מצלמה. זה הגשר.</p>
       </div>
     </div>
@@ -470,13 +475,13 @@ tr:last-child td{border-bottom:none}
   <h2>מה יש בתשתית — <span class="q">לוחצים על מה שרלוונטי לכם</span></h2>
   <div class="body">
     <div class="bento">
-      <div class="tile xl mk" data-mark="cap-boardi" data-label="בורדי — עוזר ה-AI" style="--c:var(--cy)"><span class="mk-lbl"></span><span class="tg">AI</span><span class="tt">בורדי — עוזר ה‑AI</span><span class="td">מפיק קורסים, מנתח תלמידים ומכירות, כותב דיוור. עובד על נתוני המערכת שלכם.</span></div>
+      <div class="tile xl mk" data-mark="cap-boardi" data-label="בורדי — עוזר ה-AI" style="--c:var(--cy)"><span class="mk-lbl"></span><span class="tg">AI</span><span class="tt">בורדי — עוזר ה‑AI</span><span class="td">עוזר למרצה לחקור, לאגד חומר ולהכין מצגות — ומנתח מי לומד, מי נעצר ואיפה הצפייה צונחת.</span></div>
       <div class="tile mk" data-mark="cap-video" data-label="וידאו מוגן בהצפנה" style="--c:var(--gr)"><span class="mk-lbl"></span><span class="tg">VIDEO</span><span class="tt">וידאו מוגן</span><span class="td">הזרמה מוצפנת עם חסימת הורדות</span></div>
       <div class="tile mk" data-mark="cap-live" data-label="לייב ומפגשים" style="--c:var(--vi)"><span class="mk-lbl"></span><span class="tg">LIVE</span><span class="tt">לייב ומפגשים</span><span class="td">שידור חי שנשמר לקורס לבד</span></div>
       <div class="tile mk" data-mark="cap-exams" data-label="מבחנים ותעודות" style="--c:var(--yl)"><span class="mk-lbl"></span><span class="tg">EXAMS</span><span class="tt">מבחנים ותעודות</span><span class="td">בחינות, ציונים ותעודה דיגיטלית</span></div>
       <div class="tile mk" data-mark="cap-crm" data-label="ניהול לומדים" style="--c:var(--pk)"><span class="mk-lbl"></span><span class="tg">CRM</span><span class="tt">ניהול לומדים</span><span class="td">רשומת חבר, סטטוס והיסטוריה</span></div>
       <div class="tile mk" data-mark="cap-mail" data-label="דיוור לחברים" style="--c:var(--cy)"><span class="mk-lbl"></span><span class="tg">MAIL</span><span class="tt">דיוור לחברים</span><span class="td">קמפיינים ותזכורות אוטומטיות</span></div>
-      <div class="tile mk" data-mark="cap-club" data-label="מועדון וקהילה" style="--c:var(--gr)"><span class="mk-lbl"></span><span class="tg">CLUB</span><span class="tt">מועדון וקהילה</span><span class="td">פיד, שאלות ותשובות, דירוגים</span></div>
+      <div class="tile mk" data-mark="cap-club" data-label="מועדון וקהילה" style="--c:var(--gr)"><span class="mk-lbl"></span><span class="tg">CLUB</span><span class="tt">קהילה, צ׳אט ופיד</span><span class="td">מסווגים לפי נושא, קורס או מרצה</span></div>
       <div class="tile mk" data-mark="cap-data" data-label="אנליטיקה ודוחות שעות" style="--c:var(--vi)"><span class="mk-lbl"></span><span class="tg">DATA</span><span class="tt">אנליטיקה ודוחות</span><span class="td">התקדמות, צפייה, שעות ונוכחות</span></div>
       <div class="tile mk" data-mark="cap-sites" data-label="אתר קורסים לכל גוף סמך" style="--c:var(--yl)"><span class="mk-lbl"></span><span class="tg">SITES</span><span class="tt">אתרי קורסים</span><span class="td">אתר לכל גוף, בדומיין שלו</span></div>
       <div class="tile mk" data-mark="cap-pay" data-label="מכירה וסליקה — 0% עמלה" style="--c:var(--pk)"><span class="mk-lbl"></span><span class="tg">PAY</span><span class="tt">מכירה וסליקה</span><span class="td">סליקה ישראלית · 0% עמלה</span></div>
